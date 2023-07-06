@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "@types/styled-components": "^5.1.26",
     "clean-webpack-plugin": "^4.0.0",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
@@ -33,6 +34,7 @@
     "eslint-plugin-import": "^2.27.5",
     "html-webpack-plugin": "^5.5.3",
     "prettier": "^2.8.8",
+    "styled-components": "^6.0.2",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",
     "webpack": "^5.88.1",

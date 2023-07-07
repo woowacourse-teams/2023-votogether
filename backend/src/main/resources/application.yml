@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/test;MODE=MySQL
+    username: sa
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+    show-sql: true
+
+    hibernate:
+      ddl-auto: create

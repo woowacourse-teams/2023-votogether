@@ -1,5 +1,7 @@
 package com.votogether.domain.member.entity;
 
+import com.votogether.domain.category.entity.Category;
+import com.votogether.domain.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class MemberCategory {
+public class MemberCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +27,14 @@ public class MemberCategory {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Builder
-    private MemberCategory(final Member member, final Long categoryId) {
+    private MemberCategory(final Member member, final Category category) {
         this.member = member;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
 }

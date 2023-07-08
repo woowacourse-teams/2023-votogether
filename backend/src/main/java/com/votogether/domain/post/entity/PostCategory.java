@@ -1,5 +1,7 @@
 package com.votogether.domain.post.entity;
 
+import com.votogether.domain.category.entity.Category;
+import com.votogether.domain.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class PostCategory {
+public class PostCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +27,14 @@ public class PostCategory {
     @JoinColumn(nullable = false)
     private Post post;
 
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Builder
-    private PostCategory(final Post post, final Long categoryId) {
+    private PostCategory(final Post post, final Category category) {
         this.post = post;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
 }

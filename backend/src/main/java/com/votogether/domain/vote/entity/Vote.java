@@ -1,6 +1,8 @@
 package com.votogether.domain.vote.entity;
 
+import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.entity.PostOption;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Vote {
+public class Vote extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +28,14 @@ public class Vote {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    private Long postOptionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_option_id", nullable = false)
+    private PostOption postOption;
 
     @Builder
-    private Vote(final Member member, final Long postOptionId) {
+    private Vote(final Member member, final PostOption postOption) {
         this.member = member;
-        this.postOptionId = postOptionId;
+        this.postOption = postOption;
     }
 
 }

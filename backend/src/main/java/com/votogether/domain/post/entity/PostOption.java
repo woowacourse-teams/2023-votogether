@@ -1,5 +1,6 @@
 package com.votogether.domain.post.entity;
 
+import com.votogether.domain.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class PostOption {
+public class PostOption extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class PostOption {
     private Post post;
 
     @Column(nullable = false)
-    private Long sequence;
+    private Integer sequence;
 
     @Column(length = 50, nullable = false)
     private String content;
@@ -35,7 +36,7 @@ public class PostOption {
     @Builder
     private PostOption(
             final Post post,
-            final Long sequence,
+            final Integer sequence,
             final String content
     ) {
         this.post = post;

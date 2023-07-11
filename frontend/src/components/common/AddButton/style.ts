@@ -15,4 +15,6 @@ export const Button = styled.button<ButtonProps>`
   color: #ffffff;
 
   font-size: ${props => (props.size === 'L' ? '50px' : props.size === 'M' ? '30px' : '13px')};
+
+  cursor: pointer;
 `;

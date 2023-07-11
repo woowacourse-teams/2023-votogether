@@ -1,14 +1,14 @@
 import { styled } from 'styled-components';
 
-export const Container = styled.li<{ isSelect: boolean }>`
+export const Container = styled.li<{ isSelected: boolean }>`
   display: flex;
   flex-direction: column;
 
-  border: ${({ isSelect }) => (isSelect ? '2px solid #ff7877' : '1px solid rgba(0, 0, 0, 0.1)')};
+  border: ${({ isSelected }) =>
+    isSelected ? '2px solid #ff7877' : '1px solid rgba(0, 0, 0, 0.1)'};
   border-radius: 4px;
   padding: 15px 20px;
 
-  background: #f6f6f6;
   color: #5b5b5b;
 
   cursor: pointer;
@@ -31,7 +31,7 @@ export const Image = styled.img`
   }
 `;
 
-export const PreviewContent = styled.span`
+export const PreviewContent = styled.p`
   display: -webkit-box;
 
   font-size: 1.4rem;
@@ -49,7 +49,7 @@ export const PreviewContent = styled.span`
   }
 `;
 
-export const DetailContent = styled.span`
+export const DetailContent = styled.p`
   font-size: 1.4rem;
   font-weight: 500;
 

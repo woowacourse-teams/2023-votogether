@@ -4,13 +4,13 @@ import * as S from './style';
 
 interface ProgressBarProps {
   percent: number;
-  isSelect: boolean;
+  isSelected: boolean;
 }
 
-export default function ProgressBar({ percent, isSelect }: ProgressBarProps) {
+export default function ProgressBar({ percent, isSelected }: ProgressBarProps) {
   return (
     <S.Container>
-      <S.Bar progress={`${percent}%`} isSelect={isSelect} />
+      <S.Bar progress={percent} isSelected={isSelected} />
     </S.Container>
   );
 }

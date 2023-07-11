@@ -9,10 +9,10 @@ const meta: Meta<typeof ProgressBar> = {
 export default meta;
 type Story = StoryObj<typeof ProgressBar>;
 
-export const Select: Story = {
-  render: () => <ProgressBar percent={20} isSelect={true} />,
+export const Selected: Story = {
+  render: () => <ProgressBar percent={20} isSelected={true} />,
 };
 
-export const NotSelect: Story = {
-  render: () => <ProgressBar percent={20} isSelect={false} />,
+export const NotSelected: Story = {
+  render: () => <ProgressBar percent={20} isSelected={false} />,
 };

@@ -4,38 +4,38 @@ import ProgressBar from './ProgressBar';
 import * as S from './style';
 
 interface WrittenVoteOptionProps {
-  onClick: () => void;
+  handleVoteClick: () => void;
   text: string;
-  isVote: boolean;
+  isVoted: boolean;
   peopleCount: number;
   percent: number;
-  isSelect: boolean;
+  isSelected: boolean;
   isPreview: boolean;
   imageUrl?: string;
 }
 
 export default function WrittenVoteOption({
-  onClick,
+  handleVoteClick,
   text,
-  isVote,
+  isVoted,
   peopleCount,
   percent,
-  isSelect,
+  isSelected,
   isPreview,
   imageUrl,
 }: WrittenVoteOptionProps) {
   return (
-    <S.Container aria-label={text} isSelect={isSelect} onClick={onClick}>
-      {imageUrl && <S.Image src={imageUrl} alt={text} />}
+    <S.Container aria-label={text} isSelected={isSelected} onClick={handleVoteClick}>
+      {!isPreview && imageUrl && <S.Image src={imageUrl} alt={text} />}
       {isPreview ? (
         <S.PreviewContent>{text}</S.PreviewContent>
       ) : (
         <S.DetailContent>{text}</S.DetailContent>
       )}
-      {isVote && (
+      {isVoted && (
         <>
           <S.ProgressContainer>
-            <ProgressBar percent={percent} isSelect={isSelect} />
+            <ProgressBar percent={percent} isSelected={isSelected} />
           </S.ProgressContainer>
           <S.TextContainer>
             <S.PeopleText>{peopleCount}명</S.PeopleText>

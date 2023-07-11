@@ -15,7 +15,7 @@ interface WrittenVoteOptionListProps {
   isPreview: boolean;
   selectedOptionId: number;
   voteOptionList: WrittenVoteOptionType[];
-  handleSelectVoteClick: (voteId: number) => void;
+  handleVoteClick: (voteId: number) => void;
 }
 
 const NOT_VOTED = 0;
@@ -24,7 +24,7 @@ export default function WrittenVoteOptionList({
   isPreview,
   voteOptionList,
   selectedOptionId,
-  handleSelectVoteClick,
+  handleVoteClick,
 }: WrittenVoteOptionListProps) {
   return (
     <S.VoteOptionListContainer>
@@ -33,9 +33,9 @@ export default function WrittenVoteOptionList({
           key={voteOption.id}
           {...voteOption}
           isPreview={isPreview}
-          isVote={selectedOptionId !== NOT_VOTED}
-          isSelect={selectedOptionId === voteOption.id}
-          onClick={() => handleSelectVoteClick(voteOption.id)}
+          isVoted={selectedOptionId !== NOT_VOTED}
+          isSelected={selectedOptionId === voteOption.id}
+          handleVoteClick={() => handleVoteClick(voteOption.id)}
         />
       ))}
     </S.VoteOptionListContainer>

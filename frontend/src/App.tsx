@@ -1,10 +1,10 @@
 import Home from '@pages/Home';
 
-import Button from '@components/Button';
+import Example from '@components/Example';
 
 const App = () => (
   <>
-    <Button />
+    <Example />
     <Home />
   </>
 );

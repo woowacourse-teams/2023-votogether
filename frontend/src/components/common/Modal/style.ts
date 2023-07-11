@@ -19,24 +19,24 @@ export const Backdrop = styled.div`
 `;
 
 export const Container = styled.div<ModalContainerProps>`
+  display: grid;
+  grid-template-rows: 1fr 6fr;
+
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  display: grid;
-  grid-template-rows: 1fr 6fr;
-
   width: ${props => (props.size === 'sm' ? '290px' : '700px')};
   height: 290px;
-
-  font-size: 1rem;
   border-radius: 12px;
   border: 2px solid #f6f6f6;
+  padding: 5px;
 
   background-color: white;
 
-  padding: 5px;
+  font-size: 1rem;
+
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 `;
 
@@ -46,23 +46,21 @@ export const Header = styled.div`
   alignt-items: center;
 
   width: 100%;
-
-  padding: 10px;
-
   border-bottom: 1px solid #f6f6f6;
+  padding: 10px;
 
   font-size: 1.5rem;
   font-weight: bold;
 `;
 
 export const Body = styled.div`
-  font-size: 1.2rem;
   padding: 10px;
+
+  font-size: 1.2rem;
 `;
 
 export const Description = styled.div`
   color: gray;
-  padding: 10px;
 `;
 
 export const CloseButton = styled.button`

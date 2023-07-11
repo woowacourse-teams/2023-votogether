@@ -1,12 +1,8 @@
 import Home from '@pages/Home';
 
-import Button from '@components/Button';
 
-const App = () => (
-  <>
-    <Button />
-    <Home />
-  </>
-);
+const App = () => {
+  return <Home />;
+};
 
 export default App;

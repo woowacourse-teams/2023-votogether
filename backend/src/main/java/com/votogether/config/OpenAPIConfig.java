@@ -11,11 +11,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
-    @Value("${votogether.openapi.dev-url}")
-    private String devUrl;
+    private final String devUrl;
+    private final String prodUrl;
 
-    @Value("${votogether.openapi.prod-url}")
-    private String prodUrl;
+    public OpenAPIConfig(
+            @Value("${votogether.openapi.dev-url}") final String devUrl,
+            @Value("${votogether.openapi.prod-url}") final String prodUrl
+    ) {
+        this.devUrl = devUrl;
+        this.prodUrl = prodUrl;
+    }
 
     @Bean
     public OpenAPI openAPI() {

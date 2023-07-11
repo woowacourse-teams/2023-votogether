@@ -4,5 +4,9 @@ import * as S from './style';
  * props로 s/m/l 크기를 받음
  */
 export default function AddButton({ size }: { size: 'S' | 'M' | 'L' }) {
-  return <S.Button size={size}>+</S.Button>;
+  return (
+    <S.Button size={size} aria-label="더하기 버튼">
+      +
+    </S.Button>
+  );
 }

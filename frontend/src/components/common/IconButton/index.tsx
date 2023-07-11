@@ -12,8 +12,11 @@ interface IconButtonProps {
  */
 export default function IconButton({ category }: IconButtonProps) {
   const src = category === 'category' ? categoryIcon : category === 'back' ? backIcon : searchIcon;
+  const ariaLabelText =
+    category === 'category' ? '카테고리' : category === 'back' ? '뒤로가기' : '검색';
+
   return (
-    <S.Button>
+    <S.Button aria-label={`${ariaLabelText}-버튼`}>
       <img src={src} alt={`${category}-button`} />
     </S.Button>
   );

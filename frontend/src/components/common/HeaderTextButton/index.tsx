@@ -8,5 +8,5 @@ interface HeaderTextButtonProps {
  * props로 s/m/l 크기를 받음
  */
 export default function HeaderTextButton({ children }: HeaderTextButtonProps) {
-  return <S.Button>{children}</S.Button>;
+  return <S.Button >{children}</S.Button>;
 }

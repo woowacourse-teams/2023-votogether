@@ -1,6 +1,12 @@
 import { styled } from 'styled-components';
 
-export const Container = styled.label`
+export const Container = styled.div`
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+`;
+
+export const Label = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;

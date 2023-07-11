@@ -6,12 +6,8 @@ interface OptionUploadImageButtonProps extends React.InputHTMLAttributes<HTMLInp
 
 export default function OptionUploadImageButton({ ...rest }: OptionUploadImageButtonProps) {
   return (
-    <div>
-      <S.Container
-        htmlFor="uploadImage"
-        aria-label="선택지 이미지 업로드 버튼"
-        title="이미지 업로드"
-      >
+    <S.Container>
+      <S.Label htmlFor="uploadImage" aria-label="선택지 이미지 업로드 버튼" title="이미지 업로드">
         <S.Icon xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path
             fillRule="evenodd"
@@ -19,8 +15,8 @@ export default function OptionUploadImageButton({ ...rest }: OptionUploadImageBu
             clipRule="evenodd"
           />
         </S.Icon>
-      </S.Container>
+      </S.Label>
       <S.FileInput id="uploadImage" type="file" accept="image/*" {...rest} />
-    </div>
+    </S.Container>
   );
 }

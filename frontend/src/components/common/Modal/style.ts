@@ -35,8 +35,6 @@ export const Container = styled.div<ModalContainerProps>`
 
   background-color: white;
 
-  font-size: 1rem;
-
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 `;
 
@@ -54,13 +52,20 @@ export const Header = styled.div`
 `;
 
 export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 5px;
+
   padding: 10px;
 
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 `;
 
 export const Description = styled.div`
   color: gray;
+
+  font-size: 1.2rem;
 `;
 
 export const CloseButton = styled.button`

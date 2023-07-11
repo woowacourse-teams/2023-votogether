@@ -72,7 +72,10 @@ export const WithCloseButton = () => {
               <p>Modal Title</p>
               <S.CloseButton onClick={closeModal}>X</S.CloseButton>
             </S.Header>
-            <S.Body>Modal Content</S.Body>
+            <S.Body>
+              <S.Description>This is Description</S.Description>
+              This is Content
+            </S.Body>
           </>
         </Modal>
       )}

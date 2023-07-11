@@ -11,13 +11,13 @@ export default meta;
 type Story = StoryObj<typeof IconButton>;
 
 export const categoryIconButton: Story = {
-  render: () => <IconButton category="category" />,
+  render: () => <IconButton category="category" clickEvent={() => {}} />,
 };
 
 export const backIconButton: Story = {
-  render: () => <IconButton category="back" />,
+  render: () => <IconButton category="back" clickEvent={() => {}} />,
 };
 
 export const searchIconButton: Story = {
-  render: () => <IconButton category="search" />,
+  render: () => <IconButton category="search" clickEvent={() => {}} />,
 };

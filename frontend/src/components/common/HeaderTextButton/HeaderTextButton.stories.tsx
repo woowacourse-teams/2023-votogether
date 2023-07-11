@@ -10,5 +10,5 @@ export default meta;
 type Story = StoryObj<typeof HeaderTextButton>;
 
 export const defaultButton: Story = {
-  render: () => <HeaderTextButton>확 인</HeaderTextButton>,
+  render: () => <HeaderTextButton clickEvent={() => {}}>확 인</HeaderTextButton>,
 };

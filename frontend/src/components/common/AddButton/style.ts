@@ -4,11 +4,17 @@ interface ButtonProps {
   size: 'S' | 'M' | 'L';
 }
 
+const size = {
+  S: '25px',
+  M: '40px',
+  L: '60px',
+};
+
 export const Button = styled.button<ButtonProps>`
   display: block;
 
-  width: ${props => (props.size === 'L' ? '60px' : props.size === 'M' ? '40px' : '25px')};
-  height: ${props => (props.size === 'L' ? '56px' : props.size === 'M' ? '37px' : '22px')};
+  width: ${props => (props.size === 'L' ? size.L : props.size === 'M' ? size.M : size.S)};
+  height: ${props => (props.size === 'L' ? size.L : props.size === 'M' ? size.M : size.S)};
   border-radius: 50%;
 
   background-color: #ff7877;

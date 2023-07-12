@@ -35,7 +35,7 @@ public class Post extends BaseEntity {
     @Column(length = 1000, nullable = false)
     private String content;
 
-    @Column(columnDefinition="datetime(2)", nullable = false)
+    @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
 
     @Builder

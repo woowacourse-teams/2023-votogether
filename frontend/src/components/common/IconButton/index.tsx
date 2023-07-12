@@ -33,8 +33,8 @@ export default function IconButton({ category, clickEvent }: IconButtonProps) {
   const ariaLabelText = iconCategory[category].name;
 
   return (
-    <S.Button aria-label={`${ariaLabelText}-버튼`} onClick={clickEvent}>
-      <img src={src} alt={`${category}-button`} />
+    <S.Button aria-label={ariaLabelText} onClick={clickEvent}>
+      <img src={src} alt={`${ariaLabelText}-icon`} />
     </S.Button>
   );
 }

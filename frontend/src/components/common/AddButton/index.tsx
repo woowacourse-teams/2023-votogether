@@ -10,7 +10,7 @@ interface AddButtonProps {
  */
 export default function AddButton({ size, clickEvent }: AddButtonProps) {
   return (
-    <S.Button size={size} aria-label="더하기 버튼" onClick={clickEvent}>
+    <S.Button size={size} aria-label="더하기" onClick={clickEvent}>
       +
     </S.Button>
   );

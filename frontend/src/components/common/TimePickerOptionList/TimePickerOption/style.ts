@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 export const TimeBox = styled.div`
   width: 33.3%;
   height: 100px;
+  border: 1px solid white;
 
   background-color; #F2F2F2;
 

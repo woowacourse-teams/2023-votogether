@@ -14,28 +14,12 @@ export const Container = styled.div`
   top: 0;
 
   padding: 0 80px;
-`;
-
-export const Button = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  background-color: rgba(0, 0, 0, 0);
-
-  height: 50%;
 
   & :first-child {
-    border-radius: 5px;
+    height: 70%;
+
+    & :last-child {
+      height: 40%;
+    }
   }
-
-  & :last-child {
-    height: 60%;
-  }
-
-  cursor: pointer;
-`;
-
-export const Img = styled.img`
-  height: 100%;
 `;

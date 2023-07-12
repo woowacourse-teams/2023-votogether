@@ -23,7 +23,7 @@ export const Select: Story = {
         isPreview={true}
         text="자유를 찾게 냅둔다"
         peopleCount={2}
-        percent={20}
+        percent={70.9}
         isSelected={true}
         isVoted={true}
       />

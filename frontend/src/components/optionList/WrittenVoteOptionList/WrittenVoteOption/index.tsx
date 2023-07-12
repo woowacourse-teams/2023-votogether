@@ -25,7 +25,7 @@ export default function WrittenVoteOption({
   imageUrl,
 }: WrittenVoteOptionProps) {
   return (
-    <S.Container aria-label={text} isSelected={isSelected} onClick={handleVoteClick}>
+    <S.Container isSelected={isSelected} onClick={handleVoteClick}>
       {!isPreview && imageUrl && <S.Image src={imageUrl} alt={text} />}
       {isPreview ? (
         <S.PreviewContent>{text}</S.PreviewContent>
@@ -39,7 +39,7 @@ export default function WrittenVoteOption({
           </S.ProgressContainer>
           <S.TextContainer>
             <S.PeopleText>{peopleCount}명</S.PeopleText>
-            <S.PercentText>({percent.toFixed(0)}%)</S.PercentText>
+            <S.PercentText>({percent.toFixed(1)}%)</S.PercentText>
           </S.TextContainer>
         </>
       )}

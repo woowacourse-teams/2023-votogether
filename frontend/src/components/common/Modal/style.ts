@@ -1,5 +1,13 @@
 import { styled } from 'styled-components';
 
+const modalSize: {
+  [key: string]: string;
+} = {
+  sm: '290px',
+  md: '590px',
+  lg: '700px',
+};
+
 export const All = styled.div`
   display: flex;
   justify-content: center;
@@ -25,7 +33,7 @@ export const Container = styled.div<{ size: string }>`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: ${props => (props.size === 'sm' ? '290px' : '700px')};
+  width: ${props => modalSize[props.size]};
   height: 290px;
   border-radius: 12px;
   border: 2px solid #f6f6f6;

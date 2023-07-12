@@ -2,12 +2,19 @@ import React from 'react';
 
 import * as S from './style';
 
-interface OptionUploadImageButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+interface OptionUploadImageButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  labelId: number;
+}
 
-export default function OptionUploadImageButton({ ...rest }: OptionUploadImageButtonProps) {
+export default function OptionUploadImageButton({
+  labelId,
+  ...rest
+}: OptionUploadImageButtonProps) {
+  const id = labelId.toString();
+
   return (
     <S.Container>
-      <S.Label htmlFor="uploadImage" aria-label="선택지 이미지 업로드 버튼" title="이미지 업로드">
+      <S.Label htmlFor={id} aria-label="선택지 이미지 업로드 버튼" title="이미지 업로드">
         <S.Icon xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path
             fillRule="evenodd"
@@ -16,7 +23,7 @@ export default function OptionUploadImageButton({ ...rest }: OptionUploadImageBu
           />
         </S.Icon>
       </S.Label>
-      <S.FileInput id="uploadImage" type="file" accept="image/*" {...rest} />
+      <S.FileInput id={id} type="file" accept="image/*" {...rest} />
     </S.Container>
   );
 }

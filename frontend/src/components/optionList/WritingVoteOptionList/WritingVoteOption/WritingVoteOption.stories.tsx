@@ -12,6 +12,10 @@ type Story = StoryObj<typeof WritingVoteOption>;
 export const IsDeletable: Story = {
   render: () => (
     <WritingVoteOption
+      handleDeleteOptionClick={() => {}}
+      handleRemoveImageClick={() => {}}
+      handleUploadImageChange={() => {}}
+      optionId={Math.floor(Math.random() * 100000)}
       text="방학 때 강릉으로  강아지와 기차여행을 하려했지
   만 장마가 와서 취소했어요. 여행을 별로 좋"
       isDeletable={true}
@@ -22,6 +26,10 @@ export const IsDeletable: Story = {
 export const IsNotDeletable: Story = {
   render: () => (
     <WritingVoteOption
+      handleDeleteOptionClick={() => {}}
+      handleRemoveImageClick={() => {}}
+      handleUploadImageChange={() => {}}
+      optionId={Math.floor(Math.random() * 100000)}
       text="방학 때 강릉으로  강아지와 기차여행을 하려했지
   만 장마가 와서 취소했어요. 여행을 별로 좋"
       isDeletable={false}
@@ -32,6 +40,10 @@ export const IsNotDeletable: Story = {
 export const ShowImage: Story = {
   render: () => (
     <WritingVoteOption
+      handleDeleteOptionClick={() => {}}
+      handleRemoveImageClick={() => {}}
+      handleUploadImageChange={() => {}}
+      optionId={Math.floor(Math.random() * 100000)}
       text="방학 때 강릉으로  강아지와 기차여행을 하려했지
   만 장마가 와서 취소했어요. 여행을 별로 좋"
       isDeletable={true}

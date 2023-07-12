@@ -5,3 +5,8 @@ export const Container = styled.ul`
   flex-direction: column;
   gap: 20px;
 `;
+
+export const AddButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;

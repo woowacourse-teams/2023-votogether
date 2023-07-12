@@ -33,15 +33,19 @@ public class PostOption extends BaseEntity {
     @Column(length = 50, nullable = false)
     private String content;
 
+    @Column(length = 100)
+    private String imageUrl;
+
     @Builder
-    private PostOption(
+    public PostOption(
             final Post post,
             final Integer sequence,
-            final String content
+            final String content,
+            final String imageUrl
     ) {
         this.post = post;
         this.sequence = sequence;
         this.content = content;
+        this.imageUrl = imageUrl;
     }
-
 }

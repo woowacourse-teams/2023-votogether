@@ -3,6 +3,7 @@ package com.votogether.domain.post.entity;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,26 +30,31 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(length = 100, nullable = false)
-    private String title;
-
-    @Column(length = 1000, nullable = false)
-    private String content;
+    @Embedded
+    private PostBody postBody;
 
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
 
+    @Embedded
+    private PostCategories postCategories;
+
+    @Embedded
+    private PostOptions postOptions;
+
     @Builder
-    private Post(
+    public Post(
             final Member member,
-            final String title,
-            final String content,
-            final LocalDateTime deadline
-    ) {
+            final PostBody postBody,
+            final LocalDateTime deadline,
+            final PostCategories postCategories,
+            final PostOptions postOptions
+            ) {
         this.member = member;
-        this.title = title;
-        this.content = content;
+        this.postBody = postBody;
         this.deadline = deadline;
+        this.postCategories = postCategories;
+        this.postOptions = postOptions;
     }
 
 }

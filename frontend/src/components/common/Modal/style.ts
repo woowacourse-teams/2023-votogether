@@ -1,7 +1,5 @@
 import { styled } from 'styled-components';
 
-import { ModalContainerProps } from '.';
-
 export const All = styled.div`
   display: flex;
   justify-content: center;
@@ -18,7 +16,7 @@ export const Backdrop = styled.div`
   background: rgba(0, 0, 0, 0.35);
 `;
 
-export const Container = styled.div<ModalContainerProps>`
+export const Container = styled.div<{ size: string }>`
   display: grid;
   grid-template-rows: 1fr 6fr;
 

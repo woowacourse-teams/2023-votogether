@@ -4,13 +4,11 @@ import { ModalSizeType } from '@type/modalSize';
 
 import * as S from './style';
 
-export interface ModalProps {
+interface ModalProps {
   onModalClose: Dispatch<React.SetStateAction<boolean>>;
   children: React.JSX.Element;
   size: ModalSizeType;
 }
-
-export type ModalContainerProps = Pick<ModalProps, 'size'>;
 
 export default function Modal({ onModalClose, children, size }: ModalProps) {
   const BackDropRef = useRef<HTMLDivElement>(null);

@@ -20,11 +20,14 @@ export const Default = () => {
     setIsOpen(true);
   };
 
+  const closeModal = () => {
+    if (isOpen === true) setIsOpen(false);
+  };
   return (
     <>
       <button onClick={openModal}>Open Modal</button>
       {isOpen && (
-        <Modal size="sm" onModalClose={setIsOpen}>
+        <Modal size="sm" onModalClose={closeModal}>
           <p>This is Default Modal</p>
         </Modal>
       )}
@@ -39,11 +42,15 @@ export const Wide = () => {
     setIsOpen(true);
   };
 
+  const closeModal = () => {
+    if (isOpen === true) setIsOpen(false);
+  };
+
   return (
     <>
       <button onClick={openModal}>Open Modal</button>
       {isOpen && (
-        <Modal size="lg" onModalClose={setIsOpen}>
+        <Modal size="lg" onModalClose={closeModal}>
           <p>This is Default Modal</p>
         </Modal>
       )}
@@ -66,7 +73,7 @@ export const WithCloseButton = () => {
     <>
       <button onClick={openModal}>Open Modal</button>
       {isOpen && (
-        <Modal size="sm" onModalClose={setIsOpen}>
+        <Modal size="sm" onModalClose={closeModal}>
           <>
             <S.Header>
               <p>Modal Title</p>

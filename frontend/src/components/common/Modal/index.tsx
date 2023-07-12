@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, Dispatch } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { ModalSizeType } from '@type/modalSize';
 
 import * as S from './style';
 
 interface ModalProps {
-  onModalClose: Dispatch<React.SetStateAction<boolean>>;
+  onModalClose: () => void;
   children: React.JSX.Element;
   size: ModalSizeType;
 }
@@ -13,21 +13,17 @@ interface ModalProps {
 export default function Modal({ onModalClose, children, size }: ModalProps) {
   const BackDropRef = useRef<HTMLDivElement>(null);
 
-  const closeModal = () => {
-    onModalClose(false);
-  };
-
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (e.target === BackDropRef.current) {
-        closeModal();
+        onModalClose();
       }
     };
 
     document.addEventListener('click', handler);
 
     return () => document.removeEventListener('click', handler);
-  }, [BackDropRef, closeModal]);
+  }, [BackDropRef, onModalClose]);
 
   return (
     <S.All>

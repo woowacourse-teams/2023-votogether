@@ -2,7 +2,7 @@ import React, { useEffect, useRef, Dispatch } from 'react';
 
 import * as S from './style';
 
-export interface TimePickerOptionProps {
+interface TimePickerOptionProps {
   handlePickTime: Dispatch<React.SetStateAction<number>>;
   time: number;
   timeUnit: number;

@@ -9,7 +9,7 @@ export default function TimePickerOptionList() {
   const [minute, setMinute] = useState(0);
 
   return (
-    <>
+    <S.Wrapper>
       <S.Container>
         <TimePickerOption time={day} timeUnit={3} handlePickTime={setDay} />
         <TimePickerOption time={hour} timeUnit={24} handlePickTime={setHour} />
@@ -20,6 +20,6 @@ export default function TimePickerOptionList() {
         <p>{hour}시</p>
         <p>{minute}분</p> 후 마감
       </S.PickedTimeText>
-    </>
+    </S.Wrapper>
   );
 }

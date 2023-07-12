@@ -11,7 +11,7 @@ interface WritingVoteOptionProps {
   imageUrl?: string;
 }
 
-const Container = styled.div`
+const Container = styled.li`
   display: flex;
   gap: 10px;
 `;
@@ -21,6 +21,7 @@ const OptionContainer = styled.div`
   flex-direction: column;
   align-items: center;
 
+  width: 100%;
   padding: 20px;
   border-radius: 4px;
 
@@ -30,11 +31,14 @@ const OptionContainer = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   justify-content: space-between;
+
+  width: 100%;
 `;
 
 const ContentTextArea = styled.textarea`
-  border: 1px solid black;
+  width: 100%;
   margin-right: 10px;
+  padding: 8px;
 
   font-size: 1.3rem;
   line-height: 2.4rem;
@@ -75,7 +79,12 @@ export default function WritingVoteOption({ text, isDeletable, imageUrl }: Writi
       )}
       <OptionContainer>
         <ContentContainer>
-          <ContentTextArea rows={5} />
+          <ContentTextArea
+            value={text}
+            placeholder="내용을 입력해주세요."
+            rows={2}
+            maxLength={50}
+          />
           {!imageUrl && <OptionUploadImageButton />}
         </ContentContainer>
         {imageUrl && (

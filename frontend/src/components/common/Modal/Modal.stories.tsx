@@ -51,7 +51,7 @@ export const Wide = () => {
       <button onClick={openModal}>Open Modal</button>
       {isOpen && (
         <Modal size="lg" onModalClose={closeModal}>
-          <p>This is Default Modal</p>
+          <p>This is Wide Modal</p>
         </Modal>
       )}
     </>

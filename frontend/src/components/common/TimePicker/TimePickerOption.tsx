@@ -3,12 +3,16 @@ import React, { useEffect, useRef, Dispatch } from 'react';
 import * as S from './style';
 
 export interface TimePickerOptionProps {
-  pickTime: Dispatch<React.SetStateAction<number>>;
+  handlePickTime: Dispatch<React.SetStateAction<number>>;
   time: number;
   timeUnit: number;
 }
 
-export default function TimePickerOption({ pickTime, time, timeUnit }: TimePickerOptionProps) {
+export default function TimePickerOption({
+  handlePickTime,
+  time,
+  timeUnit,
+}: TimePickerOptionProps) {
   const timeBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,7 +23,7 @@ export default function TimePickerOption({ pickTime, time, timeUnit }: TimePicke
         const centerHourIndex = Math.floor((timeBox.scrollTop + timeBox.clientHeight / 2) / 50);
 
         if (centerHourIndex >= 0 && centerHourIndex < timeBox.children.length) {
-          pickTime(centerHourIndex);
+          handlePickTime(centerHourIndex);
         }
       }
     };

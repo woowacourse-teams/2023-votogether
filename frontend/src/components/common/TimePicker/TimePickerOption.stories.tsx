@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 
 import { useState } from 'react';
 
@@ -10,14 +10,13 @@ const meta: Meta<typeof TimePickerOption> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof TimePickerOption>;
 
 export const Default = () => {
   const [hour, setHour] = useState(0);
 
   return (
     <>
-      <TimePickerOption time={hour} timeUnit={24} pickTime={setHour} />
+      <TimePickerOption time={hour} timeUnit={24} handlePickTime={setHour} />
       <p>시간 단위: {hour}</p>
     </>
   );
@@ -31,9 +30,9 @@ export const MultipleOption = () => {
   return (
     <>
       <S.Wrapper>
-        <TimePickerOption time={day} timeUnit={3} pickTime={setDay} />
-        <TimePickerOption time={hour} timeUnit={24} pickTime={setHour} />
-        <TimePickerOption time={minute} timeUnit={60} pickTime={setMinute} />
+        <TimePickerOption time={day} timeUnit={3} handlePickTime={setDay} />
+        <TimePickerOption time={hour} timeUnit={24} handlePickTime={setHour} />
+        <TimePickerOption time={minute} timeUnit={60} handlePickTime={setMinute} />
       </S.Wrapper>
       <S.PickedTimeText>
         <p>{day}일</p>

@@ -90,7 +90,7 @@ export const WithCloseButton = () => {
   );
 };
 
-export const Header = styled.div`
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
   alignt-items: center;
@@ -103,7 +103,7 @@ export const Header = styled.div`
   font-weight: bold;
 `;
 
-export const Body = styled.div`
+const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -114,13 +114,13 @@ export const Body = styled.div`
   font-size: 1.4rem;
 `;
 
-export const Description = styled.div`
+const Description = styled.div`
   color: gray;
 
   font-size: 1.2rem;
 `;
 
-export const CloseButton = styled.button`
+const CloseButton = styled.button`
   width: 20px;
   height: 20px;
 `;

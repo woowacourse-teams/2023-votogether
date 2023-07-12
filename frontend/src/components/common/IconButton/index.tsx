@@ -35,7 +35,7 @@ export default function IconButton({ category, ...rest }: IconButtonProps) {
 
   return (
     <S.Button aria-label={ariaLabelText} {...rest}>
-      <img src={src} alt={`${ariaLabelText}-icon`} />
+      <img src={src} alt={`${ariaLabelText} 버튼`} />
     </S.Button>
   );
 }

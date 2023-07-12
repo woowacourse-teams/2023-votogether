@@ -35,38 +35,3 @@ export const Container = styled.div<{ size: string }>`
 
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 `;
-
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  alignt-items: center;
-
-  width: 100%;
-  border-bottom: 1px solid #f6f6f6;
-  padding: 10px;
-
-  font-size: 1.5rem;
-  font-weight: bold;
-`;
-
-export const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  gap: 5px;
-
-  padding: 10px;
-
-  font-size: 1.4rem;
-`;
-
-export const Description = styled.div`
-  color: gray;
-
-  font-size: 1.2rem;
-`;
-
-export const CloseButton = styled.button`
-  width: 20px;
-  height: 20px;
-`;

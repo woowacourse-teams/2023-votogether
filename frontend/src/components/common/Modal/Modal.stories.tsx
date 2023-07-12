@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 
 import { useState } from 'react';
 
-import * as S from './style';
+import { styled } from 'styled-components';
 
 import Modal from '.';
 
@@ -11,7 +11,6 @@ const meta: Meta<typeof Modal> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Modal>;
 
 export const Default = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +22,7 @@ export const Default = () => {
   const closeModal = () => {
     if (isOpen === true) setIsOpen(false);
   };
+
   return (
     <>
       <button onClick={openModal}>Open Modal</button>
@@ -88,4 +88,46 @@ export const WithCloseButton = () => {
       )}
     </>
   );
+};
+
+export const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  alignt-items: center;
+
+  width: 100%;
+  border-bottom: 1px solid #f6f6f6;
+  padding: 10px;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+`;
+
+export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 5px;
+
+  padding: 10px;
+
+  font-size: 1.4rem;
+`;
+
+export const Description = styled.div`
+  color: gray;
+
+  font-size: 1.2rem;
+`;
+
+export const CloseButton = styled.button`
+  width: 20px;
+  height: 20px;
+`;
+
+const S = {
+  Header,
+  Body,
+  Description,
+  CloseButton,
 };

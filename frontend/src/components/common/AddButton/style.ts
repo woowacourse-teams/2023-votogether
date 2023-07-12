@@ -6,25 +6,23 @@ interface ButtonProps {
   size: Size;
 }
 
-const buttonSize = {
-  sm: '25px',
-  md: '40px',
-  lg: '60px',
+const size = {
+  sm: { button: '25px', font: '13px' },
+  md: { button: '40px', font: '30px' },
+  lg: { button: '60px', font: '50px' },
 };
 
 export const Button = styled.button<ButtonProps>`
   display: block;
 
-  width: ${props =>
-    props.size === 'lg' ? buttonSize.lg : props.size === 'md' ? buttonSize.md : buttonSize.sm};
-  height: ${props =>
-    props.size === 'lg' ? buttonSize.lg : props.size === 'md' ? buttonSize.md : buttonSize.sm};
+  width: ${props => size[props.size].button};
+  height: ${props => size[props.size].button};
   border-radius: 50%;
 
   background-color: #ff7877;
   color: #ffffff;
 
-  font-size: ${props => (props.size === 'lg' ? '50px' : props.size === 'md' ? '30px' : '13px')};
+  font-size: ${props => size[props.size].font};
 
   cursor: pointer;
 `;

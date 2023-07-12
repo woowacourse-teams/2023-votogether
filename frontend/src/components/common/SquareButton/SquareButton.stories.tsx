@@ -11,17 +11,9 @@ export default meta;
 type Story = StoryObj<typeof SquareButton>;
 
 export const color_blank: Story = {
-  render: () => (
-    <SquareButton theme="blank" clickEvent={() => {}}>
-      확 인
-    </SquareButton>
-  ),
+  render: () => <SquareButton theme="blank">확 인</SquareButton>,
 };
 
 export const color_fill: Story = {
-  render: () => (
-    <SquareButton theme="fill" clickEvent={() => {}}>
-      버 튼
-    </SquareButton>
-  ),
+  render: () => <SquareButton theme="fill">버 튼</SquareButton>,
 };

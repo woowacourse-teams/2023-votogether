@@ -10,13 +10,13 @@ export default meta;
 type Story = StoryObj<typeof AddButton>;
 
 export const size_S: Story = {
-  render: () => <AddButton size="S" clickEvent={() => {}} />,
+  render: () => <AddButton size="sm" />,
 };
 
 export const size_M: Story = {
-  render: () => <AddButton size="M" clickEvent={() => {}} />,
+  render: () => <AddButton size="md" />,
 };
 
 export const size_L: Story = {
-  render: () => <AddButton size="L" clickEvent={() => {}} />,
+  render: () => <AddButton size="lg" />,
 };

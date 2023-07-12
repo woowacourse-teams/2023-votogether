@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
-import { styled } from 'styled-components';
-
+import * as S from './style';
 import WritingVoteOption from './WritingVoteOption';
 
 interface WritingVoteOptionType {
@@ -12,27 +11,31 @@ interface WritingVoteOptionType {
 
 interface WritingVoteOptionListProps {
   optionList: WritingVoteOptionType[];
+  handleAddOptionClick: () => void;
+  handleDeleteOptionClick: (optionId: number) => void;
+  handleRemoveImageClick: (optionId: number) => void;
+  handleUploadImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Container = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+const MINIMUM_COUNT = 2;
+const MAXIMUM_COUNT = 5;
 
-export default function WritingVoteOptionList({ optionList }: WritingVoteOptionListProps) {
-  const isDeletable = optionList.length > 2;
+export default function WritingVoteOptionList() {
+  const [optionList, setOpitonList] = useState<WritingVoteOptionType[]>([]);
+  const isDeletable = optionList.length > MINIMUM_COUNT;
+
   return (
-    <Container>
+    <S.Container>
       {optionList.map(optionItem => (
         <WritingVoteOption
           key={optionItem.id}
           isDeletable={isDeletable}
           text={optionItem.text}
+          handleDeleteOptionClick={() => {}}
           imageUrl={optionItem.imageUrl}
         />
       ))}
-      {optionList.length < 5 && <button>더하기</button>}
-    </Container>
+      {optionList.length < MAXIMUM_COUNT && <button>더하기</button>}
+    </S.Container>
   );
 }

@@ -44,7 +44,13 @@ const MOCK_MIN_VOTE_OPTION = [
 export const MaxCountOptionList: Story = {
   render: () => (
     <ListWrapper>
-      <WritingVoteOptionList optionList={MOCK_MAX_VOTE_OPTION} />
+      <WritingVoteOptionList
+        handleAddOptionClick={() => {}}
+        handleDeleteOptionClick={() => {}}
+        handleRemoveImageClick={() => {}}
+        handleUploadImageChange={() => {}}
+        optionList={MOCK_MAX_VOTE_OPTION}
+      />
     </ListWrapper>
   ),
 };
@@ -52,7 +58,13 @@ export const MaxCountOptionList: Story = {
 export const MinCountOptionList: Story = {
   render: () => (
     <ListWrapper>
-      <WritingVoteOptionList optionList={MOCK_MIN_VOTE_OPTION} />
+      <WritingVoteOptionList
+        handleAddOptionClick={() => {}}
+        handleDeleteOptionClick={() => {}}
+        handleRemoveImageClick={() => {}}
+        handleUploadImageChange={() => {}}
+        optionList={MOCK_MIN_VOTE_OPTION}
+      />
     </ListWrapper>
   ),
 };

@@ -30,6 +30,9 @@ export const Time = styled.div<TimeProps>`
   height: 50px;
 
   background: ${props => (props.isPicked ? '#F2F2F2' : '#FFFFFF')};
+
+  font-size: 1.3rem;
+  font-weight: ${props => (props.isPicked ? 'bold' : 'light')};
 `;
 
 export const Wrapper = styled.div`

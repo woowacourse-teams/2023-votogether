@@ -17,7 +17,7 @@ const INIT_OPTION_LIST = [
 ];
 
 export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = INIT_OPTION_LIST) => {
-  const [optionList, setOptionList] = useState<WritingVoteOptionType[]>(initialOptionList);
+  const [optionList, setOptionList] = useState(initialOptionList);
 
   const addOption = () => {
     if (optionList.length >= MAX_COUNT) return;

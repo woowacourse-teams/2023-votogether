@@ -27,8 +27,8 @@ export const ContentContainer = styled.div`
 
 export const ContentTextArea = styled.textarea`
   width: 100%;
-  padding: 8px;
   height: 90px;
+  padding: 8px;
 
   font-size: 1.3rem;
   line-height: 2.4rem;
@@ -75,8 +75,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-height: 24px;
 width: 24px;
+height: 24px;
 border-radius: 50%;
 
 background-color: #bebebe;

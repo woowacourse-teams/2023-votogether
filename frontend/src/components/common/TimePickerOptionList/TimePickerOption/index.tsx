@@ -19,28 +19,24 @@ export default function TimePickerOption({
   useEffect(() => {
     const timeBox = timeBoxRef.current;
 
-    const handleScroll = () => {
-      if (timeBox) {
-        const pickedTimeIndex = Math.floor(
-          (timeBox.scrollTop + timeBox.clientHeight / 2) / timeBoxChildHeight
-        );
+    if (!timeBox) return;
 
-        if (pickedTimeIndex >= 0 && pickedTimeIndex < timeBox.children.length) {
-          handlePickTime(pickedTimeIndex);
-        }
+    const handleScroll = () => {
+      const pickedTimeIndex = Math.floor(
+        (timeBox.scrollTop + timeBox.clientHeight / 2) / timeBoxChildHeight
+      );
+
+      if (pickedTimeIndex >= 0 && pickedTimeIndex < timeUnit) {
+        handlePickTime(pickedTimeIndex);
       }
     };
 
-    if (timeBox) {
-      timeBox.addEventListener('scroll', handleScroll);
-    }
+    timeBox.addEventListener('scroll', handleScroll);
 
     return () => {
-      if (timeBox) {
-        timeBox.removeEventListener('scroll', handleScroll);
-      }
+      timeBox.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [handlePickTime, timeUnit]);
 
   return (
     <S.TimeBox ref={timeBoxRef}>

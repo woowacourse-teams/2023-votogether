@@ -10,7 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +41,9 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
 
+    @OneToMany(mappedBy = "post")
+    private List<PostOption> postOptions = new ArrayList<>();
+
     @Builder
     private Post(
             final Member member,
@@ -49,6 +55,13 @@ public class Post extends BaseEntity {
         this.title = title;
         this.content = content;
         this.deadline = deadline;
+    }
+
+    public PostOption findPostOptionById(final Long PostOptionId) {
+        return postOptions.stream()
+                .filter(postOption -> postOption.getId().equals(PostOptionId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다."));
     }
 
 }

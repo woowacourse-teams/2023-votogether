@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { Dispatch } from 'react';
 
 import * as S from './style';
 import TimePickerOption from './TimePickerOption';
 
-export default function TimePickerOptionList() {
-  const [time, setTime] = useState({
-    day: 0,
-    hour: 0,
-    minute: 0,
-  });
+interface Time {
+  day: number;
+  hour: number;
+  minute: number;
+}
+
+interface TimePickerOptionListProps {
+  time: Time;
+  setTime: Dispatch<React.SetStateAction<Time>>;
+}
+
+export default function TimePickerOptionList({ time, setTime }: TimePickerOptionListProps) {
   const { day, hour, minute } = time;
 
   const updateTime = (option: string, updatedTime: number) => {

@@ -1,4 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
+
+import { useState } from 'react';
 
 import TimePickerOptionList from '.';
 
@@ -7,8 +9,17 @@ const meta: Meta<typeof TimePickerOptionList> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof TimePickerOptionList>;
 
-export const Default: Story = {
-  render: () => <TimePickerOptionList />,
+export const Default = () => {
+  const [time, setTime] = useState({
+    day: 0,
+    hour: 0,
+    minute: 0,
+  });
+
+  return (
+    <>
+      <TimePickerOptionList time={time} setTime={setTime} />
+    </>
+  );
 };

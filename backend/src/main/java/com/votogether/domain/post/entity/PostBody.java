@@ -23,4 +23,5 @@ public class PostBody {
         this.title = title;
         this.content = content;
     }
+
 }

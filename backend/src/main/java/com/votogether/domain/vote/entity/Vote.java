@@ -38,4 +38,8 @@ public class Vote extends BaseEntity {
         this.postOption = postOption;
     }
 
+    public void changePostOption(PostOption postOption) {
+        this.postOption = postOption;
+    }
+
 }

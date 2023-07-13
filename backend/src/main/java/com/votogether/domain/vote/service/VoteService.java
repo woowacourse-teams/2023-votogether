@@ -2,6 +2,7 @@ package com.votogether.domain.vote.service;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
+import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
@@ -29,6 +30,22 @@ public class VoteService {
         member.plusPoint(1);
 
         voteRepository.save(vote);
+    }
+
+    public void changeVote(
+            final Member member,
+            final Long postId,
+            final Long originPostOptionId,
+            final Long newPostOptionId
+    ) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        Vote vote = voteRepository.findByMemberIdAndPostOptionId(
+                member.getId(), originPostOptionId);
+        PostOption postOption = post.findPostOptionById(newPostOptionId);
+
+        vote.changePostOption(postOption);
     }
 
 }

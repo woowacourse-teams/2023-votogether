@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, Dispatch } from 'react';
 
+import { timeBoxChildHeight } from './constants';
 import * as S from './style';
 
 interface TimePickerOptionProps {
@@ -16,19 +17,19 @@ export default function TimePickerOption({
   const timeBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const timeBox = timeBoxRef.current;
+
     const handleScroll = () => {
-      const timeBox = timeBoxRef.current;
-      // clientHeight는 항상 100px로 고정되어 있음 (TimeBox의 높이가 100px 이기 때문)
       if (timeBox) {
-        const pickedTimeIndex = Math.floor((timeBox.scrollTop + timeBox.clientHeight / 2) / 50);
+        const pickedTimeIndex = Math.floor(
+          (timeBox.scrollTop + timeBox.clientHeight / 2) / timeBoxChildHeight
+        );
 
         if (pickedTimeIndex >= 0 && pickedTimeIndex < timeBox.children.length) {
           handlePickTime(pickedTimeIndex);
         }
       }
     };
-
-    const timeBox = timeBoxRef.current;
 
     if (timeBox) {
       timeBox.addEventListener('scroll', handleScroll);

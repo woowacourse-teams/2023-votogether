@@ -1,19 +1,27 @@
-import React, { useEffect, useRef, Dispatch } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { timeBoxChildHeight } from './constants';
 import * as S from './style';
 
 interface TimePickerOptionProps {
-  handlePickTime: Dispatch<React.SetStateAction<number>>;
-  time: number;
-  timeUnit: number;
+  handlePickTime: (option: string, updatedTime: number) => void;
+  currentTime: number;
+  option: string;
 }
+
+const unit: { [key: string]: number } = {
+  day: 3,
+  hour: 24,
+  minute: 60,
+};
 
 export default function TimePickerOption({
   handlePickTime,
-  time,
-  timeUnit,
+  currentTime,
+  option,
 }: TimePickerOptionProps) {
+  // const dueDate = useContext()
+  const timeUnit = unit[option];
   const timeBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +35,7 @@ export default function TimePickerOption({
       );
 
       if (pickedTimeIndex >= 0 && pickedTimeIndex < timeUnit) {
-        handlePickTime(pickedTimeIndex);
+        handlePickTime(option, pickedTimeIndex);
       }
     };
 
@@ -41,7 +49,7 @@ export default function TimePickerOption({
   return (
     <S.TimeBox ref={timeBoxRef}>
       {Array.from({ length: timeUnit }).map((_, index) => (
-        <S.Time key={index} isPicked={time === index}>
+        <S.Time key={index} isPicked={currentTime === index}>
           {index}
         </S.Time>
       ))}

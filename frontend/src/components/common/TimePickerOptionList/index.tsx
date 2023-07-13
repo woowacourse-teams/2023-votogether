@@ -4,16 +4,31 @@ import * as S from './style';
 import TimePickerOption from './TimePickerOption';
 
 export default function TimePickerOptionList() {
-  const [day, setDay] = useState(0);
-  const [hour, setHour] = useState(0);
-  const [minute, setMinute] = useState(0);
+  const [time, setTime] = useState({
+    day: 0,
+    hour: 0,
+    minute: 0,
+  });
+  const { day, hour, minute } = time;
+
+  const updateTime = (option: string, updatedTime: number) => {
+    setTime(prev => ({
+      ...prev,
+      [option]: updatedTime,
+    }));
+  };
 
   return (
     <S.Wrapper>
       <S.Container>
-        <TimePickerOption time={day} timeUnit={3} handlePickTime={setDay} />
-        <TimePickerOption time={hour} timeUnit={24} handlePickTime={setHour} />
-        <TimePickerOption time={minute} timeUnit={60} handlePickTime={setMinute} />
+        {Object.entries(time).map(([key, value]) => (
+          <TimePickerOption
+            key={key}
+            currentTime={value}
+            option={key}
+            handlePickTime={updateTime}
+          ></TimePickerOption>
+        ))}
       </S.Container>
       <S.PickedTimeText>
         <p>{day}일</p>

@@ -1,12 +1,7 @@
-import Home from '@pages/Home';
+import { RouterProvider } from 'react-router-dom';
 
-import Example from '@components/Example';
+import router from '@routes/router';
 
-const App = () => (
-  <>
-    <Example />
-    <Home />
-  </>
-);
+const App = () => <RouterProvider router={router} />;
 
 export default App;

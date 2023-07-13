@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import OptionCancelButton from './OptionCancelButton';
 import OptionUploadImageButton from './OptionUploadImageButton';
@@ -14,6 +14,8 @@ interface WritingVoteOptionProps {
   imageUrl?: string;
 }
 
+const MAX_WRITING_LENGTH = 50;
+
 export default function WritingVoteOption({
   optionId,
   text,
@@ -23,6 +25,18 @@ export default function WritingVoteOption({
   handleUploadImageChange,
   imageUrl,
 }: WritingVoteOptionProps) {
+  const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.target;
+    const standard = value.length;
+
+    if (standard === MAX_WRITING_LENGTH) {
+      event.target.setCustomValidity(`선택지 내용은 ${MAX_WRITING_LENGTH}자까지 입력 가능합니다.`);
+      event.target.reportValidity();
+      return;
+    } else {
+      event.target.setCustomValidity('');
+    }
+  };
   return (
     <S.Container>
       {isDeletable && (
@@ -34,9 +48,10 @@ export default function WritingVoteOption({
         <S.ContentContainer>
           <S.ContentTextArea
             defaultValue={text}
+            onChange={handleTextChange}
             placeholder="내용을 입력해주세요."
             rows={2}
-            maxLength={50}
+            maxLength={MAX_WRITING_LENGTH}
           />
           {!imageUrl && (
             <OptionUploadImageButton labelId={optionId} onChange={handleUploadImageChange} />

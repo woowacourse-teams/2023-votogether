@@ -33,9 +33,9 @@ export default function WritingVoteOption({
       event.target.setCustomValidity(`선택지 내용은 ${MAX_WRITING_LENGTH}자까지 입력 가능합니다.`);
       event.target.reportValidity();
       return;
-    } else {
-      event.target.setCustomValidity('');
     }
+
+    event.target.setCustomValidity('');
   };
   return (
     <S.Container>

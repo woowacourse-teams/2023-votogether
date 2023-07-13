@@ -60,7 +60,12 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
 
     const file = files[0];
 
+    event.target.setCustomValidity('');
+
     if (file.size > MAX_FILE_SIZE) {
+      event.target.setCustomValidity('사진의 사이즈가 5MB를 초과합니다.');
+      event.target.reportValidity();
+
       return console.error('사진의 사이즈가 5MB를 초과합니다.');
     }
 

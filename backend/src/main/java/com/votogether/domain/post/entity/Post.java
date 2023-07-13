@@ -64,4 +64,8 @@ public class Post extends BaseEntity {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다."));
     }
 
+    public boolean isWriter(Member member) {
+        return this.member == member;
+    }
+
 }

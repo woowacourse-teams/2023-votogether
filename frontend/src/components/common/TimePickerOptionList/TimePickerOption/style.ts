@@ -5,7 +5,7 @@ export const TimeBox = styled.div`
   height: 100px;
   border: 1px solid white;
 
-  background-color; #F2F2F2;
+  background-color: #f2f2f2;
 
   text-align: center;
 

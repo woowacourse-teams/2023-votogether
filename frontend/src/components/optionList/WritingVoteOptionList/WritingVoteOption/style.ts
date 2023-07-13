@@ -28,6 +28,7 @@ export const ContentContainer = styled.div`
 export const ContentTextArea = styled.textarea`
   width: 100%;
   padding: 8px;
+  height: 90px;
 
   font-size: 1.3rem;
   line-height: 2.4rem;
@@ -35,6 +36,12 @@ export const ContentTextArea = styled.textarea`
   background-color: #e6e6e6;
 
   resize: none;
+
+  @media (min-width: 960px) {
+    height: 120px;
+
+    font-size: 1.6rem;
+  }
 `;
 
 export const ImageContainer = styled.div`
@@ -74,5 +81,20 @@ border-radius: 50%;
 
 background-color: #bebebe;
 
-cursor: pointer;;
+cursor: pointer;
+
+@media (min-width: 960px) {
+ width:28px;
+ height:28px;
+}
+`;
+
+export const IconImage = styled.img`
+  width: 14px;
+  height: 14px;
+
+  @media (min-width: 960px) {
+    width: 16px;
+    height: 16px;
+  }
 `;

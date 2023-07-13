@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { ButtonCssText } from '../style';
+import { ButtonCssText, IconImage } from '../style';
 
 export const Container = styled.div`
   width: 24px;
@@ -15,3 +15,5 @@ export const Label = styled.label`
 export const FileInput = styled.input`
   visibility: hidden;
 `;
+
+export const Image = styled(IconImage)``;

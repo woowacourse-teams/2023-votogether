@@ -17,7 +17,7 @@ export default function OptionUploadImageButton({
   return (
     <S.Container>
       <S.Label htmlFor={id} aria-label="선택지 이미지 업로드 버튼" title="이미지 업로드">
-        <img src={photoIcon} width={14} height={14} alt="" />
+        <S.Image src={photoIcon} alt="" />
       </S.Label>
       <S.FileInput id={id} type="file" accept="image/*" {...rest} />
     </S.Container>

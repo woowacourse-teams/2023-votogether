@@ -9,7 +9,7 @@ interface OptionCancelButtonProps extends React.ButtonHTMLAttributes<HTMLButtonE
 export default function OptionCancelButton({ ...rest }: OptionCancelButtonProps) {
   return (
     <S.Container aria-label="삭제" type="button" {...rest}>
-      <img src={xMarkIcon} width={14} height={14} alt="" />
+      <S.Image src={xMarkIcon} alt="" />
     </S.Container>
   );
 }

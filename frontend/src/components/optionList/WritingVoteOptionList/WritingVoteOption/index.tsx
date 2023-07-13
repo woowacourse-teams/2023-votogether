@@ -51,7 +51,6 @@ export default function WritingVoteOption({
             defaultValue={text}
             onChange={handleTextChange}
             placeholder="내용을 입력해주세요."
-            rows={2}
             maxLength={MAX_WRITING_LENGTH}
           />
           {!imageUrl && (

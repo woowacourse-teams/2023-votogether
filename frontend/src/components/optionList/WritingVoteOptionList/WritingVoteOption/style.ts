@@ -62,3 +62,17 @@ export const CancelButtonWrapper = styled.div`
   width: 34px;
   height: 100%;
 `;
+
+export const ButtonCssText = `
+display: flex;
+justify-content: center;
+align-items: center;
+
+height: 24px;
+width: 24px;
+border-radius: 50%;
+
+background-color: #bebebe;
+
+cursor: pointer;;
+`;

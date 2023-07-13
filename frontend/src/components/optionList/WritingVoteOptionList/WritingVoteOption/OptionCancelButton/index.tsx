@@ -1,5 +1,7 @@
 import React from 'react';
 
+import xMarkIcon from '@assets/x_mark_white.svg';
+
 import * as S from './style';
 
 interface OptionCancelButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
@@ -7,15 +9,7 @@ interface OptionCancelButtonProps extends React.ButtonHTMLAttributes<HTMLButtonE
 export default function OptionCancelButton({ ...rest }: OptionCancelButtonProps) {
   return (
     <S.Container aria-label="삭제" type="button" {...rest}>
-      <S.Icon
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={3}
-        stroke="currentColor"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </S.Icon>
+      <img src={xMarkIcon} width={14} height={14} alt="" />
     </S.Container>
   );
 }

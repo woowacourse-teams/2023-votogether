@@ -5,14 +5,14 @@ import photoIcon from '@assets/photo_white.svg';
 import * as S from './style';
 
 interface OptionUploadImageButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  labelId: number;
+  optionId: number;
 }
 
 export default function OptionUploadImageButton({
-  labelId,
+  optionId,
   ...rest
 }: OptionUploadImageButtonProps) {
-  const id = labelId.toString();
+  const id = optionId.toString();
 
   return (
     <S.Container>

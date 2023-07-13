@@ -16,7 +16,7 @@ const MINIMUM_COUNT = 2;
 const MAXIMUM_COUNT = 5;
 
 export default function WritingVoteOptionList({ initialOptionList }: WritingVoteOptionListProps) {
-  const { optionList, addOption, deleteOption, removeImage, handleUploadImageChange } =
+  const { optionList, addOption, deleteOption, removeImage, handleUploadImage } =
     useWritingOption(initialOptionList);
   const isDeletable = optionList.length > MINIMUM_COUNT;
 
@@ -30,8 +30,8 @@ export default function WritingVoteOptionList({ initialOptionList }: WritingVote
           text={optionItem.text}
           handleDeleteOptionClick={() => deleteOption(optionItem.id)}
           handleRemoveImageClick={() => removeImage(optionItem.id)}
-          handleUploadImageChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            handleUploadImageChange(event, optionItem.id)
+          handleUploadImage={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleUploadImage(event, optionItem.id)
           }
           imageUrl={optionItem.imageUrl}
         />

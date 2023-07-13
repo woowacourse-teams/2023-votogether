@@ -50,10 +50,7 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     setOptionList(updatedOptionList);
   };
 
-  const handleUploadImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    optionId: number
-  ) => {
+  const handleUploadImage = (event: React.ChangeEvent<HTMLInputElement>, optionId: number) => {
     const { files } = event.target;
 
     if (!files) return;
@@ -63,10 +60,10 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     event.target.setCustomValidity('');
 
     if (file.size > MAX_FILE_SIZE) {
-      event.target.setCustomValidity('사진의 사이즈가 5MB를 초과합니다.');
+      event.target.setCustomValidity('사진의 용량은 5MB 이하만 가능합니다.');
       event.target.reportValidity();
 
-      return console.error('사진의 사이즈가 5MB를 초과합니다.');
+      return;
     }
 
     const reader = new FileReader();
@@ -86,5 +83,5 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     reader.readAsDataURL(file);
   };
 
-  return { optionList, addOption, deleteOption, removeImage, handleUploadImageChange };
+  return { optionList, addOption, deleteOption, removeImage, handleUploadImage };
 };

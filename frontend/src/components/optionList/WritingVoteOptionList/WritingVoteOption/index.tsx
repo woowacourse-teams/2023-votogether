@@ -10,7 +10,7 @@ interface WritingVoteOptionProps {
   isDeletable: boolean;
   handleDeleteOptionClick: () => void;
   handleRemoveImageClick: () => void;
-  handleUploadImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   imageUrl?: string;
 }
 
@@ -22,7 +22,7 @@ export default function WritingVoteOption({
   isDeletable,
   handleDeleteOptionClick,
   handleRemoveImageClick,
-  handleUploadImageChange,
+  handleUploadImage,
   imageUrl,
 }: WritingVoteOptionProps) {
   const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -37,6 +37,7 @@ export default function WritingVoteOption({
 
     event.target.setCustomValidity('');
   };
+
   return (
     <S.Container>
       <S.CancelButtonWrapper>
@@ -54,7 +55,7 @@ export default function WritingVoteOption({
             maxLength={MAX_WRITING_LENGTH}
           />
           {!imageUrl && (
-            <OptionUploadImageButton labelId={optionId} onChange={handleUploadImageChange} />
+            <OptionUploadImageButton optionId={optionId} onChange={handleUploadImage} />
           )}
         </S.ContentContainer>
         {imageUrl && (

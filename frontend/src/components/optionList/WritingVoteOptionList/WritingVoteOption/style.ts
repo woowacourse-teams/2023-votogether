@@ -57,3 +57,8 @@ export const ImageCancelWrapper = styled.div`
   top: 10px;
   right: 10px;
 `;
+
+export const CancelButtonWrapper = styled.div`
+  width: 34px;
+  height: 100%;
+`;

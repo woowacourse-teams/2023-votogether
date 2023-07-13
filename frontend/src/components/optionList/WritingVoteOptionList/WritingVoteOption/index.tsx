@@ -39,11 +39,11 @@ export default function WritingVoteOption({
   };
   return (
     <S.Container>
-      {isDeletable && (
-        <div title="선택지 삭제하기">
-          <OptionCancelButton onClick={handleDeleteOptionClick} />
-        </div>
-      )}
+      <S.CancelButtonWrapper>
+        {isDeletable && (
+          <OptionCancelButton title="선택지 삭제하기" onClick={handleDeleteOptionClick} />
+        )}
+      </S.CancelButtonWrapper>
       <S.OptionContainer>
         <S.ContentContainer>
           <S.ContentTextArea

@@ -4,10 +4,14 @@ import { useState } from 'react';
 
 import { styled } from 'styled-components';
 
+import SquareButton from '../SquareButton';
+import TimePickerOptionList from '../TimePickerOptionList';
+
 import Modal from '.';
 
 const meta: Meta<typeof Modal> = {
   component: Modal,
+  decorators: [storyFn => <div style={{ width: '100px', height: '50px' }}>{storyFn()}</div>],
 };
 
 export default meta;
@@ -25,7 +29,9 @@ export const Default = () => {
 
   return (
     <>
-      <button onClick={openModal}>Open Modal</button>
+      <SquareButton onClick={openModal} theme="blank">
+        Open Modal
+      </SquareButton>
       {isOpen && (
         <Modal size="sm" onModalClose={closeModal}>
           <p>This is Default Modal</p>
@@ -48,7 +54,9 @@ export const Wide = () => {
 
   return (
     <>
-      <button onClick={openModal}>Open Modal</button>
+      <SquareButton onClick={openModal} theme="blank">
+        Open Modal
+      </SquareButton>
       {isOpen && (
         <Modal size="lg" onModalClose={closeModal}>
           <p>This is Wide Modal</p>
@@ -71,7 +79,9 @@ export const WithCloseButton = () => {
 
   return (
     <>
-      <button onClick={openModal}>Open Modal</button>
+      <SquareButton onClick={openModal} theme="blank">
+        Open Modal
+      </SquareButton>
       {isOpen && (
         <Modal size="sm" onModalClose={closeModal}>
           <>
@@ -82,6 +92,53 @@ export const WithCloseButton = () => {
             <S.Body>
               <S.Description>This is Description</S.Description>
               This is Content
+            </S.Body>
+          </>
+        </Modal>
+      )}
+    </>
+  );
+};
+
+export const WithTimePicker = () => {
+  const [time, setTime] = useState({
+    day: 0,
+    hour: 1,
+    minute: 3,
+  });
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    if (isOpen === true) setIsOpen(false);
+  };
+
+  return (
+    <>
+      <SquareButton onClick={openModal} theme="blank">
+        Open Modal
+      </SquareButton>
+      {isOpen && (
+        <Modal size="sm" onModalClose={closeModal}>
+          <>
+            <S.Header>
+              <h3>마감 시간 선택</h3>
+              <S.CloseButton onClick={closeModal}>X</S.CloseButton>
+            </S.Header>
+            <S.Body>
+              <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
+              <TimePickerOptionList time={time} setTime={setTime} />
+              <S.ButtonWrapper>
+                <SquareButton onClick={openModal} theme="blank">
+                  초기화
+                </SquareButton>
+                <SquareButton onClick={openModal} theme="fill">
+                  저장
+                </SquareButton>
+              </S.ButtonWrapper>
             </S.Body>
           </>
         </Modal>
@@ -125,9 +182,19 @@ const CloseButton = styled.button`
   height: 20px;
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  width: 90%;
+  height: 40px;
+`;
+
 const S = {
   Header,
   Body,
   Description,
   CloseButton,
+  ButtonWrapper,
 };

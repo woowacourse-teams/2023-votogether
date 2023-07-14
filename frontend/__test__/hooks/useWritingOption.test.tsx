@@ -43,7 +43,7 @@ describe('useWritingOption 훅을 테스트 한다.', () => {
     expect(optionList[0].imageUrl).toBe('');
   });
 
-  test('초기 값으로 투표 선택지를 설정할 수 있어야 한다.(수정 기능 시 이용)', () => {
+  test('기존 데이터가 있는 경우 기존 데이터가 선택지의 초기 값으로 존재해야 한다.', () => {
     const { result } = renderHook(() => useWritingOption(MOCK_MIN_VOTE_OPTION));
 
     const { optionList } = result.current;

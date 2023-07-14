@@ -13,7 +13,7 @@ export default meta;
 export const Default = () => {
   const [time, setTime] = useState({
     day: 0,
-    hour: 0,
+    hour: 5,
     minute: 0,
   });
 

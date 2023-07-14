@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-import { timeBoxChildHeight } from './constants';
+import { TIME_UNIT, TIMEBOX_CHILD_HEIGHT } from './constants';
 import * as S from './style';
 
 interface TimePickerOptionProps {
@@ -9,20 +9,22 @@ interface TimePickerOptionProps {
   option: string;
 }
 
-const unit: { [key: string]: number } = {
-  day: 3,
-  hour: 24,
-  minute: 60,
-};
-
 export default function TimePickerOption({
   handlePickTime,
   currentTime,
   option,
 }: TimePickerOptionProps) {
-  // const dueDate = useContext()
-  const timeUnit = unit[option];
+  const timeUnit = TIME_UNIT[option];
   const timeBoxRef = useRef<HTMLDivElement>(null);
+  const timeBoxChildRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timeBox = timeBoxRef.current;
+    const timeBoxChild = timeBoxChildRef.current;
+    if (!timeBox || !timeBoxChild) return;
+
+    timeBox.scrollTop = timeBoxChild.offsetHeight * currentTime;
+  }, []);
 
   useEffect(() => {
     const timeBox = timeBoxRef.current;
@@ -31,7 +33,7 @@ export default function TimePickerOption({
 
     const handleScroll = () => {
       const pickedTimeIndex = Math.floor(
-        (timeBox.scrollTop + timeBox.clientHeight / 2) / timeBoxChildHeight
+        (timeBox.scrollTop + timeBox.clientHeight / 2) / TIMEBOX_CHILD_HEIGHT
       );
 
       if (pickedTimeIndex >= 0 && pickedTimeIndex < timeUnit) {
@@ -49,7 +51,11 @@ export default function TimePickerOption({
   return (
     <S.TimeBox ref={timeBoxRef}>
       {Array.from({ length: timeUnit }).map((_, index) => (
-        <S.Time key={index} isPicked={currentTime === index}>
+        <S.Time
+          key={index}
+          ref={index === currentTime ? timeBoxChildRef : null}
+          isPicked={currentTime === index}
+        >
           {index}
         </S.Time>
       ))}

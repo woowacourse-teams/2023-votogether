@@ -25,11 +25,18 @@ public class VoteService {
     ) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        validateDeadLine(post);
 
         Vote vote = member.vote(post, postOptionId);
         member.plusPoint(1);
 
         voteRepository.save(vote);
+    }
+
+    private void validateDeadLine(Post post) {
+        if (post.isClosed()) {
+            throw new IllegalStateException("게시글이 마감되었습니다.");
+        }
     }
 
     public void changeVote(
@@ -40,6 +47,7 @@ public class VoteService {
     ) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        validateDeadLine(post);
 
         Vote vote = voteRepository.findByMemberIdAndPostOptionId(
                 member.getId(), originPostOptionId);

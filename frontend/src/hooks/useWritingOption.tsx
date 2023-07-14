@@ -68,6 +68,9 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
 
     const reader = new FileReader();
 
+    // readAsDataURL 메서드를 통해 파일을 모두 읽고 나면 reader의 loadend 이벤트에서 이미지 미리보기 결과를 확인할 수 있습니다.
+    reader.readAsDataURL(file);
+
     reader.onloadend = () => {
       const updatedOptionList = optionList.map(optionItem => {
         if (optionItem.id === optionId) {
@@ -79,8 +82,6 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
 
       setOptionList(updatedOptionList);
     };
-
-    reader.readAsDataURL(file);
   };
 
   return { optionList, addOption, deleteOption, removeImage, handleUploadImage };

@@ -11,6 +11,8 @@ export const Button = styled.button<{ content: Content }>`
 
   height: 100%;
 
+  cursor: pointer;
+
   & :first-child {
     height: 100%;
     border-radius: 5px;
@@ -19,6 +21,4 @@ export const Button = styled.button<{ content: Content }>`
   & :last-child {
     height: ${props => props.content !== 'icon' && '60%'};
   }
-
-  cursor: pointer;
 `;

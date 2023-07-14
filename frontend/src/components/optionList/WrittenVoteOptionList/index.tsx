@@ -1,15 +1,7 @@
-import React from 'react';
+import { WrittenVoteOptionType } from '@type/post';
 
 import * as S from './style';
 import WrittenVoteOption from './WrittenVoteOption';
-
-interface WrittenVoteOptionType {
-  id: number;
-  text: string;
-  peopleCount: number;
-  percent: number;
-  imageUrl?: string;
-}
 
 interface WrittenVoteOptionListProps {
   isPreview: boolean;

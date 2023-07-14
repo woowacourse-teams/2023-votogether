@@ -39,7 +39,14 @@ public class Vote extends BaseEntity {
     }
 
     public void changePostOption(PostOption postOption) {
+        validatePostOption(postOption);
         this.postOption = postOption;
+    }
+
+    private void validatePostOption(PostOption postOption) {
+        if (!this.postOption.isFromSamePost(postOption)) {
+            throw new IllegalArgumentException("같은 게시글이어야 합니다.");
+        }
     }
 
 }

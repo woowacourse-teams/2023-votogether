@@ -3,7 +3,7 @@ import LogoButton from '../LogoButton';
 
 import * as S from './style';
 
-export default function NarrowOriginHeader() {
+export default function NarrowMainHeader() {
   return (
     <S.Container>
       <IconButton category="category" />

@@ -4,7 +4,6 @@ import com.votogether.domain.category.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
 
-
 @Getter
 public class CategoryResponse {
 

@@ -8,11 +8,11 @@ export const Container = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
-export const Bar = styled.div<{ progress: number; isSelected: boolean }>`
+export const Bar = styled.div<{ progress: number; $isSelected: boolean }>`
   border-radius: 4px;
 
-  width: ${({ progress }) => `${progress}%`};
+  width: ${({ progress }) => `${progress}%`};ㄴ
   height: 8px;
 
-  background-color: ${({ isSelected }) => (isSelected ? '#ff7877' : '#9F9F9F')};
+  background-color: ${({ $isSelected }) => ($isSelected ? '#ff7877' : '#9F9F9F')};
 `;

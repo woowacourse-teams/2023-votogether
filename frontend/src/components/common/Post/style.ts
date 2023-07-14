@@ -22,7 +22,7 @@ export const Category = styled.span`
   }
 `;
 
-export const Title = styled.p<{ isPreview: boolean }>`
+export const Title = styled.p<{ $isPreview: boolean }>`
   display: -webkit-box;
 
   font-size: 2rem;
@@ -31,7 +31,7 @@ export const Title = styled.p<{ isPreview: boolean }>`
 
   overflow: hidden;
 
-  -webkit-line-clamp: ${props => props.isPreview && '2'};
+  -webkit-line-clamp: ${props => props.$isPreview && '2'};
   -webkit-box-orient: vertical;
 
   @media (min-width: 576px) {
@@ -59,7 +59,7 @@ export const Wrapper = styled.div`
 
 export const Time = styled.span``;
 
-export const Content = styled.p<{ isPreview: boolean }>`
+export const Content = styled.p<{ $isPreview: boolean }>`
   display: -webkit-box;
 
   font-size: 1.4rem;
@@ -70,7 +70,7 @@ export const Content = styled.p<{ isPreview: boolean }>`
 
   overflow: hidden;
 
-  -webkit-line-clamp: ${props => props.isPreview && '10'};
+  -webkit-line-clamp: ${props => props.$isPreview && '10'};
   -webkit-box-orient: vertical;
 
   @media (min-width: 576px) {

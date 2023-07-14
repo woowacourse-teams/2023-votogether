@@ -25,7 +25,7 @@ export default function WrittenVoteOption({
   imageUrl,
 }: WrittenVoteOptionProps) {
   return (
-    <S.Container isSelected={isSelected} onClick={handleVoteClick}>
+    <S.Container $isSelected={isSelected} onClick={handleVoteClick}>
       {!isPreview && imageUrl && <S.Image src={imageUrl} alt={text} />}
       {isPreview ? (
         <S.PreviewContent>{text}</S.PreviewContent>

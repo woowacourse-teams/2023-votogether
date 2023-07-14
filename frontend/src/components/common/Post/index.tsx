@@ -13,7 +13,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   return (
     <S.Container>
       <S.Category>{postInfo.category.map(category => category.name).join(' | ')}</S.Category>
-      <S.Title isPreview={isPreview}>{postInfo.title}</S.Title>
+      <S.Title $isPreview={isPreview}>{postInfo.title}</S.Title>
       <S.Wrapper>
         <S.Writer>{postInfo.writer.nick}</S.Writer>
         <S.Wrapper>
@@ -21,7 +21,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
           <S.Time>{postInfo.endTime}</S.Time>
         </S.Wrapper>
       </S.Wrapper>
-      <S.Content isPreview={isPreview}>{postInfo.content}</S.Content>
+      <S.Content $isPreview={isPreview}>{postInfo.content}</S.Content>
       <WrittenVoteOptionList
         selectedOptionId={postInfo.voteInfo.selectedOptionId}
         handleVoteClick={() => {}}

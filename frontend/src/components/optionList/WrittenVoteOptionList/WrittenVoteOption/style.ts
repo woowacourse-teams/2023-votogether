@@ -1,11 +1,11 @@
 import { styled } from 'styled-components';
 
-export const Container = styled.li<{ isSelected: boolean }>`
+export const Container = styled.li<{ $isSelected: boolean }>`
   display: flex;
   flex-direction: column;
 
-  border: ${({ isSelected }) =>
-    isSelected ? '2px solid #ff7877' : '1px solid rgba(0, 0, 0, 0.1)'};
+  border: ${({ $isSelected }) =>
+    $isSelected ? '2px solid #ff7877' : '1px solid rgba(0, 0, 0, 0.1)'};
   border-radius: 4px;
   padding: 15px 20px;
 

@@ -10,7 +10,7 @@ interface ProgressBarProps {
 export default function ProgressBar({ percent, isSelected }: ProgressBarProps) {
   return (
     <S.Container>
-      <S.Bar progress={percent} isSelected={isSelected} />
+      <S.Bar progress={percent} $isSelected={isSelected} />
     </S.Container>
   );
 }

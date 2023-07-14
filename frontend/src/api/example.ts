@@ -1,31 +1,31 @@
-// 게시물을 가져오는 예시 코드
+// 장바구니을 가져오는 예시 코드
 
 /**
- * 게시물 get: api/posts
- * 게시물 post: api/posts
+ * 게시물 get: api/cart
+ * 게시물 Cart: api/cart
  */
 import { deleteFetch, getFetch, patchFetch, postFetch, putFetch } from '@utils/fetch';
 
-interface Post {
+export interface Cart {
   id: number;
   text: string;
 }
 
-export const getPostList = async () => {
-  return await getFetch<Post[]>('api/posts');
+export const getCartList = async () => {
+  return await getFetch<Cart[]>('api/cart');
 };
 
-export const createPost = async () => {
-  return await postFetch<Post, { id: number }>('api/posts', { id: 12, text: '생성' });
+export const createCart = async () => {
+  return await postFetch<Cart, { id: number }>('api/cart', { id: 12, text: '생성' });
 };
 
-export const editPost = async () => {
-  return await putFetch<Post, { id: number }>('api/posts', { id: 12, text: '생성' });
+export const editCart = async () => {
+  return await putFetch<Cart, { id: number }>('api/cart', { id: 12, text: '생성' });
 };
 
 // remove or delete
-export const deletePost = async () => {
-  return await deleteFetch('api/posts/1');
+export const deleteCart = async () => {
+  return await deleteFetch('api/cart/1');
 };
 
 /**
@@ -33,5 +33,5 @@ export const deletePost = async () => {
  * patch와 put은 edit을 접두어로 붙힌다. 어색하다면 바꾼다.
  */
 export const editOption = async () => {
-  return await patchFetch('api/posts/1/213123');
+  return await patchFetch('api/cart/1/213123');
 };

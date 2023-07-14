@@ -116,10 +116,19 @@ export const WithTimePicker = () => {
     if (isOpen === true) setIsOpen(false);
   };
 
+  const handleResetBUtton = () => {
+    const updatedTime = {
+      day: 0,
+      hour: 0,
+      minute: 0,
+    };
+    setTime(updatedTime);
+  };
+
   return (
     <>
       <SquareButton onClick={openModal} theme="blank">
-        Open Modal
+        사용자 지정
       </SquareButton>
       {isOpen && (
         <Modal size="sm" onModalClose={closeModal}>
@@ -132,11 +141,8 @@ export const WithTimePicker = () => {
               <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
               <TimePickerOptionList time={time} setTime={setTime} />
               <S.ButtonWrapper>
-                <SquareButton onClick={openModal} theme="blank">
+                <SquareButton onClick={handleResetBUtton} theme="blank">
                   초기화
-                </SquareButton>
-                <SquareButton onClick={openModal} theme="fill">
-                  저장
                 </SquareButton>
               </S.ButtonWrapper>
             </S.Body>
@@ -164,10 +170,10 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  gap: 5px;
+  align-items: center;
+  gap: 10px;
 
-  padding: 10px;
-
+  padding: 10px 0;
   font-size: 1.4rem;
 `;
 
@@ -184,10 +190,10 @@ const CloseButton = styled.button`
 
 const ButtonWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
 
-  width: 90%;
+  width: 50%;
   height: 40px;
 `;
 

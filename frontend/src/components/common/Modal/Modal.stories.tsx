@@ -117,12 +117,15 @@ export const WithTimePicker = () => {
   };
 
   const handleResetBUtton = () => {
-    const updatedTime = {
-      day: 0,
-      hour: 0,
-      minute: 0,
-    };
-    setTime(updatedTime);
+    if (confirm('정말 초기화하시겠습니까?')) {
+      const updatedTime = {
+        day: 0,
+        hour: 0,
+        minute: 0,
+      };
+      setTime(updatedTime);
+      closeModal();
+    }
   };
 
   return (

@@ -22,5 +22,16 @@ export const GlobalStyle = createGlobalStyle`
     font-family: sans-serif;
     font-size: 62.5%;
   }
-  
+
+  /* Colors *****************************************/
+  /* Fonts *****************************************/
+  :root {
+    --primary-color: #FA7D7C;
+    --white: #FFFFFF;
+
+    --text-title: 600 20px/24px san-serif;
+    --text-subtitle: 600 18px/28px san-serif;
+    --text-body: 400 16px/24px san-serif;
+    --text-caption: 400 14px/20px san-serif;
+  }  
 `;

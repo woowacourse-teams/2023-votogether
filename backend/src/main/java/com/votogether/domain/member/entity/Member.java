@@ -61,8 +61,9 @@ public class Member extends BaseEntity {
     }
 
     public static Member createKakaoMember(final KakaoMemberResponse response) {
+        final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
-                .nickname("익명의 손님")
+                .nickname("익명의 손님" + nicknameNumberGenerator.generate())
                 .gender(Gender.valueOf(response.getKakaoAccount().getGender()))
                 .birthDate(response.getKakaoAccount().getBirthday())
                 .socialType(SocialType.KAKAO)

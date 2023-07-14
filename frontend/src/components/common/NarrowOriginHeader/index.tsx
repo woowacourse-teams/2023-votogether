@@ -7,7 +7,7 @@ export default function NarrowOriginHeader() {
   return (
     <S.Container>
       <IconButton category="category" />
-      <LogoButton inclusion="icon" />
+      <LogoButton content="icon" />
       <IconButton category="search" />
     </S.Container>
   );

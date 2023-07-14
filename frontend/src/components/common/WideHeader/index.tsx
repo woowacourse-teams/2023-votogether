@@ -6,7 +6,7 @@ import * as S from './style';
 export default function WideHeader() {
   return (
     <S.Container>
-      <LogoButton inclusion="full" />
+      <LogoButton content="full" />
       <SearchBar size="sm" />
     </S.Container>
   );

@@ -5,9 +5,9 @@ import votogether from '@assets/projectName.svg';
 
 import * as S from './style';
 
-type Inclusion = 'icon' | 'text' | 'full';
+type Content = 'icon' | 'text' | 'full';
 
-const inclusionCategory: { [key in Inclusion]: { name: string; url: string } } = {
+const contentCategory: { [key in Content]: { name: string; url: string } } = {
   icon: {
     name: '로고 아이콘',
     url: logo,
@@ -23,16 +23,16 @@ const inclusionCategory: { [key in Inclusion]: { name: string; url: string } } =
 };
 
 interface LogoButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  inclusion: Inclusion;
+  content: Content;
 }
 
-export default function LogoButton({ inclusion, ...rest }: LogoButtonProps) {
-  const src = inclusionCategory[inclusion].url;
-  const ariaLabelText = inclusionCategory[inclusion].name;
+export default function LogoButton({ content, ...rest }: LogoButtonProps) {
+  const src = contentCategory[content].url;
+  const ariaLabelText = contentCategory[content].name;
 
-  if (inclusion === 'full') {
+  if (content === 'full') {
     return (
-      <S.Button inclusion={inclusion} aria-label={ariaLabelText} {...rest}>
+      <S.Button content={content} aria-label={ariaLabelText} {...rest}>
         <img src={logo} alt="로고 아이콘" />
         <img src={votogether} alt="VoTogether" />
       </S.Button>
@@ -40,7 +40,7 @@ export default function LogoButton({ inclusion, ...rest }: LogoButtonProps) {
   }
 
   return (
-    <S.Button inclusion={inclusion} aria-label={ariaLabelText} {...rest}>
+    <S.Button content={content} aria-label={ariaLabelText} {...rest}>
       <img src={src} alt="로고 아이콘" />
     </S.Button>
   );

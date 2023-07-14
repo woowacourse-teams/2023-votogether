@@ -1,8 +1,8 @@
 import { styled } from 'styled-components';
 
-type Inclusion = 'icon' | 'text' | 'full';
+type Content = 'icon' | 'text' | 'full';
 
-export const Button = styled.button<{ inclusion: Inclusion }>`
+export const Button = styled.button<{ content: Content }>`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -17,7 +17,7 @@ export const Button = styled.button<{ inclusion: Inclusion }>`
   }
 
   & :last-child {
-    height: ${props => props.inclusion !== 'icon' && '60%'};
+    height: ${props => props.content !== 'icon' && '60%'};
   }
 
   cursor: pointer;

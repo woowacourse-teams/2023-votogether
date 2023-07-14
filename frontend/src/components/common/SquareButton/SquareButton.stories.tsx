@@ -10,10 +10,10 @@ const meta: Meta<typeof SquareButton> = {
 export default meta;
 type Story = StoryObj<typeof SquareButton>;
 
-export const color_blank: Story = {
+export const ColorBlank: Story = {
   render: () => <SquareButton theme="blank">확 인</SquareButton>,
 };
 
-export const color_fill: Story = {
+export const ColorFill: Story = {
   render: () => <SquareButton theme="fill">버 튼</SquareButton>,
 };

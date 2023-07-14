@@ -9,14 +9,14 @@ const meta: Meta<typeof AddButton> = {
 export default meta;
 type Story = StoryObj<typeof AddButton>;
 
-export const size_S: Story = {
+export const SizeS: Story = {
   render: () => <AddButton size="sm" />,
 };
 
-export const size_M: Story = {
+export const sizeM: Story = {
   render: () => <AddButton size="md" />,
 };
 
-export const size_L: Story = {
+export const sizeL: Story = {
   render: () => <AddButton size="lg" />,
 };

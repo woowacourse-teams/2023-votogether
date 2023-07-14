@@ -42,4 +42,6 @@ export const Input = styled.input`
 
 export const Button = styled.button`
   background-color: rgba(0, 0, 0, 0);
+
+  cursor: pointer;
 `;

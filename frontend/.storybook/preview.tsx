@@ -1,8 +1,17 @@
 import type { Preview } from '@storybook/react';
 
+import { initialize, mswDecorator } from 'msw-storybook-addon';
+
 import { GlobalStyle } from '../src/styles/globalStyle';
 import React from 'react';
+
 import { BrowserRouter } from 'react-router-dom';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+initialize();
+
 
 const preview: Preview = {
   parameters: {
@@ -15,13 +24,21 @@ const preview: Preview = {
     },
   },
   decorators: [
+    mswDecorator,
     Story => (
-      <BrowserRouter>
-        <GlobalStyle />
-        <Story />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <GlobalStyle />
+          <Story />
+        </BrowserRouter>
+      </QueryClientProvider>
     ),
   ],
 };
+
+if (typeof global.process === 'undefined') {
+  const { worker } = require('../src/mocks/worker');
+  worker.start();
+}
 
 export default preview;

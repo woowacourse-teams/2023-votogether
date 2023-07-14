@@ -1,6 +1,7 @@
 const path = require('path');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const DotenvWebpack = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -53,10 +54,11 @@ module.exports = {
       template: './public/index.html',
     }),
     new CleanWebpackPlugin(),
+    new DotenvWebpack(),
   ],
   devtool: 'inline-source-map',
   devServer: {
-    static: './dist',
+    static: 'public',
     hot: true,
     open: true,
   },

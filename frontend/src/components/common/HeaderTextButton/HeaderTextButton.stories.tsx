@@ -9,6 +9,6 @@ const meta: Meta<typeof HeaderTextButton> = {
 export default meta;
 type Story = StoryObj<typeof HeaderTextButton>;
 
-export const defaultButton: Story = {
+export const DefaultButton: Story = {
   render: () => <HeaderTextButton>확 인</HeaderTextButton>,
 };

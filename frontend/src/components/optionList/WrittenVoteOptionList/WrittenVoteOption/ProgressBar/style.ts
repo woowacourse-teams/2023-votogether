@@ -11,7 +11,7 @@ export const Container = styled.div`
 export const Bar = styled.div<{ progress: number; $isSelected: boolean }>`
   border-radius: 4px;
 
-  width: ${({ progress }) => `${progress}%`};ㄴ
+  width: ${({ progress }) => `${progress}%`};
   height: 8px;
 
   background-color: ${({ $isSelected }) => ($isSelected ? '#ff7877' : '#9F9F9F')};

@@ -13,13 +13,13 @@ export default meta;
 type Story = StoryObj<typeof LogoButton>;
 
 export const Icon: Story = {
-  render: () => <LogoButton inclusion="icon" />,
+  render: () => <LogoButton content="icon" />,
 };
 
 export const Text: Story = {
-  render: () => <LogoButton inclusion="text" />,
+  render: () => <LogoButton content="text" />,
 };
 
 export const Full: Story = {
-  render: () => <LogoButton inclusion="full" />,
+  render: () => <LogoButton content="full" />,
 };

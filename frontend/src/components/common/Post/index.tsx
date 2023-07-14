@@ -1,5 +1,7 @@
 import { PostInfo } from '@type/post';
 
+import { changeVotedOption, votePost } from '@api/sua/post';
+
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
 import * as S from './style';
@@ -10,23 +12,36 @@ interface PostProps {
 }
 
 export default function Post({ postInfo, isPreview }: PostProps) {
+  const { postId, category, title, writer, startTime, endTime, content, voteInfo } = postInfo;
+
+  const handleVoteClick = (optionId: number) => {
+    if (voteInfo.selectedOptionId === optionId) return;
+
+    if (voteInfo.selectedOptionId === 0) {
+      votePost(postId, optionId);
+      return;
+    }
+
+    changeVotedOption(postId, voteInfo.selectedOptionId, optionId);
+  };
+
   return (
     <S.Container>
-      <S.Category>{postInfo.category.map(category => category.name).join(' | ')}</S.Category>
-      <S.Title $isPreview={isPreview}>{postInfo.title}</S.Title>
+      <S.Category>{category.map(category => category.name).join(' | ')}</S.Category>
+      <S.Title $isPreview={isPreview}>{title}</S.Title>
       <S.Wrapper>
-        <S.Writer>{postInfo.writer.nick}</S.Writer>
+        <S.Writer>{writer.nick}</S.Writer>
         <S.Wrapper>
-          <S.Time>{postInfo.startTime}</S.Time>
-          <S.Time>{postInfo.endTime}</S.Time>
+          <S.Time>{startTime}</S.Time>
+          <S.Time>{endTime}</S.Time>
         </S.Wrapper>
       </S.Wrapper>
-      <S.Content $isPreview={isPreview}>{postInfo.content}</S.Content>
+      <S.Content $isPreview={isPreview}>{content}</S.Content>
       <WrittenVoteOptionList
-        selectedOptionId={postInfo.voteInfo.selectedOptionId}
-        handleVoteClick={() => {}}
+        selectedOptionId={voteInfo.selectedOptionId}
+        handleVoteClick={handleVoteClick}
         isPreview={isPreview}
-        voteOptionList={postInfo.voteInfo.options}
+        voteOptionList={voteInfo.options}
       />
     </S.Container>
   );

@@ -9,18 +9,18 @@ const meta: Meta<typeof SearchBar> = {
 export default meta;
 type Story = StoryObj<typeof SearchBar>;
 
-export const size_sm: Story = {
+export const SizeSm: Story = {
   render: () => <SearchBar size="sm" />,
 };
 
-export const size_md: Story = {
+export const SizeMd: Story = {
   render: () => <SearchBar size="md" />,
 };
 
-export const size_lg: Story = {
+export const SizeLg: Story = {
   render: () => <SearchBar size="lg" />,
 };
 
-export const size_free: Story = {
+export const SizeFree: Story = {
   render: () => <SearchBar size="free" />,
 };

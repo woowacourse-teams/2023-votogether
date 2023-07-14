@@ -10,7 +10,7 @@ const meta: Meta<typeof NarrowTemplateHeader> = {
 export default meta;
 type Story = StoryObj<typeof NarrowTemplateHeader>;
 
-export const bothSideHeader: Story = {
+export const BothSideHeader: Story = {
   render: () => (
     <NarrowTemplateHeader>
       <div style={{ width: '30px', backgroundColor: 'red' }}>예시</div>
@@ -19,7 +19,7 @@ export const bothSideHeader: Story = {
   ),
 };
 
-export const threeComponentHeader_left: Story = {
+export const ThreeComponentHeaderLeft: Story = {
   render: () => (
     <NarrowTemplateHeader>
       <div style={{ display: 'flex', gap: '20px' }}>
@@ -31,7 +31,7 @@ export const threeComponentHeader_left: Story = {
   ),
 };
 
-export const threeComponentHeader_right: Story = {
+export const ThreeComponentHeaderRight: Story = {
   render: () => (
     <NarrowTemplateHeader>
       <div style={{ width: '30px', backgroundColor: 'red' }}>예시</div>

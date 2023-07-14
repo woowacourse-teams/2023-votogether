@@ -12,14 +12,14 @@ const meta: Meta<typeof LogoButton> = {
 export default meta;
 type Story = StoryObj<typeof LogoButton>;
 
-export const icon: Story = {
+export const Icon: Story = {
   render: () => <LogoButton inclusion="icon" />,
 };
 
-export const text: Story = {
+export const Text: Story = {
   render: () => <LogoButton inclusion="text" />,
 };
 
-export const full: Story = {
+export const Full: Story = {
   render: () => <LogoButton inclusion="full" />,
 };

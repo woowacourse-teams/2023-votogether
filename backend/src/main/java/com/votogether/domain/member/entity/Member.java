@@ -72,13 +72,13 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    private void validateWriter(Post post) {
+    private void validateWriter(final Post post) {
         if (post.isWriter(this)) {
             throw new IllegalArgumentException("자기자신은 투표할 수 없습니다.");
         }
     }
 
-    public void plusPoint(int point) {
+    public void plusPoint(final int point) {
         this.point = this.point + point;
     }
 

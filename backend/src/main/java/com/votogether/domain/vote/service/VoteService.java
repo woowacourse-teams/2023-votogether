@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class VoteService {
 
     public final VoteRepository voteRepository;
@@ -33,7 +33,7 @@ public class VoteService {
         voteRepository.save(vote);
     }
 
-    private void validateDeadLine(Post post) {
+    private void validateDeadLine(final Post post) {
         if (post.isClosed()) {
             throw new IllegalStateException("게시글이 마감되었습니다.");
         }

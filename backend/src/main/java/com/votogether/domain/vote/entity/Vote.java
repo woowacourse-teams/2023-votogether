@@ -15,9 +15,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Entity
 public class Vote extends BaseEntity {
 
     @Id
@@ -38,12 +38,12 @@ public class Vote extends BaseEntity {
         this.postOption = postOption;
     }
 
-    public void changePostOption(PostOption postOption) {
+    public void changePostOption(final PostOption postOption) {
         validatePostOption(postOption);
         this.postOption = postOption;
     }
 
-    private void validatePostOption(PostOption postOption) {
+    private void validatePostOption(final PostOption postOption) {
         if (!this.postOption.isFromSamePost(postOption)) {
             throw new IllegalArgumentException("같은 게시글이어야 합니다.");
         }

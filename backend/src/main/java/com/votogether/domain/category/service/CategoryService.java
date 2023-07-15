@@ -4,7 +4,6 @@ import com.votogether.domain.category.dto.response.CategoryResponse;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,9 @@ public class CategoryService {
     public List<CategoryResponse> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
 
-        return categories.stream().
-                map(CategoryResponse::new).
-                collect(Collectors.toList());
+        return categories.stream()
+                .map(CategoryResponse::new)
+                .toList();
     }
 
 }

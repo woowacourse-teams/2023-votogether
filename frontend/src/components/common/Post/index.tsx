@@ -24,7 +24,10 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       return;
     }
 
-    changeVotedOption(postId, voteInfo.selectedOptionId, newOptionId);
+    changeVotedOption(postId, {
+      originOptionId: voteInfo.selectedOptionId,
+      newOptionId,
+    });
   };
 
   return (

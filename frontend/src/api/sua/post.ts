@@ -6,8 +6,7 @@ export const votePost = async (postId: number, optionId: number) => {
 
 export const changeVotedOption = async (
   postId: number,
-  originOptionId: number,
-  newOptionId: number
+  { originOptionId, newOptionId }: { originOptionId: number; newOptionId: number }
 ) => {
   return await patchFetch(
     `/posts/${postId}/options?source=${originOptionId}&target=${newOptionId}`

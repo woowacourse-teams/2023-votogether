@@ -9,7 +9,7 @@ export interface WrittenVoteOptionType {
 export interface PostInfo {
   postId: number;
   title: string;
-  writer: { id: number; nick: string };
+  writer: { id: number; nickname: string };
   content: string;
   category: { id: number; name: string }[];
   startTime: string;

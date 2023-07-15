@@ -30,7 +30,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       <S.Category>{category.map(category => category.name).join(' | ')}</S.Category>
       <S.Title $isPreview={isPreview}>{title}</S.Title>
       <S.Wrapper>
-        <S.Writer>{writer.nick}</S.Writer>
+        <S.Writer>{writer.nickname}</S.Writer>
         <S.Wrapper>
           <S.Time>{startTime}</S.Time>
           <S.Time>{endTime}</S.Time>

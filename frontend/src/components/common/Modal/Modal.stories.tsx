@@ -24,7 +24,7 @@ export const Default = () => {
   };
 
   const closeModal = () => {
-    if (isOpen === true) setIsOpen(false);
+    setIsOpen(false);
   };
 
   return (
@@ -49,7 +49,7 @@ export const Wide = () => {
   };
 
   const closeModal = () => {
-    if (isOpen === true) setIsOpen(false);
+    setIsOpen(false);
   };
 
   return (
@@ -74,7 +74,7 @@ export const WithCloseButton = () => {
   };
 
   const closeModal = () => {
-    if (isOpen === true) setIsOpen(false);
+    setIsOpen(false);
   };
 
   return (
@@ -113,7 +113,7 @@ export const WithTimePicker = () => {
   };
 
   const closeModal = () => {
-    if (isOpen === true) setIsOpen(false);
+    setIsOpen(false);
   };
 
   const handleResetBUtton = () => {
@@ -159,7 +159,7 @@ export const WithTimePicker = () => {
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  alignt-items: center;
+  align-items: center;
 
   width: 100%;
   border-bottom: 1px solid #f6f6f6;

@@ -24,7 +24,7 @@ class CategoryRepositoryTest {
     CategoryRepository categoryRepository;
 
     @Test
-    @DisplayName("카테코리를 저장한다.")
+    @DisplayName("카테고리를 저장한다.")
     void save() {
         // given
         Category category = Category.builder()
@@ -39,7 +39,7 @@ class CategoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("같은 이름의 카테코리를 저장할 시 에러가 발생한다.")
+    @DisplayName("같은 이름의 카테고리를 저장할 시 에러가 발생한다.")
     void saveButException() {
         // given
         Category category1 = Category.builder()

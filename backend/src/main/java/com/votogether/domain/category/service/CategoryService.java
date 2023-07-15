@@ -18,7 +18,7 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAll();
 
         return categories.stream().
-                map(CategoryResponse::from).
+                map(CategoryResponse::new).
                 collect(Collectors.toList());
     }
 

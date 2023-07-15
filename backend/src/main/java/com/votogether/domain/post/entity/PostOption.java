@@ -48,4 +48,5 @@ public class PostOption extends BaseEntity {
         this.content = content;
         this.imageUrl = imageUrl;
     }
+
 }

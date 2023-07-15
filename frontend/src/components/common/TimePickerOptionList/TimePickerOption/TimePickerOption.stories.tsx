@@ -11,12 +11,23 @@ const meta: Meta<typeof TimePickerOption> = {
 export default meta;
 
 export const Default = () => {
-  const [hour, setHour] = useState(0);
+  const [time, setTime] = useState({
+    day: 0,
+    hour: 5,
+    minute: 0,
+  });
+
+  const updateTime = (option: string, updatedTime: number) => {
+    setTime(prev => ({
+      ...prev,
+      [option]: updatedTime,
+    }));
+  };
 
   return (
     <>
-      <TimePickerOption time={hour} timeUnit={24} handlePickTime={setHour} />
-      <p>시간 단위: {hour}</p>
+      <TimePickerOption currentTime={time.hour} option="hour" handlePickTime={updateTime} />
+      <p>시간 단위: {time.hour}</p>
     </>
   );
 };

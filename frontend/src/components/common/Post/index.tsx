@@ -1,3 +1,5 @@
+import { POST } from 'CONSTATNS';
+
 import { PostInfo } from '@type/post';
 
 import { changeVotedOption, votePost } from '@api/sua/post';
@@ -17,7 +19,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   const handleVoteClick = (newOptionId: number) => {
     if (voteInfo.selectedOptionId === newOptionId) return;
 
-    if (voteInfo.selectedOptionId === 0) {
+    if (voteInfo.selectedOptionId === POST.NOT_VOTE) {
       votePost(postId, newOptionId);
       return;
     }

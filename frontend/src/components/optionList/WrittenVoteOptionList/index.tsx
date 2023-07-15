@@ -1,3 +1,5 @@
+import { POST } from 'CONSTATNS';
+
 import { WrittenVoteOptionType } from '@type/post';
 
 import * as S from './style';
@@ -9,8 +11,6 @@ interface WrittenVoteOptionListProps {
   voteOptionList: WrittenVoteOptionType[];
   handleVoteClick: (newOptionId: number) => void;
 }
-
-const NOT_VOTED = 0;
 
 export default function WrittenVoteOptionList({
   isPreview,
@@ -25,7 +25,7 @@ export default function WrittenVoteOptionList({
           key={voteOption.id}
           {...voteOption}
           isPreview={isPreview}
-          isVoted={selectedOptionId !== NOT_VOTED}
+          isVoted={selectedOptionId !== POST.NOT_VOTE}
           isSelected={selectedOptionId === voteOption.id}
           handleVoteClick={() => handleVoteClick(voteOption.id)}
         />

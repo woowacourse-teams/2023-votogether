@@ -2,16 +2,10 @@ import { Link } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
+import { ProfileCSSText } from '../style';
+
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  padding: 16px 12px;
-  border-radius: 4px;
-
-  font-size: 1.6rem;
-
-  background-color: var(--gray);
+  ${ProfileCSSText}
 `;
 
 export const Badge = styled.span`
@@ -21,7 +15,7 @@ export const Badge = styled.span`
 export const NickName = styled.span`
   margin-bottom: 12px;
 
-  font-size: 2rem;
+  font: var(--text-title);
 
   color: var(--red);
 `;
@@ -41,13 +35,15 @@ export const TextCardLink = styled(Link)`
   flex-direction: column;
 
   text-decoration: none;
+
   color: initial;
 `;
 
 export const TextCardTitle = styled.span`
-  font-size: 1.4rem;
+  font: var(--text-caption);
 `;
 
 export const TextCardContent = styled.span`
-  font-size: 1.2rem;
+  font: var(--text-caption);
+  text-align: center;
 `;

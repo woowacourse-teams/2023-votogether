@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 export const Container = styled.div`
-  font-size: 1.6rem;
+  font: var(--text-body);
 `;
 
 export const TitleContainer = styled.button`
@@ -14,7 +14,7 @@ export const TitleContainer = styled.button`
 `;
 
 export const Title = styled.h4`
-  font-size: 1.6rem;
+  font: var(--text-body);
 `;
 
 export const TriangleImage = styled.img`

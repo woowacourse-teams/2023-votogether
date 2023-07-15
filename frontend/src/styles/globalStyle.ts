@@ -30,6 +30,7 @@ export const GlobalStyle = createGlobalStyle`
     --white: #FFFFFF;
     --gray: #F4F4F4;
     --red: #F51A18;
+    --dark-gray: #929292;
 
     --text-title: 600 20px/24px san-serif;
     --text-subtitle: 600 18px/28px san-serif;

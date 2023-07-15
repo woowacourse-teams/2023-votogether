@@ -124,7 +124,6 @@ export const WithTimePicker = () => {
         minute: 0,
       };
       setTime(updatedTime);
-      closeModal();
     }
   };
 

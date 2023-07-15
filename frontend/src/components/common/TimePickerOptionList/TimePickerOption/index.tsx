@@ -31,6 +31,8 @@ export default function TimePickerOption({
 
     if (!timeBox) return;
 
+    if (currentTime === 0) timeBox.scrollTop = 0;
+
     const handleScroll = () => {
       const pickedTimeIndex = Math.floor(
         (timeBox.scrollTop + timeBox.clientHeight / 2) / TIMEBOX_CHILD_HEIGHT

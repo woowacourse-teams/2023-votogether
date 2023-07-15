@@ -117,7 +117,7 @@ export const WithTimePicker = () => {
   };
 
   const handleResetBUtton = () => {
-    if (confirm('정말 초기화하시겠습니까?')) {
+    if (window.confirm('정말 초기화하시겠습니까?')) {
       const updatedTime = {
         day: 0,
         hour: 0,

@@ -8,6 +8,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { handlers } from '../src/mocks/handlers';
 
 const queryClient = new QueryClient();
 initialize();
@@ -15,6 +16,7 @@ initialize();
 
 const preview: Preview = {
   parameters: {
+    msw: handlers,
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {

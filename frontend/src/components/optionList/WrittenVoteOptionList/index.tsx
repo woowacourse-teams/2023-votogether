@@ -7,7 +7,7 @@ interface WrittenVoteOptionListProps {
   isPreview: boolean;
   selectedOptionId: number;
   voteOptionList: WrittenVoteOptionType[];
-  handleVoteClick: (optionId: number) => void;
+  handleVoteClick: (newOptionId: number) => void;
 }
 
 const NOT_VOTED = 0;

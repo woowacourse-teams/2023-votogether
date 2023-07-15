@@ -14,15 +14,15 @@ interface PostProps {
 export default function Post({ postInfo, isPreview }: PostProps) {
   const { postId, category, title, writer, startTime, endTime, content, voteInfo } = postInfo;
 
-  const handleVoteClick = (optionId: number) => {
-    if (voteInfo.selectedOptionId === optionId) return;
+  const handleVoteClick = (newOptionId: number) => {
+    if (voteInfo.selectedOptionId === newOptionId) return;
 
     if (voteInfo.selectedOptionId === 0) {
-      votePost(postId, optionId);
+      votePost(postId, newOptionId);
       return;
     }
 
-    changeVotedOption(postId, voteInfo.selectedOptionId, optionId);
+    changeVotedOption(postId, voteInfo.selectedOptionId, newOptionId);
   };
 
   return (

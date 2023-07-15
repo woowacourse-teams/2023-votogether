@@ -187,8 +187,14 @@ const Description = styled.div`
 `;
 
 const CloseButton = styled.button`
-  width: 20px;
+  width: 25px;
   height: 20px;
+
+  background: white;
+
+  font-size: 1.6rem;
+
+  cursor: pointer;
 `;
 
 const ButtonWrapper = styled.div`

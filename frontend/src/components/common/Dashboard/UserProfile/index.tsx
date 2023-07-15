@@ -1,33 +1,42 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import { styled } from 'styled-components';
+import { BASE_PATH } from '@constants/path';
 
-export default function UserProfile() {
-  return (
-    <Container>
-      <Badge>[만근자]</Badge>
-      <NickName>우스스</NickName>
-      <UserInfoContainer>
-        <TextCardContainer>
-          <TextCardTitle></TextCardTitle>
-          <TextCardContent></TextCardContent>
-        </TextCardContainer>
-      </UserInfoContainer>
-    </Container>
-  );
+import * as S from './style';
+
+interface UserProfileProps {
+  nickname: string;
+  userPoint: number;
+  postCount: number;
+  voteCount: number;
+  badge?: string;
 }
 
-const Container = styled.div``;
-
-const Badge = styled.span``;
-
-const NickName = styled.span``;
-
-const UserInfoContainer = styled.div``;
-
-const TextCardContainer = styled(Link)``;
-
-const TextCardTitle = styled.span``;
-
-const TextCardContent = styled.span``;
+export default function UserProfile({
+  nickname,
+  userPoint,
+  postCount,
+  voteCount,
+  badge,
+}: UserProfileProps) {
+  return (
+    <S.Container>
+      {badge && <S.Badge>[{badge}]</S.Badge>}
+      <S.NickName>{nickname}</S.NickName>
+      <S.UserInfoContainer>
+        <S.TextCardContainer>
+          <S.TextCardTitle>포인트</S.TextCardTitle>
+          <S.TextCardContent>{userPoint}</S.TextCardContent>
+        </S.TextCardContainer>
+        <S.TextCardLink to={`/${BASE_PATH.USER}/posts`}>
+          <S.TextCardTitle>작성글</S.TextCardTitle>
+          <S.TextCardContent>{postCount}</S.TextCardContent>
+        </S.TextCardLink>
+        <S.TextCardLink to={`/${BASE_PATH.USER}/votes`}>
+          <S.TextCardTitle>투표수</S.TextCardTitle>
+          <S.TextCardContent>{voteCount}</S.TextCardContent>
+        </S.TextCardLink>
+      </S.UserInfoContainer>
+    </S.Container>
+  );
+}

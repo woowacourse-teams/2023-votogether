@@ -2,23 +2,17 @@ import React from 'react';
 
 import { BASE_PATH } from '@constants/path';
 
+import { User } from '@type/user';
+
 import * as S from './style';
 
 interface UserProfileProps {
-  nickname: string;
-  userPoint: number;
-  postCount: number;
-  voteCount: number;
-  badge?: string;
+  userInfo: User;
 }
 
-export default function UserProfile({
-  nickname,
-  userPoint,
-  postCount,
-  voteCount,
-  badge,
-}: UserProfileProps) {
+export default function UserProfile({ userInfo }: UserProfileProps) {
+  const { nickname, userPoint, postCount, voteCount, badge } = userInfo;
+
   return (
     <S.Container>
       {badge && <S.Badge>[{badge}]</S.Badge>}

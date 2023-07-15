@@ -1,5 +1,11 @@
 import React from 'react';
 
+import * as S from './style';
+
+interface DashboardProps {
+  isLoggedIn: boolean;
+}
+
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  return <S.Container></S.Container>;
 }

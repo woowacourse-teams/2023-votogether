@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Category } from '@type/category';
+
 import CategoryToggle from '.';
 
 const meta: Meta<typeof CategoryToggle> = {
@@ -9,7 +11,7 @@ const meta: Meta<typeof CategoryToggle> = {
 export default meta;
 type Story = StoryObj<typeof CategoryToggle>;
 
-const MOCK_CATEGORIES = [
+const MOCK_CATEGORIES: Category[] = [
   { id: 12312, name: '음식', favorite: false },
   { id: 12, name: '연애', favorite: false },
   { id: 13, name: '패션', favorite: false },

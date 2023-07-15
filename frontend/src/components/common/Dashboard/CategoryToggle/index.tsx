@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 
+import { Category } from '@type/category';
+
 import triangleIcon from '@assets/triangle.svg';
 
 import * as S from './style';
 
-export interface CategoryType {
-  id: number;
-  name: string;
-  favorite: boolean;
-}
-
 interface CategoryToggleProps {
   title: string;
-  categories: CategoryType[];
+  categories: Category[];
   handleFavoriteClick: (categoryId: number) => void;
   initialOpen?: boolean;
 }

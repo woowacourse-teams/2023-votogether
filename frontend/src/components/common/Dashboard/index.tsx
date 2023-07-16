@@ -15,11 +15,11 @@ interface DashboardProps {
   selectedCategory?: string;
   handleFavoriteClick: (categoryId: number) => void;
   handleLogoutClick: () => void;
-  user?: User;
+  userInfo?: User;
 }
 
 export default function Dashboard({
-  user,
+  userInfo,
   categoryList,
   selectedCategory,
   handleFavoriteClick,
@@ -30,14 +30,14 @@ export default function Dashboard({
 
   return (
     <S.Container>
-      {user ? <UserProfile userInfo={user} /> : <GuestProfile />}
+      {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
       <S.SelectCategoryWrapper>
         <S.Circle />
         <S.SelectCategoryText>{selectedCategory ? selectedCategory : '전체'}</S.SelectCategoryText>
       </S.SelectCategoryWrapper>
       <S.ContentContainer>
         <S.CategoryToggleContainer>
-          {user && (
+          {userInfo && (
             <CategoryToggle
               title="즐겨찾기"
               categoryList={favoriteCategory}
@@ -51,7 +51,7 @@ export default function Dashboard({
           />
         </S.CategoryToggleContainer>
       </S.ContentContainer>
-      {user && (
+      {userInfo && (
         <S.ButtonWrapper>
           <SquareButton theme="blank" onClick={handleLogoutClick}>
             로그아웃

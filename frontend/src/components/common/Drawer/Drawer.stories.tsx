@@ -38,7 +38,7 @@ export const LeftSideBar = () => {
       <NarrowMainHeader handleMenuOpenClick={openDrawer} />
       <Drawer width="225px" handleDrawerClose={closeDrawer} placement="left" ref={drawerRef}>
         <Dashboard
-          user={MOCK_USER_INFO}
+          userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
           handleFavoriteClick={() => {}}
           handleLogoutClick={() => {}}
@@ -56,7 +56,7 @@ export const RightSideBar = () => {
       <NarrowMainHeader handleMenuOpenClick={openDrawer} />
       <Drawer width="225px" handleDrawerClose={closeDrawer} placement="right" ref={drawerRef}>
         <Dashboard
-          user={MOCK_USER_INFO}
+          userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
           handleFavoriteClick={() => {}}
           handleLogoutClick={() => {}}

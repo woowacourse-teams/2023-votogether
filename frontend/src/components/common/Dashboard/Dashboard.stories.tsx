@@ -63,7 +63,7 @@ const MOCK_LONG_CATEGORIES: Category[] = [
 export const LoggedIn: Story = {
   render: () => (
     <Dashboard
-      user={MOCK_USER_INFO}
+      userInfo={MOCK_USER_INFO}
       categoryList={MOCK_CATEGORIES}
       handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}
@@ -74,7 +74,7 @@ export const LoggedIn: Story = {
 export const FavoriteCategory: Story = {
   render: () => (
     <Dashboard
-      user={MOCK_USER_INFO}
+      userInfo={MOCK_USER_INFO}
       categoryList={MOCK_FAVORITE_CATEGORIES}
       handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}
@@ -85,7 +85,7 @@ export const FavoriteCategory: Story = {
 export const SelectedCategory: Story = {
   render: () => (
     <Dashboard
-      user={MOCK_USER_INFO}
+      userInfo={MOCK_USER_INFO}
       categoryList={MOCK_FAVORITE_CATEGORIES}
       selectedCategory="패션"
       handleFavoriteClick={() => {}}
@@ -97,7 +97,7 @@ export const SelectedCategory: Story = {
 export const LongCategoryList: Story = {
   render: () => (
     <Dashboard
-      user={MOCK_USER_INFO}
+      userInfo={MOCK_USER_INFO}
       categoryList={MOCK_LONG_CATEGORIES}
       handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}

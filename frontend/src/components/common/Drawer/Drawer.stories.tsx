@@ -1,9 +1,9 @@
 import type { Meta } from '@storybook/react';
 
-import { useEffect, useRef } from 'react';
-
 import { Category } from '@type/category';
 import { User } from '@type/user';
+
+import { useDrawer } from '@hooks/useDrawer';
 
 import Dashboard from '../Dashboard';
 import NarrowMainHeader from '../NarrowMainHeader';
@@ -31,36 +31,12 @@ const MOCK_CATEGORIES: Category[] = [
 ];
 
 export const LeftSideBar = () => {
-  const drawerRef = useRef<HTMLDialogElement>(null);
-
-  const handleMenuOpenClick = () => {
-    if (!drawerRef.current) return;
-
-    drawerRef.current.showModal();
-    drawerRef.current.style.transform = 'translateX(0)';
-  };
-
-  const handleMenuClose = async () => {
-    if (!drawerRef.current) return;
-    drawerRef.current.style.transform = 'translateX(-100%)';
-
-    setTimeout(() => {
-      if (!drawerRef.current) return;
-
-      drawerRef.current.close();
-    }, 300);
-  };
-
-  useEffect(() => {
-    if (!drawerRef.current) return;
-
-    drawerRef.current.style.transform = 'translateX(-100%)';
-  }, []);
+  const { drawerRef, openDrawer, closeDrawer } = useDrawer('left');
 
   return (
     <div>
-      <NarrowMainHeader handleMenuOpenClick={handleMenuOpenClick} />
-      <Drawer width="225px" handleDrawerClose={handleMenuClose} placement="left" ref={drawerRef}>
+      <NarrowMainHeader handleMenuOpenClick={openDrawer} />
+      <Drawer width="225px" handleDrawerClose={closeDrawer} placement="left" ref={drawerRef}>
         <Dashboard
           user={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
@@ -73,36 +49,12 @@ export const LeftSideBar = () => {
 };
 
 export const RightSideBar = () => {
-  const drawerRef = useRef<HTMLDialogElement>(null);
-
-  const handleMenuOpenClick = () => {
-    if (!drawerRef.current) return;
-
-    drawerRef.current.showModal();
-    drawerRef.current.style.transform = 'translateX(0)';
-  };
-
-  const handleMenuClose = async () => {
-    if (!drawerRef.current) return;
-    drawerRef.current.style.transform = 'translateX(100%)';
-
-    setTimeout(() => {
-      if (!drawerRef.current) return;
-
-      drawerRef.current.close();
-    }, 300);
-  };
-
-  useEffect(() => {
-    if (!drawerRef.current) return;
-
-    drawerRef.current.style.transform = 'translateX(100%)';
-  }, []);
+  const { drawerRef, openDrawer, closeDrawer } = useDrawer('right');
 
   return (
     <div>
-      <NarrowMainHeader handleMenuOpenClick={handleMenuOpenClick} />
-      <Drawer width="225px" handleDrawerClose={handleMenuClose} placement="right" ref={drawerRef}>
+      <NarrowMainHeader handleMenuOpenClick={openDrawer} />
+      <Drawer width="225px" handleDrawerClose={closeDrawer} placement="right" ref={drawerRef}>
         <Dashboard
           user={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}

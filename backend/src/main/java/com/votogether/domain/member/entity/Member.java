@@ -64,7 +64,7 @@ public class Member extends BaseEntity {
         final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
                 .nickname("익명의 손님" + nicknameNumberGenerator.generate())
-                .gender(Gender.valueOf(response.getKakaoAccount().getGender()))
+                .gender(Gender.valueOf(response.getKakaoAccount().getGender().toUpperCase()))
                 .birthDate(response.getKakaoAccount().getBirthday())
                 .socialType(SocialType.KAKAO)
                 .socialId(String.valueOf(response.getId()))

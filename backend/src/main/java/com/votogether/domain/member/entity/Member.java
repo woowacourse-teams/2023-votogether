@@ -64,10 +64,10 @@ public class Member extends BaseEntity {
         final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
                 .nickname("익명의 손님" + nicknameNumberGenerator.generate())
-                .gender(Gender.valueOf(response.getKakaoAccount().getGender().toUpperCase()))
-                .birthDate(response.getKakaoAccount().getBirthday())
+                .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
+                .birthDate(response.kakaoAccount().birthday())
                 .socialType(SocialType.KAKAO)
-                .socialId(String.valueOf(response.getId()))
+                .socialId(String.valueOf(response.id()))
                 .point(0)
                 .build();
     }

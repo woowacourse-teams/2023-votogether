@@ -39,7 +39,7 @@ public class KakaoOAuthClient {
                 info,
                 OAuthAccessTokenResponse.class
         );
-        return response.getAccessToken();
+        return response.accessToken();
     }
 
     public KakaoMemberResponse getMemberInfo(final String accessToken) {

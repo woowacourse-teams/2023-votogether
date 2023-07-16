@@ -26,6 +26,91 @@ const MOCK_CATEGORIES: Category[] = [
   { id: 14, name: '금융', favorite: false },
 ];
 
-export const Default: Story = {
-  render: () => <Dashboard />,
+const MOCK_FAVORITE_CATEGORIES: Category[] = [
+  { id: 12312, name: '음식', favorite: false },
+  { id: 12, name: '연애', favorite: true },
+  { id: 13, name: '패션', favorite: true },
+  { id: 14, name: '금융', favorite: false },
+];
+
+const MOCK_LONG_CATEGORIES: Category[] = [
+  { id: 12312, name: '음식', favorite: false },
+  { id: 12, name: '연애', favorite: true },
+  { id: 13, name: '패션', favorite: true },
+  { id: 14, name: '금융', favorite: false },
+  { id: 12312, name: '음식', favorite: false },
+  { id: 12, name: '연애', favorite: true },
+  { id: 13, name: '패션', favorite: true },
+  { id: 14, name: '금융', favorite: false },
+  { id: 12312, name: '음식', favorite: false },
+  { id: 12, name: '연애', favorite: true },
+  { id: 13, name: '패션', favorite: true },
+  { id: 14, name: '금융', favorite: false },
+  { id: 12312, name: '음식', favorite: false },
+  { id: 12, name: '연애', favorite: true },
+  { id: 13, name: '패션', favorite: true },
+  { id: 14, name: '금융', favorite: false },
+  { id: 12312, name: '음식', favorite: false },
+  { id: 12, name: '연애', favorite: true },
+  { id: 13, name: '패션', favorite: true },
+  { id: 14, name: '금융', favorite: false },
+  { id: 12312, name: '음식', favorite: false },
+  { id: 12, name: '연애', favorite: true },
+  { id: 13, name: '패션', favorite: true },
+  { id: 14, name: '금융', favorite: false },
+];
+
+export const LoggedIn: Story = {
+  render: () => (
+    <Dashboard
+      user={MOCK_USER_INFO}
+      categoryList={MOCK_CATEGORIES}
+      handleFavoriteClick={() => {}}
+      handleLogoutClick={() => {}}
+    />
+  ),
+};
+
+export const FavoriteCategory: Story = {
+  render: () => (
+    <Dashboard
+      user={MOCK_USER_INFO}
+      categoryList={MOCK_FAVORITE_CATEGORIES}
+      handleFavoriteClick={() => {}}
+      handleLogoutClick={() => {}}
+    />
+  ),
+};
+
+export const SelectedCategory: Story = {
+  render: () => (
+    <Dashboard
+      user={MOCK_USER_INFO}
+      categoryList={MOCK_FAVORITE_CATEGORIES}
+      selectedCategory="패션"
+      handleFavoriteClick={() => {}}
+      handleLogoutClick={() => {}}
+    />
+  ),
+};
+
+export const LongCategoryList: Story = {
+  render: () => (
+    <Dashboard
+      user={MOCK_USER_INFO}
+      categoryList={MOCK_LONG_CATEGORIES}
+      handleFavoriteClick={() => {}}
+      handleLogoutClick={() => {}}
+    />
+  ),
+};
+
+export const Guest: Story = {
+  render: () => (
+    <Dashboard
+      categoryList={MOCK_CATEGORIES}
+      handleFavoriteClick={() => {}}
+      handleLogoutClick={() => {}}
+    />
+  ),
 };

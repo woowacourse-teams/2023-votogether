@@ -18,9 +18,9 @@ export const Title = styled.h4`
 `;
 
 export const TriangleImage = styled.img`
-  margin-right: 8px;
-
-  font-size: 4rem;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
 `;
 
 export const CategoryList = styled.div`
@@ -36,15 +36,25 @@ export const CategoryItem = styled.div`
   align-items: center;
 `;
 
-export const Circle = styled.button`
+export const Circle = styled.button<{ $isFavorite: boolean }>`
   width: 12px;
   height: 12px;
   border-radius: 50%;
   margin-right: 12px;
 
-  background-color: #ccc;
+  background-color: ${({ $isFavorite }) => ($isFavorite ? 'var(--primary-color)' : '#CCCCCC')};
 
   cursor: pointer;
 `;
 
-export const CategoryName = styled(Link)``;
+export const Caption = styled.span`
+  font: var(--text-caption);
+
+  color: var(--dark-gray);
+`;
+
+export const CategoryName = styled(Link)`
+  text-decoration: none;
+
+  color: initial;
+`;

@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 
 import { Category } from '@type/category';
 
-import triangleIcon from '@assets/triangle.svg';
+import chevronDown from '@assets/chevron-down.svg';
+import chevronUp from '@assets/chevron-up.svg';
 
 import * as S from './style';
 
 interface CategoryToggleProps {
   title: string;
-  categories: Category[];
+  categoryList: Category[];
   handleFavoriteClick: (categoryId: number) => void;
   initialOpen?: boolean;
 }
 
 export default function CategoryToggle({
   title,
-  categories,
+  categoryList,
   handleFavoriteClick,
   initialOpen = true,
 }: CategoryToggleProps) {
@@ -31,14 +32,21 @@ export default function CategoryToggle({
         aria-label={isActive ? `${title} 닫기` : `${title} 열기`}
         type="button"
       >
-        <S.TriangleImage src={triangleIcon} alt="" />
         <S.Title>{title}</S.Title>
+        <S.TriangleImage src={isActive ? chevronUp : chevronDown} alt="" />
       </S.TitleContainer>
       {isActive && (
         <S.CategoryList>
-          {categories.map(category => (
+          {categoryList.length === 0 && (
+            <S.Caption>선호하는 카테고리를 즐겨찾기 해보세요</S.Caption>
+          )}
+          {categoryList.map(category => (
             <S.CategoryItem key={category.id}>
-              <S.Circle title="즐겨찾기 버튼" onClick={() => handleFavoriteClick(category.id)} />
+              <S.Circle
+                title="즐겨찾기 버튼"
+                onClick={() => handleFavoriteClick(category.id)}
+                $isFavorite={category.favorite}
+              />
               <S.CategoryName to={`/posts?categoryId=${category.id}`}>
                 {category.name}
               </S.CategoryName>

@@ -28,6 +28,7 @@ export const GlobalStyle = createGlobalStyle`
   :root {
     --primary-color: #FA7D7C;
     --white: #FFFFFF;
+    --slate: #94A3B8;
 
     --text-title: 600 20px/24px san-serif;
     --text-subtitle: 600 18px/28px san-serif;

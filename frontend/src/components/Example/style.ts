@@ -1,10 +1,8 @@
 import { styled } from 'styled-components';
 
-import { theme } from '@styles/theme';
-
 export const Button = styled.button`
   width: 80px;
-  color: ${theme.color.white};
-  background: ${theme.color.primary};
+
+  color: red;
   font-size: 1rem;
 `;

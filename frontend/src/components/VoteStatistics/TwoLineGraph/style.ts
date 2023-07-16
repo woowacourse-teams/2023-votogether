@@ -11,14 +11,15 @@ export const OptionContainer = styled.div<{ $size: Size }>`
 
   width: ${props => (props.$size === 'sm' ? '30px' : props.$size === 'md' ? '40px' : '50px')};
 
-  @media (min-width: 576px) {
-    width: ${props => (props.$size === 'sm' ? '40px' : props.$size === 'md' ? '50px' : '60px')};
-  }
-
   & > :last-child {
     height: 30px;
-    word-break: keep-all;
+
     text-align: center;
+    word-break: keep-all;
+  }
+
+  @media (min-width: 576px) {
+    width: ${props => (props.$size === 'sm' ? '40px' : props.$size === 'md' ? '50px' : '60px')};
   }
 `;
 
@@ -27,7 +28,6 @@ export const DataWrapper = styled.div`
   justify-content: center;
 
   height: 90%;
-
   width: 50px;
 
   @media (min-width: 576px) {
@@ -45,7 +45,7 @@ export const OptionLengthWrapper = styled.div<{ $gender: 'female' | 'male' }>`
   height: 100%;
   width: 20%;
 
-  &>: first-child {
+  & > :first-child {
     position: relative;
     left: ${props => props.$gender === 'male' && '3px'};
     right: ${props => props.$gender === 'female' && '3px'};
@@ -55,7 +55,6 @@ export const OptionLengthWrapper = styled.div<{ $gender: 'female' | 'male' }>`
 export const OptionLength = styled.div<{ $amount: number; $gender: 'female' | 'male' }>`
   height: ${props => `${props.$amount}% `};
   width: 100%;
-
   border-radius: 5px 5px 0 0;
 
   background-color: ${props => (props.$gender === 'female' ? '#853DE1' : '#5AEAA5')};

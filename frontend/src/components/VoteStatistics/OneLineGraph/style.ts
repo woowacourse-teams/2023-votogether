@@ -11,14 +11,15 @@ export const OptionContainer = styled.div<{ $size: Size }>`
 
   width: ${props => (props.$size === 'sm' ? '30px' : props.$size === 'md' ? '40px' : '50px')};
 
-  @media (min-width: 576px) {
-    width: ${props => (props.$size === 'sm' ? '40px' : props.$size === 'md' ? '50px' : '60px')};
+  & > :last-child {
+    height: 30px;
+
+    text-align: center;
+    word-break: keep-all;
   }
 
-  & :last-child {
-    height: 30px;
-    word-break: keep-all;
-    text-align: center;
+  @media (min-width: 576px) {
+    width: ${props => (props.$size === 'sm' ? '40px' : props.$size === 'md' ? '50px' : '60px')};
   }
 `;
 

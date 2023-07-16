@@ -17,8 +17,9 @@ export const GraphContainer = styled.div<{ $size: Size }>`
 `;
 
 export const Line = styled.div<{ $size: Size }>`
+  width: 100%;
   border-bottom: 2px solid black;
+
   position: absolute;
   top: ${props => (props.$size === 'sm' ? '165px' : props.$size === 'md' ? '194px' : '224px')};
-  width: 100%;
 `;

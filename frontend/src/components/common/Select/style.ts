@@ -32,11 +32,12 @@ const SELECTED_CSS_OPTION = {
 
 type Status = typeof SELECT_DEFAULT | typeof SELECT_DISABLED | typeof SELECT_SELECTED;
 
-export const SelectedContainer = styled.div<{ $status: Status }>`
+export const SelectedContainer = styled.button<{ $status: Status }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
 
+  width: 100%;
   padding: 8px;
   border: ${({ $status }) => SELECTED_CSS_OPTION[$status].border};
   border-radius: 4px;

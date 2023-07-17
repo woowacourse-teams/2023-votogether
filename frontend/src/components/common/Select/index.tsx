@@ -7,20 +7,19 @@ import { SELECT_DEFAULT, SELECT_DISABLED, SELECT_SELECTED } from './constants';
 import * as S from './style';
 import { OptionItemProps } from './type';
 
-export interface SelectProps {
-  selectedLabel: string;
+export interface SelectProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  selectedName: string;
   optionList: OptionItemProps[];
   handleOptionChange: (option: OptionItemProps) => void;
   isDisabled?: boolean;
-  ariaLabel?: string;
 }
 
 export default function Select({
-  selectedLabel,
+  selectedName,
   optionList,
   handleOptionChange,
   isDisabled = false,
-  ariaLabel,
+  ...rest
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,7 +28,7 @@ export default function Select({
     setIsOpen(prev => !prev);
   };
 
-  const onSelectClick = (option: OptionItemProps) => {
+  const handleSelectClick = (option: OptionItemProps) => {
     handleOptionChange(option);
     setIsOpen(false);
   };
@@ -48,15 +47,15 @@ export default function Select({
 
   return (
     <S.Container>
-      <S.SelectedContainer aria-label={ariaLabel} onClick={toggleOpen} $status={getSelectStatus()}>
-        <span>{selectedLabel}</span>
+      <S.SelectedContainer onClick={toggleOpen} $status={getSelectStatus()} {...rest}>
+        <span>{selectedName}</span>
         <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
       </S.SelectedContainer>
       {isOpen && (
         <S.OptionListContainer>
           {optionList.map(option => (
-            <S.OptionContainer key={option.label} onClick={() => onSelectClick(option)}>
-              {option.label}
+            <S.OptionContainer key={option.name} onClick={() => handleSelectClick(option)}>
+              {option.name}
             </S.OptionContainer>
           ))}
         </S.OptionListContainer>

@@ -4,7 +4,9 @@ interface Time {
   minute: number;
 }
 
-export function addTimeToCurrentDate({ day, hour, minute }: Time) {
+export function addTimeToCurrentDate(time: Time) {
+  const { day, hour, minute } = time;
+  if (day === 0 && hour === 0 && minute === 0) return;
   // 현재 시간을 가져옵니다.
   const now = new Date();
 

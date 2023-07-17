@@ -1,5 +1,5 @@
 import React, { HTMLAttributes, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { PostRequest } from '@type/post';
 
@@ -30,6 +30,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     deadline: '',
   };
   const navigate = useNavigate();
+  const { postId } = useParams() as { postId: string };
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -78,8 +79,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       deadline: addTimeToCurrentDate(time) ?? deadline,
     };
 
-    window.console.log('submitted!', updatedPost);
-    window.console.log('original deadline was...', deadline);
+    if (postId) mutate(postId, updatedPost);
+    else mutate(updatedPost);
+
+    // window.console.log('submitted!', updatedPost);
+    // window.console.log('original deadline was...', deadline);
     navigate('/');
   };
 
@@ -99,6 +103,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
           value={writingTitle}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWritingTitle(e.target.value)}
           placeholder="제목을 입력해주세요"
+          required
         />
         <S.Content
           value={writingContent}
@@ -106,6 +111,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             setWritingContent(e.target.value)
           }
           placeholder="내용을 입력해주세요"
+          required
         />
         <S.OptionListWrapper>
           <WritingVoteOptionList initialOptionList={postOptions} />

@@ -1,9 +1,9 @@
 package com.votogether.domain.auth.service;
 
 import com.votogether.domain.auth.dto.KakaoMemberResponse;
-import com.votogether.domain.jwt.TokenProvider;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
+import com.votogether.global.jwt.TokenProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class AuthService {
 
     private final KakaoOAuthClient kakaoOAuthClient;
     private final MemberService memberService;
-    private final TokenProvider tokenProvider;
+    private final TokenProcessor tokenProcessor;
 
     public String register(final String code) {
         final String accessToken = kakaoOAuthClient.getAccessToken(code);
@@ -21,8 +21,8 @@ public class AuthService {
 
         final Member member = Member.createKakaoMember(response);
         final Member registeredMember = memberService.register(member);
-        
-        return tokenProvider.generateToken(registeredMember);
+
+        return tokenProcessor.generateToken(registeredMember);
     }
 
 }

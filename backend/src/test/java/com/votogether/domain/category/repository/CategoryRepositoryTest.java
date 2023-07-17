@@ -8,6 +8,7 @@ import com.votogether.domain.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,36 +19,42 @@ class CategoryRepositoryTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @Test
-    @DisplayName("카테고리를 저장한다.")
-    void save() {
-        // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
+    @Nested
+    @DisplayName("카테고리 저장")
+    class save {
 
-        // when
-        categoryRepository.save(category);
+        @Test
+        @DisplayName("카테고리를 저장한다.")
+        void save() {
+            // given
+            Category category = Category.builder()
+                    .name("개발")
+                    .build();
 
-        // then
-        assertThat(category.getId()).isNotNull();
-    }
+            // when
+            categoryRepository.save(category);
 
-    @Test
-    @DisplayName("같은 이름의 카테고리를 저장할 시 에러가 발생한다.")
-    void saveButException() {
-        // given
-        Category category1 = Category.builder()
-                .name("개발")
-                .build();
-        Category category2 = Category.builder()
-                .name("개발")
-                .build();
-        categoryRepository.save(category1);
+            // then
+            assertThat(category.getId()).isNotNull();
+        }
 
-        // when & then
-        assertThatThrownBy(() -> categoryRepository.save(category2))
-                .isInstanceOf(DataIntegrityViolationException.class);
+        @Test
+        @DisplayName("같은 이름의 카테고리를 저장할 시 에러가 발생한다.")
+        void saveButException() {
+            // given
+            Category category1 = Category.builder()
+                    .name("개발")
+                    .build();
+            Category category2 = Category.builder()
+                    .name("개발")
+                    .build();
+            categoryRepository.save(category1);
+
+            // when & then
+            assertThatThrownBy(() -> categoryRepository.save(category2))
+                    .isInstanceOf(DataIntegrityViolationException.class);
+        }
+
     }
 
     @Test

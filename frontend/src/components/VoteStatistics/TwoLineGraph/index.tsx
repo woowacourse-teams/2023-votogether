@@ -1,11 +1,9 @@
-import { Size } from '@components/common/AddButton/type';
-
 import * as GS from '../GraphStyle';
-import { AgeCategory, VoteResult } from '../type';
+import { AgeCategory, GraphProps } from '../type';
 
 import * as S from './style';
 
-export default function TwoLineGraph({ voteResult, size }: { voteResult: VoteResult; size: Size }) {
+export default function TwoLineGraph({ voteResult, size }: GraphProps) {
   const ageCategory = Object.keys(voteResult.age) as AgeCategory[];
 
   const maxVoteAmount = Math.max(

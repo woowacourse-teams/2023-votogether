@@ -1,3 +1,10 @@
+import { Size } from '@components/common/AddButton/type';
+
+export interface GraphProps {
+  voteResult: VoteResult;
+  size: Size;
+}
+
 interface VoteDetailResult {
   name: string;
   total: number;

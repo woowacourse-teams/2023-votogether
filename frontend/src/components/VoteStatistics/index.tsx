@@ -1,11 +1,9 @@
 import { MouseEvent, useState } from 'react';
 
-import { Size } from '@components/common/AddButton/type';
-
 import OneLineGraph from './OneLineGraph';
 import * as S from './style';
 import TwoLineGraph from './TwoLineGraph';
-import { VoteResult } from './type';
+import { GraphProps } from './type';
 
 interface RadioMode {
   all: string;
@@ -19,13 +17,7 @@ const radioMode: RadioMode = {
 
 type RadioCategory = keyof RadioMode;
 
-export default function VoteStatistics({
-  voteResult,
-  size,
-}: {
-  voteResult: VoteResult;
-  size: Size;
-}) {
+export default function VoteStatistics({ voteResult, size }: GraphProps) {
   const [nowRadioMode, setNowRadioMode] = useState<RadioCategory>('all');
 
   const radioModeKey = Object.keys(radioMode) as RadioCategory[];

@@ -6,6 +6,7 @@ import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class VoteService {
 
-    public final VoteRepository voteRepository;
-    public final PostRepository postRepository;
+    private final VoteRepository voteRepository;
+    private final PostRepository postRepository;
 
     public void vote(
             final Member member,
@@ -27,10 +28,19 @@ public class VoteService {
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         validateDeadLine(post);
 
-        Vote vote = member.vote(post, postOptionId);
+        List<Long> postOptionIdsInPost = post.getPostOptions().stream()
+                .map(postOption -> postOption.getId())
+                .toList();
+
+        List<Vote> alreadyVoted = voteRepository.findByMemberIdAndPostOptionIdIn(member.getId(), postOptionIdsInPost);
+        if (!alreadyVoted.isEmpty()) {
+            throw new IllegalStateException("해당 게시물에는 이미 투표하였습니다.");
+        }
+
+        Vote newVote = member.vote(post, postOptionId);
         member.plusPoint(1);
 
-        voteRepository.save(vote);
+        voteRepository.save(newVote);
     }
 
     private void validateDeadLine(final Post post) {
@@ -49,8 +59,9 @@ public class VoteService {
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         validateDeadLine(post);
 
-        Vote vote = voteRepository.findByMemberIdAndPostOptionId(
-                member.getId(), originPostOptionId);
+        Vote vote = voteRepository.findByMemberIdAndPostOptionId(member.getId(), originPostOptionId)
+                .orElseThrow(() -> new IllegalArgumentException("선택지에 해당되는 투표가 존재하지 않습니다."));
+
         PostOption postOption = post.findPostOptionById(newPostOptionId);
 
         vote.changePostOption(postOption);

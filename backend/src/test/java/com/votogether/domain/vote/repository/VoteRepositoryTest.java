@@ -1,5 +1,7 @@
 package com.votogether.domain.vote.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.votogether.config.JpaConfig;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
@@ -11,16 +13,13 @@ import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
@@ -103,7 +102,7 @@ class VoteRepositoryTest {
 
         // when
         Vote findVote = voteRepository.findByMemberIdAndPostOptionId(
-                member.getId(), postOption1.getId());
+                member.getId(), postOption1.getId()).get();
 
         // then
         assertThat(findVote).isSameAs(vote);

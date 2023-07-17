@@ -2,6 +2,7 @@ package com.votogether.domain.post.entity;
 
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -57,11 +58,8 @@ public class Post extends BaseEntity {
         this.deadline = deadline;
     }
 
-    public PostOption findPostOptionById(final Long PostOptionId) {
-        return postOptions.stream()
-                .filter(postOption -> postOption.getId().equals(PostOptionId))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다."));
+    public boolean hasPostOption(final PostOption postOption) {
+        return postOptions.contains(postOption);
     }
 
     public boolean isWriter(final Member member) {
@@ -70,6 +68,35 @@ public class Post extends BaseEntity {
 
     public boolean isClosed() {
         return deadline.isBefore(LocalDateTime.now());
+    }
+
+    public Vote makeVote(Member member, PostOption postOption) {
+        validateDeadLine();
+        validateWriter(member);
+        validatePostOption(postOption);
+
+        return Vote.builder()
+                .member(member)
+                .postOption(postOption)
+                .build();
+    }
+
+    private void validateDeadLine() {
+        if (isClosed()) {
+            throw new IllegalStateException("게시글이 이미 마감되었습니다.");
+        }
+    }
+
+    private void validateWriter(Member member) {
+        if (isWriter(member)) {
+            throw new IllegalArgumentException("작성자는 투표할 수 없습니다.");
+        }
+    }
+
+    private void validatePostOption(PostOption postOption) {
+        if (!hasPostOption(postOption)) {
+            throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
+        }
     }
 
 }

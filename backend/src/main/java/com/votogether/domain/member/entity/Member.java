@@ -1,9 +1,6 @@
 package com.votogether.domain.member.entity;
 
 import com.votogether.domain.common.BaseEntity;
-import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostOption;
-import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -61,21 +58,6 @@ public class Member extends BaseEntity {
         this.socialType = socialType;
         this.socialId = socialId;
         this.point = point;
-    }
-
-    public Vote vote(final Post post, final Long postOptionId) {
-        PostOption postOption = post.findPostOptionById(postOptionId);
-        validateWriter(post);
-        return Vote.builder()
-                .member(this)
-                .postOption(postOption)
-                .build();
-    }
-
-    private void validateWriter(final Post post) {
-        if (post.isWriter(this)) {
-            throw new IllegalArgumentException("자기자신은 투표할 수 없습니다.");
-        }
     }
 
     public void plusPoint(final int point) {

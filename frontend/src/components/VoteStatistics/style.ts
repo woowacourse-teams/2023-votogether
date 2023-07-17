@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -8,7 +10,7 @@ export const Container = styled.div`
 
   font-size: 1.2rem;
 
-  @media (min-width: 576px) {
+  @media (${theme.breakpoint.sm}) {
     font-size: 1.4rem;
   }
 `;

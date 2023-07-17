@@ -2,6 +2,8 @@ import { styled } from 'styled-components';
 
 import { Size } from '@components/common/AddButton/type';
 
+import { theme } from '@styles/theme';
+
 const size: { [key in Size]: { height: string; linePositionTop: string } } = {
   sm: { height: '200px', linePositionTop: '165px' },
   md: { height: '230px', linePositionTop: '194px' },
@@ -17,7 +19,7 @@ export const GraphContainer = styled.div<{ $size: Size }>`
 
   font-size: 1.2rem;
 
-  @media (min-width: 576px) {
+  @media (${theme.breakpoint.sm}) {
     font-size: 1.4rem;
   }
 `;

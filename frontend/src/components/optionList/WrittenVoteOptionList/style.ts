@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const VoteOptionListContainer = styled.ul`
   display: flex;
   flex-direction: column;
@@ -7,7 +9,7 @@ export const VoteOptionListContainer = styled.ul`
 
   width: 100%;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     gap: 18px;
   }
 `;

@@ -2,6 +2,8 @@ import { styled } from 'styled-components';
 
 import { Size } from '@components/common/AddButton/type';
 
+import { theme } from '@styles/theme';
+
 export const OptionContainer = styled.div<{ $size: Size }>`
   display: flex;
   flex-direction: column;
@@ -18,7 +20,7 @@ export const OptionContainer = styled.div<{ $size: Size }>`
     word-break: keep-all;
   }
 
-  @media (min-width: 576px) {
+  @media (${theme.breakpoint.sm}) {
     width: ${props => (props.$size === 'sm' ? '40px' : props.$size === 'md' ? '50px' : '60px')};
   }
 `;
@@ -30,7 +32,7 @@ export const DataWrapper = styled.div`
   height: 90%;
   width: 50px;
 
-  @media (min-width: 576px) {
+  @media (${theme.breakpoint.sm}) {
     width: 60px;
   }
 `;

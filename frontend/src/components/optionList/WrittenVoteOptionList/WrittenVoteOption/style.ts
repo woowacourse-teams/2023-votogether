@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.li<{ $isSelected: boolean }>`
   display: flex;
   flex-direction: column;
@@ -13,7 +15,7 @@ export const Container = styled.li<{ $isSelected: boolean }>`
 
   cursor: pointer;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     padding: 20px 30px;
   }
 `;
@@ -26,7 +28,7 @@ export const Image = styled.img`
 
   aspect-ratio: 1/1;
   object-fit: cover;
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     margin-bottom: 24px;
   }
 `;
@@ -44,7 +46,7 @@ export const PreviewContent = styled.p`
   -webkit-line-clamp: 2; // 원하는 라인수
   -webkit-box-orient: vertical;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     font-size: 1.6rem;
   }
 `;
@@ -53,7 +55,7 @@ export const DetailContent = styled.p`
   font-size: 1.4rem;
   font-weight: 500;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     font-size: 1.6rem;
   }
 `;
@@ -61,7 +63,7 @@ export const DetailContent = styled.p`
 export const ProgressContainer = styled.div`
   margin-top: 12px;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     margin-top: 18px;
   }
 `;
@@ -72,7 +74,7 @@ export const TextContainer = styled.div`
   text-align: end;
   font-weight: 500;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     margin-top: 12px;
 
     font-size: 1.6rem;
@@ -82,7 +84,7 @@ export const TextContainer = styled.div`
 export const PeopleText = styled.span`
   font-size: 1.4rem;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     font-size: 1.6rem;
   }
 `;
@@ -94,7 +96,7 @@ export const PercentText = styled.span`
 
   opacity: 0.7;
 
-  @media (min-width: 960px) {
+  @media (${theme.breakpoint.md}) {
     font-size: 1.4rem;
   }
 `;

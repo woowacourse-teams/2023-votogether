@@ -2,12 +2,6 @@ import { Link } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
-import { ProfileCSSText } from '../style';
-
-export const Container = styled.div`
-  ${ProfileCSSText}
-`;
-
 export const Badge = styled.span`
   margin-bottom: 7px;
 `;

@@ -21,19 +21,19 @@ interface DashboardProps {
 export default function Dashboard({
   userInfo,
   categoryList,
-  selectedCategory,
+  selectedCategory = '전체',
   handleFavoriteClick,
   handleLogoutClick,
 }: DashboardProps) {
-  const favoriteCategory = categoryList.filter(category => category.favorite === true);
-  const allCategory = categoryList.filter(category => category.favorite === false);
+  const favoriteCategory = categoryList.filter(category => category.isFavorite === true);
+  const allCategory = categoryList.filter(category => category.isFavorite === false);
 
   return (
     <S.Container>
       {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
       <S.SelectCategoryWrapper>
         <S.Circle />
-        <S.SelectCategoryText>{selectedCategory ? selectedCategory : '전체'}</S.SelectCategoryText>
+        <S.SelectCategoryText>{selectedCategory}</S.SelectCategoryText>
       </S.SelectCategoryWrapper>
       <S.ContentContainer>
         <S.CategoryToggleContainer>

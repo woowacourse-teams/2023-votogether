@@ -11,45 +11,42 @@ interface CategoryToggleProps {
   title: string;
   categoryList: Category[];
   handleFavoriteClick: (categoryId: number) => void;
-  initialOpen?: boolean;
+  isInitialOpen?: boolean;
 }
 
 export default function CategoryToggle({
   title,
   categoryList,
   handleFavoriteClick,
-  initialOpen = true,
+  isInitialOpen = true,
 }: CategoryToggleProps) {
-  const [isActive, setIsActive] = useState(initialOpen);
+  const [isToggleOpen, setIsToggleOpen] = useState(isInitialOpen);
 
   const handleToggleClick = () => {
-    setIsActive(prevIsActive => !prevIsActive);
+    setIsToggleOpen(prevIsToggleOpen => !prevIsToggleOpen);
   };
+
   return (
     <S.Container>
       <S.TitleContainer
         onClick={handleToggleClick}
-        aria-label={isActive ? `${title} 닫기` : `${title} 열기`}
+        aria-label={isToggleOpen ? `${title} 닫기` : `${title} 열기`}
         type="button"
       >
-        <S.Title>{title}</S.Title>
-        <S.TriangleImage src={isActive ? chevronUp : chevronDown} alt="" />
+        <S.TriangleImage src={isToggleOpen ? chevronUp : chevronDown} alt="" />
+        <span>{title}</span>
       </S.TitleContainer>
-      {isActive && (
+      {isToggleOpen && (
         <S.CategoryList>
-          {categoryList.length === 0 && (
-            <S.Caption>선호하는 카테고리를 즐겨찾기 해보세요</S.Caption>
-          )}
-          {categoryList.map(category => (
-            <S.CategoryItem key={category.id}>
+          {categoryList.length === 0 && <S.Caption>현재 카테고리가 없습니다</S.Caption>}
+          {categoryList.map(({ id, name, isFavorite }) => (
+            <S.CategoryItem key={id}>
               <S.Circle
                 title="즐겨찾기 버튼"
-                onClick={() => handleFavoriteClick(category.id)}
-                $isFavorite={category.favorite}
+                onClick={() => handleFavoriteClick(id)}
+                $isFavorite={isFavorite}
               />
-              <S.CategoryName to={`/posts?categoryId=${category.id}`}>
-                {category.name}
-              </S.CategoryName>
+              <S.CategoryName to={`/posts?categoryId=${id}`}>{name}</S.CategoryName>
             </S.CategoryItem>
           ))}
         </S.CategoryList>

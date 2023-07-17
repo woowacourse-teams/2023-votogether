@@ -17,7 +17,7 @@ export const ContentContainer = styled.div`
   align-items: start;
 
   width: 100%;
-  margin-bottom: 70px;
+  margin-bottom: 85px;
 
   overflow-y: scroll;
 
@@ -67,17 +67,4 @@ export const CategoryToggleContainer = styled.div`
   gap: 20px;
 
   padding-top: 20px;
-`;
-
-export const ProfileCSSText = `  
-display: flex;
-flex-direction: column;
-
-width:100%;
-padding: 16px 12px;
-border-radius: 4px;
-
-font-size: 1.6rem;
-
-background-color: var(--gray);
 `;

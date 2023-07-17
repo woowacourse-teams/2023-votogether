@@ -4,6 +4,8 @@ import { BASE_PATH } from '@constants/path';
 
 import { User } from '@type/user';
 
+import * as PS from '../profileStyle';
+
 import * as S from './style';
 
 interface UserProfileProps {
@@ -14,7 +16,7 @@ export default function UserProfile({ userInfo }: UserProfileProps) {
   const { nickname, userPoint, postCount, voteCount, badge } = userInfo;
 
   return (
-    <S.Container>
+    <PS.ProfileContainer>
       {badge && <S.Badge>[{badge}]</S.Badge>}
       <S.NickName>{nickname}</S.NickName>
       <S.UserInfoContainer>
@@ -31,6 +33,6 @@ export default function UserProfile({ userInfo }: UserProfileProps) {
           <S.TextCardContent>{voteCount}</S.TextCardContent>
         </S.TextCardLink>
       </S.UserInfoContainer>
-    </S.Container>
+    </PS.ProfileContainer>
   );
 }

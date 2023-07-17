@@ -2,25 +2,29 @@ import { Link } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.div`
-  font: var(--text-body);
+  font: var(--text-caption);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font: var(--text-body);
+  }
 `;
 
 export const TitleContainer = styled.button`
   display: flex;
   align-items: center;
 
-  cursor: pointer;
-`;
+  font: inherit;
 
-export const Title = styled.h4`
-  font: var(--text-body);
+  cursor: pointer;
 `;
 
 export const TriangleImage = styled.img`
   width: 16px;
   height: 16px;
-  margin-left: 8px;
+  margin-right: 8px;
 `;
 
 export const CategoryList = styled.div`
@@ -56,5 +60,5 @@ export const Caption = styled.span`
 export const CategoryName = styled(Link)`
   text-decoration: none;
 
-  color: initial;
+  color: inherit;
 `;

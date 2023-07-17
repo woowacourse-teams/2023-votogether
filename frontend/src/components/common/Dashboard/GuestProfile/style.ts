@@ -1,9 +1,8 @@
 import { styled } from 'styled-components';
 
-import { ProfileCSSText } from '../style';
+import { ProfileContainer } from '../profileStyle';
 
-export const Container = styled.div`
-  ${ProfileCSSText}
+export const Container = styled(ProfileContainer)`
   align-items: center;
 `;
 

@@ -2,10 +2,16 @@ import { styled } from 'styled-components';
 
 import { Size } from '@components/common/AddButton/type';
 
+const size: { [key in Size]: { height: string; linePositionTop: string } } = {
+  sm: { height: '200px', linePositionTop: '165px' },
+  md: { height: '230px', linePositionTop: '194px' },
+  lg: { height: '260px', linePositionTop: '224px' },
+};
+
 export const GraphContainer = styled.div<{ $size: Size }>`
   display: flex;
 
-  height: ${props => (props.$size === 'sm' ? '200px' : props.$size === 'md' ? '230px' : '260px')};
+  height: ${props => `${size[props.$size].height}`};
 
   position: relative;
 
@@ -21,5 +27,5 @@ export const Line = styled.div<{ $size: Size }>`
   border-bottom: 2px solid black;
 
   position: absolute;
-  top: ${props => (props.$size === 'sm' ? '165px' : props.$size === 'md' ? '194px' : '224px')};
+  top: ${props => `${size[props.$size].linePositionTop}`};
 `;

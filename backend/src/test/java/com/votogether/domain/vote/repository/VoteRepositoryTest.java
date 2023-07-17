@@ -9,11 +9,11 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +35,8 @@ class VoteRepositoryTest {
     @Autowired
     VoteRepository voteRepository;
 
-    @PersistenceContext
-    EntityManager entityManager;
+    @Autowired
+    PostOptionRepository postOptionRepository;
 
     Member member = Member.builder()
             .gender(Gender.MALE)
@@ -48,7 +48,7 @@ class VoteRepositoryTest {
                     LocalDateTime.of(1995, 07, 12, 00, 00))
             .build();
 
-    Post post = Post.builder()
+    Post post1 = Post.builder()
             .title("title")
             .deadline(
                     LocalDateTime.of(3023, 07, 12, 00, 00))
@@ -56,14 +56,21 @@ class VoteRepositoryTest {
             .member(member)
             .build();
 
+    Post post2 = Post.builder()
+            .title("title2")
+            .deadline(
+                    LocalDateTime.of(3023, 07, 12, 00, 00))
+            .content("content2")
+            .member(member)
+            .build();
     PostOption postOption1 = PostOption.builder()
-            .post(post)
+            .post(post1)
             .sequence(1)
             .content("content1")
             .build();
 
     PostOption postOption2 = PostOption.builder()
-            .post(post)
+            .post(post2)
             .sequence(2)
             .content("content2")
             .build();
@@ -77,8 +84,8 @@ class VoteRepositoryTest {
                 .member(member)
                 .build();
         memberRepository.save(member);
-        postRepository.save(post);
-        entityManager.persist(postOption1);
+        postRepository.save(post1);
+        postOptionRepository.save(postOption1);
 
         // when
         voteRepository.save(vote);
@@ -88,24 +95,52 @@ class VoteRepositoryTest {
     }
 
     @Test
-    @DisplayName("멤버아이디와 투표선택지아이디를 통해 투표를 찾는다.")
-    void findVoteByMemberIdAndPostOptionId() {
+    @DisplayName("멤버와 투표선택지를 통해 투표를 찾는다.")
+    void findByMemberAndPostOption() {
         // given
         Vote vote = Vote.builder()
                 .postOption(postOption1)
                 .member(member)
                 .build();
         memberRepository.save(member);
-        postRepository.save(post);
-        entityManager.persist(postOption1);
+        postRepository.save(post1);
+        postOptionRepository.save(postOption1);
         voteRepository.save(vote);
 
         // when
-        Vote findVote = voteRepository.findByMemberIdAndPostOptionId(
-                member.getId(), postOption1.getId()).get();
+        Vote findVote = voteRepository.findByMemberAndPostOption(member, postOption1).get();
 
         // then
         assertThat(findVote).isSameAs(vote);
+    }
+
+    @Test
+    @DisplayName("멤버와 여러 투표선택지를 통해 투표를 찾는다.")
+    void findByMemberAndPostOptionIn() {
+        // given
+        memberRepository.save(member);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postOptionRepository.save(postOption1);
+        postOptionRepository.save(postOption2);
+
+        Vote vote1 = Vote.builder()
+                .postOption(postOption1)
+                .member(member)
+                .build();
+        voteRepository.save(vote1);
+
+        Vote vote2 = Vote.builder()
+                .postOption(postOption2)
+                .member(member)
+                .build();
+        voteRepository.save(vote2);
+
+        // when
+        List<Vote> votes = voteRepository.findByMemberAndPostOptionIn(member, List.of(postOption1, postOption2));
+
+        // then
+        assertThat(votes).hasSize(2);
     }
 
 }

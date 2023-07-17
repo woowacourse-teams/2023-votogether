@@ -44,8 +44,4 @@ public class PostOption extends BaseEntity {
         this.content = content;
     }
 
-    public boolean isFromSamePost(final PostOption postOption) {
-        return this.post.equals(postOption.getPost());
-    }
-
 }

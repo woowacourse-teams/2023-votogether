@@ -12,23 +12,20 @@ interface VoteDetailResult {
   male: number;
 }
 
-export type AgeCategory =
-  | 'underTeenager'
-  | 'teenager'
-  | 'twenties'
-  | 'thirties'
-  | 'forties'
-  | 'fifties'
-  | 'aboveFifties';
+export const AGE_OPTION = [
+  'underTeenager',
+  'teenager',
+  'twenties',
+  'thirties',
+  'forties',
+  'fifties',
+  'aboveFifties',
+] as const;
+
+export type AgeCategory = (typeof AGE_OPTION)[number];
+
+export type VoteResultAge = Record<AgeCategory, VoteDetailResult>;
 
 export interface VoteResult extends VoteDetailResult {
-  age: {
-    underTeenager: VoteDetailResult;
-    teenager: VoteDetailResult;
-    twenties: VoteDetailResult;
-    thirties: VoteDetailResult;
-    forties: VoteDetailResult;
-    fifties: VoteDetailResult;
-    aboveFifties: VoteDetailResult;
-  };
+  age: VoteResultAge;
 }

@@ -8,9 +8,9 @@ interface VoteDetailResult {
 export type AgeCategory =
   | 'underTeenager'
   | 'teenager'
-  | 'twenites'
-  | 'thirites'
-  | 'fourties'
+  | 'twenties'
+  | 'thirties'
+  | 'forties'
   | 'fifties'
   | 'aboveFifties';
 
@@ -18,9 +18,9 @@ export interface VoteResult extends VoteDetailResult {
   age: {
     underTeenager: VoteDetailResult;
     teenager: VoteDetailResult;
-    twenites: VoteDetailResult;
-    thirites: VoteDetailResult;
-    fourties: VoteDetailResult;
+    twenties: VoteDetailResult;
+    thirties: VoteDetailResult;
+    forties: VoteDetailResult;
     fifties: VoteDetailResult;
     aboveFifties: VoteDetailResult;
   };

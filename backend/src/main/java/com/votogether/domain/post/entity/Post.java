@@ -50,14 +50,12 @@ public class Post extends BaseEntity {
             final Member member,
             final String title,
             final String content,
-            final LocalDateTime deadline,
-            final List<PostOption> postOptions
+            final LocalDateTime deadline
     ) {
         this.member = member;
         this.title = title;
         this.content = content;
         this.deadline = deadline;
-        this.postOptions = new ArrayList<>(postOptions);
     }
 
     public boolean hasPostOption(final PostOption postOption) {

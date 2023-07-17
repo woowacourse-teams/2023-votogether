@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { useState } from 'react';
+
+import { OptionItemProps } from './type';
+
 import Select from '.';
 
 const meta: Meta<typeof Select> = {
   component: Select,
+  decorators: [storyFn => <div style={{ width: '100px' }}>{storyFn()}</div>],
 };
 
 export default meta;
@@ -31,6 +36,10 @@ const MOCK_SORTING_OPTION = [
   },
   {
     label: '최신순',
+    value: 'latest',
+  },
+  {
+    label: '엄청나게 긴 옵션',
     value: 'latest',
   },
 ];
@@ -67,4 +76,24 @@ export const Disabled: Story = {
       handleOptionChange={() => {}}
     />
   ),
+};
+
+export const SelectExample = () => {
+  const [selectedOption, setSelectedOption] = useState<OptionItemProps>({
+    label: '진행 게시글을 선택해주세요',
+    value: '',
+  });
+
+  const handelOptionChange = (option: OptionItemProps) => {
+    setSelectedOption(option);
+  };
+
+  return (
+    <Select
+      ariaLabel="게시글 정렬 방법 선택"
+      selectedLabel={selectedOption.label}
+      optionList={MOCK_SORTING_OPTION}
+      handleOptionChange={handelOptionChange}
+    />
+  );
 };

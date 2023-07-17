@@ -5,16 +5,12 @@ import chevronUp from '@assets/chevron-up.svg';
 
 import { SELECT_DEFAULT, SELECT_DISABLED, SELECT_SELECTED } from './constants';
 import * as S from './style';
-
-interface OptionItemsProps {
-  label: string;
-  value: string;
-}
+import { OptionItemProps } from './type';
 
 export interface SelectProps {
   selectedLabel: string;
-  optionList: OptionItemsProps[];
-  handleOptionChange: () => void;
+  optionList: OptionItemProps[];
+  handleOptionChange: (option: OptionItemProps) => void;
   isDisabled?: boolean;
   ariaLabel?: string;
 }
@@ -33,8 +29,8 @@ export default function Select({
     setIsOpen(prev => !prev);
   };
 
-  const onSelectClick = () => {
-    handleOptionChange();
+  const onSelectClick = (option: OptionItemProps) => {
+    handleOptionChange(option);
     setIsOpen(false);
   };
 
@@ -59,7 +55,7 @@ export default function Select({
       {isOpen && (
         <S.OptionListContainer>
           {optionList.map(option => (
-            <S.OptionContainer key={option.label} onClick={onSelectClick}>
+            <S.OptionContainer key={option.label} onClick={() => onSelectClick(option)}>
               {option.label}
             </S.OptionContainer>
           ))}

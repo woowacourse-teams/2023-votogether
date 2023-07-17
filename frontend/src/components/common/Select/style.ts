@@ -37,7 +37,6 @@ export const SelectedContainer = styled.div<{ $status: Status }>`
   justify-content: space-between;
   align-items: center;
 
-  width: 100px;
   padding: 8px;
   border: ${({ $status }) => SELECTED_CSS_OPTION[$status].border};
   border-radius: 4px;
@@ -51,14 +50,12 @@ export const OptionListContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 100px;
   margin-top: 4px;
   border: 1px solid var(--slate);
   border-radius: 4px;
 `;
 
 export const OptionContainer = styled.div`
-  width: 100px;
   padding: 8px;
 
   cursor: pointer;
@@ -71,5 +68,5 @@ export const Image = styled.img<{ $isSelected: boolean }>`
   width: 20px;
   height: 20px;
   border-left: 1px solid var(--slate);
-  padding-left: 4px;
+  padding-left: 8px;
 `;

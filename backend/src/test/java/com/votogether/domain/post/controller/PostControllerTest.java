@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 
 @WebMvcTest(PostController.class)
 class PostControllerTest {
+
     @MockBean
     private PostService postService;
 
@@ -73,7 +74,6 @@ class PostControllerTest {
 
         final String postId = response.header("Location").substring(locationStartsWith.length());
         assertThat(Long.parseLong(postId)).isEqualTo(savedPostId);
-        
     }
 
 }

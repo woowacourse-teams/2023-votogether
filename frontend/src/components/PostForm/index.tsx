@@ -13,7 +13,7 @@ import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
-import { addTimeToCurrentDate, formatTimeWithOption } from '@utils/formatTime';
+import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 
 import { DEADLINE_OPTION } from './constants';
 import * as S from './style';
@@ -67,7 +67,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       const optionImageFileInputs =
         e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
       const fileInputList: HTMLInputElement[] = [...optionImageFileInputs];
-      const imageFileList: File[] = [];
+      const imageFileList: File[] = []; ///////////////
       fileInputList.forEach(item => {
         if (item.files) {
           imageFileList.push(item.files[0]);
@@ -79,12 +79,14 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
       const writingOptionTexts = Array.from(optionTextAreas).map((textarea: any) => textarea.value);
 
+      const baseTime = startTime ? new Date(startTime) : new Date();
+
       const updatedPostTexts = {
         categoryIds: [1, 2],
         title: writingTitle ?? '',
         content: writingContent ?? '',
         postOptions: writingOptionTexts,
-        deadline: addTimeToCurrentDate(time, data ? startTime : ''),
+        deadline: addTimeToDate(time, baseTime),
         // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
         // 마감시간 옵션을 선택 안했다면 기존의 마감 시간을 유지한다.
       };

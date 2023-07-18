@@ -4,18 +4,15 @@ interface Time {
   minute: number;
 }
 
-export function addTimeToCurrentDate(time: Time, startTime?: string) {
-  const { day, hour, minute } = time;
+export function addTimeToDate(addTime: Time, baseTime: Date) {
+  const { day, hour, minute } = addTime;
   if (day === 0 && hour === 0 && minute === 0) return;
 
-  let now;
-  if (startTime) now = new Date(startTime);
-  else now = new Date();
+  const newTime = new Date(baseTime);
 
-  const newTime = new Date(now);
-  newTime.setDate(now.getDate() + day);
-  newTime.setHours(now.getHours() + hour);
-  newTime.setMinutes(now.getMinutes() + minute);
+  newTime.setDate(baseTime.getDate() + day);
+  newTime.setHours(baseTime.getHours() + hour);
+  newTime.setMinutes(baseTime.getMinutes() + minute);
 
   const newYear = newTime.getFullYear();
   const newDay = String(newTime.getDate()).padStart(2, '0');

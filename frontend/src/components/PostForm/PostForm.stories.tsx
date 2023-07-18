@@ -2,6 +2,9 @@ import type { Meta } from '@storybook/react';
 
 import { PostRequest } from '@type/post';
 
+import { useCreatePost } from '@hooks/query/post/useCreatePost';
+import { useEditPost } from '@hooks/query/post/useEditPost';
+
 import PostForm from '.';
 
 const meta: Meta<typeof PostForm> = {
@@ -23,17 +26,20 @@ const MOCK_DATA: PostRequest = {
 };
 
 export const NewPost = () => {
+  const { mutate } = useCreatePost();
   return (
     <>
-      <PostForm mutate={() => {}} />
+      <PostForm mutate={mutate} />
     </>
   );
 };
 
 export const OldPost = () => {
+  const examplePostId = 1;
+  const { mutate } = useEditPost(examplePostId);
   return (
     <>
-      <PostForm data={MOCK_DATA} mutate={() => {}} />
+      <PostForm data={MOCK_DATA} mutate={mutate} />
     </>
   );
 };

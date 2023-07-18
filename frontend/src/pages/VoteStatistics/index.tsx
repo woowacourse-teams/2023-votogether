@@ -21,12 +21,12 @@ export default function VoteStatisticsPage() {
     data: postDetail,
     errorMessage: postError,
     isLoading: isPostLoading,
-  } = useFetch(getVoteDetail, 1); //1은 나중에 postID로 대체
+  } = useFetch(() => getVoteDetail(1)); //1은 나중에 postID로 대체
   const {
     data: voteResult,
     errorMessage: voteResultError,
     isLoading: isVoteResultLoading,
-  } = useFetch(getPostStatistics, 1); //1은 나중에 postID로 대체
+  } = useFetch(() => getPostStatistics(1)); //1은 나중에 postID로 대체
 
   return (
     <>

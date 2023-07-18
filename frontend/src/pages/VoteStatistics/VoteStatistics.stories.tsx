@@ -4,7 +4,6 @@ import VoteStatisticsPage from '.';
 
 const meta: Meta<typeof VoteStatisticsPage> = {
   component: VoteStatisticsPage,
-  // decorators: [storyFn => <div style={{ width: '360px' }}>{storyFn()}</div>],
 };
 
 export default meta;

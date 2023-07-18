@@ -26,7 +26,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
 
     changeVotedOption(postId, {
       originOptionId: voteInfo.selectedOptionId,
-      newOptionId: newOptionId,
+      newOptionId,
     });
   };
 

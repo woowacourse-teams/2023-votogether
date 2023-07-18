@@ -4,7 +4,6 @@ import OptionStatistics from '.';
 
 const meta: Meta<typeof OptionStatistics> = {
   component: OptionStatistics,
-  // decorators: [storyFn => <div style={{ width: '360px' }}>{storyFn()}</div>],
 };
 
 export default meta;

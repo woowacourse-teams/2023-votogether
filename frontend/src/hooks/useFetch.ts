@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-export const useFetch = <T>(fetchFn: (parameter: any) => Promise<T>, parameter: any) => {
+export const useFetch = <T>(fetchFn: () => Promise<T>) => {
   const [data, setData] = useState<T>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchFn(parameter)
+    fetchFn()
       .then(res => {
         setData(res);
       })

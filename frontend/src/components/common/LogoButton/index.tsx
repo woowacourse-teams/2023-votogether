@@ -1,0 +1,47 @@
+import { ButtonHTMLAttributes } from 'react';
+
+import logo from '@assets/logo.svg';
+import votogether from '@assets/projectName.svg';
+
+import * as S from './style';
+
+type Content = 'icon' | 'text' | 'full';
+
+const contentCategory: { [key in Content]: { name: string; url: string } } = {
+  icon: {
+    name: '로고 아이콘',
+    url: logo,
+  },
+  text: {
+    name: 'votogether',
+    url: votogether,
+  },
+  full: {
+    name: 'votogether',
+    url: '',
+  },
+};
+
+interface LogoButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  content: Content;
+}
+
+export default function LogoButton({ content, ...rest }: LogoButtonProps) {
+  const src = contentCategory[content].url;
+  const ariaLabelText = contentCategory[content].name;
+
+  if (content === 'full') {
+    return (
+      <S.Button content={content} aria-label={ariaLabelText} {...rest}>
+        <img src={logo} alt="로고 아이콘" />
+        <img src={votogether} alt="VoTogether" />
+      </S.Button>
+    );
+  }
+
+  return (
+    <S.Button content={content} aria-label={ariaLabelText} {...rest}>
+      <img src={src} alt="로고 아이콘" />
+    </S.Button>
+  );
+}

@@ -1,0 +1,71 @@
+name: Backend Test When Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'backend/**'
+      - '.github/**'
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: 레포지토리 체크아웃
+        uses: actions/checkout@v3
+
+      - name: JDK 17 환경 설정
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Gradle 캐시
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Gradle 실행 권한 부여
+        run: chmod +x gradlew
+
+      - name: Gradle 테스트 실행
+        run: ./gradlew --info test
+
+      - name: 테스트 결과 PR 코멘트 등록
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+
+      - name: 테스트 실패 시 해당 코드 라인에 Check 등록
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
+      - name: 테스트 실패 시 Slack 알림
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: 백엔드 테스트 실패 알림
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: failure()

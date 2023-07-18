@@ -40,7 +40,7 @@ export default function VoteStatistics({ voteResult, size }: GraphProps) {
                 type="radio"
                 name={`radio-category-${random}`}
                 value={mode}
-                checked={mode === nowRadioMode}
+                defaultChecked={mode === nowRadioMode}
                 onClick={changeMode}
               />
               {radioMode[mode]}

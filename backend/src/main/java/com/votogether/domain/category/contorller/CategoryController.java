@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class CategoryController {
     @Operation(summary = "선호 카테고리 추가하기", description = "선호하는 카테고리를 선호 카테고리 목록에 추가한다.")
     @ApiResponse(responseCode = "201", description = "추가 성공")
     @PostMapping("/{categoryId}/like")
-    public ResponseEntity<Void> addFavoriteCategory(final Member member, final Long categoryId) {
+    public ResponseEntity<Void> addFavoriteCategory(final Member member, @PathVariable final Long categoryId) {
         categoryService.addFavoriteCategory(member, categoryId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

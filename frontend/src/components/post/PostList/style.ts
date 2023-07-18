@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const Container = styled.li`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -14,7 +14,7 @@ export const SelectContainer = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
-export const PostListContainer = styled.div`
+export const PostListContainer = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 30px;

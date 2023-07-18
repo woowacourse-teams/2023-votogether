@@ -13,7 +13,7 @@ interface UsePostListParams {
 
 export const usePostList = ({ postSorting, postStatus }: UsePostListParams) => {
   const { data, error, isLoading } = useQuery<PostInfo[]>(
-    ['posts'],
+    ['posts', postSorting, postStatus],
     () => getPostList({ postSorting, postStatus }),
     {
       suspense: true,

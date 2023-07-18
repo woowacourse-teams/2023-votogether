@@ -4,7 +4,7 @@ export const MOCK_POST_LIST: PostInfo[] = [];
 
 for (let index = 0; index < 20; index += 1) {
   MOCK_POST_LIST.push({
-    postId: 2,
+    postId: Math.floor(Math.random() * 100000),
     title:
       '어느 곳에서 정보를 찾아야 할지도 막막한 사람들을 위한, 심심풀이로 나의 취향과 남의 취향을 비교해보고 싶은 사람들을 위한 프로젝트',
     writer: {

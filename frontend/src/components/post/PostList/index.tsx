@@ -1,13 +1,24 @@
 import React from 'react';
 
 import { usePostList } from '@hooks/query/usePostList';
+import { useSelect } from '@hooks/useSelect';
 
 import Post from '@components/common/Post';
+
+import { PostSortingType, PostStatusType } from '../PostListPage/constants/option';
 
 import * as S from './style';
 
 export default function PostList() {
-  const { data } = usePostList();
+  const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
+    useSelect<PostSortingType>('latest');
+  const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
+    useSelect<PostStatusType>('progress');
+
+  const { data: postList } = usePostList({
+    postSorting: selectedSortingOption,
+    postStatus: selectedStatusOption,
+  });
 
   return (
     <S.Container>
@@ -23,8 +34,8 @@ export default function PostList() {
         </select>
       </S.SelectContainer>
       <S.PostListContainer>
-        {data?.map(item => (
-          <Post key={item.postId} isPreview={true} postInfo={item} />
+        {postList?.map(post => (
+          <Post key={post.postId} isPreview={true} postInfo={post} />
         ))}
       </S.PostListContainer>
     </S.Container>

@@ -5,7 +5,9 @@ import { PostInfo } from '@type/post';
 import { getPostList } from '@api/wus/postList';
 
 export const usePostList = () => {
-  const { data, error, isLoading } = useQuery<PostInfo[]>(['posts'], getPostList);
+  const { data, error, isLoading } = useQuery<PostInfo[]>(['posts'], getPostList, {
+    suspense: true,
+  });
 
   return { data, error, isLoading };
 };

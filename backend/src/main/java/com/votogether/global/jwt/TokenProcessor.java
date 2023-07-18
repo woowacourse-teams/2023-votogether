@@ -1,5 +1,7 @@
 package com.votogether.global.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votogether.domain.member.entity.Member;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -10,12 +12,10 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,14 +25,15 @@ public class TokenProcessor {
 
     private final Key key;
     private final int tokenExpirationTime;
+    private final ObjectMapper objectMapper;
 
     public TokenProcessor(
             @Value("${jwt.token.secret-key}") final String secretKey,
             @Value("${jwt.token.expiration-time}") final int tokenExpirationTime
     ) {
-        final byte[] decodedKey = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(decodedKey);
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
         this.tokenExpirationTime = tokenExpirationTime;
+        this.objectMapper = new ObjectMapper();
     }
 
     public String generateToken(final Member member) {
@@ -47,9 +48,7 @@ public class TokenProcessor {
                 .compact();
     }
 
-    public String resolveToken(final HttpServletRequest request) {
-        final String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-
+    public String resolveToken(final String token) {
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             return token.split(" ")[1];
         }
@@ -77,6 +76,12 @@ public class TokenProcessor {
         } catch (final IllegalArgumentException e) {
             throw new IllegalArgumentException("토큰의 내용이 비어있습니다.");
         }
+    }
+
+    public TokenPayload parseToken(final String token) throws JsonProcessingException {
+        final String[] chunks = token.split("//.");
+        final String payload = new String(Decoders.BASE64.decode(chunks[1]));
+        return objectMapper.readValue(payload, TokenPayload.class);
     }
 
 }

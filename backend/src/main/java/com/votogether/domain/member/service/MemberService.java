@@ -21,4 +21,9 @@ public class MemberService {
         return maybeMember.orElseGet(() -> memberRepository.save(member));
     }
 
+    public Member findById(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Id를 가지 회원은 존재하지 않습니다."));
+    }
+
 }

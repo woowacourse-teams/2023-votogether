@@ -1,6 +1,5 @@
-package com.votogether.global;
+package com.votogether.global.jwt;
 
-import com.votogether.global.jwt.TokenProcessor;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,13 +29,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final HttpServletResponse response,
             final FilterChain filterChain
     ) throws ServletException, IOException {
-        final String token = tokenProcessor.resolveToken(request);
-        tokenProcessor.validateToken(token);
+        final String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String tokenWithoutType = tokenProcessor.resolveToken(token);
+        tokenProcessor.validateToken(tokenWithoutType);
         filterChain.doFilter(request, response);
     }
 
     @Override
-    protected boolean shouldNotFilter(final HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(final HttpServletRequest request) {
         return ALLOWED_URIS.stream()
                 .anyMatch(url -> request.getRequestURI().contains(url));
     }

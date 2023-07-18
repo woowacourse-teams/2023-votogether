@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const Header = styled.div`
+export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,7 +13,7 @@ export const Header = styled.div`
   font-weight: bold;
 `;
 
-export const Body = styled.div`
+export const ModalBody = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;

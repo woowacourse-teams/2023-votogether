@@ -162,11 +162,11 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         {isOpen && (
           <Modal size="sm" onModalClose={closeComponent}>
             <>
-              <S.Header>
+              <S.ModalHeader>
                 <h3>마감 시간 선택</h3>
                 <S.CloseButton onClick={closeComponent}>X</S.CloseButton>
-              </S.Header>
-              <S.Body>
+              </S.ModalHeader>
+              <S.ModalBody>
                 <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
                 <TimePickerOptionList time={time} setTime={setTime} />
                 <S.ResetButtonWrapper>
@@ -174,7 +174,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                     초기화
                   </SquareButton>
                 </S.ResetButtonWrapper>
-              </S.Body>
+              </S.ModalBody>
             </>
           </Modal>
         )}

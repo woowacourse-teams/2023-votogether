@@ -21,9 +21,10 @@ import * as S from './style';
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
+  isError: boolean;
 }
 
-export default function PostForm({ data, mutate }: PostFormProps) {
+export default function PostForm({ data, mutate, isError }: PostFormProps) {
   const {
     title,
     content,
@@ -94,8 +95,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
 
       mutate(formData);
 
-      window.console.log('submitted!', formData);
-      navigate('/');
+      if (isError) {
+        alert('글 저장에 실패했습니다');
+      } else {
+        navigate('/');
+      }
     }
   };
 

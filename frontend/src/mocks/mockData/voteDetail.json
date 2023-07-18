@@ -1,5 +1,5 @@
 {
-  "postId": 1111112,
+  "postId": 1,
   "title": "어느 곳에서 정보를 찾아야 할지도 막막한 사람들을 위한, 심심풀이로 나의 취향과 남의 취향을 비교해보고 싶은 사람들을 위한 프로젝트",
   "writer": {
     "id": 12121221,
@@ -23,29 +23,29 @@
   "startTime": "2023-07-12 12:40",
   "endTime": "2023-07-13 18:40",
   "voteInfo": {
-    "selectedOptionId": 12312,
+    "selectedOptionId": 2,
     "allPeopleCount": 123,
     "options": [
       {
-        "id": 12312,
+        "id": 12,
         "text": "당선",
         "peopleCount": 30,
         "percent": 30
       },
       {
-        "id": 12314,
+        "id": 123,
         "text": "votogether",
         "peopleCount": 40,
         "percent": 40
       },
       {
-        "id": 123152,
+        "id": 1234,
         "text": "인스타그램, 블라인드와 같은 SNS의 형식을 차용합니다. 누군가는 글을 쓰고, 누군가는 반응합니다. 다만, 댓글은 없습니다. 투표로 자신의 의견을 표현하고 이를 사람들에게 보여줍니다.",
         "peopleCount": 20,
         "percent": 20
       },
       {
-        "id": 123122,
+        "id": 2,
         "text": "fun from choice, 오늘도 즐거운 한 표 ",
         "imageUrl": "https://source.unsplash.com/random",
         "peopleCount": 10,

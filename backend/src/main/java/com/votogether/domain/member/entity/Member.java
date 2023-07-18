@@ -60,4 +60,8 @@ public class Member extends BaseEntity {
         this.point = point;
     }
 
+    public void plusPoint(final int point) {
+        this.point = this.point + point;
+    }
+
 }

@@ -10,5 +10,5 @@ export default meta;
 type Story = StoryObj<typeof OptionUploadImageButton>;
 
 export const Default: Story = {
-  render: () => <OptionUploadImageButton labelId={123} />,
+  render: () => <OptionUploadImageButton optionId={123} />,
 };

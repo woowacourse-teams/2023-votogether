@@ -57,6 +57,7 @@ class MemberCategoryRepositoryTest {
 
         // then
         assertThat(memberCategory.getId()).isNotNull();
+        assertThat(memberCategory.getCategory().getName()).isEqualTo("개발");
     }
 
     @Test

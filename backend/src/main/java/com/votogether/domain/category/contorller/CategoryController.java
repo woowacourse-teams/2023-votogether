@@ -41,6 +41,8 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "선호 카테고리 삭제하기", description = "선호하는 카테고리를 선호 카테고리 목록에서 삭제한다.")
+    @ApiResponse(responseCode = "204", description = "삭제 성공")
     @DeleteMapping("/{categoryId}/like")
     public ResponseEntity<Void> removeFavoriteCategory(final Member member, @PathVariable final Long categoryId) {
         categoryService.removeFavoriteCategory(member, categoryId);

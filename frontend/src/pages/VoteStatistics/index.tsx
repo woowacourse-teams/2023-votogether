@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useFetch } from '@hooks/useFetch';
 
@@ -16,23 +16,30 @@ import * as S from './style';
 export default function VoteStatisticsPage() {
   // const location = useLocation();
   // const postId = location.state.id;
+  const postId = 1;
+
+  const navigate = useNavigate();
 
   const {
     data: postDetail,
     errorMessage: postError,
     isLoading: isPostLoading,
-  } = useFetch(() => getVoteDetail(1)); //1은 나중에 postID로 대체
+  } = useFetch(() => getVoteDetail(postId));
   const {
     data: voteResult,
     errorMessage: voteResultError,
     isLoading: isVoteResultLoading,
-  } = useFetch(() => getPostStatistics(1)); //1은 나중에 postID로 대체
+  } = useFetch(() => getPostStatistics(postId));
+
+  const movePostDetailPage = () => {
+    navigate(`posts/${postId}`);
+  };
 
   return (
     <>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
-          <IconButton category="back" />
+          <IconButton category="back" onClick={movePostDetailPage} />
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
       <S.Container>

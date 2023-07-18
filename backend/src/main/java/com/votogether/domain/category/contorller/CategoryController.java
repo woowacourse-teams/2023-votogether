@@ -31,6 +31,8 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(categories);
     }
 
+    @Operation(summary = "선호 카테고리 추가하기", description = "선호하는 카테고리를 선호 카테고리 목록에 추가한다.")
+    @ApiResponse(responseCode = "201", description = "추가 성공")
     @PostMapping("/{categoryId}/like")
     public ResponseEntity<Void> addFavoriteCategory(final Member member, final Long categoryId) {
         categoryService.addFavoriteCategory(member, categoryId);

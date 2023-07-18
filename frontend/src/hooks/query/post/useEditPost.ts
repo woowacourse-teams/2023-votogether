@@ -11,8 +11,8 @@ export const useEditPost = (postId: number) => {
       onSuccess: () => {
         queryClient.invalidateQueries([QUERY_KEY.POSTS, postId]);
       },
-      onError: () => {
-        window.console.log('editPost error');
+      onError: error => {
+        window.console.log('editPost error', error);
       },
     }
   );

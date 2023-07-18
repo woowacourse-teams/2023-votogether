@@ -9,8 +9,8 @@ export const useCreatePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEY.POSTS]);
     },
-    onError: () => {
-      window.console.log('createPost error');
+    onError: error => {
+      window.console.log('createPost error', error);
     },
   });
 

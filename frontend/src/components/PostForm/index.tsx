@@ -43,6 +43,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     hour: 0,
     minute: 0,
   });
+  const baseTime = startTime ? new Date(startTime) : new Date();
+
   const [writingTitle, setWritingTitle] = useState(title);
   const [writingContent, setWritingContent] = useState(content);
 
@@ -80,8 +82,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
       const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
       const writingOptionTexts = Array.from(optionTextAreas).map((textarea: any) => textarea.value);
-
-      const baseTime = startTime ? new Date(startTime) : new Date();
 
       const updatedPostTexts = {
         categoryIds: [1, 2],
@@ -138,10 +138,16 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
           />
           <S.OptionListWrapper>
             <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
-            {data && <S.Deadline>기존 마감 시간: {deadline}</S.Deadline>}
             <S.Deadline>
               {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.
             </S.Deadline>
+            {data && (
+              <S.Description>
+                글 작성일({startTime})로부터 하루 이후 (
+                {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택 가능합니다.
+              </S.Description>
+            )}
+            {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
             <S.ButtonWrapper>
               {DEADLINE_OPTION.map(option => (
                 <SquareButton

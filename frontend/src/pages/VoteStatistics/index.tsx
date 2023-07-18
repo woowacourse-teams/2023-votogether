@@ -55,6 +55,7 @@ export default function VoteStatisticsPage() {
               const { postId, voteInfo } = postDetail;
               return (
                 <OptionStatistics
+                  key={option.id}
                   postId={postId}
                   isSelectedOption={voteInfo.selectedOptionId === option.id}
                   voteOption={option}

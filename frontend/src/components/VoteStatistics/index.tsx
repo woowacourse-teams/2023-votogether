@@ -35,7 +35,7 @@ export default function VoteStatistics({ voteResult, size }: GraphProps) {
       <S.CategoryWrapper>
         {radioModeKey.map(mode => {
           return (
-            <S.RadioLabel>
+            <S.RadioLabel key={mode}>
               <input
                 type="radio"
                 name={`radio-category-${random}`}

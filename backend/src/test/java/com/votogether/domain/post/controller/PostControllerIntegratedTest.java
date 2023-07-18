@@ -34,8 +34,8 @@ class PostControllerIntegratedTest extends IntegrationTest {
                 .deadline(LocalDateTime.now())
                 .build();
 
-        final String fileName1 = "testImage1.jpg";
-        final String resultFileName1 = "testResultImage1.jpg";
+        final String fileName1 = "testImage1.PNG";
+        final String resultFileName1 = "testResultImage1.PNG";
         final String filePath1 = "src/test/resources/images/" + fileName1;
         File file1 = new File(filePath1);
 
@@ -53,7 +53,7 @@ class PostControllerIntegratedTest extends IntegrationTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.MULTIPART)
                 .multiPart("request", postRequestJson, "application/json")
-                .multiPart("images", resultFileName1, new FileInputStream(file1), "image/jpeg")
+                .multiPart("images", resultFileName1, new FileInputStream(file1), "image/png")
                 .multiPart("images", resultFileName2, new FileInputStream(file2), "image/png")
                 .when().post("/posts")
                 .then().log().all()

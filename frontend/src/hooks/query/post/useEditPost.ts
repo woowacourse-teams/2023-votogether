@@ -9,7 +9,7 @@ export const useEditPost = (postId: number) => {
     (updatedPost: FormData) => editPost(postId, updatedPost),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEY.posts, postId]);
+        queryClient.invalidateQueries([QUERY_KEY.POSTS, postId]);
       },
       onError: () => {
         window.console.log('editPost error');

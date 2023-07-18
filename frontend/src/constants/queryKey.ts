@@ -1,3 +1,3 @@
 export const QUERY_KEY = {
-  posts: 'posts',
+  POSTS: 'posts',
 };

@@ -7,7 +7,7 @@ export const useCreatePost = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, isError, error } = useMutation((post: FormData) => createPost(post), {
     onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEY.posts]);
+      queryClient.invalidateQueries([QUERY_KEY.POSTS]);
     },
     onError: () => {
       window.console.log('createPost error');

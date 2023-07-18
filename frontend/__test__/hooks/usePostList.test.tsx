@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import { usePostList } from '@hooks/query/usePostList';
 
-import { MOCK_POST_LIST } from '../../src/mocks/wus/post';
+import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
 const queryClient = new QueryClient();
 

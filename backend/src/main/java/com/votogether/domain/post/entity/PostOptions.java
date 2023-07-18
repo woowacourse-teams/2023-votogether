@@ -23,4 +23,5 @@ public class PostOptions {
     public boolean contains(final PostOption postOption) {
         return postOptions.contains(postOption);
     }
+
 }

@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.startsWith;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.votogether.domain.post.dto.request.PostOptionRequest;
 import com.votogether.domain.post.dto.request.PostRequest;
 import com.votogether.domain.post.integrated.IntegrationTest;
 import io.restassured.RestAssured;
@@ -25,14 +24,12 @@ class PostControllerIntegratedTest extends IntegrationTest {
     @Test
     void save() throws IOException {
         // given
-        final PostOptionRequest postOptionRequest1 = new PostOptionRequest("option1");
-        final PostOptionRequest postOptionRequest2 = new PostOptionRequest("option2");
-        final List<PostOptionRequest> postOptionRequests = List.of(postOptionRequest1, postOptionRequest2);
+        final List<String> postOptionRequests = List.of("option1", "option2");
 
         final PostRequest postRequest = PostRequest.builder()
                 .title("title")
                 .content("content")
-                .postOptionRequests(postOptionRequests)
+                .postOptionContents(postOptionRequests)
                 .categoryIds(List.of(0L, 3L))
                 .deadline(LocalDateTime.now())
                 .build();

@@ -55,7 +55,7 @@ class PostServiceTest {
 
         final PostRequest postRequest = PostRequest.builder()
                 .categoryIds(Collections.emptyList())
-                .postOptionRequests(Collections.emptyList())
+                .postOptionContents(Collections.emptyList())
                 .build();
 
         // when

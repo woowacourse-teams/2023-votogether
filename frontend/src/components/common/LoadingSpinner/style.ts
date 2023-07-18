@@ -33,7 +33,7 @@ export const Container = styled.div<LoadingSpinnerProps>`
   }
 `;
 
-export const Uint = styled.div<LoadingSpinnerProps>`
+export const unit = styled.div<LoadingSpinnerProps>`
   width: ${props => size[props.$size]};
   height: ${props => size[props.$size]};
   border-radius: 50%;

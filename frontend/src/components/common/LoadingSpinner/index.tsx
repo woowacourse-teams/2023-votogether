@@ -9,9 +9,9 @@ interface LoadingSpinnerProps {
 export default function LoadingSpinner({ size }: LoadingSpinnerProps) {
   return (
     <S.Container $size={size}>
-      <S.Uint $size={size} />
-      <S.Uint $size={size} />
-      <S.Uint $size={size} />
+      <S.unit $size={size} />
+      <S.unit $size={size} />
+      <S.unit $size={size} />
     </S.Container>
   );
 }

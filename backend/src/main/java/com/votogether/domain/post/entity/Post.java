@@ -13,14 +13,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -64,8 +64,29 @@ public class Post extends BaseEntity {
         this.postCategories.mapPostAndCategories(this, categories);
     }
 
-    public void addAllPostOptions(final List<PostOption> postOptions) {
-        this.postOptions.addAllPostOptions(postOptions);
+    public void mapPostOptionsByElements(
+            final List<String> postOptionContents,
+            final Post post,
+            final List<MultipartFile> images
+    ) {
+        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, post, images));
+    }
+
+    private List<PostOption> toPostOptionEntities(
+            final List<String> postOptionContents,
+            final Post post,
+            final List<MultipartFile> images
+    ) {
+        return IntStream.range(0, postOptionContents.size())
+                .mapToObj(postOptionSequence ->
+                        PostOption.of(
+                                postOptionContents.get(postOptionSequence),
+                                post,
+                                postOptionSequence,
+                                images.get(postOptionSequence)
+                        )
+                )
+                .toList();
     }
 
     public boolean hasPostOption(final PostOption postOption) {

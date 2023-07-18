@@ -34,24 +34,6 @@ class PostTest {
         assertThat(actualPostCategories.getPostCategories()).hasSize(2);
     }
 
-    @DisplayName("여러 PostOption을 저장한다")
-    @Test
-    void addAllPostOptions() {
-        // given
-        final Post post = Post.builder().build();
-        final PostOption postOption1 = PostOption.builder().build();
-        final PostOption postOption2 = PostOption.builder().build();
-
-        final List<PostOption> postOptions = List.of(postOption1, postOption2);
-
-        // when
-        post.addAllPostOptions(postOptions);
-
-        // then
-        final PostOptions actualPostOptions = post.getPostOptions();
-        assertThat(actualPostOptions.getPostOptions()).hasSize(2);
-    }
-
     @Test
     @DisplayName("게시글의 작성자 여부를 확인한다.")
     void isWriter() {

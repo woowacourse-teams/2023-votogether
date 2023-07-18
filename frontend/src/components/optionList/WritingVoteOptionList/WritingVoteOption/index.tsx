@@ -48,7 +48,7 @@ export default function WritingVoteOption({
       <S.OptionContainer>
         <S.ContentContainer>
           <S.ContentTextArea
-            name={String(optionId)}
+            name="optionText"
             defaultValue={text}
             onChange={handleTextChange}
             placeholder="내용을 입력해주세요."

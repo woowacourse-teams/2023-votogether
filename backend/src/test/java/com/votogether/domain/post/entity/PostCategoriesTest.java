@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 class PostCategoriesTest {
 
-    @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     @Test
+    @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     void mapPostAndCategories() {
         // given
         final PostCategories postCategories = new PostCategories();

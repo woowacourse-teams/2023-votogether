@@ -28,8 +28,8 @@ class PostRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("Post를 저장한다")
     @Test
+    @DisplayName("Post를 저장한다")
     void save() {
         // given
         final PostBody postBody = PostBody.builder()

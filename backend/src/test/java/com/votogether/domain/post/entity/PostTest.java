@@ -16,8 +16,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PostTest {
 
-    @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     @Test
+    @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     void mapCategories() {
         // given
         final Post post = Post.builder().build();

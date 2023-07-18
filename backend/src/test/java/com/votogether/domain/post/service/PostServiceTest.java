@@ -37,8 +37,8 @@ class PostServiceTest {
     @InjectMocks
     private PostService postService;
 
-    @DisplayName("게시글을 등록한다")
     @Test
+    @DisplayName("게시글을 등록한다")
     void save() {
         // given
         final Category category1 = Category.builder().build();

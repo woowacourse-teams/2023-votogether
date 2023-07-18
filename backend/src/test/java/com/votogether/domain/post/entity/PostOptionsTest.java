@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 class PostOptionsTest {
 
-    @DisplayName("여러 PostOption을 저장한다")
     @Test
+    @DisplayName("여러 PostOption을 저장한다")
     void addAllPostOptions() {
         // given
         final PostOptions postOptions = new PostOptions();

@@ -30,11 +30,13 @@ export default function VoteStatisticsPage() {
 
   return (
     <>
-      <NarrowTemplateHeader>
-        <IconButton category="back" />
-      </NarrowTemplateHeader>
+      <S.HeaderWrapper>
+        <NarrowTemplateHeader>
+          <IconButton category="back" />
+        </NarrowTemplateHeader>
+      </S.HeaderWrapper>
       <S.Container>
-        <S.Header>투표 통계</S.Header>
+        <S.PageHeader>투표 통계</S.PageHeader>
         {postError && <div>{postError}</div>}
         {isPostLoading && (
           <S.LoadingWrapper>

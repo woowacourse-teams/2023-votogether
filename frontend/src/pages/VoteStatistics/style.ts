@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -8,7 +10,13 @@ export const Container = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Header = styled.div`
+export const HeaderWrapper = styled.div`
+  @media (min-width: ${theme.breakpoint.sm}) {
+    display: none;
+  }
+`;
+
+export const PageHeader = styled.div`
   margin: 15px;
   font-size: 20px;
 `;

@@ -23,7 +23,7 @@ export default function WritingVoteOption({
   handleDeleteOptionClick,
   handleRemoveImageClick,
   handleUploadImage,
-  imageUrl,
+  imageUrl = '',
 }: WritingVoteOptionProps) {
   const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
@@ -54,9 +54,12 @@ export default function WritingVoteOption({
             placeholder="내용을 입력해주세요."
             maxLength={MAX_WRITING_LENGTH}
           />
-          {!imageUrl && (
-            <OptionUploadImageButton optionId={optionId} onChange={handleUploadImage} />
-          )}
+
+          <OptionUploadImageButton
+            isImageVisible={imageUrl.length > 0}
+            optionId={optionId}
+            onChange={handleUploadImage}
+          />
         </S.ContentContainer>
         {imageUrl && (
           <S.ImageContainer>

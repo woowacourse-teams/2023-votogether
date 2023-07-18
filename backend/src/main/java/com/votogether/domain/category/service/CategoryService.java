@@ -43,4 +43,15 @@ public class CategoryService {
         memberCategoryRepository.save(memberCategory);
     }
 
+    @Transactional
+    public void removeFavoriteCategory(final Member member, final Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+
+        MemberCategory memberCategory = memberCategoryRepository.findByMemberAndCategory(member, category)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리는 선호 카테고리가 아닙니다."));
+
+        memberCategoryRepository.delete(memberCategory);
+    }
+
 }

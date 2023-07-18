@@ -40,5 +40,4 @@ public class CategoryService {
         memberCategoryRepository.save(memberCategory);
     }
 
-
 }

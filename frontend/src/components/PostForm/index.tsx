@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { PostRequest } from '@type/post';
+import { PostInfo } from '@type/post';
 
 import { useToggle } from '@hooks/useToggle';
 
@@ -17,33 +17,21 @@ import { DEADLINE_OPTION } from './constants';
 import * as S from './style';
 
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
-  data?: PostRequest;
+  data?: PostInfo;
   mutate: any;
 }
 
 export default function PostForm({ data, mutate }: PostFormProps) {
-  const { texts, images } = data ?? {
-    texts: {
-      categoryIds: [],
-      title: '',
-      content: '',
-      postOptions: [],
-      deadline: '',
-    },
-    images: [],
-  };
-  const { categoryIds, title, content, postOptions, deadline } = texts;
-
-  // 현재 WritingVoteOptionList의 props 타입이 ** {id, text, imageUrl} 객체 배열 ** 타입인데, 컴포넌트의 타입을 바꾸면 수정할 부분이 너무 많아짐
-  const postOptionListforFormat = postOptions.map(str => ({
-    id: Math.floor(Math.random() * 100000),
-    text: str,
-    imageUrl: '',
-  }));
-  // 따라서 일단은 부득이하게 문자열 배열 ['강아지'] => [ {id: 12314, text: '강아지', imageUrl:' }]  객체 배열 형식으로 포맷팅 해줘야 함...
+  const {
+    title,
+    content,
+    category: categoryIds,
+    startTime,
+    endTime: deadline,
+    voteInfo,
+  } = data ?? {};
 
   const navigate = useNavigate();
-  const { postId } = useParams();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -56,7 +44,6 @@ export default function PostForm({ data, mutate }: PostFormProps) {
 
   const handleDeadlineButtonClick = (option: string) => {
     setTime(formatTimeWithOption(option));
-    // formatTimeWithOption => '10분 후' 라는 option 이면 {day: 0, hour: 0, minute: 10} 라는 객체 반환
   };
 
   const handleResetBUtton = () => {
@@ -72,36 +59,38 @@ export default function PostForm({ data, mutate }: PostFormProps) {
 
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData();
 
     if (e.target instanceof HTMLFormElement) {
-      const formData = new FormData(e.target);
+      const optionImageFileInputs =
+        e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
+      const fileInputList: HTMLInputElement[] = [...optionImageFileInputs];
+      const imageFileList: File[] = [];
+      fileInputList.forEach(item => {
+        if (item.files) {
+          imageFileList.push(item.files[0]);
+        }
+      });
 
-      const optionImageFileInputs = e.target.querySelectorAll(
-        'input[type="file"][name="optionImage"]'
-      );
-      const imageFiles = Array.from(optionImageFileInputs).map((input: any) =>
-        formData.get(input.name)
-      );
+      imageFileList.map(file => formData.append('images', file));
 
       const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
       const writingOptionTexts = Array.from(optionTextAreas).map((textarea: any) => textarea.value);
 
-      const updatedPost: PostRequest = {
-        texts: {
-          categoryIds: [1, 2],
-          title: writingTitle,
-          content: writingContent,
-          postOptions: writingOptionTexts,
-          deadline: addTimeToCurrentDate(time) ?? deadline,
-        },
-        images: [],
+      const updatedPostTexts = {
+        categoryIds: [1, 2],
+        title: writingTitle ?? '',
+        content: writingContent ?? '',
+        postOptions: writingOptionTexts,
+        deadline: addTimeToCurrentDate(time, data ? startTime : ''),
+        // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
+        // 마감시간 옵션을 선택 안했다면 기존의 마감 시간을 유지한다.
       };
+      formData.append('texts', JSON.stringify(updatedPostTexts));
 
-      if (postId) mutate(postId, updatedPost);
-      else mutate(updatedPost);
+      mutate(formData);
 
-      window.console.log('submitted!', updatedPost);
-      window.console.log('original deadline was...', deadline);
+      window.console.log('submitted!', formData);
       navigate('/');
     }
   };
@@ -117,8 +106,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <select>
-            {categoryIds &&
-              categoryIds.map(category => <option key={category}>{category}✅</option>)}
+            {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
             <option>카테고리1</option>
             <option>카테고리2</option>
           </select>
@@ -127,6 +115,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWritingTitle(e.target.value)}
             placeholder="제목을 입력해주세요"
             maxLength={100}
+            required
           />
           <S.Content
             value={writingContent}
@@ -135,9 +124,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             }
             placeholder="내용을 입력해주세요"
             maxLength={1000}
+            required
           />
           <S.OptionListWrapper>
-            <WritingVoteOptionList initialOptionList={data && postOptionListforFormat} />
+            <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
             {data && <S.Deadline>기존 마감 시간: {deadline}</S.Deadline>}
             <S.Deadline>
               {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.

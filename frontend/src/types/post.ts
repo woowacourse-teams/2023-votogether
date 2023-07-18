@@ -20,15 +20,3 @@ export interface PostInfo {
     options: WrittenVoteOptionType[];
   };
 }
-
-export interface TextData {
-  categoryIds: number[];
-  title: string;
-  content: string;
-  postOptions: string[];
-  deadline?: string;
-}
-export interface PostRequest {
-  texts: TextData;
-  images: File[];
-}

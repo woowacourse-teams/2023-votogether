@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -28,6 +29,21 @@ public class PostRequest {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime deadline;
+
+    @Builder
+    public PostRequest(
+            final List<Long> categoryIds,
+            final String title,
+            final String content,
+            final List<PostOptionRequest> postOptionRequests,
+            final LocalDateTime deadline
+    ) {
+        this.categoryIds = categoryIds;
+        this.title = title;
+        this.content = content;
+        this.postOptionRequests = postOptionRequests;
+        this.deadline = deadline;
+    }
 
     public Post toEntity(
             final Member member,

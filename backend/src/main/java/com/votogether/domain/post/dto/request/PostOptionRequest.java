@@ -2,9 +2,11 @@ package com.votogether.domain.post.dto.request;
 
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class PostOptionRequest {
 
     private String content;
@@ -23,7 +26,8 @@ public class PostOptionRequest {
             final MultipartFile image
     ) {
         if (!image.isEmpty()) {
-            final String imageUrl = "C:/git/wooteco/2023-votogether/backend/images/" + image.getOriginalFilename();
+            final String absolutePath = new File("").getAbsolutePath();
+            final String imageUrl = absolutePath + "/src/main/resources/images/" + image.getOriginalFilename();
 
             try {
                 Files.write(Paths.get(imageUrl), image.getBytes());

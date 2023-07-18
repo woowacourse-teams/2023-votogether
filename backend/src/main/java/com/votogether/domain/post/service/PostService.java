@@ -22,7 +22,11 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
 
-    public Long save(final PostRequest postRequest, final Member member, final List<MultipartFile> images) {
+    public Long save(
+            final PostRequest postRequest,
+            final Member member,
+            final List<MultipartFile> images
+    ) {
         final List<Category> categories = categoryRepository.findAllById(postRequest.getCategoryIds());
         final Post post = postRequest.toEntity(member, images, categories);
 

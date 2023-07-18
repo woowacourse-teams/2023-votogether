@@ -33,7 +33,7 @@ public class PostOption extends BaseEntity {
     @Column(length = 50, nullable = false)
     private String content;
 
-    @Column(length = 100)
+    @Column
     private String imageUrl;
 
     @Builder

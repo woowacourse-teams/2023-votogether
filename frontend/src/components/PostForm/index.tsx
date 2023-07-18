@@ -107,74 +107,78 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   };
 
   return (
-    <S.Form onSubmit={handlePostFormSubmit}>
+    <>
       <NarrowTemplateHeader>
         <S.HeaderButton onClick={() => navigate('/')}>취소</S.HeaderButton>
-        <S.HeaderButton>저장</S.HeaderButton>
+        <S.HeaderButton type="submit" form="form-post">
+          저장
+        </S.HeaderButton>
       </NarrowTemplateHeader>
-      <S.Wrapper>
-        <select>
-          {categoryIds && categoryIds.map(category => <option key={category}>{category}✅</option>)}
-          <option>카테고리1</option>
-          <option>카테고리2</option>
-        </select>
-        <S.Title
-          value={writingTitle}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWritingTitle(e.target.value)}
-          placeholder="제목을 입력해주세요"
-          maxLength={100}
-          required
-        />
-        <S.Content
-          value={writingContent}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-            setWritingContent(e.target.value)
-          }
-          placeholder="내용을 입력해주세요"
-          maxLength={1000}
-          required
-        />
-        <S.OptionListWrapper>
-          <WritingVoteOptionList initialOptionList={postOptionListforFormat} />
-          {data && <S.Deadline>기존 마감 시간: {deadline}</S.Deadline>}
-          <S.Deadline>
-            {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.
-          </S.Deadline>
-          <S.ButtonWrapper>
-            {DEADLINE_OPTION.map(option => (
-              <SquareButton
-                key={option}
-                onClick={() => handleDeadlineButtonClick(option)}
-                theme="blank"
-              >
-                {option}
-              </SquareButton>
-            ))}
-            <SquareButton onClick={openComponent} theme="blank">
-              사용자 지정
-            </SquareButton>
-          </S.ButtonWrapper>
-        </S.OptionListWrapper>
-      </S.Wrapper>
-      {isOpen && (
-        <Modal size="sm" onModalClose={closeComponent}>
-          <>
-            <S.Header>
-              <h3>마감 시간 선택</h3>
-              <S.CloseButton onClick={closeComponent}>X</S.CloseButton>
-            </S.Header>
-            <S.Body>
-              <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
-              <TimePickerOptionList time={time} setTime={setTime} />
-              <S.ResetButtonWrapper>
-                <SquareButton onClick={handleResetBUtton} theme="blank">
-                  초기화
+      <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
+        <S.Wrapper>
+          <select>
+            {categoryIds &&
+              categoryIds.map(category => <option key={category}>{category}✅</option>)}
+            <option>카테고리1</option>
+            <option>카테고리2</option>
+          </select>
+          <S.Title
+            value={writingTitle}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWritingTitle(e.target.value)}
+            placeholder="제목을 입력해주세요"
+            maxLength={100}
+          />
+          <S.Content
+            value={writingContent}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setWritingContent(e.target.value)
+            }
+            placeholder="내용을 입력해주세요"
+            maxLength={1000}
+          />
+          <S.OptionListWrapper>
+            <WritingVoteOptionList initialOptionList={data && postOptionListforFormat} />
+            {data && <S.Deadline>기존 마감 시간: {deadline}</S.Deadline>}
+            <S.Deadline>
+              {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.
+            </S.Deadline>
+            <S.ButtonWrapper>
+              {DEADLINE_OPTION.map(option => (
+                <SquareButton
+                  key={option}
+                  type="button"
+                  onClick={() => handleDeadlineButtonClick(option)}
+                  theme="blank"
+                >
+                  {option}
                 </SquareButton>
-              </S.ResetButtonWrapper>
-            </S.Body>
-          </>
-        </Modal>
-      )}
-    </S.Form>
+              ))}
+              <SquareButton type="button" onClick={openComponent} theme="blank">
+                사용자 지정
+              </SquareButton>
+            </S.ButtonWrapper>
+          </S.OptionListWrapper>
+        </S.Wrapper>
+        {isOpen && (
+          <Modal size="sm" onModalClose={closeComponent}>
+            <>
+              <S.Header>
+                <h3>마감 시간 선택</h3>
+                <S.CloseButton onClick={closeComponent}>X</S.CloseButton>
+              </S.Header>
+              <S.Body>
+                <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
+                <TimePickerOptionList time={time} setTime={setTime} />
+                <S.ResetButtonWrapper>
+                  <SquareButton onClick={handleResetBUtton} theme="blank">
+                    초기화
+                  </SquareButton>
+                </S.ResetButtonWrapper>
+              </S.Body>
+            </>
+          </Modal>
+        )}
+      </S.Form>
+    </>
   );
 }

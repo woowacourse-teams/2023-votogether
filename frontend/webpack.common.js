@@ -28,6 +28,7 @@ module.exports = {
       '@selectors': path.resolve(__dirname, 'src/selectors'),
       '@routes': path.resolve(__dirname, 'src/routes'),
       '@api': path.resolve(__dirname, 'src/api'),
+      '@mocks': path.resolve(__dirname, 'src/mocks'),
     },
   },
   module: {

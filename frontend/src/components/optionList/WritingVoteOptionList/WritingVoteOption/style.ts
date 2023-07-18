@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.li`
   display: flex;
   gap: 10px;
@@ -37,7 +39,7 @@ export const ContentTextArea = styled.textarea`
 
   resize: none;
 
-  @media (min-width: 960px) {
+  @media (min-width: ${theme.breakpoint.md}) {
     height: 120px;
 
     font-size: 1.6rem;
@@ -83,7 +85,7 @@ background-color: #bebebe;
 
 cursor: pointer;
 
-@media (min-width: 960px) {
+@media (min-width: ${theme.breakpoint.md}) {
  width:28px;
  height:28px;
 }
@@ -93,7 +95,7 @@ export const IconImage = styled.img`
   width: 14px;
   height: 14px;
 
-  @media (min-width: 960px) {
+  @media (min-width: ${theme.breakpoint.md}) {
     width: 16px;
     height: 16px;
   }

@@ -9,6 +9,6 @@ const meta: Meta<typeof PostList> = {
 export default meta;
 type Story = StoryObj<typeof PostList>;
 
-export const Primary: Story = {
+export const Default: Story = {
   render: () => <PostList />,
 };

@@ -11,9 +11,22 @@ export default function PostList() {
 
   return (
     <S.Container>
-      {data?.map(item => (
-        <Post isPreview={true} postInfo={item} />
-      ))}
+      <S.SelectContainer>
+        <select defaultValue="진행중">
+          <option>전체</option>
+          <option>진행중</option>
+          <option>마감완료</option>
+        </select>
+        <select defaultValue="최신순">
+          <option>인기순</option>
+          <option>최신순</option>
+        </select>
+      </S.SelectContainer>
+      <S.PostListContainer>
+        {data?.map(item => (
+          <Post key={item.postId} isPreview={true} postInfo={item} />
+        ))}
+      </S.PostListContainer>
     </S.Container>
   );
 }

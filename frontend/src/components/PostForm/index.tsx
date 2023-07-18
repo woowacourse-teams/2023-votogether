@@ -22,9 +22,10 @@ interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
   isError: boolean;
+  error: unknown;
 }
 
-export default function PostForm({ data, mutate, isError }: PostFormProps) {
+export default function PostForm({ data, mutate, isError, error }: PostFormProps) {
   const {
     title,
     content,
@@ -95,11 +96,12 @@ export default function PostForm({ data, mutate, isError }: PostFormProps) {
 
       mutate(formData);
 
-      if (isError) {
-        alert('글 저장에 실패했습니다');
-      } else {
-        navigate('/');
+      if (isError && error instanceof Error) {
+        alert(error.message);
+        return;
       }
+
+      navigate('/');
     }
   };
 

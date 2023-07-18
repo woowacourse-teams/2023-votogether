@@ -10,7 +10,7 @@ export default function EditPost() {
   const { postId } = useParams();
 
   // const { data } = usePostDetailQuery({ postId});
-  const { mutate, isError } = useEditPost(Number(postId));
+  const { mutate, isError, error } = useEditPost(Number(postId));
 
   const MOCK_DATA: PostInfo = {
     postId: 1,
@@ -56,7 +56,7 @@ export default function EditPost() {
 
   return (
     <>
-      <PostForm data={MOCK_DATA} mutate={mutate} isError={isError} />
+      <PostForm data={MOCK_DATA} mutate={mutate} isError={isError} error={error} />
     </>
   );
 }

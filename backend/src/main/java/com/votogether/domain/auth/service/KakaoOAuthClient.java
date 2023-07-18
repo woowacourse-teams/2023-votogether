@@ -2,9 +2,7 @@ package com.votogether.domain.auth.service;
 
 import com.votogether.domain.auth.dto.KakaoMemberResponse;
 import com.votogether.domain.auth.dto.OAuthAccessTokenResponse;
-import com.votogether.domain.member.service.MemberService;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,14 +20,7 @@ public class KakaoOAuthClient {
 
     private static final RestTemplate restTemplate = new RestTemplate();
 
-    private final MemberService memberService;
-    private final MultiValueMap<String, String> info;
-
-    @Autowired
-    public KakaoOAuthClient(final MemberService memberService) {
-        this.memberService = memberService;
-        this.info = new LinkedMultiValueMap<>();
-    }
+    private final MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
 
     public String getAccessToken(final String code) {
         info.add("code", code);

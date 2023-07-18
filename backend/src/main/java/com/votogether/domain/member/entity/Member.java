@@ -31,7 +31,10 @@ public class Member extends BaseEntity {
     private Gender gender;
 
     @Column(nullable = false)
-    private String birthDate;
+    private String ageRange;
+
+    @Column(nullable = false)
+    private String birthday;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
@@ -46,15 +49,17 @@ public class Member extends BaseEntity {
     @Builder
     private Member(
             final String nickname,
-            final String birthDate,
             final Gender gender,
+            final String ageRange,
+            final String birthday,
             final SocialType socialType,
             final String socialId,
             final Integer point
     ) {
         this.nickname = nickname;
-        this.birthDate = birthDate;
         this.gender = gender;
+        this.ageRange = ageRange;
+        this.birthday = birthday;
         this.socialType = socialType;
         this.socialId = socialId;
         this.point = point;
@@ -65,7 +70,8 @@ public class Member extends BaseEntity {
         return Member.builder()
                 .nickname("익명의 손님" + nicknameNumberGenerator.generate())
                 .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
-                .birthDate(response.kakaoAccount().birthday())
+                .ageRange(response.kakaoAccount().ageRange())
+                .birthday(response.kakaoAccount().birthday())
                 .socialType(SocialType.KAKAO)
                 .socialId(String.valueOf(response.id()))
                 .point(0)

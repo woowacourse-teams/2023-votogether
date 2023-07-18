@@ -16,8 +16,10 @@ public class MemberService {
 
     @Transactional
     public Member register(final Member member) {
-        final Optional<Member> maybeMember = memberRepository.findBySocialIdAndSocialType(member.getSocialId(),
-                member.getSocialType());
+        final Optional<Member> maybeMember = memberRepository.findBySocialIdAndSocialType(
+                member.getSocialId(),
+                member.getSocialType()
+        );
         return maybeMember.orElseGet(() -> memberRepository.save(member));
     }
 

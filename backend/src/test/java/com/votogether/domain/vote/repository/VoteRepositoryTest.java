@@ -8,6 +8,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
+import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
@@ -45,22 +46,20 @@ class VoteRepositoryTest {
             .nickname("user1")
             .socialId("kakao@gmail.com")
             .birthDate(
-                    LocalDateTime.of(1995, 07, 12, 00, 00))
+                    LocalDateTime.of(1995, 7, 12, 0, 0))
             .build();
 
     Post post1 = Post.builder()
-            .title("title")
+            .postBody(PostBody.builder().title("title1").content("content1").build())
             .deadline(
-                    LocalDateTime.of(3023, 07, 12, 00, 00))
-            .content("content")
+                    LocalDateTime.of(3023, 7, 12, 0, 0))
             .member(member)
             .build();
 
     Post post2 = Post.builder()
-            .title("title2")
+            .postBody(PostBody.builder().title("title2").content("content2").build())
             .deadline(
-                    LocalDateTime.of(3023, 07, 12, 00, 00))
-            .content("content2")
+                    LocalDateTime.of(3023, 7, 12, 0, 0))
             .member(member)
             .build();
     PostOption postOption1 = PostOption.builder()

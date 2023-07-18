@@ -1,9 +1,11 @@
 package com.votogether.domain.post.entity;
 
+import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,14 +13,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -33,29 +35,58 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(length = 100, nullable = false)
-    private String title;
+    @Embedded
+    private PostBody postBody;
 
-    @Column(length = 1000, nullable = false)
-    private String content;
+    @Embedded
+    private PostCategories postCategories;
+
+    @Embedded
+    private PostOptions postOptions;
 
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
 
-    @OneToMany(mappedBy = "post")
-    private List<PostOption> postOptions = new ArrayList<>();
-
     @Builder
     private Post(
             final Member member,
-            final String title,
-            final String content,
+            final PostBody postBody,
             final LocalDateTime deadline
     ) {
         this.member = member;
-        this.title = title;
-        this.content = content;
+        this.postBody = postBody;
         this.deadline = deadline;
+        this.postCategories = new PostCategories();
+        this.postOptions = new PostOptions();
+    }
+
+    public void mapCategories(final List<Category> categories) {
+        this.postCategories.mapPostAndCategories(this, categories);
+    }
+
+    public void mapPostOptionsByElements(
+            final List<String> postOptionContents,
+            final Post post,
+            final List<MultipartFile> images
+    ) {
+        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, post, images));
+    }
+
+    private List<PostOption> toPostOptionEntities(
+            final List<String> postOptionContents,
+            final Post post,
+            final List<MultipartFile> images
+    ) {
+        return IntStream.range(0, postOptionContents.size())
+                .mapToObj(postOptionSequence ->
+                        PostOption.of(
+                                postOptionContents.get(postOptionSequence),
+                                post,
+                                postOptionSequence,
+                                images.get(postOptionSequence)
+                        )
+                )
+                .toList();
     }
 
     public boolean hasPostOption(final PostOption postOption) {

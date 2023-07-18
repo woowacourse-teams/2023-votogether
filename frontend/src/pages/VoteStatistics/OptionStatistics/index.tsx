@@ -7,6 +7,7 @@ import { useFetch } from '@hooks/useFetch';
 import { getOptionStatistics } from '@api/sua/voteResult';
 
 import { Size } from '@components/common/AddButton/type';
+import LoadingSpinner from '@components/common/LoadingSpinner';
 import WrittenVoteOption from '@components/optionList/WrittenVoteOptionList/WrittenVoteOption';
 import VoteStatistics from '@components/VoteStatistics';
 
@@ -48,7 +49,11 @@ export default function OptionStatistics({
       />
       <S.StatisticsContainer>
         {isStatisticsOpen && voteResult && <VoteStatistics voteResult={voteResult} size={size} />}
-        {isStatisticsOpen && isLoading && <div>로딩중</div>}
+        {isStatisticsOpen && isLoading && (
+          <S.LoadingWrapper>
+            <LoadingSpinner size="sm" />
+          </S.LoadingWrapper>
+        )}
         {isStatisticsOpen && errorMessage}
       </S.StatisticsContainer>
     </S.Container>

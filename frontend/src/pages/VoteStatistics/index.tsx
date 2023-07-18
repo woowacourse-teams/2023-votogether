@@ -6,6 +6,7 @@ import { getVoteDetail } from '@api/sua/post';
 import { getPostStatistics } from '@api/sua/voteResult';
 
 import IconButton from '@components/common/IconButton';
+import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import VoteStatistics from '@components/VoteStatistics';
 
@@ -35,11 +36,19 @@ export default function VoteStatisticsPage() {
       <S.Container>
         <S.Header>투표 통계</S.Header>
         {postError && <div>{postError}</div>}
-        {isPostLoading && <div>로딩</div>}
+        {isPostLoading && (
+          <S.LoadingWrapper>
+            <LoadingSpinner size="md" />
+          </S.LoadingWrapper>
+        )}
         {postDetail && (
           <S.OptionContainer>
             {voteResultError && <div>{voteResultError}</div>}
-            {isVoteResultLoading && <div>로딩</div>}
+            {isVoteResultLoading && (
+              <S.LoadingWrapper>
+                <LoadingSpinner size="sm" />
+              </S.LoadingWrapper>
+            )}
             {voteResult && <VoteStatistics voteResult={voteResult} size="md" />}
 
             {postDetail.voteInfo.options.map(option => {

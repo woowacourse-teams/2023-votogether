@@ -19,3 +19,9 @@ export const OptionContainer = styled.div`
   align-items: center;
   gap: 15px;
 `;
+
+export const LoadingWrapper = styled.div`
+  height: 100px;
+
+  display: flex;
+`;

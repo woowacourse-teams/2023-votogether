@@ -19,3 +19,9 @@ export const StatisticsContainer = styled.div`
     padding: 30px;
   }
 `;
+
+export const LoadingWrapper = styled.div`
+  height: 100px;
+
+  display: flex;
+`;

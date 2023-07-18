@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.startsWith;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.votogether.domain.post.dto.request.PostRequest;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.integrated.IntegrationTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -26,7 +26,7 @@ class PostControllerIntegratedTest extends IntegrationTest {
         // given
         final List<String> postOptionRequests = List.of("option1", "option2");
 
-        final PostRequest postRequest = PostRequest.builder()
+        final PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .title("title")
                 .content("content")
                 .postOptionContents(postOptionRequests)
@@ -51,7 +51,7 @@ class PostControllerIntegratedTest extends IntegrationTest {
         // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.MULTIPART)
-                .multiPart("request", postRequest, "application/json")
+                .multiPart("request", postCreateRequest, "application/json")
                 .multiPart("images", resultFileName1, new FileInputStream(file1), "image/png")
                 .multiPart("images", resultFileName2, new FileInputStream(file2), "image/png")
                 .when().post("/posts")

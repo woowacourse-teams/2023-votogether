@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.votogether.domain.post.dto.request.PostRequest;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.service.PostService;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -37,7 +37,7 @@ class PostControllerTest {
     @Test
     void save() throws IOException {
         // given
-        final PostRequest postRequest = PostRequest.builder().build();
+        final PostCreateRequest postCreateRequest = PostCreateRequest.builder().build();
 
         final String fileName1 = "testImage1.PNG";
         final String resultFileName1 = "testResultImage1.PNG";
@@ -50,7 +50,7 @@ class PostControllerTest {
         File file2 = new File(filePath2);
 
         final ObjectMapper objectMapper = new ObjectMapper();
-        final String postRequestJson = objectMapper.writeValueAsString(postRequest);
+        final String postRequestJson = objectMapper.writeValueAsString(postCreateRequest);
 
         final long savedPostId = 1L;
         given(postService.save(any(), any(), anyList())).willReturn(savedPostId);

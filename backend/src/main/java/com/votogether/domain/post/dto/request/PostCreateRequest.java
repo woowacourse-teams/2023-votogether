@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @ToString
 @NoArgsConstructor
-public class PostRequest {
+public class PostCreateRequest {
 
     private List<Long> categoryIds;
     private String title;
@@ -35,7 +35,7 @@ public class PostRequest {
     private LocalDateTime deadline;
 
     @Builder
-    public PostRequest(
+    public PostCreateRequest(
             final List<Long> categoryIds,
             final String title,
             final String content,

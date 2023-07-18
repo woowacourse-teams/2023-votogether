@@ -9,7 +9,7 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.PostRequest;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.repository.PostRepository;
 import java.util.Collections;
@@ -53,13 +53,13 @@ class PostServiceTest {
         given(categoryRepository.findAllById(anyCollection())).willReturn(categories);
         given(postRepository.save(any())).willReturn(post);
 
-        final PostRequest postRequest = PostRequest.builder()
+        final PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .categoryIds(Collections.emptyList())
                 .postOptionContents(Collections.emptyList())
                 .build();
 
         // when
-        final Long savedPostId = postService.save(postRequest, member, Collections.emptyList());
+        final Long savedPostId = postService.save(postCreateRequest, member, Collections.emptyList());
 
         // then
         assertThat(savedPostId).isOne();

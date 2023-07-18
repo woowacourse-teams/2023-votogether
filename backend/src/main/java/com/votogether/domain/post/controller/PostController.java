@@ -3,7 +3,7 @@ package com.votogether.domain.post.controller;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
-import com.votogether.domain.post.dto.request.PostRequest;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,7 +37,7 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart final PostRequest request,
+            @RequestPart final PostCreateRequest request,
             @RequestPart final List<MultipartFile> images
     ) {
         // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)

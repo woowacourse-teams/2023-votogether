@@ -42,6 +42,8 @@ export const SelectedContainer = styled.button<{ $status: Status }>`
   border: ${({ $status }) => SELECTED_CSS_OPTION[$status].border};
   border-radius: 4px;
 
+  font: inherit;
+
   color: ${({ $status }) => SELECTED_CSS_OPTION[$status].color};
 
   cursor: ${({ $status }) => SELECTED_CSS_OPTION[$status].cursor};

@@ -5,22 +5,23 @@ import chevronUp from '@assets/chevron-up.svg';
 
 import { SELECT_DEFAULT, SELECT_DISABLED, SELECT_SELECTED } from './constants';
 import * as S from './style';
-import { OptionItemProps } from './type';
 
-export interface SelectProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  selectedName: string;
-  optionList: OptionItemProps[];
-  handleOptionChange: (option: OptionItemProps) => void;
+export interface SelectProps<T extends string>
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  selectedOption: string;
+  optionList: Record<T, string>;
+  handleOptionChange: (option: T) => void;
   isDisabled?: boolean;
 }
 
-export default function Select({
-  selectedName,
+export default function Select<T extends string>({
+  selectedOption,
   optionList,
   handleOptionChange,
   isDisabled = false,
   ...rest
-}: SelectProps) {
+}: SelectProps<T>) {
+  const optionKeyList = Object.keys(optionList) as T[];
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -28,7 +29,7 @@ export default function Select({
     setIsOpen(prev => !prev);
   };
 
-  const handleSelectClick = (option: OptionItemProps) => {
+  const handleSelectClick = (option: T) => {
     handleOptionChange(option);
     setIsOpen(false);
   };
@@ -48,14 +49,14 @@ export default function Select({
   return (
     <S.Container>
       <S.SelectedContainer onClick={toggleOpen} $status={getSelectStatus()} {...rest}>
-        <span>{selectedName}</span>
+        <span>{selectedOption}</span>
         <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
       </S.SelectedContainer>
       {isOpen && (
         <S.OptionListContainer>
-          {optionList.map(option => (
-            <S.OptionContainer key={option.name} onClick={() => handleSelectClick(option)}>
-              {option.name}
+          {optionKeyList.map(optionKey => (
+            <S.OptionContainer key={optionKey} onClick={() => handleSelectClick(optionKey)}>
+              {optionList[optionKey]}
             </S.OptionContainer>
           ))}
         </S.OptionListContainer>

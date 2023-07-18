@@ -2,8 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { useState } from 'react';
 
-import { OptionItemProps } from './type';
-
 import Select from '.';
 
 const meta: Meta<typeof Select> = {
@@ -14,41 +12,29 @@ const meta: Meta<typeof Select> = {
 export default meta;
 type Story = StoryObj<typeof Select>;
 
-const MOCK_STATUS_OPTION = [
-  {
-    name: '전체',
-    value: 'all',
-  },
-  {
-    name: '진행중',
-    value: 'progress',
-  },
-  {
-    name: '마감완료',
-    value: 'closed',
-  },
-];
+const postStatus = ['all', 'progress', 'closed'] as const;
+const sortingOption = ['popular', 'latest', 'longLong'] as const;
 
-const MOCK_SORTING_OPTION = [
-  {
-    name: '인기순',
-    value: 'popular',
-  },
-  {
-    name: '최신순',
-    value: 'latest',
-  },
-  {
-    name: '엄청나게 긴 옵션',
-    value: 'latest',
-  },
-];
+type PostStatusType = (typeof postStatus)[number];
+type SortingOptionType = (typeof sortingOption)[number];
+
+const MOCK_STATUS_OPTION: Record<PostStatusType, string> = {
+  all: '전체',
+  progress: '진행중',
+  closed: '마감완료',
+};
+
+const MOCK_SORTING_OPTION: Record<SortingOptionType, string> = {
+  popular: '인기순',
+  latest: '최신순',
+  longLong: '엄청나게 긴 옵션',
+};
 
 export const PostStatus: Story = {
   render: () => (
-    <Select
+    <Select<PostStatusType>
       aria-label="게시글 진행 상태 선택"
-      selectedName="진행중"
+      selectedOption="진행중"
       optionList={MOCK_STATUS_OPTION}
       handleOptionChange={() => {}}
     />
@@ -59,7 +45,7 @@ export const Sorting: Story = {
   render: () => (
     <Select
       aria-label="게시글 정렬 방법 선택"
-      selectedName="최신순"
+      selectedOption="최신순"
       optionList={MOCK_SORTING_OPTION}
       handleOptionChange={() => {}}
     />
@@ -71,7 +57,7 @@ export const Disabled: Story = {
     <Select
       aria-label="게시글 정렬 방법 선택"
       isDisabled={true}
-      selectedName="최신순"
+      selectedOption="최신순"
       optionList={MOCK_SORTING_OPTION}
       handleOptionChange={() => {}}
     />
@@ -79,19 +65,16 @@ export const Disabled: Story = {
 };
 
 export const SelectExample = () => {
-  const [selectedOption, setSelectedOption] = useState<OptionItemProps>({
-    name: '게시글 정렬 방법 선택',
-    value: '',
-  });
+  const [selectedOption, setSelectedOption] = useState<SortingOptionType>('popular');
 
-  const handelOptionChange = (option: OptionItemProps) => {
+  const handelOptionChange = (option: SortingOptionType) => {
     setSelectedOption(option);
   };
 
   return (
-    <Select
+    <Select<SortingOptionType>
       aria-label="게시글 정렬 방법 선택"
-      selectedName={selectedOption.name}
+      selectedOption={MOCK_SORTING_OPTION[selectedOption]}
       optionList={MOCK_SORTING_OPTION}
       handleOptionChange={handelOptionChange}
     />

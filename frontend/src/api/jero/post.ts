@@ -1,11 +1,9 @@
-import { PostRequest } from '@type/post';
+import { multiPutFetch, multiPostFetch } from '@utils/fetch';
 
-import { putFetch, postFetch } from '@utils/fetch';
-
-export const createPost = async (newPost: PostRequest) => {
-  return await postFetch('/posts', newPost);
+export const createPost = async (newPost: FormData) => {
+  return await multiPostFetch('/posts', newPost);
 };
 
-export const editPost = async (postId: number, updatedPost: PostRequest) => {
-  return await putFetch(`/posts/${postId}`, updatedPost);
+export const editPost = async (postId: number, updatedPost: FormData) => {
+  return await multiPutFetch(`/posts/${postId}`, updatedPost);
 };

@@ -59,4 +59,38 @@ class MemberCategoryRepositoryTest {
         assertThat(memberCategory.getId()).isNotNull();
     }
 
+    @Test
+    @DisplayName("멤버와 카테고리를 통해 멤버 카테고리를 조회한다.")
+    void findByMemberAndCategory() {
+        // given
+        Category category = Category.builder()
+                .name("개발")
+                .build();
+
+        Member member = Member.builder()
+                .gender(Gender.MALE)
+                .point(0)
+                .socialType(SocialType.GOOGLE)
+                .nickname("user1")
+                .socialId("kakao@gmail.com")
+                .birthDate(
+                        LocalDateTime.of(1995, 07, 12, 00, 00))
+                .build();
+
+        MemberCategory memberCategory = MemberCategory.builder()
+                .member(member)
+                .category(category)
+                .build();
+
+        categoryRepository.save(category);
+        memberRepository.save(member);
+        memberCategoryRepository.save(memberCategory);
+
+        // when
+        MemberCategory findMemberCategory = memberCategoryRepository.findByMemberAndCategory(member, category).get();
+
+        // then
+        assertThat(findMemberCategory).isSameAs(memberCategory);
+    }
+
 }

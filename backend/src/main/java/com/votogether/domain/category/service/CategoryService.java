@@ -32,6 +32,9 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
 
+        memberCategoryRepository.findByMemberAndCategory(member, category)
+                .ifPresent(ignore -> new IllegalStateException("이미 선호 카테고리에 등록되어 있습니다."));
+
         MemberCategory memberCategory = MemberCategory.builder()
                 .member(member)
                 .category(category)

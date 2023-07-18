@@ -56,7 +56,7 @@ export default function EditPost() {
 
   return (
     <>
-      <PostForm data={MOCK_DATA} mutate={mutate}></PostForm>
+      <PostForm data={MOCK_DATA} mutate={mutate} />
     </>
   );
 }

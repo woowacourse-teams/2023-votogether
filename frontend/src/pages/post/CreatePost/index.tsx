@@ -7,7 +7,7 @@ export default function CreatePost() {
 
   return (
     <>
-      <PostForm mutate={mutate}></PostForm>
+      <PostForm mutate={mutate} />
     </>
   );
 }

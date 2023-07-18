@@ -62,6 +62,7 @@ class VoteRepositoryTest {
                     LocalDateTime.of(3023, 7, 12, 0, 0))
             .member(member)
             .build();
+
     PostOption postOption1 = PostOption.builder()
             .post(post1)
             .sequence(1)

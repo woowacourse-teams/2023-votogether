@@ -14,10 +14,13 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 );
 
 describe('usePostList 훅이 의도한대로 작동하는 지 확인한다.', () => {
-  test('usePostList에서 패칭된 값을 확인한다.', async () => {
-    const { result } = renderHook(() => usePostList(), {
-      wrapper,
-    });
+  test('게시글 목록을 모든 게시글을 인기순으로 불러온다.', async () => {
+    const { result } = renderHook(
+      () => usePostList({ postSorting: 'popular', postStatus: 'all' }),
+      {
+        wrapper,
+      }
+    );
 
     await waitFor(() => expect(result.current.data).toEqual(MOCK_POST_LIST));
   });

@@ -1,12 +1,12 @@
 import { PostInfo } from '@type/post';
 
-import { PostStatusType, SortingOptionType } from '@components/post/PostListPage/constants/option';
+import { PostStatusType, PostSortingType } from '@components/post/PostListPage/constants/option';
 
 import { getFetch } from '@utils/fetch';
 
 interface GetPostListParams {
   postStatus: PostStatusType;
-  postSorting: SortingOptionType;
+  postSorting: PostSortingType;
 }
 
 export const getPostList = async ({ postStatus, postSorting }: GetPostListParams) => {

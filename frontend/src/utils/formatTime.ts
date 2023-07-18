@@ -4,19 +4,19 @@ interface Time {
   minute: number;
 }
 
-export function addTimeToCurrentDate(time: Time) {
+export function addTimeToCurrentDate(time: Time, startTime?: string) {
   const { day, hour, minute } = time;
   if (day === 0 && hour === 0 && minute === 0) return;
-  // 현재 시간을 가져옵니다.
-  const now = new Date();
 
-  // 입력된 값들을 더하여 새로운 시간을 계산합니다.
+  let now;
+  if (startTime) now = new Date(startTime);
+  else now = new Date();
+
   const newTime = new Date(now);
   newTime.setDate(now.getDate() + day);
   newTime.setHours(now.getHours() + hour);
   newTime.setMinutes(now.getMinutes() + minute);
 
-  // 'yyyy-dd-mm hh:mm' 형식으로 변환하여 반환합니다.
   const newYear = newTime.getFullYear();
   const newDay = String(newTime.getDate()).padStart(2, '0');
   const newMonth = String(newTime.getMonth() + 1).padStart(2, '0');

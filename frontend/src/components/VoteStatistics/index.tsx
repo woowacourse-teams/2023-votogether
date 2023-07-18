@@ -28,6 +28,8 @@ export default function VoteStatistics({ voteResult, size }: GraphProps) {
     setNowRadioMode(targetCategory);
   };
 
+  const random = Date.now();
+
   return (
     <S.Container>
       <S.CategoryWrapper>
@@ -36,7 +38,7 @@ export default function VoteStatistics({ voteResult, size }: GraphProps) {
             <S.RadioLabel>
               <input
                 type="radio"
-                name="radio-category"
+                name={`radio-category-${random}`}
                 value={mode}
                 checked={mode === nowRadioMode}
                 onClick={changeMode}

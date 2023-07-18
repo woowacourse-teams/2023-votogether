@@ -20,8 +20,8 @@ import org.springframework.http.HttpStatus;
 
 class PostControllerIntegratedTest extends IntegrationTest {
 
-    @DisplayName("게시글을 등록한다")
     @Test
+    @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
         final List<String> postOptionRequests = List.of("option1", "option2");

@@ -37,8 +37,8 @@ class PostControllerTest {
         RestAssuredMockMvc.standaloneSetup(new PostController(postService));
     }
 
-    @DisplayName("게시글을 등록한다")
     @Test
+    @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
         final PostCreateRequest postCreateRequest = PostCreateRequest.builder().build();

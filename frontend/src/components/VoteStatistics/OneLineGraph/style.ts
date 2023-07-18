@@ -20,7 +20,7 @@ export const OptionContainer = styled.div<{ $size: Size }>`
     word-break: keep-all;
   }
 
-  @media (${theme.breakpoint.sm}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     width: ${props => (props.$size === 'sm' ? '40px' : props.$size === 'md' ? '50px' : '60px')};
   }
 `;

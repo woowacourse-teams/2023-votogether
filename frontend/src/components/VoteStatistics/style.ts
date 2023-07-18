@@ -10,7 +10,7 @@ export const Container = styled.div`
 
   font-size: 1.2rem;
 
-  @media (${theme.breakpoint.sm}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     font-size: 1.4rem;
   }
 `;

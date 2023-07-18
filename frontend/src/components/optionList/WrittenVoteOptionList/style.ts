@@ -9,7 +9,7 @@ export const VoteOptionListContainer = styled.ul`
 
   width: 100%;
 
-  @media (${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.md}) {
     gap: 18px;
   }
 `;

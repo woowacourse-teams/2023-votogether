@@ -11,7 +11,7 @@ export const Container = styled.li`
   letter-spacing: 0.5px;
   line-height: 1.5;
 
-  @media (${theme.breakpoint.sm}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     font-size: 1.4rem;
   }
 `;
@@ -19,7 +19,7 @@ export const Container = styled.li`
 export const Category = styled.span`
   font-size: 1.2rem;
 
-  @media (${theme.breakpoint.sm}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     font-size: 1.4rem;
   }
 `;
@@ -36,7 +36,7 @@ export const Title = styled.p<{ $isPreview: boolean }>`
   -webkit-line-clamp: ${props => props.$isPreview && '2'};
   -webkit-box-orient: vertical;
 
-  @media (${theme.breakpoint.sm}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     font-size: 2.2rem;
   }
 `;
@@ -54,7 +54,7 @@ export const Wrapper = styled.div`
     margin-left: 10px;
   }
 
-  @media (${theme.breakpoint.sm}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     font-size: 1.4rem;
   }
 `;
@@ -75,7 +75,7 @@ export const Content = styled.p<{ $isPreview: boolean }>`
   -webkit-line-clamp: ${props => props.$isPreview && '10'};
   -webkit-box-orient: vertical;
 
-  @media (${theme.breakpoint.sm}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     font-size: 1.6rem;
   }
 `;

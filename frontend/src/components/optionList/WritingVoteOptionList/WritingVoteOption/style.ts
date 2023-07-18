@@ -39,7 +39,7 @@ export const ContentTextArea = styled.textarea`
 
   resize: none;
 
-  @media (${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.md}) {
     height: 120px;
 
     font-size: 1.6rem;
@@ -85,7 +85,7 @@ background-color: #bebebe;
 
 cursor: pointer;
 
-@media (${theme.breakpoint.md}) {
+@media (min-width: ${theme.breakpoint.md}) {
  width:28px;
  height:28px;
 }
@@ -95,7 +95,7 @@ export const IconImage = styled.img`
   width: 14px;
   height: 14px;
 
-  @media (${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.md}) {
     width: 16px;
     height: 16px;
   }

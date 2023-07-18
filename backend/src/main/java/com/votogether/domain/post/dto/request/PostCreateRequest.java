@@ -14,40 +14,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Schema(name = "게시글 관련 데이터", description = "게시글에 관련한 데이터들입니다.")
-@Getter
-@ToString
-@NoArgsConstructor
-public class PostCreateRequest {
+@Builder
+public record PostCreateRequest (
+        List<Long> categoryIds,
+        String title,
+        String content,
+        List<String> postOptionContents,
 
-    private List<Long> categoryIds;
-    private String title;
-    private String content;
-    private List<String> postOptionContents;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime deadline;
-
-    @Builder
-    public PostCreateRequest(
-            final List<Long> categoryIds,
-            final String title,
-            final String content,
-            final List<String> postOptionContents,
-            final LocalDateTime deadline
-    ) {
-        this.categoryIds = categoryIds;
-        this.title = title;
-        this.content = content;
-        this.postOptionContents = postOptionContents;
-        this.deadline = deadline;
-    }
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+        LocalDateTime deadline
+){
 
     public Post toEntity(
             final Member member,

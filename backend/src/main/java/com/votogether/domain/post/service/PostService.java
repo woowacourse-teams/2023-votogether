@@ -27,7 +27,7 @@ public class PostService {
             final Member member,
             final List<MultipartFile> images
     ) {
-        final List<Category> categories = categoryRepository.findAllById(postCreateRequest.getCategoryIds());
+        final List<Category> categories = categoryRepository.findAllById(postCreateRequest.categoryIds());
         final Post post = postCreateRequest.toEntity(member, images, categories);
 
         // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)

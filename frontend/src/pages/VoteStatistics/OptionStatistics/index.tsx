@@ -31,9 +31,9 @@ export default function OptionStatistics({
     data: voteResult,
     errorMessage,
     isLoading,
-  } = useFetch(getOptionStatistics, { postId, optionId: voteOption.id });
+  } = useFetch(() => getOptionStatistics({ postId, optionId: voteOption.id }));
 
-  const showOptionStatistics = () => {
+  const toggleOptionStatistics = () => {
     setIsStatisticsOpen(!isStatisticsOpen);
   };
 
@@ -45,7 +45,7 @@ export default function OptionStatistics({
         isPreview={false}
         isVoted={true}
         isSelected={isSelectedOption}
-        handleVoteClick={showOptionStatistics}
+        handleVoteClick={toggleOptionStatistics}
       />
       <S.StatisticsContainer>
         {isStatisticsOpen && voteResult && <VoteStatistics voteResult={voteResult} size={size} />}

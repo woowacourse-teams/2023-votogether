@@ -1,0 +1,61 @@
+import { useLocation } from 'react-router-dom';
+
+import { useFetch } from '@hooks/useFetch';
+
+import { getVoteDetail } from '@api/sua/post';
+import { getPostStatistics } from '@api/sua/voteResult';
+
+import IconButton from '@components/common/IconButton';
+import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
+import VoteStatistics from '@components/VoteStatistics';
+
+import OptionStatistics from './OptionStatistics';
+import * as S from './style';
+
+export default function VoteStatisticsPage() {
+  // const location = useLocation();
+  // const postId = location.state.id;
+
+  const {
+    data: postDetail,
+    errorMessage: postError,
+    isLoading: isPostLoading,
+  } = useFetch(getVoteDetail, 1); //1은 나중에 postID로 대체
+  const {
+    data: voteResult,
+    errorMessage: voteResultError,
+    isLoading: isVoteResultLoading,
+  } = useFetch(getPostStatistics, 1); //1은 나중에 postID로 대체
+
+  return (
+    <>
+      <NarrowTemplateHeader>
+        <IconButton category="back" />
+      </NarrowTemplateHeader>
+      <S.Container>
+        <S.Header>투표 통계</S.Header>
+        {postError && <div>{postError}</div>}
+        {isPostLoading && <div>로딩</div>}
+        {postDetail && (
+          <S.OptionContainer>
+            {voteResultError && <div>{voteResultError}</div>}
+            {isVoteResultLoading && <div>로딩</div>}
+            {voteResult && <VoteStatistics voteResult={voteResult} size="md" />}
+
+            {postDetail.voteInfo.options.map(option => {
+              const { postId, voteInfo } = postDetail;
+              return (
+                <OptionStatistics
+                  postId={postId}
+                  isSelectedOption={voteInfo.selectedOptionId === option.id}
+                  voteOption={option}
+                  size="sm"
+                />
+              );
+            })}
+          </S.OptionContainer>
+        )}
+      </S.Container>
+    </>
+  );
+}

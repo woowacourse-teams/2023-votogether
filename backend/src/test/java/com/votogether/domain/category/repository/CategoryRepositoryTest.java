@@ -21,7 +21,7 @@ class CategoryRepositoryTest {
 
     @Nested
     @DisplayName("카테고리 저장")
-    class save {
+    class Saving {
 
         @Test
         @DisplayName("카테고리를 저장한다.")
@@ -57,28 +57,49 @@ class CategoryRepositoryTest {
 
     }
 
-    @Test
-    @DisplayName("모든 카테고리를 조회한다.")
-    void getAllCategories() {
-        // given
-        Category category1 = Category.builder()
-                .name("개발")
-                .build();
-        Category category2 = Category.builder()
-                .name("음식")
-                .build();
+    @Nested
+    @DisplayName("카테고리 조회")
+    class Finding {
 
-        categoryRepository.save(category1);
-        categoryRepository.save(category2);
+        @Test
+        @DisplayName("모든 카테고리를 조회한다.")
+        void findAllCategories() {
+            // given
+            Category category1 = Category.builder()
+                    .name("개발")
+                    .build();
+            Category category2 = Category.builder()
+                    .name("음식")
+                    .build();
 
-        // when
-        List<Category> categories = categoryRepository.findAll();
+            categoryRepository.save(category1);
+            categoryRepository.save(category2);
 
-        // then
-        assertAll(
-                () -> assertThat(categories).hasSize(2),
-                () -> assertThat(categories.get(0).getName()).isEqualTo("개발"),
-                () -> assertThat(categories.get(1).getName()).isEqualTo("음식"));
+            // when
+            List<Category> categories = categoryRepository.findAll();
+
+            // then
+            assertAll(
+                    () -> assertThat(categories).hasSize(2),
+                    () -> assertThat(categories.get(0).getName()).isEqualTo("개발"),
+                    () -> assertThat(categories.get(1).getName()).isEqualTo("음식"));
+        }
+
+        @Test
+        @DisplayName("아이디를 통해 카테고리를 조회한다.")
+        void findById() {
+            // given
+            Category category = Category.builder()
+                    .name("개발")
+                    .build();
+            categoryRepository.save(category);
+
+            // when
+            Category findCategory = categoryRepository.findById(category.getId()).get();
+
+            // then
+            assertThat(findCategory).isSameAs(category);
+        }
     }
 
 }

@@ -29,7 +29,7 @@ public class CategoryController {
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/guest")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+        final List<CategoryResponse> categories = categoryService.getAllCategories();
         return ResponseEntity.status(HttpStatus.OK).body(categories);
     }
 

@@ -1,5 +1,3 @@
-import { WritingVoteOptionType } from '@hooks/useWritingOption';
-
 export interface WrittenVoteOptionType {
   id: number;
   text: string;
@@ -23,10 +21,14 @@ export interface PostInfo {
   };
 }
 
-export interface PostRequest {
+export interface TextData {
   categoryIds: number[];
   title: string;
   content: string;
-  postOptions: WritingVoteOptionType[];
+  postOptions: string[];
   deadline?: string;
+}
+export interface PostRequest {
+  texts: TextData;
+  images: File[];
 }

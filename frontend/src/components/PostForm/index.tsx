@@ -22,15 +22,28 @@ interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
 }
 
 export default function PostForm({ data, mutate }: PostFormProps) {
-  const { categoryIds, title, content, postOptions, deadline } = data ?? {
-    categoryIds: [],
-    title: '',
-    content: '',
-    postOptions: [],
-    deadline: '',
+  const { texts, images } = data ?? {
+    texts: {
+      categoryIds: [],
+      title: '',
+      content: '',
+      postOptions: [],
+      deadline: '',
+    },
+    images: [],
   };
+  const { categoryIds, title, content, postOptions, deadline } = texts;
+
+  // 현재 WritingVoteOptionList의 props 타입이 ** {id, text, imageUrl} 객체 배열 ** 타입인데, 컴포넌트의 타입을 바꾸면 수정할 부분이 너무 많아짐
+  const postOptionListforFormat = postOptions.map(str => ({
+    id: Math.floor(Math.random() * 100000),
+    text: str,
+    imageUrl: '',
+  }));
+  // 따라서 일단은 부득이하게 문자열 배열 ['강아지'] => [ {id: 12314, text: '강아지', imageUrl:' }]  객체 배열 형식으로 포맷팅 해줘야 함...
+
   const navigate = useNavigate();
-  const { postId } = useParams() as { postId: string };
+  const { postId } = useParams();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -60,31 +73,37 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const updatedPost: PostRequest = {
-      categoryIds: [1, 2],
-      title: writingTitle,
-      content: writingContent,
-      postOptions: [
-        {
-          id: 1234221,
-          text: '귀여운 강아지',
-          imageUrl: '',
-        },
-        {
-          id: 1834221,
-          text: '아기 고양이',
-          imageUrl: '',
-        },
-      ],
-      deadline: addTimeToCurrentDate(time) ?? deadline,
-    };
+    if (e.target instanceof HTMLFormElement) {
+      const formData = new FormData(e.target);
 
-    if (postId) mutate(postId, updatedPost);
-    else mutate(updatedPost);
+      const optionImageFileInputs = e.target.querySelectorAll(
+        'input[type="file"][name="optionImage"]'
+      );
+      const imageFiles = Array.from(optionImageFileInputs).map((input: any) =>
+        formData.get(input.name)
+      );
 
-    // window.console.log('submitted!', updatedPost);
-    // window.console.log('original deadline was...', deadline);
-    navigate('/');
+      const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
+      const writingOptionTexts = Array.from(optionTextAreas).map((textarea: any) => textarea.value);
+
+      const updatedPost: PostRequest = {
+        texts: {
+          categoryIds: [1, 2],
+          title: writingTitle,
+          content: writingContent,
+          postOptions: writingOptionTexts,
+          deadline: addTimeToCurrentDate(time) ?? deadline,
+        },
+        images: [],
+      };
+
+      if (postId) mutate(postId, updatedPost);
+      else mutate(updatedPost);
+
+      window.console.log('submitted!', updatedPost);
+      window.console.log('original deadline was...', deadline);
+      navigate('/');
+    }
   };
 
   return (
@@ -95,7 +114,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       </NarrowTemplateHeader>
       <S.Wrapper>
         <select>
-          {categoryIds && categoryIds.map(category => <option>{category}✅</option>)}
+          {categoryIds && categoryIds.map(category => <option key={category}>{category}✅</option>)}
           <option>카테고리1</option>
           <option>카테고리2</option>
         </select>
@@ -103,6 +122,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
           value={writingTitle}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWritingTitle(e.target.value)}
           placeholder="제목을 입력해주세요"
+          maxLength={100}
           required
         />
         <S.Content
@@ -111,10 +131,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             setWritingContent(e.target.value)
           }
           placeholder="내용을 입력해주세요"
+          maxLength={1000}
           required
         />
         <S.OptionListWrapper>
-          <WritingVoteOptionList initialOptionList={postOptions} />
+          <WritingVoteOptionList initialOptionList={postOptionListforFormat} />
           {data && <S.Deadline>기존 마감 시간: {deadline}</S.Deadline>}
           <S.Deadline>
             {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.

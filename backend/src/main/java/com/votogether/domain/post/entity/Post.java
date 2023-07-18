@@ -48,7 +48,7 @@ public class Post extends BaseEntity {
     private LocalDateTime deadline;
 
     @Builder
-    public Post(
+    private Post(
             final Member member,
             final PostBody postBody,
             final LocalDateTime deadline

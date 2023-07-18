@@ -47,12 +47,11 @@ class PostControllerIntegratedTest extends IntegrationTest {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        final String postRequestJson = objectMapper.writeValueAsString(postRequest);
 
         // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.MULTIPART)
-                .multiPart("request", postRequestJson, "application/json")
+                .multiPart("request", postRequest, "application/json")
                 .multiPart("images", resultFileName1, new FileInputStream(file1), "image/png")
                 .multiPart("images", resultFileName2, new FileInputStream(file2), "image/png")
                 .when().post("/posts")

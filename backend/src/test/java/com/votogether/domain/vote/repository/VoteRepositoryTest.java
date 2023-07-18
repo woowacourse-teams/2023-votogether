@@ -50,14 +50,14 @@ class VoteRepositoryTest {
             .build();
 
     Post post1 = Post.builder()
-            .postBody(new PostBody("title1", "content1"))
+            .postBody(PostBody.builder().title("title1").content("content1").build())
             .deadline(
                     LocalDateTime.of(3023, 7, 12, 0, 0))
             .member(member)
             .build();
 
     Post post2 = Post.builder()
-            .postBody(new PostBody("title2", "content2"))
+            .postBody(PostBody.builder().title("title2").content("content2").build())
             .deadline(
                     LocalDateTime.of(3023, 7, 12, 0, 0))
             .member(member)

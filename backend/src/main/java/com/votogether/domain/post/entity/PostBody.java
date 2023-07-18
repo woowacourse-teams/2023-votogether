@@ -19,7 +19,7 @@ public class PostBody {
     private String content;
 
     @Builder
-    public PostBody(final String title, final String content) {
+    private PostBody(final String title, final String content) {
         this.title = title;
         this.content = content;
     }

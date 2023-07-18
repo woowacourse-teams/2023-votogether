@@ -37,6 +37,8 @@ export const unit = styled.div<LoadingSpinnerProps>`
   width: ${props => size[props.$size]};
   height: ${props => size[props.$size]};
   border-radius: 50%;
+
   background-color: #747474;
+
   animation: ${Animation} 0.5s ease-in-out infinite alternate;
 `;

@@ -3,9 +3,11 @@ import { styled } from 'styled-components';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
+
   width: 95%;
-  background-color: #f6f6f6;
   border-radius: 10px;
+
+  background-color: #f6f6f6;
 
   font-size: 20px;
 `;
@@ -21,7 +23,7 @@ export const StatisticsContainer = styled.div`
 `;
 
 export const LoadingWrapper = styled.div`
-  height: 100px;
-
   display: flex;
+
+  height: 100px;
 `;

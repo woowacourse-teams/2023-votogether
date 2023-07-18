@@ -59,7 +59,7 @@ class PostControllerTest {
         final long savedPostId = 1L;
         given(postService.save(any(), any(), anyList())).willReturn(savedPostId);
 
-        // expect
+        // when, then
         final String locationStartsWith = "/posts/";
         final ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.MULTIPART)

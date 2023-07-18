@@ -48,7 +48,7 @@ class PostControllerIntegratedTest extends IntegrationTest {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        // expect
+        // when, then
         RestAssured.given().log().all()
                 .contentType(ContentType.MULTIPART)
                 .multiPart("request", postCreateRequest, "application/json")

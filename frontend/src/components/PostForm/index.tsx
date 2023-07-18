@@ -1,3 +1,5 @@
+import type { UseMutateFunction } from '@tanstack/react-query';
+
 import React, { HTMLAttributes, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +20,7 @@ import * as S from './style';
 
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
-  mutate: any;
+  mutate: UseMutateFunction<any, unknown, FormData, unknown>;
 }
 
 export default function PostForm({ data, mutate }: PostFormProps) {

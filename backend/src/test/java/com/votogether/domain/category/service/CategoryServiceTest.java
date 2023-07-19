@@ -1,6 +1,7 @@
 package com.votogether.domain.category.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.category.dto.response.CategoryResponse;
@@ -14,8 +15,10 @@ import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -93,41 +96,75 @@ class CategoryServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("선호하는 카테고리를 선호 카테고리 목록에 삭제한다.")
-    void removeFavoriteCategory() {
-        // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
+    @Nested
+    @DisplayName("카테고리 삭제")
+    class Deleting {
 
-        Member member = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
-                .nickname("user1")
-                .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 7, 12, 0, 0))
-                .build();
+        @Test
+        @DisplayName("선호하는 카테고리를 선호 카테고리 목록에 삭제한다.")
+        void removeFavoriteCategory() {
+            // given
+            Category category = Category.builder()
+                    .name("개발")
+                    .build();
 
-        MemberCategory memberCategory = MemberCategory.builder()
-                .member(member)
-                .category(category)
-                .build();
+            Member member = Member.builder()
+                    .gender(Gender.MALE)
+                    .point(0)
+                    .socialType(SocialType.GOOGLE)
+                    .nickname("user1")
+                    .socialId("kakao@gmail.com")
+                    .birthDate(
+                            LocalDateTime.of(1995, 7, 12, 0, 0))
+                    .build();
 
-        categoryRepository.save(category);
-        memberRepository.save(member);
-        memberCategoryRepository.save(memberCategory);
+            MemberCategory memberCategory = MemberCategory.builder()
+                    .member(member)
+                    .category(category)
+                    .build();
 
-        Long categoryId = category.getId();
+            categoryRepository.save(category);
+            memberRepository.save(member);
+            memberCategoryRepository.save(memberCategory);
 
-        // when
-        categoryService.removeFavoriteCategory(member, categoryId);
+            Long categoryId = category.getId();
 
-        // then
-        boolean isEmpty = memberCategoryRepository.findByMemberAndCategory(member, category).isEmpty();
-        assertThat(isEmpty).isTrue();
+            // when
+            categoryService.removeFavoriteCategory(member, categoryId);
+
+            // then
+            Optional<MemberCategory> foundMemberCategory = memberCategoryRepository.findByMemberAndCategory(member,
+                    category);
+            assertThat(foundMemberCategory).isEmpty();
+        }
+
+        @Test
+        @DisplayName("선호하는 카테고리에 없는 카테고리를 삭제하는 경우 예외가 발생한다.")
+        void removeFavoriteCategoryException() {
+            // given
+            Category category = Category.builder()
+                    .name("개발")
+                    .build();
+
+            Member member = Member.builder()
+                    .gender(Gender.MALE)
+                    .point(0)
+                    .socialType(SocialType.GOOGLE)
+                    .nickname("user1")
+                    .socialId("kakao@gmail.com")
+                    .birthDate(
+                            LocalDateTime.of(1995, 7, 12, 0, 0))
+                    .build();
+
+            categoryRepository.save(category);
+            memberRepository.save(member);
+
+            // when, then
+            assertThatThrownBy(() -> categoryService.removeFavoriteCategory(member, category.getId()))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("해당 카테고리는 선호 카테고리가 아닙니다.");
+        }
+
     }
 
 }

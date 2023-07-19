@@ -23,6 +23,8 @@ import org.springframework.util.StringUtils;
 @Component
 public class TokenProcessor {
 
+    private static final String BEARER_TOKEN_PREFIX = "Bearer ";
+
     private final Key key;
     private final int tokenExpirationTime;
     private final ObjectMapper objectMapper;
@@ -49,7 +51,7 @@ public class TokenProcessor {
     }
 
     public String resolveToken(final String token) {
-        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_TOKEN_PREFIX)) {
             return token.split(" ")[1];
         }
         return null;

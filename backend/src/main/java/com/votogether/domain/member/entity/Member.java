@@ -65,7 +65,7 @@ public class Member extends BaseEntity {
         this.point = point;
     }
 
-    public static Member createKakaoMember(final KakaoMemberResponse response) {
+    public static Member from(final KakaoMemberResponse response) {
         final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
                 .nickname("익명의 손님" + nicknameNumberGenerator.generate())

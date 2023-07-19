@@ -4,6 +4,7 @@ import com.votogether.domain.auth.dto.LoginResponse;
 import com.votogether.domain.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,14 @@ public class AuthController {
     private final AuthService authService;
 
     @Operation(summary = "카카오 로그인 하기", description = "카카오 계정으로 로그인을 한다.")
-    @ApiResponse(responseCode = "200", description = "로그인 성공")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "카카오 로그인 성공"),
+            @ApiResponse(responseCode = "400", description = "올바르지 않은 요청"),
+            @ApiResponse(responseCode = "401", description = "올바르지 않은 인증코드")
+    })
     @GetMapping("/auth/kakao/callback")
     public ResponseEntity<LoginResponse> loginByKakao(@RequestParam("code") final String code) {
-        final String token = authService.register(code);
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.ok(authService.register(code));
     }
 
 }

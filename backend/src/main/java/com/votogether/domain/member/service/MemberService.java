@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -23,6 +22,7 @@ public class MemberService {
         return maybeMember.orElseGet(() -> memberRepository.save(member));
     }
 
+    @Transactional(readOnly = true)
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Id를 가지 회원은 존재하지 않습니다."));

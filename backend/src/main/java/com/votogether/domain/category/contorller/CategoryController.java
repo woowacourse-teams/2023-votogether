@@ -59,9 +59,9 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<Void> getAllCategories(final Member member) {
-        categoryService.getAllCategories(member);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<List<CategoryResponse>> getAllCategories(final Member member) {
+        List<CategoryResponse> categories = categoryService.getAllCategories(member);
+        return ResponseEntity.status(HttpStatus.OK).body(categories);
     }
 
 }

@@ -16,7 +16,6 @@ import com.votogether.domain.member.repository.MemberRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -75,8 +74,7 @@ class CategoryServiceTest {
                 .socialType(SocialType.GOOGLE)
                 .nickname("user1")
                 .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 7, 12, 0, 0))
+                .birthDate(LocalDateTime.of(1995, 7, 12, 0, 0))
                 .build();
 
         categoryRepository.save(category);
@@ -90,7 +88,7 @@ class CategoryServiceTest {
         // then
         MemberCategory memberCategory = memberCategoryRepository.findByMemberAndCategory(member, category).get();
 
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(memberCategory.getMember()).isSameAs(member),
                 () -> assertThat(memberCategory.getCategory()).isSameAs(category)
         );
@@ -114,8 +112,7 @@ class CategoryServiceTest {
                     .socialType(SocialType.GOOGLE)
                     .nickname("user1")
                     .socialId("kakao@gmail.com")
-                    .birthDate(
-                            LocalDateTime.of(1995, 7, 12, 0, 0))
+                    .birthDate(LocalDateTime.of(1995, 7, 12, 0, 0))
                     .build();
 
             MemberCategory memberCategory = MemberCategory.builder()
@@ -133,8 +130,8 @@ class CategoryServiceTest {
             categoryService.removeFavoriteCategory(member, categoryId);
 
             // then
-            Optional<MemberCategory> foundMemberCategory = memberCategoryRepository.findByMemberAndCategory(member,
-                    category);
+            Optional<MemberCategory> foundMemberCategory =
+                    memberCategoryRepository.findByMemberAndCategory(member, category);
             assertThat(foundMemberCategory).isEmpty();
         }
 
@@ -152,8 +149,7 @@ class CategoryServiceTest {
                     .socialType(SocialType.GOOGLE)
                     .nickname("user1")
                     .socialId("kakao@gmail.com")
-                    .birthDate(
-                            LocalDateTime.of(1995, 7, 12, 0, 0))
+                    .birthDate(LocalDateTime.of(1995, 7, 12, 0, 0))
                     .build();
 
             categoryRepository.save(category);

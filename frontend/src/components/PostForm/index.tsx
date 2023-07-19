@@ -140,8 +140,10 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               required
             />
           </S.RightSide>
-          <S.OptionListWrapper>
-            <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
+          <S.LeftSide>
+            <S.OptionListWrapper>
+              <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
+            </S.OptionListWrapper>
             <S.Deadline>
               {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.
             </S.Deadline>
@@ -155,6 +157,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
             <S.ButtonWrapper>
               {DEADLINE_OPTION.map(option => (
                 <SquareButton
+                  aria-label={option}
                   key={option}
                   type="button"
                   onClick={() => handleDeadlineButtonClick(option)}
@@ -167,7 +170,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                 사용자 지정
               </SquareButton>
             </S.ButtonWrapper>
-          </S.OptionListWrapper>
+          </S.LeftSide>
         </S.Wrapper>
         {isOpen && (
           <Modal size="sm" onModalClose={closeComponent}>

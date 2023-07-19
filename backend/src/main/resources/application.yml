@@ -25,7 +25,7 @@ logging:
 votogether:
   openapi:
     dev-url: http://localhost:8080
-    prod-url: http://votogether.com
+    prod-url: ${PROD_URL}
 
 oauth:
   kakao:

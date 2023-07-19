@@ -12,8 +12,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-@Component
 @RequiredArgsConstructor
+@Component
 public class JwtAuthorizationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final TokenProcessor tokenProcessor;
@@ -21,7 +21,8 @@ public class JwtAuthorizationArgumentResolver implements HandlerMethodArgumentRe
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Auth.class);
+        return parameter.withContainingClass(Member.class)
+                .hasParameterAnnotation(Auth.class);
     }
 
     @Override
@@ -34,7 +35,6 @@ public class JwtAuthorizationArgumentResolver implements HandlerMethodArgumentRe
         final String token = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenWithoutType = tokenProcessor.resolveToken(token);
         final TokenPayload tokenPayload = tokenProcessor.parseToken(tokenWithoutType);
-
         return memberService.findById(tokenPayload.memberId());
     }
 

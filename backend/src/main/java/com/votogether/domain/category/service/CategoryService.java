@@ -23,7 +23,8 @@ public class CategoryService {
         final List<Category> categories = categoryRepository.findAll();
 
         return categories.stream()
-                .map(CategoryResponse::new)
+                .sorted(Comparator.comparing(Category::getName))
+                .map(category -> new CategoryResponse(category, false))
                 .toList();
     }
 

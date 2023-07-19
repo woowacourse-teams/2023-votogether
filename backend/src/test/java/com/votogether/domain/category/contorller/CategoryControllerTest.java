@@ -35,7 +35,7 @@ class CategoryControllerTest {
         Category category = Category.builder()
                 .name("개발")
                 .build();
-        given(categoryService.getAllCategories()).willReturn(List.of(new CategoryResponse(category)));
+        given(categoryService.getAllCategories()).willReturn(List.of(new CategoryResponse(category, false)));
 
         // when
         RestAssuredMockMvc.

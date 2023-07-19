@@ -9,7 +9,7 @@ interface UpButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 export default function UpButton({ ...rest }: UpButtonProps) {
   return (
     <S.Button {...rest}>
-      <S.Image src={chevronUp} alt="" />
+      <img src={chevronUp} alt="" />
     </S.Button>
   );
 }

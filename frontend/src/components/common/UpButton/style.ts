@@ -10,5 +10,3 @@ export const Button = styled.button`
 
   cursor: pointer;
 `;
-
-export const Image = styled.img``;

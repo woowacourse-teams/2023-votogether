@@ -4,11 +4,14 @@ import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
 export const postListHandlers = [
   rest.get('/posts', (req, res, ctx) => {
-    const status = req.url.searchParams.get('status');
-    const sorting = req.url.searchParams.get('sorting');
+    const pages = Number(req.url.searchParams.get('pages'));
 
-    window.console.log(status, sorting);
+    if (pages === null) return;
 
-    return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
+    if (pages > 0) {
+      return res(ctx.status(200), ctx.json(MOCK_POST_LIST[pages]), ctx.delay(2000));
+    }
+
+    return res(ctx.status(200), ctx.json(MOCK_POST_LIST[pages]));
   }),
 ];

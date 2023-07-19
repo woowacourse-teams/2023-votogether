@@ -24,10 +24,10 @@ const MOCK_USER_INFO: User = {
 };
 
 const MOCK_CATEGORIES: Category[] = [
-  { id: 12312, name: '음식', favorite: false },
-  { id: 12, name: '연애', favorite: false },
-  { id: 13, name: '패션', favorite: false },
-  { id: 14, name: '금융', favorite: false },
+  { id: 12312, name: '음식', isFavorite: false },
+  { id: 12, name: '연애', isFavorite: false },
+  { id: 13, name: '패션', isFavorite: false },
+  { id: 14, name: '금융', isFavorite: false },
 ];
 
 export const LeftSideBar = () => {

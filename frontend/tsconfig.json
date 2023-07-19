@@ -28,10 +28,11 @@
       "@atoms/*": ["atoms/*"],
       "@selectors/*": ["selectors/*"],
       "@routes/*": ["routes/*"],
-      "@api/*": ["api/*"]
+      "@api/*": ["api/*"],
+      "@mocks/*": ["mocks/*"]
     },
     "outDir": "./dist"
   },
-  "include": ["src", "src/custom.d.ts"],
+  "include": ["src", "src/custom.d.ts", "__test__"],
   "exclude": ["node_modules"]
 }

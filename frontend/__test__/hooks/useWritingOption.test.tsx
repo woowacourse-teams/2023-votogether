@@ -1,10 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 
-import { useWritingOption } from '../../src/hooks/useWritingOption';
-
-/**
- * @jest-environment jsdom
- */
+import { useWritingOption } from '@hooks/useWritingOption';
 
 const MOCK_MAX_VOTE_OPTION = [
   { id: 12341, text: '', imageUrl: '' },

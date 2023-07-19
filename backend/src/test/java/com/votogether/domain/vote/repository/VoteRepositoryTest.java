@@ -51,17 +51,17 @@ class VoteRepositoryTest {
             .member(member)
             .build();
 
+    PostOption postOption1 = PostOption.builder()
+            .post(post1)
+            .sequence(1)
+            .content("content1")
+            .build();
+
     Post post2 = Post.builder()
             .postBody(PostBody.builder().title("title2").content("content2").build())
             .deadline(
                     LocalDateTime.of(3023, 7, 12, 0, 0))
             .member(member)
-            .build();
-
-    PostOption postOption1 = PostOption.builder()
-            .post(post1)
-            .sequence(1)
-            .content("content1")
             .build();
 
     PostOption postOption2 = PostOption.builder()

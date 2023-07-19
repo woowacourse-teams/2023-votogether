@@ -142,4 +142,26 @@ class VoteRepositoryTest {
         assertThat(votes).hasSize(2);
     }
 
+    @Test
+    @DisplayName("멤버가 투표한 투표목록을 가져온다.")
+    void findVotesByMember() {
+        // given
+        memberRepository.save(member);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postOptionRepository.save(postOption1);
+        postOptionRepository.save(postOption2);
+
+        Vote vote1 = Vote.builder()
+                .postOption(postOption1)
+                .member(member)
+                .build();
+        voteRepository.save(vote1);
+
+        // when
+        List<Vote> votes = voteRepository.findByMember(member);
+
+        // then
+        assertThat(votes.get(0)).isSameAs(vote1);
+    }
 }

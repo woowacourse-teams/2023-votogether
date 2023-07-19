@@ -26,7 +26,7 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "올바르지 않은 인증코드")
     })
     @GetMapping("/auth/kakao/callback")
-    public ResponseEntity<LoginResponse> loginByKakao(@RequestParam("code") final String code) {
+    public ResponseEntity<LoginResponse> loginByKakao(@RequestParam final String code) {
         return ResponseEntity.ok(authService.register(code));
     }
 

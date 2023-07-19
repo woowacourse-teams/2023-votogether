@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 @Component
 public class TokenProcessor {
 
+    private static final String TOKEN_DELIMITER = "//.";
     private static final String BEARER_TOKEN_PREFIX = "Bearer ";
 
     private final Key key;
@@ -41,7 +42,6 @@ public class TokenProcessor {
 
     public String generateToken(final Member member) {
         final Date now = new Date();
-
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .claim("memberId", member.getId())
@@ -55,7 +55,13 @@ public class TokenProcessor {
         if (StringUtils.hasText(token) && token.startsWith(BEARER_TOKEN_PREFIX)) {
             return token.split(" ")[1];
         }
-        return null;
+        throw new IllegalArgumentException("올바르지 않은 토큰입니다.");
+    }
+
+    public TokenPayload parseToken(final String token) throws JsonProcessingException {
+        final String[] chunks = token.split(TOKEN_DELIMITER);
+        final String payload = new String(Decoders.BASE64.decode(chunks[1]));
+        return objectMapper.readValue(payload, TokenPayload.class);
     }
 
     public void validateToken(final String token) {
@@ -78,13 +84,10 @@ public class TokenProcessor {
             throw new IllegalArgumentException("토큰의 유효기간이 만료되었습니다.");
         } catch (final IllegalArgumentException e) {
             throw new IllegalArgumentException("토큰의 내용이 비어있습니다.");
+        } catch (final Exception e) {
+            log.info("알 수 없는 토큰 유효성 문제가 발생했습니다.");
+            throw new IllegalArgumentException("알 수 없는 토큰 유효성 문제가 발생했습니다.");
         }
-    }
-
-    public TokenPayload parseToken(final String token) throws JsonProcessingException {
-        final String[] chunks = token.split("//.");
-        final String payload = new String(Decoders.BASE64.decode(chunks[1]));
-        return objectMapper.readValue(payload, TokenPayload.class);
     }
 
 }

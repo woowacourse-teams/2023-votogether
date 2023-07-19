@@ -25,7 +25,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 Id를 가지 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 Id를 가진 회원은 존재하지 않습니다."));
     }
 
 }

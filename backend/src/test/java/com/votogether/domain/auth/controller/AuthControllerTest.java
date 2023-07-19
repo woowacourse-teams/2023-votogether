@@ -13,17 +13,12 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = AuthController.class)
 class AuthControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
 
     @MockBean
     AuthService authService;
@@ -41,7 +36,7 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("카카오 로그인을 한다.")
-    void loginWithKakao() {
+    void loginByKakao() {
         // given
         String accessToken = "abcdefg";
         LoginResponse response = new LoginResponse(accessToken);

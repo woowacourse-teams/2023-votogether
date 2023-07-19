@@ -1,17 +1,20 @@
 package com.votogether.domain.auth.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record KakaoMemberResponse(
-        @JsonProperty("id") Long id,
-        @JsonProperty("kakao_account") KakaoAccount kakaoAccount
+        Long id,
+        KakaoAccount kakaoAccount
 ) {
 
+    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record KakaoAccount(
-            @JsonProperty("email") String email,
-            @JsonProperty("age_range") String ageRange,
-            @JsonProperty("birthday") String birthday,
-            @JsonProperty("gender") String gender
+            String email,
+            String ageRange,
+            String birthday,
+            String gender
     ) {
     }
 

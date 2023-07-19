@@ -12,7 +12,7 @@ interface LayoutProps extends PropsWithChildren {
   userInfo?: User;
   categoryList: Category[];
   selectedCategory?: string;
-  isVisibleCategory: boolean;
+  isSidebarVisible: boolean;
   handleFavoriteClick: (categoryId: number) => void;
   handleLogoutClick: () => void;
 }
@@ -21,7 +21,7 @@ export default function Layout({
   userInfo,
   categoryList,
   selectedCategory,
-  isVisibleCategory,
+  isSidebarVisible,
   handleFavoriteClick,
   handleLogoutClick,
   children,
@@ -32,7 +32,7 @@ export default function Layout({
         <WideHeader />
       </S.WideHeaderWrapper>
       <S.ContentContainer>
-        {isVisibleCategory && (
+        {isSidebarVisible && (
           <S.DashboardWrapper>
             <Dashboard
               userInfo={userInfo}
@@ -43,8 +43,8 @@ export default function Layout({
             />
           </S.DashboardWrapper>
         )}
-        <S.MainContainer $isVisibleCategory={isVisibleCategory}>
-          <S.ChildrenWrapper $isVisibleCategory={isVisibleCategory}>{children}</S.ChildrenWrapper>
+        <S.MainContainer $isSidebarVisible={isSidebarVisible}>
+          <S.ChildrenWrapper $isSidebarVisible={isSidebarVisible}>{children}</S.ChildrenWrapper>
         </S.MainContainer>
       </S.ContentContainer>
     </S.Container>

@@ -39,17 +39,17 @@ export const DashboardWrapper = styled.aside`
   }
 `;
 
-export const MainContainer = styled.main<{ $isVisibleCategory: boolean }>`
+export const MainContainer = styled.main<{ $isSidebarVisible: boolean }>`
   display: flex;
   justify-content: center;
 
   width: 100%;
   @media (min-width: ${theme.breakpoint.sm}) {
-    padding-left: ${({ $isVisibleCategory }) => $isVisibleCategory && '225px'};
+    padding-left: ${({ $isSidebarVisible }) => $isSidebarVisible && '225px'};
   }
 `;
 
-export const ChildrenWrapper = styled.div<{ $isVisibleCategory: boolean }>`
+export const ChildrenWrapper = styled.div<{ $isSidebarVisible: boolean }>`
   width: 100%;
-  max-width: ${({ $isVisibleCategory }) => $isVisibleCategory && '500px'};
+  max-width: ${({ $isSidebarVisible }) => $isSidebarVisible && '500px'};
 `;

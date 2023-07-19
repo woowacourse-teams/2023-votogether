@@ -43,7 +43,7 @@ const MOCK_FAVORITE_CATEGORIES: Category[] = [
 export const VisibleCategory: Story = {
   render: () => (
     <Layout
-      isVisibleCategory={true}
+      isSidebarVisible={true}
       userInfo={MOCK_USER_INFO}
       categoryList={MOCK_FAVORITE_CATEGORIES}
       handleFavoriteClick={() => {}}
@@ -66,7 +66,7 @@ export const VisibleCategory: Story = {
 export const HiddenCategory: Story = {
   render: () => (
     <Layout
-      isVisibleCategory={false}
+      isSidebarVisible={false}
       categoryList={MOCK_FAVORITE_CATEGORIES}
       handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}

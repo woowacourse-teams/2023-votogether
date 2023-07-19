@@ -3,10 +3,14 @@ import LogoButton from '../LogoButton';
 
 import * as S from './style';
 
-export default function NarrowMainHeader() {
+interface NarrowMainHeaderProps {
+  handleMenuOpenClick: () => void;
+}
+
+export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHeaderProps) {
   return (
     <S.Container>
-      <IconButton category="category" />
+      <IconButton category="category" onClick={handleMenuOpenClick} />
       <LogoButton content="icon" />
       <IconButton category="search" />
     </S.Container>

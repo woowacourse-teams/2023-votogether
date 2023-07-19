@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
+import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
 
 import Modal from '@components/common/Modal';
@@ -24,6 +25,9 @@ interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   isError: boolean;
   error: unknown;
 }
+
+const MAX_TITLE_LENGTH = 100;
+const MAX_CONTENT_LENGTH = 1000;
 
 export default function PostForm({ data, mutate, isError, error }: PostFormProps) {
   const {
@@ -45,8 +49,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
   });
   const baseTime = startTime ? new Date(startTime) : new Date();
 
-  const [writingTitle, setWritingTitle] = useState(title);
-  const [writingContent, setWritingContent] = useState(content);
+  const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
+  const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
 
   const handleDeadlineButtonClick = (option: string) => {
     setTime(formatTimeWithOption(option));
@@ -71,7 +75,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const optionImageFileInputs =
         e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
       const fileInputList: HTMLInputElement[] = [...optionImageFileInputs];
-      const imageFileList: File[] = []; ///////////////
+      const imageFileList: File[] = [];
       fileInputList.forEach(item => {
         if (item.files) {
           imageFileList.push(item.files[0]);
@@ -84,7 +88,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const writingOptionTexts = Array.from(optionTextAreas).map((textarea: any) => textarea.value);
 
       const updatedPostTexts = {
-        categoryIds: [1, 2],
+        categoryIds: [1, 2], // 다중 선택 컴포넌트 구현 후 수정 예정
         title: writingTitle ?? '',
         content: writingContent ?? '',
         postOptions: writingOptionTexts,
@@ -115,27 +119,27 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       </NarrowTemplateHeader>
       <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
-          <select>
-            {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
-            <option>카테고리1</option>
-            <option>카테고리2</option>
-          </select>
-          <S.Title
-            value={writingTitle}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWritingTitle(e.target.value)}
-            placeholder="제목을 입력해주세요"
-            maxLength={100}
-            required
-          />
-          <S.Content
-            value={writingContent}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setWritingContent(e.target.value)
-            }
-            placeholder="내용을 입력해주세요"
-            maxLength={1000}
-            required
-          />
+          <S.RightSide>
+            <select>
+              {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
+              <option>카테고리1</option>
+              <option>카테고리2</option>
+            </select>
+            <S.Title
+              value={writingTitle}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e, 100)}
+              placeholder="제목을 입력해주세요"
+              maxLength={MAX_TITLE_LENGTH}
+              required
+            />
+            <S.Content
+              value={writingContent}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange(e, 1000)}
+              placeholder="내용을 입력해주세요"
+              maxLength={MAX_CONTENT_LENGTH}
+              required
+            />
+          </S.RightSide>
           <S.OptionListWrapper>
             <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
             <S.Deadline>

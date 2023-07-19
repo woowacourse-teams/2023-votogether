@@ -32,7 +32,7 @@ export default function VoteStatisticsPage() {
   } = useFetch(() => getPostStatistics(postId));
 
   const movePostDetailPage = () => {
-    navigate(`posts/${postId}`);
+    navigate(`/posts/${postId}`);
   };
 
   return (

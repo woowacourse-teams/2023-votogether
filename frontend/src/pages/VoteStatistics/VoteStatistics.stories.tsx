@@ -9,6 +9,6 @@ const meta: Meta<typeof VoteStatisticsPage> = {
 export default meta;
 type Story = StoryObj<typeof VoteStatisticsPage>;
 
-export const defaultPage: Story = {
+export const DefaultPage: Story = {
   render: () => <VoteStatisticsPage />,
 };

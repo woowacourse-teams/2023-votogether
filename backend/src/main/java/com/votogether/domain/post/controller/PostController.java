@@ -4,6 +4,7 @@ import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,8 +14,10 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -52,6 +55,14 @@ public class PostController {
 
         final Long postId = postService.save(request, member, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
+    }
+
+
+    // TODO: 2023/07/19 응답값 DTO로 변환해주기
+    @GetMapping("/votes/me")
+    public ResponseEntity<List<Post>> getPostsVotedOn(final Member member) {
+        List<Post> postsVotedOn = postService.getPostsVotedOn(member);
+        return ResponseEntity.status(HttpStatus.OK).body(postsVotedOn);
     }
 
 }

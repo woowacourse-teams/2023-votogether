@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 
@@ -66,3 +67,4 @@ class PostServiceTest {
     }
 
 }
+

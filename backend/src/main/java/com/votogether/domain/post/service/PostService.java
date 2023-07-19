@@ -8,6 +8,9 @@ import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.vote.entity.Vote;
+import com.votogether.domain.vote.repository.VoteRepository;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
+    private final VoteRepository voteRepository;
 
     public Long save(
             final PostCreateRequest postCreateRequest,
@@ -60,6 +64,18 @@ public class PostService {
                 .title(postCreateRequest.title())
                 .content(postCreateRequest.content())
                 .build();
+    }
+
+    public List<Post> getPostsVotedOn(final Member member) {
+        final List<Vote> votes = voteRepository.findByMember(member);
+
+        final List<Post> posts = votes.stream()
+                .map(vote -> vote.getPostOption().getPost())
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .toList();
+
+        // TODO: 2023/07/19 List<Post> -> List<PostResponse> 로 바꾸어서 응답하기
+        return posts;
     }
 
 }

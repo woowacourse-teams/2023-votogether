@@ -84,13 +84,15 @@ export const LeftSide = styled.div`
 export const OptionListWrapper = styled.div`
   width: 100%;
   max-width: 320px;
-  height: 540px;
 
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: none;
 
   @media (min-width: 576px) {
     max-width: 500px;
+    height: 540px;
+
+    overflow-y: scroll;
   }
 `;
 

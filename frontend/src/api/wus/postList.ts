@@ -26,9 +26,20 @@ const REQUEST_SORTING_OPTION = {
   [SORTING_OPTION.popular]: 'hot',
 };
 
+const transformPostListResponse = (postList: PostInfo[], pageNumber: number) => {
+  return {
+    pageNumber,
+    postList,
+  };
+};
+
 export const getPostList = async ({ postStatus, postSorting, pages }: GetPostListParams) => {
   const status = REQUEST_STATUS_OPTION[postStatus];
   const sorting = REQUEST_SORTING_OPTION[postSorting];
 
-  return await getFetch<PostInfo[]>(`/posts?status=${status}&sorting=${sorting}&pages=${pages}`);
+  const postList = await getFetch<PostInfo[]>(
+    `/posts?status=${status}&sorting=${sorting}&pages=${pages}`
+  );
+
+  return transformPostListResponse(postList, pages);
 };

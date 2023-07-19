@@ -2,7 +2,7 @@ import { PostInfo } from '@type/post';
 
 export const MOCK_POST_LIST: PostInfo[][] = [];
 
-const MOCK_POST = {
+const getMockPost = () => ({
   postId: Math.floor(Math.random() * 100000),
   title:
     '어느 곳에서 정보를 찾아야 할지도 막막한 사람들을 위한, 심심풀이로 나의 취향과 남의 취향을 비교해보고 싶은 사람들을 위한 프로젝트',
@@ -59,13 +59,13 @@ const MOCK_POST = {
       },
     ],
   },
-};
+});
 
-for (let page = 0; page < 10; page++) {
+for (let page = 0; page < 10; page += 1) {
   const postList = [];
 
   for (let index = 0; index < 10; index += 1) {
-    postList.push(MOCK_POST);
+    postList.push(getMockPost());
   }
 
   MOCK_POST_LIST.push(postList);

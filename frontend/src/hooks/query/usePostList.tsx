@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { PostInfo } from '@type/post';
+import { PostList } from '@type/post';
 
 import { getPostList } from '@api/wus/postList';
 
@@ -9,17 +9,23 @@ import { PostStatusType, PostSortingType } from '@components/post/PostListPage/c
 interface UsePostListParams {
   postSorting: PostSortingType;
   postStatus: PostStatusType;
-  pages: number;
 }
 
-export const usePostList = ({ postSorting, postStatus, pages }: UsePostListParams) => {
-  const { data, error, isLoading } = useQuery<PostInfo[]>(
-    ['posts', postSorting, postStatus],
-    () => getPostList({ postSorting, postStatus, pages }),
-    {
-      suspense: true,
-    }
-  );
+const MAX_LIST_LENGTH = 10;
 
-  return { data, error, isLoading };
+export const usePostList = ({ postSorting, postStatus }: UsePostListParams) => {
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery<PostList>(
+      ['posts', postSorting, postStatus],
+      ({ pageParam = 0 }) => getPostList({ postSorting, postStatus, pages: pageParam }),
+      {
+        getNextPageParam: lastPage => {
+          if (lastPage.postList.length !== MAX_LIST_LENGTH) return;
+
+          return lastPage.pageNumber + 1;
+        },
+      }
+    );
+
+  return { data, error, fetchNextPage, hasNextPage, isFetchingNextPage };
 };

@@ -26,7 +26,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Operation(summary = "카테고리 조회하기", description = "전체 카테고리 목록을 조회한다.")
+    @Operation(summary = "카테고리 목록 조회하기", description = "전체 카테고리 목록을 조회한다.")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/guest")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
@@ -58,6 +58,9 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+
+    @Operation(summary = "회원으로 모든 카테고리 목록 조회하기", description = "회원의 선호하는 카테고리와 전체 카테고리 목록을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories(final Member member) {
         List<CategoryResponse> categories = categoryService.getAllCategories(member);

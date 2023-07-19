@@ -9,7 +9,6 @@ import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.SocialType;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +36,11 @@ class MemberCategoryRepositoryTest {
         Member member = Member.builder()
                 .gender(Gender.MALE)
                 .point(0)
-                .socialType(SocialType.GOOGLE)
+                .socialType(SocialType.KAKAO)
                 .nickname("user1")
                 .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 07, 12, 00, 00))
+                .ageRange("30~39")
+                .birthday("0101")
                 .build();
 
         categoryRepository.save(category);
@@ -71,11 +70,11 @@ class MemberCategoryRepositoryTest {
         Member member = Member.builder()
                 .gender(Gender.MALE)
                 .point(0)
-                .socialType(SocialType.GOOGLE)
+                .socialType(SocialType.KAKAO)
                 .nickname("user1")
                 .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 07, 12, 00, 00))
+                .ageRange("30~39")
+                .birthday("0101")
                 .build();
 
         MemberCategory memberCategory = MemberCategory.builder()

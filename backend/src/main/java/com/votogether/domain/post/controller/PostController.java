@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -42,12 +41,13 @@ public class PostController {
     ) {
         // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)
         final Member member = Member.builder()
-                .socialType(SocialType.GOOGLE)
+                .socialType(SocialType.KAKAO)
                 .socialId("tjdtls690")
                 .nickname("Abel")
                 .gender(Gender.MALE)
                 .point(100)
-                .birthDate(LocalDateTime.now())
+                .ageRange("30~39")
+                .birthday("0101")
                 .build();
 
         final Long postId = postService.save(request, member, images);

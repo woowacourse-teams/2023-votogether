@@ -7,8 +7,10 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
@@ -16,9 +18,6 @@ import io.restassured.response.ExtractableResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,13 @@ import org.springframework.http.HttpStatus;
 class PostControllerTest {
 
     @MockBean
-    private PostService postService;
+    PostService postService;
+
+    @MockBean
+    MemberService memberService;
+
+    @MockBean
+    TokenProcessor tokenProcessor;
 
     @BeforeEach
     void setUp() {

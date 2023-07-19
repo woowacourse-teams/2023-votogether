@@ -5,8 +5,12 @@ import static org.hamcrest.Matchers.startsWith;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.votogether.domain.member.entity.Gender;
+import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.integrated.IntegrationTest;
+import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.io.File;
@@ -16,14 +20,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 class PostControllerIntegratedTest extends IntegrationTest {
+
+    @Autowired
+    TokenProcessor tokenProcessor;
 
     @Test
     @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
+        final Member member = Member.builder()
+                .gender(Gender.MALE)
+                .point(0)
+                .socialType(SocialType.KAKAO)
+                .nickname("user1")
+                .socialId("kakao@gmail.com")
+                .ageRange("30~39")
+                .birthday("0101")
+                .build();
+        String token = tokenProcessor.generateToken(member);
+
         final List<String> postOptionRequests = List.of("option1", "option2");
 
         final PostCreateRequest postCreateRequest = PostCreateRequest.builder()
@@ -51,6 +71,7 @@ class PostControllerIntegratedTest extends IntegrationTest {
         // when, then
         RestAssured.given().log().all()
                 .contentType(ContentType.MULTIPART)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .multiPart("request", postCreateRequest, "application/json")
                 .multiPart("images", resultFileName1, new FileInputStream(file1), "image/png")
                 .multiPart("images", resultFileName2, new FileInputStream(file2), "image/png")

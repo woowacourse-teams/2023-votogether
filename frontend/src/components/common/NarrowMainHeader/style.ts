@@ -15,7 +15,7 @@ export const Container = styled.div`
 
   background-color: #1f1f1f;
 
-  & :nth-child(2) {
+  & > :nth-child(2) {
     margin-right: auto;
     height: 60%;
   }

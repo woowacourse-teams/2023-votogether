@@ -68,7 +68,7 @@
             "position": "after"
           },
           {
-            "pattern": "@contants/**",
+            "pattern": "@constants/**",
             "group": "internal",
             "position": "after"
           },
@@ -84,6 +84,11 @@
           },
           {
             "pattern": "@assets/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@mocks/**",
             "group": "internal",
             "position": "after"
           }

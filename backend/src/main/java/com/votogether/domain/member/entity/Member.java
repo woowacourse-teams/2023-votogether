@@ -76,6 +76,9 @@ public class Member extends BaseEntity {
                 .socialId(String.valueOf(response.id()))
                 .point(0)
                 .build();
+
+    public void plusPoint(final int point) {
+        this.point = this.point + point;
     }
 
 }

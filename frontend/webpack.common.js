@@ -10,6 +10,7 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -26,6 +27,7 @@ module.exports = {
       '@selectors': path.resolve(__dirname, 'src/selectors'),
       '@routes': path.resolve(__dirname, 'src/routes'),
       '@api': path.resolve(__dirname, 'src/api'),
+      '@mocks': path.resolve(__dirname, 'src/mocks'),
     },
   },
   module: {
@@ -55,7 +57,7 @@ module.exports = {
   ],
   devtool: 'inline-source-map',
   devServer: {
-    static: './dist',
+    static: 'public',
     hot: true,
     open: true,
   },

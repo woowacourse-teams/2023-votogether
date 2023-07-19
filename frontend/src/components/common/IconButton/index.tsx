@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react';
 
 import backIcon from '@assets/back.svg';
 import categoryIcon from '@assets/category.svg';
-import searchIcon from '@assets/search.svg';
+import searchIcon from '@assets/search_white.svg';
 
 import * as S from './style';
 

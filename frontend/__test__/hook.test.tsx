@@ -2,10 +2,6 @@ import { renderHook, act } from '@testing-library/react';
 
 import { useCount } from '../src/hooks/useCount';
 
-/**
- * @jest-environment jsdom
- */
-
 test('useCount hook을 테스트한다.', () => {
   const { result } = renderHook(() => useCount());
 

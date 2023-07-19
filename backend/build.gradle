@@ -27,6 +27,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
+    //Start Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+
+    //To response to java.lang.NoClassDefFoundError
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    //End Querydsl
+
     runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok'
@@ -40,3 +49,23 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+//Start Querydsl
+//Where To Create Querydsl Q Class
+def generated = 'src/main/generated'
+
+//Set Querydsl Q class Generated Target
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+//Add Q Class Target In Java Source Set
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+//When Gradle Clean, Delete Q Class Directory
+clean {
+    delete file(generated)
+}
+//End Querydsl

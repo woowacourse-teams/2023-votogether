@@ -5,6 +5,7 @@ import com.votogether.domain.category.service.CategoryService;
 import com.votogether.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,11 @@ public class CategoryController {
     }
 
     @Operation(summary = "선호 카테고리 추가하기", description = "선호하는 카테고리를 선호 카테고리 목록에 추가한다.")
-    @ApiResponse(responseCode = "201", description = "추가 성공")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "추가 성공"),
+            @ApiResponse(responseCode = "400", description = "해당 카테고리가 추가가 되어 있어 중복 추가 실패"),
+            @ApiResponse(responseCode = "404", description = "해당 카테고리가 존재하지 않아 추가 실패"),
+    })
     @PostMapping("/{categoryId}/like")
     public ResponseEntity<Void> addFavoriteCategory(final Member member, @PathVariable final Long categoryId) {
         categoryService.addFavoriteCategory(member, categoryId);
@@ -42,7 +47,11 @@ public class CategoryController {
     }
 
     @Operation(summary = "선호 카테고리 삭제하기", description = "선호하는 카테고리를 선호 카테고리 목록에서 삭제한다.")
-    @ApiResponse(responseCode = "204", description = "삭제 성공")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "선호하는 카테고리가 아니여서 삭제 실패"),
+            @ApiResponse(responseCode = "404", description = "해당 카테고리가 존재하지 않아 삭제 실패")
+    })
     @DeleteMapping("/{categoryId}/like")
     public ResponseEntity<Void> removeFavoriteCategory(final Member member, @PathVariable final Long categoryId) {
         categoryService.removeFavoriteCategory(member, categoryId);

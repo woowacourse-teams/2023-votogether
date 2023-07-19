@@ -17,7 +17,7 @@ export const usePostList = ({ postSorting, postStatus }: UsePostListParams) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<PostList>(
       ['posts', postSorting, postStatus],
-      ({ pageParam = 0 }) => getPostList({ postSorting, postStatus, pages: pageParam }),
+      ({ pageParam = 0 }) => getPostList({ postSorting, postStatus, pageNumber: pageParam }),
       {
         getNextPageParam: lastPage => {
           if (lastPage.postList.length !== MAX_LIST_LENGTH) return;

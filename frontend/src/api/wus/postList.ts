@@ -7,13 +7,13 @@ import { getFetch } from '@utils/fetch';
 interface GetPostListParams {
   postStatus: PostStatusType;
   postSorting: PostSortingType;
-  pages: number;
+  pageNumber: number;
 }
 
 const REQUEST_STATUS_OPTION = {
-  all: 'all',
-  progress: 'progress',
-  closed: 'closed',
+  all: 'ALL',
+  progress: 'PROGRESS',
+  closed: 'CLOSED',
 };
 
 const REQUEST_SORTING_OPTION = {
@@ -21,20 +21,15 @@ const REQUEST_SORTING_OPTION = {
   popular: 'hot',
 };
 
-const transformPostListResponse = (postList: PostInfo[], pageNumber: number) => {
+export const getPostList = async ({ postStatus, postSorting, pageNumber }: GetPostListParams) => {
+  const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
+  const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
+
+  const postList = await getFetch<PostInfo[]>(
+    `/posts?status=${requestedStatus}&sorting=${requestedSorting}&pages=${pageNumber}`
+  );
   return {
     pageNumber,
     postList,
   };
-};
-
-export const getPostList = async ({ postStatus, postSorting, pages }: GetPostListParams) => {
-  const status = REQUEST_STATUS_OPTION[postStatus];
-  const sorting = REQUEST_SORTING_OPTION[postSorting];
-
-  const postList = await getFetch<PostInfo[]>(
-    `/posts?status=${status}&sorting=${sorting}&pages=${pages}`
-  );
-
-  return transformPostListResponse(postList, pages);
 };

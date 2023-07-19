@@ -1,11 +1,6 @@
 import { PostInfo } from '@type/post';
 
-import {
-  PostStatusType,
-  PostSortingType,
-  STATUS_OPTION,
-  SORTING_OPTION,
-} from '@components/post/PostListPage/constants/option';
+import { PostStatusType, PostSortingType } from '@components/post/PostListPage/constants/option';
 
 import { getFetch } from '@utils/fetch';
 
@@ -16,14 +11,14 @@ interface GetPostListParams {
 }
 
 const REQUEST_STATUS_OPTION = {
-  [STATUS_OPTION.all]: 'all',
-  [STATUS_OPTION.progress]: 'progress',
-  [STATUS_OPTION.closed]: 'closed',
+  all: 'all',
+  progress: 'progress',
+  closed: 'closed',
 };
 
 const REQUEST_SORTING_OPTION = {
-  [SORTING_OPTION.latest]: 'latest',
-  [SORTING_OPTION.popular]: 'hot',
+  latest: 'latest',
+  popular: 'hot',
 };
 
 const transformPostListResponse = (postList: PostInfo[], pageNumber: number) => {

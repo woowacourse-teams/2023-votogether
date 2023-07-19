@@ -55,7 +55,7 @@ export default function Select<T extends string>({
       {isOpen && (
         <S.OptionListParent>
           <S.OptionListContainer>
-            {optionKeyList.map(optionKey => (
+            {optionKeyList.map((optionKey: T) => (
               <S.OptionContainer key={optionKey} onClick={() => handleSelectClick(optionKey)}>
                 {optionList[optionKey]}
               </S.OptionContainer>

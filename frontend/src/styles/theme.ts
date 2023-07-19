@@ -11,6 +11,12 @@ const breakpoint = {
   // => @media (min-width: 1440px) { ... }
 };
 
+const zIndex = {
+  header: 100,
+  modal: 200,
+};
+
 export const theme: DefaultTheme = {
   breakpoint,
+  zIndex,
 };

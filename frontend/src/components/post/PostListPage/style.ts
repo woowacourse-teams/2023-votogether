@@ -19,6 +19,8 @@ export const HeaderWrapper = styled.div`
   position: fixed;
   top: 0;
 
+  z-index: ${theme.zIndex.header};
+
   @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
     visibility: hidden;

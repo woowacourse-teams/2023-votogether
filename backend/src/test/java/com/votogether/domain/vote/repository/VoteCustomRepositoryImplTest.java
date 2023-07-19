@@ -56,7 +56,7 @@ class VoteCustomRepositoryImplTest {
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );
-        PostOption postOptionA = postOptionRepository.save(
+        PostOption postOption = postOptionRepository.save(
                 PostOption.builder()
                         .post(post)
                         .sequence(1)
@@ -64,15 +64,15 @@ class VoteCustomRepositoryImplTest {
                         .build()
         );
 
-        voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
-        voteRepository.save(Vote.builder().member(maleLate10).postOption(postOptionA).build());
-        voteRepository.save(Vote.builder().member(male60).postOption(postOptionA).build());
-        voteRepository.save(Vote.builder().member(female70).postOption(postOptionA).build());
-        voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
+        voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOption).build());
+        voteRepository.save(Vote.builder().member(maleLate10).postOption(postOption).build());
+        voteRepository.save(Vote.builder().member(male60).postOption(postOption).build());
+        voteRepository.save(Vote.builder().member(female70).postOption(postOption).build());
+        voteRepository.save(Vote.builder().member(female80).postOption(postOption).build());
 
         // when
         List<VoteStatus> result =
-                voteCustomRepository.findVoteCountByPostOptionIdGroupByAgeRangeAndGender(postOptionA.getId());
+                voteCustomRepository.findVoteCountByPostOptionIdGroupByAgeRangeAndGender(postOption.getId());
 
         // then
         assertThat(result).containsExactly(

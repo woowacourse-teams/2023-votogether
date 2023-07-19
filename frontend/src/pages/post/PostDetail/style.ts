@@ -25,3 +25,15 @@ export const TagButtonWrapper = styled.div`
   position: absolute;
   top: 55px;
 `;
+
+export const BottomButtonContainer = styled.div`
+  display: none;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    display: flex;
+    width: 90%;
+    height: 40px;
+    margin-top: 40px;
+    gap: 10px;
+  }
+`;

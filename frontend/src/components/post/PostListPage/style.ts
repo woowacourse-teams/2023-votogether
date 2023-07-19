@@ -5,10 +5,12 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const Container = styled.div`
-  max-width: 500px;
   padding-top: 55px;
-
   position: relative;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    padding-top: 0px;
+  }
 `;
 
 export const HeaderWrapper = styled.div`

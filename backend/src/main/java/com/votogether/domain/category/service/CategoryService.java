@@ -6,6 +6,7 @@ import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,21 @@ public class CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리는 선호 카테고리가 아닙니다."));
 
         memberCategoryRepository.delete(memberCategory);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> getAllCategories(final Member member) {
+        final List<Category> categories = categoryRepository.findAll();
+        final List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
+
+        final List<Category> favoriteCategories = memberCategories.stream()
+                .map(MemberCategory::getCategory)
+                .toList();
+
+        return categories.stream()
+                .sorted(Comparator.comparing(Category::getName))
+                .map(category -> new CategoryResponse(category, favoriteCategories))
+                .toList();
     }
 
 }

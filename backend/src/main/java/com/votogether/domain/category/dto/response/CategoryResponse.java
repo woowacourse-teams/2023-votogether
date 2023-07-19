@@ -13,4 +13,8 @@ public record CategoryResponse(
         this(category.getId(), category.getName(), isFavorite);
     }
 
+    public CategoryResponse(final Category category, final List<Category> favoriteCategories) {
+        this(category.getId(), category.getName(), favoriteCategories.contains(category));
+    }
+
 }

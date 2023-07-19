@@ -49,4 +49,10 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping
+    public ResponseEntity<Void> getAllCategories(final Member member) {
+        categoryService.getAllCategories(member);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

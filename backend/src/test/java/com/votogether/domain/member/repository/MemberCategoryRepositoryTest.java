@@ -2,14 +2,13 @@ package com.votogether.domain.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.votogether.domain.RepositoryTest;
+import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.SocialType;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,13 @@ class MemberCategoryRepositoryTest {
                 .build();
 
         Member member = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
                 .nickname("user1")
+                .gender(Gender.MALE)
+                .birthday("0718")
+                .ageRange("10~14")
+                .socialType(SocialType.GOOGLE)
                 .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 07, 12, 00, 00))
+                .point(0)
                 .build();
 
         categoryRepository.save(category);
@@ -69,13 +68,13 @@ class MemberCategoryRepositoryTest {
                 .build();
 
         Member member = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
                 .nickname("user1")
+                .gender(Gender.MALE)
+                .birthday("0718")
+                .ageRange("10~14")
+                .socialType(SocialType.GOOGLE)
                 .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 07, 12, 00, 00))
+                .point(0)
                 .build();
 
         MemberCategory memberCategory = MemberCategory.builder()

@@ -1,42 +1,78 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { usePostList } from '@hooks/query/usePostList';
+import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { useSelect } from '@hooks/useSelect';
 
 import Post from '@components/common/Post';
+import Select from '@components/common/Select';
+import Skeleton from '@components/common/Skeleton';
 
-import { PostSortingType, PostStatusType } from '../PostListPage/constants/option';
+import {
+  PostSortingType,
+  PostStatusType,
+  SORTING_OPTION,
+  STATUS_OPTION,
+} from '../PostListPage/constants/option';
 
 import * as S from './style';
 
 export default function PostList() {
-  const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
-    useSelect<PostSortingType>('latest');
+  const { targetRef, isIntersecting } = useIntersectionObserver({
+    root: null,
+    rootMargin: '',
+    thresholds: 0.1,
+  });
   const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
     useSelect<PostStatusType>('progress');
+  const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
+    useSelect<PostSortingType>('latest');
 
-  const { data: postList } = usePostList({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
     postSorting: selectedSortingOption,
     postStatus: selectedStatusOption,
   });
 
+  useEffect(() => {
+    if (isIntersecting && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [isIntersecting, fetchNextPage, hasNextPage]);
+
   return (
     <S.Container>
       <S.SelectContainer>
-        <select defaultValue="진행중">
-          <option>전체</option>
-          <option>진행중</option>
-          <option>마감완료</option>
-        </select>
-        <select defaultValue="최신순">
-          <option>인기순</option>
-          <option>최신순</option>
-        </select>
+        <S.SelectWrapper>
+          <Select<PostStatusType>
+            handleOptionChange={handleStatusOptionChange}
+            optionList={STATUS_OPTION}
+            selectedOption={STATUS_OPTION[selectedStatusOption]}
+          />
+        </S.SelectWrapper>
+        <S.SelectWrapper>
+          <Select<PostSortingType>
+            handleOptionChange={handleSortingOptionChange}
+            optionList={SORTING_OPTION}
+            selectedOption={SORTING_OPTION[selectedSortingOption]}
+          />
+        </S.SelectWrapper>
       </S.SelectContainer>
       <S.PostListContainer>
-        {postList?.map(post => (
-          <Post key={post.postId} isPreview={true} postInfo={post} />
+        {data?.pages.map((postListInfo, pageIndex) => (
+          <React.Fragment key={pageIndex}>
+            {postListInfo.postList.map((post, index) => {
+              if (index === 7) {
+                return (
+                  <div key={post.postId} ref={targetRef}>
+                    <Post isPreview={true} postInfo={post} />
+                  </div>
+                );
+              }
+              return <Post key={post.postId} isPreview={true} postInfo={post} />;
+            })}
+          </React.Fragment>
         ))}
+        {isFetchingNextPage && <Skeleton />}
       </S.PostListContainer>
     </S.Container>
   );

@@ -31,11 +31,12 @@ public class TokenProcessor {
 
     public TokenProcessor(
             @Value("${jwt.token.secret-key}") final String secretKey,
-            @Value("${jwt.token.expiration-time}") final int tokenExpirationTime
+            @Value("${jwt.token.expiration-time}") final int tokenExpirationTime,
+            final ObjectMapper objectMapper
     ) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
         this.tokenExpirationTime = tokenExpirationTime;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapper;
     }
 
     public String generateToken(final Member member) {

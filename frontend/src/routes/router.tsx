@@ -4,6 +4,8 @@ import CreatePost from '@pages/post/CreatePost';
 import EditPost from '@pages/post/EditPost';
 import PostDetail from '@pages/post/PostDetail';
 import PostList from '@pages/post/PostList';
+import Login from '@pages/user/Login';
+import Redirection from '@pages/user/Redirection';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,14 @@ const router = createBrowserRouter([
       {
         path: 'posts/write/:postId',
         element: <EditPost />,
+      },
+      {
+        path: 'login',
+        element: <Login />,
+      },
+      {
+        path: 'auth/kakao/callback',
+        element: <Redirection />,
       },
     ],
   },

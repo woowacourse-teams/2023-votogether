@@ -41,10 +41,7 @@ export const ButtonContainer = styled.div`
   gap: 20px;
 
   position: sticky;
-
   bottom: 24px;
-
-  will-change: transform;
 `;
 
 export const AddButtonWrapper = styled(Link)`

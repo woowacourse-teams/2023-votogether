@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface VoteRepository extends JpaRepository<Vote, Long> {
+public interface VoteRepository extends JpaRepository<Vote, Long>, VoteCustomRepository {
 
     Optional<Vote> findByMemberAndPostOption(final Member member, final PostOption postOption);
 

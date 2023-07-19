@@ -40,25 +40,75 @@ class CategoryServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @Test
-    @DisplayName("모든 카테고리를 가져온다.")
-    void getAllCategories() {
-        // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
 
-        categoryRepository.save(category);
+    @Nested
+    @DisplayName("조회 하기")
+    class Getting {
 
-        // when
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+        @Test
+        @DisplayName("모든 카테고리를 가져온다.")
+        void getAllCategories() {
+            // given
+            Category category = Category.builder()
+                    .name("개발")
+                    .build();
 
-        // then
-        assertAll(
-                () -> assertThat(categories.get(0).id()).isNotNull(),
-                () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
-                () -> assertThat(categories.get(0).isFavorite()).isFalse()
-        );
+            categoryRepository.save(category);
+
+            // when
+            List<CategoryResponse> categories = categoryService.getAllCategories();
+
+            // then
+            assertAll(
+                    () -> assertThat(categories.get(0).id()).isNotNull(),
+                    () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
+                    () -> assertThat(categories.get(0).isFavorite()).isFalse()
+            );
+        }
+
+        @Test
+        @DisplayName("회원으로 모든 카테고리 목록을 조회한다.")
+        void getAllCategoriesFromMember() {
+            Category category = Category.builder()
+                    .name("개발")
+                    .build();
+
+            Category category1 = Category.builder()
+                    .name("음식")
+                    .build();
+
+            Member member = Member.builder()
+                    .gender(Gender.MALE)
+                    .point(0)
+                    .socialType(SocialType.GOOGLE)
+                    .nickname("user1")
+                    .socialId("kakao@gmail.com")
+                    .birthDate(
+                            LocalDateTime.of(1995, 7, 12, 0, 0))
+                    .build();
+
+            MemberCategory memberCategory = MemberCategory.builder()
+                    .member(member)
+                    .category(category).build();
+
+            categoryRepository.save(category);
+            categoryRepository.save(category1);
+            memberRepository.save(member);
+            memberCategoryRepository.save(memberCategory);
+
+            // when
+            List<CategoryResponse> categories = categoryService.getAllCategories(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(categories.get(0).id()).isNotNull(),
+                    () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
+                    () -> assertThat(categories.get(0).isFavorite()).isTrue(),
+                    () -> assertThat(categories.get(1).id()).isNotNull(),
+                    () -> assertThat(categories.get(1).name()).isEqualTo("음식"),
+                    () -> assertThat(categories.get(1).isFavorite()).isFalse()
+            );
+        }
     }
 
     @Test

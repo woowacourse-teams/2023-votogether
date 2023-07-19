@@ -1,5 +1,7 @@
 package com.votogether.domain.category.contorller;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -9,7 +11,6 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.service.CategoryService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.util.List;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,9 +44,9 @@ class CategoryControllerTest {
                 .when().get("/categories/guest")
                 .then().log().all()
                 .status(HttpStatus.OK)
-                .body("[0].id", Matchers.nullValue())
-                .body("[0].name", Matchers.equalTo("개발"))
-                .body("[0].isFavorite", Matchers.equalTo(false));
+                .body("[0].id", nullValue())
+                .body("[0].name", equalTo("개발"))
+                .body("[0].isFavorite", equalTo(false));
     }
 
     @Test
@@ -57,7 +58,7 @@ class CategoryControllerTest {
         // when & then
         RestAssuredMockMvc.
                 given().log().all()
-                .when().post("/categories/1/like")
+                .when().post("/categories/{categoryId/like", 1)
                 .then().log().all()
                 .status(HttpStatus.CREATED);
     }

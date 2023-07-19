@@ -11,10 +11,9 @@ import Drawer from '@components/common/Drawer';
 import NarrowMainHeader from '@components/common/NarrowMainHeader';
 import Skeleton from '@components/common/Skeleton';
 import UpButton from '@components/common/UpButton';
+import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
-
-import PostList from '../PostList';
 
 import * as S from './style';
 

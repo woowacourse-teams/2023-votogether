@@ -4,11 +4,11 @@ import { PostList } from '@type/post';
 
 import { getPostList } from '@api/wus/postList';
 
-import { PostStatusType, PostSortingType } from '@components/post/PostListPage/constants/option';
+import { PostSorting, PostStatus } from '@components/post/PostListPage/types/option';
 
 interface UsePostListParams {
-  postSorting: PostSortingType;
-  postStatus: PostStatusType;
+  postSorting: PostSorting;
+  postStatus: PostStatus;
 }
 
 const MAX_LIST_LENGTH = 10;

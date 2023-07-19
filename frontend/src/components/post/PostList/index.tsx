@@ -7,13 +7,8 @@ import { useSelect } from '@hooks/useSelect';
 import Post from '@components/common/Post';
 import Select from '@components/common/Select';
 import Skeleton from '@components/common/Skeleton';
-
-import {
-  PostSortingType,
-  PostStatusType,
-  SORTING_OPTION,
-  STATUS_OPTION,
-} from '../PostListPage/constants/option';
+import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants/option';
+import type { PostSorting, PostStatus } from '@components/post/PostListPage/types/option';
 
 import * as S from './style';
 
@@ -24,9 +19,9 @@ export default function PostList() {
     thresholds: 0.1,
   });
   const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
-    useSelect<PostStatusType>('progress');
+    useSelect<PostStatus>('progress');
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
-    useSelect<PostSortingType>('latest');
+    useSelect<PostSorting>('latest');
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
     postSorting: selectedSortingOption,
@@ -43,14 +38,14 @@ export default function PostList() {
     <S.Container>
       <S.SelectContainer>
         <S.SelectWrapper>
-          <Select<PostStatusType>
+          <Select<PostStatus>
             handleOptionChange={handleStatusOptionChange}
             optionList={STATUS_OPTION}
             selectedOption={STATUS_OPTION[selectedStatusOption]}
           />
         </S.SelectWrapper>
         <S.SelectWrapper>
-          <Select<PostSortingType>
+          <Select<PostSorting>
             handleOptionChange={handleSortingOptionChange}
             optionList={SORTING_OPTION}
             selectedOption={SORTING_OPTION[selectedSortingOption]}

@@ -27,14 +27,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
-    testImplementation 'io.rest-assured:rest-assured'
-    testImplementation 'io.rest-assured:spring-mock-mvc'
-
     runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'io.rest-assured:spring-mock-mvc'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

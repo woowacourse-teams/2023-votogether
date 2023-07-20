@@ -44,8 +44,6 @@ class PostTest {
                 .socialType(SocialType.GOOGLE)
                 .nickname("user1")
                 .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 7, 12, 0, 0))
                 .build();
 
         Member member2 = Member.builder()

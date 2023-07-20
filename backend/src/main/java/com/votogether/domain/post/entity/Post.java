@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -94,7 +95,7 @@ public class Post extends BaseEntity {
     }
 
     public boolean isWriter(final Member member) {
-        return this.member == member;
+        return Objects.equals(this.member.getId(), member.getId());
     }
 
     public boolean isClosed() {

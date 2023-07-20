@@ -6,6 +6,7 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -67,8 +68,11 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")
     })
     @GetMapping("/{postId}/options")
-    public ResponseEntity<VoteOptionStatisticsResponse> getVoteStatistics(@PathVariable final Long postId) {
-        final VoteOptionStatisticsResponse response = postService.getVoteStatistics(postId);
+    public ResponseEntity<VoteOptionStatisticsResponse> getVoteStatistics(
+            @PathVariable final Long postId,
+            @Auth final Member member
+    ) {
+        final VoteOptionStatisticsResponse response = postService.getVoteStatistics(postId, member);
         return ResponseEntity.ok(response);
     }
 
@@ -81,9 +85,10 @@ public class PostController {
     @GetMapping("/{postId}/options/{optionId}")
     public ResponseEntity<VoteOptionStatisticsResponse> getVoteOptionStatistics(
             @PathVariable final Long postId,
-            @PathVariable final Long optionId
+            @PathVariable final Long optionId,
+            @Auth final Member member
     ) {
-        final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId);
+        final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId, member);
         return ResponseEntity.ok(response);
     }
 

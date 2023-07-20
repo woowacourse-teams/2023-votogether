@@ -19,7 +19,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
             " WHERE p.post.id = :postId" +
             " GROUP BY m.ageRange, m.gender"
     )
-    List<VoteStatus> findVoteCountByPostIdGroupByAgeRangeAndGender(Long postId);
+    List<VoteStatus> findVoteCountByPostIdGroupByAgeRangeAndGender(@Param("postId") final Long postId);
 
     @Query("SELECT new com.votogether.domain.vote.dto.VoteStatus(m.ageRange, m.gender, COUNT(v))" +
             " FROM Vote v" +
@@ -27,7 +27,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
             " WHERE v.postOption.id = :postOptionId" +
             " GROUP BY m.ageRange, m.gender"
     )
-    List<VoteStatus> findVoteCountByPostOptionIdGroupByAgeRangeAndGender(@Param("postOptionId") Long postOptionId);
+    List<VoteStatus> findVoteCountByPostOptionIdGroupByAgeRangeAndGender(
+            @Param("postOptionId") final Long postOptionId);
 
     Optional<Vote> findByMemberAndPostOption(final Member member, final PostOption postOption);
 

@@ -115,7 +115,7 @@ class CategoryControllerTest {
         // when & then
         RestAssuredMockMvc.
                 given().log().all()
-                .when().delete("/categories/1/like")
+                .when().delete("/categories/{categoryId}/like", 1)
                 .then().log().all()
                 .status(HttpStatus.NO_CONTENT);
     }

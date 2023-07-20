@@ -12,7 +12,7 @@ public record PostCreateRequest(
         List<Long> categoryIds,
         String title,
         String content,
-        List<String> postOptionContents,
+        List<String> postOptions,
 
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline

@@ -62,7 +62,7 @@ public class PostService {
                 .deadline(postCreateRequest.deadline())
                 .build();
 
-        final List<String> postOptionContents = postCreateRequest.postOptionContents();
+        final List<String> postOptionContents = postCreateRequest.postOptions();
         post.mapPostOptionsByElements(postOptionContents, post, images);
         post.mapCategories(categories);
 

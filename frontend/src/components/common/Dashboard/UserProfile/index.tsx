@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { BASE_PATH } from '@constants/path';
-
 import { User } from '@type/user';
+
+import { BASE_PATH } from '@constants/path';
 
 import * as PS from '../profileStyle';
 

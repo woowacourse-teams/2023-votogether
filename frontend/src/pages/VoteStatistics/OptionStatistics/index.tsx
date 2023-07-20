@@ -4,7 +4,7 @@ import { WrittenVoteOptionType } from '@type/post';
 
 import { useFetch } from '@hooks/useFetch';
 
-import { getOptionStatistics } from '@api/sua/voteResult';
+import { getOptionStatistics } from '@api/voteResult';
 
 import { Size } from '@components/common/AddButton/type';
 import LoadingSpinner from '@components/common/LoadingSpinner';

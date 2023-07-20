@@ -9,7 +9,7 @@ export const Container = styled.div`
 
   background-color: #f6f6f6;
 
-  font-size: var(--text-title);
+  font: var(--text-title);
 `;
 
 export const StatisticsContainer = styled.div`

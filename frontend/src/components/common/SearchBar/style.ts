@@ -36,7 +36,7 @@ export const Input = styled.input`
 
   background-color: rgba(0, 0, 0, 0);
 
-  font-size: 14px;
+  font: var(--text-caption);
   letter-spacing: 1px;
 `;
 

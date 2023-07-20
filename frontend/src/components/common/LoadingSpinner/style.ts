@@ -6,7 +6,7 @@ interface LoadingSpinnerProps {
   $size: Size;
 }
 
-const size = {
+const SIZE = {
   sm: '10px',
   md: '15px',
   lg: '30px',
@@ -25,7 +25,7 @@ export const Container = styled.div<LoadingSpinnerProps>`
 
   & > :nth-child(2) {
     animation-delay: 0.1s;
-    margin: 0 ${props => size[props.$size]};
+    margin: 0 ${props => SIZE[props.$size]};
   }
 
   & > :nth-child(3) {
@@ -33,9 +33,9 @@ export const Container = styled.div<LoadingSpinnerProps>`
   }
 `;
 
-export const unit = styled.div<LoadingSpinnerProps>`
-  width: ${props => size[props.$size]};
-  height: ${props => size[props.$size]};
+export const Unit = styled.div<LoadingSpinnerProps>`
+  width: ${props => SIZE[props.$size]};
+  height: ${props => SIZE[props.$size]};
   border-radius: 50%;
 
   background-color: #747474;

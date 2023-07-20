@@ -14,8 +14,8 @@ export const useFetch = <T>(fetchFn: () => Promise<T>) => {
       .then(res => {
         setData(res);
       })
-      .catch(rej => {
-        setErrorMessage(rej.message);
+      .catch(error => {
+        setErrorMessage(error.message);
       })
       .finally(() => {
         setIsLoading(false);

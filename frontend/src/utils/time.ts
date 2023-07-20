@@ -10,8 +10,8 @@ const convertNowTimeToNumber = () => {
   return Number(`${year}${month}${day}${hours}${minutes}`);
 };
 
-const convertTimeFromStringToNumber = (responseDate: string) => {
-  const dateComponents = responseDate.split(' ');
+const convertTimeFromStringToNumber = (date: string) => {
+  const dateComponents = date.split(' ');
   const datePieces = dateComponents[0].split('-');
   const timePieces = dateComponents[1].split(':');
   return Number([...datePieces, ...timePieces].join(''));

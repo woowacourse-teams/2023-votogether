@@ -64,7 +64,7 @@ export default function PostDetailPage() {
   const controlPost = {
     setEarlyClosePost: async () => {
       await setEarlyClosePost(postId)
-        .catch(rej => alert(rej.message))
+        .catch(error => alert(error.message))
         .then(res => {
           alert('게시물을 즉시마감했습니다.');
           refetch();
@@ -74,7 +74,7 @@ export default function PostDetailPage() {
       if (!isClosed) alert('마감된 게시물만 삭제 가능합니다.');
 
       await removePost(postId)
-        .catch(rej => alert(rej.message))
+        .catch(error => alert(error.message))
         .then(res => alert('게시물을 삭제했습니다.'));
     },
     reportPost: () => {

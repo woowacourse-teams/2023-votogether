@@ -17,7 +17,7 @@
     "prepare": "cd .. && husky install frontend/.husky"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix"
+    "*.{js,ts,tsx}": "eslint --cache --fix"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.19",

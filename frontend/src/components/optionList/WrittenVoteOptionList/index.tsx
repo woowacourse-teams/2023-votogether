@@ -1,6 +1,6 @@
-import { POST } from 'CONSTATNS';
-
 import { WrittenVoteOptionType } from '@type/post';
+
+import { POST } from '@constants/post';
 
 import * as S from './style';
 import WrittenVoteOption from './WrittenVoteOption';

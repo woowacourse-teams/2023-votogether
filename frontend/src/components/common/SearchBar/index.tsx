@@ -1,8 +1,8 @@
 import { FormHTMLAttributes } from 'react';
 
-import searchIcon from '@assets/search_black.svg';
+import { Size } from '@type/style';
 
-import { Size } from '../AddButton/type';
+import searchIcon from '@assets/search_black.svg';
 
 import * as S from './style';
 

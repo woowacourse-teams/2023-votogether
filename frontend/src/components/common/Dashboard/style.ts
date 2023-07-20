@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -9,6 +11,10 @@ export const Container = styled.div`
   height: 100vh;
   padding: 20px;
   border-right: 2px solid var(--gray);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    height: 100%;
+  }
 `;
 
 export const ContentContainer = styled.div`

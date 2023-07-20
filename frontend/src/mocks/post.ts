@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-export const createEditPostTest = [
+export const mockPost = [
   //게시글 작성
   rest.post('/posts', (req, res, ctx) => {
     window.console.log('게시글 작성 완료', req.body);

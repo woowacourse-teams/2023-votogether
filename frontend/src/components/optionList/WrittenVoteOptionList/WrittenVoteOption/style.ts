@@ -7,7 +7,7 @@ export const Container = styled.li<{ $isSelected: boolean }>`
   flex-direction: column;
 
   border: ${({ $isSelected }) =>
-    $isSelected ? '2px solid #ff7877' : '1px solid rgba(0, 0, 0, 0.1)'};
+    $isSelected ? '2px solid var(--primary-color)' : '1px solid rgba(0, 0, 0, 0.1)'};
   border-radius: 4px;
   padding: 15px 20px;
 
@@ -36,7 +36,7 @@ export const Image = styled.img`
 export const PreviewContent = styled.p`
   display: -webkit-box;
 
-  font-size: 1.4rem;
+  font: var(--text-caption);
   font-weight: 500;
   text-overflow: ellipsis;
   word-break: break-word;
@@ -47,16 +47,16 @@ export const PreviewContent = styled.p`
   -webkit-box-orient: vertical;
 
   @media (min-width: ${theme.breakpoint.md}) {
-    font-size: 1.6rem;
+    font: var(--text-body);
   }
 `;
 
 export const DetailContent = styled.p`
-  font-size: 1.4rem;
+  font: var(--text-caption);
   font-weight: 500;
 
   @media (min-width: ${theme.breakpoint.md}) {
-    font-size: 1.6rem;
+    font: var(--text-body);
   }
 `;
 
@@ -77,26 +77,26 @@ export const TextContainer = styled.div`
   @media (min-width: ${theme.breakpoint.md}) {
     margin-top: 12px;
 
-    font-size: 1.6rem;
+    font: var(--text-body);
   }
 `;
 
 export const PeopleText = styled.span`
-  font-size: 1.4rem;
+  font: var(--text-caption);
 
   @media (min-width: ${theme.breakpoint.md}) {
-    font-size: 1.6rem;
+    font: var(--text-body);
   }
 `;
 
 export const PercentText = styled.span`
   margin-left: 4px;
 
-  font-size: 1.2rem;
+  font: var(--text-small);
 
   opacity: 0.7;
 
   @media (min-width: ${theme.breakpoint.md}) {
-    font-size: 1.4rem;
+    font: var(--text-caption);
   }
 `;

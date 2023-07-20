@@ -1,10 +1,10 @@
-import { POST } from 'CONSTATNS';
-
 import { PostInfo } from '@type/post';
 
-import { changeVotedOption, votePost } from '@api/sua/post';
+import { changeVotedOption, votePost } from '@api/post';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
+
+import { POST } from '@constants/vote';
 
 import * as S from './style';
 

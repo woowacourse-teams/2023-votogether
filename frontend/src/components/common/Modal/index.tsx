@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 
+import { Size } from '@type/style';
+
 import * as S from './style';
 
 interface ModalProps {
   onModalClose: () => void;
   children: React.JSX.Element;
-  size: 'sm' | 'md' | 'lg';
+  size: Size;
 }
 
 export default function Modal({ onModalClose, children, size }: ModalProps) {

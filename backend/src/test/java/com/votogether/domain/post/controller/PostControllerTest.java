@@ -8,10 +8,12 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
@@ -31,7 +33,13 @@ import org.springframework.http.HttpStatus;
 class PostControllerTest {
 
     @MockBean
-    private PostService postService;
+    PostService postService;
+
+    @MockBean
+    MemberService memberService;
+
+    @MockBean
+    TokenProcessor tokenProcessor;
 
     @BeforeEach
     void setUp() {

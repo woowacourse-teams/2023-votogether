@@ -19,7 +19,7 @@ import * as S from './style';
 export default function PostDetailPage({ userId }: { userId: number }) {
   const navigate = useNavigate();
   const movePostListPage = () => {
-    navigate('posts/');
+    navigate('/');
   };
 
   const location = useLocation();
@@ -80,7 +80,7 @@ export default function PostDetailPage({ userId }: { userId: number }) {
 
   const moveVoteStatisticsPage = () => {
     //수정필요
-    navigate(`posts/write/${postId}`);
+    navigate(`/posts/write/${postId}`);
   };
 
   const isClosedPost = checkClosedPost(postData.startTime, postData.endTime);
@@ -118,7 +118,7 @@ export default function PostDetailPage({ userId }: { userId: number }) {
   const moveWritePostPage = () => {
     if (postData.voteInfo.allPeopleCount) alert('투표한 사용자가 있어 글 수정이 불가합니다.');
 
-    navigate(`posts/write/${postId}`);
+    navigate(`/posts/write/${postId}`);
   };
 
   const useSetEarlyClosePost = async () => {

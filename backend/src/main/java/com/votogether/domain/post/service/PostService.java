@@ -77,6 +77,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public VoteOptionStatisticsResponse getVoteStatistics(final Long postId) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+
+        final List<VoteStatus> voteStatuses =
+                voteRepository.findVoteCountByPostIdGroupByAgeRangeAndGender(post.getId());
+        return VoteOptionStatisticsResponse.from(groupVoteStatus(voteStatuses));
+    }
+
+    @Transactional(readOnly = true)
     public VoteOptionStatisticsResponse getVoteOptionStatistics(final Long postId, final Long optionId) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));

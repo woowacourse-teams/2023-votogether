@@ -91,6 +91,76 @@ class PostServiceTest {
     }
 
     @Nested
+    @DisplayName("게시글에 대한 투표 통계 조회 시 ")
+    class GetVoteStatistics {
+
+        @Test
+        @DisplayName("게시글이 존재하지 않으면 예외를 던진다.")
+        void throwExceptionNonExistPost() {
+            // given, when, then
+            assertThatThrownBy(() -> postService.getVoteStatistics(-1L))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("전체 투표 통계를 조회한다.")
+        void getVoteStatistics() {
+            // given
+            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10);
+            Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10);
+            Member male60 = memberRepository.save(MemberFixtures.MALE_60);
+            Member female70 = memberRepository.save(MemberFixtures.FEMALE_70);
+            Member female80 = memberRepository.save(MemberFixtures.FEMALE_80);
+            Member writer = memberRepository.save(MemberFixtures.MALE_20);
+
+            Post post = postRepository.save(
+                    Post.builder()
+                            .member(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOptionA = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(post)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+            PostOption postOptionB = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(post)
+                            .sequence(2)
+                            .content("피자")
+                            .build()
+            );
+
+            voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
+            voteRepository.save(Vote.builder().member(maleLate10).postOption(postOptionB).build());
+            voteRepository.save(Vote.builder().member(male60).postOption(postOptionA).build());
+            voteRepository.save(Vote.builder().member(female70).postOption(postOptionB).build());
+            voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
+
+            // when
+            VoteOptionStatisticsResponse response = postService.getVoteStatistics(post.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(response.totalVoteCount()).isEqualTo(5),
+                    () -> assertThat(response.totalMaleCount()).isEqualTo(2),
+                    () -> assertThat(response.totalFemaleCount()).isEqualTo(3),
+                    () -> assertThat(response.ageGroup()).hasSize(7),
+                    () -> assertThat(response.ageGroup().get(1).ageGroup()).isEqualTo("10대"),
+                    () -> assertThat(response.ageGroup().get(1).voteCount()).isEqualTo(2),
+                    () -> assertThat(response.ageGroup().get(1).maleCount()).isEqualTo(1),
+                    () -> assertThat(response.ageGroup().get(1).femaleCount()).isEqualTo(1)
+            );
+        }
+
+    }
+
+    @Nested
     @DisplayName("게시글 투표 옵션에 대한 투표 통계 조회 시 ")
     class GetVoteOptionStatistics {
 
@@ -205,6 +275,7 @@ class PostServiceTest {
                     () -> assertThat(response.ageGroup().get(1).femaleCount()).isEqualTo(1)
             );
         }
+
     }
 
 }

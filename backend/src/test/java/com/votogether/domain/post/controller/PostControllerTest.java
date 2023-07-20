@@ -86,6 +86,17 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글을 삭제한다")
+    void deleteById() {
+        // given, when, then
+        RestAssuredMockMvc.given().log().all()
+                .when().delete("/posts/{id}", 1)
+                .then().log().all()
+                .assertThat()
+                .status(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
     @DisplayName("게시글 투표 옵션에 대한 투표 통계를 조회한다.")
     void getVoteOptionStatistics() {
         // given

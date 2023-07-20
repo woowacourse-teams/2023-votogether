@@ -1,6 +1,7 @@
 package com.votogether.domain.post.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -22,7 +23,6 @@ import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.fixtures.MemberFixtures;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -66,13 +66,13 @@ class PostServiceTest {
                 "image1",
                 "test.png",
                 "image/png",
-                new FileInputStream(new File("src/test/resources/images/testImage1.PNG"))
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
         );
         MockMultipartFile file2 = new MockMultipartFile(
                 "image1",
                 "test.png",
                 "image/png",
-                new FileInputStream(new File("src/test/resources/images/testImage2.PNG"))
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
         );
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
@@ -88,6 +88,81 @@ class PostServiceTest {
 
         // then
         assertThat(savedPostId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제한다")
+    void deleteById() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP);
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD);
+        Member member = memberRepository.save(MemberFixtures.MALE_20);
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptionContents(List.of("피자", "치킨"))
+                .deadline(LocalDateTime.of(2020, 7, 12, 0, 0))
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file1, file2));
+
+        // when
+        postService.deleteById(savedPostId);
+
+        // then
+        assertThat(postRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제할 시, 마감 안된 게시글이면 예외처리한다")
+    void deleteByIdException() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP);
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD);
+        Member member = memberRepository.save(MemberFixtures.MALE_20);
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptionContents(List.of("피자", "치킨"))
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file1, file2));
+
+        // when, then
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> postService.deleteById(savedPostId))
+                .withMessage("마감 안된 게시글은 삭제할 수 없습니다.");
     }
 
     @Nested

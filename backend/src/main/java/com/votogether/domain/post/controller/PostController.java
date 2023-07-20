@@ -15,6 +15,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,6 +60,18 @@ public class PostController {
 
         final Long postId = postService.save(request, member, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
+    }
+
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "게시글이 삭제되었습니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다."),
+            @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+        postService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "게시글 투표 선택지 통계 조회", description = "게시글 특정 투표 선택지에 대한 통계를 조회한다.")

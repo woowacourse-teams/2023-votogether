@@ -118,4 +118,11 @@ public class PostService {
         return ageRange;
     }
 
+    public void deleteById(final Long id) {
+        postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."))
+                .validateUnfinished();
+
+        postRepository.deleteById(id);
+    }
 }

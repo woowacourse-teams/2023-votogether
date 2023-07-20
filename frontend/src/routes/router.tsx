@@ -1,15 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import Home from '@pages/Home';
 import CreatePost from '@pages/post/CreatePost';
 import EditPost from '@pages/post/EditPost';
 import PostDetailPage from '@pages/post/PostDetail';
-import PostList from '@pages/post/PostList';
 
 const router = createBrowserRouter([
   {
     path: '/',
     children: [
-      { path: '', element: <PostList /> },
+      { path: '', element: <Home /> },
       {
         path: 'posts/write',
         element: <CreatePost />,

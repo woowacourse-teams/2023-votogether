@@ -14,11 +14,13 @@ import BottomButtonPart from './BottomButtonPart';
 import InnerHeaderPart from './InnerHeaderPart';
 import * as S from './style';
 
-export default function PostDetailPage({ userId }: { userId: number }) {
+export default function PostDetailPage() {
   const navigate = useNavigate();
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
+
+  const userId = 1;
 
   const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
 

@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import CreatePost from '@pages/post/CreatePost';
 import EditPost from '@pages/post/EditPost';
-import PostDetail from '@pages/post/PostDetail';
+import PostDetailPage from '@pages/post/PostDetail';
 import PostList from '@pages/post/PostList';
 
 const router = createBrowserRouter([
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'posts/:postId',
-        element: <PostDetail />,
+        element: <PostDetailPage />,
       },
       {
         path: 'posts/write/:postId',

@@ -1,4 +1,4 @@
-import { Size } from '../AddButton/type';
+import { Size } from '@type/style';
 
 import * as S from './style';
 

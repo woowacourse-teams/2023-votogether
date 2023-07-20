@@ -1,6 +1,6 @@
 import { keyframes, styled } from 'styled-components';
 
-import { Size } from '../AddButton/type';
+import { Size } from '@type/style';
 
 interface LoadingSpinnerProps {
   $size: Size;

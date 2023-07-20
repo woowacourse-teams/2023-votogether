@@ -7,7 +7,7 @@ export const Container = styled.li<{ $isSelected: boolean }>`
   flex-direction: column;
 
   border: ${({ $isSelected }) =>
-    $isSelected ? '2px solid #ff7877' : '1px solid rgba(0, 0, 0, 0.1)'};
+    $isSelected ? '2px solid var(--primary-color)' : '1px solid rgba(0, 0, 0, 0.1)'};
   border-radius: 4px;
   padding: 15px 20px;
 

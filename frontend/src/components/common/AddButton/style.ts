@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { Size } from './type';
+import { Size } from '@type/style';
 
 interface ButtonProps {
   size: Size;
@@ -19,8 +19,8 @@ export const Button = styled.button<ButtonProps>`
   height: ${props => SIZE[props.size].button};
   border-radius: 50%;
 
-  background-color: #ff7877;
-  color: #ffffff;
+  background-color: var(--primary-color);
+  color: var(--white);
 
   font-size: ${props => SIZE[props.size].font};
 

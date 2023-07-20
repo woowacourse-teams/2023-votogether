@@ -26,11 +26,14 @@ export const GlobalStyle = createGlobalStyle`
   :root {
     /* Colors *****************************************/
     --primary-color: #FA7D7C;
-    --white: #FFFFFF;
+    --white: #ffffff;
     --slate: #94A3B8;
     --gray: #F4F4F4;
     --red: #F51A18;
     --dark-gray: #929292;
+    --header: #1f1f1f;
+    --graph-color-purple:#853DE1;
+    --graph-color-green:#5AEAA5;
     
     /* Fonts *****************************************/
     --text-title: 600 2rem/2.4rem san-serif;

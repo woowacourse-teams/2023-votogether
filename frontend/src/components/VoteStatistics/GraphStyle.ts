@@ -1,10 +1,10 @@
 import { styled } from 'styled-components';
 
-import { Size } from '@components/common/AddButton/type';
+import { Size } from '@type/style';
 
 import { theme } from '@styles/theme';
 
-const size: { [key in Size]: { height: string; linePositionTop: string } } = {
+const size: Record<Size, { height: string; linePositionTop: string }> = {
   sm: { height: '200px', linePositionTop: '165px' },
   md: { height: '230px', linePositionTop: '194px' },
   lg: { height: '260px', linePositionTop: '224px' },

@@ -1,7 +1,8 @@
 import { ButtonHTMLAttributes } from 'react';
 
+import { Size } from '@type/style';
+
 import * as S from './style';
-import { Size } from './type';
 
 interface AddButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: Size;

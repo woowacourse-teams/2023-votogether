@@ -8,7 +8,7 @@ import * as S from './style';
 
 type IconCategory = 'category' | 'back' | 'search';
 
-const ICON_CATEGORY: { [key: string]: { name: string; url: string } } = {
+const ICON_CATEGORY: Record<IconCategory, { name: string; url: string }> = {
   category: {
     name: '카테고리',
     url: categoryIcon,

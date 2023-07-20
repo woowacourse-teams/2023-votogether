@@ -39,10 +39,6 @@ class CategoryServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @Nested
-    @DisplayName("조회 하기")
-    class Getting {
-
         @Test
         @DisplayName("모든 카테고리를 가져온다.")
         void getAllCategories() {
@@ -107,8 +103,6 @@ class CategoryServiceTest {
                     () -> assertThat(categories.get(1).isFavorite()).isFalse()
             );
         }
-
-    }
 
     @Test
     @DisplayName("선호하는 카테고리를 선호 카테고리 목록에 추가한다.")

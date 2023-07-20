@@ -6,7 +6,6 @@ import com.votogether.domain.category.service.CategoryService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,63 +32,57 @@ class CategoryControllerTest {
         RestAssuredMockMvc.standaloneSetup(new CategoryController(categoryService));
     }
 
-    @Nested
-    @DisplayName("카테고리 조회")
-    class Getting {
+    @Test
+    @DisplayName("전체 카테고리 목록을 조회한다.")
+    void getAllCategories() {
+        // given
+        Category category = Category.builder()
+                .name("개발")
+                .build();
+        given(categoryService.getAllCategories()).willReturn(List.of(new CategoryResponse(category, false)));
 
-        @Test
-        @DisplayName("전체 카테고리 목록을 조회한다.")
-        void getAllCategories() {
-            // given
-            Category category = Category.builder()
-                    .name("개발")
-                    .build();
-            given(categoryService.getAllCategories()).willReturn(List.of(new CategoryResponse(category, false)));
+        // when
+        RestAssuredMockMvc.
+                given().log().all()
+                .when().get("/categories/guest")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .body("[0].id", nullValue())
+                .body("[0].name", equalTo("개발"))
+                .body("[0].isFavorite", equalTo(false));
+    }
 
-            // when
-            RestAssuredMockMvc.
-                    given().log().all()
-                    .when().get("/categories/guest")
-                    .then().log().all()
-                    .status(HttpStatus.OK)
-                    .body("[0].id", nullValue())
-                    .body("[0].name", equalTo("개발"))
-                    .body("[0].isFavorite", equalTo(false));
-        }
+    @Test
+    @DisplayName("회원으로 전체 카테고리 목록을 조회한다.")
+    void getAllCategoriesFromMember() {
+        // given
+        Category category = Category.builder()
+                .name("개발")
+                .build();
 
-        @Test
-        @DisplayName("회원으로 전체 카테고리 목록을 조회한다.")
-        void getAllCategoriesFromMember() {
-            // given
-            Category category = Category.builder()
-                    .name("개발")
-                    .build();
+        Category category1 = Category.builder()
+                .name("음식")
+                .build();
 
-            Category category1 = Category.builder()
-                    .name("음식")
-                    .build();
+        List<CategoryResponse> categoryResponses = List.of(
+                new CategoryResponse(category, false),
+                new CategoryResponse(category1, true)
+        );
 
-            List<CategoryResponse> categoryResponses = List.of(
-                    new CategoryResponse(category, false),
-                    new CategoryResponse(category1, true)
-            );
+        given(categoryService.getAllCategories(any())).willReturn(categoryResponses);
 
-            given(categoryService.getAllCategories(any())).willReturn(categoryResponses);
+        // when
+        List<CategoryResponse> results = RestAssuredMockMvc
+                .given().log().all()
+                .when().get("/categories")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<CategoryResponse>>() {
+                }.getType());
 
-            // when
-            List<CategoryResponse> results = RestAssuredMockMvc
-                    .given().log().all()
-                    .when().get("/categories")
-                    .then().log().all()
-                    .status(HttpStatus.OK)
-                    .extract()
-                    .as(new ParameterizedTypeReference<List<CategoryResponse>>() {
-                    }.getType());
-
-            // then
-            assertThat(results).usingRecursiveComparison().isEqualTo(categoryResponses);
-        }
-
+        // then
+        assertThat(results).usingRecursiveComparison().isEqualTo(categoryResponses);
     }
 
     @Test

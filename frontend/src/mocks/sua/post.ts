@@ -27,7 +27,7 @@ const examplePost: PostInfo = {
     },
   ],
   startTime: '2023-07-12 12:40',
-  endTime: '2023-07-13 18:40',
+  endTime: '2023-07-21 18:40',
   voteInfo: {
     selectedOptionId: 2,
     allPeopleCount: 123,
@@ -63,14 +63,16 @@ const examplePost: PostInfo = {
 
 export const getPostTest = [
   rest.get('/posts/:postId', (req, res, ctx) => {
-    return res(ctx.delay(5000), ctx.status(200), ctx.json(examplePost));
+    return res(ctx.delay(1000), ctx.status(200), ctx.json(examplePost));
   }),
 
   rest.delete('/posts/:postId', (req, res, ctx) => {
-    return res(ctx.delay(5000), ctx.status(200));
+    return res(ctx.delay(1000), ctx.status(200));
   }),
 
   rest.patch('/posts/:postId/close', (req, res, ctx) => {
-    return res(ctx.delay(5000), ctx.status(200));
+    examplePost.endTime = '2023-07-13 18:40';
+
+    return res(ctx.delay(1000), ctx.status(200));
   }),
 ];

@@ -10,9 +10,5 @@ export default meta;
 type Story = StoryObj<typeof PostDetailPage>;
 
 export const WriterCase: Story = {
-  render: () => <PostDetailPage userId={12121221} />,
-};
-
-export const NotWriterCase: Story = {
-  render: () => <PostDetailPage userId={121211341} />,
+  render: () => <PostDetailPage />,
 };

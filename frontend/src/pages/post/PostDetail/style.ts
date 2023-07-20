@@ -11,29 +11,11 @@ export const Container = styled.div`
 `;
 
 export const HeaderContainer = styled.div`
+  position: fixed;
+  width: 100%;
+  top: 0;
+
   @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
-  }
-`;
-
-export const HeaderWrapper = styled.div`
-  display: flex;
-  gap: 30px;
-`;
-
-export const TagButtonWrapper = styled.div`
-  position: absolute;
-  top: 55px;
-`;
-
-export const BottomButtonContainer = styled.div`
-  display: none;
-
-  @media (min-width: ${theme.breakpoint.sm}) {
-    display: flex;
-    width: 90%;
-    height: 40px;
-    margin-top: 40px;
-    gap: 10px;
   }
 `;

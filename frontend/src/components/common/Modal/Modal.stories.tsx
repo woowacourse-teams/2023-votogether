@@ -164,7 +164,7 @@ const Header = styled.div`
   border-bottom: 1px solid #f6f6f6;
   padding: 10px;
 
-  font-size: 1.5rem;
+  font: var(--text-body);
   font-weight: bold;
 `;
 
@@ -176,13 +176,13 @@ const Body = styled.div`
   gap: 10px;
 
   padding: 10px 0;
-  font-size: 1.4rem;
+  font: var(--text-caption);
 `;
 
 const Description = styled.div`
   color: gray;
 
-  font-size: 1.2rem;
+  font: var(--text-small);
 `;
 
 const CloseButton = styled.button`
@@ -191,7 +191,7 @@ const CloseButton = styled.button`
 
   background: white;
 
-  font-size: 1.6rem;
+  font: var(--text-body);
 
   cursor: pointer;
 `;

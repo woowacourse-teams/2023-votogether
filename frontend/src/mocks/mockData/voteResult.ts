@@ -1,4 +1,4 @@
-export const mockVoteResult = {
+export const MOCK_VOTE_RESULT = {
   total: 100,
   female: 30,
   name: '총합',

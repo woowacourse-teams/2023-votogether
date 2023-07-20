@@ -1,21 +1,24 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import PostDetail from '@pages/post/PostDetail';
+import PostDetailPage from '@pages/post/PostDetail';
 import PostList from '@pages/post/PostList';
-import WritePost from '@pages/post/WritePost';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <PostList />,
     children: [
+      { path: '', element: <PostList /> },
       {
         path: 'posts/write',
-        element: <WritePost />,
+        element: <CreatePost />,
       },
       {
         path: 'posts/:postId',
-        element: <PostDetail />,
+        element: <PostDetailPage />,
+      },
+      {
+        path: 'posts/write/:postId',
+        element: <EditPost />,
       },
     ],
   },

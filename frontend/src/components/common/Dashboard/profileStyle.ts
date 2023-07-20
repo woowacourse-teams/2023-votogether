@@ -10,7 +10,7 @@ export const ProfileContainer = styled.div`
   padding: 16px 12px;
   border-radius: 4px;
 
-  font-size: 1.6rem;
+  font: var(--text-body);
 
   background-color: var(--gray);
 `;

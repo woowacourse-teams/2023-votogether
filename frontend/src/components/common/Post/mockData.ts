@@ -1,6 +1,6 @@
 import { PostInfo } from '@type/post';
 
-export const mockNotVotedPost: PostInfo = {
+export const MOCK_NOT_VOTE_POST: PostInfo = {
   postId: 1111111,
   title:
     '어느 곳에서 정보를 찾아야 할지도 막막한 사람들을 위한, 심심풀이로 나의 취향과 남의 취향을 비교해보고 싶은 사람들을 위한 프로젝트',
@@ -59,7 +59,7 @@ export const mockNotVotedPost: PostInfo = {
   },
 };
 
-export const mockVotedPost: PostInfo = {
+export const MOCK_VOTE_POST: PostInfo = {
   postId: 1111112,
   title:
     '어느 곳에서 정보를 찾아야 할지도 막막한 사람들을 위한, 심심풀이로 나의 취향과 남의 취향을 비교해보고 싶은 사람들을 위한 프로젝트',

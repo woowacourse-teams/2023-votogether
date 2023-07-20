@@ -12,6 +12,8 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +38,7 @@ public class TokenProcessor {
             @Value("${jwt.token.expiration-time}") final int tokenExpirationTime,
             final ObjectMapper objectMapper
     ) {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.tokenExpirationTime = tokenExpirationTime;
         this.objectMapper = objectMapper;
     }

@@ -9,6 +9,8 @@ import static org.mockito.Mockito.doNothing;
 import com.votogether.domain.category.dto.response.CategoryResponse;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.service.CategoryService;
+import com.votogether.domain.member.service.MemberService;
+import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +25,12 @@ class CategoryControllerTest {
 
     @MockBean
     CategoryService categoryService;
+
+    @MockBean
+    TokenProcessor tokenProcessor;
+
+    @MockBean
+    MemberService memberService;
 
     @BeforeEach
     void setUp() {

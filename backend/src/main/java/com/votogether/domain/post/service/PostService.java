@@ -5,7 +5,8 @@ import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.CreatePostRequest;
+import com.votogether.domain.post.dto.request.UpdatePostRequest;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -38,12 +39,12 @@ public class PostService {
 
     @Transactional
     public Long save(
-            final PostCreateRequest postCreateRequest,
+            final CreatePostRequest request,
             final Member member,
             final List<MultipartFile> images
     ) {
-        final List<Category> categories = categoryRepository.findAllById(postCreateRequest.categoryIds());
-        final Post post = toPostEntity(postCreateRequest, member, images, categories);
+        final List<Category> categories = categoryRepository.findAllById(request.categoryIds());
+        final Post post = toPostEntity(request, member, images, categories);
 
         // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)
         memberRepository.save(member);
@@ -51,29 +52,44 @@ public class PostService {
     }
 
     private Post toPostEntity(
-            final PostCreateRequest postCreateRequest,
+            final CreatePostRequest createPostRequest,
             final Member member,
             final List<MultipartFile> images,
             final List<Category> categories
     ) {
         final Post post = Post.builder()
                 .member(member)
-                .postBody(toPostBody(postCreateRequest))
-                .deadline(postCreateRequest.deadline())
+                .postBody(toPostBody(createPostRequest))
+                .deadline(createPostRequest.deadline())
                 .build();
 
-        final List<String> postOptionContents = postCreateRequest.postOptions();
+        final List<String> postOptionContents = createPostRequest.postOptions();
         post.mapPostOptionsByElements(postOptionContents, post, images);
         post.mapCategories(categories);
 
         return post;
     }
 
-    private PostBody toPostBody(final PostCreateRequest postCreateRequest) {
+    private PostBody toPostBody(final CreatePostRequest createPostRequest) {
         return PostBody.builder()
-                .title(postCreateRequest.title())
-                .content(postCreateRequest.content())
+                .title(createPostRequest.title())
+                .content(createPostRequest.content())
                 .build();
+    }
+
+    public void update(final Long id, final UpdatePostRequest request, final List<MultipartFile> images) {
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        final List<Category> categories = categoryRepository.findAllById(request.categoryIds());
+
+        post.update(
+                categories,
+                request.title(),
+                request.content(),
+                request.postOptions(),
+                request.deadline(),
+                images
+        );
     }
 
     @Transactional(readOnly = true)
@@ -117,5 +133,4 @@ public class PostService {
         }
         return ageRange;
     }
-
 }

@@ -8,11 +8,15 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.member.service.MemberService;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.CreatePostRequest;
+import com.votogether.domain.post.dto.request.UpdatePostRequest;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -20,7 +24,10 @@ import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.response.ExtractableResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +35,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
 @WebMvcTest(PostController.class)
 class PostControllerTest {
@@ -50,7 +59,7 @@ class PostControllerTest {
     @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder().build();
+        CreatePostRequest createPostRequest = CreatePostRequest.builder().build();
 
         String fileName1 = "testImage1.PNG";
         String resultFileName1 = "testResultImage1.PNG";
@@ -63,7 +72,7 @@ class PostControllerTest {
         File file2 = new File(filePath2);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String postRequestJson = objectMapper.writeValueAsString(postCreateRequest);
+        String postRequestJson = objectMapper.writeValueAsString(createPostRequest);
 
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList())).willReturn(savedPostId);
@@ -83,6 +92,35 @@ class PostControllerTest {
 
         String postId = response.header("Location").substring(locationStartsWith.length());
         assertThat(Long.parseLong(postId)).isEqualTo(savedPostId);
+    }
+
+    @Test
+    @DisplayName("게시글을 수정한다")
+    void update() throws IOException {
+        // given
+        final UpdatePostRequest request = new UpdatePostRequest(
+                List.of(1L, 2L),
+                "title2",
+                "content2",
+                List.of("option1", "option2"),
+                LocalDateTime.of(1900, 7, 12, 0, 0)
+        );
+
+        File file1 = new File("src/test/resources/images/testImage1.PNG");
+        File file2 = new File("src/test/resources/images/testImage2.PNG");
+        byte[] file1Content = Files.readAllBytes(file1.toPath());
+        byte[] file2Content = Files.readAllBytes(file2.toPath());
+
+        // when, then
+        RestAssuredMockMvc.given().log().all()
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .multiPart("request", request, "application/json")
+                .multiPart("images", file1.getName(), file1Content, "image/png")
+                .multiPart("images", file2.getName(), file2Content, "image/png")
+                .when().put("/posts/1")
+                .then().log().all()
+                .assertThat()
+                .status(HttpStatus.OK);
     }
 
     @Test

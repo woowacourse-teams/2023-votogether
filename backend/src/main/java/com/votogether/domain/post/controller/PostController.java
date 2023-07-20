@@ -3,9 +3,11 @@ package com.votogether.domain.post.controller;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.CreatePostRequest;
+import com.votogether.domain.post.dto.request.UpdatePostRequest;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +42,7 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart final PostCreateRequest request,
+            @RequestPart final CreatePostRequest request,
             @RequestPart final List<MultipartFile> images
     ) {
         // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)
@@ -59,6 +62,22 @@ public class PostController {
 
         final Long postId = postService.save(request, member, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
+    }
+
+    @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시물을 수정했습니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다."),
+            @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
+    })
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> update(
+            @PathVariable final Long id,
+            @RequestPart final UpdatePostRequest request,
+            @RequestPart final List<MultipartFile> images
+    ) {
+        postService.update(id, request, images);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "게시글 투표 선택지 통계 조회", description = "게시글 특정 투표 선택지에 대한 통계를 조회한다.")

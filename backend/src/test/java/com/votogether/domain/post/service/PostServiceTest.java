@@ -9,10 +9,12 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.CreatePostRequest;
+import com.votogether.domain.post.dto.request.UpdatePostRequest;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
@@ -24,6 +26,7 @@ import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.fixtures.MemberFixtures;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,16 +78,16 @@ class PostServiceTest {
                 new FileInputStream(new File("src/test/resources/images/testImage2.PNG"))
         );
 
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+        CreatePostRequest createPostRequest = CreatePostRequest.builder()
                 .categoryIds(List.of(category1.getId(), category2.getId()))
                 .title("title")
                 .content("content")
-                .postOptionContents(List.of("피자", "치킨"))
+                .postOptions(List.of("피자", "치킨"))
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
         // when
-        Long savedPostId = postService.save(postCreateRequest, member, List.of(file1, file2));
+        Long savedPostId = postService.save(createPostRequest, member, List.of(file1, file2));
 
         // then
         assertThat(savedPostId).isNotNull();
@@ -205,6 +208,62 @@ class PostServiceTest {
                     () -> assertThat(response.ageGroup().get(1).femaleCount()).isEqualTo(1)
             );
         }
+    }
+
+    @Test
+    @DisplayName("게시글을 수정한다")
+    void update() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP);
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD);
+        Member member = memberRepository.save(MemberFixtures.MALE_20);
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        CreatePostRequest createPostRequest = CreatePostRequest.builder()
+                .categoryIds(List.of(category1.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of("피자", "치킨"))
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        Long savedPostId = postService.save(createPostRequest, member, List.of(file1, file2));
+
+        final UpdatePostRequest request = new UpdatePostRequest(
+                List.of(category1.getId(), category2.getId()),
+                "title2",
+                "content2",
+                List.of("option1", "option2"),
+                LocalDateTime.of(1900, 7, 12, 0, 0)
+        );
+
+        // when
+        postService.update(savedPostId, request, List.of(file1, file2));
+
+        // then
+        final Post post = postRepository.findById(savedPostId).get();
+        final PostBody postBody = post.getPostBody();
+        final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
+        final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+
+        assertAll(
+                () -> assertThat(postBody.getTitle()).isEqualTo("title2"),
+                () -> assertThat(postBody.getContent()).isEqualTo("content2"),
+                () -> assertThat(postCategories).hasSize(2),
+                () -> assertThat(postOptions).hasSize(2)
+        );
     }
 
 }

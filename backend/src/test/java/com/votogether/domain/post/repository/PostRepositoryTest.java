@@ -1,11 +1,9 @@
 package com.votogether.domain.post.repository;
 
+import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.votogether.config.JpaConfig;
-import com.votogether.domain.member.entity.Gender;
-import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
+import com.votogether.RepositoryTest;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -13,13 +11,8 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DataJpaTest
-@Import(JpaConfig.class)
+@RepositoryTest
 class PostRepositoryTest {
 
     @Autowired
@@ -37,22 +30,13 @@ class PostRepositoryTest {
                 .content("content")
                 .build();
 
-        final Member member = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
-                .nickname("user1")
-                .socialId("kakao@gmail.com")
-                .birthDate(LocalDateTime.of(1993, 7, 12, 0, 0))
-                .build();
-
         final Post post = Post.builder()
-                .member(member)
+                .member(MALE_30)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
-        memberRepository.save(member);
+        memberRepository.save(MALE_30);
 
         // when
         final Post savedPost = postRepository.save(post);

@@ -37,8 +37,8 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       <S.Wrapper>
         <S.Writer>{writer.nickname}</S.Writer>
         <S.Wrapper>
-          <S.Time>{startTime}</S.Time>
-          <S.Time>{endTime}</S.Time>
+          <span>{startTime}</span>
+          <span>{endTime}</span>
         </S.Wrapper>
       </S.Wrapper>
       <S.Content $isPreview={isPreview}>{content}</S.Content>

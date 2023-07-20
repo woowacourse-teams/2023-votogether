@@ -1,5 +1,7 @@
 package com.votogether.domain.post.entity;
 
+import static com.votogether.fixtures.CategoryFixtures.DEVELOP;
+import static com.votogether.fixtures.CategoryFixtures.FOOD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.votogether.domain.category.entity.Category;
@@ -15,10 +17,8 @@ class PostCategoriesTest {
         // given
         final PostCategories postCategories = new PostCategories();
         final Post post = Post.builder().build();
-        final Category category1 = Category.builder().build();
-        final Category category2 = Category.builder().build();
 
-        final List<Category> categories = List.of(category1, category2);
+        final List<Category> categories = List.of(FOOD, DEVELOP);
 
         // when
         postCategories.mapPostAndCategories(post, categories);

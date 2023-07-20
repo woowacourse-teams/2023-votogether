@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -107,6 +108,10 @@ public class PostOption extends BaseEntity {
     public boolean isVoteByMember(final Member member) {
         return votes.stream()
                 .anyMatch(vote -> vote.isVoteByMember(member));
+    }
+
+    public boolean isBelongsTo(final Post post) {
+        return Objects.equals(this.post.getId(), post.getId());
     }
 
 }

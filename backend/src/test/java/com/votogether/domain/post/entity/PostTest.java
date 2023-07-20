@@ -1,12 +1,13 @@
 package com.votogether.domain.post.entity;
 
+import static com.votogether.fixtures.CategoryFixtures.DEVELOP;
+import static com.votogether.fixtures.CategoryFixtures.FOOD;
+import static com.votogether.fixtures.MemberFixtures.FEMALE_20;
+import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.category.entity.Category;
-import com.votogether.domain.member.entity.Gender;
-import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PostTest {
@@ -25,10 +25,8 @@ class PostTest {
     void mapCategories() {
         // given
         final Post post = Post.builder().build();
-        final Category category1 = Category.builder().build();
-        final Category category2 = Category.builder().build();
 
-        final List<Category> categories = List.of(category1, category2);
+        final List<Category> categories = List.of(FOOD, DEVELOP);
 
         // when
         post.mapCategories(categories);
@@ -71,27 +69,14 @@ class PostTest {
     @DisplayName("게시글의 작성자 여부를 확인한다.")
     void isWriter() {
         // given
-        Member member1 = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
-                .nickname("user1")
-                .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 7, 12, 0, 0))
-                .build();
-
-        Member member2 = Member.builder()
-                .nickname("s")
-                .build();
 
         Post post = Post.builder()
-                .member(member1)
+                .member(MALE_30)
                 .build();
 
         // when
-        boolean result1 = post.isWriter(member1);
-        boolean result2 = post.isWriter(member2);
+        boolean result1 = post.isWriter(MALE_30);
+        boolean result2 = post.isWriter(FEMALE_20);
 
         // then
         assertAll(

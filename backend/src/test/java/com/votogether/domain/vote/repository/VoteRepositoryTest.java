@@ -37,12 +37,17 @@ class VoteRepositoryTest {
     PostOptionRepository postOptionRepository;
 
     Member member = Member.builder()
+            .gender(Gender.MALE)
+            .point(0)
+            .socialType(SocialType.KAKAO)
             .nickname("user1")
             .gender(Gender.MALE)
             .birthday("0718")
             .ageRange("10~14")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("kakao@gmail.com")
+            .ageRange("30~39")
+            .birthday("0101")
             .point(0)
             .build();
 

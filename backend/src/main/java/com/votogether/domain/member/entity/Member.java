@@ -1,5 +1,6 @@
 package com.votogether.domain.member.entity;
 
+import com.votogether.domain.auth.dto.KakaoMemberResponse;
 import com.votogether.domain.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -66,6 +67,19 @@ public class Member extends BaseEntity {
         this.socialType = socialType;
         this.socialId = socialId;
         this.point = point;
+    }
+
+    public static Member from(final KakaoMemberResponse response) {
+        final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
+        return Member.builder()
+                .nickname("익명의 손님" + nicknameNumberGenerator.generate())
+                .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
+                .ageRange(response.kakaoAccount().ageRange())
+                .birthday(response.kakaoAccount().birthday())
+                .socialType(SocialType.KAKAO)
+                .socialId(String.valueOf(response.id()))
+                .point(0)
+                .build();
     }
 
     public void plusPoint(final int point) {

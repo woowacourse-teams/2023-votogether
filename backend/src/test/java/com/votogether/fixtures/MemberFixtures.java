@@ -11,7 +11,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("1~9")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user1@gmail.com")
             .point(0)
             .build();
@@ -21,7 +21,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("1~9")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user2@gmail.com")
             .point(0)
             .build();
@@ -31,7 +31,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("10~14")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user3@gmail.com")
             .point(0)
             .build();
@@ -41,7 +41,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("10~14")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user4@gmail.com")
             .point(0)
             .build();
@@ -51,7 +51,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("15~19")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user5@gmail.com")
             .point(0)
             .build();
@@ -61,7 +61,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("15~19")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user6@gmail.com")
             .point(0)
             .build();
@@ -71,7 +71,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("20~29")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user7@gmail.com")
             .point(0)
             .build();
@@ -81,7 +81,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("20~29")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user8@gmail.com")
             .point(0)
             .build();
@@ -91,7 +91,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("30~39")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user9@gmail.com")
             .point(0)
             .build();
@@ -101,7 +101,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("30~39")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user10@gmail.com")
             .point(0)
             .build();
@@ -111,7 +111,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("40~49")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user11@gmail.com")
             .point(0)
             .build();
@@ -121,7 +121,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("40~49")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user12@gmail.com")
             .point(0)
             .build();
@@ -131,7 +131,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("50~59")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user13@gmail.com")
             .point(0)
             .build();
@@ -141,7 +141,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("50~59")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user14@gmail.com")
             .point(0)
             .build();
@@ -151,7 +151,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("60~69")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user15@gmail.com")
             .point(0)
             .build();
@@ -161,7 +161,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("60~69")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user16@gmail.com")
             .point(0)
             .build();
@@ -171,7 +171,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("70~79")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user17@gmail.com")
             .point(0)
             .build();
@@ -181,7 +181,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("70~79")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user18@gmail.com")
             .point(0)
             .build();
@@ -191,7 +191,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("80~89")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user19@gmail.com")
             .point(0)
             .build();
@@ -201,7 +201,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("80~89")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user20@gmail.com")
             .point(0)
             .build();
@@ -211,7 +211,7 @@ public class MemberFixtures {
             .gender(Gender.MALE)
             .birthday("1225")
             .ageRange("90~")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user21@gmail.com")
             .point(0)
             .build();
@@ -221,7 +221,7 @@ public class MemberFixtures {
             .gender(Gender.FEMALE)
             .birthday("1225")
             .ageRange("90~")
-            .socialType(SocialType.GOOGLE)
+            .socialType(SocialType.KAKAO)
             .socialId("user22@gmail.com")
             .point(0)
             .build();

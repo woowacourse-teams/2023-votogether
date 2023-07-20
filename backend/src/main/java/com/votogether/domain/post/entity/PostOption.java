@@ -105,6 +105,10 @@ public class PostOption extends BaseEntity {
                 .build();
     }
 
+    public void addVote(final Vote vote) {
+        this.votes.add(vote);
+    }
+
     public boolean isVoteByMember(final Member member) {
         return votes.stream()
                 .anyMatch(vote -> vote.isVoteByMember(member));
@@ -113,5 +117,4 @@ public class PostOption extends BaseEntity {
     public boolean isBelongsTo(final Post post) {
         return Objects.equals(this.post.getId(), post.getId());
     }
-
 }

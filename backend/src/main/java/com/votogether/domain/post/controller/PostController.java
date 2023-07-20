@@ -1,14 +1,13 @@
 package com.votogether.domain.post.controller;
 
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.post.dto.request.CreatePostRequest;
 import com.votogether.domain.post.dto.response.GetAllPostResponse;
+import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
-import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,20 +41,10 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
+            @Auth Member member,
             @RequestPart final CreatePostRequest request,
             @RequestPart final List<MultipartFile> images
     ) {
-        // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)
-        final Member member = Member.builder()
-                .nickname("Abel")
-                .gender(Gender.MALE)
-                .birthday("0718")
-                .ageRange("10~14")
-                .socialType(SocialType.GOOGLE)
-                .socialId("tjdtls690")
-                .point(100)
-                .build();
-
         final Long postId = postService.save(request, member, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
@@ -79,7 +68,7 @@ public class PostController {
     }
 
     @Operation(summary = "게시글 투표 선택지 통계 조회", description = "게시글 특정 투표 선택지에 대한 통계를 조회한다.")
-    @ApiResponses({
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 투표 선택지 통계 조회 성공"),
             @ApiResponse(responseCode = "400", description = "게시글 투표 옵션이 게시글에 속하지 않아 조회 실패"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글이거나 게시글 투표 옵션")

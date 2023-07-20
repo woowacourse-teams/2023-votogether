@@ -114,10 +114,13 @@ public class Post extends BaseEntity {
         validateWriter(member);
         validatePostOption(postOption);
 
-        return Vote.builder()
+        final Vote vote = Vote.builder()
                 .member(member)
                 .postOption(postOption)
                 .build();
+
+        postOption.addVote(vote);
+        return vote;
     }
 
     private void validateDeadLine() {

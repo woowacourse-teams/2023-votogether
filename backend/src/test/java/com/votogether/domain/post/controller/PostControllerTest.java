@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.CreatePostRequest;
 import com.votogether.domain.post.dto.response.GetAllPostResponse;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
@@ -22,6 +23,7 @@ import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
@@ -42,7 +44,13 @@ import org.springframework.http.HttpStatus;
 class PostControllerTest {
 
     @MockBean
-    private PostService postService;
+    PostService postService;
+
+    @MockBean
+    MemberService memberService;
+
+    @MockBean
+    TokenProcessor tokenProcessor;
 
     @BeforeEach
     void setUp() {
@@ -66,7 +74,7 @@ class PostControllerTest {
         File file2 = new File(filePath2);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        final String postRequestJson = objectMapper.writeValueAsString(createPostRequest);
+        String postRequestJson = objectMapper.writeValueAsString(createPostRequest);
 
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList())).willReturn(savedPostId);

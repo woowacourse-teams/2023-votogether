@@ -69,7 +69,6 @@ class PostTest {
     @DisplayName("게시글의 작성자 여부를 확인한다.")
     void isWriter() {
         // given
-
         Post post = Post.builder()
                 .member(MALE_30)
                 .build();

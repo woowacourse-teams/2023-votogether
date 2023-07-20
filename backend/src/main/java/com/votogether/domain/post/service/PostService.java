@@ -4,7 +4,6 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.dto.request.CreatePostRequest;
 import com.votogether.domain.post.dto.response.GetAllPostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
@@ -41,20 +40,17 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;
     private final CategoryRepository categoryRepository;
-    private final MemberRepository memberRepository;
     private final VoteRepository voteRepository;
 
     public PostService(
             final PostRepository postRepository,
             final PostOptionRepository postOptionRepository,
             final CategoryRepository categoryRepository,
-            final MemberRepository memberRepository,
             final VoteRepository voteRepository
     ) {
         this.postRepository = postRepository;
         this.postOptionRepository = postOptionRepository;
         this.categoryRepository = categoryRepository;
-        this.memberRepository = memberRepository;
         this.voteRepository = voteRepository;
 
         this.postClosingTypeMapper = new EnumMap<>(PostClosingType.class);
@@ -78,8 +74,6 @@ public class PostService {
         final List<Category> categories = categoryRepository.findAllById(createPostRequest.categoryIds());
         final Post post = toPostEntity(createPostRequest, member, images, categories);
 
-        // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)
-        memberRepository.save(member);
         return postRepository.save(post).getId();
     }
 
@@ -126,7 +120,8 @@ public class PostService {
                 .toList();
     }
 
-    private List<Post> findContentsBySortTypeAndClosingType(final PostClosingType postClosingType, final Pageable pageable) {
+    private List<Post> findContentsBySortTypeAndClosingType(final PostClosingType postClosingType,
+                                                            final Pageable pageable) {
         return postClosingTypeMapper.get(postClosingType)
                 .apply(pageable)
                 .getContent();

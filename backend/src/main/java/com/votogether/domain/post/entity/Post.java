@@ -74,22 +74,20 @@ public class Post extends BaseEntity {
 
     public void mapPostOptionsByElements(
             final List<String> postOptionContents,
-            final Post post,
             final List<MultipartFile> images
     ) {
-        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, post, images));
+        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, images));
     }
 
     private List<PostOption> toPostOptionEntities(
             final List<String> postOptionContents,
-            final Post post,
             final List<MultipartFile> images
     ) {
         return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
                 .mapToObj(postOptionSequence ->
                         PostOption.of(
                                 postOptionContents.get(postOptionSequence - 1),
-                                post,
+                                this,
                                 postOptionSequence,
                                 images.get(postOptionSequence - 1)
                         )

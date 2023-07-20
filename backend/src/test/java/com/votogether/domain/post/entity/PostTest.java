@@ -58,7 +58,7 @@ class PostTest {
         );
 
         // when
-        post.mapPostOptionsByElements(List.of("content1", "content2"), post, List.of(file1, file2));
+        post.mapPostOptionsByElements(List.of("content1", "content2"), List.of(file1, file2));
 
         // then
         final List<PostOption> postOptions = post.getPostOptions().getPostOptions();

@@ -86,7 +86,7 @@ public class PostService {
         final Post post = toPost(createPostRequest, member);
 
         final List<String> postOptionContents = createPostRequest.postOptionContents();
-        post.mapPostOptionsByElements(postOptionContents, post, images);
+        post.mapPostOptionsByElements(postOptionContents, images);
         post.mapCategories(categories);
 
         return post;

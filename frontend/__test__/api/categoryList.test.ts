@@ -1,46 +1,55 @@
-import { MOCK_CATEGORY_LIST } from '@mocks/mockData/categoryList';
+import {
+  addFavoriteCategory,
+  getGuestCategoryList,
+  getUserCategoryList,
+  removeFavoriteCategory,
+  transformCategoryListResponse,
+} from '@api/wus/categoryList';
 
-const MEMBER = true;
-const GUEST = false;
+import { MOCK_CATEGORY_LIST, MOCK_GUEST_CATEGORY_LIST } from '@mocks/mockData/categoryList';
 
 describe('카테고리에 대한 통신이 의도한대로 작동하는 지 확인한다.', () => {
   test('회원의 카테고리 정보를 불러올 수 있다.', async () => {
-    const data = await getUserCategoryList(MEMBER);
+    const data = await getUserCategoryList();
 
-    expect(data).toBe(MOCK_CATEGORY_LIST);
+    const expectResult = transformCategoryListResponse(MOCK_CATEGORY_LIST);
+
+    expect(data).toEqual(expectResult);
   });
 
   test('비회원의 카테고리 정보를 불러올 수 있다.', async () => {
-    const data = await getUserCategoryList(GUEST);
+    const data = await getGuestCategoryList();
 
-    expect(data.postList).toEqual(MOCK_GUEST_CATEGORY_LIST);
+    const expectResult = transformCategoryListResponse(MOCK_GUEST_CATEGORY_LIST);
+
+    expect(data).toEqual(expectResult);
   });
 
-  test('회원이 카테고리 즐겨찾기를 할 수 있다.', () => {
-    MOCK_CATEGORY_LIST[1].isFavorite = false;
+  test('회원이 카테고리 즐겨찾기를 할 수 있다.', async () => {
+    MOCK_CATEGORY_LIST[1].favorite = false;
 
     await addFavoriteCategory(MOCK_CATEGORY_LIST[1].id);
 
-    const data = await getUserCategoryList(MEMBER);
+    const data = await getUserCategoryList();
 
-    expect(MOCK_CATEGORY_LIST[1].isFavorite).toBe(true);
+    expect(data[1].isFavorite).toBe(true);
   });
 
   test('회원이 카테고리 즐겨찾기를 해제할 수 있다.', async () => {
-    MOCK_CATEGORY_LIST[0].isFavorite = true;
+    MOCK_CATEGORY_LIST[0].favorite = true;
 
     await removeFavoriteCategory(MOCK_CATEGORY_LIST[0].id);
 
-    const data = await getUserCategoryList(MEMBER);
+    const data = await getUserCategoryList();
 
-    expect(MOCK_CATEGORY_LIST[0].isFavorite).toBe(false);
+    expect(data[0].isFavorite).toBe(false);
   });
 
   test('클라이언트에서 사용하는 API 명세가 의도한대로 존재해야한다.', async () => {
-    const data = await getGuestCategoryList(GUEST);
+    const data = await getGuestCategoryList();
 
-    const dataKeys = Object.keys(data);
+    const categoryKeys = Object.keys(data[0]);
 
-    expect(dataKeys).toEqual(['id', 'name', 'isFavorite']);
+    expect(categoryKeys).toEqual(['id', 'name', 'isFavorite']);
   });
 });

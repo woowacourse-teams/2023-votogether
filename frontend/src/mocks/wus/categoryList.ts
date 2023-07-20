@@ -1,31 +1,25 @@
-import { Category } from '@type/category';
+import { rest } from 'msw';
 
-import { deleteFetch, getFetch, postFetch } from '@utils/fetch';
+import { MOCK_CATEGORY_LIST, MOCK_GUEST_CATEGORY_LIST } from '@mocks/mockData/categoryList';
 
-const transformCategoryListResponse = (categoryList: Category[]) => {
-  return categoryList.map(category => ({
-    id: category.id,
-    name: category.name,
-    isFavorite: category.isFavorite,
-  }));
-};
+export const mockCategoryHandlers = [
+  rest.get('/categories', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(MOCK_CATEGORY_LIST));
+  }),
 
-export const getUserCategoryList = async () => {
-  const categoryList = await getFetch<Category[]>('/categories');
+  rest.get('/categories/guest', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(MOCK_GUEST_CATEGORY_LIST));
+  }),
 
-  return transformCategoryListResponse(categoryList);
-};
+  rest.post('/categories/:categoryId/like', (req, res, ctx) => {
+    MOCK_CATEGORY_LIST[1].favorite = true;
 
-export const getGuestCategoryList = async () => {
-  const categoryList = await getFetch<Category[]>('/categories/guest');
+    return res(ctx.status(201), ctx.json({ message: 'ok' }));
+  }),
 
-  return transformCategoryListResponse(categoryList);
-};
+  rest.delete('/categories/:categoryId/like', (req, res, ctx) => {
+    MOCK_CATEGORY_LIST[0].favorite = false;
 
-export const addFavoriteCategory = async (categoryId: number) => {
-  await postFetch(`/categories/${categoryId}/like`, '');
-};
-
-export const removeFavoriteCategory = async (categoryId: number) => {
-  await deleteFetch(`/categories/${categoryId}/like`);
-};
+    return res(ctx.status(204), ctx.json({ message: 'ok' }));
+  }),
+];

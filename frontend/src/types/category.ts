@@ -3,3 +3,9 @@ export interface Category {
   name: string;
   isFavorite: boolean;
 }
+
+export interface ServerCategory {
+  id: number;
+  name: string;
+  favorite: boolean;
+}

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useFetch } from '@hooks/useFetch';
 
-import { getVoteDetail } from '@api/post';
+import { getPost } from '@api/post';
 import { getPostStatistics } from '@api/voteResult';
 
 import IconButton from '@components/common/IconButton';
@@ -22,7 +22,7 @@ export default function VoteStatisticsPage() {
     data: postDetail,
     errorMessage: postError,
     isLoading: isPostLoading,
-  } = useFetch(() => getVoteDetail(postId));
+  } = useFetch(() => getPost(postId));
   const {
     data: voteResult,
     errorMessage: voteResultError,

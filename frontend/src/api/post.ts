@@ -24,7 +24,7 @@ export const changeVotedOption = async (postId: number, optionData: OptionData) 
   );
 };
 
-export const getVoteDetail = async (postId: number): Promise<PostInfo> => {
+export const getPost = async (postId: number): Promise<PostInfo> => {
   return await getFetch<PostInfo>(`/posts/${postId}`);
 };
 

@@ -2,11 +2,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useFetch } from '@hooks/useFetch_2';
 
-import { getPost, removePost, setEarlyClosePost } from '@api/sua/post';
+import { getPost, removePost, setEarlyClosePost } from '@api/post';
 
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
-import { mockNotVotedPost } from '@components/common/Post/mockData';
+import { MOCK_NOT_VOTE_POST } from '@components/common/Post/mockData';
 
 import { checkClosedPost } from '@utils/time';
 
@@ -94,7 +94,7 @@ export default function PostDetailPage() {
         </NarrowTemplateHeader>
       </S.HeaderContainer>
       <S.Container>
-        <Post postInfo={mockNotVotedPost} isPreview={false} />
+        <Post postInfo={MOCK_NOT_VOTE_POST} isPreview={false} />
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}

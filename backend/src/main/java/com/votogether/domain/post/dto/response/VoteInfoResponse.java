@@ -17,18 +17,10 @@ public record VoteInfoResponse(
             final Long totalVoteCount
     ) {
         this(
-                getSelectOption(member, postOptions),
+                postOptions.getSelectOption(member),
                 parseTotalVoteCount(totalVoteCount),
                 getOptions(postOptions, parseTotalVoteCount(totalVoteCount))
         );
-    }
-
-    private static Integer getSelectOption(final Member member, final PostOptions postOptions) {
-        return postOptions.getPostOptions().stream()
-                .filter(postOption -> postOption.isVoteByMember(member))
-                .findFirst()
-                .map(PostOption::getSequence)
-                .orElse(0);
     }
 
     private static Long parseTotalVoteCount(final Long totalVoteCount) {

@@ -11,11 +11,13 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"id"}, callSuper = true)
 @ToString
 @Getter
 @Entity

@@ -64,10 +64,11 @@ class TokenProcessorTest {
     }
 
     @Nested
+    @DisplayName("토큰의 prefix를 제외한 값을 추출할 때")
     class ResolveToken {
 
         @Test
-        @DisplayName("토큰의 prefix를 제외한 값을 추출한다.")
+        @DisplayName("Bearer가 prefix면 성공한다.")
         void resolveTokenSuccess() throws JsonProcessingException {
             // given
             Member member = Member.builder()
@@ -94,7 +95,7 @@ class TokenProcessorTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"Bear", "Barrier", "Baerer", "bearer"})
-        @DisplayName("토큰의 prefix를 제외한 값을 추출한다.")
+        @DisplayName("Bearer가 아닌 다른 prefix라면 예외를 발생시킨다.")
         void resolveTokenFail(String prefix) {
             // given
             Member member = Member.builder()

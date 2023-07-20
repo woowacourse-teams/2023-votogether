@@ -13,5 +13,5 @@ export const Container = styled.div`
   position: absolute;
   top: 0;
 
-  background-color: #1f1f1f;
+  background-color: var(--header);
 `;

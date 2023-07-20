@@ -8,10 +8,10 @@ export const Container = styled.div`
   align-items: center;
   gap: 15px;
 
-  font-size: 1.2rem;
+  font: var(--text-small);
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    font-size: 1.4rem;
+    font: var(--text-caption);
   }
 `;
 

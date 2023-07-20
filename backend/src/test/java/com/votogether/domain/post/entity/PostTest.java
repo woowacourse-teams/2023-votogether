@@ -41,11 +41,11 @@ class PostTest {
         Member member1 = Member.builder()
                 .gender(Gender.MALE)
                 .point(0)
-                .socialType(SocialType.GOOGLE)
+                .socialType(SocialType.KAKAO)
                 .nickname("user1")
                 .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 7, 12, 0, 0))
+                .ageRange("30~39")
+                .birthday("0101")
                 .build();
 
         Member member2 = Member.builder()

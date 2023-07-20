@@ -5,7 +5,7 @@ export const Container = styled.div`
 
   height: 8px;
 
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.15);
 `;
 
 export const Bar = styled.div<{ progress: number; $isSelected: boolean }>`
@@ -14,5 +14,5 @@ export const Bar = styled.div<{ progress: number; $isSelected: boolean }>`
   width: ${({ progress }) => `${progress}%`};
   height: 8px;
 
-  background-color: ${({ $isSelected }) => ($isSelected ? '#ff7877' : '#9F9F9F')};
+  background-color: ${({ $isSelected }) => ($isSelected ? 'var(--primary-color)' : '#9F9F9F')};
 `;

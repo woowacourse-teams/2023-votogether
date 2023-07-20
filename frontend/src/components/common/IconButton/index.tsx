@@ -8,7 +8,7 @@ import * as S from './style';
 
 type IconCategory = 'category' | 'back' | 'search';
 
-const iconCategory: { [key in IconCategory]: { name: string; url: string } } = {
+const ICON_CATEGORY: Record<IconCategory, { name: string; url: string }> = {
   category: {
     name: '카테고리',
     url: categoryIcon,
@@ -30,8 +30,8 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 /* 뒤로가기, 카테고리 열기 등에 사용될 아이콘 버튼
  */
 export default function IconButton({ category, ...rest }: IconButtonProps) {
-  const src = iconCategory[category].url;
-  const ariaLabelText = iconCategory[category].name;
+  const src = ICON_CATEGORY[category].url;
+  const ariaLabelText = ICON_CATEGORY[category].name;
 
   return (
     <S.Button aria-label={ariaLabelText} {...rest}>

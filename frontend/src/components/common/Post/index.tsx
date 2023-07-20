@@ -1,12 +1,11 @@
-import { POST } from 'CONSTATNS';
-
 import { PostInfo } from '@type/post';
 
-import { changeVotedOption, votePost } from '@api/sua/post';
+import { changeVotedOption, votePost } from '@api/post';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
-import { PATH } from '@constants/path';
+
+import { POST } from '@constants/vote';
 
 import * as S from './style';
 
@@ -43,6 +42,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
             <S.Time>{startTime}</S.Time>
             <S.Time>{endTime}</S.Time>
           </S.Wrapper>
+
         </S.Wrapper>
         <S.Content $isPreview={isPreview}>{content}</S.Content>
       </S.DetailLink>

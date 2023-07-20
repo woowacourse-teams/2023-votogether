@@ -1,5 +1,7 @@
 import { example } from './example/get';
-import { votePostTest } from './sua/vote';
-import { postListHandlers } from './wus/post';
 
-export const handlers = [...example, ...votePostTest, ...postListHandlers];
+import { mockVoteResult } from './getVoteDetail';
+import { mockPost } from './post';
+import { mockVote } from './vote';
+
+export const handlers = [...example, ...mockPost, ...mockVoteResult, ...mockVote];

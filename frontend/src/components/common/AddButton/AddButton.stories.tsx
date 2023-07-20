@@ -13,10 +13,10 @@ export const SizeS: Story = {
   render: () => <AddButton size="sm" />,
 };
 
-export const sizeM: Story = {
+export const SizeM: Story = {
   render: () => <AddButton size="md" />,
 };
 
-export const sizeL: Story = {
+export const SizeL: Story = {
   render: () => <AddButton size="lg" />,
 };

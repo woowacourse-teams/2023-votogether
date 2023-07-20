@@ -6,7 +6,7 @@ export interface User {
   badge?: string;
 }
 
-export interface ServerUser {
+export interface UserInfoResponse {
   nickname: string;
   userPoint: number;
   postCount: number;

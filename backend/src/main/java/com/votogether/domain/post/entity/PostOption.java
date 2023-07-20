@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -92,6 +92,10 @@ public class PostOption extends BaseEntity {
                 .content(postOptionContent)
                 .imageUrl(imageUrl)
                 .build();
+    }
+
+    public boolean isBelongsTo(final Post post) {
+        return Objects.equals(this.post.getId(), post.getId());
     }
 
 }

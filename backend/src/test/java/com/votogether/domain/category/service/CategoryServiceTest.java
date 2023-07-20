@@ -4,27 +4,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.votogether.ServiceTest;
 import com.votogether.domain.category.dto.response.CategoryResponse;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
-import java.time.LocalDateTime;
+import com.votogether.fixtures.MemberFixtures;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
+@ServiceTest
 class CategoryServiceTest {
 
     @Autowired
@@ -64,21 +60,13 @@ class CategoryServiceTest {
     @DisplayName("선호하는 카테고리를 선호 카테고리 목록에 추가한다.")
     void addFavoriteCategory() {
         // given
+        Member member = memberRepository.save(MemberFixtures.MALE_20);
+
         Category category = Category.builder()
                 .name("개발")
                 .build();
 
-        Member member = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
-                .nickname("user1")
-                .socialId("kakao@gmail.com")
-                .birthDate(LocalDateTime.of(1995, 7, 12, 0, 0))
-                .build();
-
         categoryRepository.save(category);
-        memberRepository.save(member);
 
         Long categoryId = category.getId();
 
@@ -102,17 +90,10 @@ class CategoryServiceTest {
         @DisplayName("선호하는 카테고리를 선호 카테고리 목록에 삭제한다.")
         void removeFavoriteCategory() {
             // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20);
+
             Category category = Category.builder()
                     .name("개발")
-                    .build();
-
-            Member member = Member.builder()
-                    .gender(Gender.MALE)
-                    .point(0)
-                    .socialType(SocialType.GOOGLE)
-                    .nickname("user1")
-                    .socialId("kakao@gmail.com")
-                    .birthDate(LocalDateTime.of(1995, 7, 12, 0, 0))
                     .build();
 
             MemberCategory memberCategory = MemberCategory.builder()
@@ -121,7 +102,7 @@ class CategoryServiceTest {
                     .build();
 
             categoryRepository.save(category);
-            memberRepository.save(member);
+
             memberCategoryRepository.save(memberCategory);
 
             Long categoryId = category.getId();
@@ -139,21 +120,13 @@ class CategoryServiceTest {
         @DisplayName("선호하는 카테고리에 없는 카테고리를 삭제하는 경우 예외가 발생한다.")
         void removeFavoriteCategoryException() {
             // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20);
+
             Category category = Category.builder()
                     .name("개발")
                     .build();
 
-            Member member = Member.builder()
-                    .gender(Gender.MALE)
-                    .point(0)
-                    .socialType(SocialType.GOOGLE)
-                    .nickname("user1")
-                    .socialId("kakao@gmail.com")
-                    .birthDate(LocalDateTime.of(1995, 7, 12, 0, 0))
-                    .build();
-
             categoryRepository.save(category);
-            memberRepository.save(member);
 
             // when, then
             assertThatThrownBy(() -> categoryService.removeFavoriteCategory(member, category.getId()))

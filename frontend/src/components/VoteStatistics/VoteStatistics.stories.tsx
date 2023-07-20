@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { mockVoteResult } from './mockData';
+import { MOCK_VOTE_RESULT } from '@mocks/mockData/voteResult';
 
 import VoteStatistics from '.';
 
@@ -12,13 +12,13 @@ export default meta;
 type Story = StoryObj<typeof VoteStatistics>;
 
 export const SizeSm: Story = {
-  render: () => <VoteStatistics size="sm" voteResult={mockVoteResult} />,
+  render: () => <VoteStatistics size="sm" voteResult={MOCK_VOTE_RESULT} />,
 };
 
 export const SizeMd: Story = {
-  render: () => <VoteStatistics size="md" voteResult={mockVoteResult} />,
+  render: () => <VoteStatistics size="md" voteResult={MOCK_VOTE_RESULT} />,
 };
 
 export const SizeLg: Story = {
-  render: () => <VoteStatistics size="lg" voteResult={mockVoteResult} />,
+  render: () => <VoteStatistics size="lg" voteResult={MOCK_VOTE_RESULT} />,
 };

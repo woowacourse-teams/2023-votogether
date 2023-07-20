@@ -4,6 +4,7 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.vote.entity.Vote;
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -20,12 +21,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 public class Post extends BaseEntity {
+
+    private static final int FIRST_OPTION_SEQUENCE = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +50,10 @@ public class Post extends BaseEntity {
 
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
+
+    @Basic(fetch=FetchType.LAZY)
+    @Formula("(select count(v.id) from Vote v where v.post_option_id in (select po.id from Post_Option po where po.post_id = id))")
+    private Long totalVoteCount;
 
     @Builder
     private Post(
@@ -77,13 +85,13 @@ public class Post extends BaseEntity {
             final Post post,
             final List<MultipartFile> images
     ) {
-        return IntStream.range(0, postOptionContents.size())
+        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
                 .mapToObj(postOptionSequence ->
                         PostOption.of(
-                                postOptionContents.get(postOptionSequence),
+                                postOptionContents.get(postOptionSequence - 1),
                                 post,
                                 postOptionSequence,
-                                images.get(postOptionSequence)
+                                images.get(postOptionSequence - 1)
                         )
                 )
                 .toList();

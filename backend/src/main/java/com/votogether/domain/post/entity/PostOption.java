@@ -1,6 +1,9 @@
 package com.votogether.domain.post.entity;
 
 import com.votogether.domain.common.BaseEntity;
+import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.vote.entity.Vote;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,10 +12,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,6 +46,9 @@ public class PostOption extends BaseEntity {
 
     @Column
     private String imageUrl;
+
+    @OneToMany(mappedBy = "postOption", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Vote> votes = new ArrayList<>();
 
     @Builder
     private PostOption(
@@ -92,6 +100,11 @@ public class PostOption extends BaseEntity {
                 .content(postOptionContent)
                 .imageUrl(imageUrl)
                 .build();
+    }
+
+    public boolean isVoteByMember(final Member member) {
+        return votes.stream()
+                .anyMatch(vote -> vote.isVoteByMember(member));
     }
 
 }

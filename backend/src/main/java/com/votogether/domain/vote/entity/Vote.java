@@ -38,4 +38,7 @@ public class Vote extends BaseEntity {
         this.postOption = postOption;
     }
 
+    public boolean isVoteByMember(final Member member) {
+        return this.member.equals(member);
+    }
 }

@@ -3,7 +3,10 @@ package com.votogether.domain.post.controller;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.CreatePostRequest;
+import com.votogether.domain.post.dto.response.GetAllPostResponse;
+import com.votogether.domain.post.entity.PostClosingType;
+import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +18,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -37,7 +41,7 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart final PostCreateRequest request,
+            @RequestPart final CreatePostRequest request,
             @RequestPart final List<MultipartFile> images
     ) {
         // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)
@@ -52,6 +56,24 @@ public class PostController {
 
         final Long postId = postService.save(request, member, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
+    }
+
+    @Operation(summary = "게시글 조회", description = "게시글을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글을 조회했습니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다."),
+            @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
+    })
+    @GetMapping
+    public ResponseEntity<List<GetAllPostResponse>> getAllPost(
+            final Integer page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType
+    ) {
+        final List<GetAllPostResponse> getAllPostResponses =
+                postService.getAllPostBySortTypeAndClosingType(page, postClosingType, postSortType);
+
+        return ResponseEntity.ok(getAllPostResponses);
     }
 
 }

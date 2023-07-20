@@ -78,6 +78,38 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글에 대한 전체 투표 통계를 조회한다.")
+    void getVoteStatistics() {
+        // given
+        VoteOptionStatisticsResponse response = new VoteOptionStatisticsResponse(
+                17,
+                10,
+                7,
+                List.of(
+                        new VoteCountForAgeGroupResponse("10대 미만", 2, 1, 1),
+                        new VoteCountForAgeGroupResponse("10대", 3, 1, 2),
+                        new VoteCountForAgeGroupResponse("20대", 2, 2, 0),
+                        new VoteCountForAgeGroupResponse("30대", 5, 3, 2),
+                        new VoteCountForAgeGroupResponse("40대", 1, 1, 0),
+                        new VoteCountForAgeGroupResponse("50대", 0, 0, 0),
+                        new VoteCountForAgeGroupResponse("60대 이상", 4, 2, 2)
+                )
+        );
+        given(postService.getVoteStatistics(anyLong())).willReturn(response);
+
+        // when
+        VoteOptionStatisticsResponse result = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/{postId}/options", 1)
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(VoteOptionStatisticsResponse.class);
+
+        // then
+        assertThat(result).usingRecursiveComparison().isEqualTo(response);
+    }
+
+    @Test
     @DisplayName("게시글 투표 옵션에 대한 투표 통계를 조회한다.")
     void getVoteOptionStatistics() {
         // given

@@ -1,8 +1,8 @@
-import { ServerCategory } from '@type/category';
+import { CategoryResponse } from '@type/category';
 
 import { deleteFetch, getFetch, postFetch } from '@utils/fetch';
 
-export const transformCategoryListResponse = (categoryList: ServerCategory[]) => {
+export const transformCategoryListResponse = (categoryList: CategoryResponse[]) => {
   return categoryList.map(category => ({
     id: category.id,
     name: category.name,
@@ -11,13 +11,13 @@ export const transformCategoryListResponse = (categoryList: ServerCategory[]) =>
 };
 
 export const getUserCategoryList = async () => {
-  const categoryList = await getFetch<ServerCategory[]>('/categories');
+  const categoryList = await getFetch<CategoryResponse[]>('/categories');
 
   return transformCategoryListResponse(categoryList);
 };
 
 export const getGuestCategoryList = async () => {
-  const categoryList = await getFetch<ServerCategory[]>('/categories/guest');
+  const categoryList = await getFetch<CategoryResponse[]>('/categories/guest');
 
   return transformCategoryListResponse(categoryList);
 };

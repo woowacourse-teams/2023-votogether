@@ -4,7 +4,7 @@ export interface Category {
   isFavorite: boolean;
 }
 
-export interface ServerCategory {
+export interface CategoryResponse {
   id: number;
   name: string;
   favorite: boolean;

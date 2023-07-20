@@ -1,14 +1,6 @@
 import { WrittenVoteOptionType } from '@type/post';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { POST } from '@constants/vote';
-=======
-import { POST } from '@constants/post';
->>>>>>> c24a867082d6bc1a17267ef808274bcec3858a4c
-=======
-import { POST } from '@constants/post';
->>>>>>> c24a867082d6bc1a17267ef808274bcec3858a4c
 
 import * as S from './style';
 import WrittenVoteOption from './WrittenVoteOption';

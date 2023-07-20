@@ -4,7 +4,7 @@ import { changeVotedOption, votePost } from '@api/post';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
-import { POST } from '@constants/post';
+import { POST } from '@constants/vote';
 
 import * as S from './style';
 

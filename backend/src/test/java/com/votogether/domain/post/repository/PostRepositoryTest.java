@@ -2,7 +2,7 @@ package com.votogether.domain.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.votogether.config.JpaConfig;
+import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
@@ -13,13 +13,8 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DataJpaTest
-@Import(JpaConfig.class)
+@RepositoryTest
 class PostRepositoryTest {
 
     @Autowired
@@ -40,10 +35,16 @@ class PostRepositoryTest {
         final Member member = Member.builder()
                 .gender(Gender.MALE)
                 .point(0)
-                .socialType(SocialType.GOOGLE)
+                .socialType(SocialType.KAKAO)
                 .nickname("user1")
+                .gender(Gender.MALE)
+                .birthday("0718")
+                .ageRange("10~14")
+                .socialType(SocialType.KAKAO)
                 .socialId("kakao@gmail.com")
-                .birthDate(LocalDateTime.of(1993, 7, 12, 0, 0))
+                .ageRange("30~39")
+                .birthday("0101")
+                .point(0)
                 .build();
 
         final Post post = Post.builder()

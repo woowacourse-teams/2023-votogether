@@ -23,6 +23,7 @@ public class KakaoOAuthClient {
     private final MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
 
     public String getAccessToken(final String code) {
+        info.remove("code");
         info.add("code", code);
 
         final OAuthAccessTokenResponse response = restTemplate.postForObject(

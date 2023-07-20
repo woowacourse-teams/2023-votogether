@@ -7,8 +7,8 @@ import { useSelect } from '@hooks/useSelect';
 import Post from '@components/common/Post';
 import Select from '@components/common/Select';
 import Skeleton from '@components/common/Skeleton';
-import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants/option';
-import type { PostSorting, PostStatus } from '@components/post/PostListPage/types/option';
+import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
+import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
 import * as S from './style';
 

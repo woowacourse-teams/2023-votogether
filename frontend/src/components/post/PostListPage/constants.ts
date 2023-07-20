@@ -1,4 +1,4 @@
-import type { PostSorting, PostStatus } from '../types/option';
+import { PostSorting, PostStatus } from './types';
 
 export const STATUS_OPTION: Record<PostStatus, string> = {
   all: '전체',

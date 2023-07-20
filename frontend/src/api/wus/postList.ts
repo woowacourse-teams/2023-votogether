@@ -1,10 +1,10 @@
 import { PostInfo } from '@type/post';
 
-import type { PostSorting, PostStatus } from '@components/post/PostListPage/types/option';
+import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
 import { getFetch } from '@utils/fetch';
 
-interface GetPostListParams {
+interface GetPostList {
   postStatus: PostStatus;
   postSorting: PostSorting;
   pageNumber: number;
@@ -21,7 +21,7 @@ const REQUEST_SORTING_OPTION: Record<PostSorting, string> = {
   popular: 'HOT',
 };
 
-export const getPostList = async ({ postStatus, postSorting, pageNumber }: GetPostListParams) => {
+export const getPostList = async ({ postStatus, postSorting, pageNumber }: GetPostList) => {
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 

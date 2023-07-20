@@ -4,16 +4,16 @@ import { PostList } from '@type/post';
 
 import { getPostList } from '@api/wus/postList';
 
-import { PostSorting, PostStatus } from '@components/post/PostListPage/types/option';
+import { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
-interface UsePostListParams {
+interface UsePostList {
   postSorting: PostSorting;
   postStatus: PostStatus;
 }
 
 const MAX_LIST_LENGTH = 10;
 
-export const usePostList = ({ postSorting, postStatus }: UsePostListParams) => {
+export const usePostList = ({ postSorting, postStatus }: UsePostList) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<PostList>(
       ['posts', postSorting, postStatus],

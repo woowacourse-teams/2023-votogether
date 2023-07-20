@@ -18,27 +18,29 @@ const radioMode: RadioMode = {
 type RadioCategory = keyof RadioMode;
 
 export default function VoteStatistics({ voteResult, size }: GraphProps) {
-  const [nowRadioMode, setNowRadioMode] = useState<RadioCategory>('all');
+  const [currentRadioMode, setCurrentRadioMode] = useState<RadioCategory>('all');
 
   const radioModeKey = Object.keys(radioMode) as RadioCategory[];
 
   const changeMode = (e: MouseEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     const targetCategory = target.value as RadioCategory;
-    setNowRadioMode(targetCategory);
+    setCurrentRadioMode(targetCategory);
   };
+
+  const random = Date.now();
 
   return (
     <S.Container>
       <S.CategoryWrapper>
         {radioModeKey.map(mode => {
           return (
-            <S.RadioLabel>
+            <S.RadioLabel key={mode}>
               <input
                 type="radio"
-                name="radio-category"
+                name={`radio-category-${random}`}
                 value={mode}
-                checked={mode === nowRadioMode}
+                defaultChecked={mode === currentRadioMode}
                 onClick={changeMode}
               />
               {radioMode[mode]}
@@ -46,8 +48,8 @@ export default function VoteStatistics({ voteResult, size }: GraphProps) {
           );
         })}
       </S.CategoryWrapper>
-      {nowRadioMode === 'all' && <OneLineGraph size={size} voteResult={voteResult} />}
-      {nowRadioMode === 'gender' && <TwoLineGraph size={size} voteResult={voteResult} />}
+      {currentRadioMode === 'all' && <OneLineGraph size={size} voteResult={voteResult} />}
+      {currentRadioMode === 'gender' && <TwoLineGraph size={size} voteResult={voteResult} />}
     </S.Container>
   );
 }

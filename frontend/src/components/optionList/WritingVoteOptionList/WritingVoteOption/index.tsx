@@ -1,4 +1,6 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
+
+import { useText } from '@hooks/useText';
 
 import OptionCancelButton from './OptionCancelButton';
 import OptionUploadImageButton from './OptionUploadImageButton';
@@ -23,20 +25,9 @@ export default function WritingVoteOption({
   handleDeleteOptionClick,
   handleRemoveImageClick,
   handleUploadImage,
-  imageUrl,
+  imageUrl = '',
 }: WritingVoteOptionProps) {
-  const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = event.target;
-    const standard = value.length;
-
-    if (standard === MAX_WRITING_LENGTH) {
-      event.target.setCustomValidity(`선택지 내용은 ${MAX_WRITING_LENGTH}자까지 입력 가능합니다.`);
-      event.target.reportValidity();
-      return;
-    }
-
-    event.target.setCustomValidity('');
-  };
+  const { handleTextChange } = useText('');
 
   return (
     <S.Container>
@@ -48,14 +39,20 @@ export default function WritingVoteOption({
       <S.OptionContainer>
         <S.ContentContainer>
           <S.ContentTextArea
+            name="optionText"
             defaultValue={text}
-            onChange={handleTextChange}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              handleTextChange(e, MAX_WRITING_LENGTH)
+            }
             placeholder="내용을 입력해주세요."
             maxLength={MAX_WRITING_LENGTH}
           />
-          {!imageUrl && (
-            <OptionUploadImageButton optionId={optionId} onChange={handleUploadImage} />
-          )}
+
+          <OptionUploadImageButton
+            isImageVisible={imageUrl.length > 0}
+            optionId={optionId}
+            onChange={handleUploadImage}
+          />
         </S.ContentContainer>
         {imageUrl && (
           <S.ImageContainer>

@@ -38,7 +38,7 @@ export default function WritingVoteOptionList({ initialOptionList }: WritingVote
       ))}
       {optionList.length < MAXIMUM_COUNT && (
         <S.AddButtonWrapper>
-          <AddButton size="md" onClick={addOption} />
+          <AddButton type="button" size="md" onClick={addOption} />
         </S.AddButtonWrapper>
       )}
     </S.Container>

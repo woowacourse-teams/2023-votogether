@@ -107,6 +107,7 @@ public class PostService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public List<GetAllPostResponse> getAllPostBySortTypeAndClosingType(
             final Integer page,
             final PostClosingType postClosingType,

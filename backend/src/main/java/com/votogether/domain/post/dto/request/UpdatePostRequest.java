@@ -6,9 +6,9 @@ import java.util.List;
 import lombok.Builder;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Schema(name = "게시글 관련 데이터", description = "게시글에 관련한 데이터들입니다.")
+@Schema(name = "게시글 수정 관련 데이터", description = "게시글 수정에 관련한 데이터들입니다.")
 @Builder
-public record PostCreateRequest(
+public record UpdatePostRequest(
         List<Long> categoryIds,
         String title,
         String content,

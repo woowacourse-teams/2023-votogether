@@ -7,11 +7,16 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
+import com.votogether.fixtures.CategoryFixtures;
+import com.votogether.fixtures.MemberFixtures;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.mock.web.MockMultipartFile;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PostTest {
@@ -32,6 +37,52 @@ class PostTest {
         // then
         final PostCategories actualPostCategories = post.getPostCategories();
         assertThat(actualPostCategories.getPostCategories()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("게시글을 수정한다")
+    void update() throws IOException {
+        // given
+        Member writer = MemberFixtures.MALE_20;
+        final Post post = Post.builder()
+                .member(writer)
+                .postBody(PostBody.builder().title("title").content("content").build())
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        // when
+        post.update(
+                List.of(CategoryFixtures.DEVELOP),
+                "title2",
+                "content2",
+                List.of("option1", "option2"),
+                LocalDateTime.of(1900, 7, 12, 0, 0),
+                List.of(file1, file2)
+        );
+
+        // then
+        final PostBody postBody = post.getPostBody();
+        assertAll(
+                () -> assertThat(post.getPostCategories().getPostCategories()).hasSize(1),
+                () -> assertThat(postBody.getTitle()).isEqualTo("title2"),
+                () -> assertThat(postBody.getContent()).isEqualTo("content2"),
+                () -> assertThat(post.getPostOptions().getPostOptions()).hasSize(2),
+                () -> assertThat(post.getDeadline()).isBefore(LocalDateTime.now())
+        );
     }
 
     @Test

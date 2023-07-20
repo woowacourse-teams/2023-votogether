@@ -24,4 +24,7 @@ public class PostOptions {
         return postOptions.contains(postOption);
     }
 
+    public void update(final List<PostOption> postOptions) {
+        this.postOptions = postOptions;
+    }
 }

@@ -24,4 +24,23 @@ class PostOptionsTest {
         // then
         assertThat(postOptions.getPostOptions()).hasSize(2);
     }
+
+    @Test
+    @DisplayName("PostOptions를 업데이트한다")
+    void update() {
+        // given
+        final PostOptions postOptions = new PostOptions();
+        final PostOption postOption1 = PostOption.builder().build();
+        final PostOption postOption2 = PostOption.builder().build();
+        postOptions.addAllPostOptions(List.of(postOption1, postOption2));
+
+        final PostOption postOption3 = PostOption.builder().build();
+
+        // when
+        postOptions.update(List.of(postOption3));
+
+        // then
+        assertThat(postOptions.getPostOptions()).hasSize(1);
+    }
+    
 }

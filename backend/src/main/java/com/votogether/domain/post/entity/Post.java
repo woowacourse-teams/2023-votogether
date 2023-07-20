@@ -27,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Entity
 public class Post extends BaseEntity {
 
+    private static final int FIRST_OPTION_SEQUENCE = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -89,6 +91,50 @@ public class Post extends BaseEntity {
                 .toList();
     }
 
+    public void update(
+            final List<Category> categories,
+            final String title,
+            final String content,
+            final List<String> postOptionContents,
+            final LocalDateTime deadline,
+            final List<MultipartFile> images
+    ) {
+        validateDeadLine();
+        this.postBody = createPostBody(title, content);
+        this.postCategories = createPostCategories(categories);
+        this.deadline = deadline;
+
+        final List<PostOption> postOptions = toPostOptions(postOptionContents, images);
+
+        this.postOptions.update(postOptions);
+    }
+
+    private PostBody createPostBody(final String title, final String content) {
+        return PostBody.builder()
+                .title(title)
+                .content(content)
+                .build();
+    }
+
+    private PostCategories createPostCategories(final List<Category> categories) {
+        final PostCategories postCategories = new PostCategories();
+        postCategories.mapPostAndCategories(this, categories);
+        return postCategories;
+    }
+
+    private List<PostOption> toPostOptions(final List<String> postOptionContents, final List<MultipartFile> images) {
+        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
+                .mapToObj(postOptionSequence ->
+                        PostOption.of(
+                                postOptionContents.get(postOptionSequence - 1),
+                                this,
+                                postOptionSequence,
+                                images.get(postOptionSequence - 1)
+                        )
+                )
+                .toList();
+    }
+
     public boolean hasPostOption(final PostOption postOption) {
         return postOptions.contains(postOption);
     }
@@ -112,7 +158,7 @@ public class Post extends BaseEntity {
                 .build();
     }
 
-    private void validateDeadLine() {
+    public void validateDeadLine() {
         if (isClosed()) {
             throw new IllegalStateException("게시글이 이미 마감되었습니다.");
         }

@@ -62,7 +62,7 @@ public class CategoryController {
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories(final Member member) {
-        List<CategoryResponse> categories = categoryService.getAllCategories(member);
+        final List<CategoryResponse> categories = categoryService.getAllCategories(member);
         return ResponseEntity.status(HttpStatus.OK).body(categories);
     }
 

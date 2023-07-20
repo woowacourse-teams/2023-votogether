@@ -82,7 +82,7 @@ public class PostOption extends BaseEntity {
 
     private static String saveImageToPath(final MultipartFile image) {
         final String absolutePath = new File("").getAbsolutePath();
-        final String imageUrl = absolutePath + "/src/main/resources/images/" + image.getOriginalFilename();
+        final String imageUrl = absolutePath + "/images/" + image.getOriginalFilename();
 
         try {
             Files.write(Paths.get(imageUrl), image.getBytes());

@@ -23,8 +23,9 @@ import org.springframework.util.StringUtils;
 @Component
 public class TokenProcessor {
 
-    private static final String TOKEN_DELIMITER = "//.";
+    private static final String TOKEN_DELIMITER = "\\.";
     private static final String BEARER_TOKEN_PREFIX = "Bearer ";
+    private static final String BLANK = " ";
 
     private final Key key;
     private final int tokenExpirationTime;
@@ -53,7 +54,7 @@ public class TokenProcessor {
 
     public String resolveToken(final String token) {
         if (StringUtils.hasText(token) && token.startsWith(BEARER_TOKEN_PREFIX)) {
-            return token.split(" ")[1];
+            return token.split(BLANK)[1];
         }
         throw new IllegalArgumentException("올바르지 않은 토큰입니다.");
     }

@@ -2,27 +2,41 @@ package com.votogether.domain.post.service;
 
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
+import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.vote.dto.VoteStatus;
+import com.votogether.domain.vote.repository.VoteRepository;
+import com.votogether.exception.BadRequestException;
+import com.votogether.exception.NotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostOptionRepository postOptionRepository;
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
+    private final VoteRepository voteRepository;
 
+    @Transactional
     public Long save(
             final PostCreateRequest postCreateRequest,
             final Member member,
@@ -60,6 +74,48 @@ public class PostService {
                 .title(postCreateRequest.title())
                 .content(postCreateRequest.content())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public VoteOptionStatisticsResponse getVoteOptionStatistics(final Long postId, final Long optionId) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+        final PostOption postOption = postOptionRepository.findById(optionId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_OPTION_NOT_FOUND));
+
+        if (!postOption.isBelongsTo(post)) {
+            throw new BadRequestException(PostExceptionType.UNRELATED_POST_OPTION);
+        }
+
+        final List<VoteStatus> voteStatuses =
+                voteRepository.findVoteCountByPostOptionIdGroupByAgeRangeAndGender(postOption.getId());
+        return VoteOptionStatisticsResponse.from(groupVoteStatus(voteStatuses));
+    }
+
+    private Map<String, Map<Gender, Long>> groupVoteStatus(final List<VoteStatus> voteStatuses) {
+        return voteStatuses.stream()
+                .collect(Collectors.groupingBy(
+                        status -> groupAgeRange(status.ageRange()),
+                        HashMap::new,
+                        Collectors.groupingBy(
+                                VoteStatus::gender,
+                                HashMap::new,
+                                Collectors.summingLong(VoteStatus::count)
+                        )
+                ));
+    }
+
+    private String groupAgeRange(final String ageRange) {
+        final List<String> teens = List.of("10~14", "15~19");
+        final List<String> over60 = List.of("60~69", "70~79", "80~89", "90~");
+
+        if (teens.contains(ageRange)) {
+            return "10~19";
+        }
+        if (over60.contains(ageRange)) {
+            return "60~";
+        }
+        return ageRange;
     }
 
 }

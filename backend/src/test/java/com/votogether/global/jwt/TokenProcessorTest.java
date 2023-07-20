@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.votogether.domain.RepositoryTest;
+import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;

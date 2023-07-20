@@ -50,7 +50,7 @@ export const Wrapper = styled.div`
 
   font-size: 1.2rem;
 
-  :nth-child(2) {
+  & > :nth-child(2) {
     margin-left: 10px;
   }
 
@@ -58,8 +58,6 @@ export const Wrapper = styled.div`
     font-size: 1.4rem;
   }
 `;
-
-export const Time = styled.span``;
 
 export const Content = styled.p<{ $isPreview: boolean }>`
   display: -webkit-box;

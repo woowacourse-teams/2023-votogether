@@ -1,4 +1,4 @@
-package com.votogether.domain;
+package com.votogether;
 
 import com.votogether.config.JpaConfig;
 import java.lang.annotation.ElementType;
@@ -9,10 +9,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(JpaConfig.class)
 @Target(value = ElementType.TYPE)
 @Retention(value = RetentionPolicy.RUNTIME)
+@Import(JpaConfig.class)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@DataJpaTest
 public @interface RepositoryTest {
 }

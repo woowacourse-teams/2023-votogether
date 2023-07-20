@@ -1,6 +1,13 @@
 import { PostInfo } from '@type/post';
 
-import { getFetch, patchFetch, postFetch, multiPutFetch, multiPostFetch } from '@utils/fetch';
+import {
+  getFetch,
+  patchFetch,
+  postFetch,
+  multiPutFetch,
+  multiPostFetch,
+  deleteFetch,
+} from '@utils/fetch';
 
 export const votePost = async (postId: number, optionId: number) => {
   return await postFetch(`/posts/${postId}/options/${optionId}`, '');
@@ -27,4 +34,12 @@ export const createPost = async (newPost: FormData) => {
 
 export const editPost = async (postId: number, updatedPost: FormData) => {
   return await multiPutFetch(`/posts/${postId}`, updatedPost);
+};
+
+export const removePost = async (postId: number) => {
+  return await deleteFetch(`/posts/${postId}`);
+};
+
+export const setEarlyClosePost = async (postId: number) => {
+  return await patchFetch(`/posts/${postId}/close`);
 };

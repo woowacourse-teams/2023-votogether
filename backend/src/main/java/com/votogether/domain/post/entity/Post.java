@@ -83,16 +83,7 @@ public class Post extends BaseEntity {
             final List<String> postOptionContents,
             final List<MultipartFile> images
     ) {
-        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
-                .mapToObj(postOptionSequence ->
-                        PostOption.of(
-                                postOptionContents.get(postOptionSequence - 1),
-                                this,
-                                postOptionSequence,
-                                images.get(postOptionSequence - 1)
-                        )
-                )
-                .toList();
+        return toPostOptions(postOptionContents, images);
     }
 
     public boolean hasPostOption(final PostOption postOption) {
@@ -137,6 +128,19 @@ public class Post extends BaseEntity {
         if (!hasPostOption(postOption)) {
             throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
         }
+    }
+
+    private List<PostOption> toPostOptions(final List<String> postOptionContents, final List<MultipartFile> images) {
+        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
+                .mapToObj(postOptionSequence ->
+                        PostOption.of(
+                                postOptionContents.get(postOptionSequence - 1),
+                                this,
+                                postOptionSequence,
+                                images.get(postOptionSequence - 1)
+                        )
+                )
+                .toList();
     }
 
 }

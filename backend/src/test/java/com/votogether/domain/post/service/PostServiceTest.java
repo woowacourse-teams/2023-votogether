@@ -207,4 +207,30 @@ class PostServiceTest {
         }
     }
 
+    @Test
+    @DisplayName("해당 게시글을 조기 마감 합니다")
+    void postClosedEarlyById() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30);
+        LocalDateTime oldDeadline = LocalDateTime.of(2100, 7, 12, 0, 0);
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post findedPost = postRepository.findById(post.getId()).get();
+
+        // when
+        postService.postClosedEarlyById(post.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(findedPost.getId()).isEqualTo(post.getId()),
+                () -> assertThat(findedPost.getDeadline()).isBefore(oldDeadline)
+        );
+    }
+
 }

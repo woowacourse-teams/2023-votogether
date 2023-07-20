@@ -20,17 +20,17 @@ class PostTest {
     @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     void mapCategories() {
         // given
-        final Post post = Post.builder().build();
-        final Category category1 = Category.builder().build();
-        final Category category2 = Category.builder().build();
+        Post post = Post.builder().build();
+        Category category1 = Category.builder().build();
+        Category category2 = Category.builder().build();
 
-        final List<Category> categories = List.of(category1, category2);
+        List<Category> categories = List.of(category1, category2);
 
         // when
         post.mapCategories(categories);
 
         // then
-        final PostCategories actualPostCategories = post.getPostCategories();
+        PostCategories actualPostCategories = post.getPostCategories();
         assertThat(actualPostCategories.getPostCategories()).hasSize(2);
     }
 
@@ -90,6 +90,23 @@ class PostTest {
                 () -> assertThat(result1).isTrue(),
                 () -> assertThat(result2).isFalse()
         );
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감 합니다.")
+    void closedEarly() {
+        // given
+        LocalDateTime deadline = LocalDateTime.of(2100, 1, 1, 0, 0);
+        Post post = Post.builder()
+                .deadline(deadline)
+                .build();
+
+
+        // when
+        post.closedEarly();
+
+        // then
+        assertThat(post.getDeadline()).isBefore(deadline);
     }
 
 }

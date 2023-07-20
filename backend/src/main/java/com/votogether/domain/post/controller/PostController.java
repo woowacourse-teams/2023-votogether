@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,7 +63,7 @@ public class PostController {
     }
 
     @Operation(summary = "게시글 투표 선택지 통계 조회", description = "게시글 특정 투표 선택지에 대한 통계를 조회한다.")
-    @ApiResponses({
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 투표 선택지 통계 조회 성공"),
             @ApiResponse(responseCode = "400", description = "게시글 투표 옵션이 게시글에 속하지 않아 조회 실패"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글이거나 게시글 투표 옵션")
@@ -74,6 +75,18 @@ public class PostController {
     ) {
         final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "게시글 조기 마감", description = "게시글을 조기 마감한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시물이 조기 마감 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다."),
+            @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
+    })
+    @PatchMapping("/{id}/close")
+    public ResponseEntity<Void> postClosedEarly(@PathVariable final Long id) {
+        postService.postClosedEarlyById(id);
+        return ResponseEntity.ok().build();
     }
 
 }

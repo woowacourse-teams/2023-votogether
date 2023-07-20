@@ -118,4 +118,11 @@ public class PostService {
         return ageRange;
     }
 
+    @Transactional
+    public void postClosedEarlyById(final Long id) {
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+
+        post.closedEarly();
+    }
 }

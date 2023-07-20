@@ -130,4 +130,7 @@ public class Post extends BaseEntity {
         }
     }
 
+    public void closedEarly() {
+        this.deadline = LocalDateTime.now();
+    }
 }

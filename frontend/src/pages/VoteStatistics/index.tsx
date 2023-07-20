@@ -1,9 +1,9 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useFetch } from '@hooks/useFetch';
 
-import { getVoteDetail } from '@api/sua/post';
-import { getPostStatistics } from '@api/sua/voteResult';
+import { getVoteDetail } from '@api/post';
+import { getPostStatistics } from '@api/voteResult';
 
 import IconButton from '@components/common/IconButton';
 import LoadingSpinner from '@components/common/LoadingSpinner';
@@ -14,8 +14,6 @@ import OptionStatistics from './OptionStatistics';
 import * as S from './style';
 
 export default function VoteStatisticsPage() {
-  // const location = useLocation();
-  // const postId = location.state.id;
   const postId = 1;
 
   const navigate = useNavigate();

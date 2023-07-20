@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { mockNotVotedPost, mockVotedPost } from './mockData';
+import { MOCK_NOT_VOTE_POST, MOCK_VOTE_POST } from './mockData';
 
 import Post from '.';
 
@@ -13,17 +13,17 @@ export default meta;
 type Story = StoryObj<typeof Post>;
 
 export const PreviewNotVotedPost: Story = {
-  render: () => <Post postInfo={mockNotVotedPost} isPreview={true} />,
+  render: () => <Post postInfo={MOCK_NOT_VOTE_POST} isPreview={true} />,
 };
 
 export const PreviewVotedPost: Story = {
-  render: () => <Post postInfo={mockVotedPost} isPreview={true} />,
+  render: () => <Post postInfo={MOCK_VOTE_POST} isPreview={true} />,
 };
 
 export const NotVotedPost: Story = {
-  render: () => <Post postInfo={mockNotVotedPost} isPreview={false} />,
+  render: () => <Post postInfo={MOCK_NOT_VOTE_POST} isPreview={false} />,
 };
 
 export const VotedPost: Story = {
-  render: () => <Post postInfo={mockVotedPost} isPreview={false} />,
+  render: () => <Post postInfo={MOCK_VOTE_POST} isPreview={false} />,
 };

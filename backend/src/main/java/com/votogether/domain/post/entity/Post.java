@@ -112,7 +112,7 @@ public class Post extends BaseEntity {
                 .build();
     }
 
-    private void validateDeadLine() {
+    public void validateDeadLine() {
         if (isClosed()) {
             throw new IllegalStateException("게시글이 이미 마감되었습니다.");
         }
@@ -130,4 +130,9 @@ public class Post extends BaseEntity {
         }
     }
 
+    public void validateUnfinished() {
+        if (!isClosed()) {
+            throw new IllegalArgumentException("마감 안된 게시글은 삭제할 수 없습니다.");
+        }
+    }
 }

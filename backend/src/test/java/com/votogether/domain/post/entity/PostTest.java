@@ -1,6 +1,8 @@
 package com.votogether.domain.post.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.category.entity.Category;
@@ -68,7 +70,7 @@ class PostTest {
     }
 
     @Test
-    @DisplayName("게시글의 마감 여부를 확인한다.")
+    @DisplayName("게시글이 마감 되었는지 확인한다.")
     void isClosed() {
         // given
         Post post1 = Post.builder()
@@ -89,6 +91,27 @@ class PostTest {
         assertAll(
                 () -> assertThat(result1).isTrue(),
                 () -> assertThat(result2).isFalse()
+        );
+    }
+
+    @Test
+    @DisplayName("게시글의 마감이 안된 상태인지 확인한다.")
+    void isUnfinished() {
+        // given
+        Post post1 = Post.builder()
+                .deadline(
+                        LocalDateTime.of(2022, 1, 1, 0, 0))
+                .build();
+
+        Post post2 = Post.builder()
+                .deadline(
+                        LocalDateTime.of(3222, 1, 1, 0, 0))
+                .build();
+
+        // when
+        assertAll(
+                () -> assertThatNoException().isThrownBy(post1::validateUnfinished),
+                () -> assertThatIllegalArgumentException().isThrownBy(post2::validateUnfinished)
         );
     }
 

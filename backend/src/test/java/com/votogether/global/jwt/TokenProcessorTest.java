@@ -4,40 +4,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 
+@Import(TokenProcessor.class)
 @RepositoryTest
 class TokenProcessorTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    MemberRepository memberRepository;
 
-    private TokenProcessor tokenProcessor;
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        objectMapper = new ObjectMapper();
-        String secretKey = "abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd";
-        int expirationTime = 100000;
-        tokenProcessor = new TokenProcessor(
-                secretKey,
-                expirationTime,
-                objectMapper
-        );
-    }
+    @Autowired
+    TokenProcessor tokenProcessor;
 
     @Test
     @DisplayName("토큰을 생성한다.")

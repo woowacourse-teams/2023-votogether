@@ -14,10 +14,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest",
-    "prepare": "cd .. && husky install frontend/.husky"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix"
+    "prepare": "cd .. && husky install frontend/.husky && git update-index --chmod=+x && cd frontend"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.19",
@@ -77,5 +74,11 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

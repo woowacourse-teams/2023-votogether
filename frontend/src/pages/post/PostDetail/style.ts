@@ -11,6 +11,10 @@ export const Container = styled.div`
 `;
 
 export const HeaderContainer = styled.div`
+  position: fixed;
+  width: 100%;
+  top: 0;
+
   @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
   }

@@ -3,6 +3,8 @@ package com.votogether.domain.category.contorller;
 import com.votogether.domain.category.dto.response.CategoryResponse;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.service.CategoryService;
+import com.votogether.domain.member.service.MemberService;
+import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +28,12 @@ class CategoryControllerTest {
 
     @MockBean
     CategoryService categoryService;
+
+    @MockBean
+    TokenProcessor tokenProcessor;
+
+    @MockBean
+    MemberService memberService;
 
     @BeforeEach
     void setUp() {

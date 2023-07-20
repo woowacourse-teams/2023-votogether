@@ -8,7 +8,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 @Configuration
 public class SwaggerBeanConfig {
-    
+
     public SwaggerBeanConfig(final MappingJackson2HttpMessageConverter converter) {
         final List<MediaType> supportedMediaTypes = new ArrayList<>(converter.getSupportedMediaTypes());
         supportedMediaTypes.add(new MediaType("application", "octet-stream"));

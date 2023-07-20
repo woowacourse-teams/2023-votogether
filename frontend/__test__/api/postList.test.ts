@@ -20,4 +20,15 @@ describe('전체 게시글 목록을 패치하는 로직이 의도한대로 작�
 
     expect(data.pageNumber).toEqual(3);
   });
+
+  test('카테고리별 게시글 페이지의 정보를 불러온다.', async () => {
+    const data = await getPostList({
+      postStatus: 'closed',
+      postSorting: 'popular',
+      pageNumber: 3,
+      categoryId: 1,
+    });
+
+    expect(data.postList).toEqual(MOCK_POST_LIST[3]);
+  });
 });

@@ -2,7 +2,7 @@ import { rest } from 'msw';
 
 import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
-export const postListHandlers = [
+export const mockPostList = [
   rest.get('/posts', (req, res, ctx) => {
     const pages = Number(req.url.searchParams.get('pages'));
 

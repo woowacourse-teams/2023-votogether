@@ -14,9 +14,20 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 );
 
 describe('usePostList 훅이 의도한대로 작동하는 지 확인한다.', () => {
-  test('게시글 목록을 불러온다.', async () => {
+  test('전체 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
       () => usePostList({ postSorting: 'popular', postStatus: 'all' }),
+      {
+        wrapper,
+      }
+    );
+
+    await waitFor(() => expect(result.current.data?.pages[0].postList).toEqual(MOCK_POST_LIST[0]));
+  });
+
+  test('카테고리별 게시글 목록을 불러온다.', async () => {
+    const { result } = renderHook(
+      () => usePostList({ postSorting: 'popular', postStatus: 'all', categoryId: 1 }),
       {
         wrapper,
       }

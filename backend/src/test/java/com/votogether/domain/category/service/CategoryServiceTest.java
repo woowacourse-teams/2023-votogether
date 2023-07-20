@@ -39,7 +39,6 @@ class CategoryServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
-
     @Nested
     @DisplayName("조회 하기")
     class Getting {
@@ -108,6 +107,7 @@ class CategoryServiceTest {
                     () -> assertThat(categories.get(1).isFavorite()).isFalse()
             );
         }
+
     }
 
     @Test

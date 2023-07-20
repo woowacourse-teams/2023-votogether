@@ -39,7 +39,8 @@ class AuthControllerTest {
     void loginByKakao() {
         // given
         String accessToken = "abcdefg";
-        LoginResponse response = new LoginResponse(accessToken);
+        String nickname = "jeomxon";
+        LoginResponse response = new LoginResponse(accessToken, nickname);
 
         given(authService.register(any())).willReturn(response);
 

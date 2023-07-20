@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import PostDetail from '@pages/post/PostDetail';
+import PostDetailPage from '@pages/post/PostDetail';
 import PostList from '@pages/post/PostList';
 import WritePost from '@pages/post/WritePost';
 
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'posts/:postId',
-        element: <PostDetail />,
+        element: <PostDetailPage />,
       },
     ],
   },

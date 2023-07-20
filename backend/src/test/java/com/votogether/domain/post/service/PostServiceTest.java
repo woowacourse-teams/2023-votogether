@@ -37,30 +37,30 @@ import org.springframework.mock.web.MockMultipartFile;
 class PostServiceTest {
 
     @Autowired
-    private PostService postService;
+    PostService postService;
 
     @Autowired
-    private MemberRepository memberRepository;
+    MemberRepository memberRepository;
 
     @Autowired
-    private PostRepository postRepository;
+    PostRepository postRepository;
 
     @Autowired
-    private PostOptionRepository postOptionRepository;
+    PostOptionRepository postOptionRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    CategoryRepository categoryRepository;
 
     @Autowired
-    private VoteRepository voteRepository;
+    VoteRepository voteRepository;
 
     @Test
     @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
-        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP);
-        Category category2 = categoryRepository.save(CategoryFixtures.FOOD);
-        Member member = memberRepository.save(MemberFixtures.MALE_20);
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
         MockMultipartFile file1 = new MockMultipartFile(
                 "image1",
@@ -98,21 +98,41 @@ class PostServiceTest {
         @DisplayName("게시글이 존재하지 않으면 예외를 던진다.")
         void throwExceptionNonExistPost() {
             // given, when, then
-            assertThatThrownBy(() -> postService.getVoteStatistics(-1L))
+            assertThatThrownBy(() -> postService.getVoteStatistics(-1L, MemberFixtures.MALE_20.get()))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("게시글 작성자가 아니라면 예외를 던진다.")
+        void throwExceptionNotWriter() {
+            // given
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member reader = memberRepository.save(MemberFixtures.FEMALE_20.get());
+            Post post = postRepository.save(
+                    Post.builder()
+                            .member(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                            .build()
+            );
+
+            // when, then
+            assertThatThrownBy(() -> postService.getVoteStatistics(post.getId(), reader))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("해당 게시글 작성자가 아닙니다.");
         }
 
         @Test
         @DisplayName("전체 투표 통계를 조회한다.")
         void getVoteStatistics() {
             // given
-            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10);
-            Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10);
-            Member male60 = memberRepository.save(MemberFixtures.MALE_60);
-            Member female70 = memberRepository.save(MemberFixtures.FEMALE_70);
-            Member female80 = memberRepository.save(MemberFixtures.FEMALE_80);
-            Member writer = memberRepository.save(MemberFixtures.MALE_20);
+            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
+            Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
+            Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
             Post post = postRepository.save(
                     Post.builder()
@@ -143,7 +163,7 @@ class PostServiceTest {
             voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
 
             // when
-            VoteOptionStatisticsResponse response = postService.getVoteStatistics(post.getId());
+            VoteOptionStatisticsResponse response = postService.getVoteStatistics(post.getId(), writer);
 
             // then
             assertAll(
@@ -168,7 +188,7 @@ class PostServiceTest {
         @DisplayName("게시글이 존재하지 않으면 예외를 던진다.")
         void throwExceptionNonExistPost() {
             // given, when, then
-            assertThatThrownBy(() -> postService.getVoteOptionStatistics(-1L, 1L))
+            assertThatThrownBy(() -> postService.getVoteOptionStatistics(-1L, 1L, MemberFixtures.MALE_20.get()))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 게시글이 존재하지 않습니다.");
         }
@@ -177,7 +197,7 @@ class PostServiceTest {
         @DisplayName("게시글 투표 옵션이 존재하지 않으면 예외를 던진다.")
         void throwExceptionNonExistOption() {
             // given
-            Member writer = memberRepository.save(MemberFixtures.MALE_20);
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
             Post post = postRepository.save(
                     Post.builder()
@@ -188,7 +208,7 @@ class PostServiceTest {
             );
 
             // when, then
-            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), -1L))
+            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), -1L, writer))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 게시글 투표 옵션이 존재하지 않습니다.");
         }
@@ -197,7 +217,7 @@ class PostServiceTest {
         @DisplayName("게시글 투표 옵션이 게시글에 속하지 않으면 예외를 던진다.")
         void throwExceptionNotBelongToPost() {
             // given
-            Member writer = memberRepository.save(MemberFixtures.MALE_20);
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
             Post post1 = postRepository.save(
                     Post.builder()
@@ -222,21 +242,48 @@ class PostServiceTest {
             );
 
             // when, then
-            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post1.getId(), postOption.getId()))
+            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post1.getId(), postOption.getId(), writer))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("게시글 투표 옵션이 게시글과 연관되어 있지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("게시글 작성자가 아니라면 예외를 던진다.")
+        void throwExceptionNotWriter() {
+            // given
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member reader = memberRepository.save(MemberFixtures.FEMALE_20.get());
+            Post post = postRepository.save(
+                    Post.builder()
+                            .member(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(post)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+
+            // when, then
+            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), postOption.getId(), reader))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("해당 게시글 작성자가 아닙니다.");
         }
 
         @Test
         @DisplayName("게시글 투표 옵션에 대한 투표 통계를 조회한다.")
         void getVoteOptionStatistics() {
             // given
-            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10);
-            Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10);
-            Member male60 = memberRepository.save(MemberFixtures.MALE_60);
-            Member female70 = memberRepository.save(MemberFixtures.FEMALE_70);
-            Member female80 = memberRepository.save(MemberFixtures.FEMALE_80);
-            Member writer = memberRepository.save(MemberFixtures.MALE_20);
+            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
+            Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
+            Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
             Post post = postRepository.save(
                     Post.builder()
@@ -261,7 +308,7 @@ class PostServiceTest {
 
             // when
             VoteOptionStatisticsResponse response =
-                    postService.getVoteOptionStatistics(post.getId(), postOption.getId());
+                    postService.getVoteOptionStatistics(post.getId(), postOption.getId(), writer);
 
             // then
             assertAll(

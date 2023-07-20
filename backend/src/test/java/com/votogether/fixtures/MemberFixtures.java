@@ -4,226 +4,54 @@ import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 
-public class MemberFixtures {
+public enum MemberFixtures {
 
-    public static final Member MALE_UNDER_10 = Member.builder()
-            .nickname("user1")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("1~9")
-            .socialType(SocialType.KAKAO)
-            .socialId("user1@gmail.com")
-            .point(0)
-            .build();
+    MALE_UNDER_10("user1", Gender.MALE, "1~9", "user1"),
+    FEMALE_UNDER_10("user2", Gender.FEMALE, "1~9", "user2"),
+    MALE_EARLY_10("user3", Gender.MALE, "10~14", "user3"),
+    FEMALE_EARLY_10("user4", Gender.FEMALE, "10~14", "user4"),
+    MALE_LATE_10("user5", Gender.MALE, "15~19", "user5"),
+    FEMALE_LATE_10("user6", Gender.FEMALE, "15~19", "user6"),
+    MALE_20("user7", Gender.MALE, "20~29", "user7"),
+    FEMALE_20("user8", Gender.FEMALE, "20~29", "user8"),
+    MALE_30("user9", Gender.MALE, "30~39", "user9"),
+    FEMALE_30("user10", Gender.FEMALE, "30~39", "user10"),
+    MALE_40("user11", Gender.MALE, "40~49", "user11"),
+    FEMALE_40("user12", Gender.FEMALE, "40~49", "user12"),
+    MALE_50("user13", Gender.MALE, "50~59", "user13"),
+    FEMALE_50("user14", Gender.FEMALE, "50~59", "user14"),
+    MALE_60("user15", Gender.MALE, "60~69", "user15"),
+    FEMALE_60("user16", Gender.FEMALE, "60~69", "user16"),
+    MALE_70("user17", Gender.MALE, "70~79", "user17"),
+    FEMALE_70("user18", Gender.FEMALE, "70~79", "user18"),
+    MALE_80("user19", Gender.MALE, "80~89", "user19"),
+    FEMALE_80("user20", Gender.FEMALE, "80~89", "user20"),
+    MALE_OVER_90("user21", Gender.MALE, "90~", "user21"),
+    FEMALE_OVER_90("user22", Gender.FEMALE, "90~", "user22"),
+    ;
 
-    public static final Member FEMALE_UNDER_10 = Member.builder()
-            .nickname("user2")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("1~9")
-            .socialType(SocialType.KAKAO)
-            .socialId("user2@gmail.com")
-            .point(0)
-            .build();
+    private final String nickname;
+    private final Gender gender;
+    private final String ageRange;
+    private final String socialId;
 
-    public static final Member MALE_EARLY_10 = Member.builder()
-            .nickname("user3")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("10~14")
-            .socialType(SocialType.KAKAO)
-            .socialId("user3@gmail.com")
-            .point(0)
-            .build();
+    MemberFixtures(final String nickname, final Gender gender, final String ageRange, final String socialId) {
+        this.nickname = nickname;
+        this.gender = gender;
+        this.ageRange = ageRange;
+        this.socialId = socialId;
+    }
 
-    public static final Member FEMALE_EARLY_10 = Member.builder()
-            .nickname("user4")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("10~14")
-            .socialType(SocialType.KAKAO)
-            .socialId("user4@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_LATE_10 = Member.builder()
-            .nickname("user5")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("15~19")
-            .socialType(SocialType.KAKAO)
-            .socialId("user5@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_LATE_10 = Member.builder()
-            .nickname("user6")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("15~19")
-            .socialType(SocialType.KAKAO)
-            .socialId("user6@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_20 = Member.builder()
-            .nickname("user7")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("20~29")
-            .socialType(SocialType.KAKAO)
-            .socialId("user7@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_20 = Member.builder()
-            .nickname("user8")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("20~29")
-            .socialType(SocialType.KAKAO)
-            .socialId("user8@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_30 = Member.builder()
-            .nickname("user9")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("30~39")
-            .socialType(SocialType.KAKAO)
-            .socialId("user9@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_30 = Member.builder()
-            .nickname("user10")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("30~39")
-            .socialType(SocialType.KAKAO)
-            .socialId("user10@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_40 = Member.builder()
-            .nickname("user11")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("40~49")
-            .socialType(SocialType.KAKAO)
-            .socialId("user11@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_40 = Member.builder()
-            .nickname("user12")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("40~49")
-            .socialType(SocialType.KAKAO)
-            .socialId("user12@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_50 = Member.builder()
-            .nickname("user13")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("50~59")
-            .socialType(SocialType.KAKAO)
-            .socialId("user13@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_50 = Member.builder()
-            .nickname("user14")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("50~59")
-            .socialType(SocialType.KAKAO)
-            .socialId("user14@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_60 = Member.builder()
-            .nickname("user15")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("60~69")
-            .socialType(SocialType.KAKAO)
-            .socialId("user15@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_60 = Member.builder()
-            .nickname("user16")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("60~69")
-            .socialType(SocialType.KAKAO)
-            .socialId("user16@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_70 = Member.builder()
-            .nickname("user17")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("70~79")
-            .socialType(SocialType.KAKAO)
-            .socialId("user17@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_70 = Member.builder()
-            .nickname("user18")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("70~79")
-            .socialType(SocialType.KAKAO)
-            .socialId("user18@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_80 = Member.builder()
-            .nickname("user19")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("80~89")
-            .socialType(SocialType.KAKAO)
-            .socialId("user19@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_80 = Member.builder()
-            .nickname("user20")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("80~89")
-            .socialType(SocialType.KAKAO)
-            .socialId("user20@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member MALE_OVER_90 = Member.builder()
-            .nickname("user21")
-            .gender(Gender.MALE)
-            .birthday("1225")
-            .ageRange("90~")
-            .socialType(SocialType.KAKAO)
-            .socialId("user21@gmail.com")
-            .point(0)
-            .build();
-
-    public static final Member FEMALE_OVER_90 = Member.builder()
-            .nickname("user22")
-            .gender(Gender.FEMALE)
-            .birthday("1225")
-            .ageRange("90~")
-            .socialType(SocialType.KAKAO)
-            .socialId("user22@gmail.com")
-            .point(0)
-            .build();
+    public Member get() {
+        return Member.builder()
+                .nickname(nickname)
+                .gender(gender)
+                .birthday("1225")
+                .ageRange(ageRange)
+                .socialType(SocialType.KAKAO)
+                .socialId(socialId)
+                .point(0)
+                .build();
+    }
 
 }

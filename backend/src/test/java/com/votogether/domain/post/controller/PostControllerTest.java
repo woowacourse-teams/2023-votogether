@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
@@ -103,7 +104,7 @@ class PostControllerTest {
                         new VoteCountForAgeGroupResponse("60대 이상", 4, 2, 2)
                 )
         );
-        given(postService.getVoteStatistics(anyLong())).willReturn(response);
+        given(postService.getVoteStatistics(anyLong(), any(Member.class))).willReturn(response);
 
         // when
         VoteOptionStatisticsResponse result = RestAssuredMockMvc.given().log().all()
@@ -135,7 +136,7 @@ class PostControllerTest {
                         new VoteCountForAgeGroupResponse("60대 이상", 4, 2, 2)
                 )
         );
-        given(postService.getVoteOptionStatistics(anyLong(), anyLong())).willReturn(response);
+        given(postService.getVoteOptionStatistics(anyLong(), anyLong(), any(Member.class))).willReturn(response);
 
         // when
         VoteOptionStatisticsResponse result = RestAssuredMockMvc.given().log().all()

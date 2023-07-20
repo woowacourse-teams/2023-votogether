@@ -12,6 +12,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.fixtures.MemberFixtures;
 import java.util.List;
 import java.util.Optional;
@@ -39,11 +40,7 @@ class CategoryServiceTest {
     @DisplayName("모든 카테고리를 가져온다.")
     void getAllCategories() {
         // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
-
-        categoryRepository.save(category);
+        categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
         // when
         List<CategoryResponse> categories = categoryService.getAllCategories();
@@ -60,18 +57,11 @@ class CategoryServiceTest {
     @DisplayName("선호하는 카테고리를 선호 카테고리 목록에 추가한다.")
     void addFavoriteCategory() {
         // given
-        Member member = memberRepository.save(MemberFixtures.MALE_20);
-
-        Category category = Category.builder()
-                .name("개발")
-                .build();
-
-        categoryRepository.save(category);
-
-        Long categoryId = category.getId();
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+        Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
         // when
-        categoryService.addFavoriteCategory(member, categoryId);
+        categoryService.addFavoriteCategory(member, category.getId());
 
         // then
         MemberCategory memberCategory = memberCategoryRepository.findByMemberAndCategory(member, category).get();
@@ -90,25 +80,17 @@ class CategoryServiceTest {
         @DisplayName("선호하는 카테고리를 선호 카테고리 목록에 삭제한다.")
         void removeFavoriteCategory() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20);
-
-            Category category = Category.builder()
-                    .name("개발")
-                    .build();
-
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
             MemberCategory memberCategory = MemberCategory.builder()
                     .member(member)
                     .category(category)
                     .build();
 
-            categoryRepository.save(category);
-
             memberCategoryRepository.save(memberCategory);
 
-            Long categoryId = category.getId();
-
             // when
-            categoryService.removeFavoriteCategory(member, categoryId);
+            categoryService.removeFavoriteCategory(member, category.getId());
 
             // then
             Optional<MemberCategory> foundMemberCategory =
@@ -120,13 +102,8 @@ class CategoryServiceTest {
         @DisplayName("선호하는 카테고리에 없는 카테고리를 삭제하는 경우 예외가 발생한다.")
         void removeFavoriteCategoryException() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20);
-
-            Category category = Category.builder()
-                    .name("개발")
-                    .build();
-
-            categoryRepository.save(category);
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
             // when, then
             assertThatThrownBy(() -> categoryService.removeFavoriteCategory(member, category.getId()))

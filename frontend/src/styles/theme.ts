@@ -9,8 +9,10 @@ const breakpoint = {
   lg: '1440px',
 };
 
+
 export type Breakpoint = typeof breakpoint;
 
 export const theme: DefaultTheme = {
   breakpoint,
+  zIndex,
 };

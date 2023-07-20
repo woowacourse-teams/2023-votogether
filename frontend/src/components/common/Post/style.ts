@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
@@ -76,4 +78,8 @@ export const Content = styled.p<{ $isPreview: boolean }>`
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-body);
   }
+`;
+
+export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
+  pointer-events: ${({ $isPreview }) => !$isPreview && 'none'};
 `;

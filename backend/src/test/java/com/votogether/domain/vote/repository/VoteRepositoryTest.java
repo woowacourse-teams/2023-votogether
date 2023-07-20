@@ -141,6 +141,58 @@ class VoteRepositoryTest {
     }
 
     @Test
+    @DisplayName("게시글의 연령대와 성별로 그룹화된 투표 통계를 조회한다.")
+    void findVoteCountByPostIdGroupByAgeRangeAndGender() {
+        // given
+        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10);
+        Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10);
+        Member male60 = memberRepository.save(MemberFixtures.MALE_60);
+        Member female70 = memberRepository.save(MemberFixtures.FEMALE_70);
+        Member female80 = memberRepository.save(MemberFixtures.FEMALE_80);
+        Member writer = memberRepository.save(MemberFixtures.MALE_20);
+
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOptionA = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+        PostOption postOptionB = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(2)
+                        .content("피자")
+                        .build()
+        );
+
+        voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
+        voteRepository.save(Vote.builder().member(maleLate10).postOption(postOptionB).build());
+        voteRepository.save(Vote.builder().member(male60).postOption(postOptionA).build());
+        voteRepository.save(Vote.builder().member(female70).postOption(postOptionB).build());
+        voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
+
+        // when
+        List<VoteStatus> result = voteRepository.findVoteCountByPostIdGroupByAgeRangeAndGender(post.getId());
+
+        // then
+        assertThat(result).containsExactly(
+                new VoteStatus("10~14", Gender.FEMALE, 1),
+                new VoteStatus("15~19", Gender.MALE, 1),
+                new VoteStatus("60~69", Gender.MALE, 1),
+                new VoteStatus("70~79", Gender.FEMALE, 1),
+                new VoteStatus("80~89", Gender.FEMALE, 1)
+        );
+    }
+
+    @Test
     @DisplayName("게시글 투표 옵션의 연령대와 성별로 그룹화된 투표 통계를 조회한다.")
     void findVoteCountByPostOptionIdGroupByAgeRangeAndGender() {
         // given

@@ -1,8 +1,9 @@
-import { QUERY_KEY } from '@constants/queryKey';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createPost } from '@api/jero/post';
 
+import { QUERY_KEY } from '@constants/queryKey';
+console.log('hi');
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, isError, error } = useMutation((post: FormData) => createPost(post), {

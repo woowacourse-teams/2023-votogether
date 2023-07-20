@@ -53,13 +53,15 @@ export default function Select<T extends string>({
         <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
       </S.SelectedContainer>
       {isOpen && (
-        <S.OptionListContainer>
-          {optionKeyList.map(optionKey => (
-            <S.OptionContainer key={optionKey} onClick={() => handleSelectClick(optionKey)}>
-              {optionList[optionKey]}
-            </S.OptionContainer>
-          ))}
-        </S.OptionListContainer>
+        <S.OptionListParent>
+          <S.OptionListContainer>
+            {optionKeyList.map((optionKey: T) => (
+              <S.OptionContainer key={optionKey} onClick={() => handleSelectClick(optionKey)}>
+                {optionList[optionKey]}
+              </S.OptionContainer>
+            ))}
+          </S.OptionListContainer>
+        </S.OptionListParent>
       )}
     </S.Container>
   );

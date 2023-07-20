@@ -71,4 +71,9 @@ th {
 button{
   background: none;
 }
+
+a{
+  color: inherit;
+  text-decoration: none;
+}
 `;

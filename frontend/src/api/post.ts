@@ -29,11 +29,11 @@ export const getPost = async (postId: number): Promise<PostInfo> => {
 };
 
 export const createPost = async (newPost: FormData) => {
-  return await multiPostFetch('/posts', newPost);
+  return await multiPostFetch('http://3.35.232.54/api/posts', newPost);
 };
 
 export const editPost = async (postId: number, updatedPost: FormData) => {
-  return await multiPutFetch(`/posts/${postId}`, updatedPost);
+  return await multiPutFetch(`http://3.35.232.54/api/posts/${postId}`, updatedPost);
 };
 
 export const removePost = async (postId: number) => {

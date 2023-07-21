@@ -1,15 +1,22 @@
 import React, { Dispatch, SetStateAction, createContext, useState } from 'react';
 
-interface Auth {
+interface LoggedInfo {
+  accessToken: string;
+  nickname: string;
   isLogin: boolean;
-  setIsLogin: Dispatch<SetStateAction<boolean>>;
+}
+
+interface Auth {
+  loggedInfo: LoggedInfo;
+  setLoggedInfo: Dispatch<SetStateAction<LoggedInfo>>;
 }
 
 export const AuthContext = createContext({} as Auth);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const accessToken = localStorage.getItem('accessToken');
-  const [isLogin, setIsLogin] = useState(accessToken ? true : false);
+  const [loggedInfo, setLoggedInfo] = useState({} as LoggedInfo);
 
-  return <AuthContext.Provider value={{ isLogin, setIsLogin }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ loggedInfo, setLoggedInfo }}>{children}</AuthContext.Provider>
+  );
 }

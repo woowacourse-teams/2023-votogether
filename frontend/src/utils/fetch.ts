@@ -1,11 +1,13 @@
+const ACCESS_TOKEN = localStorage.getItem('accessToken');
+
 const headers = {
   'Content-Type': 'application/json;charset=utf-8',
-  Authorization: `Bearer `,
+  Authorization: `Bearer ${ACCESS_TOKEN}`,
 };
 
 const multiHeaders = {
   'Content-Type': 'multipart/form-data',
-  Authorization: `Bearer `,
+  Authorization: `Bearer ${ACCESS_TOKEN}`,
 };
 
 export const getFetch = async <T>(url: string): Promise<T> => {

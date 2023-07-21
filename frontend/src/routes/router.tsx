@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import Login from '@pages/auth/Login';
+import Redirection from '@pages/auth/Redirection';
 import CreatePost from '@pages/post/CreatePost';
 import EditPost from '@pages/post/EditPost';
 import PostDetail from '@pages/post/PostDetail';
 import PostList from '@pages/post/PostList';
-import Login from '@pages/user/Login';
-import Redirection from '@pages/user/Redirection';
 
 const router = createBrowserRouter([
   {

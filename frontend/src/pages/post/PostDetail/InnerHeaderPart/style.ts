@@ -8,4 +8,6 @@ export const HeaderWrapper = styled.div`
 export const TagButtonWrapper = styled.div`
   position: absolute;
   top: 55px;
+  margin-right: 10px;
+  right: 10px;
 `;

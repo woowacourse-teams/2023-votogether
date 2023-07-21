@@ -18,7 +18,7 @@ import { PATH } from '@constants/path';
 import * as S from './style';
 
 interface PostListPageProps {
-  userInfo: User;
+  userInfo?: User;
   categoryList: Category[];
   handleFavoriteClick: (categoryId: number) => void;
   handleLogoutClick: () => void;

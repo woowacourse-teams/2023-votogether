@@ -20,7 +20,7 @@ export default function PostDetailPage() {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const userId = 1;
+  const userId = 12121221;
 
   const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
 
@@ -54,7 +54,7 @@ export default function PostDetailPage() {
       navigate(`/posts/write/${postId}`);
     },
     moveVoteStatisticsPage: () => {
-      navigate(`/posts/write/${postId}`);
+      navigate(`/posts/result/${postId}`);
     },
     movePostListPage: () => {
       navigate('/');

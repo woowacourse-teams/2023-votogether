@@ -111,12 +111,14 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
   return (
     <>
-      <NarrowTemplateHeader>
-        <S.HeaderButton onClick={() => navigate('/')}>취소</S.HeaderButton>
-        <S.HeaderButton type="submit" form="form-post">
-          저장
-        </S.HeaderButton>
-      </NarrowTemplateHeader>
+      <S.HeaderWrapper>
+        <NarrowTemplateHeader>
+          <S.HeaderButton onClick={() => navigate('/')}>취소</S.HeaderButton>
+          <S.HeaderButton type="submit" form="form-post">
+            저장
+          </S.HeaderButton>
+        </NarrowTemplateHeader>
+      </S.HeaderWrapper>
       <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <S.RightSide>

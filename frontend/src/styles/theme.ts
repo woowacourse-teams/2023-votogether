@@ -8,8 +8,12 @@ const breakpoint = {
   /** @media (min-width: 1440px) { ... }*/
   lg: '1440px',
 };
+const zIndex = {
+  header: 100,
+  modal: 200,
+};
 
-
+export type ZIndex = typeof zIndex;
 export type Breakpoint = typeof breakpoint;
 
 export const theme: DefaultTheme = {

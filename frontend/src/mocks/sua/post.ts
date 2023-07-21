@@ -67,12 +67,12 @@ export const getPostTest = [
   }),
 
   rest.delete('/posts/:postId', (req, res, ctx) => {
-    return res(ctx.delay(1000), ctx.status(200));
+    return res(ctx.delay(1000), ctx.status(200), ctx.json({ message: 'ok' }));
   }),
 
   rest.patch('/posts/:postId/close', (req, res, ctx) => {
     examplePost.endTime = '2023-07-13 18:40';
 
-    return res(ctx.delay(1000), ctx.status(200));
+    return res(ctx.delay(1000), ctx.status(200), ctx.json({ message: 'ok' }));
   }),
 ];

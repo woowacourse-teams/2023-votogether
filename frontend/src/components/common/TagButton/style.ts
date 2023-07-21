@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { Size } from '../AddButton/type';
+import { Size } from '@type/style';
 
 interface ButtonProps {
   $size: Size;

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Category } from '@type/category';
 import type { User } from '@type/user';
+
+import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
 
 import Skeleton from '../Skeleton';
 
@@ -20,25 +21,6 @@ const MOCK_USER_INFO: User = {
   voteCount: 128,
   userPoint: 200,
 };
-
-const MOCK_FAVORITE_CATEGORIES: Category[] = [
-  { id: 12312, name: '음식', isFavorite: false },
-  { id: 12, name: '연애', isFavorite: true },
-  { id: 13, name: '패션', isFavorite: true },
-  { id: 14, name: '금융', isFavorite: false },
-  { id: 12312, name: '음식', isFavorite: false },
-  { id: 12, name: '연애', isFavorite: true },
-  { id: 13, name: '패션', isFavorite: true },
-  { id: 14, name: '금융', isFavorite: false },
-  { id: 12312, name: '음식', isFavorite: false },
-  { id: 12, name: '연애', isFavorite: true },
-  { id: 13, name: '패션', isFavorite: true },
-  { id: 14, name: '금융', isFavorite: false },
-  { id: 12312, name: '음식', isFavorite: false },
-  { id: 12, name: '연애', isFavorite: true },
-  { id: 13, name: '패션', isFavorite: true },
-  { id: 14, name: '금융', isFavorite: false },
-];
 
 export const VisibleCategory: Story = {
   render: () => (

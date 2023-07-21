@@ -88,12 +88,17 @@ class PostControllerTest {
     @Test
     @DisplayName("게시글을 삭제한다")
     void deleteById() {
-        // given, when, then
-        RestAssuredMockMvc.given().log().all()
-                .when().delete("/posts/{id}", 1)
+        // given
+        final int postId = 1;
+
+        // when
+        final ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .when().delete("/posts/{id}", postId)
                 .then().log().all()
-                .assertThat()
-                .status(HttpStatus.NO_CONTENT);
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test

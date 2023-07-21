@@ -241,7 +241,7 @@ class PostServiceTest {
 
         Long savedPostId = postService.save(createPostRequest, member, List.of(file1, file2));
 
-        final UpdatePostRequest request = new UpdatePostRequest(
+        UpdatePostRequest request = new UpdatePostRequest(
                 List.of(category1.getId(), category2.getId()),
                 "title2",
                 "content2",
@@ -253,10 +253,10 @@ class PostServiceTest {
         postService.update(savedPostId, request, List.of(file1, file2));
 
         // then
-        final Post post = postRepository.findById(savedPostId).get();
-        final PostBody postBody = post.getPostBody();
-        final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
-        final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+        Post post = postRepository.findById(savedPostId).get();
+        PostBody postBody = post.getPostBody();
+        List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
+        List<PostOption> postOptions = post.getPostOptions().getPostOptions();
 
         assertAll(
                 () -> assertThat(postBody.getTitle()).isEqualTo("title2"),

@@ -25,17 +25,17 @@ class PostTest {
     @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     void mapCategories() {
         // given
-        final Post post = Post.builder().build();
-        final Category category1 = Category.builder().build();
-        final Category category2 = Category.builder().build();
+        Post post = Post.builder().build();
+        Category category1 = Category.builder().build();
+        Category category2 = Category.builder().build();
 
-        final List<Category> categories = List.of(category1, category2);
+        List<Category> categories = List.of(category1, category2);
 
         // when
         post.mapCategories(categories);
 
         // then
-        final PostCategories actualPostCategories = post.getPostCategories();
+        PostCategories actualPostCategories = post.getPostCategories();
         assertThat(actualPostCategories.getPostCategories()).hasSize(2);
     }
 
@@ -44,7 +44,7 @@ class PostTest {
     void update() throws IOException {
         // given
         Member writer = MemberFixtures.MALE_20;
-        final Post post = Post.builder()
+        Post post = Post.builder()
                 .member(writer)
                 .postBody(PostBody.builder().title("title").content("content").build())
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
@@ -75,7 +75,7 @@ class PostTest {
         );
 
         // then
-        final PostBody postBody = post.getPostBody();
+        PostBody postBody = post.getPostBody();
         assertAll(
                 () -> assertThat(post.getPostCategories().getPostCategories()).hasSize(1),
                 () -> assertThat(postBody.getTitle()).isEqualTo("title2"),

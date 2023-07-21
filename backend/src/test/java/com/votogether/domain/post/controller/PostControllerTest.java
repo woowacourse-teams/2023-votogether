@@ -98,7 +98,7 @@ class PostControllerTest {
     @DisplayName("게시글을 수정한다")
     void update() throws IOException {
         // given
-        final UpdatePostRequest request = new UpdatePostRequest(
+        UpdatePostRequest request = new UpdatePostRequest(
                 List.of(1L, 2L),
                 "title2",
                 "content2",

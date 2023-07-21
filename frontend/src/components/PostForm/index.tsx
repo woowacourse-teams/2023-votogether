@@ -96,7 +96,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
         // 마감시간 옵션을 선택 안했다면 기존의 마감 시간을 유지한다.
       };
-      formData.append('texts', JSON.stringify(updatedPostTexts));
+      formData.append('request', JSON.stringify(updatedPostTexts));
 
       mutate(formData);
 

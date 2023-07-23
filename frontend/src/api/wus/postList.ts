@@ -13,7 +13,7 @@ interface PostListByOption {
   categoryId?: number;
 }
 
-export const getPostListUrl = ({
+export const makePostListUrl = ({
   categoryId,
   postStatus,
   postSorting,
@@ -22,11 +22,13 @@ export const getPostListUrl = ({
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 
+  const OPTION_URL = `status=${requestedStatus}&sorting=${requestedSorting}&pages=${pageNumber}`;
+
   if (categoryId) {
-    return `/posts?categoryId=${categoryId}&status=${requestedStatus}&sorting=${requestedSorting}&pages=${pageNumber}`;
+    return `/posts?categoryId=${categoryId}&${OPTION_URL}`;
   }
 
-  return `/posts?status=${requestedStatus}&sorting=${requestedSorting}&pages=${pageNumber}`;
+  return `/posts?${OPTION_URL}`;
 };
 
 export const getPostList = async ({
@@ -35,7 +37,7 @@ export const getPostList = async ({
   pageNumber,
   categoryId,
 }: PostListByOption) => {
-  const postListUrl = getPostListUrl({ pageNumber, postSorting, postStatus, categoryId });
+  const postListUrl = makePostListUrl({ pageNumber, postSorting, postStatus, categoryId });
 
   const postList = await getFetch<PostInfo[]>(postListUrl);
 

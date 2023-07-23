@@ -24,4 +24,6 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> findByMemberAndPostOptionIn(final Member member, final List<PostOption> postOptions);
 
+    int countByMember(final Member member);
+
 }

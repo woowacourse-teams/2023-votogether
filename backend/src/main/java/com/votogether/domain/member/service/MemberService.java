@@ -1,7 +1,10 @@
 package com.votogether.domain.member.service;
 
+import com.votogether.domain.member.dto.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.vote.repository.VoteRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
+    private final VoteRepository voteRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -26,6 +31,19 @@ public class MemberService {
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Id를 가진 회원은 존재하지 않습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse findMemberInfo(final Member member) {
+        final int numberOfPosts = postRepository.countByMember(member);
+        final int numberOfVotes = voteRepository.countByMember(member);
+
+        return new MemberInfoResponse(
+                member.getNickname(),
+                member.getPoint(),
+                numberOfPosts,
+                numberOfVotes
+        );
     }
 
 }

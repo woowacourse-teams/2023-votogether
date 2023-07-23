@@ -43,8 +43,6 @@ export const Title = styled.p<{ $isPreview: boolean }>`
   }
 `;
 
-export const Writer = styled.span``;
-
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;

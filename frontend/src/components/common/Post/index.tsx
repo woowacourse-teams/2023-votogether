@@ -4,7 +4,7 @@ import { changeVotedOption, votePost } from '@api/post';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
-
+import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
 import * as S from './style';
@@ -37,12 +37,11 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         <S.Category>{category.map(category => category.name).join(' | ')}</S.Category>
         <S.Title $isPreview={isPreview}>{title}</S.Title>
         <S.Wrapper>
-          <S.Writer>{writer.nickname}</S.Writer>
+          <span>{writer.nickname}</span>
           <S.Wrapper>
-            <S.Time>{startTime}</S.Time>
-            <S.Time>{endTime}</S.Time>
+            <span>{startTime}</span>
+            <span>{endTime}</span>
           </S.Wrapper>
-
         </S.Wrapper>
         <S.Content $isPreview={isPreview}>{content}</S.Content>
       </S.DetailLink>

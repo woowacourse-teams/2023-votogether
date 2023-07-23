@@ -13,10 +13,10 @@ export const SizeS: Story = {
   render: () => <LoadingSpinner size="sm" />,
 };
 
-export const sizeM: Story = {
+export const SizeM: Story = {
   render: () => <LoadingSpinner size="md" />,
 };
 
-export const sizeL: Story = {
+export const SizeL: Story = {
   render: () => <LoadingSpinner size="lg" />,
 };

@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { Size } from '@components/common/AddButton/type';
+import { Size } from '@type/style';
 
 import { theme } from '@styles/theme';
 
@@ -59,5 +59,6 @@ export const OptionLength = styled.div<{ $amount: number; $gender: 'female' | 'm
   width: 100%;
   border-radius: 5px 5px 0 0;
 
-  background-color: ${props => (props.$gender === 'female' ? '#853DE1' : '#5AEAA5')};
+  background-color: ${props =>
+    props.$gender === 'female' ? 'var(--graph-color-purple)' : 'var(--graph-color-green)'};
 `;

@@ -7,6 +7,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
+  ${theme.breakpoint.sm}
   margin-top: 50px;
   margin-bottom: 20px;
 `;
@@ -20,7 +21,7 @@ export const HeaderWrapper = styled.div`
 export const PageHeader = styled.div`
   margin: 15px;
 
-  font-size: 20px;
+  font: var(--text-title);
 `;
 
 export const OptionContainer = styled.div`

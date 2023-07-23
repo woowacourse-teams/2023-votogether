@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { Size } from '@components/common/AddButton/type';
+import { Size } from '@type/style';
 
 import { theme } from '@styles/theme';
 
@@ -30,5 +30,5 @@ export const OptionLength = styled.div<{ $amount: number }>`
   width: 40%;
   border-radius: 5px 5px 0 0;
 
-  background-color: #f27676;
+  background-color: var(--primary-color);
 `;

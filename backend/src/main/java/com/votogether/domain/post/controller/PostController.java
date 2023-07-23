@@ -44,13 +44,17 @@ public class PostController {
     ) {
         // TODO : 일단 돌아가게 하기 위한 member 저장 (실제 어플에선 삭제될 코드)
         final Member member = Member.builder()
+                .socialType(SocialType.KAKAO)
+                .socialId("tjdtls690")
                 .nickname("Abel")
                 .gender(Gender.MALE)
                 .birthday("0718")
                 .ageRange("10~14")
-                .socialType(SocialType.GOOGLE)
+                .socialType(SocialType.KAKAO)
                 .socialId("tjdtls690")
                 .point(100)
+                .ageRange("30~39")
+                .birthday("0101")
                 .build();
 
         final Long postId = postService.save(request, member, images);

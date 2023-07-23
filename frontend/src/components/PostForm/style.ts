@@ -1,5 +1,17 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
+export const HeaderWrapper = styled.div`
+  position: fixed;
+  width: 100%;
+  z-index: ${theme.zIndex.header};
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    display: none;
+  }
+`;
+
 export const HeaderButton = styled.button`
   width: 30px;
 
@@ -44,14 +56,14 @@ export const Wrapper = styled.div`
 export const Title = styled.input`
   color: gray;
 
-  font-size: 2rem;
+  font: var(--text-title);
 `;
 
 export const Content = styled.textarea`
   height: 300px;
   color: gray;
 
-  font-size: 1.4rem;
+  font: var(--text-caption);
   font-family: 'Raleway', sans-serif;
 
   @media (min-width: 576px) {
@@ -95,7 +107,7 @@ export const OptionListWrapper = styled.div`
 `;
 
 export const Deadline = styled.p`
-  font-size: 1.5rem;
+  font: var(--text-body);
   font-weight: bold;
   text-align: center;
 `;
@@ -103,7 +115,7 @@ export const Deadline = styled.p`
 export const Description = styled.div`
   color: gray;
 
-  font-size: 1.2rem;
+  font: var(--text-small);
 `;
 
 export const ButtonWrapper = styled.div`
@@ -125,7 +137,7 @@ export const ModalHeader = styled.div`
   border-bottom: 1px solid #f6f6f6;
   padding: 10px;
 
-  font-size: 1.5rem;
+  font: var(--text-body);
   font-weight: bold;
 `;
 
@@ -135,7 +147,7 @@ export const CloseButton = styled.button`
 
   background: white;
 
-  font-size: 1.6rem;
+  font: var(--text-body);
 
   cursor: pointer;
 `;
@@ -148,7 +160,7 @@ export const ModalBody = styled.div`
 
   padding: 10px 0;
 
-  font-size: 1.4rem;
+  font: var(--text-caption);
 `;
 
 export const ResetButtonWrapper = styled.div`

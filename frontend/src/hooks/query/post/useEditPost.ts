@@ -1,7 +1,8 @@
-import { QUERY_KEY } from '@constants/queryKey';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { editPost } from '@api/jero/post';
+import { editPost } from '@api/post';
+
+import { QUERY_KEY } from '@constants/queryKey';
 
 export const useEditPost = (postId: number) => {
   const queryClient = useQueryClient();

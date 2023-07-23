@@ -32,7 +32,7 @@ export const ContentTextArea = styled.textarea`
   height: 90px;
   padding: 8px;
 
-  font-size: 1.3rem;
+  font: var(--text-small);
   line-height: 2.4rem;
 
   background-color: #e6e6e6;
@@ -42,7 +42,7 @@ export const ContentTextArea = styled.textarea`
   @media (min-width: ${theme.breakpoint.md}) {
     height: 120px;
 
-    font-size: 1.6rem;
+    font: var(--text-body);
   }
 `;
 

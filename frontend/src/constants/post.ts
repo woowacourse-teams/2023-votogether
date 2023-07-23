@@ -14,5 +14,3 @@ export const REQUEST_SORTING_OPTION: Record<PostSorting, string> = {
   latest: 'LATEST',
   popular: 'HOT',
 };
-
-export const CATEGORY_ID = 'categoryId';

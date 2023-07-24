@@ -24,7 +24,7 @@ export const Backdrop = styled.div`
   background: rgba(0, 0, 0, 0.35);
 `;
 
-export const Container = styled.div<{ size: string }>`
+export const Container = styled.div<{ size: Size }>`
   display: grid;
   grid-template-rows: 1fr 6fr;
 

@@ -5,7 +5,7 @@ export const MOCK_NOT_VOTE_POST: PostInfo = {
   title:
     '어느 곳에서 정보를 찾아야 할지도 막막한 사람들을 위한, 심심풀이로 나의 취향과 남의 취향을 비교해보고 싶은 사람들을 위한 프로젝트',
   writer: {
-    id: 121212212,
+    id: 12121221,
     nickname: '우아한 잔치국수',
   },
   content:
@@ -25,7 +25,7 @@ export const MOCK_NOT_VOTE_POST: PostInfo = {
     },
   ],
   startTime: '2023-07-12 12:40',
-  endTime: '2023-07-13 18:40',
+  endTime: '2023-07-20 18:40',
   voteInfo: {
     selectedOptionId: 0,
     allPeopleCount: 100,
@@ -44,7 +44,7 @@ export const MOCK_NOT_VOTE_POST: PostInfo = {
       },
       {
         id: 123152,
-        text: '인스타그램, 블라인드와 같은 SNS의 형식을 차용합니다. 누군가는 글을 쓰고, 누군가는 반응합니다. 다만, 댓글은 없습니다. 투표로 자신의 의견을 표현하고 이를 사람들에게 보여줍니다.',
+        text: '블라인드와 같은 SNS의 형식을 차용합니다. 누군가는 글을 쓰고, 누군가는 반응합니다. 다만, 댓글은 없습니다. 투표로 자신의 의견을 표현하고 이를 사람들에게 보여줍니다.',
         peopleCount: -1,
         percent: -1,
       },
@@ -84,7 +84,7 @@ export const MOCK_VOTE_POST: PostInfo = {
     },
   ],
   startTime: '2023-07-12 12:40',
-  endTime: '2023-07-13 18:40',
+  endTime: '2023-07-21 18:40',
   voteInfo: {
     selectedOptionId: 12312,
     allPeopleCount: 123,

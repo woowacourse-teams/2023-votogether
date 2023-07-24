@@ -13,7 +13,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('usePostList 훅이 의도한대로 작동하는 지 확인한다.', () => {
+describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.', () => {
   test('게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
       () => usePostList({ postSorting: 'popular', postStatus: 'all' }),

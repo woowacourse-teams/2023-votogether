@@ -1,11 +1,19 @@
 package com.votogether.domain.category.contorller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+
 import com.votogether.domain.category.dto.response.CategoryResponse;
-import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.service.CategoryService;
 import com.votogether.domain.member.service.MemberService;
+import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,15 +21,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 
 @WebMvcTest(CategoryController.class)
 class CategoryControllerTest {
@@ -44,10 +43,8 @@ class CategoryControllerTest {
     @DisplayName("전체 카테고리 목록을 조회한다.")
     void getAllCategories() {
         // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
-        given(categoryService.getAllCategories()).willReturn(List.of(new CategoryResponse(category, false)));
+        given(categoryService.getAllCategories())
+                .willReturn(List.of(new CategoryResponse(CategoryFixtures.DEVELOP.get(), false)));
 
         // when
         RestAssuredMockMvc.
@@ -64,17 +61,9 @@ class CategoryControllerTest {
     @DisplayName("회원으로 전체 카테고리 목록을 조회한다.")
     void getAllCategoriesFromMember() {
         // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
-
-        Category category1 = Category.builder()
-                .name("음식")
-                .build();
-
         List<CategoryResponse> categoryResponses = List.of(
-                new CategoryResponse(category, false),
-                new CategoryResponse(category1, true)
+                new CategoryResponse(CategoryFixtures.DEVELOP.get(), false),
+                new CategoryResponse(CategoryFixtures.FOOD.get(), true)
         );
 
         given(categoryService.getAllCategories(any())).willReturn(categoryResponses);

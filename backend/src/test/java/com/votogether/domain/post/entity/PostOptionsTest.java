@@ -12,11 +12,11 @@ class PostOptionsTest {
     @DisplayName("여러 PostOption을 저장한다")
     void addAllPostOptions() {
         // given
-        final PostOptions postOptions = new PostOptions();
-        final PostOption postOption1 = PostOption.builder().build();
-        final PostOption postOption2 = PostOption.builder().build();
+        PostOptions postOptions = new PostOptions();
+        PostOption postOptionA = PostOption.builder().build();
+        PostOption postOptionB = PostOption.builder().build();
 
-        final List<PostOption> postOptionsToSave = List.of(postOption1, postOption2);
+        List<PostOption> postOptionsToSave = List.of(postOptionA, postOptionB);
 
         // when
         postOptions.addAllPostOptions(postOptionsToSave);

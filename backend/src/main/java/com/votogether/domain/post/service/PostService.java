@@ -81,13 +81,17 @@ public class PostService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
-        if (!post.isWriter(member)) {
-            throw new BadRequestException(PostExceptionType.NOT_WRITER);
-        }
+        validateWriter(member, post);
 
         final List<VoteStatus> voteStatuses =
                 voteRepository.findVoteCountByPostIdGroupByAgeRangeAndGender(post.getId());
         return VoteOptionStatisticsResponse.from(groupVoteStatus(voteStatuses));
+    }
+
+    private void validateWriter(final Member member, final Post post) {
+        if (!post.isWriter(member)) {
+            throw new BadRequestException(PostExceptionType.NOT_WRITER);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -104,9 +108,7 @@ public class PostService {
         if (!postOption.isBelongsTo(post)) {
             throw new BadRequestException(PostExceptionType.UNRELATED_POST_OPTION);
         }
-        if (!post.isWriter(member)) {
-            throw new BadRequestException(PostExceptionType.NOT_WRITER);
-        }
+        validateWriter(member, post);
 
         final List<VoteStatus> voteStatuses =
                 voteRepository.findVoteCountByPostOptionIdGroupByAgeRangeAndGender(postOption.getId());

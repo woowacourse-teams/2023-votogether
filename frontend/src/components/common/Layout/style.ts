@@ -51,5 +51,5 @@ export const MainContainer = styled.main<{ $isSidebarVisible: boolean }>`
 
 export const ChildrenWrapper = styled.div<{ $isSidebarVisible: boolean }>`
   width: 100%;
-  max-width: ${({ $isSidebarVisible }) => $isSidebarVisible && '500px'};
+  max-width: ${({ $isSidebarVisible }) => $isSidebarVisible && '700px'};
 `;

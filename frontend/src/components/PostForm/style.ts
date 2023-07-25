@@ -3,8 +3,10 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const HeaderWrapper = styled.div`
-  position: fixed;
   width: 100%;
+
+  position: fixed;
+
   z-index: ${theme.zIndex.header};
 
   @media (min-width: ${theme.breakpoint.sm}) {

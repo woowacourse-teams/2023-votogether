@@ -21,6 +21,8 @@ export const WideHeaderWrapper = styled.div`
   position: fixed;
   top: 0;
 
+  z-index: ${theme.zIndex.header};
+
   @media (max-width: ${theme.breakpoint.sm}) {
     display: none;
     visibility: hidden;

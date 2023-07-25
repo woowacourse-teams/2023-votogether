@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import type { Category } from '@type/category';
 import type { User } from '@type/user';
@@ -26,10 +27,16 @@ export default function Layout({
   handleLogoutClick,
   children,
 }: LayoutProps) {
+  const navigate = useNavigate();
+
+  const movePostListPage = () => {
+    navigate('/');
+  };
+
   return (
     <S.Container>
       <S.WideHeaderWrapper>
-        <WideHeader />
+        <WideHeader clickLogo={movePostListPage} />
       </S.WideHeaderWrapper>
       <S.ContentContainer>
         {isSidebarVisible && (

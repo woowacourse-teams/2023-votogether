@@ -10,5 +10,5 @@ export default meta;
 type Story = StoryObj<typeof WideHeader>;
 
 export const Primary: Story = {
-  render: () => <WideHeader />,
+  render: () => <WideHeader clickLogo={() => {}} />,
 };

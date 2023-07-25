@@ -4,11 +4,15 @@ import { useFetch } from '@hooks/useFetch';
 
 import { getPost, removePost, setEarlyClosePost } from '@api/post';
 
+import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
 import { MOCK_NOT_VOTE_POST } from '@components/common/Post/mockData';
 
 import { checkClosedPost } from '@utils/time';
+
+import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
+import { MOCK_USER_INFO } from '@mocks/mockData/user';
 
 import BottomButtonPart from './BottomButtonPart';
 import InnerHeaderPart from './InnerHeaderPart';
@@ -26,7 +30,13 @@ export default function PostDetailPage() {
 
   if (!postData) {
     return (
-      <>
+      <Layout
+        userInfo={MOCK_USER_INFO}
+        categoryList={MOCK_FAVORITE_CATEGORIES}
+        isSidebarVisible={true}
+        handleFavoriteClick={() => {}}
+        handleLogoutClick={() => {}}
+      >
         <S.HeaderContainer>
           <NarrowTemplateHeader>
             <></>
@@ -36,7 +46,7 @@ export default function PostDetailPage() {
           {isLoading && 'loading'}
           {errorMessage && errorMessage}
         </S.Container>
-      </>
+      </Layout>
     );
   }
 
@@ -83,7 +93,13 @@ export default function PostDetailPage() {
   };
 
   return (
-    <>
+    <Layout
+      userInfo={MOCK_USER_INFO}
+      categoryList={MOCK_FAVORITE_CATEGORIES}
+      isSidebarVisible={true}
+      handleFavoriteClick={() => {}}
+      handleLogoutClick={() => {}}
+    >
       <S.HeaderContainer>
         <NarrowTemplateHeader>
           <InnerHeaderPart
@@ -101,6 +117,6 @@ export default function PostDetailPage() {
           handleEvent={{ movePage, controlPost }}
         />
       </S.Container>
-    </>
+    </Layout>
   );
 }

@@ -11,9 +11,6 @@ import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import VoteStatistics from '@components/VoteStatistics';
 
-import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
-import { MOCK_USER_INFO } from '@mocks/mockData/user';
-
 import OptionStatistics from './OptionStatistics';
 import * as S from './style';
 
@@ -38,13 +35,7 @@ export default function VoteStatisticsPage() {
   };
 
   return (
-    <Layout
-      userInfo={MOCK_USER_INFO}
-      categoryList={MOCK_FAVORITE_CATEGORIES}
-      isSidebarVisible={true}
-      handleFavoriteClick={() => {}}
-      handleLogoutClick={() => {}}
-    >
+    <Layout isSidebarVisible={true}>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
           <IconButton category="back" onClick={movePostDetailPage} />

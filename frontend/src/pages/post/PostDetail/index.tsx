@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useFetch } from '@hooks/useFetch_2';
+import { useFetch } from '@hooks/useFetch';
 
 import { getPost, removePost, setEarlyClosePost } from '@api/post';
 

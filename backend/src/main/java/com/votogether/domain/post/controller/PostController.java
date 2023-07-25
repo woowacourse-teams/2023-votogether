@@ -98,9 +98,10 @@ public class PostController {
     @Operation(summary = "투표한 게시글 조회", description = "회원이 투표한 게시글 목록을 최신순으로 조회한다.")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/votes/me")
-    public ResponseEntity<List<Post>> getPostsVotedOn(final Member member) {
+    public ResponseEntity<List<Post>> getPostsVotedOn(@Auth final Member member) {
         final List<Post> postsVotedOn = postService.getPostsVotedOn(member);
         return ResponseEntity.status(HttpStatus.OK).body(postsVotedOn);
     }
+
 }
 

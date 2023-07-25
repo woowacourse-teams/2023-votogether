@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.votogether.ServiceTest;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
+import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
@@ -32,6 +34,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 @ServiceTest
 class PostServiceTest {
@@ -324,6 +327,53 @@ class PostServiceTest {
         }
 
     }
+
+   @Test
+   @DisplayName("회원 자신이 투표한 게시글 목록을 조회한다.")
+   void getPostsVotedOn() {
+       // given
+       Member member = memberRepository.save(MemberFixtures.FEMALE_20.get());
+       Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+
+       Post postA = postRepository.save(
+               Post.builder()
+                       .member(writer)
+                       .postBody(PostBody.builder().title("title").content("content").build())
+                       .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                       .build()
+       );
+       Post postB = postRepository.save(
+               Post.builder()
+                       .member(writer)
+                       .postBody(PostBody.builder().title("title1").content("content2").build())
+                       .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                       .build()
+       );
+
+       PostOption postOptionOfPostA = postOptionRepository.save(
+               PostOption.builder()
+                       .post(postA)
+                       .sequence(1)
+                       .content("치킨")
+                       .build()
+       );
+       PostOption postOptionOfPostB = postOptionRepository.save(
+               PostOption.builder()
+                       .post(postB)
+                       .sequence(1)
+                       .content("치킨")
+                       .build()
+       );
+
+       voteRepository.save(Vote.builder().member(member).postOption(postOptionOfPostA).build());
+       voteRepository.save(Vote.builder().member(member).postOption(postOptionOfPostB).build());
+
+       // when
+       List<Post> postsVotedOn = postService.getPostsVotedOn(member);
+
+       // then
+       assertThat(postsVotedOn).hasSize(2);
+   }
 
 }
 

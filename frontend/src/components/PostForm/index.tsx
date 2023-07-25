@@ -38,9 +38,11 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     endTime: deadline,
     voteInfo,
   } = data ?? {};
+  const options = voteInfo?.options ?? [];
 
   const navigate = useNavigate();
 
+  console.log(options);
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
     day: 0,
@@ -85,13 +87,15 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       imageFileList.map(file => formData.append('images', file));
 
       const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
-      const writingOptionTexts = Array.from(optionTextAreas).map((textarea: any) => textarea.value);
+      const writingOptionList = Array.from(optionTextAreas).map((textarea: any, index) => {
+        return { content: textarea.value, imageURL: options[index].imageUrl };
+      });
 
       const updatedPostTexts = {
         categoryIds: [1, 2], // 다중 선택 컴포넌트 구현 후 수정 예정
         title: writingTitle ?? '',
         content: writingContent ?? '',
-        postOptions: writingOptionTexts,
+        postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),
         // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
         // 마감시간 옵션을 선택 안했다면 기존의 마감 시간을 유지한다.
@@ -105,7 +109,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         return;
       }
 
-      navigate('/');
+      // navigate('/');
     }
   };
 

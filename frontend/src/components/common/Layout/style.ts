@@ -45,8 +45,11 @@ export const MainContainer = styled.main<{ $isSidebarVisible: boolean }>`
   display: flex;
   justify-content: center;
 
+  margin-top: 15px;
   width: 100%;
+
   @media (min-width: ${theme.breakpoint.sm}) {
+    margin-top: 0;
     padding-left: ${({ $isSidebarVisible }) => $isSidebarVisible && '225px'};
   }
 `;

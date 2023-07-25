@@ -1,8 +1,8 @@
 import { styled } from 'styled-components';
 
-const modalSize: {
-  [key: string]: string;
-} = {
+import { Size } from '@type/style';
+
+const MODAL_SIZE: Record<Size, string> = {
   sm: '290px',
   md: '590px',
   lg: '700px',
@@ -24,7 +24,7 @@ export const Backdrop = styled.div`
   background: rgba(0, 0, 0, 0.35);
 `;
 
-export const Container = styled.div<{ size: string }>`
+export const Container = styled.div<{ size: Size }>`
   display: grid;
   grid-template-rows: 1fr 6fr;
 
@@ -33,7 +33,7 @@ export const Container = styled.div<{ size: string }>`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: ${props => modalSize[props.size]};
+  width: ${props => MODAL_SIZE[props.size]};
   height: 290px;
   border-radius: 12px;
   border: 2px solid #f6f6f6;

@@ -15,7 +15,7 @@ export default function TwoLineGraph({ voteResult, size }: GraphProps) {
         const voteResultFilteredByAge = voteResult.age[option];
 
         return (
-          <S.OptionContainer $size={size}>
+          <S.OptionContainer key={option} $size={size}>
             <S.DataWrapper>
               <S.OptionLengthWrapper $gender="female">
                 <span aria-label="투표한 여자수">{voteResultFilteredByAge.female}</span>

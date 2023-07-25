@@ -3,6 +3,11 @@ const headers = {
   Authorization: `Bearer `,
 };
 
+const multiHeaders = {
+  'Content-Type': 'multipart/form-data',
+  Authorization: `Bearer `,
+};
+
 export const getFetch = async <T>(url: string): Promise<T> => {
   const response = await fetch(url, {
     method: 'GET',
@@ -74,4 +79,36 @@ export const deleteFetch = async (url: string) => {
   if (!response.ok) {
     throw new Error(data.message);
   }
+};
+
+export const multiPostFetch = async (url: string, body: FormData) => {
+  const response = await fetch(url, {
+    method: 'POST',
+    body,
+    headers: multiHeaders,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
+};
+
+export const multiPutFetch = async (url: string, body: FormData) => {
+  const response = await fetch(url, {
+    method: 'PUT',
+    body,
+    headers: multiHeaders,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
 };

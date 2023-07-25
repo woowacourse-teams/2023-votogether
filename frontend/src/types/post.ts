@@ -20,3 +20,8 @@ export interface PostInfo {
     options: WrittenVoteOptionType[];
   };
 }
+
+export interface PostList {
+  pageNumber: number;
+  postList: PostInfo[];
+}

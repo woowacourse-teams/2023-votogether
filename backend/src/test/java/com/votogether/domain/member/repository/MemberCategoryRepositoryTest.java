@@ -1,15 +1,16 @@
 package com.votogether.domain.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.votogether.domain.RepositoryTest;
+import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.domain.member.entity.SocialType;
-import java.time.LocalDateTime;
+import com.votogether.fixtures.CategoryFixtures;
+import com.votogether.fixtures.MemberFixtures;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,22 +31,8 @@ class MemberCategoryRepositoryTest {
     @DisplayName("멤버가 선호하는 카테고리를 저장한다.")
     void save() {
         // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
-
-        Member member = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
-                .nickname("user1")
-                .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 07, 12, 00, 00))
-                .build();
-
-        categoryRepository.save(category);
-        memberRepository.save(member);
+        Member member = memberRepository.save(MemberFixtures.MALE_EARLY_10.get());
+        Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
         MemberCategory memberCategory = MemberCategory.builder()
                 .member(member)
@@ -64,27 +51,14 @@ class MemberCategoryRepositoryTest {
     @DisplayName("멤버와 카테고리를 통해 멤버 카테고리를 조회한다.")
     void findByMemberAndCategory() {
         // given
-        Category category = Category.builder()
-                .name("개발")
-                .build();
-
-        Member member = Member.builder()
-                .gender(Gender.MALE)
-                .point(0)
-                .socialType(SocialType.GOOGLE)
-                .nickname("user1")
-                .socialId("kakao@gmail.com")
-                .birthDate(
-                        LocalDateTime.of(1995, 07, 12, 00, 00))
-                .build();
+        Member member = memberRepository.save(MemberFixtures.MALE_EARLY_10.get());
+        Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
         MemberCategory memberCategory = MemberCategory.builder()
                 .member(member)
                 .category(category)
                 .build();
 
-        categoryRepository.save(category);
-        memberRepository.save(member);
         memberCategoryRepository.save(memberCategory);
 
         // when
@@ -92,6 +66,37 @@ class MemberCategoryRepositoryTest {
 
         // then
         assertThat(findMemberCategory).isSameAs(memberCategory);
+    }
+
+    @Test
+    @DisplayName("멤버를 통해 멤버 카테고리 목록을 조회힌다.")
+    void findByMember() {
+        // given
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+        Category categoryA = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category categoryB = categoryRepository.save(CategoryFixtures.FOOD.get());
+
+        MemberCategory memberCategoryA = MemberCategory.builder()
+                .member(member)
+                .category(categoryA)
+                .build();
+
+        MemberCategory memberCategoryB = MemberCategory.builder()
+                .member(member)
+                .category(categoryB)
+                .build();
+
+        memberCategoryRepository.save(memberCategoryA);
+        memberCategoryRepository.save(memberCategoryB);
+
+        // when
+        List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
+
+        // then
+        assertAll(
+                () -> assertThat(memberCategories).hasSize(2),
+                () -> assertThat(memberCategories).contains(memberCategoryA, memberCategoryB)
+        );
     }
 
 }

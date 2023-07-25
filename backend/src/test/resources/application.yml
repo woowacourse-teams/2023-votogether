@@ -1,0 +1,17 @@
+votogether:
+  openapi:
+    dev-url: http://localhost:8080
+    prod-url: http://aaaaaaaa.com
+
+oauth:
+  kakao:
+    info:
+      grant_type: aaaaaaaaaaaaaaaa
+      client_id: bbbbbbbbbbbbbbbbbbbbbbbbbbbb
+      client_secret: cccccccccccccccccccccccccccccccccccccc
+      redirect_uri: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+jwt:
+  token:
+    secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
+    expiration-time: 222222

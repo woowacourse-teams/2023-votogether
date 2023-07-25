@@ -1,4 +1,4 @@
-import { Size } from '@components/common/AddButton/type';
+import { Size } from '@type/style';
 
 export interface GraphProps {
   voteResult: VoteResult;

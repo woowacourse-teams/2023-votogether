@@ -27,6 +27,7 @@ const router = createBrowserRouter([
         path: 'posts/result/:postId',
         element: <VoteStatisticsPage />,
       },
+      { path: 'posts/category/:categoryId', element: <Home /> },
     ],
   },
 ]);

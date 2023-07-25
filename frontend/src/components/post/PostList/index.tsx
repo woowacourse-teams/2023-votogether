@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
@@ -11,11 +11,10 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
-import { CATEGORY_ID } from './constants';
 import * as S from './style';
 
 export default function PostList() {
-  const [searchParams] = useSearchParams();
+  const { categoryId } = useParams<{ categoryId?: string }>();
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
@@ -25,8 +24,6 @@ export default function PostList() {
     useSelect<PostStatus>('progress');
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
     useSelect<PostSorting>('latest');
-
-  const categoryId = searchParams.get(CATEGORY_ID);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
     postSorting: selectedSortingOption,

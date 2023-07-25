@@ -13,6 +13,8 @@ interface PostListByOption {
   categoryId?: number;
 }
 
+const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
+
 export const makePostListUrl = ({
   categoryId,
   postStatus,
@@ -22,13 +24,14 @@ export const makePostListUrl = ({
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 
+  const POST_BASE_URL = `${BASE_URL}/posts`;
   const OPTION_URL = `status=${requestedStatus}&sorting=${requestedSorting}&pages=${pageNumber}`;
 
   if (categoryId) {
-    return `/posts?categoryId=${categoryId}&${OPTION_URL}`;
+    return `${POST_BASE_URL}?categoryId=${categoryId}&${OPTION_URL}`;
   }
 
-  return `/posts?${OPTION_URL}`;
+  return `${POST_BASE_URL}?${OPTION_URL}`;
 };
 
 export const getPostList = async ({

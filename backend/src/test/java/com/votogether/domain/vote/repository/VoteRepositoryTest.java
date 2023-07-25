@@ -191,4 +191,38 @@ class VoteRepositoryTest {
         );
     }
 
+    @Test
+    @DisplayName("해당 회원이 투표한 개수를 반환한다.")
+    void countByMember() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_20);
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOption = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+        Vote vote = Vote.builder()
+                .member(member)
+                .postOption(postOption)
+                .build();
+
+        memberRepository.save(member);
+        voteRepository.save(vote);
+
+        // when
+        int numberOfVote = voteRepository.countByMember(member);
+
+        // then
+        assertThat(numberOfVote).isEqualTo(1);
+    }
+
 }

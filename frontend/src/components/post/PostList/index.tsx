@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
@@ -13,6 +14,7 @@ import type { PostSorting, PostStatus } from '@components/post/PostListPage/type
 import * as S from './style';
 
 export default function PostList() {
+  const { categoryId } = useParams<{ categoryId?: string }>();
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
@@ -26,6 +28,7 @@ export default function PostList() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
     postSorting: selectedSortingOption,
     postStatus: selectedStatusOption,
+    categoryId: Number(categoryId),
   });
 
   useEffect(() => {

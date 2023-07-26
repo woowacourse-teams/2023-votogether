@@ -4,11 +4,11 @@ import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
 export const mockPostList = [
   rest.get('/posts', (req, res, ctx) => {
-    const pages = Number(req.url.searchParams.get('pages'));
+    const page = Number(req.url.searchParams.get('page'));
 
-    if (pages === null) return;
+    if (page === null) return;
 
-    if (pages > 0) {
+    if (page > 0) {
       return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
     }
 
@@ -16,11 +16,11 @@ export const mockPostList = [
   }),
 
   rest.get('/posts/categories/:categoryId', (req, res, ctx) => {
-    const pages = Number(req.url.searchParams.get('pages'));
+    const page = Number(req.url.searchParams.get('page'));
 
-    if (pages === null) return;
+    if (page === null) return;
 
-    if (pages > 0) {
+    if (page > 0) {
       return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
     }
 
@@ -28,11 +28,11 @@ export const mockPostList = [
   }),
 
   rest.get('/posts/me', (req, res, ctx) => {
-    const pages = Number(req.url.searchParams.get('pages'));
+    const page = Number(req.url.searchParams.get('page'));
 
-    if (pages === null) return;
+    if (page === null) return;
 
-    if (pages > 0) {
+    if (page > 0) {
       return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
     }
 
@@ -40,11 +40,11 @@ export const mockPostList = [
   }),
 
   rest.get('/posts/votes/me', (req, res, ctx) => {
-    const pages = Number(req.url.searchParams.get('pages'));
+    const page = Number(req.url.searchParams.get('page'));
 
-    if (pages === null) return;
+    if (page === null) return;
 
-    if (pages > 0) {
+    if (page > 0) {
       return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
     }
 

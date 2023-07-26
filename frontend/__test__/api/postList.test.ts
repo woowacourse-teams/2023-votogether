@@ -40,7 +40,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
     const data = await getPostList({
       postStatus: 'closed',
       postSorting: 'popular',
-      pageNumber: 3,
+      pageNumber: 0,
       categoryId: 1,
       requestKind: 'category',
     });
@@ -52,7 +52,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
     const data = await getPostList({
       postStatus: 'closed',
       postSorting: 'popular',
-      pageNumber: 3,
+      pageNumber: 0,
       categoryId: 1,
       requestKind: 'myPost',
     });
@@ -64,7 +64,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
     const data = await getPostList({
       postStatus: 'closed',
       postSorting: 'popular',
-      pageNumber: 3,
+      pageNumber: 0,
       categoryId: 1,
       requestKind: 'myVote',
     });

@@ -31,7 +31,7 @@ export const makePostListUrl = ({
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 
   const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[requestKind]}`;
-  const OPTION_URL = `status=${requestedStatus}&sorting=${requestedSorting}&pages=${pageNumber}`;
+  const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
 
   if (categoryId && requestKind === 'category') {
     return `${POST_BASE_URL}/${categoryId}?${OPTION_URL}`;

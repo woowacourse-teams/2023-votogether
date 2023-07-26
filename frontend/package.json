@@ -13,7 +13,7 @@
     "lint": "eslint --cache .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "jest"
+    "test": "DOTENV_CONFIG_PATH=.env.test jest --setupFiles=dotenv/config jest --setupFiles=dotenv/config"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.19",

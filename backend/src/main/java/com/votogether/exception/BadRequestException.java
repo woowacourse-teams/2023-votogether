@@ -6,4 +6,8 @@ public class BadRequestException extends BaseException {
         super(exceptionType);
     }
 
+    public BadRequestException(final int code, final String message) {
+        super(code, message);
+    }
+
 }

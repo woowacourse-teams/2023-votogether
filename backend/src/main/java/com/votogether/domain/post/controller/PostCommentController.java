@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "게시글 댓글", description = "게시글 댓글 관련 API")
+@Tag(name = "게시글 댓글", description = "게시글 댓글 API")
 @RequiredArgsConstructor
 @RequestMapping("/posts")
 @RestController

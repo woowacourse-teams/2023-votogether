@@ -19,9 +19,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/health-check",
             "/auth/kakao/callback",
             "/categories/guest",
-            "/swagger-ui.html",
-            "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui.html"
+    );
+
+    private static final List<String> ALLOWED_START_URIS = List.of(
+            "/v3/api-docs",
+            "/swagger-ui"
     );
 
     private final TokenProcessor tokenProcessor;
@@ -40,8 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) {
-        return ALLOWED_URIS.stream()
-                .anyMatch(url -> request.getRequestURI().contains(url));
+        return ALLOWED_URIS.stream().anyMatch(url -> request.getRequestURI().contains(url))
+                || ALLOWED_START_URIS.stream().anyMatch(url -> request.getRequestURI().startsWith(url));
     }
 
 }

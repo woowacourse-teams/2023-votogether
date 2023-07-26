@@ -22,6 +22,9 @@ logging:
             sql:
               BasicBinder: TRACE
 
+server:
+  forward-headers-strategy: FRAMEWORK
+
 votogether:
   openapi:
     dev-url: http://localhost:8080

@@ -138,7 +138,7 @@ public class PostService {
     }
 
     public List<Post> getPostsVotedOn(final Member member) {
-        final List<Vote> votes = voteRepository.findByMember(member);
+        final List<Vote> votes = voteRepository.findAllByMember(member);
 
         final List<Post> posts = votes.stream()
                 .map(vote -> vote.getPostOption().getPost())

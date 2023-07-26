@@ -32,8 +32,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     Optional<Vote> findByMemberAndPostOption(final Member member, final PostOption postOption);
 
-    List<Vote> findByMemberAndPostOptionIn(final Member member, final List<PostOption> postOptions);
+    List<Vote> findAllByMemberAndPostOptionIn(final Member member, final List<PostOption> postOptions);
 
-    List<Vote> findByMember(final Member member);
+    List<Vote> findAllByMember(final Member member);
 
 }

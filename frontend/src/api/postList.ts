@@ -1,27 +1,22 @@
 import { PostInfo } from '@type/post';
 
-import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
+import type { PostRequestKind, PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
-import { REQUEST_STATUS_OPTION, REQUEST_SORTING_OPTION } from '@constants/post';
+import {
+  REQUEST_STATUS_OPTION,
+  REQUEST_SORTING_OPTION,
+  REQUEST_POST_KIND_URL,
+} from '@constants/post';
 
 import { getFetch } from '@utils/fetch';
 
 interface PostListByOption {
-  requestKind: RequestKind;
+  requestKind: PostRequestKind;
   postStatus: PostStatus;
   postSorting: PostSorting;
   pageNumber: number;
   categoryId?: number;
 }
-
-const REQUEST_KIND = {
-  all: 'posts',
-  myPost: 'posts/me',
-  myVote: 'posts/votes/me',
-  category: 'posts/categories',
-} as const;
-
-type RequestKind = keyof typeof REQUEST_KIND;
 
 const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
@@ -35,7 +30,7 @@ export const makePostListUrl = ({
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 
-  const POST_BASE_URL = `${BASE_URL}/${REQUEST_KIND[requestKind]}`;
+  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[requestKind]}`;
   const OPTION_URL = `status=${requestedStatus}&sorting=${requestedSorting}&pages=${pageNumber}`;
 
   if (categoryId && requestKind === 'category') {

@@ -55,7 +55,9 @@ public class Post extends BaseEntity {
     private LocalDateTime deadline;
 
     @Basic(fetch=FetchType.EAGER)
-    @Formula("(select count(v.id) from Vote v where v.post_option_id in (select po.id from Post_Option po where po.post_id = id))")
+    @Formula("(select count(v.id) from Vote v where v.post_option_id in "
+            + "(select po.id from Post_Option po where po.post_id = id)"
+            + ")")
     private long totalVoteCount;
 
     @Builder

@@ -14,7 +14,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "DOTENV_CONFIG_PATH=.env.test jest --setupFiles=dotenv/config jest --setupFiles=dotenv/config",
-    "prepare": "cd .. && husky install frontend/.husky && git update-index --chmod=+x && cd frontend"
+    "prepare": "cd .. && husky install frontend/.husky"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.19",

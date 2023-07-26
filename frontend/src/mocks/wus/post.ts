@@ -27,19 +27,7 @@ export const mockPostList = [
     return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
   }),
 
-  rest.get('/members/me/', (req, res, ctx) => {
-    const pages = Number(req.url.searchParams.get('pages'));
-
-    if (pages === null) return;
-
-    if (pages > 0) {
-      return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
-    }
-
-    return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
-  }),
-
-  rest.get('/posts/me/:categoryId', (req, res, ctx) => {
+  rest.get('/posts/me', (req, res, ctx) => {
     const pages = Number(req.url.searchParams.get('pages'));
 
     if (pages === null) return;

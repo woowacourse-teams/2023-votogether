@@ -54,7 +54,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: 'popular',
       pageNumber: 3,
       categoryId: 1,
-      requestKind: 'category',
+      requestKind: 'myPost',
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);

@@ -148,6 +148,8 @@ export const SaveButtonWrapper = styled.div`
   visibility: hidden;
 
   @media (min-width: ${theme.breakpoint.sm}) {
+    display: flex;
+    visibility: visible;
     width: 100%;
     height: 60px;
 

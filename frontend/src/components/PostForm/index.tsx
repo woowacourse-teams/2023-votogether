@@ -173,7 +173,9 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               </SquareButton>
             </S.ButtonWrapper>
             <S.SaveButtonWrapper>
-              <SquareButton theme="fill">저장</SquareButton>
+              <SquareButton theme="fill" type="submit" form="form-post">
+                저장
+              </SquareButton>
             </S.SaveButtonWrapper>
           </S.RightSide>
         </S.Wrapper>

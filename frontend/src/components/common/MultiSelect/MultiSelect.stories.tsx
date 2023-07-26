@@ -90,8 +90,8 @@ export const CategoryNotSelected = () => {
 
 export const CategorySelected = () => {
   const CATEGORY_COUNT_LIMIT = 3;
-  const initialSelectedOptionList = MOCK_OPTION_LIST.filter(
-    option => option.name === '옵션1' || option.name === '옵션7'
+  const initialSelectedOptionList = MOCK_CATEGORY_LIST.filter(
+    option => option.id === 7 || option.id === 9
   );
 
   const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(

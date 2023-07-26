@@ -109,6 +109,36 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     }
   };
 
+  const getDeadlineTime = ({
+    day,
+    hour,
+    minute,
+  }: {
+    day: number;
+    hour: number;
+    minute: number;
+  }) => {
+    const timeMessage = [];
+
+    if (day === 0 && hour === 0 && minute === 0) {
+      return '마감 시간을 선택해주세요';
+    }
+
+    if (day > 0) {
+      timeMessage.push(`${day}일`);
+    }
+
+    if (hour > 0) {
+      timeMessage.push(`${hour}시간`);
+    }
+
+    if (minute > 0) {
+      timeMessage.push(`${minute}분`);
+    }
+
+    return `${timeMessage.join(' ')}  후에 마감됩니다.`;
+  };
+
   return (
     <>
       <S.HeaderWrapper>
@@ -147,7 +177,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
             </S.OptionListWrapper>
             <S.Deadline>
-              {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.
+              {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
             </S.Deadline>
             {data && (
               <S.Description>

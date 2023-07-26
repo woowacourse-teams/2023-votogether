@@ -56,7 +56,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     setTime(formatTimeWithOption(option));
   };
 
-  const handleResetBUtton = () => {
+  const handleResetButton = () => {
     if (window.confirm('정말 초기화하시겠습니까?')) {
       const updatedTime = {
         day: 0,
@@ -121,7 +121,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       </S.HeaderWrapper>
       <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
-          <S.RightSide>
+          <S.LeftSide>
             <select>
               {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
               <option>카테고리1</option>
@@ -141,8 +141,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-          </S.RightSide>
-          <S.LeftSide>
+          </S.LeftSide>
+          <S.RightSide>
             <S.OptionListWrapper>
               <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
             </S.OptionListWrapper>
@@ -172,7 +172,10 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                 사용자 지정
               </SquareButton>
             </S.ButtonWrapper>
-          </S.LeftSide>
+            <S.SaveButtonWrapper>
+              <SquareButton theme="fill">저장</SquareButton>
+            </S.SaveButtonWrapper>
+          </S.RightSide>
         </S.Wrapper>
         {isOpen && (
           <Modal size="sm" onModalClose={closeComponent}>
@@ -185,7 +188,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                 <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
                 <TimePickerOptionList time={time} setTime={setTime} />
                 <S.ResetButtonWrapper>
-                  <SquareButton onClick={handleResetBUtton} theme="blank">
+                  <SquareButton onClick={handleResetButton} type="button" theme="blank">
                     초기화
                   </SquareButton>
                 </S.ResetButtonWrapper>

@@ -32,7 +32,7 @@ export default function MultiSelect({
   const { isOpen, openComponent, closeComponent } = useToggle();
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [wrapperClientHeight, setWrapperClientHeight] = useState(40);
+  const [wrapperClientHeight, setWrapperClientHeight] = useState(45);
 
   const handleToggleWrapper = () => {
     if (isOpen) {
@@ -45,11 +45,12 @@ export default function MultiSelect({
   useEffect(() => {
     if (wrapperRef) {
       if (selectedOptionList.length > 0) {
+        window.console.log(wrapperRef.current);
         const newClientHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 25;
 
         setWrapperClientHeight(newClientHeight);
       } else {
-        setWrapperClientHeight(40);
+        setWrapperClientHeight(45);
       }
     }
   }, [selectedOptionList]);

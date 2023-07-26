@@ -7,7 +7,7 @@ import * as S from './style';
 
 type Content = 'icon' | 'text' | 'full';
 
-const contentCategory: { [key in Content]: { name: string; url: string } } = {
+const contentCategory: Record<Content, { name: string; url: string }> = {
   icon: {
     name: '로고 아이콘',
     url: logo,

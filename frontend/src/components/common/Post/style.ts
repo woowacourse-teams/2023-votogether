@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
@@ -7,27 +9,27 @@ export const Container = styled.li`
   flex-direction: column;
   gap: 10px;
 
-  font-size: 1.2rem;
+  font: var(--text-small);
   letter-spacing: 0.5px;
   line-height: 1.5;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    font-size: 1.4rem;
+    font: var(--text-caption);
   }
 `;
 
 export const Category = styled.span`
-  font-size: 1.2rem;
+  font: var(--text-small);
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    font-size: 1.4rem;
+    font: var(--text-caption);
   }
 `;
 
 export const Title = styled.p<{ $isPreview: boolean }>`
   display: -webkit-box;
 
-  font-size: 2rem;
+  font: var(--text-title);
   text-overflow: ellipsis;
   word-break: break-word;
 
@@ -41,28 +43,26 @@ export const Title = styled.p<{ $isPreview: boolean }>`
   }
 `;
 
-export const Writer = styled.span``;
-
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  font-size: 1.2rem;
+  font: var(--text-small);
 
   & > :nth-child(2) {
     margin-left: 10px;
   }
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    font-size: 1.4rem;
+    font: var(--text-caption);
   }
 `;
 
 export const Content = styled.p<{ $isPreview: boolean }>`
   display: -webkit-box;
 
-  font-size: 1.4rem;
+  font: var(--text-caption);
   text-overflow: ellipsis;
   word-break: break-word;
 
@@ -74,6 +74,10 @@ export const Content = styled.p<{ $isPreview: boolean }>`
   -webkit-box-orient: vertical;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    font-size: 1.6rem;
+    font: var(--text-body);
   }
+`;
+
+export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
+  pointer-events: ${({ $isPreview }) => !$isPreview && 'none'};
 `;

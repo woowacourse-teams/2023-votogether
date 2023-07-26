@@ -13,13 +13,13 @@ class PostOptionTest {
     @DisplayName("해당 선택지를 현재 회원이 투표한 건지 확인한다")
     void isVoteByMember() {
         // given
-        final PostOption postOption = PostOption.builder().build();
+        PostOption postOption = PostOption.builder().build();
 
-        final Vote vote = Vote.builder().member(MALE_30).build();
+        Vote vote = Vote.builder().member(MALE_30.get()).build();
         postOption.getVotes().add(vote);
 
         // when
-        final boolean isVoteByMember = postOption.isVoteByMember(MALE_30);
+        boolean isVoteByMember = postOption.isVoteByMember(MALE_30.get());
 
         // then
         assertThat(isVoteByMember).isTrue();

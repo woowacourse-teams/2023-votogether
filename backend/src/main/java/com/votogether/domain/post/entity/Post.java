@@ -3,8 +3,10 @@ package com.votogether.domain.post.entity;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.Basic;
+import com.votogether.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -16,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -90,8 +93,10 @@ public class Post extends BaseEntity {
         return postOptions.contains(postOption);
     }
 
-    public boolean isWriter(final Member member) {
-        return this.member == member;
+    public void validateWriter(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new BadRequestException(PostExceptionType.NOT_WRITER);
+        }
     }
 
     public boolean isClosed() {
@@ -118,16 +123,14 @@ public class Post extends BaseEntity {
         }
     }
 
-    private void validateWriter(Member member) {
-        if (isWriter(member)) {
-            throw new IllegalArgumentException("작성자는 투표할 수 없습니다.");
-        }
-    }
-
     private void validatePostOption(PostOption postOption) {
         if (!hasPostOption(postOption)) {
             throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
         }
+    }
+
+    public boolean isWriter(final Member member) {
+        return Objects.equals(this.member, member);
     }
 
     private List<PostOption> toPostOptions(final List<String> postOptionContents, final List<MultipartFile> images) {
@@ -142,5 +145,4 @@ public class Post extends BaseEntity {
                 )
                 .toList();
     }
-
 }

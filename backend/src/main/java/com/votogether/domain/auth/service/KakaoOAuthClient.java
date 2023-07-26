@@ -23,13 +23,19 @@ public class KakaoOAuthClient {
     private final MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
 
     public String getAccessToken(final String code) {
+        info.remove("code");
         info.add("code", code);
 
-        final OAuthAccessTokenResponse response = restTemplate.postForObject(
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        final HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(info, headers);
+
+        final OAuthAccessTokenResponse response = restTemplate.postForEntity(
                 "https://kauth.kakao.com/oauth/token",
-                info,
+                httpEntity,
                 OAuthAccessTokenResponse.class
-        );
+        ).getBody();
         return response.accessToken();
     }
 

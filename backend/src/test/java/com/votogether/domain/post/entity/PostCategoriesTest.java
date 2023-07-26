@@ -1,7 +1,5 @@
 package com.votogether.domain.post.entity;
 
-import static com.votogether.fixtures.CategoryFixtures.DEVELOP;
-import static com.votogether.fixtures.CategoryFixtures.FOOD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.votogether.domain.category.entity.Category;
@@ -15,10 +13,12 @@ class PostCategoriesTest {
     @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     void mapPostAndCategories() {
         // given
-        final PostCategories postCategories = new PostCategories();
-        final Post post = Post.builder().build();
+        PostCategories postCategories = new PostCategories();
+        Post post = Post.builder().build();
+        Category categoryA = Category.builder().build();
+        Category categoryB = Category.builder().build();
 
-        final List<Category> categories = List.of(FOOD, DEVELOP);
+        List<Category> categories = List.of(categoryA, categoryB);
 
         // when
         postCategories.mapPostAndCategories(post, categories);

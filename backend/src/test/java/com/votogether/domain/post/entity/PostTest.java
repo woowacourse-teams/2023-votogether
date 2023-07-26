@@ -1,7 +1,5 @@
 package com.votogether.domain.post.entity;
 
-import static com.votogether.fixtures.CategoryFixtures.DEVELOP;
-import static com.votogether.fixtures.CategoryFixtures.FOOD;
 import static com.votogether.fixtures.MemberFixtures.FEMALE_20;
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,26 +11,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PostTest {
 
     @Test
     @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     void mapCategories() {
         // given
-        final Post post = Post.builder().build();
+        Post post = Post.builder().build();
+        Category categoryA = Category.builder().build();
+        Category categoryB = Category.builder().build();
 
-        final List<Category> categories = List.of(FOOD, DEVELOP);
+        List<Category> categories = List.of(categoryA, categoryB);
 
         // when
         post.mapCategories(categories);
 
         // then
-        final PostCategories actualPostCategories = post.getPostCategories();
+        PostCategories actualPostCategories = post.getPostCategories();
         assertThat(actualPostCategories.getPostCategories()).hasSize(2);
     }
 
@@ -70,12 +68,12 @@ class PostTest {
     void isWriter() {
         // given
         Post post = Post.builder()
-                .member(MALE_30)
+                .member(MALE_30.get())
                 .build();
 
         // when
-        boolean result1 = post.isWriter(MALE_30);
-        boolean result2 = post.isWriter(FEMALE_20);
+        boolean result1 = post.isWriter(MALE_30.get());
+        boolean result2 = post.isWriter(FEMALE_20.get());
 
         // then
         assertAll(
@@ -88,24 +86,22 @@ class PostTest {
     @DisplayName("게시글의 마감 여부를 확인한다.")
     void isClosed() {
         // given
-        Post post1 = Post.builder()
-                .deadline(
-                        LocalDateTime.of(2022, 1, 1, 0, 0))
+        Post postA = Post.builder()
+                .deadline(LocalDateTime.of(2022, 1, 1, 0, 0))
                 .build();
 
-        Post post2 = Post.builder()
-                .deadline(
-                        LocalDateTime.of(3222, 1, 1, 0, 0))
+        Post postB = Post.builder()
+                .deadline(LocalDateTime.of(3222, 1, 1, 0, 0))
                 .build();
 
         // when
-        boolean result1 = post1.isClosed();
-        boolean result2 = post2.isClosed();
+        boolean resultA = postA.isClosed();
+        boolean resultB = postB.isClosed();
 
         // then
         assertAll(
-                () -> assertThat(result1).isTrue(),
-                () -> assertThat(result2).isFalse()
+                () -> assertThat(resultA).isTrue(),
+                () -> assertThat(resultB).isFalse()
         );
     }
 

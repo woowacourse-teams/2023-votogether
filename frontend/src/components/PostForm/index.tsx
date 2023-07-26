@@ -42,7 +42,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
   const navigate = useNavigate();
 
-  console.log(options);
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
     day: 0,

@@ -13,12 +13,12 @@ class PostCategoriesTest {
     @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
     void mapPostAndCategories() {
         // given
-        final PostCategories postCategories = new PostCategories();
-        final Post post = Post.builder().build();
-        final Category category1 = Category.builder().build();
-        final Category category2 = Category.builder().build();
+        PostCategories postCategories = new PostCategories();
+        Post post = Post.builder().build();
+        Category categoryA = Category.builder().build();
+        Category categoryB = Category.builder().build();
 
-        final List<Category> categories = List.of(category1, category2);
+        List<Category> categories = List.of(categoryA, categoryB);
 
         // when
         postCategories.mapPostAndCategories(post, categories);

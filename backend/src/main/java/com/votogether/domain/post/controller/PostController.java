@@ -6,6 +6,7 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.service.PostService;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -61,18 +62,33 @@ public class PostController {
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
+    @Operation(summary = "게시글 투표 통계 조회", description = "게시글 투표에 대한 전체 통계를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 투표 통계 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")
+    })
+    @GetMapping("/{postId}/options")
+    public ResponseEntity<VoteOptionStatisticsResponse> getVoteStatistics(
+            @PathVariable final Long postId,
+            @Auth final Member member
+    ) {
+        final VoteOptionStatisticsResponse response = postService.getVoteStatistics(postId, member);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "게시글 투표 선택지 통계 조회", description = "게시글 특정 투표 선택지에 대한 통계를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 투표 선택지 통계 조회 성공"),
             @ApiResponse(responseCode = "400", description = "게시글 투표 옵션이 게시글에 속하지 않아 조회 실패"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글이거나 게시글 투표 옵션")
     })
-    @GetMapping(value = "/{postId}/options/{optionId}")
+    @GetMapping("/{postId}/options/{optionId}")
     public ResponseEntity<VoteOptionStatisticsResponse> getVoteOptionStatistics(
             @PathVariable final Long postId,
-            @PathVariable final Long optionId
+            @PathVariable final Long optionId,
+            @Auth final Member member
     ) {
-        final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId);
+        final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId, member);
         return ResponseEntity.ok(response);
     }
 

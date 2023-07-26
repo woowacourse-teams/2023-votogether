@@ -46,7 +46,7 @@ export default function CategoryToggle({
                 onClick={() => handleFavoriteClick(id)}
                 $isFavorite={isFavorite}
               />
-              <S.CategoryName to={`/posts?categoryId=${id}`}>{name}</S.CategoryName>
+              <S.CategoryNameLink to={`/posts/category/${id}`}>{name}</S.CategoryNameLink>
             </S.CategoryItem>
           ))}
         </S.CategoryList>

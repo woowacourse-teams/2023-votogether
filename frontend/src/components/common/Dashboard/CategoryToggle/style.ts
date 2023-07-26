@@ -57,7 +57,7 @@ export const Caption = styled.span`
   color: var(--dark-gray);
 `;
 
-export const CategoryName = styled(Link)`
+export const CategoryNameLink = styled(Link)`
   text-decoration: none;
 
   color: inherit;

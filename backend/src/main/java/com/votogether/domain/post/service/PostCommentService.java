@@ -9,6 +9,7 @@ import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -16,6 +17,7 @@ public class PostCommentService {
 
     private final PostRepository postRepository;
 
+    @Transactional
     public void registerComment(
             final Member member,
             final Long postId,

@@ -62,15 +62,14 @@ export default function MultiSelect({
   }, [selectedOptionList, optionList, closeComponent]);
 
   const filteredOptionList = optionList.filter(
-    option => selectedOptionList.findIndex(selected => selected.id === option.id) === -1
+    option => !selectedOptionList.some(selected => selected.id === option.id)
   );
-
   return (
     <S.Wrapper onClick={handleToggleWrapper} ref={wrapperRef}>
       <S.Container>
         {selectedOptionList.length === 0 && <span>{placeholder} </span>}
         {selectedOptionList.map(({ id, name }) => (
-          <S.Chip key={id} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+          <S.SelectedOption key={id} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
             <span>{name}</span>
             <OptionCancelButton
               onClick={(e: React.MouseEvent) => {
@@ -78,7 +77,7 @@ export default function MultiSelect({
                 handleOptionDelete(id);
               }}
             />
-          </S.Chip>
+          </S.SelectedOption>
         ))}
       </S.Container>
       <S.SelectIcon>

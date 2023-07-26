@@ -69,7 +69,7 @@ export const DropDown = styled.ul<{
   }
 `;
 
-export const Chip = styled.span`
+export const SelectedOption = styled.span`
   display: flex;
   justify-content: space-between;
   align-items: center;

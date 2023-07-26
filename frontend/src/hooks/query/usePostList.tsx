@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { PostList } from '@type/post';
 
-import { getPostList } from '@api/wus/postList';
+import { getPostList } from '@api/postList';
 
 import { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 

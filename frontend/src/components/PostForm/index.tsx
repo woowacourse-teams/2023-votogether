@@ -110,7 +110,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         return;
       }
 
-      // navigate('/');
+      navigate('/');
     }
   };
 

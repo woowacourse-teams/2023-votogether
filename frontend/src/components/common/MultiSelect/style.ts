@@ -28,14 +28,13 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Container = styled.div`
+export const SelectedOptionListContainer = styled.div`
   display: flex;
   flex-grow: 1;
   flex-wrap: wrap;
 `;
 
 export const SelectIcon = styled.span`
-  display: 'inline-block';
   width: 20px;
 `;
 
@@ -48,7 +47,7 @@ export const DropDown = styled.ul<{
   margin-top: 10px;
 
   position: absolute;
-  top: ${({ wrapperClientHeight }) => wrapperClientHeight - 10}px;
+  top: ${({ wrapperClientHeight }) => wrapperClientHeight}px;
   left: 0px;
 
   opacity: ${({ opened }) => (opened ? 1 : 0)};

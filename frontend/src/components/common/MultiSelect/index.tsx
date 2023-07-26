@@ -32,7 +32,11 @@ export default function MultiSelect({
   const { isOpen, openComponent, closeComponent } = useToggle();
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [wrapperClientHeight, setWrapperClientHeight] = useState(45);
+  const [wrapperClientHeight, setWrapperClientHeight] = useState(40);
+
+  const filteredOptionList = optionList.filter(
+    option => !selectedOptionList.some(selected => selected.id === option.id)
+  );
 
   const handleToggleWrapper = () => {
     if (isOpen) {
@@ -44,29 +48,18 @@ export default function MultiSelect({
 
   useEffect(() => {
     if (wrapperRef) {
-      if (selectedOptionList.length > 0) {
-        window.console.log(wrapperRef.current);
-        const newClientHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 25;
+      if (selectedOptionList.length > 0 && wrapperRef.current) {
+        setWrapperClientHeight(wrapperRef.current.clientHeight);
 
-        setWrapperClientHeight(newClientHeight);
-      } else {
-        setWrapperClientHeight(45);
+        return;
       }
+      setWrapperClientHeight(40);
     }
   }, [selectedOptionList]);
 
-  useEffect(() => {
-    if (selectedOptionList.length === optionList.length) {
-      closeComponent();
-    }
-  }, [selectedOptionList, optionList, closeComponent]);
-
-  const filteredOptionList = optionList.filter(
-    option => !selectedOptionList.some(selected => selected.id === option.id)
-  );
   return (
     <S.Wrapper onClick={handleToggleWrapper} ref={wrapperRef}>
-      <S.Container>
+      <S.SelectedOptionListContainer>
         {selectedOptionList.length === 0 && <span>{placeholder} </span>}
         {selectedOptionList.map(({ id, name }) => (
           <S.SelectedOption key={id} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -79,7 +72,7 @@ export default function MultiSelect({
             />
           </S.SelectedOption>
         ))}
-      </S.Container>
+      </S.SelectedOptionListContainer>
       <S.SelectIcon>
         <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
       </S.SelectIcon>

@@ -29,7 +29,7 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
   return (
     <S.Container>
       <S.WideHeaderWrapper>
-        <WideHeader clickLogo={movePostListPage} />
+        <WideHeader handleLogoClick={movePostListPage} />
       </S.WideHeaderWrapper>
       <S.ContentContainer>
         {isSidebarVisible && (

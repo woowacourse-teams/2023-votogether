@@ -3,10 +3,10 @@ import SearchBar from '../SearchBar';
 
 import * as S from './style';
 
-export default function WideHeader({ clickLogo }: { clickLogo: () => void }) {
+export default function WideHeader({ handleLogoClick }: { handleLogoClick: () => void }) {
   return (
     <S.Container>
-      <LogoButton content="full" onClick={clickLogo} />
+      <LogoButton content="full" onClick={handleLogoClick} />
       <SearchBar size="sm" />
     </S.Container>
   );

@@ -9,35 +9,17 @@ public record OptionResponse(
         Double votePercent
 ) {
 
-    public OptionResponse(final PostOption postOption, final Long totalVoteCount) {
+    public OptionResponse(
+            final PostOption postOption,
+            final boolean isPostVoteByMember,
+            final Long totalVoteCount
+    ) {
         this(
                 postOption.getId(),
                 postOption.getContent(),
-                getVoteCount(postOption),
-                getVotePercent(postOption, totalVoteCount)
+                postOption.getVoteCount(isPostVoteByMember),
+                postOption.getVotePercent(totalVoteCount)
         );
-    }
-
-    private static Integer getVoteCount(final PostOption postOption) {
-        final int voteCount = postOption.getVotes().size();
-        if (voteCount == 0) {
-            return -1;
-        }
-
-        return voteCount;
-    }
-
-    private static Double getVotePercent(final PostOption postOption, final Long totalVoteCount) {
-        final Double votePercent = calculateVotePercent(postOption, totalVoteCount);
-        if (votePercent == 0) {
-            return -1.0;
-        }
-
-        return votePercent;
-    }
-
-    private static Double calculateVotePercent(final PostOption postOption, final Long totalVoteCount) {
-        return ((double) postOption.getVotes().size() / totalVoteCount) * 100;
     }
 
     @Override

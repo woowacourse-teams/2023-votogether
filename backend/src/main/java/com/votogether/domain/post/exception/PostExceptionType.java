@@ -10,6 +10,7 @@ public enum PostExceptionType implements ExceptionType {
     POST_OPTION_NOT_FOUND(1001, "해당 게시글 투표 옵션이 존재하지 않습니다."),
     UNRELATED_POST_OPTION(1002, "게시글 투표 옵션이 게시글과 연관되어 있지 않습니다."),
     NOT_WRITER(1003, "해당 게시글 작성자가 아닙니다."),
+    NOT_VOTER(1004, "해당 게시글 작성자는 투표할 수 없습니다."),
     ;
 
     private final int code;

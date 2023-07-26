@@ -68,7 +68,7 @@ class PostTest {
     void isWriter() {
         // given
         Post post = Post.builder()
-                .member(MALE_30.get())
+                .writer(MALE_30.get())
                 .build();
 
         // when

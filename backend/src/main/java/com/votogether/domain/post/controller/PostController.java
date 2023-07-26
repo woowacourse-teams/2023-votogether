@@ -1,8 +1,8 @@
 package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.CreatePostRequest;
-import com.votogether.domain.post.dto.response.GetAllPostResponse;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
@@ -41,11 +41,11 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @Auth Member member,
-            @RequestPart final CreatePostRequest request,
+            @Auth Member loginMember,
+            @RequestPart final PostCreateRequest request,
             @RequestPart final List<MultipartFile> images
     ) {
-        final Long postId = postService.save(request, member, images);
+        final Long postId = postService.save(request, loginMember, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
@@ -56,15 +56,16 @@ public class PostController {
             @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
     })
     @GetMapping
-    public ResponseEntity<List<GetAllPostResponse>> getAllPost(
+    public ResponseEntity<List<PostResponse>> getAllPost(
+            @Auth final Member loginMember,
             final Integer page,
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {
-        final List<GetAllPostResponse> getAllPostResponses =
-                postService.getAllPostBySortTypeAndClosingType(page, postClosingType, postSortType);
+        final List<PostResponse> getPostResponses =
+                postService.getAllPostBySortTypeAndClosingType(loginMember, page, postClosingType, postSortType);
 
-        return ResponseEntity.ok(getAllPostResponses);
+        return ResponseEntity.ok(getPostResponses);
     }
 
     @Operation(summary = "게시글 투표 통계 조회", description = "게시글 투표에 대한 전체 통계를 조회한다.")

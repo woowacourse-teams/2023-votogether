@@ -4,8 +4,8 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.CreatePostRequest;
-import com.votogether.domain.post.dto.response.GetAllPostResponse;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -35,6 +35,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostService {
+    private static final int BASIC_PAGING_SIZE = 10;
+
     private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
 
     private final PostRepository postRepository;
@@ -67,62 +69,65 @@ public class PostService {
 
     @Transactional
     public Long save(
-            final CreatePostRequest createPostRequest,
-            final Member member,
+            final PostCreateRequest postCreateRequest,
+            final Member loginMember,
             final List<MultipartFile> images
     ) {
-        final List<Category> categories = categoryRepository.findAllById(createPostRequest.categoryIds());
-        final Post post = toPostEntity(createPostRequest, member, images, categories);
+        final List<Category> categories = categoryRepository.findAllById(postCreateRequest.categoryIds());
+        final Post post = toPostEntity(postCreateRequest, loginMember, images, categories);
 
         return postRepository.save(post).getId();
     }
 
     private Post toPostEntity(
-            final CreatePostRequest createPostRequest,
-            final Member member,
+            final PostCreateRequest postCreateRequest,
+            final Member loginMember,
             final List<MultipartFile> images,
             final List<Category> categories
     ) {
-        final Post post = toPost(createPostRequest, member);
+        final Post post = toPost(postCreateRequest, loginMember);
 
-        final List<String> postOptionContents = createPostRequest.postOptionContents();
+        final List<String> postOptionContents = postCreateRequest.postOptionContents();
         post.mapPostOptionsByElements(postOptionContents, images);
         post.mapCategories(categories);
 
         return post;
     }
 
-    private Post toPost(final CreatePostRequest createPostRequest, final Member member) {
+    private Post toPost(final PostCreateRequest postCreateRequest, final Member loginMember) {
         return Post.builder()
-                .member(member)
-                .postBody(toPostBody(createPostRequest))
-                .deadline(createPostRequest.deadline())
+                .writer(loginMember)
+                .postBody(toPostBody(postCreateRequest))
+                .deadline(postCreateRequest.deadline())
                 .build();
     }
 
-    private PostBody toPostBody(final CreatePostRequest createPostRequest) {
+    private PostBody toPostBody(final PostCreateRequest postCreateRequest) {
         return PostBody.builder()
-                .title(createPostRequest.title())
-                .content(createPostRequest.content())
+                .title(postCreateRequest.title())
+                .content(postCreateRequest.content())
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public List<GetAllPostResponse> getAllPostBySortTypeAndClosingType(
+    public List<PostResponse> getAllPostBySortTypeAndClosingType(
+            final Member loginMember,
             final Integer page,
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {
-        final Pageable pageable = PageRequest.of(page, 10, postSortType.getSort());
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getSort());
         final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
 
         return contents.stream()
-                .map(GetAllPostResponse::new)
+                .map(post -> new PostResponse(post, loginMember))
                 .toList();
     }
 
-    private List<Post> findContentsBySortTypeAndClosingType(final PostClosingType postClosingType,
-                                                            final Pageable pageable) {
+    private List<Post> findContentsBySortTypeAndClosingType(
+            final PostClosingType postClosingType,
+            final Pageable pageable
+    ) {
         return postClosingTypeMapper.get(postClosingType)
                 .apply(pageable)
                 .getContent();

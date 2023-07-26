@@ -1,39 +1,34 @@
 package com.votogether.domain.post.dto.response;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.entity.PostOption;
-import com.votogether.domain.post.entity.PostOptions;
+import com.votogether.domain.post.entity.Post;
 import java.util.List;
-import java.util.Objects;
 
 public record VoteInfoResponse(
         Integer selectOption,
         Long totalVoteCount,
         List<OptionResponse> options
 ) {
-    public VoteInfoResponse(
-            final Member member,
-            final PostOptions postOptions,
-            final Long totalVoteCount
-    ) {
+    public VoteInfoResponse(final Post post, final Member loginMember) {
         this(
-                postOptions.getSelectOption(member),
-                parseTotalVoteCount(totalVoteCount),
-                getOptions(postOptions, parseTotalVoteCount(totalVoteCount))
+                post.getPostOptions().getSelectOption(loginMember),
+                post.getFinalTotalVoteCount(loginMember),
+                getOptions(post, loginMember)
         );
     }
 
-    private static Long parseTotalVoteCount(final Long totalVoteCount) {
-        if (Objects.isNull(totalVoteCount) || totalVoteCount == 0) {
-            return -1L;
-        }
-
-        return totalVoteCount;
-    }
-
-    private static List<OptionResponse> getOptions(final PostOptions postOptions, final Long totalVoteCount) {
-        return postOptions.getPostOptions().stream()
-                .map(postOption -> new OptionResponse(postOption, totalVoteCount))
+    private static List<OptionResponse> getOptions(
+            final Post post,
+            final Member loginMember
+    ) {
+        return post.getPostOptions().getPostOptions().stream()
+                .map(postOption ->
+                        new OptionResponse(
+                                postOption,
+                                post.isPostVoteByMember(loginMember),
+                                post.getFinalTotalVoteCount(loginMember)
+                        )
+                )
                 .toList();
     }
 

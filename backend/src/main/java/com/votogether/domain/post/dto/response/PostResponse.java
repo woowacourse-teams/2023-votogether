@@ -4,11 +4,10 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
-import com.votogether.domain.post.entity.PostOptions;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record GetAllPostResponse(
+public record PostResponse(
         Long postId,
         WriterResponse writer,
         String title,
@@ -19,25 +18,25 @@ public record GetAllPostResponse(
         VoteInfoResponse voteInfo
 ) {
 
-    public GetAllPostResponse(final Post post) {
-        this(post, post.getMember(), post.getPostBody(), post.getPostOptions());
+    public PostResponse(final Post post, final Member loginMember) {
+        this(post, post.getWriter(), post.getPostBody(), loginMember);
     }
 
-    public GetAllPostResponse(
+    public PostResponse(
             final Post post,
-            final Member member,
+            final Member writer,
             final PostBody postBody,
-            final PostOptions postOptions
+            final Member loginMember
     ) {
         this(
                 post.getId(),
-                new WriterResponse(member.getId(), member.getNickname()),
+                new WriterResponse(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                new VoteInfoResponse(member, postOptions, post.getTotalVoteCount())
+                new VoteInfoResponse(post, loginMember)
         );
     }
 
@@ -50,7 +49,7 @@ public record GetAllPostResponse(
 
     @Override
     public String toString() {
-        return "GetAllPostResponse{" +
+        return "PostResponse{" +
                 "postId=" + postId +
                 ", writer=" + writer +
                 ", title='" + title + '\'' +

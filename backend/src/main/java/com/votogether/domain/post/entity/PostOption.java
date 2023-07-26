@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id"}, callSuper = true)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Getter
 @Entity
 public class PostOption extends BaseEntity {
@@ -51,7 +51,7 @@ public class PostOption extends BaseEntity {
     private String imageUrl;
 
     @OneToMany(mappedBy = "postOption", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Vote> votes = new ArrayList<>();
+    private final List<Vote> votes = new ArrayList<>();
 
     @Builder
     private PostOption(
@@ -117,4 +117,30 @@ public class PostOption extends BaseEntity {
     public boolean isBelongsTo(final Post post) {
         return Objects.equals(this.post.getId(), post.getId());
     }
+
+    public int getVoteCount(final boolean isPostVoteByMember) {
+        final int votesCount = votes.size();
+        if (isPostVoteByMember) {
+            return votesCount;
+        }
+
+        return -1;
+    }
+
+    public double getVotePercent(final long totalVoteCount) {
+        if (isPostVoteByMember(totalVoteCount)) {
+            return calculateVotePercent(totalVoteCount);
+        }
+
+        return totalVoteCount;
+    }
+
+    private boolean isPostVoteByMember(final long totalVoteCount) {
+        return totalVoteCount > 0;
+    }
+
+    private double calculateVotePercent(final Long totalVoteCount) {
+        return ((double) this.votes.size() / totalVoteCount) * 100;
+    }
+
 }

@@ -35,7 +35,7 @@ class PostRepositoryTest {
                 .build();
 
         Post post = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();

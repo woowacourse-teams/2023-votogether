@@ -40,7 +40,7 @@ public class Post extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member writer;
 
     @Embedded
     private PostBody postBody;
@@ -54,17 +54,17 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
 
-    @Basic(fetch=FetchType.LAZY)
+    @Basic(fetch=FetchType.EAGER)
     @Formula("(select count(v.id) from Vote v where v.post_option_id in (select po.id from Post_Option po where po.post_id = id))")
-    private Long totalVoteCount;
+    private long totalVoteCount;
 
     @Builder
     private Post(
-            final Member member,
+            final Member writer,
             final PostBody postBody,
             final LocalDateTime deadline
     ) {
-        this.member = member;
+        this.writer = writer;
         this.postBody = postBody;
         this.deadline = deadline;
         this.postCategories = new PostCategories();
@@ -89,12 +89,25 @@ public class Post extends BaseEntity {
         return toPostOptions(postOptionContents, images);
     }
 
+    private List<PostOption> toPostOptions(final List<String> postOptionContents, final List<MultipartFile> images) {
+        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
+                .mapToObj(postOptionSequence ->
+                        PostOption.of(
+                                postOptionContents.get(postOptionSequence - 1),
+                                this,
+                                postOptionSequence,
+                                images.get(postOptionSequence - 1)
+                        )
+                )
+                .toList();
+    }
+
     public boolean hasPostOption(final PostOption postOption) {
         return postOptions.contains(postOption);
     }
 
     public void validateWriter(final Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
+        if (!Objects.equals(this.writer.getId(), member.getId())) {
             throw new BadRequestException(PostExceptionType.NOT_WRITER);
         }
     }
@@ -103,18 +116,24 @@ public class Post extends BaseEntity {
         return deadline.isBefore(LocalDateTime.now());
     }
 
-    public Vote makeVote(Member member, PostOption postOption) {
+    public Vote makeVote(Member voter, PostOption postOption) {
         validateDeadLine();
-        validateWriter(member);
+        validateVoter(voter);
         validatePostOption(postOption);
 
         final Vote vote = Vote.builder()
-                .member(member)
+                .member(voter)
                 .postOption(postOption)
                 .build();
 
         postOption.addVote(vote);
         return vote;
+    }
+
+    private void validateVoter(final Member voter) {
+        if (Objects.equals(this.writer.getId(), voter.getId())) {
+            throw new BadRequestException(PostExceptionType.NOT_VOTER);
+        }
     }
 
     private void validateDeadLine() {
@@ -130,19 +149,19 @@ public class Post extends BaseEntity {
     }
 
     public boolean isWriter(final Member member) {
-        return Objects.equals(this.member, member);
+        return Objects.equals(this.writer, member);
     }
 
-    private List<PostOption> toPostOptions(final List<String> postOptionContents, final List<MultipartFile> images) {
-        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
-                .mapToObj(postOptionSequence ->
-                        PostOption.of(
-                                postOptionContents.get(postOptionSequence - 1),
-                                this,
-                                postOptionSequence,
-                                images.get(postOptionSequence - 1)
-                        )
-                )
-                .toList();
+    public Long getFinalTotalVoteCount(final Member loginMember) {
+        if (isPostVoteByMember(loginMember)) {
+            return this.totalVoteCount;
+        }
+
+        return -1L;
     }
+
+    public boolean isPostVoteByMember(final Member member) {
+        return this.postOptions.getSelectOption(member) != 0;
+    }
+
 }

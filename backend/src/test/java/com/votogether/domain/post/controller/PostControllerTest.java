@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
-import com.votogether.domain.post.dto.request.CreatePostRequest;
-import com.votogether.domain.post.dto.response.GetAllPostResponse;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -62,7 +63,7 @@ class PostControllerTest {
     @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
-        CreatePostRequest createPostRequest = CreatePostRequest.builder().build();
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder().build();
 
         String fileName1 = "testImage1.PNG";
         String resultFileName1 = "testResultImage1.PNG";
@@ -75,7 +76,7 @@ class PostControllerTest {
         File file2 = new File(filePath2);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String postRequestJson = objectMapper.writeValueAsString(createPostRequest);
+        String postRequestJson = objectMapper.writeValueAsString(postCreateRequest);
 
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList())).willReturn(savedPostId);
@@ -109,13 +110,17 @@ class PostControllerTest {
                 .build();
 
         Post post = Post.builder()
-                .member(MALE_30.get())
+                .writer(MALE_30.get())
                 .postBody(postBody)
                 .deadline(LocalDateTime.now().plusDays(3L))
                 .build();
 
-        given(postService.getAllPostBySortTypeAndClosingType(firstPage, PostClosingType.PROGRESS, PostSortType.LATEST))
-                .willReturn(List.of(new GetAllPostResponse(post)));
+        given(postService.getAllPostBySortTypeAndClosingType(
+                any(Member.class),
+                eq(firstPage),
+                eq(PostClosingType.PROGRESS),
+                eq(PostSortType.LATEST)))
+                .willReturn(List.of(new PostResponse(post, MALE_30.get())));
 
         // when
         String responseBody = RestAssuredMockMvc.given().log().all()
@@ -130,7 +135,7 @@ class PostControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        List<GetAllPostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
+        List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
         });
 
         // then

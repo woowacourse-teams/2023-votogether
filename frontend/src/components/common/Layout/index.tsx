@@ -1,35 +1,35 @@
-import React, { PropsWithChildren } from 'react';
-
-import type { Category } from '@type/category';
-import type { User } from '@type/user';
+import { PropsWithChildren } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
 
+import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
+
 import * as S from './style';
 
 interface LayoutProps extends PropsWithChildren {
-  userInfo?: User;
-  categoryList: Category[];
-  selectedCategory?: string;
   isSidebarVisible: boolean;
-  handleFavoriteClick: (categoryId: number) => void;
-  handleLogoutClick: () => void;
 }
 
-export default function Layout({
-  userInfo,
-  categoryList,
-  selectedCategory,
-  isSidebarVisible,
-  handleFavoriteClick,
-  handleLogoutClick,
-  children,
-}: LayoutProps) {
+export default function Layout({ children, isSidebarVisible }: LayoutProps) {
+  const navigate = useNavigate();
+
+  //추후 구현 예정
+  const userInfo = undefined;
+  const categoryList = MOCK_FAVORITE_CATEGORIES;
+  const selectedCategory = undefined;
+  const handleFavoriteClick = () => {};
+  const handleLogoutClick = () => {};
+
+  const movePostListPage = () => {
+    navigate('/');
+  };
+
   return (
     <S.Container>
       <S.WideHeaderWrapper>
-        <WideHeader />
+        <WideHeader handleLogoClick={movePostListPage} />
       </S.WideHeaderWrapper>
       <S.ContentContainer>
         {isSidebarVisible && (

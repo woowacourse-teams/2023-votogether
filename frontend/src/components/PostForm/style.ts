@@ -3,8 +3,10 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const HeaderWrapper = styled.div`
-  position: fixed;
   width: 100%;
+
+  position: fixed;
+
   z-index: ${theme.zIndex.header};
 
   @media (min-width: ${theme.breakpoint.sm}) {
@@ -31,6 +33,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
+  align-items: center;
   gap: 40px;
 
   position: relative;

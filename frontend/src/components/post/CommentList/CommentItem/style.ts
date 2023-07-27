@@ -15,6 +15,7 @@ export const Header = styled.div`
   justify-content: space-between;
   align-items: center;
 
+  height: 24px;
   margin-bottom: 7px;
 `;
 
@@ -51,8 +52,6 @@ export const Description = styled.p``;
 
 export const MenuContainer = styled.button`
   width: 24px;
-  height: 24px;
-
   position: relative;
 
   color: #888;

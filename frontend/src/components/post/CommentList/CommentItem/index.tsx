@@ -10,14 +10,16 @@ import CommentDeleteModal from './CommentDeleteModal';
 import CommentMenu from './CommentMenu';
 import { COMMENT_MENU } from './CommentMenu/constants';
 import CommentReportModal from './CommentReportModal';
+import { COMMENT_USER_MENU } from './constants';
 import * as S from './style';
-import { CommentAction } from './types';
+import { CommentAction, CommentUser } from './types';
 
 interface CommentItemProps {
   comment: Comment;
+  userType: CommentUser;
 }
 
-export default function CommentItem({ comment }: CommentItemProps) {
+export default function CommentItem({ comment, userType }: CommentItemProps) {
   const { isOpen, toggleComponent } = useToggle();
   const { member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
@@ -30,6 +32,8 @@ export default function CommentItem({ comment }: CommentItemProps) {
     setAction(null);
   };
 
+  const USER_TYPE = COMMENT_USER_MENU[userType];
+
   return (
     <S.Container>
       <S.Header>
@@ -40,14 +44,16 @@ export default function CommentItem({ comment }: CommentItemProps) {
             {isEdit && <S.SubTitle>(수정됨)</S.SubTitle>}
           </S.SubTitleContainer>
         </S.UserContainer>
-        <S.MenuContainer type="button" aria-label="댓글 메뉴" onClick={toggleComponent}>
-          <S.Image src={ellipsis}></S.Image>
-          {isOpen && (
-            <S.MenuWrapper>
-              <CommentMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU.NORMAL} />
-            </S.MenuWrapper>
-          )}
-        </S.MenuContainer>
+        {userType !== 'guest' && (
+          <S.MenuContainer type="button" aria-label="댓글 메뉴" onClick={toggleComponent}>
+            <S.Image src={ellipsis}></S.Image>
+            {isOpen && (
+              <S.MenuWrapper>
+                <CommentMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
+              </S.MenuWrapper>
+            )}
+          </S.MenuContainer>
+        )}
       </S.Header>
       <S.Description>{content}</S.Description>
       {action === 'delete' && (

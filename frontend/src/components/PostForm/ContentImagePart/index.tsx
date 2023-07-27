@@ -9,7 +9,7 @@ export default function ContentImagePart({ imageUrl }: { imageUrl: string }) {
 
   return (
     <>
-      {imageUrl && (
+      {contentImage && (
         <S.ContentImageContainer>
           <OptionCancelButton onClick={removeImage} />
           <S.ContentImageWrapper>

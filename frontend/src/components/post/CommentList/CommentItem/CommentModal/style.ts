@@ -35,7 +35,7 @@ export const ModalContainer = styled.div`
 `;
 
 export const Title = styled.span`
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 
   color: #334253;
 
@@ -44,19 +44,6 @@ export const Title = styled.span`
 
   @media (min-width: ${theme.breakpoint.sm}) {
     font-size: 2.4rem;
-  }
-`;
-
-export const Description = styled.p`
-  margin-bottom: 44px;
-
-  color: #67727e;
-
-  font: var(--text-caption);
-  white-space: pre-wrap;
-
-  @media (min-width: ${theme.breakpoint.sm}) {
-    font: var(--text-body);
   }
 `;
 
@@ -72,4 +59,5 @@ export const ButtonContainer = styled.div`
 export const ButtonWrapper = styled.div`
   width: 100%;
   height: 48px;
+  margin-top: 44px;
 `;

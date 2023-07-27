@@ -1,8 +1,11 @@
 package com.votogether.domain.member.service;
 
+import com.votogether.domain.member.dto.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import java.util.Optional;
@@ -15,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
+    private final VoteRepository voteRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -29,6 +34,19 @@ public class MemberService {
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse findMemberInfo(final Member member) {
+        final int numberOfPosts = postRepository.countByMember(member);
+        final int numberOfVotes = voteRepository.countByMember(member);
+
+        return new MemberInfoResponse(
+                member.getNickname(),
+                member.getPoint(),
+                numberOfPosts,
+                numberOfVotes
+        );
     }
 
     @Transactional

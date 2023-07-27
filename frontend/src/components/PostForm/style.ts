@@ -76,25 +76,6 @@ export const Content = styled.textarea`
   }
 `;
 
-export const ContentImagePart = styled.div`
-  display: grid;
-  grid-template-columns: 40px auto;
-`;
-
-export const ContentImageContainer = styled.div`
-  width: 60%;
-
-  position: relative;
-`;
-
-export const ContentImage = styled.img`
-  width: 100%;
-  border-radius: 4px;
-
-  aspect-ratio: 1/1;
-  object-fit: cover;
-`;
-
 export const LeftSide = styled.div`
   display: flex;
   flex-direction: column;

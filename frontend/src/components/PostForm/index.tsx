@@ -13,11 +13,11 @@ import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
-import OptionCancelButton from '@components/optionList/WritingVoteOptionList/WritingVoteOption/OptionCancelButton';
 
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 
 import { DEADLINE_OPTION } from './constants';
+import ContentImagePart from './ContentImagePart';
 import * as S from './style';
 
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
@@ -148,21 +148,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-            {!imageUrl ? (
-              <S.ContentImagePart>
-                <OptionCancelButton />
-                <S.ContentImageContainer>
-                  <S.ContentImage
-                    src={'https://source.unsplash.com/random'}
-                    alt={'본문에 포함된 사진'}
-                  />
-                </S.ContentImageContainer>
-              </S.ContentImagePart>
-            ) : (
-              <SquareButton theme="fill" type="button" onClick={() => {}}>
-                본문에 사진 추가
-              </SquareButton>
-            )}
+            {<ContentImagePart imageUrl={imageUrl} />}
           </S.LeftSide>
           <S.RightSide>
             <S.OptionListWrapper>

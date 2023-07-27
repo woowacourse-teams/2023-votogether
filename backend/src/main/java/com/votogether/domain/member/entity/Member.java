@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id", "nickname"}, callSuper = false)
+@EqualsAndHashCode(of = {"id", "nickname"})
 @ToString
 @Getter
 @Entity

@@ -95,7 +95,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         'textarea[name="optionText"]'
       );
       const writingOptionList = Array.from(optionTextAreas).map((textarea, index) => {
-        return { content: textarea.value, imageURL: options[index]?.imageUrl ?? '' };
+        return { content: textarea.value, imageUrl: options[index]?.imageUrl ?? '' };
       });
 
       const updatedPostTexts = {

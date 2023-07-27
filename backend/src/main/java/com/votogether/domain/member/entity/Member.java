@@ -97,9 +97,6 @@ public class Member extends BaseEntity {
         if (!Pattern.matches("^[가-힣a-zA-Z0-9]+$", nickname)) {
             throw new BadRequestException(MemberExceptionType.INVALID_NICKNAME_LETTER);
         }
-        if (this.nickname.equals(nickname)) {
-            throw new BadRequestException(MemberExceptionType.DUPLICATED_NICKNAME_BEFORE);
-        }
     }
 
 }

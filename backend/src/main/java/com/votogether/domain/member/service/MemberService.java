@@ -1,7 +1,10 @@
 package com.votogether.domain.member.service;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.exception.BadRequestException;
+import com.votogether.exception.NotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,20 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 Id를 가진 회원은 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+    }
+
+    @Transactional
+    public void changeNickname(final Member member, final String nickname) {
+        validateExistentNickname(nickname);
+        member.changeNickname(nickname);
+    }
+
+    private void validateExistentNickname(final String nickname) {
+        final boolean isExist = memberRepository.existsByNickname(nickname);
+        if (!isExist) {
+            throw new BadRequestException(MemberExceptionType.ALREADY_EXISTENT_NICKNAME);
+        }
     }
 
 }

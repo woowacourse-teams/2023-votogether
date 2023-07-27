@@ -1,6 +1,4 @@
-import { PostInfo } from '@type/post';
-
-import type { PostRequestKind, PostSorting, PostStatus } from '@components/post/PostListPage/types';
+import { PostInfo, PostListByOption } from '@type/post';
 
 import {
   REQUEST_STATUS_OPTION,
@@ -9,14 +7,6 @@ import {
 } from '@constants/post';
 
 import { getFetch } from '@utils/fetch';
-
-interface PostListByOption {
-  content: PostRequestKind;
-  postStatus: PostStatus;
-  postSorting: PostSorting;
-  pageNumber: number;
-  categoryId?: number;
-}
 
 const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 

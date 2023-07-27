@@ -19,11 +19,10 @@ export const ContentImage = styled.img`
   object-fit: cover;
 `;
 
-export const Container = styled.div<{ $isVisible: boolean }>`
+export const Container = styled.div`
   width: 100%;
   margin: 5px;
   border-radius: 50%;
-  visibility: ${props => !props.$isVisible && 'hidden'};
 `;
 
 export const FileInput = styled.input`

@@ -7,6 +7,7 @@ import { PostInfo } from '@type/post';
 
 import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
+import { useWritingOption } from '@hooks/useWritingOption';
 
 import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
@@ -43,7 +44,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
   const options = voteInfo?.options ?? [];
 
   const navigate = useNavigate();
-
+  const writingOptionHook = useWritingOption(voteInfo?.options);
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
     day: 0,
@@ -157,7 +158,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
           </S.LeftSide>
           <S.RightSide>
             <S.OptionListWrapper>
-              <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
+              <WritingVoteOptionList writingOptionHook={writingOptionHook} />
             </S.OptionListWrapper>
             <S.Deadline>
               {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.

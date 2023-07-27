@@ -1,23 +1,27 @@
-import React from 'react';
+import { ChangeEvent } from 'react';
 
-import { useWritingOption } from '@hooks/useWritingOption';
-import type { WritingVoteOptionType } from '@hooks/useWritingOption';
+import { WritingVoteOptionType } from '@hooks/useWritingOption';
 
 import AddButton from '@components/common/AddButton';
 
 import * as S from './style';
 import WritingVoteOption from './WritingVoteOption';
 
-interface WritingVoteOptionListProps {
-  initialOptionList?: WritingVoteOptionType[];
-}
-
 const MINIMUM_COUNT = 2;
 const MAXIMUM_COUNT = 5;
 
-export default function WritingVoteOptionList({ initialOptionList }: WritingVoteOptionListProps) {
-  const { optionList, addOption, deleteOption, removeImage, handleUploadImage } =
-    useWritingOption(initialOptionList);
+interface WritingVoteOptionListProps {
+  writingOptionHook: {
+    optionList: WritingVoteOptionType[];
+    addOption: () => void;
+    deleteOption: (optionId: number) => void;
+    removeImage: (optionId: number) => void;
+    handleUploadImage: (event: ChangeEvent<HTMLInputElement>, optionId: number) => void;
+  };
+}
+
+export default function WritingVoteOptionList({ writingOptionHook }: WritingVoteOptionListProps) {
+  const { optionList, addOption, deleteOption, removeImage, handleUploadImage } = writingOptionHook;
   const isDeletable = optionList.length > MINIMUM_COUNT;
 
   return (
@@ -30,7 +34,7 @@ export default function WritingVoteOptionList({ initialOptionList }: WritingVote
           text={optionItem.text}
           handleDeleteOptionClick={() => deleteOption(optionItem.id)}
           handleRemoveImageClick={() => removeImage(optionItem.id)}
-          handleUploadImage={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleUploadImage={(event: ChangeEvent<HTMLInputElement>) =>
             handleUploadImage(event, optionItem.id)
           }
           imageUrl={optionItem.imageUrl}

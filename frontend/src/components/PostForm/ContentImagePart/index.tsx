@@ -4,17 +4,19 @@ import OptionCancelButton from '@components/optionList/WritingVoteOptionList/Wri
 
 import * as S from './style';
 
-export default function ContentImagePart({ imageUrl }: { imageUrl?: string }) {
+export default function ContentImagePart({ imageUrl }: { imageUrl: string }) {
   const { contentImage, removeImage, handleUploadImage } = useContentImage(imageUrl);
 
   return (
     <>
-      <S.ContentImageContainer $isVisible={!!contentImage}>
-        <OptionCancelButton onClick={removeImage} />
-        <S.ContentImageWrapper>
-          <S.ContentImage src={contentImage} alt={'본문에 포함된 사진'} />
-        </S.ContentImageWrapper>
-      </S.ContentImageContainer>
+      {imageUrl && (
+        <S.ContentImageContainer>
+          <OptionCancelButton onClick={removeImage} />
+          <S.ContentImageWrapper>
+            <S.ContentImage src={contentImage} alt={'본문에 포함된 사진'} />
+          </S.ContentImageWrapper>
+        </S.ContentImageContainer>
+      )}
       <S.FileInputContainer $isVisible={!contentImage}>
         <S.Label
           htmlFor="content-image-upload"

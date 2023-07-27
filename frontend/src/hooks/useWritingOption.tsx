@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 export interface WritingVoteOptionType {
   id: number;
   text: string;
-  imageUrl?: string;
+  imageUrl: string;
 }
 
 const MIN_COUNT = 2;
@@ -74,7 +74,7 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     reader.onloadend = () => {
       const updatedOptionList = optionList.map(optionItem => {
         if (optionItem.id === optionId) {
-          return { ...optionItem, imageUrl: reader.result?.toString() };
+          return { ...optionItem, imageUrl: reader.result?.toString() ?? '' };
         }
 
         return optionItem;

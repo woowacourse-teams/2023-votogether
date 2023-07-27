@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 
 import { MAX_FILE_SIZE } from './useWritingOption';
 
-export const useContentImage = (imageUrl?: string) => {
+export const useContentImage = (imageUrl: string) => {
   const [contentImage, setContentImage] = useState(imageUrl);
 
   const removeImage = () => {
@@ -30,7 +30,7 @@ export const useContentImage = (imageUrl?: string) => {
     reader.readAsDataURL(file);
 
     reader.onloadend = () => {
-      setContentImage(reader.result?.toString());
+      setContentImage(reader.result?.toString() ?? '');
     };
   };
 

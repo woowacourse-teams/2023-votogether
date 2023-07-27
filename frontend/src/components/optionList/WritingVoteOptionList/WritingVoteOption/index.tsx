@@ -13,7 +13,7 @@ interface WritingVoteOptionProps {
   handleDeleteOptionClick: () => void;
   handleRemoveImageClick: () => void;
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  imageUrl?: string;
+  imageUrl: string;
 }
 
 const MAX_WRITING_LENGTH = 50;
@@ -25,7 +25,7 @@ export default function WritingVoteOption({
   handleDeleteOptionClick,
   handleRemoveImageClick,
   handleUploadImage,
-  imageUrl = '',
+  imageUrl,
 }: WritingVoteOptionProps) {
   const { handleTextChange } = useText('');
 

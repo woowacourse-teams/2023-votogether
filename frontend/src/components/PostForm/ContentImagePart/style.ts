@@ -1,10 +1,8 @@
 import { styled } from 'styled-components';
 
-export const ContentImageContainer = styled.div<{ $isVisible: boolean }>`
+export const ContentImageContainer = styled.div`
   display: grid;
   grid-template-columns: 40px auto;
-
-  visibility: ${props => !props.$isVisible && 'hidden'};
 `;
 
 export const ContentImageWrapper = styled.div`

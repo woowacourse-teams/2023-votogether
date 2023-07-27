@@ -153,7 +153,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-            <ContentImagePart imageUrl={imageUrl} />
+            <ContentImagePart imageUrl={imageUrl ?? ''} />
           </S.LeftSide>
           <S.RightSide>
             <S.OptionListWrapper>

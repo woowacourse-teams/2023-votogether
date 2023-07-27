@@ -93,7 +93,7 @@ public class PostOption extends BaseEntity {
 
     private static PostOption toPostOptionEntity(
             final Post post,
-            final int postOptionSequence,
+            final Integer postOptionSequence,
             final String postOptionContent,
             final String imageUrl
     ) {

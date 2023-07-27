@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 public record VoteOptionStatisticsResponse(
-        int totalVoteCount,
-        int totalMaleCount,
-        int totalFemaleCount,
+        Integer totalVoteCount,
+        Integer totalMaleCount,
+        Integer totalFemaleCount,
         List<VoteCountForAgeGroupResponse> ageGroup
 ) {
 

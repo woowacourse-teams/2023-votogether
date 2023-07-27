@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostService {
-    private static final int BASIC_PAGING_SIZE = 10;
+    private static final Integer BASIC_PAGING_SIZE = 10;
 
     private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
 

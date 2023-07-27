@@ -21,7 +21,7 @@ public class PostOptions {
         this.postOptions.addAll(postOptions);
     }
 
-    public boolean contains(final PostOption postOption) {
+    public Boolean contains(final PostOption postOption) {
         return postOptions.contains(postOption);
     }
 

@@ -11,7 +11,7 @@ public record OptionResponse(
 
     public OptionResponse(
             final PostOption postOption,
-            final boolean isPostVoteByMember,
+            final Boolean isPostVoteByMember,
             final Long totalVoteCount
     ) {
         this(

@@ -1,11 +1,13 @@
 import { styled } from 'styled-components';
 
-export const ContentImagePart = styled.div`
+export const ContentImageContainer = styled.div<{ $isVisible: boolean }>`
   display: grid;
   grid-template-columns: 40px auto;
+
+  visibility: ${props => !props.$isVisible && 'hidden'};
 `;
 
-export const ContentImageContainer = styled.div`
+export const ContentImageWrapper = styled.div`
   width: 60%;
 
   position: relative;
@@ -19,10 +21,12 @@ export const ContentImage = styled.img`
   object-fit: cover;
 `;
 
-export const Container = styled.div`
+export const FileInputContainer = styled.div<{ $isVisible: boolean }>`
   width: 100%;
   margin: 5px;
   border-radius: 50%;
+
+  visibility: ${props => !props.$isVisible && 'hidden'};
 `;
 
 export const FileInput = styled.input`

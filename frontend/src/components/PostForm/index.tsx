@@ -78,14 +78,19 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const optionImageFileInputs =
         e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
       const fileInputList: HTMLInputElement[] = [...optionImageFileInputs];
-      const imageFileList: File[] = [];
-      fileInputList.forEach(item => {
+      const contentImageFileList: File[] = [];
+      const optionImageFileList: File[] = [];
+      fileInputList.forEach((item, index) => {
         if (item.files) {
-          imageFileList.push(item.files[0]);
+          optionImageFileList.push(item.files[0]);
+          // index === 0
+          //   ? contentImageFileList.push(item.files[0])
+          //   : optionImageFileList.push(item.files[0]);
         }
       });
 
-      imageFileList.map(file => formData.append('images', file));
+      contentImageFileList.map(file => formData.append('contentImages', file));
+      optionImageFileList.map(file => formData.append('optionImages', file));
 
       const optionTextAreas = e.target.querySelectorAll<HTMLTextAreaElement>(
         'textarea[name="optionText"]'
@@ -97,6 +102,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const updatedPostTexts = {
         categoryIds: [1, 2], // 다중 선택 컴포넌트 구현 후 수정 예정
         title: writingTitle ?? '',
+        imageUrl: imageUrl ?? '',
         content: writingContent ?? '',
         postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),
@@ -112,7 +118,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         return;
       }
 
-      navigate('/');
+      // navigate('/');
     }
   };
 
@@ -148,7 +154,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-            {<ContentImagePart imageUrl={imageUrl} />}
+            <ContentImagePart imageUrl={imageUrl} />
           </S.LeftSide>
           <S.RightSide>
             <S.OptionListWrapper>

@@ -1,12 +1,18 @@
-import { useContentImage } from '@hooks/useContentImage';
+import { ChangeEvent } from 'react';
 
 import OptionCancelButton from '@components/optionList/WritingVoteOptionList/WritingVoteOption/OptionCancelButton';
 
 import * as S from './style';
 
-export default function ContentImagePart({ imageUrl }: { imageUrl: string }) {
-  const { contentImage, removeImage, handleUploadImage } = useContentImage(imageUrl);
-
+interface ContentImagePartProps {
+  contentImageHook: {
+    contentImage: string;
+    removeImage: () => void;
+    handleUploadImage: (event: ChangeEvent<HTMLInputElement>) => void;
+  };
+}
+export default function ContentImagePart({ contentImageHook }: ContentImagePartProps) {
+  const { contentImage, removeImage, handleUploadImage } = contentImageHook;
   return (
     <>
       {contentImage && (

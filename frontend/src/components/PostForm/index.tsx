@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
+import { useContentImage } from '@hooks/useContentImage';
 import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
 import { useWritingOption } from '@hooks/useWritingOption';
@@ -45,6 +46,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
   const navigate = useNavigate();
   const writingOptionHook = useWritingOption(voteInfo?.options);
+  const contentImageHook = useContentImage(imageUrl ?? '');
+
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
     day: 0,
@@ -154,7 +157,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-            <ContentImagePart imageUrl={imageUrl ?? ''} />
+            <ContentImagePart contentImageHook={contentImageHook} />
           </S.LeftSide>
           <S.RightSide>
             <S.OptionListWrapper>

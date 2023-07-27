@@ -11,7 +11,6 @@ import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.fixtures.MemberFixtures;
-import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,9 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @ServiceTest
 class PostCommentServiceTest {
-
-    @Autowired
-    EntityManager em;
 
     @Autowired
     PostCommentService postCommentService;

@@ -62,4 +62,46 @@ class PostRepositoryTest {
         assertThat(savedPost).isNotNull();
     }
 
+    @Test
+    @DisplayName("해당 멤버가 작성한 글의 개수를 확인한다.")
+    void countByMember() {
+        // given
+        Member member = Member.builder()
+                .nickname("user1")
+                .gender(Gender.MALE)
+                .socialType(SocialType.KAKAO)
+                .socialId("kakao@gmail.com")
+                .ageRange("30~39")
+                .birthday("0101")
+                .point(0)
+                .build();
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post1 = Post.builder()
+                .member(member)
+                .postBody(postBody)
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        Post post2 = Post.builder()
+                .member(member)
+                .postBody(postBody)
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        memberRepository.save(member);
+        postRepository.save(post1);
+        postRepository.save(post2);
+
+        // when
+        int numberOfPosts = postRepository.countByMember(member);
+
+        // then
+        assertThat(numberOfPosts).isEqualTo(2);
+    }
+
 }

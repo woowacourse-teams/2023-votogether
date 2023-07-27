@@ -277,7 +277,6 @@ class VoteRepositoryTest {
                 .postOption(postOption)
                 .build();
 
-        memberRepository.save(member);
         voteRepository.save(vote);
 
         // when

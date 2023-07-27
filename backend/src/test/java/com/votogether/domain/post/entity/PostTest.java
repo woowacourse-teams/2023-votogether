@@ -38,7 +38,7 @@ class PostTest {
     @DisplayName("PostOption의 내용을 전달하면 Post와 PostOption이 매핑된다")
     void mapPostOptionsByElements() {
         // given
-        final Post post = Post.builder().build();
+        Post post = Post.builder().build();
 
         byte[] content = "Hello, World!".getBytes(StandardCharsets.UTF_8);
         MockMultipartFile file1 = new MockMultipartFile(
@@ -59,7 +59,7 @@ class PostTest {
         post.mapPostOptionsByElements(List.of("content1", "content2"), List.of(file1, file2));
 
         // then
-        final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+        List<PostOption> postOptions = post.getPostOptions().getPostOptions();
         assertThat(postOptions).hasSize(2);
     }
 

@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import { useUserInfo } from '@hooks/query/user/useUserInfo';
 import { useDrawer } from '@hooks/useDrawer';
 
 import AddButton from '@components/common/AddButton';
@@ -21,7 +22,7 @@ export default function PostListPage() {
 
   //추후 구현 예정
   const categoryList = MOCK_FAVORITE_CATEGORIES;
-  const userInfo = undefined;
+  const { data: userInfo } = useUserInfo();
   const handleFavoriteClick = () => {};
   const handleLogoutClick = () => {};
 

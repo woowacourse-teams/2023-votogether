@@ -12,9 +12,9 @@ export default meta;
 type Story = StoryObj<typeof CommentMenu>;
 
 export const Writer: Story = {
-  render: () => <CommentMenu menuList={COMMENT_MENU.WRITER} />,
+  render: () => <CommentMenu menuList={COMMENT_MENU.WRITER} handleMenuClick={() => {}} />,
 };
 
 export const NormalUser: Story = {
-  render: () => <CommentMenu menuList={COMMENT_MENU.NORMAL} />,
+  render: () => <CommentMenu menuList={COMMENT_MENU.NORMAL} handleMenuClick={() => {}} />,
 };

@@ -85,8 +85,10 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
       imageFileList.map(file => formData.append('images', file));
 
-      const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
-      const writingOptionList = Array.from(optionTextAreas).map((textarea: any, index) => {
+      const optionTextAreas = e.target.querySelectorAll<HTMLTextAreaElement>(
+        'textarea[name="optionText"]'
+      );
+      const writingOptionList = Array.from(optionTextAreas).map((textarea, index) => {
         return { content: textarea.value, imageURL: options[index].imageUrl };
       });
 

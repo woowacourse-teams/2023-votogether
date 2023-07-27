@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from 'react';
 import * as S from './style';
 
 interface SquareButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  theme: 'blank' | 'fill';
+  theme: 'blank' | 'fill' | 'gray';
   children: string;
 }
 
@@ -13,7 +13,7 @@ interface SquareButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  */
 export default function SquareButton({ theme, children, ...rest }: SquareButtonProps) {
   return (
-    <S.Button theme={theme} {...rest}>
+    <S.Button $theme={theme} {...rest}>
       {children}
     </S.Button>
   );

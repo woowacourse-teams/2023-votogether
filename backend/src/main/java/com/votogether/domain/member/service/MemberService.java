@@ -39,7 +39,7 @@ public class MemberService {
 
     private void validateExistentNickname(final String nickname) {
         final boolean isExist = memberRepository.existsByNickname(nickname);
-        if (!isExist) {
+        if (isExist) {
             throw new BadRequestException(MemberExceptionType.ALREADY_EXISTENT_NICKNAME);
         }
     }

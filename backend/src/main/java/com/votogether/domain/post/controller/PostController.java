@@ -36,8 +36,7 @@ public class PostController {
     @Operation(summary = "게시글 작성", description = "게시글을 저장한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "게시물 생성되었습니다."),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다."),
-            @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
@@ -52,8 +51,7 @@ public class PostController {
     @Operation(summary = "게시글 조회", description = "게시글을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글을 조회했습니다."),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다."),
-            @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPost(

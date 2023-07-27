@@ -99,8 +99,8 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 조회한다")
-    void getAllPost() throws JsonProcessingException {
+    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
+    void getAllPostBySortTypeAndClosingType() throws JsonProcessingException {
         // given
         int firstPage = 0;
 

@@ -78,6 +78,11 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     e.preventDefault();
     const formData = new FormData();
 
+    const imageUrlList = [
+      contentImageHook.contentImage,
+      ...writingOptionHook.optionList.map(option => option.imageUrl),
+    ];
+
     if (e.target instanceof HTMLFormElement) {
       const optionImageFileInputs =
         e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
@@ -85,6 +90,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const contentImageFileList: File[] = [];
       const optionImageFileList: File[] = [];
       fileInputList.forEach((item, index) => {
+        if (imageUrlList[index] === '') item.value = '';
         if (item.files) {
           index === 0
             ? contentImageFileList.push(item.files[0])

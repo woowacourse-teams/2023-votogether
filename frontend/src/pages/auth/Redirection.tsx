@@ -1,8 +1,7 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
-import { useFetch } from '@hooks/useFetch';
 
 import { getFetch } from '@utils/fetch';
 
@@ -17,32 +16,50 @@ const getAuthInfo = async (url: string): Promise<AuthResponse> => {
 
 export default function Redirection() {
   const { loggedInfo, setLoggedInfo } = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
-  //매우 긴 URL에서 code 값 추출
-  const params = new URL(document.location.toString()).searchParams;
-  const code = params.get('code');
 
-  const REGISTER_API_URL = `${process.env.API_URL}/auth/kakao/callback?code=${code}`;
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      setErrorMessage('');
 
-  const { data, isLoading } = useFetch<AuthResponse>(() => getAuthInfo(REGISTER_API_URL));
-  window.console.log(REGISTER_API_URL);
-  window.console.log(data);
+      const params = new URL(document.location.toString()).searchParams;
+      const code = params.get('code');
+      const REGISTER_API_URL = `${process.env.API_URL}/auth/kakao/callback?code=${code}`;
 
-  if (data) {
-    const { accessToken, nickname } = data;
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('nickname', nickname);
+      await getAuthInfo(REGISTER_API_URL)
+        .finally(() => {
+          setIsLoading(false);
+        })
+        .catch(error => {
+          setErrorMessage(error.message);
+        })
+        .then(res => {
+          if (!res) return setErrorMessage('잘못된 형식의 response');
 
-    setLoggedInfo({
-      ...loggedInfo,
-      accessToken: accessToken,
-      nickname: nickname,
-      isLogin: true,
-    }); // 수정 필요
+          const { accessToken, nickname } = res;
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('nickname', nickname);
 
-    navigate('/');
-  }
+          setLoggedInfo({
+            ...loggedInfo,
+            accessToken: accessToken,
+            nickname: nickname,
+            isLogin: true,
+          });
 
-  return <div>{isLoading && '로그인 중입니다...'}</div>;
+          navigate('/');
+        });
+    })();
+  }, [navigate, loggedInfo, setLoggedInfo]);
+
+  return (
+    <div>
+      {isLoading && '로그인 중입니다...'}
+      {errorMessage && errorMessage}
+    </div>
+  );
 }

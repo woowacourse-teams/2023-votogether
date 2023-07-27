@@ -80,11 +80,14 @@ export const deleteFetch = async (url: string) => {
   return response;
 };
 
-export const multiPostFetch = async (url: string, body: FormData) => {
+export const multiPostFetch = async (token: string, url: string, body: FormData) => {
   const response = await fetch(url, {
     method: 'POST',
     body,
-    headers: multiHeaders,
+    headers: {
+      ...multiHeaders,
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   const data = await response.json();
@@ -100,7 +103,7 @@ export const multiPutFetch = async (url: string, body: FormData) => {
   const response = await fetch(url, {
     method: 'PUT',
     body,
-    headers: multiHeaders,
+    headers,
   });
 
   const data = await response.json();

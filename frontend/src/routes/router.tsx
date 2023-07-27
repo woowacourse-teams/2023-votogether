@@ -39,12 +39,12 @@ const router = createBrowserRouter([
     ],
   },
   {
-     path: 'login',
-     element: <Login />,
+    path: 'login',
+    element: <Login />,
   },
   {
-     path: 'auth/kakao/callback',
-     element: <Redirection />,
+    path: 'auth/kakao/callback',
+    element: <Redirection />,
   },
   {
     path: PATH.USER,

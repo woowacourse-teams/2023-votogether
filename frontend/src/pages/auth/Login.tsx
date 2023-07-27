@@ -36,14 +36,11 @@ const Wrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   gap: 150px;
-
   width: 320px;
   height: 1vh;
   margin-top: 300px;
-
   position: fixed;
   left: 10%;
-
   @media (min-width: 576px) {
     left: 30%;
   }
@@ -59,6 +56,5 @@ const ButtonWrapper = styled.div`
   flex-direction: column;
   justify-content: space-around;
   gap: 20px;
-
   width: 230px;
 `;

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import type { Option } from './types';
 
-import { useToggle } from '@hooks/useToggle';
+import { useState, MouseEvent } from 'react';
 
 import OptionCancelButton from '@components/optionList/WritingVoteOptionList/WritingVoteOption/OptionCancelButton';
 
@@ -8,11 +8,6 @@ import chevronDown from '@assets/chevron-down.svg';
 import chevronUp from '@assets/chevron-up.svg';
 
 import * as S from './style';
-
-interface Option {
-  id: number;
-  name: string;
-}
 
 interface MultiSelectProps {
   selectedOptionList: Option[];
@@ -29,18 +24,14 @@ export default function MultiSelect({
   handleOptionDelete,
   placeholder = '여러 개의 옵션을 선택해주세요',
 }: MultiSelectProps) {
-  const { isOpen, openComponent, closeComponent } = useToggle();
+  const [isOpen, setIsOpen] = useState(false);
 
   const filteredOptionList = optionList.filter(
     option => !selectedOptionList.some(selected => selected.id === option.id)
   );
 
   const handleToggleWrapper = () => {
-    if (isOpen) {
-      closeComponent();
-      return;
-    }
-    openComponent();
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -49,10 +40,10 @@ export default function MultiSelect({
         <S.SelectedOptionListContainer>
           {selectedOptionList.length === 0 && <span>{placeholder} </span>}
           {selectedOptionList.map(({ id, name }) => (
-            <S.SelectedOption key={id} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <S.SelectedOption key={id} onClick={(e: MouseEvent) => e.stopPropagation()}>
               <span>{name}</span>
               <OptionCancelButton
-                onClick={(e: React.MouseEvent) => {
+                onClick={(e: MouseEvent) => {
                   e.stopPropagation();
                   handleOptionDelete(id);
                 }}
@@ -65,7 +56,7 @@ export default function MultiSelect({
         </S.SelectIcon>
       </S.Wrapper>
       {filteredOptionList.length > 0 && (
-        <S.DropDown opened={isOpen}>
+        <S.DropDown $isOpened={isOpen}>
           {filteredOptionList.map(({ id, name }) => (
             <li
               key={id}

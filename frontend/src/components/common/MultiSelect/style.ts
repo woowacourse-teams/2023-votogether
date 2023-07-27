@@ -38,7 +38,7 @@ export const SelectIcon = styled.span`
 `;
 
 export const DropDown = styled.ul<{
-  opened: boolean;
+  $isOpened: boolean;
 }>`
   width: 100%;
   border: 1px solid #e4e5e7;
@@ -47,8 +47,8 @@ export const DropDown = styled.ul<{
 
   position: absolute;
 
-  opacity: ${({ opened }) => (opened ? 1 : 0)};
-  visibility: ${({ opened }) => (opened ? 'visible' : 'hidden')};
+  opacity: ${({ $isOpened }) => ($isOpened ? 1 : 0)};
+  visibility: ${({ $isOpened }) => ($isOpened ? 'visible' : 'hidden')};
 
   transition: all 0.2s linear 0.1s;
 

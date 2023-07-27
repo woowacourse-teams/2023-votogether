@@ -1,9 +1,6 @@
 import { useState } from 'react';
 
-interface Option {
-  id: number;
-  name: string;
-}
+import type { Option } from '@components/common/MultiSelect/types';
 
 export const useMultiSelect = (initialSelectedOptionList: Option[], optionCountLimit?: number) => {
   const [selectedOptionList, setSelectedOptionList] = useState(initialSelectedOptionList);

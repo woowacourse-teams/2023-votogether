@@ -60,10 +60,10 @@ public class PostController {
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {
-        final List<PostResponse> getPostResponses =
+        final List<PostResponse> responses =
                 postService.getAllPostBySortTypeAndClosingType(loginMember, page, postClosingType, postSortType);
 
-        return ResponseEntity.ok(getPostResponses);
+        return ResponseEntity.ok(responses);
     }
 
     @Operation(summary = "게시글 투표 통계 조회", description = "게시글 투표에 대한 전체 통계를 조회한다.")

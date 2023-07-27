@@ -11,6 +11,7 @@ export interface PostInfo {
   title: string;
   writer: { id: number; nickname: string };
   content: string;
+  imageUrl?: string;
   category: { id: number; name: string }[];
   startTime: string;
   endTime: string;

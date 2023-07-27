@@ -10,5 +10,5 @@ export default meta;
 type Story = StoryObj<typeof CommentReportModal>;
 
 export const Default: Story = {
-  render: () => <CommentReportModal />,
+  render: () => <CommentReportModal handleCancelClick={() => {}} />,
 };

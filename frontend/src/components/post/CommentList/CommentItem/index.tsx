@@ -13,6 +13,7 @@ import CommentReportModal from './CommentReportModal';
 import { COMMENT_USER_MENU } from './constants';
 import * as S from './style';
 import { CommentAction, CommentUser } from './types';
+import UserReportModal from './UserReportModal';
 
 interface CommentItemProps {
   comment: Comment;
@@ -59,7 +60,8 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       {action === 'delete' && (
         <CommentDeleteModal handleCancelClick={handleCancelClick} handleDeleteClick={() => {}} />
       )}
-      {action === 'report' && <CommentReportModal handleCancelClick={handleCancelClick} />}
+      {action === 'userReport' && <UserReportModal handleCancelClick={handleCancelClick} />}
+      {action === 'commentReport' && <CommentReportModal handleCancelClick={handleCancelClick} />}
     </S.Container>
   );
 }

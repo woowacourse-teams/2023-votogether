@@ -1,2 +1,2 @@
-export type CommentAction = 'delete' | 'report' | 'edit';
+export type CommentAction = 'delete' | 'userReport' | 'commentReport' | 'edit';
 export type CommentUser = 'guest' | 'writer' | 'normal';

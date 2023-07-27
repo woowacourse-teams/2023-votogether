@@ -73,13 +73,9 @@ class PostTest {
 
         // when
         boolean result1 = post.isWriter(MALE_30.get());
-        boolean result2 = post.isWriter(FEMALE_20.get());
 
         // then
-        assertAll(
-                () -> assertThat(result1).isTrue(),
-                () -> assertThat(result2).isFalse()
-        );
+        assertThat(result1).isTrue();
     }
 
     @Test

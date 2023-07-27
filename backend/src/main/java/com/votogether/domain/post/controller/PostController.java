@@ -41,7 +41,7 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @Auth Member loginMember,
+            @Auth final Member loginMember,
             @RequestPart final PostCreateRequest request,
             @RequestPart final List<MultipartFile> images
     ) {

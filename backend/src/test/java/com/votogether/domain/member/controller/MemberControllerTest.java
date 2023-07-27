@@ -3,12 +3,16 @@ package com.votogether.domain.member.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 
 import com.votogether.domain.member.dto.MemberInfoResponse;
+import com.votogether.domain.member.dto.MemberNicknameRequest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;
+import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 
 @Import(TokenProcessor.class)
 @WebMvcTest(MemberController.class)
@@ -61,6 +66,26 @@ class MemberControllerTest {
                 () -> assertThat(response.postCount()).isEqualTo(0),
                 () -> assertThat(response.voteCount()).isEqualTo(0)
         );
+    }
+
+    @Test
+    @DisplayName("회원의 닉네임을 변경한다.")
+    void changeNickname() {
+        // given
+        String nicknameToChange = "jeomxon";
+        MemberNicknameRequest memberNicknameRequest = new MemberNicknameRequest(nicknameToChange);
+        
+        willDoNothing().given(memberService).changeNickname(any(Member.class), anyString());
+
+        // when, then
+        RestAssuredMockMvc
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(memberNicknameRequest)
+                .when().patch("/members/me/nickname")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
     }
 
 }

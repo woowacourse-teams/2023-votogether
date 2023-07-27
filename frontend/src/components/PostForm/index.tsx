@@ -149,7 +149,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
           </S.HeaderButton>
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
-      <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
+      <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <S.LeftSide>
             <select>
@@ -228,7 +228,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
             </>
           </Modal>
         )}
-      </S.Form>
+      </form>
     </>
   );
 }

@@ -22,8 +22,6 @@ export const HeaderButton = styled.button`
   cursor: pointer;
 `;
 
-export const Form = styled.form``;
-
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -145,15 +143,18 @@ export const ButtonWrapper = styled.div`
 
 export const SaveButtonWrapper = styled.div`
   display: none;
+
   visibility: hidden;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     display: flex;
-    visibility: visible;
+
     width: 100%;
     height: 60px;
 
     margin-top: 40px;
+
+    visibility: visible;
   }
 `;
 

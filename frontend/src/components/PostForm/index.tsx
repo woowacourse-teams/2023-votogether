@@ -82,10 +82,9 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const optionImageFileList: File[] = [];
       fileInputList.forEach((item, index) => {
         if (item.files) {
-          optionImageFileList.push(item.files[0]);
-          // index === 0
-          //   ? contentImageFileList.push(item.files[0])
-          //   : optionImageFileList.push(item.files[0]);
+          index === 0
+            ? contentImageFileList.push(item.files[0])
+            : optionImageFileList.push(item.files[0]);
         }
       });
 

@@ -25,7 +25,7 @@ public record VoteInfoResponse(
                 .map(postOption ->
                         new OptionResponse(
                                 postOption,
-                                post.isPostVoteByMember(loginMember),
+                                post.isCanSeeVoteResult(loginMember),
                                 post.getFinalTotalVoteCount(loginMember)
                         )
                 )

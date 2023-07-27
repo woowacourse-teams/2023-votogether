@@ -466,7 +466,6 @@ class PostServiceTest {
                 () -> assertThat(secondResponse.voteInfo().options()).hasSize(2),
                 () -> assertThat(secondResponse.voteInfo().totalVoteCount()).isEqualTo(31)
         );
-
     }
 
 }

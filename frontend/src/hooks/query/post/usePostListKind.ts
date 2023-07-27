@@ -2,13 +2,15 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import { PostRequestKind } from '@components/post/PostListPage/types';
 
+import { POST_CONTENT } from '@constants/post';
+
 import { getPathFragment } from '@utils/getPathFragment';
 
 const REQUEST_URL: Record<string, PostRequestKind> = {
-  '/': 'all',
-  '/posts/category': 'category',
-  '/users/posts': 'myPost',
-  '/users/votes': 'myVote',
+  '/': POST_CONTENT.ALL,
+  '/posts/category': POST_CONTENT.CATEGORY,
+  '/users/posts': POST_CONTENT.MY_POST,
+  '/users/votes': POST_CONTENT.MY_VOTE,
 };
 
 export const usePostListKind = () => {

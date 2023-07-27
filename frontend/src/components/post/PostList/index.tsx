@@ -11,6 +11,8 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
+import { SORTING, STATUS } from '@constants/post';
+
 import * as S from './style';
 
 export default function PostList() {
@@ -21,9 +23,9 @@ export default function PostList() {
     thresholds: 0.1,
   });
   const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
-    useSelect<PostStatus>('progress');
+    useSelect<PostStatus>(STATUS.PROGRESS);
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
-    useSelect<PostSorting>('latest');
+    useSelect<PostSorting>(SORTING.LATEST);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
     content,

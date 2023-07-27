@@ -5,6 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import { usePostList } from '@hooks/query/usePostList';
 
+import { POST_CONTENT, SORTING, STATUS } from '@constants/post';
+
 import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
 const queryClient = new QueryClient();
@@ -16,7 +18,12 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.', () => {
   test('전체 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
-      () => usePostList({ postSorting: 'popular', postStatus: 'all', content: 'all' }),
+      () =>
+        usePostList({
+          postSorting: SORTING.POPULAR,
+          postStatus: STATUS.ALL,
+          content: POST_CONTENT.ALL,
+        }),
       {
         wrapper,
       }
@@ -29,10 +36,10 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
     const { result } = renderHook(
       () =>
         usePostList({
-          postSorting: 'popular',
-          postStatus: 'all',
+          postSorting: SORTING.POPULAR,
+          postStatus: STATUS.ALL,
           categoryId: 1,
-          content: 'category',
+          content: POST_CONTENT.CATEGORY,
         }),
       {
         wrapper,
@@ -46,10 +53,10 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
     const { result } = renderHook(
       () =>
         usePostList({
-          postSorting: 'popular',
-          postStatus: 'all',
+          postSorting: SORTING.POPULAR,
+          postStatus: STATUS.ALL,
           categoryId: 1,
-          content: 'myPost',
+          content: POST_CONTENT.MY_POST,
         }),
       {
         wrapper,
@@ -63,10 +70,10 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
     const { result } = renderHook(
       () =>
         usePostList({
-          postSorting: 'popular',
-          postStatus: 'all',
+          postSorting: SORTING.POPULAR,
+          postStatus: STATUS.ALL,
           categoryId: 1,
-          content: 'myVote',
+          content: POST_CONTENT.MY_VOTE,
         }),
       {
         wrapper,

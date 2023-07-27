@@ -26,12 +26,12 @@ public class PostCommentService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
 
-        post.addComment(
-                Comment.builder()
-                        .member(member)
-                        .content(commentRegisterRequest.content())
-                        .build()
-        );
+        final Comment comment = Comment.builder()
+                .member(member)
+                .content(commentRegisterRequest.content())
+                .build();
+
+        post.addComment(comment);
     }
 
 }

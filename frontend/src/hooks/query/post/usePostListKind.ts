@@ -18,5 +18,5 @@ export const usePostListKind = () => {
 
   const convertedPathname = getPathFragment(pathname);
 
-  return { categoryId: Number(categoryId), requestKind: REQUEST_URL[convertedPathname] };
+  return { categoryId: Number(categoryId), content: REQUEST_URL[convertedPathname] };
 };

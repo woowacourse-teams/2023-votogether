@@ -16,7 +16,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.', () => {
   test('전체 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
-      () => usePostList({ postSorting: 'popular', postStatus: 'all', requestKind: 'all' }),
+      () => usePostList({ postSorting: 'popular', postStatus: 'all', content: 'all' }),
       {
         wrapper,
       }
@@ -32,7 +32,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
           postSorting: 'popular',
           postStatus: 'all',
           categoryId: 1,
-          requestKind: 'category',
+          content: 'category',
         }),
       {
         wrapper,
@@ -49,7 +49,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
           postSorting: 'popular',
           postStatus: 'all',
           categoryId: 1,
-          requestKind: 'myPost',
+          content: 'myPost',
         }),
       {
         wrapper,
@@ -66,7 +66,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
           postSorting: 'popular',
           postStatus: 'all',
           categoryId: 1,
-          requestKind: 'myVote',
+          content: 'myVote',
         }),
       {
         wrapper,

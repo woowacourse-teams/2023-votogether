@@ -14,7 +14,7 @@ import type { PostSorting, PostStatus } from '@components/post/PostListPage/type
 import * as S from './style';
 
 export default function PostList() {
-  const { categoryId, requestKind } = usePostListKind();
+  const { categoryId, content } = usePostListKind();
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
@@ -26,7 +26,7 @@ export default function PostList() {
     useSelect<PostSorting>('latest');
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
-    requestKind,
+    content,
     categoryId,
     postSorting: selectedSortingOption,
     postStatus: selectedStatusOption,

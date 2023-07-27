@@ -8,7 +8,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postStatus: 'all',
       postSorting: 'popular',
       pageNumber: 0,
-      requestKind: 'all',
+      content: 'all',
     });
 
     expect(data.postList.length).toBe(10);
@@ -19,7 +19,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postStatus: 'closed',
       postSorting: 'popular',
       pageNumber: 0,
-      requestKind: 'all',
+      content: 'all',
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
@@ -30,7 +30,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postStatus: 'closed',
       postSorting: 'popular',
       pageNumber: 3,
-      requestKind: 'all',
+      content: 'all',
     });
 
     expect(data.pageNumber).toEqual(3);
@@ -42,7 +42,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: 'popular',
       pageNumber: 0,
       categoryId: 1,
-      requestKind: 'category',
+      content: 'category',
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
@@ -54,7 +54,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: 'popular',
       pageNumber: 0,
       categoryId: 1,
-      requestKind: 'myPost',
+      content: 'myPost',
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
@@ -66,7 +66,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: 'popular',
       pageNumber: 0,
       categoryId: 1,
-      requestKind: 'myVote',
+      content: 'myVote',
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);

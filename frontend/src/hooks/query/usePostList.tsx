@@ -7,7 +7,7 @@ import { getPostList } from '@api/postList';
 import { PostRequestKind, PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
 interface UsePostList {
-  requestKind: PostRequestKind;
+  content: PostRequestKind;
   postSorting: PostSorting;
   postStatus: PostStatus;
   categoryId?: number;
@@ -15,12 +15,12 @@ interface UsePostList {
 
 const MAX_LIST_LENGTH = 10;
 
-export const usePostList = ({ requestKind, postSorting, postStatus, categoryId }: UsePostList) => {
+export const usePostList = ({ content, postSorting, postStatus, categoryId }: UsePostList) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<PostList>(
       ['posts', postSorting, postStatus, categoryId],
       ({ pageParam = 0 }) =>
-        getPostList({ requestKind, postSorting, postStatus, pageNumber: pageParam, categoryId }),
+        getPostList({ content, postSorting, postStatus, pageNumber: pageParam, categoryId }),
       {
         getNextPageParam: lastPage => {
           if (lastPage.postList.length !== MAX_LIST_LENGTH) return;

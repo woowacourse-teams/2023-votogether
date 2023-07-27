@@ -11,7 +11,7 @@ import {
 import { getFetch } from '@utils/fetch';
 
 interface PostListByOption {
-  requestKind: PostRequestKind;
+  content: PostRequestKind;
   postStatus: PostStatus;
   postSorting: PostSorting;
   pageNumber: number;
@@ -21,7 +21,7 @@ interface PostListByOption {
 const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export const makePostListUrl = ({
-  requestKind,
+  content,
   categoryId,
   postStatus,
   postSorting,
@@ -30,10 +30,10 @@ export const makePostListUrl = ({
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 
-  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[requestKind]}`;
+  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[content]}`;
   const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
 
-  if (categoryId && requestKind === 'category') {
+  if (categoryId && content === 'category') {
     return `${POST_BASE_URL}/${categoryId}?${OPTION_URL}`;
   }
 
@@ -41,14 +41,14 @@ export const makePostListUrl = ({
 };
 
 export const getPostList = async ({
-  requestKind,
+  content,
   postStatus,
   postSorting,
   pageNumber,
   categoryId,
 }: PostListByOption) => {
   const postListUrl = makePostListUrl({
-    requestKind,
+    content,
     pageNumber,
     postSorting,
     postStatus,

@@ -87,9 +87,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
       const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
       const writingOptionList = Array.from(optionTextAreas).map((textarea: any, index) => {
-        return options.length === 0
-          ? textarea.value
-          : { content: textarea.value, imageURL: options[index].imageUrl };
+        return { content: textarea.value, imageURL: options[index].imageUrl };
       });
 
       const updatedPostTexts = {

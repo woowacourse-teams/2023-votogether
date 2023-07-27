@@ -56,7 +56,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPost(
             @Auth final Member loginMember,
-            final Integer page,
+            final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {

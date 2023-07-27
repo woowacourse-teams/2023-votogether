@@ -66,6 +66,8 @@ export const Content = styled.textarea`
   height: 300px;
   color: gray;
 
+  resize: none;
+
   font: var(--text-caption);
   font-family: 'Raleway', sans-serif;
 
@@ -74,19 +76,38 @@ export const Content = styled.textarea`
   }
 `;
 
-export const RightSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  justfiy-content: start;
-  gap: 30px;
+export const ContentImagePart = styled.div`
+  display: grid;
+  grid-template-columns: 40px auto;
+`;
 
-  width: 90%;
+export const ContentImageContainer = styled.div`
+  width: 60%;
+
+  position: relative;
+`;
+
+export const ContentImage = styled.img`
+  width: 100%;
+  border-radius: 4px;
+
+  aspect-ratio: 1/1;
+  object-fit: cover;
 `;
 
 export const LeftSide = styled.div`
   display: flex;
   flex-direction: column;
-  justfiy-content: start;
+  justify-content: start;
+  gap: 30px;
+
+  width: 90%;
+`;
+
+export const RightSide = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
   gap: 20px;
 
   width: 90%;

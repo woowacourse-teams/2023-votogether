@@ -13,6 +13,7 @@ import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
+import OptionCancelButton from '@components/optionList/WritingVoteOptionList/WritingVoteOption/OptionCancelButton';
 
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 
@@ -37,6 +38,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     startTime,
     endTime: deadline,
     voteInfo,
+    imageUrl,
   } = data ?? {};
   const options = voteInfo?.options ?? [];
 
@@ -126,7 +128,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       </S.HeaderWrapper>
       <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
-          <S.RightSide>
+          <S.LeftSide>
             <select>
               {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
               <option>카테고리1</option>
@@ -146,8 +148,23 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-          </S.RightSide>
-          <S.LeftSide>
+            {!imageUrl ? (
+              <S.ContentImagePart>
+                <OptionCancelButton />
+                <S.ContentImageContainer>
+                  <S.ContentImage
+                    src={'https://source.unsplash.com/random'}
+                    alt={'본문에 포함된 사진'}
+                  />
+                </S.ContentImageContainer>
+              </S.ContentImagePart>
+            ) : (
+              <SquareButton theme="fill" type="button" onClick={() => {}}>
+                본문에 사진 추가
+              </SquareButton>
+            )}
+          </S.LeftSide>
+          <S.RightSide>
             <S.OptionListWrapper>
               <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
             </S.OptionListWrapper>
@@ -173,11 +190,13 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                   {option}
                 </SquareButton>
               ))}
-              <SquareButton type="button" onClick={openComponent} theme="blank">
-                사용자 지정
-              </SquareButton>
+              {
+                <SquareButton type="button" onClick={openComponent} theme="blank">
+                  사용자 지정
+                </SquareButton>
+              }
             </S.ButtonWrapper>
-          </S.LeftSide>
+          </S.RightSide>
         </S.Wrapper>
         {isOpen && (
           <Modal size="sm" onModalClose={closeComponent}>

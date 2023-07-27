@@ -42,11 +42,18 @@ export const SubTitle = styled.span`
   }
 `;
 
+export const MenuWrapper = styled.div`
+  position: absolute;
+  right: 0%;
+`;
+
 export const Description = styled.p``;
 
-export const Menu = styled.button`
+export const MenuContainer = styled.button`
   width: 24px;
   height: 24px;
+
+  position: relative;
 
   color: #888;
 

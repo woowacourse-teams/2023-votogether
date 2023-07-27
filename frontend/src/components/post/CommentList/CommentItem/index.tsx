@@ -2,8 +2,12 @@ import React from 'react';
 
 import { Comment } from '@type/comment';
 
+import { useToggle } from '@hooks/useToggle';
+
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
+import CommentMenu from './CommentMenu';
+import { COMMENT_MENU } from './CommentMenu/constants';
 import * as S from './style';
 
 interface CommentItemProps {
@@ -11,6 +15,7 @@ interface CommentItemProps {
 }
 
 export default function CommentItem({ comment }: CommentItemProps) {
+  const { isOpen, toggleComponent } = useToggle();
   const { member, content, createdAt, isEdit } = comment;
   return (
     <S.Container>
@@ -22,9 +27,14 @@ export default function CommentItem({ comment }: CommentItemProps) {
             {isEdit && <S.SubTitle>(수정됨)</S.SubTitle>}
           </S.SubTitleContainer>
         </S.UserContainer>
-        <S.Menu type="button" aria-label="댓글 메뉴">
+        <S.MenuContainer type="button" aria-label="댓글 메뉴" onClick={toggleComponent}>
           <S.Image src={ellipsis}></S.Image>
-        </S.Menu>
+          {isOpen && (
+            <S.MenuWrapper>
+              <CommentMenu menuList={COMMENT_MENU.NORMAL} />
+            </S.MenuWrapper>
+          )}
+        </S.MenuContainer>
       </S.Header>
       <S.Description>{content}</S.Description>
     </S.Container>

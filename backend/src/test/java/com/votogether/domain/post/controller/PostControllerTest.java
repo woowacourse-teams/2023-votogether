@@ -13,7 +13,6 @@ import static org.mockito.BDDMockito.given;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
@@ -38,6 +37,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -53,6 +53,9 @@ class PostControllerTest {
 
     @MockBean
     TokenProcessor tokenProcessor;
+
+    @Autowired
+    ObjectMapper mapper;
 
     @BeforeEach
     void setUp() {
@@ -75,8 +78,7 @@ class PostControllerTest {
         String filePath2 = "src/test/resources/images/" + fileName2;
         File file2 = new File(filePath2);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String postRequestJson = objectMapper.writeValueAsString(postCreateRequest);
+        String postRequestJson = mapper.writeValueAsString(postCreateRequest);
 
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList())).willReturn(savedPostId);
@@ -133,10 +135,9 @@ class PostControllerTest {
                 .status(HttpStatus.OK)
                 .extract().asString();
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
         List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
         });
+        System.out.println(responses.get(0).deadline());
 
         // then
         assertAll(
@@ -145,6 +146,7 @@ class PostControllerTest {
         );
     }
 
+    @Test
     @DisplayName("게시글에 대한 전체 투표 통계를 조회한다.")
     void getVoteStatistics() {
         // given

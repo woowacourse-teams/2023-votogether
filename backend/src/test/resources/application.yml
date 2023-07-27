@@ -1,3 +1,7 @@
+springdoc:
+  swagger-ui:
+    enabled: false
+
 votogether:
   openapi:
     dev-url: http://localhost:8080

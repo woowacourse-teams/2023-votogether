@@ -25,6 +25,11 @@ logging:
 server:
   forward-headers-strategy: FRAMEWORK
 
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLE}
+  default-produces-media-type: application/json;charset=UTF-8
+
 votogether:
   openapi:
     dev-url: http://localhost:8080

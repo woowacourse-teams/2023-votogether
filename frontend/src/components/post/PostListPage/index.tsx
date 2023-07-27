@@ -23,7 +23,7 @@ export default function PostListPage() {
   const isLoggedIn = true; //로그인한 유저라고 가정
   const { data: categoryList } = useCategoryList(isLoggedIn);
   const { data: userInfo } = useUserInfo();
-  const handleFavoriteClick = () => {};
+
   const handleLogoutClick = () => {};
 
   const scrollToTop = () => {
@@ -40,7 +40,6 @@ export default function PostListPage() {
           <Dashboard
             userInfo={userInfo}
             categoryList={categoryList ?? []}
-            handleFavoriteClick={handleFavoriteClick}
             handleLogoutClick={handleLogoutClick}
           />
         </Drawer>

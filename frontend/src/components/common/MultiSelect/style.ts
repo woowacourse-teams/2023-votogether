@@ -2,12 +2,21 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
+export const Container = styled.div`
+  position: relative;
+
+  font: var(--text-caption);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font: var(--text-body);
+  }
+`;
+
 export const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 20px;
   align-items: center;
 
-  width: 80%;
   height: auto;
   border: 1px solid var(--slate);
   border-radius: 6px;
@@ -15,17 +24,7 @@ export const Wrapper = styled.div`
 
   position: relative;
 
-  font: var(--text-caption);
-
   cursor: pointer;
-
-  @media (min-width: ${theme.breakpoint.sm}) {
-    font: var(--text-body);
-  }
-
-  @media (min-width: ${theme.breakpoint.md}) {
-    width: 50%;
-  }
 `;
 
 export const SelectedOptionListContainer = styled.div`
@@ -40,15 +39,13 @@ export const SelectIcon = styled.span`
 
 export const DropDown = styled.ul<{
   opened: boolean;
-  wrapperClientHeight: number;
 }>`
   width: 100%;
+  border: 1px solid #e4e5e7;
   border-radius: 6px;
   margin-top: 10px;
 
   position: absolute;
-  top: ${({ wrapperClientHeight }) => wrapperClientHeight}px;
-  left: 0px;
 
   opacity: ${({ opened }) => (opened ? 1 : 0)};
   visibility: ${({ opened }) => (opened ? 'visible' : 'hidden')};
@@ -59,11 +56,12 @@ export const DropDown = styled.ul<{
     list-style: none;
     padding: 10px 0px 10px 15px;
     border-bottom: 1px solid #e4e5e7;
-    border-left: 1px solid #e4e5e7;
-    border-right: 1px solid #e4e5e7;
 
     &:hover {
       background-color: #ffefd5;
+    }
+    &:last-child {
+      border-bottom: none;
     }
   }
 `;

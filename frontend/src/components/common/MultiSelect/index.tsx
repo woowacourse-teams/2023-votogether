@@ -31,9 +31,6 @@ export default function MultiSelect({
 }: MultiSelectProps) {
   const { isOpen, openComponent, closeComponent } = useToggle();
 
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [wrapperClientHeight, setWrapperClientHeight] = useState(40);
-
   const filteredOptionList = optionList.filter(
     option => !selectedOptionList.some(selected => selected.id === option.id)
   );
@@ -46,38 +43,29 @@ export default function MultiSelect({
     openComponent();
   };
 
-  useEffect(() => {
-    if (wrapperRef) {
-      if (selectedOptionList.length > 0 && wrapperRef.current) {
-        setWrapperClientHeight(wrapperRef.current.clientHeight);
-
-        return;
-      }
-      setWrapperClientHeight(40);
-    }
-  }, [selectedOptionList]);
-
   return (
-    <S.Wrapper onClick={handleToggleWrapper} ref={wrapperRef}>
-      <S.SelectedOptionListContainer>
-        {selectedOptionList.length === 0 && <span>{placeholder} </span>}
-        {selectedOptionList.map(({ id, name }) => (
-          <S.SelectedOption key={id} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-            <span>{name}</span>
-            <OptionCancelButton
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                handleOptionDelete(id);
-              }}
-            />
-          </S.SelectedOption>
-        ))}
-      </S.SelectedOptionListContainer>
-      <S.SelectIcon>
-        <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
-      </S.SelectIcon>
+    <S.Container>
+      <S.Wrapper onClick={handleToggleWrapper}>
+        <S.SelectedOptionListContainer>
+          {selectedOptionList.length === 0 && <span>{placeholder} </span>}
+          {selectedOptionList.map(({ id, name }) => (
+            <S.SelectedOption key={id} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+              <span>{name}</span>
+              <OptionCancelButton
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  handleOptionDelete(id);
+                }}
+              />
+            </S.SelectedOption>
+          ))}
+        </S.SelectedOptionListContainer>
+        <S.SelectIcon>
+          <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
+        </S.SelectIcon>
+      </S.Wrapper>
       {filteredOptionList.length > 0 && (
-        <S.DropDown opened={isOpen} wrapperClientHeight={wrapperClientHeight}>
+        <S.DropDown opened={isOpen}>
           {filteredOptionList.map(({ id, name }) => (
             <li
               key={id}
@@ -91,6 +79,6 @@ export default function MultiSelect({
           ))}
         </S.DropDown>
       )}
-    </S.Wrapper>
+    </S.Container>
   );
 }

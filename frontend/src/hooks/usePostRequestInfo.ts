@@ -13,7 +13,7 @@ const REQUEST_URL: Record<string, PostRequestKind> = {
   '/users/votes': POST_CONTENT.MY_VOTE,
 };
 
-export const usePostListKind = () => {
+export const usePostRequestInfo = () => {
   const { categoryId } = useParams<{ categoryId?: string }>();
 
   const { pathname } = useLocation();

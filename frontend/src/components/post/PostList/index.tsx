@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
-import { usePostListKind } from '@hooks/query/post/usePostListKind';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
+import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 import { useSelect } from '@hooks/useSelect';
 
 import Post from '@components/common/Post';
@@ -16,7 +16,7 @@ import { SORTING, STATUS } from '@constants/post';
 import * as S from './style';
 
 export default function PostList() {
-  const { categoryId, content } = usePostListKind();
+  const { categoryId, content } = usePostRequestInfo();
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',

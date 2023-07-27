@@ -22,13 +22,6 @@ export const HeaderButton = styled.button`
   cursor: pointer;
 `;
 
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  gap: 20px;
-`;
-
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,76 +29,94 @@ export const Wrapper = styled.div`
   align-items: center;
   gap: 40px;
 
-  position: relative;
-  top: 80px;
-  left: 30px;
+  width: 100%;
+  padding: 70px 30px;
 
-  width: 96%;
+  box-sizing: border-box;
 
-  @media (min-width: 576px) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     flex-direction: row;
-    justify-content: start;
+    justify-content: space-between;
+    align-items: start;
 
-    left: 40px;
-  }
-
-  @media (min-width: 1280px) {
-    gap: 150px;
-
-    left: 70px;
+    padding: 30px 70px;
   }
 `;
 
 export const Title = styled.input`
+  padding: 10px;
+
   color: gray;
 
   font: var(--text-title);
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    font-size: 2.4rem;
+  }
+
+  @media (min-width: ${theme.breakpoint.lg}) {
+    font-size: 2.8rem;
+  }
 `;
 
 export const Content = styled.textarea`
+  padding: 10px;
+
   height: 300px;
+
   color: gray;
 
   font: var(--text-caption);
   font-family: 'Raleway', sans-serif;
 
-  @media (min-width: 576px) {
+  @media (min-width: ${theme.breakpoint.md}) {
+    font-size: 1.8rem;
+    height: 470px;
+  }
+
+  @media (min-width: ${theme.breakpoint.lg}) {
     height: 670px;
+    font-size: 2rem;
   }
 `;
 
 export const RightSide = styled.div`
   display: flex;
   flex-direction: column;
-  justfiy-content: start;
+  justify-content: center;
   gap: 30px;
 
-  width: 90%;
+  width: 100%;
+  height: 100%;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    max-width: 400px;
+
+    margin-top: 40px;
+  }
 `;
 
 export const LeftSide = styled.div`
   display: flex;
   flex-direction: column;
-  justfiy-content: start;
-  gap: 20px;
+  justify-content: start;
+  gap: 30px;
 
-  width: 90%;
-
-  @media (min-width: 576px) {
-    margin-top: 40px;
-  }
+  width: 100%;
 `;
 
 export const OptionListWrapper = styled.div`
   width: 100%;
-  max-width: 320px;
-  height: 540px;
 
   overflow-x: hidden;
-  overflow-y: scroll;
 
-  @media (min-width: 576px) {
-    max-width: 500px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    height: 460px;
+
+    overflow-y: auto;
   }
 `;
 
@@ -124,11 +135,27 @@ export const Description = styled.div`
 export const ButtonWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 46px);
   gap: 10px;
 
-  width: 90%;
-  height: 90px;
   margin-bottom: 30px;
+`;
+
+export const SaveButtonWrapper = styled.div`
+  display: none;
+
+  visibility: hidden;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    display: flex;
+
+    width: 100%;
+    height: 60px;
+
+    margin-top: 40px;
+
+    visibility: visible;
+  }
 `;
 
 export const ModalHeader = styled.div`
@@ -157,6 +184,7 @@ export const CloseButton = styled.button`
 export const ModalBody = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: start;
   align-items: center;
   gap: 10px;

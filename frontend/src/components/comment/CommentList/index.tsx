@@ -6,6 +6,8 @@ import SquareButton from '@components/common/SquareButton';
 
 import { COMMENT_USER } from '@constants/comment';
 
+import { scrollToTop } from '@utils/post/scrollToTop';
+
 import CommentItem from './CommentItem';
 import CommentLogin from './CommentLogin';
 import CommentTextForm from './CommentTextForm';
@@ -61,7 +63,9 @@ export default function CommentList({
       )}
       <S.ButtonContainer>
         <S.TopButtonWrapper>
-          <SquareButton theme="blank">TOP</SquareButton>
+          <SquareButton onClick={scrollToTop} theme="blank">
+            TOP
+          </SquareButton>
         </S.TopButtonWrapper>
       </S.ButtonContainer>
     </S.Container>

@@ -12,6 +12,8 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
+import { scrollToTop } from '@utils/post/scrollToTop';
+
 import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
 
 import * as S from './style';
@@ -24,10 +26,6 @@ export default function PostListPage() {
   const userInfo = undefined;
   const handleFavoriteClick = () => {};
   const handleLogoutClick = () => {};
-
-  const scrollToTop = () => {
-    window.scroll({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <S.Container>

@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -8,6 +10,10 @@ export const Container = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
   font: var(--text-caption);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font: var(--text-body);
+  }
 `;
 
 export const Header = styled.div`
@@ -20,7 +26,7 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.span`
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 export const UserContainer = styled.div`
@@ -31,15 +37,22 @@ export const UserContainer = styled.div`
 export const SubTitleContainer = styled.div`
   display: flex;
   align-items: center;
+
   margin-left: 15px;
 `;
 
 export const SubTitle = styled.span`
   font: var(--text-small);
+  font-weight: 400;
+
   color: var(--dark-gray);
 
   &:nth-child(2) {
     margin-left: 6px;
+  }
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font: var(--text-caption);
   }
 `;
 
@@ -49,6 +62,9 @@ export const MenuWrapper = styled.div`
 `;
 
 export const Description = styled.p`
+  font-weight: 400;
+  line-height: 24px;
+
   white-space: pre-wrap;
 `;
 

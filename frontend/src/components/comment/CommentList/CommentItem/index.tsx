@@ -9,10 +9,11 @@ import UserReportModal from '@components/report/UserReportModal';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
-import CommentDeleteModal from './CommentDeleteModal';
+import CommentDeleteModal from '../../CommentDeleteModal';
+import CommentTextForm from '../CommentTextForm';
+
 import CommentMenu from './CommentMenu';
 import { COMMENT_MENU } from './CommentMenu/constants';
-import CommentTextForm from './CommentTextForm';
 import { COMMENT_USER_MENU } from './constants';
 import * as S from './style';
 import { CommentAction, CommentUser } from './types';

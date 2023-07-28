@@ -2,8 +2,8 @@ import React from 'react';
 
 import { useSelect } from '@hooks/useSelect';
 
+import CommentModal from '@components/comment/CommentModal';
 import Select from '@components/common/Select';
-import CommentModal from '@components/post/CommentList/CommentItem/CommentModal';
 
 import { COMMENT_REPORT_MESSAGE } from './constants';
 import { CommentReportMessage } from './types';

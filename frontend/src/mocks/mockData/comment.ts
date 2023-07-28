@@ -28,11 +28,11 @@ const nicknameList = [
 ];
 const getMockComment = (): Comment => ({
   id: Math.floor(Math.random() * 100000),
-  content: commentList[Math.floor(Math.random() * 12)],
+  content: commentList[Math.floor(Math.random() * 11)],
   createdAt: '2023.7.27. 07:43',
   member: {
     id: Math.floor(Math.random() * 100000),
-    nickname: nicknameList[Math.floor(Math.random() * 8)],
+    nickname: nicknameList[Math.floor(Math.random() * 7)],
   },
   isEdit: Math.random() > 0.6,
 });

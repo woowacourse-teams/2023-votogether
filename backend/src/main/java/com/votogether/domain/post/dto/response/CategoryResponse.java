@@ -3,7 +3,7 @@ package com.votogether.domain.post.dto.response;
 import com.votogether.domain.category.entity.Category;
 
 public record CategoryResponse(
-        Long id,
+        long id,
         String name
 ) {
 

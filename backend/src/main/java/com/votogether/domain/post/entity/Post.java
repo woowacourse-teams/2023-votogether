@@ -58,7 +58,7 @@ public class Post extends BaseEntity {
     @Formula("(select count(v.id) from Vote v where v.post_option_id in "
             + "(select po.id from Post_Option po where po.post_id = id)"
             + ")")
-    private Long totalVoteCount;
+    private long totalVoteCount;
 
     @Builder
     private Post(
@@ -118,7 +118,7 @@ public class Post extends BaseEntity {
         return deadline.isBefore(LocalDateTime.now());
     }
 
-    public Vote makeVote(Member voter, PostOption postOption) {
+    public Vote makeVote(final Member voter, final PostOption postOption) {
         validateDeadLine();
         validateVoter(voter);
         validatePostOption(postOption);
@@ -144,7 +144,7 @@ public class Post extends BaseEntity {
         }
     }
 
-    private void validatePostOption(PostOption postOption) {
+    private void validatePostOption(final PostOption postOption) {
         if (!hasPostOption(postOption)) {
             throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
         }
@@ -154,7 +154,7 @@ public class Post extends BaseEntity {
         return Objects.equals(this.writer, member);
     }
 
-    public Long getFinalTotalVoteCount(final Member loginMember) {
+    public long getFinalTotalVoteCount(final Member loginMember) {
         if (isVisibleVoteResult(loginMember)) {
             return this.totalVoteCount;
         }

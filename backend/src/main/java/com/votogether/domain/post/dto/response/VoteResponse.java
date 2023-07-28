@@ -3,14 +3,14 @@ package com.votogether.domain.post.dto.response;
 import java.util.List;
 
 public record VoteResponse(
-        Long selectedOptionId,
-        Long totalVoteCount,
+        long selectedOptionId,
+        long totalVoteCount,
         List<PostOptionResponse> options
 ) {
 
     public static VoteResponse of(
-            final Long selectedOptionId,
-            final Long finalTotalVoteCount,
+            final long selectedOptionId,
+            final long finalTotalVoteCount,
             final List<PostOptionResponse> options
     ) {
         return new VoteResponse(selectedOptionId, finalTotalVoteCount, options);

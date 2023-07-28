@@ -112,7 +112,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<PostResponse> getAllPostBySortTypeAndClosingType(
             final Member loginMember,
-            final Integer page,
+            final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {
@@ -134,7 +134,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public VoteOptionStatisticsResponse getVoteStatistics(final Long postId, final Member member) {
+    public VoteOptionStatisticsResponse getVoteStatistics(final long postId, final Member member) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
@@ -147,8 +147,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public VoteOptionStatisticsResponse getVoteOptionStatistics(
-            final Long postId,
-            final Long optionId,
+            final long postId,
+            final long optionId,
             final Member member
     ) {
         final Post post = postRepository.findById(postId)

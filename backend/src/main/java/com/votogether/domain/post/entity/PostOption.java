@@ -40,7 +40,7 @@ public class PostOption extends BaseEntity {
     private Post post;
 
     @Column(nullable = false)
-    private Integer sequence;
+    private int sequence;
 
     @Column(length = 50, nullable = false)
     private String content;

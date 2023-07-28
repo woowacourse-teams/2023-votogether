@@ -44,7 +44,7 @@ public class PostController {
             @RequestPart final List<MultipartFile> images,
             @Auth final Member loginMember
     ) {
-        final Long postId = postService.save(request, loginMember, images);
+        final long postId = postService.save(request, loginMember, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
@@ -73,7 +73,7 @@ public class PostController {
     })
     @GetMapping("/{postId}/options")
     public ResponseEntity<VoteOptionStatisticsResponse> getVoteStatistics(
-            @PathVariable final Long postId,
+            @PathVariable final long postId,
             @Auth final Member member
     ) {
         final VoteOptionStatisticsResponse response = postService.getVoteStatistics(postId, member);
@@ -88,8 +88,8 @@ public class PostController {
     })
     @GetMapping("/{postId}/options/{optionId}")
     public ResponseEntity<VoteOptionStatisticsResponse> getVoteOptionStatistics(
-            @PathVariable final Long postId,
-            @PathVariable final Long optionId,
+            @PathVariable final long postId,
+            @PathVariable final long optionId,
             @Auth final Member member
     ) {
         final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId, member);

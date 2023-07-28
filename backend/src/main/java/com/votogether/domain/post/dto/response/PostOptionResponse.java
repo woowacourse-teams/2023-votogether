@@ -1,13 +1,12 @@
 package com.votogether.domain.post.dto.response;
 
-import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 
 public record PostOptionResponse(
-        Long optionId,
+        long optionId,
         String content,
-        Integer voteCount,
-        Double votePercent
+        int voteCount,
+        double votePercent
 ) {
 
     public static PostOptionResponse of(

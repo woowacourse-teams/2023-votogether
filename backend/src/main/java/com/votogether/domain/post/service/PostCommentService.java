@@ -6,7 +6,7 @@ import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostRepository;
-import com.votogether.exception.BadRequestException;
+import com.votogether.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class PostCommentService {
             final CommentRegisterRequest commentRegisterRequest
     ) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
         final Comment comment = Comment.builder()
                 .member(member)

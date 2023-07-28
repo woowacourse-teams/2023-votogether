@@ -51,7 +51,6 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         </S.UserContainer>
         {isAllowedMenu && (
           <S.MenuContainer
-            type="button"
             aria-label="댓글 메뉴"
             onMouseEnter={toggleComponent}
             onMouseLeave={toggleComponent}

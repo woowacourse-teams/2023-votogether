@@ -1,5 +1,7 @@
 import { type Comment } from '@type/comment';
 
+import { useMoreComment } from '@hooks/useMoreComment';
+
 import SquareButton from '@components/common/SquareButton';
 
 import { COMMENT_USER } from '@constants/comment';
@@ -22,6 +24,8 @@ export default function CommentList({
   isGuest,
   postWriterName,
 }: CommentListProps) {
+  const { slicedCommentList, handleMoreComment, hasMoreComment } = useMoreComment(commentList);
+
   const getUserType = (writerId: number) => {
     if (isGuest) {
       return COMMENT_USER.GUEST;
@@ -40,7 +44,7 @@ export default function CommentList({
         {isGuest ? <CommentLogin name={postWriterName} /> : <CommentTextForm initialComment="" />}
       </S.TextOrLoginWrapper>
       <S.ListContainer>
-        {commentList.map(comment => (
+        {slicedCommentList.map(comment => (
           <CommentItem
             key={comment.id}
             comment={comment}
@@ -48,9 +52,13 @@ export default function CommentList({
           />
         ))}
       </S.ListContainer>
-      <S.MoreButtonWrapper>
-        <SquareButton theme="fill">더보기</SquareButton>
-      </S.MoreButtonWrapper>
+      {hasMoreComment && (
+        <S.MoreButtonWrapper>
+          <SquareButton onClick={handleMoreComment} theme="fill">
+            더보기
+          </SquareButton>
+        </S.MoreButtonWrapper>
+      )}
       <S.ButtonContainer>
         <S.TopButtonWrapper>
           <SquareButton theme="blank">TOP</SquareButton>

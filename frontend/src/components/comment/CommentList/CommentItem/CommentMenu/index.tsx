@@ -11,7 +11,7 @@ export default function CommentMenu({ menuList, handleMenuClick }: CommentMenuPr
   return (
     <S.Container>
       {menuList.map(({ content, color, action }) => (
-        <S.Menu $color={color} onClick={() => handleMenuClick(action)}>
+        <S.Menu key={content} role="button" $color={color} onClick={() => handleMenuClick(action)}>
           {content}
         </S.Menu>
       ))}

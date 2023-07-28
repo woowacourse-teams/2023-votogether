@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,4 +51,10 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/me/delete")
+    public ResponseEntity<Void> deleteMember(@Auth final Member member) {
+        memberService.deleteMember(member);
+        return ResponseEntity.noContent().build();
+    }
+    
 }

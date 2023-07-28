@@ -1,5 +1,6 @@
 package com.votogether.domain.post.service;
 
+import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -342,13 +343,35 @@ class PostServiceTest {
         Post findedPost = postRepository.findById(post.getId()).get();
 
         // when
-        postService.postClosedEarlyById(post.getId());
+        postService.postClosedEarlyById(post.getId(), writer);
 
         // then
         assertAll(
                 () -> assertThat(findedPost.getId()).isEqualTo(post.getId()),
                 () -> assertThat(findedPost.getDeadline()).isBefore(oldDeadline)
         );
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 작성자가 아니면 예외를 던진다.")
+    void throwExceptionNotWriterPostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.of(2100, 7, 12, 0, 0);
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post findedPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.postClosedEarlyById(findedPost.getId(), MemberFixtures.MALE_30.get()))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("해당 게시글 작성자가 아닙니다.");
     }
 
 }

@@ -15,7 +15,7 @@ public record PostResponse(
         List<CategoryResponse> categories,
         LocalDateTime createdAt,
         LocalDateTime deadline,
-        VoteInfoResponse voteInfo
+        VoteResponse voteInfo
 ) {
 
     public PostResponse(final Post post, final Member loginMember) {
@@ -36,7 +36,7 @@ public record PostResponse(
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                new VoteInfoResponse(
+                new VoteResponse(
                         post.getPostOptions().getSelectOption(loginMember),
                         post.getFinalTotalVoteCount(loginMember),
                         getOptions(post, loginMember)

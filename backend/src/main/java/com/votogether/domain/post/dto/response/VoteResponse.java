@@ -2,7 +2,7 @@ package com.votogether.domain.post.dto.response;
 
 import java.util.List;
 
-public record VoteInfoResponse(
+public record VoteResponse(
         Integer selectOption,
         Long totalVoteCount,
         List<PostOptionResponse> options

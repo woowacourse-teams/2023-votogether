@@ -1,14 +1,3 @@
-export interface Comment {
-  id: number;
-  member: {
-    id: number;
-    nickname: string;
-  };
-  content: string;
-  createdAt: string;
-  isEdit: boolean;
-}
-
 export interface CommentResponse {
   id: number;
   member: {
@@ -20,6 +9,4 @@ export interface CommentResponse {
   updatedAt: string;
 }
 
-export interface CommentRequest {
-  content: string;
-}
+export type CommentRequest = Pick<CommentResponse, 'content'>;

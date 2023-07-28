@@ -2,8 +2,8 @@ import { CommentRequest, CommentResponse } from '@type/comment';
 
 import { getFetch, postFetch, putFetch, deleteFetch } from '@utils/fetch';
 
-export const getComment = async (postId: number): Promise<CommentResponse> => {
-  return await getFetch<CommentResponse>(`/posts/${postId}/comments`);
+export const getCommentList = async (postId: number): Promise<CommentResponse[]> => {
+  return await getFetch<CommentResponse[]>(`/posts/${postId}/comments`);
 };
 
 export const createComment = async (postId: number, newComment: CommentRequest) => {

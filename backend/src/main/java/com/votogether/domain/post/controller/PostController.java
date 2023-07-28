@@ -40,9 +40,9 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @Auth final Member loginMember,
             @RequestPart final PostCreateRequest request,
-            @RequestPart final List<MultipartFile> images
+            @RequestPart final List<MultipartFile> images,
+            @Auth final Member loginMember
     ) {
         final Long postId = postService.save(request, loginMember, images);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
@@ -55,10 +55,10 @@ public class PostController {
     })
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPost(
-            @Auth final Member loginMember,
             final int page,
             final PostClosingType postClosingType,
-            final PostSortType postSortType
+            final PostSortType postSortType,
+            @Auth final Member loginMember
     ) {
         final List<PostResponse> responses =
                 postService.getAllPostBySortTypeAndClosingType(loginMember, page, postClosingType, postSortType);

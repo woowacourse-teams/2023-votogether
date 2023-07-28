@@ -1,7 +1,7 @@
 package com.votogether.domain.member.controller;
 
 import com.votogether.domain.member.dto.MemberInfoResponse;
-import com.votogether.domain.member.dto.MemberNicknameRequest;
+import com.votogether.domain.member.dto.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.Auth;
@@ -44,7 +44,7 @@ public class MemberController {
     @PatchMapping("/me/nickname")
     public ResponseEntity<Void> changeNickname(
             @Auth final Member member,
-            @Valid @RequestBody final MemberNicknameRequest request
+            @Valid @RequestBody final MemberNicknameUpdateRequest request
     ) {
         memberService.changeNickname(member, request.nickname());
         return ResponseEntity.ok().build();

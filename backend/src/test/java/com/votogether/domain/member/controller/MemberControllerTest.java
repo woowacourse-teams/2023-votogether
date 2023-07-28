@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import com.votogether.domain.member.dto.MemberInfoResponse;
-import com.votogether.domain.member.dto.MemberNicknameRequest;
+import com.votogether.domain.member.dto.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;
@@ -78,7 +78,7 @@ class MemberControllerTest {
         void changeNicknameSuccess() {
             // given
             String nicknameToChange = "jeomxon";
-            MemberNicknameRequest memberNicknameRequest = new MemberNicknameRequest(nicknameToChange);
+            MemberNicknameUpdateRequest memberNicknameUpdateRequest = new MemberNicknameUpdateRequest(nicknameToChange);
 
             willDoNothing().given(memberService).changeNickname(any(Member.class), anyString());
 
@@ -86,7 +86,7 @@ class MemberControllerTest {
             RestAssuredMockMvc
                     .given().log().all()
                     .contentType(ContentType.JSON)
-                    .body(memberNicknameRequest)
+                    .body(memberNicknameUpdateRequest)
                     .when().patch("/members/me/nickname")
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
@@ -98,7 +98,7 @@ class MemberControllerTest {
         void changeNicknameFail() {
             // given
             String nicknameToChange = "";
-            MemberNicknameRequest memberNicknameRequest = new MemberNicknameRequest(nicknameToChange);
+            MemberNicknameUpdateRequest memberNicknameUpdateRequest = new MemberNicknameUpdateRequest(nicknameToChange);
 
             willDoNothing().given(memberService).changeNickname(any(Member.class), anyString());
 
@@ -106,7 +106,7 @@ class MemberControllerTest {
             RestAssuredMockMvc
                     .given().log().all()
                     .contentType(ContentType.JSON)
-                    .body(memberNicknameRequest)
+                    .body(memberNicknameUpdateRequest)
                     .when().patch("/members/me/nickname")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())

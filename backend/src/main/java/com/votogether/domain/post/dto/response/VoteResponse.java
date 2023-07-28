@@ -8,6 +8,14 @@ public record VoteResponse(
         List<PostOptionResponse> options
 ) {
 
+    public static VoteResponse of(
+            final Long selectedOptionId,
+            final Long finalTotalVoteCount,
+            final List<PostOptionResponse> options
+    ) {
+        return new VoteResponse(selectedOptionId, finalTotalVoteCount, options);
+    }
+
     @Override
     public String toString() {
         return "VoteInfoResponse{" +

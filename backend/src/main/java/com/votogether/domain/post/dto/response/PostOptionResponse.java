@@ -1,5 +1,6 @@
 package com.votogether.domain.post.dto.response;
 
+import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 
 public record PostOptionResponse(
@@ -9,12 +10,12 @@ public record PostOptionResponse(
         Double votePercent
 ) {
 
-    public PostOptionResponse(
+    public static PostOptionResponse of(
             final PostOption postOption,
-            final Boolean isVisibleVoteResult,
+            final boolean isVisibleVoteResult,
             final Long totalVoteCount
     ) {
-        this(
+        return new PostOptionResponse(
                 postOption.getId(),
                 postOption.getContent(),
                 postOption.getVoteCount(isVisibleVoteResult),

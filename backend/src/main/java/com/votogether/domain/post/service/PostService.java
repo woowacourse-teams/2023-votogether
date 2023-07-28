@@ -120,7 +120,7 @@ public class PostService {
         final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
 
         return contents.stream()
-                .map(post -> new PostResponse(post, loginMember))
+                .map(post -> PostResponse.of(post, loginMember))
                 .toList();
     }
 

@@ -5,6 +5,10 @@ public record WriterResponse(
         String nickname
 ) {
 
+    public static WriterResponse of(final Long id, final String nickname) {
+        return new WriterResponse(id, nickname);
+    }
+
     @Override
     public String toString() {
         return "WriterResponse{" +

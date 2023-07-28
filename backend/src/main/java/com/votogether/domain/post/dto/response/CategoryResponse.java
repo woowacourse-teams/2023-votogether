@@ -7,8 +7,8 @@ public record CategoryResponse(
         String name
 ) {
 
-    public CategoryResponse(final Category category) {
-        this(category.getId(), category.getName());
+    public static CategoryResponse of(Category category) {
+        return new CategoryResponse(category.getId(), category.getName());
     }
 
     @Override
@@ -18,5 +18,4 @@ public record CategoryResponse(
                 ", name='" + name + '\'' +
                 '}';
     }
-
 }

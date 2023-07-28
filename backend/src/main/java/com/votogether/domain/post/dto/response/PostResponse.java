@@ -18,25 +18,19 @@ public record PostResponse(
         VoteResponse voteInfo
 ) {
 
-    public PostResponse(final Post post, final Member loginMember) {
-        this(post, post.getWriter(), post.getPostBody(), loginMember);
-    }
+    public static PostResponse of(final Post post, final Member loginMember) {
+        final Member writer = post.getWriter();
+        final PostBody postBody = post.getPostBody();
 
-    public PostResponse(
-            final Post post,
-            final Member writer,
-            final PostBody postBody,
-            final Member loginMember
-    ) {
-        this(
+        return new PostResponse(
                 post.getId(),
-                new WriterResponse(writer.getId(), writer.getNickname()),
+                WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                new VoteResponse(
+                VoteResponse.of(
                         post.getPostOptions().getSelectedOptionId(loginMember),
                         post.getFinalTotalVoteCount(loginMember),
                         getOptions(post, loginMember)
@@ -47,7 +41,7 @@ public record PostResponse(
     private static List<CategoryResponse> getCategories(final Post post) {
         return post.getPostCategories().getPostCategories().stream()
                 .map(PostCategory::getCategory)
-                .map(CategoryResponse::new)
+                .map(CategoryResponse::of)
                 .toList();
     }
 
@@ -57,7 +51,7 @@ public record PostResponse(
     ) {
         return post.getPostOptions().getPostOptions().stream()
                 .map(postOption ->
-                        new PostOptionResponse(
+                        PostOptionResponse.of(
                                 postOption,
                                 post.isVisibleVoteResult(loginMember),
                                 post.getFinalTotalVoteCount(loginMember)

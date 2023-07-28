@@ -122,7 +122,7 @@ class PostControllerTest {
                 eq(firstPage),
                 eq(PostClosingType.PROGRESS),
                 eq(PostSortType.LATEST)))
-                .willReturn(List.of(new PostResponse(post, MALE_30.get())));
+                .willReturn(List.of(PostResponse.of(post, MALE_30.get())));
 
         // when
         String responseBody = RestAssuredMockMvc.given().log().all()

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PATH } from '@constants/path';
 
 import kakaoLogin from '@assets/kakao_login_large.svg';

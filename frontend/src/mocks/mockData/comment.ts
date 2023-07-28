@@ -1,4 +1,4 @@
-import { Comment } from '@type/comment';
+import { type Comment } from '@type/comment';
 
 export const MOCK_COMMENT_LIST: Comment[] = [];
 

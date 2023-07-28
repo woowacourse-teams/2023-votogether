@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent } from 'react';
 
 import { useText } from '@hooks/useText';
 
@@ -23,9 +23,7 @@ export default function CommentTextForm({
     <S.Container>
       <S.TextArea
         value={text}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-          handleTextChange(e, COMMENT_MAX_LENGTH)
-        }
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, COMMENT_MAX_LENGTH)}
       />
       <S.ButtonContainer>
         {handleCancelClick && (

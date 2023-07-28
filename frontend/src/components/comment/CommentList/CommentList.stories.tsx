@@ -12,13 +12,19 @@ export default meta;
 type Story = StoryObj<typeof CommentList>;
 
 export const Guest: Story = {
-  render: () => <CommentList commentList={MOCK_COMMENT_LIST[0]} userType="guest" />,
+  render: () => <CommentList commentList={MOCK_COMMENT_LIST} memberId={0} isGuest={true} />,
 };
 
 export const Writer: Story = {
-  render: () => <CommentList commentList={MOCK_COMMENT_LIST[0]} userType="writer" />,
+  render: () => (
+    <CommentList
+      commentList={MOCK_COMMENT_LIST}
+      memberId={MOCK_COMMENT_LIST[0].id}
+      isGuest={false}
+    />
+  ),
 };
 
 export const Normal: Story = {
-  render: () => <CommentList commentList={MOCK_COMMENT_LIST[0]} userType="normal" />,
+  render: () => <CommentList commentList={MOCK_COMMENT_LIST} memberId={0} isGuest={false} />,
 };

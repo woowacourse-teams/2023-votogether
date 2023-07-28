@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { CommentMenuItem } from './types';
+import { CommentMenuItem } from '@type/comment';
 
 const COLOR_PALETTE: Record<CommentMenuItem['color'], string> = {
   red: 'var(--primary-color)',

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-import { Comment } from '@type/comment';
+import { type Comment, type CommentAction, type CommentUser } from '@type/comment';
 
 import { useToggle } from '@hooks/useToggle';
 
 import CommentReportModal from '@components/report/CommentReportModal';
 import UserReportModal from '@components/report/UserReportModal';
+
+import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '@constants/comment';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
@@ -13,10 +15,7 @@ import CommentDeleteModal from '../../CommentDeleteModal';
 import CommentTextForm from '../CommentTextForm';
 
 import CommentMenu from './CommentMenu';
-import { COMMENT_MENU } from './CommentMenu/constants';
-import { COMMENT_USER_MENU } from './constants';
 import * as S from './style';
-import { CommentAction, CommentUser } from './types';
 
 interface CommentItemProps {
   comment: Comment;
@@ -38,7 +37,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
 
   const USER_TYPE = COMMENT_USER_MENU[userType];
 
-  const isAllowedMenu = userType !== 'guest' && action !== 'edit';
+  const isAllowedMenu = userType !== COMMENT_USER.GUEST && action !== COMMENT_ACTION.EDIT;
 
   return (
     <S.Container>
@@ -61,16 +60,20 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           </S.MenuContainer>
         )}
       </S.Header>
-      {action === 'edit' ? (
+      {action === COMMENT_ACTION.EDIT ? (
         <CommentTextForm initialComment={content} handleCancelClick={handleCancelClick} />
       ) : (
         <S.Description>{content}</S.Description>
       )}
-      {action === 'delete' && (
+      {action === COMMENT_ACTION.DELETE && (
         <CommentDeleteModal handleCancelClick={handleCancelClick} handleDeleteClick={() => {}} />
       )}
-      {action === 'userReport' && <UserReportModal handleCancelClick={handleCancelClick} />}
-      {action === 'commentReport' && <CommentReportModal handleCancelClick={handleCancelClick} />}
+      {action === COMMENT_ACTION.USER_REPORT && (
+        <UserReportModal handleCancelClick={handleCancelClick} />
+      )}
+      {action === COMMENT_ACTION.COMMENT_REPORT && (
+        <CommentReportModal handleCancelClick={handleCancelClick} />
+      )}
     </S.Container>
   );
 }

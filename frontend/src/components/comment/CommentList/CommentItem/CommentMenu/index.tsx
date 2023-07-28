@@ -1,9 +1,6 @@
-import React from 'react';
-
-import { CommentAction } from '../types';
+import { type CommentAction, type CommentMenuItem } from '@type/comment';
 
 import * as S from './style';
-import { CommentMenuItem } from './types';
 
 interface CommentMenuProps {
   menuList: CommentMenuItem[];

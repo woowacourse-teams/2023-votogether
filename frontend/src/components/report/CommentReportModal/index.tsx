@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useSelect } from '@hooks/useSelect';
 
 import CommentModal from '@components/comment/CommentModal';

@@ -11,6 +11,8 @@ const meta: Meta<typeof CommentEditForm> = {
 export default meta;
 type Story = StoryObj<typeof CommentEditForm>;
 
-export const Guest: Story = {
-  render: () => <CommentEditForm initialComment={MOCK_COMMENT_LIST[0].content} />,
+export const Default: Story = {
+  render: () => (
+    <CommentEditForm initialComment={MOCK_COMMENT_LIST[0].content} handleCancelClick={() => {}} />
+  ),
 };

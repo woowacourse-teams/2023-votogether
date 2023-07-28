@@ -48,7 +48,9 @@ export const MenuWrapper = styled.div`
   right: 0%;
 `;
 
-export const Description = styled.p``;
+export const Description = styled.p`
+  white-space: pre-wrap;
+`;
 
 export const MenuContainer = styled.button`
   width: 24px;

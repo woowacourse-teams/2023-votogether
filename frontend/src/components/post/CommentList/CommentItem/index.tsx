@@ -10,6 +10,7 @@ import UserReportModal from '@components/report/UserReportModal';
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
 import CommentDeleteModal from './CommentDeleteModal';
+import CommentEditForm from './CommentEditForm';
 import CommentMenu from './CommentMenu';
 import { COMMENT_MENU } from './CommentMenu/constants';
 import { COMMENT_USER_MENU } from './constants';
@@ -36,6 +37,8 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
 
   const USER_TYPE = COMMENT_USER_MENU[userType];
 
+  const isAllowedMenu = userType !== 'guest' && action !== 'edit';
+
   return (
     <S.Container>
       <S.Header>
@@ -46,7 +49,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
             {isEdit && <S.SubTitle>(수정됨)</S.SubTitle>}
           </S.SubTitleContainer>
         </S.UserContainer>
-        {userType !== 'guest' && (
+        {isAllowedMenu && (
           <S.MenuContainer type="button" aria-label="댓글 메뉴" onClick={toggleComponent}>
             <S.Image src={ellipsis}></S.Image>
             {isOpen && (
@@ -57,7 +60,11 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           </S.MenuContainer>
         )}
       </S.Header>
-      <S.Description>{content}</S.Description>
+      {action === 'edit' ? (
+        <CommentEditForm initialComment={content} handleCancelClick={handleCancelClick} />
+      ) : (
+        <S.Description>{content}</S.Description>
+      )}
       {action === 'delete' && (
         <CommentDeleteModal handleCancelClick={handleCancelClick} handleDeleteClick={() => {}} />
       )}

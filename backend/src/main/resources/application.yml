@@ -25,6 +25,10 @@ logging:
 server:
   forward-headers-strategy: FRAMEWORK
 
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLE}
+
 votogether:
   openapi:
     dev-url: http://localhost:8080

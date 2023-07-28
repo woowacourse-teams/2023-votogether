@@ -4,15 +4,14 @@ import { type Comment, type CommentAction, type CommentUser } from '@type/commen
 
 import { useToggle } from '@hooks/useToggle';
 
+import CommentDeleteModal from '@components/comment/CommentDeleteModal';
+import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
 import CommentReportModal from '@components/report/CommentReportModal';
 import UserReportModal from '@components/report/UserReportModal';
 
 import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '@constants/comment';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
-
-import CommentDeleteModal from '../../CommentDeleteModal';
-import CommentTextForm from '../CommentTextForm';
 
 import CommentMenu from './CommentMenu';
 import * as S from './style';

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import CommentModal from '../CommentModal';
 
 import * as S from './style';

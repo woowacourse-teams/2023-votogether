@@ -11,18 +11,6 @@ describe(`useMoreComment 훅에서 댓글 리스트를 입력받고, 10개 단�
     expect(MOCK_COMMENT_LIST.length).toBeGreaterThan(20);
   });
 
-  test('댓글 리스트를 입력받고, 10개 단위로 보여준다.', () => {
-    const { result } = renderHook(() => useMoreComment(MOCK_COMMENT_LIST));
-
-    const { slicedCommentList } = result.current;
-
-    expect(MOCK_COMMENT_LIST.length).toBeGreaterThan(20);
-
-    expect(slicedCommentList.length).toBe(10);
-
-    expect(slicedCommentList).toEqual(MOCK_COMMENT_LIST.slice(0, 10));
-  });
-
   test('댓글 리스트를 입력받고, 10개 단위로 보여준다. ', () => {
     const { result } = renderHook(() => useMoreComment(MOCK_COMMENT_LIST));
 

@@ -4,7 +4,7 @@ import CommentModal from '@components/comment/CommentModal';
 import Select from '@components/common/Select';
 
 import { COMMENT_REPORT_KIND, COMMENT_REPORT_MESSAGE } from './constants';
-import { CommentReportMessage } from './types';
+import { type CommentReportMessage } from './types';
 
 interface CommentReportModalProps {
   handleCancelClick: () => void;

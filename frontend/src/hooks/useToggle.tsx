@@ -14,5 +14,6 @@ export const useToggle = () => {
   const toggleComponent = () => {
     setIsOpen(prevIsOpen => !prevIsOpen);
   };
+
   return { isOpen, openComponent, closeComponent, toggleComponent };
 };

@@ -24,9 +24,9 @@ export const Menu = styled.button<{ $color: CommentMenuItem['color'] }>`
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 
   color: ${({ $color }) => COLOR_PALETTE[$color]};
+  background-color: white;
 
   cursor: pointer;
-  background-color: white;
 
   &:hover {
     background-color: var(--gray);

@@ -2,10 +2,13 @@ package com.votogether.domain.post.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 
+import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.CommentRegisterRequest;
 import com.votogether.domain.post.service.PostCommentService;
@@ -40,7 +43,7 @@ class PostCommentControllerTest {
     TokenProcessor tokenProcessor;
 
     @BeforeEach
-    void setUp(final WebApplicationContext webApplicationContext) {
+    void setUp(WebApplicationContext webApplicationContext) {
         RestAssuredMockMvc.standaloneSetup(new PostCommentController(postCommentService));
         RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
     }
@@ -72,12 +75,13 @@ class PostCommentControllerTest {
         @ParameterizedTest
         @NullAndEmptySource
         @DisplayName("댓글 내용이 존재하지 않으면 400을 응답한다.")
-        void emptyContent(final String content) throws Exception {
+        void emptyContent(String content) throws Exception {
             // given
             TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
             given(tokenProcessor.resolveToken(anyString())).willReturn("token");
             given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
             given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+
             CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest(content);
 
             // when, then
@@ -100,7 +104,10 @@ class PostCommentControllerTest {
             given(tokenProcessor.resolveToken(anyString())).willReturn("token");
             given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
             given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+
             CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest("댓글입니다.");
+            willDoNothing().given(postCommentService)
+                    .createComment(any(Member.class), anyLong(), any(CommentRegisterRequest.class));
 
             // when, then
             RestAssuredMockMvc.given().log().all()
@@ -110,6 +117,71 @@ class PostCommentControllerTest {
                     .when().post("/posts/{postId}/comments", 1)
                     .then().log().all()
                     .status(HttpStatus.CREATED);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("게시글 댓글 삭제")
+    class DeleteComment {
+
+        @ParameterizedTest
+        @ValueSource(strings = {"@", "a", "가"})
+        @DisplayName("게시글 ID가 Long 타입으로 변환할 수 없는 값이라면 400을 응답한다.")
+        void invalidPostIDType(String postId) throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+
+            // when, then
+            RestAssuredMockMvc.given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .when().delete("/posts/{postId}/comments/{commentId}", postId, 1L)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(-9998))
+                    .body("message", containsString("postId는 Long 타입이 필요합니다."));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"@", "a", "가"})
+        @DisplayName("댓글 ID가 Long 타입으로 변환할 수 없는 값이라면 400을 응답한다.")
+        void invalidCommentIDType(String commentId) throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+
+            // when, then
+            RestAssuredMockMvc.given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .when().delete("/posts/{postId}/comments/{commentId}", 1L, commentId)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(-9998))
+                    .body("message", containsString("commentId는 Long 타입이 필요합니다."));
+        }
+
+        @Test
+        @DisplayName("댓글을 정상적으로 삭제하면 204를 응답한다.")
+        void deleteComment() throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+
+            willDoNothing().given(postCommentService).deleteComment(any(Member.class), anyLong(), anyLong());
+
+            // when, then
+            RestAssuredMockMvc.given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .when().delete("/posts/{postId}/comments/{commentId}", 1L, 1L)
+                    .then().log().all()
+                    .status(HttpStatus.NO_CONTENT);
         }
 
     }

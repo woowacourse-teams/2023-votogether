@@ -61,7 +61,9 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         )}
       </S.Header>
       {action === COMMENT_ACTION.EDIT ? (
-        <CommentTextForm initialComment={content} handleCancelClick={handleCancelClick} />
+        <S.TextFormWrapper>
+          <CommentTextForm initialComment={content} handleCancelClick={handleCancelClick} />
+        </S.TextFormWrapper>
       ) : (
         <S.Description>{content}</S.Description>
       )}

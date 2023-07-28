@@ -8,7 +8,11 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  padding: 40px 20px;
+  @media (min-width: ${theme.breakpoint.sm}) {
+    padding: 0 20px;
+
+    font-size: 2.4rem;
+  }
 `;
 
 export const Title = styled.span`

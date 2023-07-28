@@ -31,7 +31,7 @@ export const ButtonContainer = styled.div`
   justify-content: end;
   gap: 20px;
 
-  padding: 20px 0;
+  padding-top: 20px;
 `;
 
 export const ButtonWrapper = styled.div`

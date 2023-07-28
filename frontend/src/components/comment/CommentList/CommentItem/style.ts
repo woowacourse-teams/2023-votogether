@@ -77,6 +77,10 @@ export const MenuContainer = styled.button`
   cursor: pointer;
 `;
 
+export const TextFormWrapper = styled.div`
+  margin-top: 12px;
+`;
+
 export const Image = styled.img`
   width: 100%;
   height: 100%;

@@ -36,7 +36,11 @@ public record PostResponse(
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                new VoteInfoResponse(post, loginMember)
+                new VoteInfoResponse(
+                        post.getPostOptions().getSelectOption(loginMember),
+                        post.getFinalTotalVoteCount(loginMember),
+                        getOptions(post, loginMember)
+                )
         );
     }
 
@@ -44,6 +48,21 @@ public record PostResponse(
         return post.getPostCategories().getPostCategories().stream()
                 .map(PostCategory::getCategory)
                 .map(CategoryResponse::new)
+                .toList();
+    }
+
+    private static List<PostOptionResponse> getOptions(
+            final Post post,
+            final Member loginMember
+    ) {
+        return post.getPostOptions().getPostOptions().stream()
+                .map(postOption ->
+                        new PostOptionResponse(
+                                postOption,
+                                post.isVisibleVoteResult(loginMember),
+                                post.getFinalTotalVoteCount(loginMember)
+                        )
+                )
                 .toList();
     }
 

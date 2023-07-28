@@ -155,14 +155,14 @@ public class Post extends BaseEntity {
     }
 
     public Long getFinalTotalVoteCount(final Member loginMember) {
-        if (isCanSeeVoteResult(loginMember)) {
+        if (isVisibleVoteResult(loginMember)) {
             return this.totalVoteCount;
         }
 
         return -1L;
     }
 
-    public boolean isCanSeeVoteResult(final Member member) {
+    public boolean isVisibleVoteResult(final Member member) {
         return this.postOptions.getSelectOption(member) != 0 || this.writer.equals(member);
     }
 

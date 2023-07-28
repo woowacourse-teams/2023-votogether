@@ -27,7 +27,7 @@ public class PostOptions {
 
     public Integer getSelectOption(final Member member) {
         return postOptions.stream()
-                .filter(postOption -> postOption.isVoteByMember(member))
+                .filter(postOption -> postOption.hasMemberVote(member))
                 .findFirst()
                 .map(PostOption::getSequence)
                 .orElse(0);

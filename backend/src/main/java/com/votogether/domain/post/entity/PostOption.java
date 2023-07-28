@@ -107,7 +107,7 @@ public class PostOption extends BaseEntity {
         this.votes.add(vote);
     }
 
-    public boolean isVoteByMember(final Member member) {
+    public boolean hasMemberVote(final Member member) {
         return votes.stream()
                 .anyMatch(vote -> vote.isVoteByMember(member));
     }

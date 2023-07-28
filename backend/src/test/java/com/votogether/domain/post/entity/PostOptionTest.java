@@ -19,7 +19,7 @@ class PostOptionTest {
         postOption.getVotes().add(vote);
 
         // when
-        boolean isVoteByMember = postOption.isVoteByMember(MALE_30.get());
+        boolean isVoteByMember = postOption.hasMemberVote(MALE_30.get());
 
         // then
         assertThat(isVoteByMember).isTrue();

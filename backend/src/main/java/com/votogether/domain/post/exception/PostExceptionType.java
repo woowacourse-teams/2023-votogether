@@ -10,6 +10,8 @@ public enum PostExceptionType implements ExceptionType {
     POST_OPTION_NOT_FOUND(1001, "해당 게시글 투표 옵션이 존재하지 않습니다."),
     UNRELATED_POST_OPTION(1002, "게시글 투표 옵션이 게시글과 연관되어 있지 않습니다."),
     NOT_WRITER(1003, "해당 게시글 작성자가 아닙니다."),
+    POST_CLOSED(1004, "게시글이 이미 마감되었습니다."),
+    POST_NOT_HALF_DEADLINE(1005, "게시글이 마감 시간까지 절반의 시간 이상이 지나지 않으면 조기마감을 할 수 없습니다."),
     ;
 
     private final int code;

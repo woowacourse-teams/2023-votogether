@@ -18,7 +18,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -104,7 +108,7 @@ public class Post extends BaseEntity {
     }
 
     public void validateWriter(final Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
+        if (!Objects.equals(this.member, member)) {
             throw new BadRequestException(PostExceptionType.NOT_WRITER);
         }
     }
@@ -124,15 +128,24 @@ public class Post extends BaseEntity {
                 .build();
     }
 
-    private void validateDeadLine() {
+    public void validateDeadLine() {
         if (isClosed()) {
-            throw new IllegalStateException("게시글이 이미 마감되었습니다.");
+            throw new BadRequestException(PostExceptionType.POST_CLOSED);
         }
     }
 
     private void validatePostOption(PostOption postOption) {
         if (!hasPostOption(postOption)) {
-            throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
+            throw new BadRequestException(PostExceptionType.POST_OPTION_NOT_FOUND);
+        }
+    }
+
+    public void validateHalfDeadLine() {
+        final Duration betweenDuration = Duration.between(getCreatedAt(), this.deadline);
+        final LocalDateTime midpoint = getCreatedAt().plus(betweenDuration.dividedBy(2));
+
+        if (midpoint.isAfter(LocalDateTime.now())) {
+            throw new BadRequestException(PostExceptionType.POST_NOT_HALF_DEADLINE);
         }
     }
 

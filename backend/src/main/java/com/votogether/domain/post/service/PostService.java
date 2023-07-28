@@ -141,6 +141,8 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
         post.validateWriter(loginMember);
+        post.validateDeadLine();
+        post.validateHalfDeadLine();
         post.closedEarly();
     }
 

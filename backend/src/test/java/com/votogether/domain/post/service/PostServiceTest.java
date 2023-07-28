@@ -26,7 +26,9 @@ import com.votogether.fixtures.MemberFixtures;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -328,10 +330,10 @@ class PostServiceTest {
 
     @Test
     @DisplayName("해당 게시글을 조기 마감 합니다")
-    void postClosedEarlyById() {
+    void postClosedEarlyById() throws InterruptedException {
         // given
         Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
-        LocalDateTime oldDeadline = LocalDateTime.of(2100, 7, 12, 0, 0);
+        LocalDateTime oldDeadline = LocalDateTime.now().plus(100, ChronoUnit.MILLIS);
         Post post = postRepository.save(
                 Post.builder()
                         .member(writer)
@@ -341,6 +343,7 @@ class PostServiceTest {
         );
 
         Post findedPost = postRepository.findById(post.getId()).get();
+        Thread.sleep(50);
 
         // when
         postService.postClosedEarlyById(post.getId(), writer);
@@ -372,6 +375,50 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.postClosedEarlyById(findedPost.getId(), MemberFixtures.MALE_30.get()))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("해당 게시글 작성자가 아닙니다.");
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 마감이 된 게시글이면 예외를 던진다.")
+    void throwExceptionDeadLinePostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.of(2000, 7, 12, 0, 0);
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post findedPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.postClosedEarlyById(findedPost.getId(), writer))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("게시글이 이미 마감되었습니다.");
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 마감 시간까지의 시간 중 반 이상이 지나지 않은 게시글이면 예외를 던진다.")
+    void throwExceptionHalfDeadLinePostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.now().plusMinutes(1);
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post findedPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.postClosedEarlyById(findedPost.getId(), writer))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("게시글이 마감 시간까지 절반의 시간 이상이 지나지 않으면 조기마감을 할 수 없습니다.");
     }
 
 }

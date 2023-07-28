@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { MAX_FILE_SIZE } from '@components/PostForm/constants';
+
 export interface WritingVoteOptionType {
   id: number;
   text: string;
@@ -8,8 +10,6 @@ export interface WritingVoteOptionType {
 
 const MIN_COUNT = 2;
 const MAX_COUNT = 5;
-
-export const MAX_FILE_SIZE = 5000000;
 
 const INIT_OPTION_LIST = [
   { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },

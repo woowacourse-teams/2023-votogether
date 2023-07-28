@@ -51,10 +51,15 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "회원 탈퇴", description = "서비스를 탈퇴한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 회원")
+    })
     @DeleteMapping("/me/delete")
     public ResponseEntity<Void> deleteMember(@Auth final Member member) {
         memberService.deleteMember(member);
         return ResponseEntity.noContent().build();
     }
-    
+
 }

@@ -10,9 +10,9 @@ import UserReportModal from '@components/report/UserReportModal';
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
 import CommentDeleteModal from './CommentDeleteModal';
-import CommentEditForm from './CommentEditForm';
 import CommentMenu from './CommentMenu';
 import { COMMENT_MENU } from './CommentMenu/constants';
+import CommentTextForm from './CommentTextForm';
 import { COMMENT_USER_MENU } from './constants';
 import * as S from './style';
 import { CommentAction, CommentUser } from './types';
@@ -61,7 +61,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         )}
       </S.Header>
       {action === 'edit' ? (
-        <CommentEditForm initialComment={content} handleCancelClick={handleCancelClick} />
+        <CommentTextForm initialComment={content} handleCancelClick={handleCancelClick} />
       ) : (
         <S.Description>{content}</S.Description>
       )}

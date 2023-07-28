@@ -8,15 +8,15 @@ import { COMMENT_MAX_LENGTH } from '@constants/comment';
 
 import * as S from './style';
 
-interface CommentEditFormProps {
+interface CommentTextFormProps {
   initialComment: string;
-  handleCancelClick: () => void;
+  handleCancelClick?: () => void;
 }
 
-export default function CommentEditForm({
+export default function CommentTextForm({
   initialComment,
   handleCancelClick,
-}: CommentEditFormProps) {
+}: CommentTextFormProps) {
   const { handleTextChange, text } = useText(initialComment);
 
   return (
@@ -28,11 +28,13 @@ export default function CommentEditForm({
         }
       />
       <S.ButtonContainer>
-        <S.ButtonWrapper>
-          <SquareButton onClick={handleCancelClick} theme="gray" type="button">
-            취소
-          </SquareButton>
-        </S.ButtonWrapper>
+        {handleCancelClick && (
+          <S.ButtonWrapper>
+            <SquareButton onClick={handleCancelClick} theme="gray" type="button">
+              취소
+            </SquareButton>
+          </S.ButtonWrapper>
+        )}
         <S.ButtonWrapper>
           <SquareButton theme="blank" type="button">
             저장

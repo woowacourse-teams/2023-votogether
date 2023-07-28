@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 
 import { MAX_FILE_SIZE } from './useWritingOption';
 
-export const useContentImage = (imageUrl: string) => {
+export const useContentImage = (imageUrl: string = '') => {
   const [contentImage, setContentImage] = useState(imageUrl);
 
   const removeImage = () => {

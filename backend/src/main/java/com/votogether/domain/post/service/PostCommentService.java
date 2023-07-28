@@ -18,7 +18,7 @@ public class PostCommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void registerComment(
+    public void createComment(
             final Member member,
             final Long postId,
             final CommentRegisterRequest commentRegisterRequest

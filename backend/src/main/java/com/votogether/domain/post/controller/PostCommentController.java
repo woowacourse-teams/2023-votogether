@@ -40,12 +40,12 @@ public class PostCommentController {
             )
     })
     @PostMapping("/{postId}/comments")
-    public ResponseEntity<Void> registerComment(
+    public ResponseEntity<Void> createComment(
             @Auth final Member member,
             @PathVariable @Parameter(description = "댓글 작성 게시글 ID") final Long postId,
             @Valid @RequestBody CommentRegisterRequest commentRegisterRequest
     ) {
-        postCommentService.registerComment(member, postId, commentRegisterRequest);
+        postCommentService.createComment(member, postId, commentRegisterRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

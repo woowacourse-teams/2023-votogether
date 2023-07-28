@@ -47,7 +47,7 @@ class PostCommentControllerTest {
 
     @Nested
     @DisplayName("게시글 댓글 등록 시 ")
-    class RegisterComment {
+    class CreateComment {
 
         @ParameterizedTest
         @ValueSource(strings = {"@", "a", "가"})
@@ -94,7 +94,7 @@ class PostCommentControllerTest {
 
         @Test
         @DisplayName("댓글을 정상적으로 등록하면 201을 응답한다.")
-        void registerComment() throws Exception {
+        void createComment() throws Exception {
             // given
             TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
             given(tokenProcessor.resolveToken(anyString())).willReturn("token");

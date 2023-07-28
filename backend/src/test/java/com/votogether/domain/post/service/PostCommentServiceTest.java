@@ -33,7 +33,7 @@ class PostCommentServiceTest {
 
     @Test
     @DisplayName("게시글에 댓글을 등록한다.")
-    void registerComment() {
+    void createComment() {
         // given
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
         Post post = postRepository.save(
@@ -46,7 +46,7 @@ class PostCommentServiceTest {
         CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest("hello");
 
         // when
-        postCommentService.registerComment(member, post.getId(), commentRegisterRequest);
+        postCommentService.createComment(member, post.getId(), commentRegisterRequest);
 
         // then
         assertThat(commentRepository.findAll()).hasSize(1);

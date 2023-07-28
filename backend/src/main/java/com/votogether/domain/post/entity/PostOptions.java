@@ -28,7 +28,7 @@ public class PostOptions {
     public Long getSelectedOptionId(final Member member) {
         return postOptions.stream()
                 .filter(postOption -> postOption.hasMemberVote(member))
-                .findFirst()
+                .findAny()
                 .map(PostOption::getId)
                 .orElse(0L);
     }

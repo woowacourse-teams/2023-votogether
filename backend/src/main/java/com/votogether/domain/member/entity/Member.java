@@ -2,16 +2,14 @@ package com.votogether.domain.member.entity;
 
 import com.votogether.domain.auth.dto.KakaoMemberResponse;
 import com.votogether.domain.common.BaseEntity;
-import com.votogether.domain.member.exception.MemberExceptionType;
-import com.votogether.exception.BadRequestException;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +24,8 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 15, unique = true, nullable = false)
-    private String nickname;
+    @Embedded
+    private Nickname nickname;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
@@ -59,7 +57,7 @@ public class Member extends BaseEntity {
             final String socialId,
             final Integer point
     ) {
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.gender = gender;
         this.ageRange = ageRange;
         this.birthday = birthday;
@@ -86,17 +84,7 @@ public class Member extends BaseEntity {
     }
 
     public void changeNickname(final String nickname) {
-        validateNickname(nickname);
-        this.nickname = nickname;
-    }
-
-    private void validateNickname(final String nickname) {
-        if (nickname.length() < 2 || nickname.length() > 16) {
-            throw new BadRequestException(MemberExceptionType.INVALID_NICKNAME_LENGTH);
-        }
-        if (!Pattern.matches("^[가-힣a-zA-Z0-9]+$", nickname)) {
-            throw new BadRequestException(MemberExceptionType.INVALID_NICKNAME_LETTER);
-        }
+        this.nickname = new Nickname(nickname);
     }
 
 }

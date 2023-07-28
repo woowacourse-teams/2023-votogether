@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.Nickname;
 import com.votogether.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,7 +38,7 @@ class MemberRepositoryTest {
         @DisplayName("false를 반환한다.")
         void existsByNicknameFalse() {
             // given
-            String nonExistentNickname = "jeomxon";
+            Nickname nonExistentNickname = new Nickname("jeomxon");
 
             // when
             boolean isExist = memberRepository.existsByNickname(nonExistentNickname);

@@ -2,6 +2,7 @@ package com.votogether.domain.member.service;
 
 import com.votogether.domain.member.dto.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.repository.PostRepository;
@@ -42,7 +43,7 @@ public class MemberService {
         final int numberOfVotes = voteRepository.countByMember(member);
 
         return new MemberInfoResponse(
-                member.getNickname(),
+                member.getNickname().getValue(),
                 member.getPoint(),
                 numberOfPosts,
                 numberOfVotes
@@ -56,7 +57,7 @@ public class MemberService {
     }
 
     private void validateExistentNickname(final String nickname) {
-        final boolean isExist = memberRepository.existsByNickname(nickname);
+        final boolean isExist = memberRepository.existsByNickname(new Nickname(nickname));
         if (isExist) {
             throw new BadRequestException(MemberExceptionType.ALREADY_EXISTENT_NICKNAME);
         }

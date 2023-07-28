@@ -1,11 +1,12 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useFetch } from '@hooks/useFetch';
 
-import { getVoteDetail } from '@api/sua/post';
-import { getPostStatistics } from '@api/sua/voteResult';
+import { getPost } from '@api/post';
+import { getPostStatistics } from '@api/voteResult';
 
 import IconButton from '@components/common/IconButton';
+import Layout from '@components/common/Layout';
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import VoteStatistics from '@components/VoteStatistics';
@@ -14,8 +15,6 @@ import OptionStatistics from './OptionStatistics';
 import * as S from './style';
 
 export default function VoteStatisticsPage() {
-  // const location = useLocation();
-  // const postId = location.state.id;
   const postId = 1;
 
   const navigate = useNavigate();
@@ -24,7 +23,7 @@ export default function VoteStatisticsPage() {
     data: postDetail,
     errorMessage: postError,
     isLoading: isPostLoading,
-  } = useFetch(() => getVoteDetail(postId));
+  } = useFetch(() => getPost(postId));
   const {
     data: voteResult,
     errorMessage: voteResultError,
@@ -36,7 +35,7 @@ export default function VoteStatisticsPage() {
   };
 
   return (
-    <>
+    <Layout isSidebarVisible={true}>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
           <IconButton category="back" onClick={movePostDetailPage} />
@@ -75,6 +74,6 @@ export default function VoteStatisticsPage() {
           </S.OptionContainer>
         )}
       </S.Container>
-    </>
+    </Layout>
   );
 }

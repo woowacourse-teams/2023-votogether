@@ -3,7 +3,11 @@ package com.votogether.domain.post.entity;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.entity.comment.Comment;
+import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.vote.entity.Vote;
+import com.votogether.exception.BadRequestException;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,8 +17,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,6 +53,9 @@ public class Post extends BaseEntity {
 
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     private Post(
@@ -93,8 +103,10 @@ public class Post extends BaseEntity {
         return postOptions.contains(postOption);
     }
 
-    public boolean isWriter(final Member member) {
-        return this.member == member;
+    public void validateWriter(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new BadRequestException(PostExceptionType.NOT_WRITER);
+        }
     }
 
     public boolean isClosed() {
@@ -118,12 +130,6 @@ public class Post extends BaseEntity {
         }
     }
 
-    private void validateWriter(Member member) {
-        if (isWriter(member)) {
-            throw new IllegalArgumentException("작성자는 투표할 수 없습니다.");
-        }
-    }
-
     private void validatePostOption(PostOption postOption) {
         if (!hasPostOption(postOption)) {
             throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
@@ -132,6 +138,11 @@ public class Post extends BaseEntity {
 
     public void closedEarly() {
         this.deadline = LocalDateTime.now();
+    }
+
+    public void addComment(final Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
     }
 
 }

@@ -17,7 +17,7 @@ const MOCK_MAX_VOTE_OPTION = {
   percent: 10,
 };
 
-export const defaultPage: Story = {
+export const DefaultPage: Story = {
   render: () => (
     <OptionStatistics
       postId={1}

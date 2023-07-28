@@ -1,11 +1,13 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Dialog = styled.dialog<{
   $width: string;
   $placement: 'left' | 'right';
 }>`
   width: ${({ $width }) => $width};
-  height: 100%;
+  min-height: 100%;
 
   position: fixed;
   top: 0;
@@ -18,7 +20,8 @@ export const Dialog = styled.dialog<{
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 
-  z-index: 999;
+  z-index: ${theme.zIndex.modal};
+
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.35);
   }

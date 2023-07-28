@@ -10,10 +10,10 @@ export const Container = styled.div`
   height: 55px;
   padding: 0 20px;
 
-  position: absolute;
+  position: fixed;
   top: 0;
 
-  background-color: #1f1f1f;
+  background-color: var(--header);
 
   & > :nth-child(2) {
     margin-right: auto;

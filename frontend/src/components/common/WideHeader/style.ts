@@ -8,10 +8,10 @@ export const Container = styled.div`
   width: 100%;
   height: 70px;
 
-  position: absolute;
+  position: fixed;
   top: 0;
 
-  background-color: #1f1f1f;
+  background-color: var(--header);
 
   padding: 0 80px;
 

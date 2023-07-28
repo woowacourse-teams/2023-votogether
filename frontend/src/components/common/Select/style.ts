@@ -49,13 +49,22 @@ export const SelectedContainer = styled.button<{ $status: Status }>`
   cursor: ${({ $status }) => SELECTED_CSS_OPTION[$status].cursor};
 `;
 
+export const OptionListParent = styled.div`
+  position: relative;
+`;
+
 export const OptionListContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  margin-top: 4px;
+  width: 100%;
   border: 1px solid var(--slate);
   border-radius: 4px;
+
+  position: absolute;
+  top: 4px;
+
+  background-color: var(--white);
 `;
 
 export const OptionContainer = styled.div`

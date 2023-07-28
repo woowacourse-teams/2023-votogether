@@ -27,8 +27,8 @@ export const Time = styled.div<{ isPicked: boolean }>`
   width: 100%;
   height: 50px;
 
-  background: ${props => (props.isPicked ? '#F2F2F2' : '#FFFFFF')};
+  background: ${props => (props.isPicked ? '#F2F2F2' : 'var(--white)')};
 
-  font-size: 1.3rem;
+  font: var(--text-small);
   font-weight: ${props => (props.isPicked ? 'bold' : 'light')};
 `;

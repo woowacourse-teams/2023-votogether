@@ -9,9 +9,16 @@ export const Container = styled.div`
 
   margin-top: 50px;
   margin-bottom: 20px;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    margin-top: 30px;
+  }
 `;
 
 export const HeaderWrapper = styled.div`
+  position: fixed;
+  z-index: ${theme.zIndex.header};
+
   @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
   }
@@ -20,7 +27,7 @@ export const HeaderWrapper = styled.div`
 export const PageHeader = styled.div`
   margin: 15px;
 
-  font-size: 20px;
+  font: var(--text-title);
 `;
 
 export const OptionContainer = styled.div`

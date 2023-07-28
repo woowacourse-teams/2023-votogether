@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -36,58 +35,31 @@ class VoteRepositoryTest {
     @Autowired
     PostOptionRepository postOptionRepository;
 
-    Member member = Member.builder()
-            .gender(Gender.MALE)
-            .point(0)
-            .socialType(SocialType.KAKAO)
-            .nickname("user1")
-            .gender(Gender.MALE)
-            .birthday("0718")
-            .ageRange("10~14")
-            .socialType(SocialType.KAKAO)
-            .socialId("kakao@gmail.com")
-            .ageRange("30~39")
-            .birthday("0101")
-            .point(0)
-            .build();
-
-    Post post1 = Post.builder()
-            .postBody(PostBody.builder().title("title1").content("content1").build())
-            .deadline(
-                    LocalDateTime.of(3023, 7, 12, 0, 0))
-            .member(member)
-            .build();
-
-    PostOption postOption1 = PostOption.builder()
-            .post(post1)
-            .sequence(1)
-            .content("content1")
-            .build();
-
-    Post post2 = Post.builder()
-            .postBody(PostBody.builder().title("title2").content("content2").build())
-            .deadline(
-                    LocalDateTime.of(3023, 7, 12, 0, 0))
-            .member(member)
-            .build();
-
-    PostOption postOption2 = PostOption.builder()
-            .post(post2)
-            .sequence(2)
-            .content("content2")
-            .build();
-
     @Test
     @DisplayName("투표를 저장한다.")
     void save() {
         // given
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(member)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOption = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+
         Vote vote = Vote.builder()
-                .postOption(postOption1)
+                .postOption(postOption)
                 .member(member)
                 .build();
-        memberRepository.save(member);
-        postRepository.save(post1);
-        postOptionRepository.save(postOption1);
 
         // when
         voteRepository.save(vote);
@@ -100,17 +72,30 @@ class VoteRepositoryTest {
     @DisplayName("멤버와 투표선택지를 통해 투표를 찾는다.")
     void findByMemberAndPostOption() {
         // given
-        Vote vote = Vote.builder()
-                .postOption(postOption1)
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(member)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOption = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+
+        Vote vote = voteRepository.save(Vote.builder()
+                .postOption(postOption)
                 .member(member)
-                .build();
-        memberRepository.save(member);
-        postRepository.save(post1);
-        postOptionRepository.save(postOption1);
-        voteRepository.save(vote);
+                .build());
 
         // when
-        Vote findVote = voteRepository.findByMemberAndPostOption(member, postOption1).get();
+        Vote findVote = voteRepository.findByMemberAndPostOption(member, postOption).get();
 
         // then
         assertThat(findVote).isSameAs(vote);
@@ -120,41 +105,117 @@ class VoteRepositoryTest {
     @DisplayName("멤버와 여러 투표선택지를 통해 투표를 찾는다.")
     void findByMemberAndPostOptionIn() {
         // given
-        memberRepository.save(member);
-        postRepository.save(post1);
-        postRepository.save(post2);
-        postOptionRepository.save(postOption1);
-        postOptionRepository.save(postOption2);
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        Vote vote1 = Vote.builder()
-                .postOption(postOption1)
+        Post postA = postRepository.save(
+                Post.builder()
+                        .member(member)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOptionA = postOptionRepository.save(
+                PostOption.builder()
+                        .post(postA)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+        Post postB = postRepository.save(
+                Post.builder()
+                        .member(member)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOptionB = postOptionRepository.save(
+                PostOption.builder()
+                        .post(postB)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+
+        Vote voteA = Vote.builder()
+                .postOption(postOptionA)
                 .member(member)
                 .build();
-        voteRepository.save(vote1);
-
-        Vote vote2 = Vote.builder()
-                .postOption(postOption2)
+        Vote voteB = Vote.builder()
+                .postOption(postOptionB)
                 .member(member)
                 .build();
-        voteRepository.save(vote2);
+        voteRepository.save(voteA);
+        voteRepository.save(voteB);
 
         // when
-        List<Vote> votes = voteRepository.findByMemberAndPostOptionIn(member, List.of(postOption1, postOption2));
+        List<Vote> votes = voteRepository.findByMemberAndPostOptionIn(member, List.of(postOptionA, postOptionB));
 
         // then
         assertThat(votes).hasSize(2);
     }
 
     @Test
+    @DisplayName("게시글의 연령대와 성별로 그룹화된 투표 통계를 조회한다.")
+    void findVoteCountByPostIdGroupByAgeRangeAndGender() {
+        // given
+        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+        Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+        Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
+        Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
+        Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOptionA = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+        PostOption postOptionB = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(2)
+                        .content("피자")
+                        .build()
+        );
+
+        voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
+        voteRepository.save(Vote.builder().member(maleLate10).postOption(postOptionB).build());
+        voteRepository.save(Vote.builder().member(male60).postOption(postOptionA).build());
+        voteRepository.save(Vote.builder().member(female70).postOption(postOptionB).build());
+        voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
+
+        // when
+        List<VoteStatus> result = voteRepository.findVoteCountByPostIdGroupByAgeRangeAndGender(post.getId());
+
+        // then
+        assertThat(result).containsExactly(
+                new VoteStatus("10~14", Gender.FEMALE, 1),
+                new VoteStatus("15~19", Gender.MALE, 1),
+                new VoteStatus("60~69", Gender.MALE, 1),
+                new VoteStatus("70~79", Gender.FEMALE, 1),
+                new VoteStatus("80~89", Gender.FEMALE, 1)
+        );
+    }
+
+    @Test
     @DisplayName("게시글 투표 옵션의 연령대와 성별로 그룹화된 투표 통계를 조회한다.")
     void findVoteCountByPostOptionIdGroupByAgeRangeAndGender() {
         // given
-        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10);
-        Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10);
-        Member male60 = memberRepository.save(MemberFixtures.MALE_60);
-        Member female70 = memberRepository.save(MemberFixtures.FEMALE_70);
-        Member female80 = memberRepository.save(MemberFixtures.FEMALE_80);
-        Member writer = memberRepository.save(MemberFixtures.MALE_20);
+        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+        Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+        Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
+        Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
+        Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
         Post post = postRepository.save(
                 Post.builder()
@@ -189,6 +250,40 @@ class VoteRepositoryTest {
                 new VoteStatus("70~79", Gender.FEMALE, 1),
                 new VoteStatus("80~89", Gender.FEMALE, 1)
         );
+    }
+
+    @Test
+    @DisplayName("해당 회원이 투표한 개수를 반환한다.")
+    void countByMember() {
+        // given
+        Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+        Post post = postRepository.save(
+                Post.builder()
+                        .member(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOption = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+        Vote vote = Vote.builder()
+                .member(member)
+                .postOption(postOption)
+                .build();
+
+        voteRepository.save(vote);
+
+        // when
+        int numberOfVote = voteRepository.countByMember(member);
+
+        // then
+        assertThat(numberOfVote).isEqualTo(1);
     }
 
 }

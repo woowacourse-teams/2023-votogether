@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 import { WrittenVoteOptionType } from '@type/post';
+import { Size } from '@type/style';
 
 import { useFetch } from '@hooks/useFetch';
 
-import { getOptionStatistics } from '@api/sua/voteResult';
+import { getOptionStatistics } from '@api/voteResult';
 
-import { Size } from '@components/common/AddButton/type';
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import WrittenVoteOption from '@components/optionList/WrittenVoteOptionList/WrittenVoteOption';
 import VoteStatistics from '@components/VoteStatistics';

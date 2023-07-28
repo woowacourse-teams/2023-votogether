@@ -1,27 +1,47 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import Home from '@pages/Home';
 import CreatePost from '@pages/post/CreatePost';
 import EditPost from '@pages/post/EditPost';
-import PostDetail from '@pages/post/PostDetail';
-import PostList from '@pages/post/PostList';
+import PostDetailPage from '@pages/post/PostDetail';
+import VoteStatisticsPage from '@pages/VoteStatistics';
+
+import { PATH } from '@constants/path';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: PATH.HOME,
+    element: <Home />,
     children: [
-      { path: '', element: <PostList /> },
+      { path: 'search', element: <Home /> },
+      { path: 'login', element: <Home /> },
+    ],
+  },
+  {
+    path: PATH.POST,
+    children: [
+      { path: 'write', element: <CreatePost /> },
       {
-        path: 'posts/write',
-        element: <CreatePost />,
-      },
-      {
-        path: 'posts/:postId',
-        element: <PostDetail />,
-      },
-      {
-        path: 'posts/write/:postId',
+        path: 'write/:postId',
         element: <EditPost />,
       },
+      {
+        path: ':postId',
+        element: <PostDetailPage />,
+      },
+      {
+        path: 'result/:postId',
+        element: <VoteStatisticsPage />,
+      },
+      { path: 'category/:categoryId', element: <Home /> },
+    ],
+  },
+  {
+    path: PATH.USER,
+    children: [
+      { path: 'posts', element: <Home /> },
+      { path: 'votes', element: <Home /> },
+      { path: 'myPage', element: <Home /> },
     ],
   },
 ]);

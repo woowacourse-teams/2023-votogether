@@ -3,6 +3,7 @@ package com.votogether.domain.category.contorller;
 import com.votogether.domain.category.dto.response.CategoryResponse;
 import com.votogether.domain.category.service.CategoryService;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -41,7 +42,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "해당 카테고리가 존재하지 않아 추가 실패"),
     })
     @PostMapping("/{categoryId}/like")
-    public ResponseEntity<Void> addFavoriteCategory(final Member member, @PathVariable final Long categoryId) {
+    public ResponseEntity<Void> addFavoriteCategory(@Auth final Member member, @PathVariable final Long categoryId) {
         categoryService.addFavoriteCategory(member, categoryId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -53,7 +54,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "해당 카테고리가 존재하지 않아 삭제 실패")
     })
     @DeleteMapping("/{categoryId}/like")
-    public ResponseEntity<Void> removeFavoriteCategory(final Member member, @PathVariable final Long categoryId) {
+    public ResponseEntity<Void> removeFavoriteCategory(@Auth final Member member, @PathVariable final Long categoryId) {
         categoryService.removeFavoriteCategory(member, categoryId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -61,7 +62,7 @@ public class CategoryController {
     @Operation(summary = "회원으로 모든 카테고리 목록 조회하기", description = "회원의 선호하는 카테고리와 전체 카테고리 목록을 조회한다.")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories(final Member member) {
+    public ResponseEntity<List<CategoryResponse>> getAllCategories(@Auth final Member member) {
         final List<CategoryResponse> categories = categoryService.getAllCategories(member);
         return ResponseEntity.status(HttpStatus.OK).body(categories);
     }

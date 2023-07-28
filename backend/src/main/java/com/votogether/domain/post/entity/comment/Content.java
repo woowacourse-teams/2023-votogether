@@ -25,10 +25,7 @@ class Content {
 
     private void validate(final String content) {
         if (content.length() > MAXIMUM_LENGTH) {
-            throw new BadRequestException(
-                    CommentExceptionType.INVALID_CONTENT_LENGTH.getCode(),
-                    String.format("댓글 길이는 최대 %d자까지 가능합니다.", MAXIMUM_LENGTH)
-            );
+            throw new BadRequestException(CommentExceptionType.INVALID_CONTENT_LENGTH);
         }
     }
 

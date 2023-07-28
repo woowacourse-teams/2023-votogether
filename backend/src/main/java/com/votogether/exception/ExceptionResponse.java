@@ -11,7 +11,8 @@ public record ExceptionResponse(
 ) {
 
     public static ExceptionResponse from(final BaseException e) {
-        return new ExceptionResponse(e.getCode(), e.getMessage());
+        final ExceptionType exceptionType = e.getExceptionType();
+        return new ExceptionResponse(exceptionType.getCode(), exceptionType.getMessage());
     }
 
 }

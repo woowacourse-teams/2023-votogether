@@ -36,7 +36,7 @@ class CommentTest {
                         .build()
         )
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage("댓글 길이는 최대 500자까지 가능합니다.");
+                .hasMessage("유효하지 않은 댓글 길이입니다.");
     }
 
 }

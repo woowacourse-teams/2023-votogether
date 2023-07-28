@@ -19,7 +19,7 @@ export const Container = styled.div`
   font: var(--text-caption);
 `;
 
-export const Menu = styled.div<{ $color: CommentMenuItem['color'] }>`
+export const Menu = styled.button<{ $color: CommentMenuItem['color'] }>`
   padding: 10px 15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 

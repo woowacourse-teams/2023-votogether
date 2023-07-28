@@ -17,6 +17,8 @@ export const Container = styled.div`
 
   background-color: rgba(0, 0, 0, 0.5);
 
+  z-index: ${theme.zIndex.modal};
+
   @media (min-width: ${theme.breakpoint.sm}) {
     padding: 0;
   }

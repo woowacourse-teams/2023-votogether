@@ -3,6 +3,7 @@ package com.votogether.domain.member.entity;
 import com.votogether.domain.auth.dto.KakaoMemberResponse;
 import com.votogether.domain.common.BaseEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,8 +24,8 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 15, unique = true, nullable = false)
-    private String nickname;
+    @Embedded
+    private Nickname nickname;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
@@ -56,7 +57,7 @@ public class Member extends BaseEntity {
             final String socialId,
             final Integer point
     ) {
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.gender = gender;
         this.ageRange = ageRange;
         this.birthday = birthday;
@@ -80,6 +81,10 @@ public class Member extends BaseEntity {
 
     public void plusPoint(final int point) {
         this.point = this.point + point;
+    }
+
+    public void changeNickname(final String nickname) {
+        this.nickname = new Nickname(nickname);
     }
 
 }

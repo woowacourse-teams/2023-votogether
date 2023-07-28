@@ -3,20 +3,26 @@ package com.votogether.domain.member.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 
 import com.votogether.domain.member.dto.MemberInfoResponse;
+import com.votogether.domain.member.dto.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;
+import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 
 @Import(TokenProcessor.class)
 @WebMvcTest(MemberController.class)
@@ -61,6 +67,52 @@ class MemberControllerTest {
                 () -> assertThat(response.postCount()).isEqualTo(0),
                 () -> assertThat(response.voteCount()).isEqualTo(0)
         );
+    }
+
+    @Nested
+    @DisplayName("회원의 닉네임이")
+    class ChangeNickname {
+
+        @Test
+        @DisplayName("변경에 성공하면 200을 반환한다.")
+        void changeNicknameSuccess() {
+            // given
+            String nicknameToChange = "jeomxon";
+            MemberNicknameUpdateRequest memberNicknameUpdateRequest = new MemberNicknameUpdateRequest(nicknameToChange);
+
+            willDoNothing().given(memberService).changeNickname(any(Member.class), anyString());
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(memberNicknameUpdateRequest)
+                    .when().patch("/members/me/nickname")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract();
+        }
+
+        @Test
+        @DisplayName("변경에 실패하면 400을 반환한다.")
+        void changeNicknameFail() {
+            // given
+            String nicknameToChange = "";
+            MemberNicknameUpdateRequest memberNicknameUpdateRequest = new MemberNicknameUpdateRequest(nicknameToChange);
+
+            willDoNothing().given(memberService).changeNickname(any(Member.class), anyString());
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(memberNicknameUpdateRequest)
+                    .when().patch("/members/me/nickname")
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .extract();
+        }
+
     }
 
 }

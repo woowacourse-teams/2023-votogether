@@ -55,7 +55,7 @@ public class PostCommentController {
             @ApiResponse(responseCode = "204", description = "게시글 댓글 삭제 성공"),
             @ApiResponse(
                     responseCode = "404",
-                    description = "[존재하지 않는 게시글, 존재하지 않는 댓글]",
+                    description = "존재하지 않는 게시글, 존재하지 않는 댓글",
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })

@@ -37,7 +37,7 @@ public record PostResponse(
                 post.getCreatedAt(),
                 post.getDeadline(),
                 new VoteResponse(
-                        post.getPostOptions().getSelectOption(loginMember),
+                        post.getPostOptions().getSelectedOptionId(loginMember),
                         post.getFinalTotalVoteCount(loginMember),
                         getOptions(post, loginMember)
                 )

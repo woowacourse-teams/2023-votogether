@@ -3,7 +3,7 @@ package com.votogether.domain.post.dto.response;
 import java.util.List;
 
 public record VoteResponse(
-        Integer selectOption,
+        Long selectedOptionId,
         Long totalVoteCount,
         List<PostOptionResponse> options
 ) {
@@ -11,7 +11,7 @@ public record VoteResponse(
     @Override
     public String toString() {
         return "VoteInfoResponse{" +
-                "selectOption=" + selectOption +
+                "selectedOptionId=" + selectedOptionId +
                 ", totalVoteCount=" + totalVoteCount +
                 ", options=" + options +
                 '}';

@@ -25,12 +25,12 @@ public class PostOptions {
         return postOptions.contains(postOption);
     }
 
-    public Integer getSelectOption(final Member member) {
+    public Long getSelectedOptionId(final Member member) {
         return postOptions.stream()
                 .filter(postOption -> postOption.hasMemberVote(member))
                 .findFirst()
-                .map(PostOption::getSequence)
-                .orElse(0);
+                .map(PostOption::getId)
+                .orElse(0L);
     }
 
 }

@@ -163,7 +163,7 @@ public class Post extends BaseEntity {
     }
 
     public boolean isVisibleVoteResult(final Member member) {
-        return this.postOptions.getSelectOption(member) != 0 || this.writer.equals(member);
+        return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
     }
 
 }

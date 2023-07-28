@@ -3,7 +3,7 @@ import { useSelect } from '@hooks/useSelect';
 import CommentModal from '@components/comment/CommentModal';
 import Select from '@components/common/Select';
 
-import { COMMENT_REPORT_MESSAGE } from './constants';
+import { COMMENT_REPORT_KIND, COMMENT_REPORT_MESSAGE } from './constants';
 import { CommentReportMessage } from './types';
 
 interface CommentReportModalProps {
@@ -11,7 +11,9 @@ interface CommentReportModalProps {
 }
 
 export default function CommentReportModal({ handleCancelClick }: CommentReportModalProps) {
-  const { handleOptionChange, selectedOption } = useSelect<CommentReportMessage>('advertising');
+  const { handleOptionChange, selectedOption } = useSelect<CommentReportMessage>(
+    COMMENT_REPORT_KIND.ADVERTISING
+  );
 
   return (
     <CommentModal
@@ -26,7 +28,6 @@ export default function CommentReportModal({ handleCancelClick }: CommentReportM
         optionList={COMMENT_REPORT_MESSAGE}
         handleOptionChange={handleOptionChange}
         selectedOption={COMMENT_REPORT_MESSAGE[selectedOption]}
-        defaultValue="신고 사유를 선택해주세요"
       />
     </CommentModal>
   );

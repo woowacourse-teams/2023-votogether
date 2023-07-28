@@ -22,9 +22,7 @@ export const ListContainer = styled.div`
 export const MoreButtonWrapper = styled.div`
   width: 80px;
   height: 46px;
-  margin: 0 auto;
-
-  margin-top: 25px;
+  margin: 25px auto 0 auto;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     width: 190px;

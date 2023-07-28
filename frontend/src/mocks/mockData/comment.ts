@@ -26,6 +26,7 @@ const nicknameList = [
   '뛰어난 전략가',
   '뚜렷한 개성',
 ];
+
 const getMockComment = (): Comment => ({
   id: Math.floor(Math.random() * 100000),
   content: commentList[Math.floor(Math.random() * 11)],

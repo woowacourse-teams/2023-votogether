@@ -12,7 +12,7 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
-import { scrollToTop } from '@utils/post/scrollToTop';
+import { scrollToTop } from '@utils/scrollToTop';
 
 import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
 

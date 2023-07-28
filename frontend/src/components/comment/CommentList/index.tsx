@@ -6,7 +6,7 @@ import SquareButton from '@components/common/SquareButton';
 
 import { COMMENT_USER } from '@constants/comment';
 
-import { scrollToTop } from '@utils/post/scrollToTop';
+import { scrollToTop } from '@utils/scrollToTop';
 
 import CommentItem from './CommentItem';
 import CommentLogin from './CommentLogin';

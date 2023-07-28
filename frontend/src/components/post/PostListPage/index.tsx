@@ -1,7 +1,4 @@
-import React, { Suspense } from 'react';
-
-import { Category } from '@type/category';
-import { User } from '@type/user';
+import { Suspense } from 'react';
 
 import { useDrawer } from '@hooks/useDrawer';
 
@@ -15,22 +12,18 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
+import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
+
 import * as S from './style';
 
-interface PostListPageProps {
-  userInfo?: User;
-  categoryList: Category[];
-  handleFavoriteClick: (categoryId: number) => void;
-  handleLogoutClick: () => void;
-}
-
-export default function PostListPage({
-  categoryList,
-  userInfo,
-  handleFavoriteClick,
-  handleLogoutClick,
-}: PostListPageProps) {
+export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
+
+  //추후 구현 예정
+  const categoryList = MOCK_FAVORITE_CATEGORIES;
+  const userInfo = undefined;
+  const handleFavoriteClick = () => {};
+  const handleLogoutClick = () => {};
 
   const scrollToTop = () => {
     window.scroll({ top: 0, behavior: 'smooth' });

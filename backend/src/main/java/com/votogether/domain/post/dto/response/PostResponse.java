@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record PostResponse(
-        long postId,
+        Long postId,
         WriterResponse writer,
         String title,
         String content,
@@ -24,7 +24,7 @@ public record PostResponse(
 
         return new PostResponse(
                 post.getId(),
-                WriterResponse.of(writer.getId(), writer.getNickname()),
+                WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 getCategories(post),

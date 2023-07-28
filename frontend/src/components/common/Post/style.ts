@@ -5,10 +5,6 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const Container = styled.li`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
   font: var(--text-small);
   letter-spacing: 0.5px;
   line-height: 1.5;
@@ -79,5 +75,9 @@ export const Content = styled.p<{ $isPreview: boolean }>`
 `;
 
 export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
   pointer-events: ${({ $isPreview }) => !$isPreview && 'none'};
 `;

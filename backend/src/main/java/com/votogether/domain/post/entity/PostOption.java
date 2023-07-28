@@ -54,7 +54,7 @@ public class PostOption extends BaseEntity {
     @Builder
     private PostOption(
             final Post post,
-            final Integer sequence,
+            final int sequence,
             final String content,
             final String imageUrl
     ) {

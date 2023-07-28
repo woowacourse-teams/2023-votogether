@@ -7,12 +7,18 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  ${theme.breakpoint.sm}
   margin-top: 50px;
   margin-bottom: 20px;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    margin-top: 30px;
+  }
 `;
 
 export const HeaderWrapper = styled.div`
+  position: fixed;
+  z-index: ${theme.zIndex.header};
+
   @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
   }

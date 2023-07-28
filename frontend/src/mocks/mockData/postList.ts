@@ -1,6 +1,6 @@
 import { PostInfo } from '@type/post';
 
-export const MOCK_POST_LIST: PostInfo[][] = [];
+export const MOCK_POST_LIST: PostInfo[] = [];
 
 const getMockPost = () => ({
   postId: Math.floor(Math.random() * 100000),
@@ -61,12 +61,6 @@ const getMockPost = () => ({
   },
 });
 
-for (let page = 0; page < 10; page += 1) {
-  const postList = [];
-
-  for (let index = 0; index < 10; index += 1) {
-    postList.push(getMockPost());
-  }
-
-  MOCK_POST_LIST.push(postList);
+for (let index = 0; index < 10; index += 1) {
+  MOCK_POST_LIST.push(getMockPost());
 }

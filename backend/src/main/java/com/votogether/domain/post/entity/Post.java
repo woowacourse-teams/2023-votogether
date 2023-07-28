@@ -3,10 +3,12 @@ package com.votogether.domain.post.entity;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.exception.BadRequestException;
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -16,7 +18,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -59,6 +63,9 @@ public class Post extends BaseEntity {
             + "(select po.id from Post_Option po where po.post_id = id)"
             + ")")
     private long totalVoteCount;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     private Post(
@@ -163,6 +170,11 @@ public class Post extends BaseEntity {
 
     public boolean isVisibleVoteResult(final Member member) {
         return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
+    }
+
+    public void addComment(final Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
     }
 
 }

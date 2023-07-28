@@ -9,27 +9,28 @@ export const Container = styled.li<{ $isSelected: boolean }>`
   border: ${({ $isSelected }) =>
     $isSelected ? '2px solid var(--primary-color)' : '1px solid rgba(0, 0, 0, 0.1)'};
   border-radius: 4px;
-  padding: 15px 20px;
+  padding: 10px 15px;
 
   color: #5b5b5b;
 
   cursor: pointer;
 
   @media (min-width: ${theme.breakpoint.md}) {
-    padding: 20px 30px;
+    padding: 15px 25px;
   }
 `;
 
 export const Image = styled.img`
   border-radius: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 
   width: 100%;
 
   aspect-ratio: 1/1;
   object-fit: cover;
+
   @media (min-width: ${theme.breakpoint.md}) {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 `;
 

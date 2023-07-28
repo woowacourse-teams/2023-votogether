@@ -4,6 +4,7 @@ import { PostInfo } from '@type/post';
 
 import { useEditPost } from '@hooks/query/post/useEditPost';
 
+import Layout from '@components/common/Layout';
 import PostForm from '@components/PostForm';
 
 export default function EditPost() {
@@ -55,8 +56,8 @@ export default function EditPost() {
   };
 
   return (
-    <>
+    <Layout isSidebarVisible={false}>
       <PostForm data={MOCK_DATA} mutate={mutate} isError={isError} error={error} />
-    </>
+    </Layout>
   );
 }

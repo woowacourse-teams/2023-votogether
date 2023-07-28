@@ -39,7 +39,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(final Member member) {
-        final int numberOfPosts = postRepository.countByMember(member);
+        final int numberOfPosts = postRepository.countByWriter(member);
         final int numberOfVotes = voteRepository.countByMember(member);
 
         return new MemberInfoResponse(

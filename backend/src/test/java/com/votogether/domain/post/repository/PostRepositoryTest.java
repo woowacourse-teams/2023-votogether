@@ -48,7 +48,7 @@ class PostRepositoryTest {
                 .build();
 
         final Post post = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
@@ -82,13 +82,13 @@ class PostRepositoryTest {
                 .build();
 
         Post post1 = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
         Post post2 = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
@@ -98,7 +98,7 @@ class PostRepositoryTest {
         postRepository.save(post2);
 
         // when
-        int numberOfPosts = postRepository.countByMember(member);
+        int numberOfPosts = postRepository.countByWriter(member);
 
         // then
         assertThat(numberOfPosts).isEqualTo(2);

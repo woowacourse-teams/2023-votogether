@@ -12,10 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"id"})
+@ToString
 @Getter
 @Entity
 public class Member extends BaseEntity {
@@ -45,7 +49,7 @@ public class Member extends BaseEntity {
     private String socialId;
 
     @Column(nullable = false)
-    private Integer point;
+    private int point;
 
     @Builder
     private Member(

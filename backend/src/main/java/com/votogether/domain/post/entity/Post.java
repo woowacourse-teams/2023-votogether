@@ -125,7 +125,6 @@ public class Post extends BaseEntity {
 
         final Vote vote = Vote.builder()
                 .member(voter)
-                .postOption(postOption)
                 .build();
 
         postOption.addVote(vote);

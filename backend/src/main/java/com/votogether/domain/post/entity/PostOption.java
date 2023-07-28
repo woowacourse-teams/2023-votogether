@@ -105,6 +105,7 @@ public class PostOption extends BaseEntity {
 
     public void addVote(final Vote vote) {
         this.votes.add(vote);
+        vote.setPostOption(this);
     }
 
     public boolean hasMemberVote(final Member member) {

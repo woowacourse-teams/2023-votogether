@@ -12,5 +12,4 @@ export const AddButtonWrapper = styled.div`
   justify-content: center;
 
   position: relative;
-  left: 17px;
 `;

@@ -80,8 +80,7 @@ public class PostController {
     @Operation(summary = "게시글 조기 마감", description = "게시글을 조기 마감한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물이 조기 마감 되었습니다."),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다."),
-            @ApiResponse(responseCode = "500", description = "인터넷 서버 오류입니다.")
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @PatchMapping("/{id}/close")
     public ResponseEntity<Void> postClosedEarly(@PathVariable final Long id) {

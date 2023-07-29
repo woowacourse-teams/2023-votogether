@@ -13,7 +13,7 @@ export const useDeleteComment = (postId: number, commentId: number) => {
         queryClient.invalidateQueries([QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS]);
       },
       onError: error => {
-        window.console.log('editComment error', error);
+        window.console.log('Delete Comment error', error);
       },
     }
   );

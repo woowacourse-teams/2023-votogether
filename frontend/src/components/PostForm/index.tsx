@@ -42,7 +42,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     voteInfo,
     imageUrl,
   } = data ?? {};
-  const options = voteInfo?.options ?? [];
 
   const navigate = useNavigate();
   const writingOptionHook = useWritingOption(voteInfo?.options);
@@ -101,11 +100,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       contentImageFileList.map(file => formData.append('contentImages', file));
       optionImageFileList.map(file => formData.append('optionImages', file));
 
-      const optionTextAreas = e.target.querySelectorAll<HTMLTextAreaElement>(
-        'textarea[name="optionText"]'
-      );
-      const writingOptionList = Array.from(optionTextAreas).map((textarea, index) => {
-        return { content: textarea.value, imageUrl: options[index]?.imageUrl ?? '' };
+      const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
+        return { content: text, imageUrl: imageUrl };
       });
 
       const updatedPostTexts = {
@@ -127,7 +123,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         return;
       }
 
-      navigate('/');
+      // navigate('/');
     }
   };
 

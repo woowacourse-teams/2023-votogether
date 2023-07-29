@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 import { MAX_FILE_SIZE } from '@components/PostForm/constants';
+
+const MAX_WRITING_LENGTH = 50;
 
 export interface WritingVoteOptionType {
   id: number;
@@ -29,6 +31,32 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
 
     setOptionList(updatedOptionList);
   };
+
+  const writingOption =
+    (optionId: number) => (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      const { value } = event.target;
+      const standard = value.length;
+
+      if (standard === MAX_WRITING_LENGTH) {
+        event.target.setCustomValidity(
+          `선택지 내용은 ${MAX_WRITING_LENGTH}자까지 입력 가능합니다.`
+        );
+        event.target.reportValidity();
+        return;
+      }
+
+      const updateOptionList = optionList.map(optionItem => {
+        return optionItem.id !== optionId
+          ? optionItem
+          : {
+              ...optionItem,
+              text: value,
+            };
+      });
+
+      event.target.setCustomValidity('');
+      setOptionList(updateOptionList);
+    };
 
   const deleteOption = (optionId: number) => {
     if (optionList.length <= MIN_COUNT) return;
@@ -84,5 +112,5 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     };
   };
 
-  return { optionList, addOption, deleteOption, removeImage, handleUploadImage };
+  return { optionList, addOption, writingOption, deleteOption, removeImage, handleUploadImage };
 };

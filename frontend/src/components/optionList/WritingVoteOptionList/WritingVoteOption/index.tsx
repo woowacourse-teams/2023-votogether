@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { useText } from '@hooks/useText';
+import { ChangeEvent } from 'react';
 
 import OptionCancelButton from './OptionCancelButton';
 import OptionUploadImageButton from './OptionUploadImageButton';
@@ -10,9 +8,10 @@ interface WritingVoteOptionProps {
   optionId: number;
   text: string;
   isDeletable: boolean;
+  handleUpdateOptionChange: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   handleDeleteOptionClick: () => void;
   handleRemoveImageClick: () => void;
-  handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUploadImage: (event: ChangeEvent<HTMLInputElement>) => void;
   imageUrl: string;
 }
 
@@ -22,13 +21,12 @@ export default function WritingVoteOption({
   optionId,
   text,
   isDeletable,
+  handleUpdateOptionChange,
   handleDeleteOptionClick,
   handleRemoveImageClick,
   handleUploadImage,
   imageUrl,
 }: WritingVoteOptionProps) {
-  const { handleTextChange } = useText('');
-
   return (
     <S.Container>
       <S.CancelButtonWrapper>
@@ -41,9 +39,7 @@ export default function WritingVoteOption({
           <S.ContentTextArea
             name="optionText"
             defaultValue={text}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              handleTextChange(e, MAX_WRITING_LENGTH)
-            }
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleUpdateOptionChange(e)}
             placeholder="내용을 입력해주세요."
             maxLength={MAX_WRITING_LENGTH}
           />

@@ -14,6 +14,9 @@ interface WritingVoteOptionListProps {
   writingOptionHook: {
     optionList: WritingVoteOptionType[];
     addOption: () => void;
+    writingOption: (
+      optionId: number
+    ) => (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
     deleteOption: (optionId: number) => void;
     removeImage: (optionId: number) => void;
     handleUploadImage: (event: ChangeEvent<HTMLInputElement>, optionId: number) => void;
@@ -21,7 +24,8 @@ interface WritingVoteOptionListProps {
 }
 
 export default function WritingVoteOptionList({ writingOptionHook }: WritingVoteOptionListProps) {
-  const { optionList, addOption, deleteOption, removeImage, handleUploadImage } = writingOptionHook;
+  const { optionList, addOption, writingOption, deleteOption, removeImage, handleUploadImage } =
+    writingOptionHook;
   const isDeletable = optionList.length > MINIMUM_COUNT;
 
   return (
@@ -32,6 +36,7 @@ export default function WritingVoteOptionList({ writingOptionHook }: WritingVote
           optionId={optionItem.id}
           isDeletable={isDeletable}
           text={optionItem.text}
+          handleUpdateOptionChange={writingOption(optionItem.id)}
           handleDeleteOptionClick={() => deleteOption(optionItem.id)}
           handleRemoveImageClick={() => removeImage(optionItem.id)}
           handleUploadImage={(event: ChangeEvent<HTMLInputElement>) =>

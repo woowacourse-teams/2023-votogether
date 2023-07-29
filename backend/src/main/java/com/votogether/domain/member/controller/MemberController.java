@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,17 @@ public class MemberController {
     ) {
         memberService.changeNickname(member, request.nickname());
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "회원 탈퇴", description = "서비스를 탈퇴한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 회원")
+    })
+    @DeleteMapping("/me/delete")
+    public ResponseEntity<Void> deleteMember(@Auth final Member member) {
+        memberService.deleteMember(member);
+        return ResponseEntity.noContent().build();
     }
 
 }

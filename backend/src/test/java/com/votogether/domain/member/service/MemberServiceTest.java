@@ -96,4 +96,17 @@ class MemberServiceTest {
 
     }
 
+    @Test
+    @DisplayName("회원 탈퇴를 성공한다.")
+    void deleteMember() {
+        // given
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        // when
+        memberService.deleteMember(member);
+
+        // then
+        assertThat(memberRepository.findAll()).isEmpty();
+    }
+
 }

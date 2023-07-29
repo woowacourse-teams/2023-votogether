@@ -24,7 +24,7 @@ class CommentTest {
                 .content("content")
                 .build();
         Post post = Post.builder()
-                .member(MemberFixtures.FEMALE_20.get())
+                .writer(MemberFixtures.FEMALE_20.get())
                 .postBody(body)
                 .deadline(LocalDateTime.now())
                 .build();

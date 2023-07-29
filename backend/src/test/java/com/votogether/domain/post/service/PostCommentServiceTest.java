@@ -60,7 +60,7 @@ class PostCommentServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Post post = postRepository.save(
                     Post.builder()
-                            .member(member)
+                            .writer(member)
                             .postBody(PostBody.builder().title("title").content("content").build())
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()

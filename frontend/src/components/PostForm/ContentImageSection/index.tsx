@@ -19,7 +19,7 @@ export default function ContentImageSection({ contentImageHook }: ContentImageSe
         <S.ContentImageContainer>
           <OptionCancelButton onClick={removeImage} />
           <S.ContentImageWrapper>
-            <S.ContentImage src={contentImage} alt={'본문에 포함된 사진'} />
+            <S.ContentImage src={contentImage} alt="본문에 포함된 사진" />
           </S.ContentImageWrapper>
         </S.ContentImageContainer>
       )}

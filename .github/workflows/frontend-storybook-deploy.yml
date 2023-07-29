@@ -50,16 +50,16 @@ jobs:
       - name: Build app
         run: |
           npm run build
-          cp ./build/index.html ./build/404.html
+          cp ./dist/index.html ./dist/404.html
 
       - name: Build storybook
         run: |
           npm run build-storybook
-          mv ./storybook-static ./build/storybook
+          mv ./storybook-static ./dist/storybook
 
       - name: storybook-deploy 브런치에 배포할 파일을 업데이트 한다.
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: storybook-deploy
-          publish_dir: ./build
+          publish_dir: ./dist

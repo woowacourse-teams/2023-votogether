@@ -99,7 +99,7 @@ class PostCommentServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Post post = postRepository.save(
                     Post.builder()
-                            .member(member)
+                            .writer(member)
                             .postBody(PostBody.builder().title("title").content("content").build())
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
@@ -118,14 +118,14 @@ class PostCommentServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Post postA = postRepository.save(
                     Post.builder()
-                            .member(member)
+                            .writer(member)
                             .postBody(PostBody.builder().title("titleA").content("contentA").build())
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
             Post postB = postRepository.save(
                     Post.builder()
-                            .member(member)
+                            .writer(member)
                             .postBody(PostBody.builder().title("titleB").content("contentB").build())
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
@@ -152,7 +152,7 @@ class PostCommentServiceTest {
             Member memberB = memberRepository.save(MemberFixtures.FEMALE_20.get());
             Post post = postRepository.save(
                     Post.builder()
-                            .member(memberA)
+                            .writer(memberA)
                             .postBody(PostBody.builder().title("titleA").content("contentA").build())
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
@@ -178,7 +178,7 @@ class PostCommentServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Post post = postRepository.save(
                     Post.builder()
-                            .member(member)
+                            .writer(member)
                             .postBody(PostBody.builder().title("titleA").content("contentA").build())
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()

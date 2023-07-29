@@ -51,7 +51,7 @@ class CommentTest {
                 .content("content")
                 .build();
         Post post = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(body)
                 .deadline(LocalDateTime.now())
                 .build();
@@ -79,7 +79,7 @@ class CommentTest {
                 .content("content")
                 .build();
         Post postA = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(bodyA)
                 .deadline(LocalDateTime.now())
                 .build();
@@ -88,7 +88,7 @@ class CommentTest {
                 .content("content")
                 .build();
         Post postB = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(bodyB)
                 .deadline(LocalDateTime.now())
                 .build();

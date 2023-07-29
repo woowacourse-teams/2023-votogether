@@ -63,4 +63,11 @@ public class MemberService {
         }
     }
 
+    @Transactional
+    public void deleteMember(final Member member) {
+        final Member existentMember = memberRepository.findById(member.getId())
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+        memberRepository.delete(existentMember);
+    }
+
 }

@@ -4,11 +4,11 @@ import kakaoLogin from '@assets/kakao_login_large.svg';
 
 import * as S from './style';
 
-interface CommentLoginProps {
+interface CommentLoginSectionProps {
   name: string;
 }
 
-export default function CommentLogin({ name }: CommentLoginProps) {
+export default function CommentLoginSectionSection({ name }: CommentLoginSectionProps) {
   return (
     <S.Container>
       <S.Title>대화에 참여하려면 회원가입</S.Title>

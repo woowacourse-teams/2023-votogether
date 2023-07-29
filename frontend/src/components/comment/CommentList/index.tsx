@@ -9,7 +9,7 @@ import { COMMENT_USER } from '@constants/comment';
 import { scrollToTop } from '@utils/scrollToTop';
 
 import CommentItem from './CommentItem';
-import CommentLogin from './CommentLogin';
+import CommentLoginSection from './CommentLoginSection';
 import CommentTextForm from './CommentTextForm';
 import * as S from './style';
 
@@ -43,7 +43,11 @@ export default function CommentList({
   return (
     <S.Container>
       <S.TextOrLoginWrapper>
-        {isGuest ? <CommentLogin name={postWriterName} /> : <CommentTextForm initialComment="" />}
+        {isGuest ? (
+          <CommentLoginSection name={postWriterName} />
+        ) : (
+          <CommentTextForm initialComment="" />
+        )}
       </S.TextOrLoginWrapper>
       <S.ListContainer>
         {slicedCommentList.map(comment => (

@@ -5,3 +5,5 @@ export const example = [
     return res(ctx.status(200));
   }),
 ];
+
+window.console.log('husky pre-commit test');

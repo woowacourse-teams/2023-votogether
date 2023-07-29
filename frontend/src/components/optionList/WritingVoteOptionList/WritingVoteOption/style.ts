@@ -32,7 +32,7 @@ export const ContentTextArea = styled.textarea`
   height: 90px;
   padding: 8px;
 
-  font: var(--text-small);
+  font: var(--text-caption);
   line-height: 2.4rem;
 
   background-color: #e6e6e6;

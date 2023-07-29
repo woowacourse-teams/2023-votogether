@@ -8,10 +8,10 @@ import { mockUserInfo } from './wus/userInfo';
 
 export const handlers = [
   ...example,
+  ...mockPostList,
   ...mockPost,
   ...mockVoteResult,
   ...mockVote,
-  ...mockPostList,
   ...mockCategoryHandlers,
   ...mockUserInfo,
 ];

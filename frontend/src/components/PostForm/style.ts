@@ -66,6 +66,8 @@ export const Content = styled.textarea`
 
   color: gray;
 
+  resize: none;
+
   font: var(--text-caption);
   font-family: 'Raleway', sans-serif;
 

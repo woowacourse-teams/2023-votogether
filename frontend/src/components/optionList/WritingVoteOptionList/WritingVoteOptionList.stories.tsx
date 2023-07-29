@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 
 import { styled } from 'styled-components';
+
+import { useWritingOption } from '@hooks/useWritingOption';
 
 import WritingVoteOptionList from '.';
 
@@ -9,7 +11,6 @@ const meta: Meta<typeof WritingVoteOptionList> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof WritingVoteOptionList>;
 
 const ListWrapper = styled.div`
   width: 100%;
@@ -41,26 +42,32 @@ const MOCK_MIN_VOTE_OPTION = [
   { id: 123415, text: '', imageUrl: '' },
 ];
 
-export const DefaultOptionList: Story = {
-  render: () => (
+export const DefaultOptionList = () => {
+  const writingOptionHook = useWritingOption();
+
+  return (
     <ListWrapper>
-      <WritingVoteOptionList />
+      <WritingVoteOptionList writingOptionHook={writingOptionHook} />
     </ListWrapper>
-  ),
+  );
 };
 
-export const MaxCountOptionList: Story = {
-  render: () => (
+export const MaxCountOptionList = () => {
+  const writingOptionHook = useWritingOption(MOCK_MAX_VOTE_OPTION);
+
+  return (
     <ListWrapper>
-      <WritingVoteOptionList initialOptionList={MOCK_MAX_VOTE_OPTION} />
+      <WritingVoteOptionList writingOptionHook={writingOptionHook} />
     </ListWrapper>
-  ),
+  );
 };
 
-export const MinCountOptionList: Story = {
-  render: () => (
+export const MinCountOptionList = () => {
+  const writingOptionHook = useWritingOption(MOCK_MIN_VOTE_OPTION);
+
+  return (
     <ListWrapper>
-      <WritingVoteOptionList initialOptionList={MOCK_MIN_VOTE_OPTION} />
+      <WritingVoteOptionList writingOptionHook={writingOptionHook} />
     </ListWrapper>
-  ),
+  );
 };

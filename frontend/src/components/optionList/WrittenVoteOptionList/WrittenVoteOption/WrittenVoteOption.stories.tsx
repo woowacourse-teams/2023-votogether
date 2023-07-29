@@ -26,6 +26,7 @@ export const Select: Story = {
         percent={70.9}
         isSelected={true}
         isVoted={true}
+        imageUrl=""
       />
     </WrittenVoteWrapper>
   ),
@@ -42,6 +43,7 @@ export const NotSelectAndLongText: Story = {
         peopleCount={6}
         isSelected={false}
         isVoted={true}
+        imageUrl=""
       />
     </WrittenVoteWrapper>
   ),
@@ -75,6 +77,7 @@ export const NotVote: Story = {
         peopleCount={0}
         isSelected={false}
         isVoted={false}
+        imageUrl=""
       />
     </WrittenVoteWrapper>
   ),
@@ -142,6 +145,7 @@ export const NoImageAndDetailContent: Story = {
         peopleCount={8}
         isSelected={true}
         isVoted={true}
+        imageUrl=""
       />
     </WrittenVoteWrapper>
   ),

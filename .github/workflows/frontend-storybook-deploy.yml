@@ -3,8 +3,13 @@ name: Deploy
 on:
   push:
     branches: ['feat/#165']
+    paths:
+      - 'frontend/**'
+      - '.github/**'
 
-  workflow_dispatch:
+defaults:
+  run:
+    working-directory: frontend
 
 jobs:
   deploy:
@@ -42,14 +47,15 @@ jobs:
           PUBLIC_URL=$(echo $GITHUB_REPOSITORY | sed -r 's/^.+\/(.+)$/\/\1\//')
           echo PUBLIC_URL=$PUBLIC_URL > .env
 
-      - name: Build storybook
+      - name: build 빈 폴더를 만든다. 스토리북을 빌드하고 build 폴더로 옮긴다.
         run: |
           mkdir build
           npm run build-storybook
           mv ./storybook-static ./build
 
-      - name: Deploy to  storybook-deploy branch
+      - name: storybook-deploy 브런치에 배포할 파일을 업데이트 한다.
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: storybook-deploy
           publish_dir: ./build

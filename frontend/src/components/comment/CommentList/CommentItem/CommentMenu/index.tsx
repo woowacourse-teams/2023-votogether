@@ -1,3 +1,5 @@
+import { MouseEvent } from 'react';
+
 import { type CommentAction, type CommentMenuItem } from '@type/comment';
 
 import * as S from './style';
@@ -11,7 +13,15 @@ export default function CommentMenu({ menuList, handleMenuClick }: CommentMenuPr
   return (
     <S.Container>
       {menuList.map(({ content, color, action }) => (
-        <S.Menu key={content} type="button" $color={color} onClick={() => handleMenuClick(action)}>
+        <S.Menu
+          key={content}
+          type="button"
+          $color={color}
+          onClick={(event: MouseEvent) => {
+            event.stopPropagation();
+            handleMenuClick(action);
+          }}
+        >
           {content}
         </S.Menu>
       ))}

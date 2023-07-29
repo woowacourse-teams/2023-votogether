@@ -22,11 +22,12 @@ interface CommentItemProps {
 }
 
 export default function CommentItem({ comment, userType }: CommentItemProps) {
-  const { isOpen, toggleComponent } = useToggle();
+  const { isOpen, toggleComponent, closeComponent } = useToggle();
   const { member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
 
   const handleMenuClick = (menu: CommentAction) => {
+    closeComponent();
     setAction(menu);
   };
 
@@ -49,11 +50,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           </S.SubTitleContainer>
         </S.UserContainer>
         {isAllowedMenu && (
-          <S.MenuContainer
-            aria-label="댓글 메뉴"
-            onMouseEnter={toggleComponent}
-            onMouseLeave={toggleComponent}
-          >
+          <S.MenuContainer aria-label="댓글 메뉴" onClick={toggleComponent}>
             <S.Image src={ellipsis}></S.Image>
             {isOpen && (
               <S.MenuWrapper>

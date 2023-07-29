@@ -1,8 +1,9 @@
 name: Deploy
 
 on:
-  push:
-    branches: ['feat/#165']
+  pull_request:
+    branches: ['dev']
+    types: ['closed']
     paths:
       - 'frontend/**'
       - '.github/**'

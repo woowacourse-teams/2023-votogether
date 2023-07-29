@@ -61,11 +61,11 @@ public class PostCommentController {
     })
     @DeleteMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(
-            @Auth final Member member,
             @PathVariable @Parameter(description = "게시글 ID") final Long postId,
-            @PathVariable @Parameter(description = "댓글 ID") final Long commentId
+            @PathVariable @Parameter(description = "댓글 ID") final Long commentId,
+            @Auth final Member member
     ) {
-        postCommentService.deleteComment(member, postId, commentId);
+        postCommentService.deleteComment(postId, commentId, member);
         return ResponseEntity.noContent().build();
     }
 

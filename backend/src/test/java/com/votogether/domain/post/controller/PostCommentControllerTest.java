@@ -174,7 +174,7 @@ class PostCommentControllerTest {
             given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
             given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
 
-            willDoNothing().given(postCommentService).deleteComment(any(Member.class), anyLong(), anyLong());
+            willDoNothing().given(postCommentService).deleteComment(anyLong(), anyLong(), any(Member.class));
 
             // when, then
             RestAssuredMockMvc.given().log().all()

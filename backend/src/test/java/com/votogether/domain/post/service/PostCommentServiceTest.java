@@ -87,7 +87,7 @@ class PostCommentServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
             // when, then
-            assertThatThrownBy(() -> postCommentService.deleteComment(member, -1L, 1L))
+            assertThatThrownBy(() -> postCommentService.deleteComment(-1L, 1L, member))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 게시글이 존재하지 않습니다.");
         }
@@ -106,7 +106,7 @@ class PostCommentServiceTest {
             );
 
             // when, then
-            assertThatThrownBy(() -> postCommentService.deleteComment(member, post.getId(), -1L))
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), -1L, member))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 댓글이 존재하지 않습니다.");
         }
@@ -139,7 +139,7 @@ class PostCommentServiceTest {
             );
 
             // when, then
-            assertThatThrownBy(() -> postCommentService.deleteComment(member, postB.getId(), comment.getId()))
+            assertThatThrownBy(() -> postCommentService.deleteComment(postB.getId(), comment.getId(), member))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("댓글의 게시글 정보와 일치하지 않습니다.");
         }
@@ -166,7 +166,7 @@ class PostCommentServiceTest {
             );
 
             // when, then
-            assertThatThrownBy(() -> postCommentService.deleteComment(memberA, post.getId(), comment.getId()))
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), memberA))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("댓글 작성자가 아닙니다.");
         }
@@ -192,7 +192,7 @@ class PostCommentServiceTest {
             );
 
             // when
-            postCommentService.deleteComment(member, post.getId(), comment.getId());
+            postCommentService.deleteComment(post.getId(), comment.getId(), member);
 
             // then
             assertThat(commentRepository.findAll()).isEmpty();

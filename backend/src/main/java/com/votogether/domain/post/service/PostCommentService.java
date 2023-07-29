@@ -38,7 +38,7 @@ public class PostCommentService {
     }
 
     @Transactional
-    public void deleteComment(final Member member, final Long postId, final Long commentId) {
+    public void deleteComment(final Long postId, final Long commentId, final Member member) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
         final Comment comment = commentRepository.findById(commentId)

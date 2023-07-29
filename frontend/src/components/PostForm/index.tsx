@@ -19,7 +19,7 @@ import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList'
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 
 import { DEADLINE_OPTION } from './constants';
-import ContentImagePart from './ContentImagePart';
+import ContentImagePart from './ContentImageSection';
 import * as S from './style';
 
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {

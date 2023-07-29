@@ -4,14 +4,14 @@ import OptionCancelButton from '@components/optionList/WritingVoteOptionList/Wri
 
 import * as S from './style';
 
-interface ContentImagePartProps {
+interface ContentImageSectionProps {
   contentImageHook: {
     contentImage: string;
     removeImage: () => void;
     handleUploadImage: (event: ChangeEvent<HTMLInputElement>) => void;
   };
 }
-export default function ContentImagePart({ contentImageHook }: ContentImagePartProps) {
+export default function ContentImageSection({ contentImageHook }: ContentImageSectionProps) {
   const { contentImage, removeImage, handleUploadImage } = contentImageHook;
   return (
     <>

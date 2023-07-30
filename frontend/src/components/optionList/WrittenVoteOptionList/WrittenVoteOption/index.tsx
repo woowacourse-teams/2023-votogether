@@ -11,7 +11,7 @@ interface WrittenVoteOptionProps {
   percent: number;
   isSelected: boolean;
   isPreview: boolean;
-  imageUrl?: string;
+  imageUrl: string;
 }
 
 export default function WrittenVoteOption({

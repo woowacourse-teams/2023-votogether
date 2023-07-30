@@ -1,18 +1,28 @@
 package com.votogether.domain.post.controller;
 
+import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
+import com.votogether.domain.post.entity.Post;
+import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostClosingType;
+import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
@@ -22,10 +32,12 @@ import io.restassured.response.ExtractableResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -41,6 +53,9 @@ class PostControllerTest {
 
     @MockBean
     TokenProcessor tokenProcessor;
+
+    @Autowired
+    ObjectMapper mapper;
 
     @BeforeEach
     void setUp() {
@@ -63,8 +78,7 @@ class PostControllerTest {
         String filePath2 = "src/test/resources/images/" + fileName2;
         File file2 = new File(filePath2);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String postRequestJson = objectMapper.writeValueAsString(postCreateRequest);
+        String postRequestJson = mapper.writeValueAsString(postCreateRequest);
 
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList())).willReturn(savedPostId);
@@ -84,6 +98,52 @@ class PostControllerTest {
 
         String postId = response.header("Location").substring(locationStartsWith.length());
         assertThat(Long.parseLong(postId)).isEqualTo(savedPostId);
+    }
+
+    @Test
+    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
+    void getAllPostBySortTypeAndClosingType() throws JsonProcessingException {
+        // given
+        int firstPage = 0;
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(MALE_30.get())
+                .postBody(postBody)
+                .deadline(LocalDateTime.now().plusDays(3L))
+                .build();
+
+        given(postService.getAllPostBySortTypeAndClosingType(
+                any(Member.class),
+                eq(firstPage),
+                eq(PostClosingType.PROGRESS),
+                eq(PostSortType.LATEST)))
+                .willReturn(List.of(PostResponse.of(post, MALE_30.get())));
+
+        // when
+        String responseBody = RestAssuredMockMvc.given().log().all()
+                .param("page", firstPage)
+                .param("postClosingType", PostClosingType.PROGRESS)
+                .param("postSortType", PostSortType.LATEST)
+                .when().get("/posts")
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .status(HttpStatus.OK)
+                .extract().asString();
+
+        List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
+        });
+        System.out.println(responses.get(0).deadline());
+
+        // then
+        assertAll(
+                () -> assertThat(responses).isNotEmpty(),
+                () -> assertThat(responses).hasSize(1)
+        );
     }
 
     @Test

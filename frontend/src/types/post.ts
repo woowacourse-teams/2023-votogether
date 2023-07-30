@@ -5,7 +5,7 @@ export interface WrittenVoteOptionType {
   text: string;
   peopleCount: number;
   percent: number;
-  imageUrl?: string;
+  imageUrl: string;
 }
 
 export interface PostInfo {
@@ -13,6 +13,7 @@ export interface PostInfo {
   title: string;
   writer: { id: number; nickname: string };
   content: string;
+  imageUrl: string;
   category: { id: number; name: string }[];
   startTime: string;
   endTime: string;

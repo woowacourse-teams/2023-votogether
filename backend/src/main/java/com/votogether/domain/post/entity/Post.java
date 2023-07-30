@@ -114,7 +114,7 @@ public class Post extends BaseEntity {
     public void validateDeadlineNotExceedThreeDays() {
         LocalDateTime threeDaysFromNow = LocalDateTime.now().plusDays(3);
         if (this.deadline.isAfter(threeDaysFromNow)) {
-            throw new IllegalStateException("마감 기한은 현재 시간으로부터 3일을 초과할 수 없습니다.");
+            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
         }
     }
 

@@ -77,6 +77,7 @@ public class PostService {
     ) {
         final List<Category> categories = categoryRepository.findAllById(postRequest.categoryIds());
         final Post post = toPostEntity(postRequest, loginMember, contentImages, optionImages, categories);
+        post.validateDeadlineNotExceedThreeDays();
 
         return postRepository.save(post).getId();
     }

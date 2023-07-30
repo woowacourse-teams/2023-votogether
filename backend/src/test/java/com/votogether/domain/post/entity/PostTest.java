@@ -2,9 +2,15 @@ package com.votogether.domain.post.entity;
 
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.category.entity.Category;
+import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.exception.BadRequestException;
+import com.votogether.fixtures.MemberFixtures;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class PostTest {
 
@@ -60,6 +67,33 @@ class PostTest {
         // then
         List<PostOption> postOptions = post.getPostOptions().getPostOptions();
         assertThat(postOptions).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("게시글 작성 시, 게시글의 마감 기한이 현재 시간보다 3일 초과 여부에 따라 예외를 던질 지 결정한다.")
+    void throwExceptionIsWriter() {
+        // given
+        final Member writer = MemberFixtures.MALE_30.get();
+        ReflectionTestUtils.setField(writer, "id", 1L);
+
+        Post post1 = Post.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.now().plusDays(4))
+                .build();
+
+        Post post2 = Post.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.now().plusDays(2))
+                .build();
+
+        // when, then
+        assertAll(
+                () -> assertThatThrownBy(post1::validateDeadlineNotExceedThreeDays)
+                        .isInstanceOf(BadRequestException.class)
+                        .hasMessage(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS.getMessage()),
+                () -> assertThatNoException()
+                        .isThrownBy(post2::validateDeadlineNotExceedThreeDays)
+        );
     }
 
     @Test

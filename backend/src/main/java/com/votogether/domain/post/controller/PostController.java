@@ -1,8 +1,6 @@
 package com.votogether.domain.post.controller;
 
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.post.dto.request.PostRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;

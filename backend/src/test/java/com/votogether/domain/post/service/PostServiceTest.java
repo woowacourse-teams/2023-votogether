@@ -1,6 +1,5 @@
 package com.votogether.domain.post.service;
 
-import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,7 +25,6 @@ import com.votogether.fixtures.MemberFixtures;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -346,7 +344,7 @@ class PostServiceTest {
         Thread.sleep(50);
 
         // when
-        postService.postClosedEarlyById(post.getId(), writer);
+        postService.closePostEarlyById(post.getId(), writer);
 
         // then
         assertAll(
@@ -372,7 +370,7 @@ class PostServiceTest {
         Post foundPost = postRepository.findById(post.getId()).get();
 
         // when, then
-        assertThatThrownBy(() -> postService.postClosedEarlyById(foundPost.getId(), MemberFixtures.MALE_30.get()))
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), MemberFixtures.MALE_30.get()))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("해당 게시글 작성자가 아닙니다.");
     }
@@ -394,7 +392,7 @@ class PostServiceTest {
         Post foundPost = postRepository.findById(post.getId()).get();
 
         // when, then
-        assertThatThrownBy(() -> postService.postClosedEarlyById(foundPost.getId(), writer))
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("게시글이 이미 마감되었습니다.");
     }
@@ -416,7 +414,7 @@ class PostServiceTest {
         Post foundPost = postRepository.findById(post.getId()).get();
 
         // when, then
-        assertThatThrownBy(() -> postService.postClosedEarlyById(foundPost.getId(), writer))
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("게시글이 마감 시간까지 절반의 시간 이상이 지나지 않으면 조기마감을 할 수 없습니다.");
     }

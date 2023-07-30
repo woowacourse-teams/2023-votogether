@@ -158,7 +158,7 @@ class PostTest {
                 .build();
 
         // when
-        post.closedEarly();
+        post.closeEarly();
 
         // then
         assertThat(post.getDeadline()).isBefore(deadline);

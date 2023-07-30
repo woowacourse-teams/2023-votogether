@@ -158,7 +158,7 @@ class PostControllerTest {
 
         // when
         ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
-                .when().patch("/posts/" + postId + "/close")
+                .when().patch("/posts/{postId}/close", postId)
                 .then().log().all()
                 .extract();
 

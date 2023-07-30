@@ -111,6 +111,13 @@ public class Post extends BaseEntity {
         return postOptions.contains(postOption);
     }
 
+    public void validateDeadlineNotExceedThreeDays() {
+        LocalDateTime threeDaysFromNow = LocalDateTime.now().plusDays(3);
+        if (this.deadline.isAfter(threeDaysFromNow)) {
+            throw new IllegalStateException("마감 기한은 현재 시간으로부터 3일을 초과할 수 없습니다.");
+        }
+    }
+
     public void validateWriter(final Member member) {
         if (!Objects.equals(this.writer.getId(), member.getId())) {
             throw new BadRequestException(PostExceptionType.NOT_WRITER);

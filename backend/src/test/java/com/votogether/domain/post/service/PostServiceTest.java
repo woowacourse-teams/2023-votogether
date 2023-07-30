@@ -123,7 +123,7 @@ class PostServiceTest {
                                 .imageUrl("")
                                 .build()
                 ))
-                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .deadline(LocalDateTime.now().plusDays(2))
                 .build();
 
         // when
@@ -466,7 +466,7 @@ class PostServiceTest {
                     .title("title" + postSequence)
                     .content("content" + postSequence)
                     .postOptions(options)
-                    .deadline(LocalDateTime.of(2100, 7, 19, 11, postSequence))
+                    .deadline(LocalDateTime.now().plusDays(2))
                     .build();
 
             Long savedPostId = postService.save(postRequest, writer, contentImages, optionImages);

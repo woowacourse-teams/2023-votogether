@@ -2,6 +2,7 @@ package com.votogether.domain.post.service;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.CommentUpdateRequest;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.CommentExceptionType;
@@ -38,6 +39,24 @@ public class PostCommentService {
     }
 
     @Transactional
+    public void updateComment(
+            final Long postId,
+            final Long commentId,
+            final CommentUpdateRequest commentUpdateRequest,
+            final Member member
+    ) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+        final Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
+
+        comment.validateBelong(post);
+        comment.validateWriter(member);
+
+        comment.updateContent(commentUpdateRequest.content());
+    }
+
+    @Transactional
     public void deleteComment(final Long postId, final Long commentId, final Member member) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
@@ -49,5 +68,4 @@ public class PostCommentService {
 
         commentRepository.delete(comment);
     }
-
 }

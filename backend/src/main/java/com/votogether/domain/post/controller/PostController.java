@@ -98,12 +98,12 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "게시물이 조기 마감 되었습니다."),
             @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
-    @PatchMapping("/{id}/close")
+    @PatchMapping("/{postId}/close")
     public ResponseEntity<Void> postClosedEarly(
-            @PathVariable final Long id,
+            @PathVariable final Long postId,
             @Auth final Member loginMember
     ) {
-        postService.postClosedEarlyById(id, loginMember);
+        postService.postClosedEarlyById(postId, loginMember);
         return ResponseEntity.ok().build();
     }
 

@@ -88,24 +88,20 @@ public class Post extends BaseEntity {
             final List<String> postOptionContents,
             final List<MultipartFile> images
     ) {
-        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, images));
+        this.postOptions.addAllPostOptions(toPostOptions(postOptionContents, images));
     }
 
-    private List<PostOption> toPostOptionEntities(
+    private List<PostOption> toPostOptions(
             final List<String> postOptionContents,
-            final List<MultipartFile> images
+            final List<MultipartFile> optionsImages
     ) {
-        return toPostOptions(postOptionContents, images);
-    }
-
-    private List<PostOption> toPostOptions(final List<String> postOptionContents, final List<MultipartFile> images) {
         return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
                 .mapToObj(postOptionSequence ->
                         PostOption.of(
                                 postOptionContents.get(postOptionSequence - 1),
                                 this,
                                 postOptionSequence,
-                                images.get(postOptionSequence - 1)
+                                optionsImages.get(postOptionSequence - 1)
                         )
                 )
                 .toList();
@@ -160,6 +156,10 @@ public class Post extends BaseEntity {
         return Objects.equals(this.writer, member);
     }
 
+    public void addContentImage(final MultipartFile contentImage) {
+        this.postBody.addContentImage(this, contentImage);
+    }
+
     public long getFinalTotalVoteCount(final Member loginMember) {
         if (isVisibleVoteResult(loginMember)) {
             return this.totalVoteCount;
@@ -176,5 +176,4 @@ public class Post extends BaseEntity {
         comments.add(comment);
         comment.setPost(this);
     }
-
 }

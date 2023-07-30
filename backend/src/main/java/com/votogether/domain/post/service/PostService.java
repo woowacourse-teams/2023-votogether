@@ -4,7 +4,8 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionRequest;
+import com.votogether.domain.post.dto.request.PostRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -69,43 +70,51 @@ public class PostService {
 
     @Transactional
     public Long save(
-            final PostCreateRequest postCreateRequest,
+            final PostRequest postRequest,
             final Member loginMember,
-            final List<MultipartFile> images
+            final List<MultipartFile> contentImages,
+            final List<MultipartFile> optionImages
     ) {
-        final List<Category> categories = categoryRepository.findAllById(postCreateRequest.categoryIds());
-        final Post post = toPostEntity(postCreateRequest, loginMember, images, categories);
+        final List<Category> categories = categoryRepository.findAllById(postRequest.categoryIds());
+        final Post post = toPostEntity(postRequest, loginMember, contentImages, optionImages, categories);
 
         return postRepository.save(post).getId();
     }
 
     private Post toPostEntity(
-            final PostCreateRequest postCreateRequest,
+            final PostRequest postRequest,
             final Member loginMember,
-            final List<MultipartFile> images,
+            final List<MultipartFile> contentImages,
+            final List<MultipartFile> optionImages,
             final List<Category> categories
     ) {
-        final Post post = toPost(postCreateRequest, loginMember);
+        final Post post = toPost(postRequest, loginMember);
+        final List<String> postOptionContents = postRequest.postOptions().stream()
+                .map(PostOptionRequest::content)
+                .toList();
 
-        final List<String> postOptionContents = postCreateRequest.postOptionContents();
-        post.mapPostOptionsByElements(postOptionContents, images);
+        post.mapPostOptionsByElements(postOptionContents, optionImages);
         post.mapCategories(categories);
+        post.addContentImage(contentImages.get(0));
 
         return post;
     }
 
-    private Post toPost(final PostCreateRequest postCreateRequest, final Member loginMember) {
+    private Post toPost(
+            final PostRequest postRequest,
+            final Member loginMember
+    ) {
         return Post.builder()
                 .writer(loginMember)
-                .postBody(toPostBody(postCreateRequest))
-                .deadline(postCreateRequest.deadline())
+                .postBody(toPostBody(postRequest))
+                .deadline(postRequest.deadline())
                 .build();
     }
 
-    private PostBody toPostBody(final PostCreateRequest postCreateRequest) {
+    private PostBody toPostBody(final PostRequest postRequest) {
         return PostBody.builder()
-                .title(postCreateRequest.title())
-                .content(postCreateRequest.content())
+                .title(postRequest.title())
+                .content(postRequest.content())
                 .build();
     }
 

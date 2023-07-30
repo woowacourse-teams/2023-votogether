@@ -1,7 +1,9 @@
 package com.votogether.domain.post.controller;
 
+import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.member.entity.SocialType;
+import com.votogether.domain.post.dto.request.PostRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.PostClosingType;
@@ -40,11 +42,12 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart final PostCreateRequest request,
-            @RequestPart final List<MultipartFile> images,
+            @RequestPart final PostRequest request,
+            @RequestPart final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member loginMember
     ) {
-        final long postId = postService.save(request, loginMember, images);
+        final long postId = postService.save(request, loginMember, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 

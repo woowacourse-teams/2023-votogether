@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
@@ -66,7 +66,7 @@ class PostControllerTest {
     @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder().build();
+        PostRequest postRequest = PostRequest.builder().build();
 
         String fileName1 = "testImage1.PNG";
         String resultFileName1 = "testResultImage1.PNG";
@@ -78,18 +78,24 @@ class PostControllerTest {
         String filePath2 = "src/test/resources/images/" + fileName2;
         File file2 = new File(filePath2);
 
-        String postRequestJson = mapper.writeValueAsString(postCreateRequest);
+        String fileName3 = "testImage3.PNG";
+        String resultFileName3 = "testResultImage3.PNG";
+        String filePath3 = "src/test/resources/images/" + fileName3;
+        File file3 = new File(filePath3);
+
+        String postRequestJson = mapper.writeValueAsString(postRequest);
 
         long savedPostId = 1L;
-        given(postService.save(any(), any(), anyList())).willReturn(savedPostId);
+        given(postService.save(any(), any(), anyList(), anyList())).willReturn(savedPostId);
 
         // when, then
         String locationStartsWith = "/posts/";
         ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.MULTIPART)
                 .multiPart("request", postRequestJson, "application/json")
-                .multiPart("images", resultFileName1, new FileInputStream(file1), "image/png")
-                .multiPart("images", resultFileName2, new FileInputStream(file2), "image/png")
+                .multiPart("contentImages", resultFileName3, new FileInputStream(file3), "image/png")
+                .multiPart("optionImages", resultFileName1, new FileInputStream(file1), "image/png")
+                .multiPart("optionImages", resultFileName2, new FileInputStream(file2), "image/png")
                 .when().post("/posts")
                 .then().log().all()
                 .status(HttpStatus.CREATED)

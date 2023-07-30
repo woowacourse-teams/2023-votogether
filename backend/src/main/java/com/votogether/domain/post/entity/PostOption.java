@@ -2,6 +2,7 @@ package com.votogether.domain.post.entity;
 
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.util.ImageUploader;
 import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,10 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -68,25 +65,14 @@ public class PostOption extends BaseEntity {
             final String postOptionContent,
             final Post post,
             final int postOptionSequence,
-            final MultipartFile image
+            final MultipartFile optionImage
     ) {
-        if (!image.isEmpty()) {
-            final String imageUrl = saveImageToPath(image);
+        if (!optionImage.isEmpty()) {
+            final String imageUrl = ImageUploader.upload(optionImage);
             return toPostOptionEntity(post, postOptionSequence, postOptionContent, imageUrl);
         }
 
         return toPostOptionEntity(post, postOptionSequence, postOptionContent, "");
-    }
-
-    private static String saveImageToPath(final MultipartFile image) {
-        final String absolutePath = new File("").getAbsolutePath();
-        final String imageUrl = absolutePath + "/images/" + image.getOriginalFilename();
-
-        try {
-            Files.write(Paths.get(imageUrl), image.getBytes());
-        } catch (IOException ignore) {
-        }
-        return imageUrl;
     }
 
     private static PostOption toPostOptionEntity(

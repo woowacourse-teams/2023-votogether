@@ -19,7 +19,8 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionRequest;
+import com.votogether.domain.post.dto.request.PostRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -90,27 +91,43 @@ class PostServiceTest {
 
         MockMultipartFile file1 = new MockMultipartFile(
                 "image1",
-                "test.png",
+                "test1.png",
                 "image/png",
-                new FileInputStream(new File("src/test/resources/images/testImage1.PNG"))
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
         );
         MockMultipartFile file2 = new MockMultipartFile(
-                "image1",
-                "test.png",
+                "image2",
+                "test2.png",
                 "image/png",
-                new FileInputStream(new File("src/test/resources/images/testImage2.PNG"))
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
         );
 
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+        MockMultipartFile file3 = new MockMultipartFile(
+                "image3",
+                "test3.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
+        );
+
+        PostRequest postRequest = PostRequest.builder()
                 .categoryIds(List.of(category1.getId(), category2.getId()))
                 .title("title")
                 .content("content")
-                .postOptionContents(List.of("피자", "치킨"))
+                .postOptions(List.of(
+                        PostOptionRequest.builder()
+                                .content("option1")
+                                .imageUrl("")
+                                .build(),
+                        PostOptionRequest.builder()
+                                .content("option2")
+                                .imageUrl("")
+                                .build()
+                ))
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
         // when
-        Long savedPostId = postService.save(postCreateRequest, member, List.of(file1, file2));
+        Long savedPostId = postService.save(postRequest, member, List.of(file3), List.of(file1, file2));
 
         // then
         assertThat(savedPostId).isNotNull();
@@ -387,42 +404,72 @@ class PostServiceTest {
                 "Hello, World!22".getBytes()
         );
 
+        MockMultipartFile file3 = new MockMultipartFile(
+                "file3",
+                "hello3.txt",
+                "text/plain",
+                "Hello, World!33".getBytes()
+        );
+
         for (int postSequence = 30; postSequence > 0; postSequence--) {
-            List<String> options = new ArrayList<>() {
+            List<PostOptionRequest> options = new ArrayList<>() {
                 {
-                    add("option1");
-                    add("option2");
+                    add(
+                            PostOptionRequest.builder()
+                                    .content("option1")
+                                    .imageUrl("")
+                                    .build()
+                    );
+                    add(
+                            PostOptionRequest.builder()
+                                    .content("option2")
+                                    .imageUrl("")
+                                    .build()
+                    );
                 }
             };
 
-            List<MultipartFile> images = new ArrayList<>() {
+
+
+            List<MultipartFile> optionImages = new ArrayList<>() {
                 {
                     add(file1);
                     add(file2);
                 }
             };
 
+            List<MultipartFile> contentImages = new ArrayList<>() {
+                {
+                    add(file3);
+                }
+            };
+
             if (postSequence % 2 == 0) {
-                MockMultipartFile file3 = new MockMultipartFile(
-                        "file3",
-                        "hello3.txt",
+                MockMultipartFile file4 = new MockMultipartFile(
+                        "file4",
+                        "hello4.txt",
                         "text/plain",
-                        "Hello, World!33".getBytes()
+                        "Hello, World!44".getBytes()
                 );
 
-                images.add(file3);
-                options.add("option3");
+                optionImages.add(file4);
+                options.add(
+                        PostOptionRequest.builder()
+                                .content("option3")
+                                .imageUrl("")
+                                .build()
+                );
             }
 
-            PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+            PostRequest postRequest = PostRequest.builder()
                     .categoryIds(List.of(0L, 2L))
                     .title("title" + postSequence)
                     .content("content" + postSequence)
-                    .postOptionContents(options)
+                    .postOptions(options)
                     .deadline(LocalDateTime.of(2100, 7, 19, 11, postSequence))
                     .build();
 
-            Long savedPostId = postService.save(postCreateRequest, writer, images);
+            Long savedPostId = postService.save(postRequest, writer, contentImages, optionImages);
             Post post = postRepository.findById(savedPostId).get();
 
             List<PostOption> postOptions = post.getPostOptions().getPostOptions();

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart final PostRequest request,
+            @RequestPart @Valid final PostRequest request,
             @RequestPart final List<MultipartFile> contentImages,
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member loginMember
@@ -49,7 +50,7 @@ public class PostController {
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
-    @Operation(summary = "게시글 조회", description = "게시글을 조회한다.")
+    @Operation(summary = "전체 게시글 조회", description = "게시글을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글을 조회했습니다."),
             @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")

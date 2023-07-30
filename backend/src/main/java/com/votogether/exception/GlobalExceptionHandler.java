@@ -1,7 +1,9 @@
 package com.votogether.exception;
 
+import com.votogether.domain.post.controller.PostController;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = PostController.class)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
@@ -41,7 +43,7 @@ public class GlobalExceptionHandler {
         final List<String> errorMessages = e.getBindingResult()
                 .getAllErrors()
                 .stream()
-                .map(error -> error.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
         log.warn("[" + e.getClass() + "] : " + errorMessages);
         return ResponseEntity.badRequest()

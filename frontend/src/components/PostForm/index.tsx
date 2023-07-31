@@ -169,7 +169,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       </S.HeaderWrapper>
       <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
-          <S.LeftSide>
+          <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
             <select>
               {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
               <option>카테고리1</option>
@@ -189,40 +189,45 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-            <ContentImagePart contentImageHook={contentImageHook} />
+            <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>
+              <ContentImagePart size="md" contentImageHook={contentImageHook} />
+            </S.ContentImagePartWrapper>
           </S.LeftSide>
           <S.RightSide>
             <S.OptionListWrapper>
               <WritingVoteOptionList writingOptionHook={writingOptionHook} />
             </S.OptionListWrapper>
             <S.Deadline>
-              {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
+              <S.DeadlineDescription>
+                {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
+                {data && (
+                  <S.Description>
+                    글 작성일({startTime})로부터 하루 이후 (
+                    {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택
+                    가능합니다.
+                  </S.Description>
+                )}
+                {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
+              </S.DeadlineDescription>
+              <S.ButtonWrapper>
+                {DEADLINE_OPTION.map(option => (
+                  <SquareButton
+                    aria-label={option}
+                    key={option}
+                    type="button"
+                    onClick={() => handleDeadlineButtonClick(option)}
+                    theme="blank"
+                  >
+                    {option}
+                  </SquareButton>
+                ))}
+                {
+                  <SquareButton type="button" onClick={openComponent} theme="blank">
+                    사용자 지정
+                  </SquareButton>
+                }
+              </S.ButtonWrapper>
             </S.Deadline>
-            {data && (
-              <S.Description>
-                글 작성일({startTime})로부터 하루 이후 (
-                {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택 가능합니다.
-              </S.Description>
-            )}
-            {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
-            <S.ButtonWrapper>
-              {DEADLINE_OPTION.map(option => (
-                <SquareButton
-                  aria-label={option}
-                  key={option}
-                  type="button"
-                  onClick={() => handleDeadlineButtonClick(option)}
-                  theme="blank"
-                >
-                  {option}
-                </SquareButton>
-              ))}
-              {
-                <SquareButton type="button" onClick={openComponent} theme="blank">
-                  사용자 지정
-                </SquareButton>
-              }
-            </S.ButtonWrapper>
             <S.SaveButtonWrapper>
               <SquareButton theme="fill" type="submit" form="form-post">
                 저장

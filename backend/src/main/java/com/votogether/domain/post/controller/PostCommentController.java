@@ -2,6 +2,7 @@ package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.CommentUpdateRequest;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.exception.ExceptionResponse;
 import com.votogether.global.jwt.Auth;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,9 +52,39 @@ public class PostCommentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "게시글 댓글 수정", description = "게시글 댓글을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 댓글 수정 성공"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "게시글에 속하지 않은 댓글, 올바르지 않은 댓글 작성자",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 게시글, 존재하지 않는 댓글",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            )
+    })
+    @PutMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Void> updateComment(
+            @PathVariable @Parameter(description = "게시글 ID") final Long postId,
+            @PathVariable @Parameter(description = "댓글 ID") final Long commentId,
+            @RequestBody @Valid final CommentUpdateRequest commentUpdateRequest,
+            @Auth final Member member
+    ) {
+        postCommentService.updateComment(postId, commentId, commentUpdateRequest, member);
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "게시글 댓글 삭제", description = "게시글 댓글을 삭제한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "게시글 댓글 삭제 성공"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "게시글에 속하지 않은 댓글, 올바르지 않은 댓글 작성자",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 게시글, 존재하지 않는 댓글",

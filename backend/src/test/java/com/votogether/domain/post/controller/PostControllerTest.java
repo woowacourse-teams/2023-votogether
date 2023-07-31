@@ -169,7 +169,6 @@ class PostControllerTest {
         given(postService.save(any(), any(), anyList(), anyList())).willReturn(savedPostId);
 
         // when
-        String locationStartsWith = "/posts/";
         ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.MULTIPART)
                 .multiPart("request", postRequestJson, "application/json")
@@ -183,7 +182,7 @@ class PostControllerTest {
         // then
         final String message = response.body().jsonPath().get("message").toString();
         assertAll(
-                () -> assertThat(message).contains("제목을 입력해주세요.", "내용은 최소 1자, 최대 1000자까지 입력 가능합니다."),
+                () -> assertThat(message).contains("제목을 입력해주세요.", "내용은 최대 1000자까지 입력 가능합니다."),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         );
     }

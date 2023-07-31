@@ -1,6 +1,6 @@
-import type { UserInfoResponse, User } from '@type/user';
+import type { UserInfoResponse, User, ModifyNicknameRequest } from '@type/user';
 
-import { getFetch } from '@utils/fetch';
+import { deleteFetch, getFetch, patchFetch } from '@utils/fetch';
 
 export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
   const { nickname, postCount, userPoint, voteCount, badge } = userInfo;
@@ -18,4 +18,12 @@ export const getUserInfo = async () => {
   const userInfo = await getFetch<UserInfoResponse>('/members/me');
 
   return transformUserInfoResponse(userInfo);
+};
+
+export const modifyNickname = async (nickname: string) => {
+  await patchFetch<ModifyNicknameRequest>('/members/me/nickname', { nickname });
+};
+
+export const cancelMembership = async () => {
+  await deleteFetch('/members/me/delete');
 };

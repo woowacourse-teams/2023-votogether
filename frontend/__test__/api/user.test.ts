@@ -1,4 +1,9 @@
-import { getUserInfo, transformUserInfoResponse } from '@api/wus/userInfo';
+import {
+  cancelMembership,
+  getUserInfo,
+  modifyNickname,
+  transformUserInfoResponse,
+} from '@api/wus/userInfo';
 
 import { MOCK_USER_INFO } from '@mocks/mockData/user';
 
@@ -15,5 +20,17 @@ describe('서버와 통신하여 유저의 정보를 불러올 수 있어야 한
     const userInfoKeys = Object.keys(data);
 
     expect(userInfoKeys).toEqual(['nickname', 'postCount', 'userPoint', 'voteCount', 'badge']);
+  });
+
+  test('유저의 닉네임을 수정한다', async () => {
+    await modifyNickname('wood');
+
+    expect(MOCK_USER_INFO.nickname).toBe('wood');
+  });
+
+  test('유저가 회원 탈퇴를 한다', async () => {
+    await cancelMembership();
+
+    expect(MOCK_USER_INFO.nickname).toBe('cancel');
   });
 });

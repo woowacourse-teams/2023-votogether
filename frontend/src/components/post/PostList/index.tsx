@@ -16,7 +16,7 @@ import { SORTING, STATUS } from '@constants/post';
 import * as S from './style';
 
 export default function PostList() {
-  const { categoryId, content } = usePostRequestInfo();
+  const { categoryId, content, keyword } = usePostRequestInfo();
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
@@ -32,6 +32,7 @@ export default function PostList() {
     categoryId,
     postSorting: selectedSortingOption,
     postStatus: selectedStatusOption,
+    keyword,
   });
 
   useEffect(() => {

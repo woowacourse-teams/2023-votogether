@@ -17,7 +17,14 @@ export const usePostList = ({
     useInfiniteQuery<PostList>(
       ['posts', postSorting, postStatus, categoryId, keyword],
       ({ pageParam = 0 }) =>
-        getPostList({ content, postSorting, postStatus, pageNumber: pageParam, categoryId }),
+        getPostList({
+          content,
+          postSorting,
+          postStatus,
+          pageNumber: pageParam,
+          categoryId,
+          keyword,
+        }),
       {
         getNextPageParam: lastPage => {
           if (lastPage.postList.length !== MAX_LIST_LENGTH) return;

@@ -5,6 +5,7 @@ import {
   REQUEST_SORTING_OPTION,
   REQUEST_POST_KIND_URL,
   POST_CONTENT,
+  SEARCH_KEYWORD,
 } from '@constants/post';
 
 import { getFetch } from '@utils/fetch';
@@ -30,7 +31,7 @@ export const makePostListUrl = ({
   }
 
   if (content === POST_CONTENT.SEARCH) {
-    return `${POST_BASE_URL}?keyword=${keyword}&${OPTION_URL}`;
+    return `${POST_BASE_URL}?${SEARCH_KEYWORD}=${keyword}&${OPTION_URL}`;
   }
 
   return `${POST_BASE_URL}?${OPTION_URL}`;

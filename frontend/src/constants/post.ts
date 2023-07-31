@@ -39,3 +39,5 @@ export const REQUEST_POST_KIND_URL = {
   [POST_CONTENT.CATEGORY]: 'posts/categories',
   [POST_CONTENT.SEARCH]: 'posts/search',
 } as const;
+
+export const SEARCH_KEYWORD = 'keyword';

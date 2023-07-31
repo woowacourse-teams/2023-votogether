@@ -4,10 +4,12 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record PostCreateResponse(
+@Schema(description = "게시글에 관련한 데이터들입니다.")
+public record PostResponse(
         Long postId,
         WriterResponse writer,
         String title,
@@ -18,11 +20,11 @@ public record PostCreateResponse(
         VoteResponse voteInfo
 ) {
 
-    public static PostCreateResponse of(final Post post, final Member loginMember) {
+    public static PostResponse of(final Post post, final Member loginMember) {
         final Member writer = post.getWriter();
         final PostBody postBody = post.getPostBody();
 
-        return new PostCreateResponse(
+        return new PostResponse(
                 post.getId(),
                 WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
                 postBody.getTitle(),

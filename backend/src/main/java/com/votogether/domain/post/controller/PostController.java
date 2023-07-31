@@ -1,8 +1,8 @@
 package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.PostRequest;
-import com.votogether.domain.post.dto.response.PostCreateResponse;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
@@ -41,7 +41,7 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart @Valid final PostRequest request,
+            @RequestPart @Valid final PostCreateRequest request,
             @RequestPart final List<MultipartFile> contentImages,
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member loginMember
@@ -56,13 +56,13 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @GetMapping
-    public ResponseEntity<List<PostCreateResponse>> getAllPost(
+    public ResponseEntity<List<PostResponse>> getAllPost(
             final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
             @Auth final Member loginMember
     ) {
-        final List<PostCreateResponse> responses =
+        final List<PostResponse> responses =
                 postService.getAllPostBySortTypeAndClosingType(loginMember, page, postClosingType, postSortType);
 
         return ResponseEntity.ok(responses);

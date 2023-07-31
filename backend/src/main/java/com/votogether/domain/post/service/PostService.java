@@ -4,9 +4,9 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.PostOptionRequest;
-import com.votogether.domain.post.dto.request.PostRequest;
-import com.votogether.domain.post.dto.response.PostCreateResponse;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -70,28 +70,28 @@ public class PostService {
 
     @Transactional
     public Long save(
-            final PostRequest postRequest,
+            final PostCreateRequest postCreateRequest,
             final Member loginMember,
             final List<MultipartFile> contentImages,
             final List<MultipartFile> optionImages
     ) {
-        final List<Category> categories = categoryRepository.findAllById(postRequest.categoryIds());
-        final Post post = toPostEntity(postRequest, loginMember, contentImages, optionImages, categories);
+        final List<Category> categories = categoryRepository.findAllById(postCreateRequest.categoryIds());
+        final Post post = toPostEntity(postCreateRequest, loginMember, contentImages, optionImages, categories);
         post.validateDeadlineNotExceedThreeDays();
 
         return postRepository.save(post).getId();
     }
 
     private Post toPostEntity(
-            final PostRequest postRequest,
+            final PostCreateRequest postCreateRequest,
             final Member loginMember,
             final List<MultipartFile> contentImages,
             final List<MultipartFile> optionImages,
             final List<Category> categories
     ) {
-        final Post post = toPost(postRequest, loginMember);
-        final List<String> postOptionContents = postRequest.postOptions().stream()
-                .map(PostOptionRequest::content)
+        final Post post = toPost(postCreateRequest, loginMember);
+        final List<String> postOptionContents = postCreateRequest.postOptions().stream()
+                .map(PostOptionCreateRequest::content)
                 .toList();
 
         post.mapPostOptionsByElements(postOptionContents, optionImages);
@@ -102,25 +102,25 @@ public class PostService {
     }
 
     private Post toPost(
-            final PostRequest postRequest,
+            final PostCreateRequest postCreateRequest,
             final Member loginMember
     ) {
         return Post.builder()
                 .writer(loginMember)
-                .postBody(toPostBody(postRequest))
-                .deadline(postRequest.deadline())
+                .postBody(toPostBody(postCreateRequest))
+                .deadline(postCreateRequest.deadline())
                 .build();
     }
 
-    private PostBody toPostBody(final PostRequest postRequest) {
+    private PostBody toPostBody(final PostCreateRequest postCreateRequest) {
         return PostBody.builder()
-                .title(postRequest.title())
-                .content(postRequest.content())
+                .title(postCreateRequest.title())
+                .content(postCreateRequest.content())
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public List<PostCreateResponse> getAllPostBySortTypeAndClosingType(
+    public List<PostResponse> getAllPostBySortTypeAndClosingType(
             final Member loginMember,
             final int page,
             final PostClosingType postClosingType,
@@ -130,7 +130,7 @@ public class PostService {
         final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
 
         return contents.stream()
-                .map(post -> PostCreateResponse.of(post, loginMember))
+                .map(post -> PostResponse.of(post, loginMember))
                 .toList();
     }
 

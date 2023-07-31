@@ -19,9 +19,9 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.PostOptionRequest;
-import com.votogether.domain.post.dto.request.PostRequest;
-import com.votogether.domain.post.dto.response.PostCreateResponse;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -108,16 +108,16 @@ class PostServiceTest {
                 new FileInputStream("src/test/resources/images/testImage3.PNG")
         );
 
-        PostRequest postRequest = PostRequest.builder()
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .categoryIds(List.of(category1.getId(), category2.getId()))
                 .title("title")
                 .content("content")
                 .postOptions(List.of(
-                        PostOptionRequest.builder()
+                        PostOptionCreateRequest.builder()
                                 .content("option1")
                                 .imageUrl("")
                                 .build(),
-                        PostOptionRequest.builder()
+                        PostOptionCreateRequest.builder()
                                 .content("option2")
                                 .imageUrl("")
                                 .build()
@@ -126,7 +126,7 @@ class PostServiceTest {
                 .build();
 
         // when
-        Long savedPostId = postService.save(postRequest, member, List.of(file3), List.of(file1, file2));
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
 
         // then
         assertThat(savedPostId).isNotNull();
@@ -411,16 +411,16 @@ class PostServiceTest {
         );
 
         for (int postSequence = 30; postSequence > 0; postSequence--) {
-            List<PostOptionRequest> options = new ArrayList<>() {
+            List<PostOptionCreateRequest> options = new ArrayList<>() {
                 {
                     add(
-                            PostOptionRequest.builder()
+                            PostOptionCreateRequest.builder()
                                     .content("option1")
                                     .imageUrl("")
                                     .build()
                     );
                     add(
-                            PostOptionRequest.builder()
+                            PostOptionCreateRequest.builder()
                                     .content("option2")
                                     .imageUrl("")
                                     .build()
@@ -453,14 +453,14 @@ class PostServiceTest {
 
                 optionImages.add(file4);
                 options.add(
-                        PostOptionRequest.builder()
+                        PostOptionCreateRequest.builder()
                                 .content("option3")
                                 .imageUrl("")
                                 .build()
                 );
             }
 
-            PostRequest postRequest = PostRequest.builder()
+            PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                     .categoryIds(List.of(0L, 2L))
                     .title("title" + postSequence)
                     .content("content" + postSequence)
@@ -468,7 +468,7 @@ class PostServiceTest {
                     .deadline(LocalDateTime.now().plusDays(2))
                     .build();
 
-            Long savedPostId = postService.save(postRequest, writer, contentImages, optionImages);
+            Long savedPostId = postService.save(postCreateRequest, writer, contentImages, optionImages);
             Post post = postRepository.findById(savedPostId).get();
 
             List<PostOption> postOptions = post.getPostOptions().getPostOptions();
@@ -496,7 +496,7 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostCreateResponse> responses = postService.getAllPostBySortTypeAndClosingType(
+        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingType(
                 memberToAllPostVote,
                 0,
                 PostClosingType.PROGRESS,
@@ -504,8 +504,8 @@ class PostServiceTest {
         );
 
         // then
-        PostCreateResponse firstResponse = responses.get(0);
-        PostCreateResponse secondResponse = responses.get(1);
+        PostResponse firstResponse = responses.get(0);
+        PostResponse secondResponse = responses.get(1);
         assertAll(
                 () -> assertThat(firstResponse.voteInfo().options()).hasSize(3),
                 () -> assertThat(firstResponse.voteInfo().totalVoteCount()).isEqualTo(32),

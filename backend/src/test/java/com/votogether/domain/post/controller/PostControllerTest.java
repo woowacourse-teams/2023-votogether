@@ -17,9 +17,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
-import com.votogether.domain.post.dto.request.PostOptionRequest;
-import com.votogether.domain.post.dto.request.PostRequest;
-import com.votogether.domain.post.dto.response.PostCreateResponse;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
+import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -75,20 +75,20 @@ class PostControllerTest {
     @DisplayName("게시글을 등록한다")
     void save() throws IOException {
         // given
-        PostOptionRequest postOptionRequest1 = PostOptionRequest.builder()
+        PostOptionCreateRequest postOptionCreateRequest1 = PostOptionCreateRequest.builder()
                 .content("optionContent1")
                 .build();
 
-        PostOptionRequest postOptionRequest2 = PostOptionRequest.builder()
+        PostOptionCreateRequest postOptionCreateRequest2 = PostOptionCreateRequest.builder()
                 .content("optionContent2")
                 .build();
 
-        PostRequest postRequest = PostRequest.builder()
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .categoryIds(List.of(0L))
                 .title("title")
                 .content("content")
                 .deadline(LocalDateTime.now().plusDays(2))
-                .postOptions(List.of(postOptionRequest1, postOptionRequest2))
+                .postOptions(List.of(postOptionCreateRequest1, postOptionCreateRequest2))
                 .build();
 
         String fileName1 = "testImage1.PNG";
@@ -106,7 +106,7 @@ class PostControllerTest {
         String filePath3 = "src/test/resources/images/" + fileName3;
         File file3 = new File(filePath3);
 
-        String postRequestJson = mapper.writeValueAsString(postRequest);
+        String postRequestJson = mapper.writeValueAsString(postCreateRequest);
 
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList(), anyList())).willReturn(savedPostId);
@@ -133,19 +133,19 @@ class PostControllerTest {
     @DisplayName("게시글을 등록 시, 유효성 검증에 위배되는 데이터를 전달하면 예외를 던진다.")
     void throwExceptionBlankTitle() throws IOException {
         // given
-        PostOptionRequest postOptionRequest1 = PostOptionRequest.builder()
+        PostOptionCreateRequest postOptionCreateRequest1 = PostOptionCreateRequest.builder()
                 .content("optionContent1")
                 .build();
 
-        PostOptionRequest postOptionRequest2 = PostOptionRequest.builder()
+        PostOptionCreateRequest postOptionCreateRequest2 = PostOptionCreateRequest.builder()
                 .content("optionContent2")
                 .build();
 
-        PostRequest postRequest = PostRequest.builder()
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .categoryIds(List.of(0L))
                 .content("c".repeat(1001))
                 .deadline(LocalDateTime.now().plusDays(2))
-                .postOptions(List.of(postOptionRequest1, postOptionRequest2))
+                .postOptions(List.of(postOptionCreateRequest1, postOptionCreateRequest2))
                 .build();
 
         String fileName1 = "testImage1.PNG";
@@ -163,7 +163,7 @@ class PostControllerTest {
         String filePath3 = "src/test/resources/images/" + fileName3;
         File file3 = new File(filePath3);
 
-        String postRequestJson = mapper.writeValueAsString(postRequest);
+        String postRequestJson = mapper.writeValueAsString(postCreateRequest);
 
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList(), anyList())).willReturn(savedPostId);
@@ -210,7 +210,7 @@ class PostControllerTest {
                 eq(firstPage),
                 eq(PostClosingType.PROGRESS),
                 eq(PostSortType.LATEST)))
-                .willReturn(List.of(PostCreateResponse.of(post, MALE_30.get())));
+                .willReturn(List.of(PostResponse.of(post, MALE_30.get())));
 
         // when
         String responseBody = RestAssuredMockMvc.given().log().all()
@@ -223,7 +223,7 @@ class PostControllerTest {
                 .status(HttpStatus.OK)
                 .extract().asString();
 
-        List<PostCreateResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
+        List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
         });
         System.out.println(responses.get(0).deadline());
 

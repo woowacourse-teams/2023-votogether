@@ -4,6 +4,7 @@ import {
   REQUEST_STATUS_OPTION,
   REQUEST_SORTING_OPTION,
   REQUEST_POST_KIND_URL,
+  POST_CONTENT,
 } from '@constants/post';
 
 import { getFetch } from '@utils/fetch';
@@ -16,6 +17,7 @@ export const makePostListUrl = ({
   postStatus,
   postSorting,
   pageNumber,
+  keyword,
 }: PostListByOption) => {
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
@@ -23,8 +25,12 @@ export const makePostListUrl = ({
   const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[content]}`;
   const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
 
-  if (categoryId && content === 'category') {
+  if (categoryId && content === POST_CONTENT.CATEGORY) {
     return `${POST_BASE_URL}/${categoryId}?${OPTION_URL}`;
+  }
+
+  if (content === POST_CONTENT.SEARCH) {
+    return `${POST_BASE_URL}?keyword=${keyword}&${OPTION_URL}`;
   }
 
   return `${POST_BASE_URL}?${OPTION_URL}`;
@@ -36,6 +42,7 @@ export const getPostList = async ({
   postSorting,
   pageNumber,
   categoryId,
+  keyword,
 }: PostListByOption) => {
   const postListUrl = makePostListUrl({
     content,
@@ -43,6 +50,7 @@ export const getPostList = async ({
     postSorting,
     postStatus,
     categoryId,
+    keyword,
   });
 
   const postList = await getFetch<PostInfo[]>(postListUrl);

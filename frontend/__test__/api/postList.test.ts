@@ -73,4 +73,17 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
   });
+
+  test('내가 검색한 게시글 페이지의 정보를 불러온다.', async () => {
+    const data = await getPostList({
+      postStatus: STATUS.CLOSED,
+      postSorting: SORTING.POPULAR,
+      pageNumber: 0,
+      categoryId: 1,
+      content: POST_CONTENT.SEARCH,
+      keyword: '갤럭시',
+    });
+
+    expect(data.postList).toEqual(MOCK_POST_LIST);
+  });
 });

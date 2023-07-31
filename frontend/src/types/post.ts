@@ -35,4 +35,5 @@ export interface PostListByOption {
   postSorting: PostSorting;
   pageNumber: number;
   categoryId?: number;
+  keyword?: string;
 }

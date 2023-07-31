@@ -2,9 +2,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { User } from '@type/user';
 
+import { useToggle } from '@hooks/useToggle';
+
 import Accordion from '@components/common/Accordion';
 import UserProfile from '@components/common/Dashboard/UserProfile';
 import IconButton from '@components/common/IconButton';
+import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 
@@ -12,6 +15,7 @@ import * as S from './style';
 
 export default function MyInfo() {
   const navigate = useNavigate();
+  const { isOpen, openComponent, closeComponent } = useToggle();
 
   // const { data: userInfo, error, isLoading, isError } = useUserInfo(); // 유저 정보 조회 관련 pr merge 필요
   const MOCK_USER_INFO: User = {
@@ -46,12 +50,29 @@ export default function MyInfo() {
           </S.ButtonWrapper>
         </Accordion>
         <Accordion title="회원 탈퇴">
-          <S.Input placeholder="비밀번호를 입력해주세요" />
           <S.ButtonWrapper>
-            <SquareButton aria-label="회원 탈퇴" theme="fill">
+            <SquareButton onClick={openComponent} aria-label="회원 탈퇴" theme="blank">
               회원 탈퇴
             </SquareButton>
           </S.ButtonWrapper>
+          {isOpen && (
+            <Modal size="sm" onModalClose={closeComponent}>
+              <S.ModalBody>
+                <S.ModalTitle>정말 탈퇴하시겠어요?</S.ModalTitle>
+                <S.ModalDescription>
+                  탈퇴 버튼 클릭 시, <br></br>계정은 삭제되며 복구되지 않아요.
+                </S.ModalDescription>
+                <S.ButtonListWrapper>
+                  <SquareButton aria-label="회원 탈퇴" theme="fill">
+                    탈퇴
+                  </SquareButton>
+                  <SquareButton onClick={closeComponent} aria-label="회원 탈퇴" theme="blank">
+                    취소
+                  </SquareButton>
+                </S.ButtonListWrapper>
+              </S.ModalBody>
+            </Modal>
+          )}
         </Accordion>
       </S.UserControlSection>
     </S.Wrapper>

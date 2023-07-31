@@ -39,3 +39,35 @@ export const Input = styled.input`
   border: 1px solid #f2f2f2;
   padding: 20px;
 `;
+
+export const ModalBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+
+  width: 90%;
+  margin: 40px 20px 0px 16px;
+
+  font: var(--text-caption);
+`;
+
+export const ModalTitle = styled.div`
+  font: var(--text-title);
+`;
+
+export const ModalDescription = styled.div`
+  font: var(--text-body);
+`;
+
+export const ButtonListWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+
+  width: 90%;
+  height: 50px;
+
+  margin-top: 20px;
+`;

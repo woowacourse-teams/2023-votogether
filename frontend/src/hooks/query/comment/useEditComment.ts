@@ -12,7 +12,7 @@ export const useEditComment = (
   updatedComment: CommentRequest
 ) => {
   const queryClient = useQueryClient();
-  const queryKey = [QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS, commentId];
+  const queryKey = [QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS];
 
   const { mutate, isLoading, isError, error } = useMutation(
     () => editComment(postId, commentId, updatedComment),

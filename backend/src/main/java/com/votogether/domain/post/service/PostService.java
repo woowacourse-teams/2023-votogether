@@ -6,7 +6,7 @@ import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostOptionRequest;
 import com.votogether.domain.post.dto.request.PostRequest;
-import com.votogether.domain.post.dto.response.PostResponse;
+import com.votogether.domain.post.dto.response.PostCreateResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -120,7 +120,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPostBySortTypeAndClosingType(
+    public List<PostCreateResponse> getAllPostBySortTypeAndClosingType(
             final Member loginMember,
             final int page,
             final PostClosingType postClosingType,
@@ -130,7 +130,7 @@ public class PostService {
         final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
 
         return contents.stream()
-                .map(post -> PostResponse.of(post, loginMember))
+                .map(post -> PostCreateResponse.of(post, loginMember))
                 .toList();
     }
 

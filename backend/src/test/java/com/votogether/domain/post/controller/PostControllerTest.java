@@ -2,7 +2,6 @@ package com.votogether.domain.post.controller;
 
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -10,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
@@ -21,14 +19,13 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostOptionRequest;
 import com.votogether.domain.post.dto.request.PostRequest;
-import com.votogether.domain.post.dto.response.PostResponse;
+import com.votogether.domain.post.dto.response.PostCreateResponse;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
-import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.exception.GlobalExceptionHandler;
 import com.votogether.global.jwt.TokenProcessor;
@@ -213,7 +210,7 @@ class PostControllerTest {
                 eq(firstPage),
                 eq(PostClosingType.PROGRESS),
                 eq(PostSortType.LATEST)))
-                .willReturn(List.of(PostResponse.of(post, MALE_30.get())));
+                .willReturn(List.of(PostCreateResponse.of(post, MALE_30.get())));
 
         // when
         String responseBody = RestAssuredMockMvc.given().log().all()
@@ -226,7 +223,7 @@ class PostControllerTest {
                 .status(HttpStatus.OK)
                 .extract().asString();
 
-        List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
+        List<PostCreateResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
         });
         System.out.println(responses.get(0).deadline());
 

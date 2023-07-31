@@ -21,7 +21,7 @@ import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.dto.request.PostOptionRequest;
 import com.votogether.domain.post.dto.request.PostRequest;
-import com.votogether.domain.post.dto.response.PostResponse;
+import com.votogether.domain.post.dto.response.PostCreateResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -38,7 +38,6 @@ import com.votogether.exception.NotFoundException;
 import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.fixtures.MemberFixtures;
 import jakarta.persistence.EntityManager;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -497,7 +496,7 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingType(
+        List<PostCreateResponse> responses = postService.getAllPostBySortTypeAndClosingType(
                 memberToAllPostVote,
                 0,
                 PostClosingType.PROGRESS,
@@ -505,8 +504,8 @@ class PostServiceTest {
         );
 
         // then
-        PostResponse firstResponse = responses.get(0);
-        PostResponse secondResponse = responses.get(1);
+        PostCreateResponse firstResponse = responses.get(0);
+        PostCreateResponse secondResponse = responses.get(1);
         assertAll(
                 () -> assertThat(firstResponse.voteInfo().options()).hasSize(3),
                 () -> assertThat(firstResponse.voteInfo().totalVoteCount()).isEqualTo(32),

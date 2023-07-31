@@ -7,7 +7,7 @@ import com.votogether.domain.post.entity.PostCategory;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record PostResponse(
+public record PostCreateResponse(
         Long postId,
         WriterResponse writer,
         String title,
@@ -18,11 +18,11 @@ public record PostResponse(
         VoteResponse voteInfo
 ) {
 
-    public static PostResponse of(final Post post, final Member loginMember) {
+    public static PostCreateResponse of(final Post post, final Member loginMember) {
         final Member writer = post.getWriter();
         final PostBody postBody = post.getPostBody();
 
-        return new PostResponse(
+        return new PostCreateResponse(
                 post.getId(),
                 WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
                 postBody.getTitle(),

@@ -1,5 +1,7 @@
 package com.votogether.domain.post.util;
 
+import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.exception.BadRequestException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +24,7 @@ public class ImageUploader {
         try {
             Files.write(Paths.get(imageUrl), image.getBytes());
         } catch (IOException ignore) {
+            throw new BadRequestException(PostExceptionType.WRONG_IMAGE);
         }
 
         return imageUrl;

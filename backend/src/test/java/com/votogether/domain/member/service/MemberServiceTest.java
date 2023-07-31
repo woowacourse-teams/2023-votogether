@@ -52,7 +52,7 @@ class MemberServiceTest {
             memberService.changeNickname(member, newNickname);
 
             // then
-            assertThat(member.getNickname().getValue()).isEqualTo(newNickname);
+            assertThat(member.getNickname()).isEqualTo(newNickname);
         }
 
         @ParameterizedTest
@@ -89,7 +89,7 @@ class MemberServiceTest {
             Member member2 = memberRepository.save(MemberFixtures.MALE_30.get());
 
             // when, then
-            assertThatThrownBy(() -> memberService.changeNickname(member1, member2.getNickname().getValue()))
+            assertThatThrownBy(() -> memberService.changeNickname(member1, member2.getNickname()))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 중복된 닉네임이 존재합니다.");
         }

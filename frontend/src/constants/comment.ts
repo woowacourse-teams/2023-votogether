@@ -8,11 +8,6 @@ export const COMMENT_USER = {
   WRITER: 'WRITER',
 } as const;
 
-export const COMMENT_MENU_KIND = {
-  [COMMENT_USER.NORMAL]: 'NORMAL',
-  [COMMENT_USER.WRITER]: 'WRITER',
-} as const;
-
 export const COMMENT_ACTION = {
   DELETE: 'delete',
   USER_REPORT: 'userReport',
@@ -21,9 +16,9 @@ export const COMMENT_ACTION = {
 } as const;
 
 export const COMMENT_USER_MENU: Record<CommentUser, CommentMenu> = {
-  [COMMENT_USER.GUEST]: COMMENT_MENU_KIND.NORMAL,
-  [COMMENT_USER.NORMAL]: COMMENT_MENU_KIND.NORMAL,
-  [COMMENT_USER.WRITER]: COMMENT_MENU_KIND.WRITER,
+  [COMMENT_USER.GUEST]: COMMENT_USER.NORMAL,
+  [COMMENT_USER.NORMAL]: COMMENT_USER.NORMAL,
+  [COMMENT_USER.WRITER]: COMMENT_USER.WRITER,
 } as const;
 
 export const COMMENT_MENU: Record<CommentMenu, CommentMenuItem[]> = {

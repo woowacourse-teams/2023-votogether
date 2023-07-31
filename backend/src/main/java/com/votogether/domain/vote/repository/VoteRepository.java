@@ -28,7 +28,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
             " GROUP BY m.ageRange, m.gender"
     )
     List<VoteStatus> findVoteCountByPostOptionIdGroupByAgeRangeAndGender(
-            @Param("postOptionId") final Long postOptionId);
+            @Param("postOptionId") final Long postOptionId);;
 
     Optional<Vote> findByMemberAndPostOption(final Member member, final PostOption postOption);
 

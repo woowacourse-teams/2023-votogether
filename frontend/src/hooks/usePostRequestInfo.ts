@@ -20,7 +20,7 @@ export const usePostRequestInfo = () => {
   const [searchParams] = useSearchParams();
 
   const { pathname } = useLocation();
-  const keyword = searchParams.get(SEARCH_KEYWORD)?.toString();
+  const keyword = searchParams.get(SEARCH_KEYWORD)?.toString().slice(0, 100);
 
   const convertedPathname = getPathFragment(pathname);
 

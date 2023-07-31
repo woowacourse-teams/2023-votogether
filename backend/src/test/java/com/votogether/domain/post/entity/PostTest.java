@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.util.ImageUploader;
 import com.votogether.exception.BadRequestException;
 import com.votogether.fixtures.MemberFixtures;
 import java.nio.charset.StandardCharsets;
@@ -61,8 +62,12 @@ class PostTest {
                 content
         );
 
+        final List<String> imageUrls = List.of(file1, file2).stream()
+                .map(ImageUploader::upload)
+                .toList();
+
         // when
-        post.mapPostOptionsByElements(List.of("content1", "content2"), List.of(file1, file2));
+        post.mapPostOptionsByElements(List.of("content1", "content2"), imageUrls);
 
         // then
         List<PostOption> postOptions = post.getPostOptions().getPostOptions();

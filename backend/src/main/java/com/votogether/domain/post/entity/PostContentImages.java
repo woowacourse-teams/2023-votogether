@@ -19,8 +19,7 @@ public class PostContentImages {
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostContentImage> contentImages = new ArrayList<>();
 
-    public void addContentImage(final Post post, final MultipartFile contentImage) {
-        final String contentImageUrl = ImageUploader.upload(contentImage);
+    public void addContentImage(final Post post, final String contentImageUrl) {
         this.contentImages.add(getPostContentImage(post, contentImageUrl));
     }
 

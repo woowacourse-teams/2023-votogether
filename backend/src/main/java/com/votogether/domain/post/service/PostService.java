@@ -4,8 +4,8 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -16,6 +16,7 @@ import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.post.util.ImageUploader;
 import com.votogether.domain.vote.dto.VoteStatus;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
@@ -90,13 +91,10 @@ public class PostService {
             final List<Category> categories
     ) {
         final Post post = toPost(postCreateRequest, loginMember);
-        final List<String> postOptionContents = postCreateRequest.postOptions().stream()
-                .map(PostOptionCreateRequest::content)
-                .toList();
 
-        post.mapPostOptionsByElements(postOptionContents, optionImages);
+        post.mapPostOptionsByElements(getPostOptionContents(postCreateRequest), parseOptionImageUrls(optionImages));
         post.mapCategories(categories);
-        post.addContentImage(contentImages.get(0));
+        post.addContentImage(ImageUploader.upload(contentImages.get(0)));
 
         return post;
     }
@@ -117,6 +115,18 @@ public class PostService {
                 .title(postCreateRequest.title())
                 .content(postCreateRequest.content())
                 .build();
+    }
+
+    private List<String> getPostOptionContents(final PostCreateRequest postCreateRequest) {
+        return postCreateRequest.postOptions().stream()
+                .map(PostOptionCreateRequest::content)
+                .toList();
+    }
+
+    private List<String> parseOptionImageUrls(final List<MultipartFile> optionImages) {
+        return optionImages.stream()
+                .map(ImageUploader::upload)
+                .toList();
     }
 
     @Transactional(readOnly = true)

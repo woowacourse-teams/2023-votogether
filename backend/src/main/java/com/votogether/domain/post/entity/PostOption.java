@@ -65,11 +65,10 @@ public class PostOption extends BaseEntity {
             final String postOptionContent,
             final Post post,
             final int postOptionSequence,
-            final MultipartFile optionImage
+            final String optionImageUrl
     ) {
-        if (!optionImage.isEmpty()) {
-            final String imageUrl = ImageUploader.upload(optionImage);
-            return toPostOptionEntity(post, postOptionSequence, postOptionContent, imageUrl);
+        if (!optionImageUrl.isEmpty()) {
+            return toPostOptionEntity(post, postOptionSequence, postOptionContent, optionImageUrl);
         }
 
         return toPostOptionEntity(post, postOptionSequence, postOptionContent, "");
@@ -79,13 +78,13 @@ public class PostOption extends BaseEntity {
             final Post post,
             final Integer postOptionSequence,
             final String postOptionContent,
-            final String imageUrl
+            final String optionImageUrl
     ) {
         return PostOption.builder()
                 .post(post)
                 .sequence(postOptionSequence)
                 .content(postOptionContent)
-                .imageUrl(imageUrl)
+                .imageUrl(optionImageUrl)
                 .build();
     }
 

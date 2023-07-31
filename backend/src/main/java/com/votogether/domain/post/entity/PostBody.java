@@ -30,8 +30,8 @@ public class PostBody {
         this.postContentImages = new PostContentImages();
     }
 
-    public void addContentImage(final Post post, final MultipartFile contentImage) {
-        this.postContentImages.addContentImage(post, contentImage);
+    public void addContentImage(final Post post, final String contentImageUrl) {
+        this.postContentImages.addContentImage(post, contentImageUrl);
     }
 
 }

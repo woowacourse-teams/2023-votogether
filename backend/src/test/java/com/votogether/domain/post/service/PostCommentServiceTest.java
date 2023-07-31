@@ -149,7 +149,7 @@ class PostCommentServiceTest {
         }
 
         @Test
-        @DisplayName("댓글의 작성자가 아니라면 예외르 던진다.")
+        @DisplayName("댓글의 작성자가 아니라면 예외를 던진다.")
         void invalidWriter() {
             // given
             Member memberA = memberRepository.save(MemberFixtures.MALE_20.get());
@@ -275,7 +275,7 @@ class PostCommentServiceTest {
         }
 
         @Test
-        @DisplayName("댓글의 작성자가 아니라면 예외르 던진다.")
+        @DisplayName("댓글의 작성자가 아니라면 예외를 던진다.")
         void invalidWriter() {
             // given
             Member memberA = memberRepository.save(MemberFixtures.MALE_20.get());

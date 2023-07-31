@@ -1,6 +1,5 @@
 package com.votogether.exception;
 
-import com.votogether.domain.post.controller.PostController;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
-@RestControllerAdvice(basePackageClasses = PostController.class)
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler

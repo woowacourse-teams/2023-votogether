@@ -48,7 +48,7 @@ export default function TimePickerOption({
     return () => {
       timeBox.removeEventListener('scroll', handleScroll);
     };
-  }, [handlePickTime, timeUnit]);
+  }, [currentTime, handlePickTime, option, timeUnit]);
 
   return (
     <S.TimeBox ref={timeBoxRef}>

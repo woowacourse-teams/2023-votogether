@@ -55,7 +55,6 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
         usePostList({
           postSorting: SORTING.POPULAR,
           postStatus: STATUS.ALL,
-          categoryId: 1,
           content: POST_CONTENT.MY_POST,
         }),
       {
@@ -72,8 +71,24 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
         usePostList({
           postSorting: SORTING.POPULAR,
           postStatus: STATUS.ALL,
-          categoryId: 1,
           content: POST_CONTENT.MY_VOTE,
+        }),
+      {
+        wrapper,
+      }
+    );
+
+    await waitFor(() => expect(result.current.data?.pages[0].postList).toEqual(MOCK_POST_LIST));
+  });
+
+  test('내가 검색한 게시글 목록을 불러온다.', async () => {
+    const { result } = renderHook(
+      () =>
+        usePostList({
+          postSorting: SORTING.POPULAR,
+          postStatus: STATUS.ALL,
+          content: POST_CONTENT.SEARCH,
+          keyword: '갤럭시',
         }),
       {
         wrapper,

@@ -38,7 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class PostService {
 
-    private static final Integer BASIC_PAGING_SIZE = 10;
+    private static final int BASIC_PAGING_SIZE = 10;
+    private static final int MAXIMUM_DEADLINE = 3;
 
     private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
     private final PostRepository postRepository;
@@ -78,7 +79,7 @@ public class PostService {
     ) {
         final List<Category> categories = categoryRepository.findAllById(postCreateRequest.categoryIds());
         final Post post = toPostEntity(postCreateRequest, loginMember, contentImages, optionImages, categories);
-        post.validateDeadlineNotExceedThreeDays();
+        post.validateDeadlineNotExceedByMaximumDeadline(MAXIMUM_DEADLINE);
 
         return postRepository.save(post).getId();
     }

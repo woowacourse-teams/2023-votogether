@@ -94,11 +94,11 @@ class PostTest {
 
         // when, then
         assertAll(
-                () -> assertThatThrownBy(post1::validateDeadlineNotExceedThreeDays)
+                () -> assertThatThrownBy(() -> post1.validateDeadlineNotExceedByMaximumDeadline(3))
                         .isInstanceOf(BadRequestException.class)
                         .hasMessage(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS.getMessage()),
                 () -> assertThatNoException()
-                        .isThrownBy(post2::validateDeadlineNotExceedThreeDays)
+                        .isThrownBy(() -> post2.validateDeadlineNotExceedByMaximumDeadline(3))
         );
     }
 

@@ -29,7 +29,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
-import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -111,9 +110,9 @@ public class Post extends BaseEntity {
         return postOptions.contains(postOption);
     }
 
-    public void validateDeadlineNotExceedThreeDays() {
-        LocalDateTime threeDaysFromNow = LocalDateTime.now().plusDays(3);
-        if (this.deadline.isAfter(threeDaysFromNow)) {
+    public void validateDeadlineNotExceedByMaximumDeadline(final int maximumDeadline) {
+        LocalDateTime maximumDeadlineFromNow = LocalDateTime.now().plusDays(maximumDeadline);
+        if (this.deadline.isAfter(maximumDeadlineFromNow)) {
             throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
         }
     }

@@ -25,6 +25,6 @@ export const PickedTimeText = styled.p`
   align-items: center;
   gap: 20px;
 
-  font: var(--text-body);
+  font: var(--text-caption);
   font-weight: bold;
 `;

@@ -56,7 +56,7 @@ export default function TimePickerOption({
         <S.Time
           key={index}
           ref={index === currentTime ? timeBoxChildRef : null}
-          isPicked={currentTime === index}
+          $isPicked={currentTime === index}
         >
           {index}
         </S.Time>

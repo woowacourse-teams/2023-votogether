@@ -1,5 +1,6 @@
 package com.votogether.domain.post.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Schema(description = "게시글에 관련한 데이터들입니다.")
 @Builder
@@ -37,8 +37,8 @@ public record PostCreateRequest(
         @Size(min = 2, max = 5, message = "선택지는 최소 2개, 최대 5개까지 등록 가능합니다.")
         List<PostOptionCreateRequest> postOptions,
 
-        @Schema(description = "마감 기한", example = "deadline")
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+        @Schema(description = "마감 기한", example = "2023-08-01 15:30")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline
 ) {
 }

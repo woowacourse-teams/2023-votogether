@@ -15,6 +15,7 @@ import com.votogether.fixtures.MemberFixtures;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -62,7 +63,7 @@ class PostTest {
                 content
         );
 
-        final List<String> imageUrls = List.of(file1, file2).stream()
+        final List<String> imageUrls = Stream.of(file1, file2)
                 .map(ImageUploader::upload)
                 .toList();
 

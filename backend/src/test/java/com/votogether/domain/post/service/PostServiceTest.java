@@ -115,11 +115,9 @@ class PostServiceTest {
                 .postOptions(List.of(
                         PostOptionCreateRequest.builder()
                                 .content("option1")
-                                .imageUrl("")
                                 .build(),
                         PostOptionCreateRequest.builder()
                                 .content("option2")
-                                .imageUrl("")
                                 .build()
                 ))
                 .deadline(LocalDateTime.now().plusDays(2))
@@ -416,13 +414,11 @@ class PostServiceTest {
                     add(
                             PostOptionCreateRequest.builder()
                                     .content("option1")
-                                    .imageUrl("")
                                     .build()
                     );
                     add(
                             PostOptionCreateRequest.builder()
                                     .content("option2")
-                                    .imageUrl("")
                                     .build()
                     );
                 }
@@ -455,7 +451,6 @@ class PostServiceTest {
                 options.add(
                         PostOptionCreateRequest.builder()
                                 .content("option3")
-                                .imageUrl("")
                                 .build()
                 );
             }

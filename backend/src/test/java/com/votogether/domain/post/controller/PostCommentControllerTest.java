@@ -11,6 +11,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.CommentUpdateRequest;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.fixtures.MemberFixtures;
 import com.votogether.global.jwt.TokenPayload;
@@ -117,6 +118,81 @@ class PostCommentControllerTest {
                     .when().post("/posts/{postId}/comments", 1)
                     .then().log().all()
                     .status(HttpStatus.CREATED);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("게시글 댓글 수정")
+    class UpdateComment {
+
+        @ParameterizedTest
+        @ValueSource(strings = {"@", "a", "가"})
+        @DisplayName("게시글 ID가 Long 타입으로 변환할 수 없는 값이라면 400을 응답한다.")
+        void invalidPostIDType(String postId) throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+
+            // when, then
+            RestAssuredMockMvc.given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .when().put("/posts/{postId}/comments/{commentId}", postId, 1L)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(-9998))
+                    .body("message", containsString("postId는 Long 타입이 필요합니다."));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"@", "a", "가"})
+        @DisplayName("댓글 ID가 Long 타입으로 변환할 수 없는 값이라면 400을 응답한다.")
+        void invalidCommentIDType(String commentId) throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+
+            // when, then
+            RestAssuredMockMvc.given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .when().put("/posts/{postId}/comments/{commentId}", 1L, commentId)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(-9998))
+                    .body("message", containsString("commentId는 Long 타입이 필요합니다."));
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @DisplayName("수정할 댓글 내용이 비어있거나 존재하지 않으면 400을 응답한다.")
+        void nullAndEmptyCommentContent(String content) throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.MALE_20.get());
+            CommentUpdateRequest request = new CommentUpdateRequest(content);
+
+            // when, then
+            RestAssuredMockMvc.given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .when().put("/posts/{postId}/comments/{commentId}", 1L, 1L)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(-9997))
+                    .body("message", containsString("댓글 내용은 존재해야 합니다."));
         }
 
     }

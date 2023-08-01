@@ -106,4 +106,29 @@ class CommentTest {
                 .hasMessage("댓글의 게시글 정보와 일치하지 않습니다.");
     }
 
+    @Test
+    @DisplayName("댓글 수정 시 최대 글자를 초과하면 예외를 던진다.")
+    void updateContentWithInvalidContentLength() {
+        // given
+        PostBody body = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+        Post post = Post.builder()
+                .writer(MemberFixtures.FEMALE_20.get())
+                .postBody(body)
+                .deadline(LocalDateTime.now())
+                .build();
+        Comment comment = Comment.builder()
+                .member(MemberFixtures.MALE_20.get())
+                .post(post)
+                .content("hello")
+                .build();
+
+        // when, then
+        assertThatThrownBy(() -> comment.updateContent("a".repeat(501)))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("유효하지 않은 댓글 길이입니다.");
+    }
+
 }

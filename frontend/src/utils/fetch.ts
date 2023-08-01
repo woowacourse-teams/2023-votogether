@@ -74,11 +74,7 @@ export const deleteFetch = async (url: string) => {
     headers,
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
+  return response;
 };
 
 export const multiPostFetch = async (url: string, body: FormData) => {

@@ -60,4 +60,12 @@ public class Comment extends BaseEntity {
         }
     }
 
+    public void updateContent(final String content) {
+        this.content = new Content(content);
+    }
+
+    public String getContent() {
+        return content.getValue();
+    }
+
 }

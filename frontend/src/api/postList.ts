@@ -4,7 +4,7 @@ import {
   REQUEST_STATUS_OPTION,
   REQUEST_SORTING_OPTION,
   REQUEST_POST_KIND_URL,
-  POST_CONTENT,
+  POST_TYPE,
   SEARCH_KEYWORD,
 } from '@constants/post';
 
@@ -13,7 +13,7 @@ import { getFetch } from '@utils/fetch';
 const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export const makePostListUrl = ({
-  content,
+  postType,
   categoryId,
   postStatus,
   postSorting,
@@ -23,14 +23,14 @@ export const makePostListUrl = ({
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 
-  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[content]}`;
+  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[postType]}`;
   const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
 
-  if (categoryId && content === POST_CONTENT.CATEGORY) {
+  if (categoryId && postType === POST_TYPE.CATEGORY) {
     return `${POST_BASE_URL}/${categoryId}?${OPTION_URL}`;
   }
 
-  if (content === POST_CONTENT.SEARCH) {
+  if (postType === POST_TYPE.SEARCH) {
     return `${POST_BASE_URL}?${SEARCH_KEYWORD}=${keyword}&${OPTION_URL}`;
   }
 
@@ -38,7 +38,7 @@ export const makePostListUrl = ({
 };
 
 export const getPostList = async ({
-  content,
+  postType,
   postStatus,
   postSorting,
   pageNumber,
@@ -46,7 +46,7 @@ export const getPostList = async ({
   keyword,
 }: PostListByOption) => {
   const postListUrl = makePostListUrl({
-    content,
+    postType,
     pageNumber,
     postSorting,
     postStatus,

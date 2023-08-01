@@ -13,7 +13,7 @@ export const SORTING = {
   POPULAR: 'popular',
 } as const;
 
-export const POST_CONTENT = {
+export const POST_TYPE = {
   ALL: 'posts',
   MY_POST: 'myPost',
   MY_VOTE: 'myVote',
@@ -33,11 +33,11 @@ export const REQUEST_SORTING_OPTION = {
 } as const;
 
 export const REQUEST_POST_KIND_URL = {
-  [POST_CONTENT.ALL]: 'posts',
-  [POST_CONTENT.MY_POST]: 'posts/me',
-  [POST_CONTENT.MY_VOTE]: 'posts/votes/me',
-  [POST_CONTENT.CATEGORY]: 'posts/categories',
-  [POST_CONTENT.SEARCH]: 'posts/search',
+  [POST_TYPE.ALL]: 'posts',
+  [POST_TYPE.MY_POST]: 'posts/me',
+  [POST_TYPE.MY_VOTE]: 'posts/votes/me',
+  [POST_TYPE.CATEGORY]: 'posts/categories',
+  [POST_TYPE.SEARCH]: 'posts/search',
 } as const;
 
 export const SEARCH_KEYWORD = 'keyword';

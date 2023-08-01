@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import { usePostList } from '@hooks/query/usePostList';
 
-import { POST_CONTENT, SORTING, STATUS } from '@constants/post';
+import { POST_TYPE, SORTING, STATUS } from '@constants/post';
 
 import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
@@ -22,7 +22,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
         usePostList({
           postSorting: SORTING.POPULAR,
           postStatus: STATUS.ALL,
-          content: POST_CONTENT.ALL,
+          postType: POST_TYPE.ALL,
         }),
       {
         wrapper,
@@ -39,7 +39,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
           postSorting: SORTING.POPULAR,
           postStatus: STATUS.ALL,
           categoryId: 1,
-          content: POST_CONTENT.CATEGORY,
+          postType: POST_TYPE.CATEGORY,
         }),
       {
         wrapper,
@@ -55,7 +55,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
         usePostList({
           postSorting: SORTING.POPULAR,
           postStatus: STATUS.ALL,
-          content: POST_CONTENT.MY_POST,
+          postType: POST_TYPE.MY_POST,
         }),
       {
         wrapper,
@@ -71,7 +71,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
         usePostList({
           postSorting: SORTING.POPULAR,
           postStatus: STATUS.ALL,
-          content: POST_CONTENT.MY_VOTE,
+          postType: POST_TYPE.MY_VOTE,
         }),
       {
         wrapper,
@@ -87,7 +87,7 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
         usePostList({
           postSorting: SORTING.POPULAR,
           postStatus: STATUS.ALL,
-          content: POST_CONTENT.SEARCH,
+          postType: POST_TYPE.SEARCH,
           keyword: '갤럭시',
         }),
       {

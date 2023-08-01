@@ -30,7 +30,7 @@ export interface PostList {
 }
 
 export interface PostListByOption {
-  content: PostRequestKind;
+  postType: PostRequestKind;
   postStatus: PostStatus;
   postSorting: PostSorting;
   pageNumber: number;

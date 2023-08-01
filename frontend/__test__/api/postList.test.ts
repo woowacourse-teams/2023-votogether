@@ -1,6 +1,6 @@
 import { getPostList } from '@api/postList';
 
-import { POST_CONTENT, SORTING, STATUS } from '@constants/post';
+import { POST_TYPE, SORTING, STATUS } from '@constants/post';
 
 import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
@@ -10,7 +10,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postStatus: STATUS.ALL,
       postSorting: SORTING.POPULAR,
       pageNumber: 0,
-      content: POST_CONTENT.ALL,
+      postType: POST_TYPE.ALL,
     });
 
     expect(data.postList.length).toBe(10);
@@ -21,7 +21,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postStatus: STATUS.CLOSED,
       postSorting: SORTING.POPULAR,
       pageNumber: 0,
-      content: POST_CONTENT.ALL,
+      postType: POST_TYPE.ALL,
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
@@ -32,7 +32,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postStatus: STATUS.CLOSED,
       postSorting: SORTING.POPULAR,
       pageNumber: 3,
-      content: POST_CONTENT.ALL,
+      postType: POST_TYPE.ALL,
     });
 
     expect(data.pageNumber).toEqual(3);
@@ -44,7 +44,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: SORTING.POPULAR,
       pageNumber: 0,
       categoryId: 1,
-      content: POST_CONTENT.CATEGORY,
+      postType: POST_TYPE.CATEGORY,
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
@@ -56,7 +56,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: SORTING.POPULAR,
       pageNumber: 0,
       categoryId: 1,
-      content: POST_CONTENT.MY_POST,
+      postType: POST_TYPE.MY_POST,
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
@@ -68,7 +68,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: SORTING.POPULAR,
       pageNumber: 0,
       categoryId: 1,
-      content: POST_CONTENT.MY_VOTE,
+      postType: POST_TYPE.MY_VOTE,
     });
 
     expect(data.postList).toEqual(MOCK_POST_LIST);
@@ -80,7 +80,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       postSorting: SORTING.POPULAR,
       pageNumber: 0,
       categoryId: 1,
-      content: POST_CONTENT.SEARCH,
+      postType: POST_TYPE.SEARCH,
       keyword: '갤럭시',
     });
 

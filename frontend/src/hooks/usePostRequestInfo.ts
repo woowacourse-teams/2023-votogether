@@ -3,16 +3,16 @@ import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { PostRequestKind } from '@components/post/PostListPage/types';
 
 import { PATH } from '@constants/path';
-import { POST_CONTENT, SEARCH_KEYWORD } from '@constants/post';
+import { POST_TYPE, SEARCH_KEYWORD } from '@constants/post';
 
 import { getPathFragment } from '@utils/getPathFragment';
 
 const REQUEST_URL: Record<string, PostRequestKind> = {
-  [PATH.HOME]: POST_CONTENT.ALL,
-  [PATH.POST_CATEGORY]: POST_CONTENT.CATEGORY,
-  [PATH.USER_POST]: POST_CONTENT.MY_POST,
-  [PATH.USER_VOTE]: POST_CONTENT.MY_VOTE,
-  [PATH.SEARCH]: POST_CONTENT.SEARCH,
+  [PATH.HOME]: POST_TYPE.ALL,
+  [PATH.POST_CATEGORY]: POST_TYPE.CATEGORY,
+  [PATH.USER_POST]: POST_TYPE.MY_POST,
+  [PATH.USER_VOTE]: POST_TYPE.MY_VOTE,
+  [PATH.SEARCH]: POST_TYPE.SEARCH,
 };
 
 export const usePostRequestInfo = () => {
@@ -24,11 +24,11 @@ export const usePostRequestInfo = () => {
 
   const convertedPathname = getPathFragment(pathname);
 
-  const content = REQUEST_URL[convertedPathname];
+  const postType = REQUEST_URL[convertedPathname];
 
-  if (!content) {
-    return { categoryId: Number(categoryId), content: REQUEST_URL[PATH.HOME], keyword };
+  if (!postType) {
+    return { categoryId: Number(categoryId), postType: REQUEST_URL[PATH.HOME], keyword };
   }
 
-  return { categoryId: Number(categoryId), content, keyword };
+  return { categoryId: Number(categoryId), postType, keyword };
 };

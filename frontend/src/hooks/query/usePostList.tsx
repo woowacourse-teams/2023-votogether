@@ -7,7 +7,7 @@ import { getPostList } from '@api/postList';
 const MAX_LIST_LENGTH = 10;
 
 export const usePostList = ({
-  content,
+  postType,
   postSorting,
   postStatus,
   categoryId = 0,
@@ -18,7 +18,7 @@ export const usePostList = ({
       ['posts', postSorting, postStatus, categoryId, keyword],
       ({ pageParam = 0 }) =>
         getPostList({
-          content,
+          postType,
           postSorting,
           postStatus,
           pageNumber: pageParam,

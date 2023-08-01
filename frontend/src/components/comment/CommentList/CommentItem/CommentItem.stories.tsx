@@ -13,14 +13,14 @@ const meta: Meta<typeof CommentItem> = {
 export default meta;
 type Story = StoryObj<typeof CommentItem>;
 
-export const Guest: Story = {
+export const GuestUser: Story = {
   render: () => <CommentItem comment={MOCK_COMMENT_LIST[0]} userType={COMMENT_USER.GUEST} />,
 };
 
-export const Writer: Story = {
+export const WriterUser: Story = {
   render: () => <CommentItem comment={MOCK_COMMENT_LIST[0]} userType={COMMENT_USER.WRITER} />,
 };
 
-export const Normal: Story = {
+export const NotWriterUser: Story = {
   render: () => <CommentItem comment={MOCK_COMMENT_LIST[0]} userType={COMMENT_USER.NORMAL} />,
 };

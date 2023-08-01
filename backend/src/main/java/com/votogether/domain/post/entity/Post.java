@@ -29,7 +29,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
-import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -86,26 +85,22 @@ public class Post extends BaseEntity {
 
     public void mapPostOptionsByElements(
             final List<String> postOptionContents,
-            final List<MultipartFile> images
+            final List<String> optionImageUrls
     ) {
-        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, images));
+        this.postOptions.addAllPostOptions(toPostOptions(postOptionContents, optionImageUrls));
     }
 
-    private List<PostOption> toPostOptionEntities(
+    private List<PostOption> toPostOptions(
             final List<String> postOptionContents,
-            final List<MultipartFile> images
+            final List<String> optionImageUrls
     ) {
-        return toPostOptions(postOptionContents, images);
-    }
-
-    private List<PostOption> toPostOptions(final List<String> postOptionContents, final List<MultipartFile> images) {
         return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
                 .mapToObj(postOptionSequence ->
                         PostOption.of(
                                 postOptionContents.get(postOptionSequence - 1),
                                 this,
                                 postOptionSequence,
-                                images.get(postOptionSequence - 1)
+                                optionImageUrls.get(postOptionSequence - 1)
                         )
                 )
                 .toList();
@@ -115,14 +110,21 @@ public class Post extends BaseEntity {
         return postOptions.contains(postOption);
     }
 
+    public void validateDeadlineNotExceedByMaximumDeadline(final int maximumDeadline) {
+        LocalDateTime maximumDeadlineFromNow = LocalDateTime.now().plusDays(maximumDeadline);
+        if (this.deadline.isAfter(maximumDeadlineFromNow)) {
+            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
+        }
+    }
+
     public void validateWriter(final Member member) {
-        if (!Objects.equals(this.writer.getId(), member.getId())) {
+        if (!isWriter(member)) {
             throw new BadRequestException(PostExceptionType.NOT_WRITER);
         }
     }
 
-    public boolean isClosed() {
-        return deadline.isBefore(LocalDateTime.now());
+    private boolean isWriter(final Member member) {
+        return Objects.equals(this.writer, member);
     }
 
     public Vote makeVote(final Member voter, final PostOption postOption) {
@@ -138,15 +140,19 @@ public class Post extends BaseEntity {
         return vote;
     }
 
-    private void validateVoter(final Member voter) {
-        if (Objects.equals(this.writer.getId(), voter.getId())) {
-            throw new BadRequestException(PostExceptionType.NOT_VOTER);
-        }
-    }
-
     private void validateDeadLine() {
         if (isClosed()) {
             throw new IllegalStateException("게시글이 이미 마감되었습니다.");
+        }
+    }
+
+    private boolean isClosed() {
+        return deadline.isBefore(LocalDateTime.now());
+    }
+
+    private void validateVoter(final Member voter) {
+        if (Objects.equals(this.writer.getId(), voter.getId())) {
+            throw new BadRequestException(PostExceptionType.NOT_VOTER);
         }
     }
 
@@ -156,8 +162,8 @@ public class Post extends BaseEntity {
         }
     }
 
-    public boolean isWriter(final Member member) {
-        return Objects.equals(this.writer, member);
+    public void addContentImage(final String contentImageUrl) {
+        this.postBody.addContentImage(this, contentImageUrl);
     }
 
     public long getFinalTotalVoteCount(final Member loginMember) {
@@ -176,5 +182,4 @@ public class Post extends BaseEntity {
         comments.add(comment);
         comment.setPost(this);
     }
-
 }

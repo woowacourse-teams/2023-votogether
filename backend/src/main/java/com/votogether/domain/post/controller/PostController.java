@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +42,12 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart final PostCreateRequest request,
-            @RequestPart final List<MultipartFile> images,
+            @RequestPart @Valid final PostCreateRequest request,
+            @RequestPart final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member loginMember
     ) {
-        final long postId = postService.save(request, loginMember, images);
+        final long postId = postService.save(request, loginMember, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 

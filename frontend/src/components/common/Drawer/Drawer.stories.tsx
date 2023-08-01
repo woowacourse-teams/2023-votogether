@@ -40,7 +40,6 @@ export const LeftSideBar = () => {
         <Dashboard
           userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
-          handleFavoriteClick={() => {}}
           handleLogoutClick={() => {}}
         />
       </Drawer>
@@ -58,7 +57,6 @@ export const RightSideBar = () => {
         <Dashboard
           userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
-          handleFavoriteClick={() => {}}
           handleLogoutClick={() => {}}
         />
       </Drawer>

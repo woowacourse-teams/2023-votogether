@@ -41,10 +41,10 @@ export const Wrapper = styled.div`
 export const LeftSide = styled.div<{ $hasImage: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 35px 40px 400px ${props => (props.$hasImage ? '170px' : '50px')};
+  grid-template-rows: 35px 40px 400px ${props => (props.$hasImage ? '100vw' : '50px')};
   gap: 5px;
 
-  @media (min-width: ${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     grid-template-rows: 40px 50px auto ${props => (props.$hasImage ? '180px' : '60px')};
   }
 `;
@@ -84,7 +84,7 @@ export const Content = styled.textarea`
 
 export const ContentImagePartWrapper = styled.div<{ $hasImage: boolean }>`
   @media (min-width: ${theme.breakpoint.sm}) {
-    width: ${props => props.$hasImage && '50%'};
+    width: ${props => props.$hasImage && '80%'};
   }
 `;
 

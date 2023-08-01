@@ -202,7 +202,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               required
             />
             <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>
-              <ContentImagePart size="md" contentImageHook={contentImageHook} />
+              <ContentImagePart size="lg" contentImageHook={contentImageHook} />
             </S.ContentImagePartWrapper>
           </S.LeftSide>
           <S.RightSide>

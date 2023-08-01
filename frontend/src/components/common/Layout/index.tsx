@@ -19,7 +19,6 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
   const userInfo = undefined;
   const categoryList = MOCK_FAVORITE_CATEGORIES;
   const selectedCategory = undefined;
-  const handleFavoriteClick = () => {};
   const handleLogoutClick = () => {};
 
   const movePostListPage = () => {
@@ -38,7 +37,6 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
               userInfo={userInfo}
               categoryList={categoryList}
               selectedCategory={selectedCategory}
-              handleFavoriteClick={handleFavoriteClick}
               handleLogoutClick={handleLogoutClick}
             />
           </S.DashboardWrapper>

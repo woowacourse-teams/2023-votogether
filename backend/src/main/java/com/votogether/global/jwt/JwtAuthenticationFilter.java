@@ -19,7 +19,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/health-check",
             "/auth/kakao/callback",
             "/categories/guest",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
+            "/h2-console"
     );
 
     private static final List<String> ALLOWED_START_URIS = List.of(

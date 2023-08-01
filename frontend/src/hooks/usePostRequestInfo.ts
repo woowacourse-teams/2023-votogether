@@ -3,7 +3,7 @@ import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { PostRequestKind } from '@components/post/PostListPage/types';
 
 import { PATH } from '@constants/path';
-import { POST_TYPE, SEARCH_KEYWORD } from '@constants/post';
+import { POST_TYPE, SEARCH_KEYWORD, SEARCH_KEYWORD_MAX_LENGTH } from '@constants/post';
 
 import { getPathFragment } from '@utils/getPathFragment';
 
@@ -18,12 +18,10 @@ const REQUEST_URL: Record<string, PostRequestKind> = {
 export const usePostRequestInfo = () => {
   const { categoryId } = useParams<{ categoryId?: string }>();
   const [searchParams] = useSearchParams();
-
   const { pathname } = useLocation();
-  const keyword = searchParams.get(SEARCH_KEYWORD)?.toString().slice(0, 100);
 
+  const keyword = searchParams.get(SEARCH_KEYWORD)?.toString().slice(0, SEARCH_KEYWORD_MAX_LENGTH);
   const convertedPathname = getPathFragment(pathname);
-
   const postType = REQUEST_URL[convertedPathname];
 
   if (!postType) {

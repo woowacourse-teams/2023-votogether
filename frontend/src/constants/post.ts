@@ -41,3 +41,13 @@ export const REQUEST_POST_KIND_URL = {
 } as const;
 
 export const SEARCH_KEYWORD = 'keyword';
+
+export const MAX_FILE_SIZE = 5000000;
+
+export const POST_TITLE_MAX_LENGTH = 100;
+
+export const POST_DESCRIPTION_MAX_LENGTH = 1000;
+
+export const SEARCH_KEYWORD_MAX_LENGTH = 100;
+
+export const POST_LIST_MAX_LENGTH = 10;

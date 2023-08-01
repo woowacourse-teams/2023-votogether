@@ -4,7 +4,7 @@ import { PostList, PostListByOption } from '@type/post';
 
 import { getPostList } from '@api/postList';
 
-const MAX_LIST_LENGTH = 10;
+import { POST_LIST_MAX_LENGTH } from '@constants/post';
 
 export const usePostList = ({
   postType,
@@ -27,7 +27,7 @@ export const usePostList = ({
         }),
       {
         getNextPageParam: lastPage => {
-          if (lastPage.postList.length !== MAX_LIST_LENGTH) return;
+          if (lastPage.postList.length !== POST_LIST_MAX_LENGTH) return;
 
           return lastPage.pageNumber + 1;
         },

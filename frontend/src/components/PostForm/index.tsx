@@ -16,6 +16,8 @@ import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
+import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
+
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 
 import { DEADLINE_OPTION } from './constants';
@@ -177,14 +179,18 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
             </select>
             <S.Title
               value={writingTitle}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e, 100)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleTitleChange(e, POST_TITLE_MAX_LENGTH)
+              }
               placeholder="제목을 입력해주세요"
               maxLength={MAX_TITLE_LENGTH}
               required
             />
             <S.Content
               value={writingContent}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange(e, 1000)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                handleContentChange(e, POST_DESCRIPTION_MAX_LENGTH)
+              }
               placeholder="내용을 입력해주세요"
               maxLength={MAX_CONTENT_LENGTH}
               required

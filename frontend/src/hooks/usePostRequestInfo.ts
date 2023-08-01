@@ -16,17 +16,24 @@ const REQUEST_URL: Record<string, PostRequestKind> = {
 };
 
 export const usePostRequestInfo = () => {
-  const { categoryId } = useParams<{ categoryId?: string }>();
+  const params = useParams<{ categoryId?: string }>();
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
 
-  const keyword = searchParams.get(SEARCH_KEYWORD)?.toString().slice(0, SEARCH_KEYWORD_MAX_LENGTH);
+  const categoryId = Number(params.categoryId ?? 0);
+  const keyword =
+    searchParams.get(SEARCH_KEYWORD)?.toString().slice(0, SEARCH_KEYWORD_MAX_LENGTH) ?? '';
   const convertedPathname = getPathFragment(pathname);
   const postType = REQUEST_URL[convertedPathname];
 
+  const postOptionalOption = {
+    categoryId,
+    keyword,
+  };
+
   if (!postType) {
-    return { categoryId: Number(categoryId), postType: REQUEST_URL[PATH.HOME], keyword };
+    return { postType: REQUEST_URL[PATH.HOME], postOptionalOption };
   }
 
-  return { categoryId: Number(categoryId), postType, keyword };
+  return { postType, postOptionalOption };
 };

@@ -19,11 +19,17 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
   test('전체 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
       () =>
-        usePostList({
-          postSorting: SORTING.POPULAR,
-          postStatus: STATUS.ALL,
-          postType: POST_TYPE.ALL,
-        }),
+        usePostList(
+          {
+            postSorting: SORTING.POPULAR,
+            postStatus: STATUS.ALL,
+            postType: POST_TYPE.ALL,
+          },
+          {
+            categoryId: 0,
+            keyword: '',
+          }
+        ),
       {
         wrapper,
       }
@@ -35,12 +41,17 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
   test('카테고리별 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
       () =>
-        usePostList({
-          postSorting: SORTING.POPULAR,
-          postStatus: STATUS.ALL,
-          categoryId: 1,
-          postType: POST_TYPE.CATEGORY,
-        }),
+        usePostList(
+          {
+            postSorting: SORTING.POPULAR,
+            postStatus: STATUS.ALL,
+            postType: POST_TYPE.CATEGORY,
+          },
+          {
+            categoryId: 1,
+            keyword: '',
+          }
+        ),
       {
         wrapper,
       }
@@ -52,11 +63,17 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
   test('내가 작성한 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
       () =>
-        usePostList({
-          postSorting: SORTING.POPULAR,
-          postStatus: STATUS.ALL,
-          postType: POST_TYPE.MY_POST,
-        }),
+        usePostList(
+          {
+            postSorting: SORTING.POPULAR,
+            postStatus: STATUS.ALL,
+            postType: POST_TYPE.MY_POST,
+          },
+          {
+            categoryId: 0,
+            keyword: '',
+          }
+        ),
       {
         wrapper,
       }
@@ -68,11 +85,17 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
   test('내가 투표한 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
       () =>
-        usePostList({
-          postSorting: SORTING.POPULAR,
-          postStatus: STATUS.ALL,
-          postType: POST_TYPE.MY_VOTE,
-        }),
+        usePostList(
+          {
+            postSorting: SORTING.POPULAR,
+            postStatus: STATUS.ALL,
+            postType: POST_TYPE.MY_VOTE,
+          },
+          {
+            categoryId: 0,
+            keyword: '',
+          }
+        ),
       {
         wrapper,
       }
@@ -84,12 +107,17 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
   test('내가 검색한 게시글 목록을 불러온다.', async () => {
     const { result } = renderHook(
       () =>
-        usePostList({
-          postSorting: SORTING.POPULAR,
-          postStatus: STATUS.ALL,
-          postType: POST_TYPE.SEARCH,
-          keyword: '갤럭시',
-        }),
+        usePostList(
+          {
+            postSorting: SORTING.POPULAR,
+            postStatus: STATUS.ALL,
+            postType: POST_TYPE.SEARCH,
+          },
+          {
+            categoryId: 0,
+            keyword: '갤럭시',
+          }
+        ),
       {
         wrapper,
       }

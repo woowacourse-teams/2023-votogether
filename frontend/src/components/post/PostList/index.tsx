@@ -16,7 +16,7 @@ import { SORTING, STATUS } from '@constants/post';
 import * as S from './style';
 
 export default function PostList() {
-  const { categoryId, postType, keyword } = usePostRequestInfo();
+  const { postType, postOptionalOption } = usePostRequestInfo();
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
@@ -27,13 +27,14 @@ export default function PostList() {
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
     useSelect<PostSorting>(SORTING.LATEST);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
-    postType,
-    categoryId,
-    postSorting: selectedSortingOption,
-    postStatus: selectedStatusOption,
-    keyword,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList(
+    {
+      postType,
+      postSorting: selectedSortingOption,
+      postStatus: selectedStatusOption,
+    },
+    postOptionalOption
+  );
 
   useEffect(() => {
     if (isIntersecting && hasNextPage) {

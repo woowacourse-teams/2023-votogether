@@ -29,11 +29,14 @@ export interface PostList {
   postList: PostInfo[];
 }
 
-export interface PostListByOption {
+export interface PostListByRequiredOption {
   postType: PostRequestKind;
   postStatus: PostStatus;
   postSorting: PostSorting;
   pageNumber: number;
-  categoryId?: number;
-  keyword?: string;
+}
+
+export interface PostListByOptionalOption {
+  categoryId: number;
+  keyword: string;
 }

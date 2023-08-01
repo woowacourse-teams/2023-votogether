@@ -55,10 +55,11 @@ export const putFetch = async <T, R>(url: string, body: T): Promise<R | void> =>
   return data;
 };
 
-export const patchFetch = async (url: string) => {
+export const patchFetch = async <T>(url: string, body?: T) => {
   const response = await fetch(url, {
     method: 'PATCH',
     headers,
+    body: JSON.stringify(body),
   });
 
   const data = await response.json();
@@ -66,6 +67,8 @@ export const patchFetch = async (url: string) => {
   if (!response.ok) {
     throw new Error(data.message);
   }
+
+  return response;
 };
 
 export const deleteFetch = async (url: string) => {

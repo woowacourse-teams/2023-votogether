@@ -3,6 +3,7 @@ package com.votogether.domain.member.entity;
 import com.votogether.domain.auth.dto.KakaoMemberResponse;
 import com.votogether.domain.common.BaseEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,10 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"id"})
+@ToString
 @Getter
 @Entity
 public class Member extends BaseEntity {
@@ -23,8 +28,8 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 15, unique = true, nullable = false)
-    private String nickname;
+    @Embedded
+    private Nickname nickname;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
@@ -44,7 +49,7 @@ public class Member extends BaseEntity {
     private String socialId;
 
     @Column(nullable = false)
-    private Integer point;
+    private int point;
 
     @Builder
     private Member(
@@ -56,7 +61,7 @@ public class Member extends BaseEntity {
             final String socialId,
             final Integer point
     ) {
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.gender = gender;
         this.ageRange = ageRange;
         this.birthday = birthday;
@@ -68,7 +73,7 @@ public class Member extends BaseEntity {
     public static Member from(final KakaoMemberResponse response) {
         final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
-                .nickname("익명의 손님" + nicknameNumberGenerator.generate())
+                .nickname("익명의손님" + nicknameNumberGenerator.generate())
                 .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
                 .ageRange(response.kakaoAccount().ageRange())
                 .birthday(response.kakaoAccount().birthday())
@@ -80,6 +85,10 @@ public class Member extends BaseEntity {
 
     public void plusPoint(final int point) {
         this.point = this.point + point;
+    }
+
+    public void changeNickname(final String nickname) {
+        this.nickname = new Nickname(nickname);
     }
 
 }

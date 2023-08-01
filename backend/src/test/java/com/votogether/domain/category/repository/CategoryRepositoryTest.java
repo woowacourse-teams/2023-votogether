@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
+import com.votogether.fixtures.CategoryFixtures;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -27,9 +28,7 @@ class CategoryRepositoryTest {
         @DisplayName("카테고리를 저장한다.")
         void save() {
             // given
-            Category category = Category.builder()
-                    .name("개발")
-                    .build();
+            Category category = CategoryFixtures.DEVELOP.get();
 
             // when
             categoryRepository.save(category);
@@ -42,16 +41,12 @@ class CategoryRepositoryTest {
         @DisplayName("같은 이름의 카테고리를 저장할 시 에러가 발생한다.")
         void saveButException() {
             // given
-            Category category1 = Category.builder()
-                    .name("개발")
-                    .build();
-            Category category2 = Category.builder()
-                    .name("개발")
-                    .build();
-            categoryRepository.save(category1);
+            Category categoryA = CategoryFixtures.DEVELOP.get();
+            Category categoryB = CategoryFixtures.DEVELOP.get();
+            categoryRepository.save(categoryA);
 
             // when & then
-            assertThatThrownBy(() -> categoryRepository.save(category2))
+            assertThatThrownBy(() -> categoryRepository.save(categoryB))
                     .isInstanceOf(DataIntegrityViolationException.class);
         }
 
@@ -65,15 +60,8 @@ class CategoryRepositoryTest {
         @DisplayName("모든 카테고리를 조회한다.")
         void findAllCategories() {
             // given
-            Category category1 = Category.builder()
-                    .name("개발")
-                    .build();
-            Category category2 = Category.builder()
-                    .name("음식")
-                    .build();
-
-            categoryRepository.save(category1);
-            categoryRepository.save(category2);
+            categoryRepository.save(CategoryFixtures.DEVELOP.get());
+            categoryRepository.save(CategoryFixtures.FOOD.get());
 
             // when
             List<Category> categories = categoryRepository.findAll();
@@ -89,10 +77,7 @@ class CategoryRepositoryTest {
         @DisplayName("아이디를 통해 카테고리를 조회한다.")
         void findById() {
             // given
-            Category category = Category.builder()
-                    .name("개발")
-                    .build();
-            categoryRepository.save(category);
+            Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
             // when
             Category findCategory = categoryRepository.findById(category.getId()).get();

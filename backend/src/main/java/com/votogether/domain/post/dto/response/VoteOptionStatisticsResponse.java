@@ -41,7 +41,7 @@ public record VoteOptionStatisticsResponse(
         THIRTY("30~39", "30대"),
         FORTY("40~49", "40대"),
         FIFTY("50~59", "50대"),
-        OVER_SIXTY("60~", "60 이상"),
+        OVER_SIXTY("60~", "60대 이상"),
         ;
 
         private final String age;

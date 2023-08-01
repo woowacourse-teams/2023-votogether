@@ -2,16 +2,52 @@ import { rest } from 'msw';
 
 import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
-export const postListHandlers = [
+export const mockPostList = [
   rest.get('/posts', (req, res, ctx) => {
-    const pages = Number(req.url.searchParams.get('pages'));
+    const page = Number(req.url.searchParams.get('page'));
 
-    if (pages === null) return;
+    if (page === null) return;
 
-    if (pages > 0) {
-      return res(ctx.status(200), ctx.json(MOCK_POST_LIST[pages]), ctx.delay(2000));
+    if (page > 0) {
+      return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
     }
 
-    return res(ctx.status(200), ctx.json(MOCK_POST_LIST[pages]));
+    return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
+  }),
+
+  rest.get('/posts/categories/:categoryId', (req, res, ctx) => {
+    const page = Number(req.url.searchParams.get('page'));
+
+    if (page === null) return;
+
+    if (page > 0) {
+      return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
+    }
+
+    return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
+  }),
+
+  rest.get('/posts/me', (req, res, ctx) => {
+    const page = Number(req.url.searchParams.get('page'));
+
+    if (page === null) return;
+
+    if (page > 0) {
+      return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
+    }
+
+    return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
+  }),
+
+  rest.get('/posts/votes/me', (req, res, ctx) => {
+    const page = Number(req.url.searchParams.get('page'));
+
+    if (page === null) return;
+
+    if (page > 0) {
+      return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
+    }
+
+    return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
   }),
 ];

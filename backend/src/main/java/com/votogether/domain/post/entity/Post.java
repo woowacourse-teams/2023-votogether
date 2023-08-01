@@ -3,7 +3,12 @@ package com.votogether.domain.post.entity;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.entity.comment.Comment;
+import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.vote.entity.Vote;
+import com.votogether.exception.BadRequestException;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,19 +18,24 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import org.hibernate.annotations.Formula;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 public class Post extends BaseEntity {
+
+    private static final Integer FIRST_OPTION_SEQUENCE = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +43,7 @@ public class Post extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member writer;
 
     @Embedded
     private PostBody postBody;
@@ -47,13 +57,22 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
 
+    @Basic(fetch = FetchType.LAZY)
+    @Formula("(select count(v.id) from Vote v where v.post_option_id in "
+            + "(select po.id from Post_Option po where po.post_id = id)"
+            + ")")
+    private long totalVoteCount;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     private Post(
-            final Member member,
+            final Member writer,
             final PostBody postBody,
             final LocalDateTime deadline
     ) {
-        this.member = member;
+        this.writer = writer;
         this.postBody = postBody;
         this.deadline = deadline;
         this.postCategories = new PostCategories();
@@ -66,24 +85,22 @@ public class Post extends BaseEntity {
 
     public void mapPostOptionsByElements(
             final List<String> postOptionContents,
-            final Post post,
-            final List<MultipartFile> images
+            final List<String> optionImageUrls
     ) {
-        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, post, images));
+        this.postOptions.addAllPostOptions(toPostOptions(postOptionContents, optionImageUrls));
     }
 
-    private List<PostOption> toPostOptionEntities(
+    private List<PostOption> toPostOptions(
             final List<String> postOptionContents,
-            final Post post,
-            final List<MultipartFile> images
+            final List<String> optionImageUrls
     ) {
-        return IntStream.range(0, postOptionContents.size())
+        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
                 .mapToObj(postOptionSequence ->
                         PostOption.of(
-                                postOptionContents.get(postOptionSequence),
-                                post,
+                                postOptionContents.get(postOptionSequence - 1),
+                                this,
                                 postOptionSequence,
-                                images.get(postOptionSequence)
+                                optionImageUrls.get(postOptionSequence - 1)
                         )
                 )
                 .toList();
@@ -93,23 +110,40 @@ public class Post extends BaseEntity {
         return postOptions.contains(postOption);
     }
 
-    public boolean isWriter(final Member member) {
-        return this.member == member;
+    public void validateDeadlineNotExceedByMaximumDeadline(final int maximumDeadline) {
+        LocalDateTime maximumDeadlineFromNow = LocalDateTime.now().plusDays(maximumDeadline);
+        if (this.deadline.isAfter(maximumDeadlineFromNow)) {
+            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
+        }
+    }
+
+    public void validateWriter(final Member member) {
+        if (!Objects.equals(this.writer.getId(), member.getId())) {
+            throw new BadRequestException(PostExceptionType.NOT_WRITER);
+        }
     }
 
     public boolean isClosed() {
         return deadline.isBefore(LocalDateTime.now());
     }
 
-    public Vote makeVote(Member member, PostOption postOption) {
+    public Vote makeVote(final Member voter, final PostOption postOption) {
         validateDeadLine();
-        validateWriter(member);
+        validateVoter(voter);
         validatePostOption(postOption);
 
-        return Vote.builder()
-                .member(member)
-                .postOption(postOption)
+        final Vote vote = Vote.builder()
+                .member(voter)
                 .build();
+
+        postOption.addVote(vote);
+        return vote;
+    }
+
+    private void validateVoter(final Member voter) {
+        if (Objects.equals(this.writer.getId(), voter.getId())) {
+            throw new BadRequestException(PostExceptionType.NOT_VOTER);
+        }
     }
 
     private void validateDeadLine() {
@@ -118,16 +152,34 @@ public class Post extends BaseEntity {
         }
     }
 
-    private void validateWriter(Member member) {
-        if (isWriter(member)) {
-            throw new IllegalArgumentException("작성자는 투표할 수 없습니다.");
-        }
-    }
-
-    private void validatePostOption(PostOption postOption) {
+    private void validatePostOption(final PostOption postOption) {
         if (!hasPostOption(postOption)) {
             throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
         }
     }
 
+    public boolean isWriter(final Member member) {
+        return Objects.equals(this.writer, member);
+    }
+
+    public void addContentImage(final String contentImageUrl) {
+        this.postBody.addContentImage(this, contentImageUrl);
+    }
+
+    public long getFinalTotalVoteCount(final Member loginMember) {
+        if (isVisibleVoteResult(loginMember)) {
+            return this.totalVoteCount;
+        }
+
+        return -1L;
+    }
+
+    public boolean isVisibleVoteResult(final Member member) {
+        return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
+    }
+
+    public void addComment(final Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
+    }
 }

@@ -1,8 +1,7 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 
-import { Category } from '@type/category';
-import { User } from '@type/user';
-
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
+import { useUserInfo } from '@hooks/query/user/useUserInfo';
 import { useDrawer } from '@hooks/useDrawer';
 
 import AddButton from '@components/common/AddButton';
@@ -17,20 +16,15 @@ import { PATH } from '@constants/path';
 
 import * as S from './style';
 
-interface PostListPageProps {
-  userInfo?: User;
-  categoryList: Category[];
-  handleFavoriteClick: (categoryId: number) => void;
-  handleLogoutClick: () => void;
-}
-
-export default function PostListPage({
-  categoryList,
-  userInfo,
-  handleFavoriteClick,
-  handleLogoutClick,
-}: PostListPageProps) {
+export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
+
+  //추후 구현 예정
+  const isLoggedIn = true; //로그인한 유저라고 가정
+  const { data: categoryList } = useCategoryList(isLoggedIn);
+  const { data: userInfo } = useUserInfo();
+
+  const handleLogoutClick = () => {};
 
   const scrollToTop = () => {
     window.scroll({ top: 0, behavior: 'smooth' });
@@ -45,8 +39,7 @@ export default function PostListPage({
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
           <Dashboard
             userInfo={userInfo}
-            categoryList={categoryList}
-            handleFavoriteClick={handleFavoriteClick}
+            categoryList={categoryList ?? []}
             handleLogoutClick={handleLogoutClick}
           />
         </Drawer>

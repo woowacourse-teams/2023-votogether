@@ -1,23 +1,76 @@
-import { getPostList } from '@api/wus/postList';
+import { getPostList } from '@api/postList';
+
+import { POST_CONTENT, SORTING, STATUS } from '@constants/post';
 
 import { MOCK_POST_LIST } from '@mocks/mockData/postList';
 
 describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확인한다.', () => {
   test('게시글 목록의 개수는 10개씩 불러온다.', async () => {
-    const data = await getPostList({ postStatus: 'all', postSorting: 'popular', pageNumber: 0 });
+    const data = await getPostList({
+      postStatus: STATUS.ALL,
+      postSorting: SORTING.POPULAR,
+      pageNumber: 0,
+      content: POST_CONTENT.ALL,
+    });
 
     expect(data.postList.length).toBe(10);
   });
 
   test('게시글 목록을 불러온다.', async () => {
-    const data = await getPostList({ postStatus: 'closed', postSorting: 'popular', pageNumber: 0 });
+    const data = await getPostList({
+      postStatus: STATUS.CLOSED,
+      postSorting: SORTING.POPULAR,
+      pageNumber: 0,
+      content: POST_CONTENT.ALL,
+    });
 
-    expect(data.postList).toEqual(MOCK_POST_LIST[0]);
+    expect(data.postList).toEqual(MOCK_POST_LIST);
   });
 
   test('게시글 페이지의 정보를 불러온다.', async () => {
-    const data = await getPostList({ postStatus: 'closed', postSorting: 'popular', pageNumber: 3 });
+    const data = await getPostList({
+      postStatus: STATUS.CLOSED,
+      postSorting: SORTING.POPULAR,
+      pageNumber: 3,
+      content: POST_CONTENT.ALL,
+    });
 
     expect(data.pageNumber).toEqual(3);
+  });
+
+  test('카테고리별 게시글 페이지의 정보를 불러온다.', async () => {
+    const data = await getPostList({
+      postStatus: STATUS.CLOSED,
+      postSorting: SORTING.POPULAR,
+      pageNumber: 0,
+      categoryId: 1,
+      content: POST_CONTENT.CATEGORY,
+    });
+
+    expect(data.postList).toEqual(MOCK_POST_LIST);
+  });
+
+  test('내가 작성한 게시글 페이지의 정보를 불러온다.', async () => {
+    const data = await getPostList({
+      postStatus: STATUS.CLOSED,
+      postSorting: SORTING.POPULAR,
+      pageNumber: 0,
+      categoryId: 1,
+      content: POST_CONTENT.MY_POST,
+    });
+
+    expect(data.postList).toEqual(MOCK_POST_LIST);
+  });
+
+  test('내가 투표한 게시글 페이지의 정보를 불러온다.', async () => {
+    const data = await getPostList({
+      postStatus: STATUS.CLOSED,
+      postSorting: SORTING.POPULAR,
+      pageNumber: 0,
+      categoryId: 1,
+      content: POST_CONTENT.MY_VOTE,
+    });
+
+    expect(data.postList).toEqual(MOCK_POST_LIST);
   });
 });

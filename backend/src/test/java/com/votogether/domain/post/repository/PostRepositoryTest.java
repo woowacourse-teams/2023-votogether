@@ -48,7 +48,7 @@ class PostRepositoryTest {
                 .build();
 
         final Post post = Post.builder()
-                .member(member)
+                .writer(member)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
@@ -60,6 +60,53 @@ class PostRepositoryTest {
 
         // then
         assertThat(savedPost).isNotNull();
+    }
+
+    @Test
+    @DisplayName("해당 멤버가 작성한 글의 개수를 확인한다.")
+    void countByMember() {
+        // given
+        Member member = Member.builder()
+                .nickname("user1")
+                .gender(Gender.MALE)
+                .socialType(SocialType.KAKAO)
+                .socialId("kakao@gmail.com")
+                .ageRange("30~39")
+                .birthday("0101")
+                .point(0)
+                .build();
+
+        PostBody postBody1 = PostBody.builder()
+                .title("title1")
+                .content("content1")
+                .build();
+
+        PostBody postBody2 = PostBody.builder()
+                .title("title2")
+                .content("content2")
+                .build();
+
+        Post post1 = Post.builder()
+                .writer(member)
+                .postBody(postBody1)
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        Post post2 = Post.builder()
+                .writer(member)
+                .postBody(postBody2)
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        memberRepository.save(member);
+        postRepository.save(post1);
+        postRepository.save(post2);
+
+        // when
+        int numberOfPosts = postRepository.countByWriter(member);
+
+        // then
+        assertThat(numberOfPosts).isEqualTo(2);
     }
 
 }

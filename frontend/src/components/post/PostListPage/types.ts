@@ -1,5 +1,9 @@
-const POST_STATUS_LIST = ['all', 'progress', 'closed'] as const;
-const POST_SORTING_LIST = ['popular', 'latest'] as const;
+import {
+  REQUEST_POST_KIND_URL,
+  REQUEST_SORTING_OPTION,
+  REQUEST_STATUS_OPTION,
+} from '@constants/post';
 
-export type PostStatus = (typeof POST_STATUS_LIST)[number];
-export type PostSorting = (typeof POST_SORTING_LIST)[number];
+export type PostStatus = keyof typeof REQUEST_STATUS_OPTION;
+export type PostSorting = keyof typeof REQUEST_SORTING_OPTION;
+export type PostRequestKind = keyof typeof REQUEST_POST_KIND_URL;

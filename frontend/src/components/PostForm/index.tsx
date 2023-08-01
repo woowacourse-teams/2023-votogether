@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
+import { useContentImage } from '@hooks/useContentImage';
 import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
+import { useWritingOption } from '@hooks/useWritingOption';
 
 import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
@@ -17,6 +19,7 @@ import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList'
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 
 import { DEADLINE_OPTION } from './constants';
+import ContentImagePart from './ContentImageSection';
 import * as S from './style';
 
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
@@ -37,9 +40,12 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     startTime,
     endTime: deadline,
     voteInfo,
+    imageUrl,
   } = data ?? {};
 
   const navigate = useNavigate();
+  const writingOptionHook = useWritingOption(voteInfo?.options);
+  const contentImageHook = useContentImage(imageUrl);
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -56,7 +62,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     setTime(formatTimeWithOption(option));
   };
 
-  const handleResetBUtton = () => {
+  const handleResetButton = () => {
     if (window.confirm('정말 초기화하시겠습니까?')) {
       const updatedTime = {
         day: 0,
@@ -71,27 +77,39 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     e.preventDefault();
     const formData = new FormData();
 
+    const imageUrlList = [
+      contentImageHook.contentImage,
+      ...writingOptionHook.optionList.map(option => option.imageUrl),
+    ];
+
     if (e.target instanceof HTMLFormElement) {
       const optionImageFileInputs =
         e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
       const fileInputList: HTMLInputElement[] = [...optionImageFileInputs];
-      const imageFileList: File[] = [];
-      fileInputList.forEach(item => {
+      const contentImageFileList: File[] = [];
+      const optionImageFileList: File[] = [];
+      fileInputList.forEach((item, index) => {
+        if (imageUrlList[index] === '') item.value = '';
         if (item.files) {
-          imageFileList.push(item.files[0]);
+          index === 0
+            ? contentImageFileList.push(item.files[0])
+            : optionImageFileList.push(item.files[0]);
         }
       });
 
-      imageFileList.map(file => formData.append('images', file));
+      contentImageFileList.map(file => formData.append('contentImages', file));
+      optionImageFileList.map(file => formData.append('optionImages', file));
 
-      const optionTextAreas = e.target.querySelectorAll('textarea[name="optionText"]');
-      const writingOptionTexts = Array.from(optionTextAreas).map((textarea: any) => textarea.value);
+      const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
+        return { content: text, imageUrl: imageUrl };
+      });
 
       const updatedPostTexts = {
         categoryIds: [1, 2], // 다중 선택 컴포넌트 구현 후 수정 예정
         title: writingTitle ?? '',
+        imageUrl: imageUrl ?? '',
         content: writingContent ?? '',
-        postOptions: writingOptionTexts,
+        postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),
         // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
         // 마감시간 옵션을 선택 안했다면 기존의 마감 시간을 유지한다.
@@ -109,6 +127,36 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     }
   };
 
+  const getDeadlineTime = ({
+    day,
+    hour,
+    minute,
+  }: {
+    day: number;
+    hour: number;
+    minute: number;
+  }) => {
+    const timeMessage = [];
+
+    if (day === 0 && hour === 0 && minute === 0) {
+      return '마감 시간을 선택해주세요';
+    }
+
+    if (day > 0) {
+      timeMessage.push(`${day}일`);
+    }
+
+    if (hour > 0) {
+      timeMessage.push(`${hour}시간`);
+    }
+
+    if (minute > 0) {
+      timeMessage.push(`${minute}분`);
+    }
+
+    return `${timeMessage.join(' ')}  후에 마감됩니다.`;
+  };
+
   return (
     <>
       <S.HeaderWrapper>
@@ -119,9 +167,9 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
           </S.HeaderButton>
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
-      <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
+      <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
-          <S.RightSide>
+          <S.LeftSide>
             <select>
               {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
               <option>카테고리1</option>
@@ -141,13 +189,14 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-          </S.RightSide>
-          <S.LeftSide>
+            <ContentImagePart contentImageHook={contentImageHook} />
+          </S.LeftSide>
+          <S.RightSide>
             <S.OptionListWrapper>
-              <WritingVoteOptionList initialOptionList={voteInfo && voteInfo.options} />
+              <WritingVoteOptionList writingOptionHook={writingOptionHook} />
             </S.OptionListWrapper>
             <S.Deadline>
-              {time.day}일 {time.hour}시 {time.minute}분 후에 마감됩니다.
+              {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
             </S.Deadline>
             {data && (
               <S.Description>
@@ -168,11 +217,18 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                   {option}
                 </SquareButton>
               ))}
-              <SquareButton type="button" onClick={openComponent} theme="blank">
-                사용자 지정
-              </SquareButton>
+              {
+                <SquareButton type="button" onClick={openComponent} theme="blank">
+                  사용자 지정
+                </SquareButton>
+              }
             </S.ButtonWrapper>
-          </S.LeftSide>
+            <S.SaveButtonWrapper>
+              <SquareButton theme="fill" type="submit" form="form-post">
+                저장
+              </SquareButton>
+            </S.SaveButtonWrapper>
+          </S.RightSide>
         </S.Wrapper>
         {isOpen && (
           <Modal size="sm" onModalClose={closeComponent}>
@@ -185,7 +241,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                 <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
                 <TimePickerOptionList time={time} setTime={setTime} />
                 <S.ResetButtonWrapper>
-                  <SquareButton onClick={handleResetBUtton} theme="blank">
+                  <SquareButton onClick={handleResetButton} type="button" theme="blank">
                     초기화
                   </SquareButton>
                 </S.ResetButtonWrapper>
@@ -193,7 +249,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
             </>
           </Modal>
         )}
-      </S.Form>
+      </form>
     </>
   );
 }

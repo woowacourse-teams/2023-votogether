@@ -12,7 +12,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;

@@ -8,35 +8,50 @@ import EditPost from '@pages/post/EditPost';
 import PostDetailPage from '@pages/post/PostDetail';
 import VoteStatisticsPage from '@pages/VoteStatistics';
 
+import { PATH } from '@constants/path';
+
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: PATH.HOME,
+    element: <Home />,
     children: [
-      { path: '', element: <Home /> },
+      { path: 'search', element: <Home /> },
+      { path: 'login', element: <Home /> },
+    ],
+  },
+  {
+    path: PATH.POST,
+    children: [
+      { path: 'write', element: <CreatePost /> },
       {
-        path: 'posts/write',
-        element: <CreatePost />,
-      },
-      {
-        path: 'posts/:postId',
-        element: <PostDetailPage />,
-      },
-      {
-        path: 'posts/write/:postId',
+        path: 'write/:postId',
         element: <EditPost />,
       },
       {
-        path: 'posts/result/:postId',
+        path: ':postId',
+        element: <PostDetailPage />,
+      },
+      {
+        path: 'result/:postId',
         element: <VoteStatisticsPage />,
       },
-      {
-        path: 'login',
-        element: <Login />,
-      },
-      {
-        path: 'auth/kakao/callback',
-        element: <Redirection />,
-      },
+      { path: 'category/:categoryId', element: <Home /> },
+    ],
+  },
+  {
+     path: 'login',
+     element: <Login />,
+  },
+  {
+     path: 'auth/kakao/callback',
+     element: <Redirection />,
+  },
+  {
+    path: PATH.USER,
+    children: [
+      { path: 'posts', element: <Home /> },
+      { path: 'votes', element: <Home /> },
+      { path: 'myPage', element: <Home /> },
     ],
   },
 ]);

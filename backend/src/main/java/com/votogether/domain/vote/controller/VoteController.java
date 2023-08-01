@@ -2,6 +2,7 @@ package com.votogether.domain.vote.controller;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.vote.service.VoteService;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +28,7 @@ public class VoteController {
     public ResponseEntity<Void> vote(
             @PathVariable final Long postId,
             @PathVariable("optionId") final Long postOptionId,
-            final Member member
+            @Auth final Member member
     ) {
         voteService.vote(member, postId, postOptionId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -41,7 +42,7 @@ public class VoteController {
             @PathVariable final Long postId,
             @RequestParam("source") final Long originPostOptionId,
             @RequestParam("target") final Long newPostOptionId,
-            final Member member
+            @Auth final Member member
     ) {
         voteService.changeVote(member, postId, originPostOptionId, newPostOptionId);
         return ResponseEntity.status(HttpStatus.OK).build();

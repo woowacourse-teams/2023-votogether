@@ -1,9 +1,9 @@
-import { type Comment } from '@type/comment';
+import { CommentResponse } from '@type/comment';
 
-export const MOCK_COMMENT_LIST: Comment[] = [];
+export const MOCK_COMMENT_LIST: CommentResponse[] = [];
 
 const commentList = [
-  'Woah, your project looks awesome! How long have you been coding for? I’m still new, but think I want to dive into React as well soon. Perhaps you can give me an insight on where I can learn React? Thanks!',
+  'Woah, your project looks awesome! How long have you been coding for? ',
   '일하기 싫어서 화장실에 앉아서 보는 중은 아닌데 아 원숭이 김종민보려고 눈뜬거 진짜웃겨ㅠㅠㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
   '진짜 다보고 나니 눈물이 ㅜㅜ 너무 참아서 눈물이 줄줄 ㅜㅜ 미쳤네요',
   'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ 생일 축하드립니다 🎉🎉🎉 뭔가 예전에 무한도전에서 했던 돌+아이 콘테스트도 조금 생각나요',
@@ -27,15 +27,15 @@ const nicknameList = [
   '뚜렷한 개성',
 ];
 
-const getMockComment = (): Comment => ({
+const getMockComment = (): CommentResponse => ({
   id: Math.floor(Math.random() * 100000),
-  content: commentList[Math.floor(Math.random() * 11)],
+  content: commentList[Math.floor(Math.random() * 12)],
   createdAt: '2023.7.27. 07:43',
   member: {
     id: Math.floor(Math.random() * 100000),
-    nickname: nicknameList[Math.floor(Math.random() * 7)],
+    nickname: nicknameList[Math.floor(Math.random() * 8)],
   },
-  isEdit: Math.random() > 0.6,
+  updatedAt: '2023.7.28. 07:43',
 });
 
 for (let index = 0; index < 50; index++) {

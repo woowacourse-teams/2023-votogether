@@ -19,3 +19,5 @@ export interface CommentResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export type CommentRequest = Pick<CommentResponse, 'content'>;

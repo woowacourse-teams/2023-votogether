@@ -6,6 +6,7 @@ import { getPost } from '@api/post';
 import { getPostStatistics } from '@api/voteResult';
 
 import IconButton from '@components/common/IconButton';
+import Layout from '@components/common/Layout';
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import VoteStatistics from '@components/VoteStatistics';
@@ -34,7 +35,7 @@ export default function VoteStatisticsPage() {
   };
 
   return (
-    <>
+    <Layout isSidebarVisible={true}>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
           <IconButton category="back" onClick={movePostDetailPage} />
@@ -73,6 +74,6 @@ export default function VoteStatisticsPage() {
           </S.OptionContainer>
         )}
       </S.Container>
-    </>
+    </Layout>
   );
 }

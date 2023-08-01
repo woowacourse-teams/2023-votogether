@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
+import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 import { useSelect } from '@hooks/useSelect';
 
 import Post from '@components/common/Post';
@@ -11,24 +11,27 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
+import { SORTING, STATUS } from '@constants/post';
+
 import * as S from './style';
 
 export default function PostList() {
-  const { categoryId } = useParams<{ categoryId?: string }>();
+  const { categoryId, content } = usePostRequestInfo();
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
     thresholds: 0.1,
   });
   const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
-    useSelect<PostStatus>('progress');
+    useSelect<PostStatus>(STATUS.PROGRESS);
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
-    useSelect<PostSorting>('latest');
+    useSelect<PostSorting>(SORTING.LATEST);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList({
+    content,
+    categoryId,
     postSorting: selectedSortingOption,
     postStatus: selectedStatusOption,
-    categoryId: Number(categoryId),
   });
 
   useEffect(() => {

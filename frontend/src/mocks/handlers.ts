@@ -1,3 +1,4 @@
+import { mockComment } from './comment';
 import { example } from './example/get';
 import { mockVoteResult } from './getVoteDetail';
 import { mockPost } from './post';
@@ -8,10 +9,11 @@ import { mockUserInfo } from './wus/userInfo';
 
 export const handlers = [
   ...example,
+  ...mockPostList,
   ...mockPost,
   ...mockVoteResult,
   ...mockVote,
-  ...mockPostList,
   ...mockCategoryHandlers,
   ...mockUserInfo,
+  ...mockComment,
 ];

@@ -13,7 +13,6 @@ import UserProfile from './UserProfile';
 interface DashboardProps {
   categoryList: Category[];
   selectedCategory?: string;
-  handleFavoriteClick: (categoryId: number) => void;
   handleLogoutClick: () => void;
   userInfo?: User;
 }
@@ -22,7 +21,6 @@ export default function Dashboard({
   userInfo,
   categoryList,
   selectedCategory = '전체',
-  handleFavoriteClick,
   handleLogoutClick,
 }: DashboardProps) {
   const favoriteCategory = categoryList.filter(category => category.isFavorite === true);
@@ -37,18 +35,8 @@ export default function Dashboard({
       </S.SelectCategoryWrapper>
       <S.ContentContainer>
         <S.CategoryToggleContainer>
-          {userInfo && (
-            <CategoryToggle
-              title="즐겨찾기"
-              categoryList={favoriteCategory}
-              handleFavoriteClick={handleFavoriteClick}
-            />
-          )}
-          <CategoryToggle
-            title="카테고리 모아보기"
-            categoryList={allCategory}
-            handleFavoriteClick={handleFavoriteClick}
-          />
+          {userInfo && <CategoryToggle title="즐겨찾기" categoryList={favoriteCategory} />}
+          <CategoryToggle title="카테고리 모아보기" categoryList={allCategory} />
         </S.CategoryToggleContainer>
       </S.ContentContainer>
       {userInfo && (

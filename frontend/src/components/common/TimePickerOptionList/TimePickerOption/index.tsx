@@ -48,7 +48,7 @@ export default function TimePickerOption({
     return () => {
       timeBox.removeEventListener('scroll', handleScroll);
     };
-  }, [handlePickTime, timeUnit]);
+  }, [currentTime, handlePickTime, option, timeUnit]);
 
   return (
     <S.TimeBox ref={timeBoxRef}>
@@ -56,7 +56,7 @@ export default function TimePickerOption({
         <S.Time
           key={index}
           ref={index === currentTime ? timeBoxChildRef : null}
-          isPicked={currentTime === index}
+          $isPicked={currentTime === index}
         >
           {index}
         </S.Time>

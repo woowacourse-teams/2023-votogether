@@ -19,22 +19,11 @@ const MOCK_CATEGORIES: Category[] = [
 ];
 
 export const Default: Story = {
-  render: () => (
-    <CategoryToggle
-      handleFavoriteClick={() => {}}
-      title="즐겨찾기"
-      categoryList={MOCK_CATEGORIES}
-    />
-  ),
+  render: () => <CategoryToggle title="즐겨찾기" categoryList={MOCK_CATEGORIES} />,
 };
 
 export const Closed: Story = {
   render: () => (
-    <CategoryToggle
-      handleFavoriteClick={() => {}}
-      title="즐겨찾기"
-      categoryList={MOCK_CATEGORIES}
-      isInitialOpen={false}
-    />
+    <CategoryToggle title="즐겨찾기" categoryList={MOCK_CATEGORIES} isInitialOpen={false} />
   ),
 };

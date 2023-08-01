@@ -36,4 +36,6 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> findAllByMember(final Member member);
 
+    int countByMember(final Member member);
+
 }

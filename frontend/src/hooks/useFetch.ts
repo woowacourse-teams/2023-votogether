@@ -1,28 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useFetch = <T>(fetchFn: () => Promise<T>) => {
-  const [data, setData] = useState<T>();
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [data, setData] = useState<T | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const refetch = useCallback(() => {
+    setIsLoading(true);
+    setData(null);
+    setErrorMessage(null);
+
     fetchFn()
       .then(res => {
         setData(res);
       })
-      .catch(rej => {
-        setErrorMessage(rej.message);
+      .catch(error => {
+        setErrorMessage(error.message);
       })
       .finally(() => {
         setIsLoading(false);
       });
+  }, [fetchFn]);
 
-    return (() => {
-      setData(undefined);
-      setIsLoading(true);
-      setErrorMessage(undefined);
-    })();
+  useEffect(() => {
+    refetch();
   }, []);
 
-  return { data, errorMessage, isLoading };
+  return { data, errorMessage, isLoading, refetch };
 };

@@ -1,9 +1,11 @@
+import { PostRequestKind, PostSorting, PostStatus } from '@components/post/PostListPage/types';
+
 export interface WrittenVoteOptionType {
   id: number;
   text: string;
   peopleCount: number;
   percent: number;
-  imageUrl?: string;
+  imageUrl: string;
 }
 
 export interface PostInfo {
@@ -11,6 +13,7 @@ export interface PostInfo {
   title: string;
   writer: { id: number; nickname: string };
   content: string;
+  imageUrl: string;
   category: { id: number; name: string }[];
   startTime: string;
   endTime: string;
@@ -24,4 +27,12 @@ export interface PostInfo {
 export interface PostList {
   pageNumber: number;
   postList: PostInfo[];
+}
+
+export interface PostListByOption {
+  content: PostRequestKind;
+  postStatus: PostStatus;
+  postSorting: PostSorting;
+  pageNumber: number;
+  categoryId?: number;
 }

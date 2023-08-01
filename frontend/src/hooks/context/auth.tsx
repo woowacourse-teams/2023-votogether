@@ -1,9 +1,11 @@
 import React, { Dispatch, SetStateAction, createContext, useState } from 'react';
 
+import { UserInfoResponse } from '@type/user';
+
 interface LoggedInfo {
   accessToken: string;
-  nickname: string;
   isLogin: boolean;
+  userInfo?: UserInfoResponse;
 }
 
 interface Auth {

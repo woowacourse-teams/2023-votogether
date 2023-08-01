@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 
+import { getCookieToken, setCookieToken } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
 
 interface AuthResponse {
   accessToken: string;
-  nickname: string;
 }
 
 const getAuthInfo = async (url: string): Promise<AuthResponse> => {
@@ -40,14 +40,12 @@ export default function Redirection() {
         .then(res => {
           if (!res) return setErrorMessage('잘못된 형식의 response');
 
-          const { accessToken, nickname } = res;
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('nickname', nickname);
+          const { accessToken } = res;
+          setCookieToken('accessToken', accessToken);
 
           setLoggedInfo({
             ...loggedInfo,
-            accessToken: accessToken,
-            nickname: nickname,
+            accessToken: getCookieToken().accessToken,
             isLogin: true,
           });
 

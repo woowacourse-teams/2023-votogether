@@ -16,6 +16,7 @@ import com.votogether.domain.post.dto.request.CommentUpdateRequest;
 import com.votogether.domain.post.dto.response.CommentResponse;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.service.PostCommentService;
+import com.votogether.exception.GlobalExceptionHandler;
 import com.votogether.fixtures.MemberFixtures;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
@@ -36,7 +37,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @WebMvcTest(PostCommentController.class)
 class PostCommentControllerTest {
@@ -51,9 +52,12 @@ class PostCommentControllerTest {
     TokenProcessor tokenProcessor;
 
     @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext) {
-        RestAssuredMockMvc.standaloneSetup(new PostCommentController(postCommentService));
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
+    void setUp() {
+        RestAssuredMockMvc.standaloneSetup(
+                MockMvcBuilders
+                        .standaloneSetup(new PostCommentController(postCommentService))
+                        .setControllerAdvice(GlobalExceptionHandler.class)
+        );
     }
 
     @Nested
@@ -185,7 +189,7 @@ class PostCommentControllerTest {
 
             // when
             List<CommentResponse> response = RestAssuredMockMvc.given().log().all()
-                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    //.headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                     .when().get("/posts/{postId}/comments", 1L)
                     .then().log().all()
                     .status(HttpStatus.OK)

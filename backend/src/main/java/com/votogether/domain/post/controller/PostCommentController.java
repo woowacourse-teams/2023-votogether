@@ -58,7 +58,11 @@ public class PostCommentController {
     @Operation(summary = "게시글 댓글 목록 조회", description = "게시글 댓글 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 댓글 목록 조회 성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 게시글",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            )
     })
     @GetMapping("/{postId}/comments")
     public ResponseEntity<List<CommentResponse>> getComments(@PathVariable final Long postId) {

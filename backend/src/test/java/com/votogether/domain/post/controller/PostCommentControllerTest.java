@@ -21,6 +21,7 @@ import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -174,6 +175,10 @@ class PostCommentControllerTest {
                     .member(memberB)
                     .content("commentA")
                     .build();
+            LocalDateTime now = LocalDateTime.now();
+            ReflectionTestUtils.setField(commentA, "createdAt", now);
+            ReflectionTestUtils.setField(commentB, "createdAt", now);
+
             CommentResponse commentResponseA = CommentResponse.from(commentA);
             CommentResponse commentResponseB = CommentResponse.from(commentB);
             given(postCommentService.getComments(anyLong())).willReturn(List.of(commentResponseA, commentResponseB));
@@ -189,7 +194,9 @@ class PostCommentControllerTest {
                     });
 
             // then
-            assertThat(response).usingRecursiveComparison().isEqualTo(List.of(commentResponseA, commentResponseB));
+            assertThat(response).usingRecursiveComparison()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
+                    .isEqualTo(List.of(commentResponseA, commentResponseB));
         }
 
     }

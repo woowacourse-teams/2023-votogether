@@ -24,13 +24,18 @@ public record PostDetailResponse(
         final Member writer = post.getWriter();
         final PostBody postBody = post.getPostBody();
         final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
+        final StringBuilder contentImageUrl = new StringBuilder();
+
+        if (!contentImages.isEmpty()) {
+            contentImageUrl.append(contentImages.get(0).getImageUrl());
+        }
 
         return new PostDetailResponse(
                 post.getId(),
                 WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
                 postBody.getTitle(),
                 postBody.getContent(),
-                contentImages.get(0).getImageUrl(),
+                contentImageUrl.toString(),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),

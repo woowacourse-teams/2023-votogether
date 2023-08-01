@@ -14,16 +14,18 @@ export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
   };
 };
 
+const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
+
 export const getUserInfo = async () => {
-  const userInfo = await getFetch<UserInfoResponse>('/members/me');
+  const userInfo = await getFetch<UserInfoResponse>(`${BASE_URL}/members/me`);
 
   return transformUserInfoResponse(userInfo);
 };
 
 export const modifyNickname = async (nickname: string) => {
-  await patchFetch<ModifyNicknameRequest>('/members/me/nickname', { nickname });
+  await patchFetch<ModifyNicknameRequest>(`${BASE_URL}/members/me/nickname`, { nickname });
 };
 
 export const cancelMembership = async () => {
-  await deleteFetch('/members/me/delete');
+  await deleteFetch(`${BASE_URL}/members/me/delete`);
 };

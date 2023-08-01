@@ -55,7 +55,7 @@ export const putFetch = async <T, R>(url: string, body: T): Promise<R | void> =>
   return data;
 };
 
-export const patchFetch = async <T>(url: string, body: T) => {
+export const patchFetch = async <T>(url: string, body?: T) => {
   const response = await fetch(url, {
     method: 'PATCH',
     headers,

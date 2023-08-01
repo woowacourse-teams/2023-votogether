@@ -1,19 +1,20 @@
-package com.votogether.domain.post.dto.response;
+package com.votogether.domain.post.dto.response.vote;
 
+import com.votogether.domain.post.dto.response.PostOptionResponse;
 import java.util.List;
 
-public record VoteDetailResponse(
+public record VoteResponse(
         long selectedOptionId,
         long totalVoteCount,
-        List<PostOptionDetailResponse> options
+        List<PostOptionResponse> options
 ) {
 
-    public static VoteDetailResponse of(
+    public static VoteResponse of(
             final long selectedOptionId,
             final long finalTotalVoteCount,
-            final List<PostOptionDetailResponse> options
+            final List<PostOptionResponse> options
     ) {
-        return new VoteDetailResponse(selectedOptionId, finalTotalVoteCount, options);
+        return new VoteResponse(selectedOptionId, finalTotalVoteCount, options);
     }
 
     @Override

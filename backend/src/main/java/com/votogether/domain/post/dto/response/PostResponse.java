@@ -1,6 +1,7 @@
 package com.votogether.domain.post.dto.response;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.dto.response.vote.VoteResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;

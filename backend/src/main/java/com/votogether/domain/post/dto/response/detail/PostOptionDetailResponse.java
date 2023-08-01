@@ -1,4 +1,4 @@
-package com.votogether.domain.post.dto.response;
+package com.votogether.domain.post.dto.response.detail;
 
 import com.votogether.domain.post.entity.PostOption;
 

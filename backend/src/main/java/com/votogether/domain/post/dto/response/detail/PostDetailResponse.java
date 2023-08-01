@@ -1,6 +1,8 @@
-package com.votogether.domain.post.dto.response;
+package com.votogether.domain.post.dto.response.detail;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.dto.response.CategoryResponse;
+import com.votogether.domain.post.dto.response.WriterResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;

@@ -4,6 +4,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
+import com.votogether.domain.post.entity.PostContentImage;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +13,7 @@ public record PostDetailResponse(
         WriterResponse writer,
         String title,
         String content,
+        String imageUrl,
         List<CategoryResponse> categories,
         LocalDateTime createdAt,
         LocalDateTime deadline,
@@ -21,12 +23,14 @@ public record PostDetailResponse(
     public static PostDetailResponse of(final Post post, final Member loginMember) {
         final Member writer = post.getWriter();
         final PostBody postBody = post.getPostBody();
+        final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
 
         return new PostDetailResponse(
                 post.getId(),
                 WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
                 postBody.getTitle(),
                 postBody.getContent(),
+                contentImages.get(0).getImageUrl(),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),

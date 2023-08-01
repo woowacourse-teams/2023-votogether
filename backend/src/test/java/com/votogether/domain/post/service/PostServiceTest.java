@@ -20,13 +20,19 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.CategoryResponse;
+import com.votogether.domain.post.dto.response.PostDetailResponse;
+import com.votogether.domain.post.dto.response.PostOptionDetailResponse;
 import com.votogether.domain.post.dto.response.PostResponse;
+import com.votogether.domain.post.dto.response.VoteDetailResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
+import com.votogether.domain.post.dto.response.WriterResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
@@ -39,6 +45,7 @@ import com.votogether.fixtures.MemberFixtures;
 import jakarta.persistence.EntityManager;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -352,7 +359,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
+    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 조회한다")
     void getAllPostBySortTypeAndClosingType() {
         // given
         Member writer = MALE_30.get();
@@ -466,6 +473,73 @@ class PostServiceTest {
                 () -> assertThat(secondResponse.voteInfo().options()).hasSize(2),
                 () -> assertThat(secondResponse.voteInfo().totalVoteCount()).isEqualTo(31)
         );
+    }
+
+    @Test
+    @DisplayName("한 게시글의 상세를 조회한다.")
+    void getPost() throws IOException {
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3);
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptionContents(List.of("피자", "치킨"))
+                .deadline(deadline)
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file1, file2));
+
+        // when
+        PostDetailResponse response = postService.getPostById(savedPostId, member);
+
+        // then
+        List<CategoryResponse> categories = response.categories();
+        WriterResponse writer = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+
+        assertAll(
+                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(response.deadline()).isEqualTo(deadline),
+                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
+                () -> assertThat(writer.id()).isEqualTo(member.getId()),
+                () -> assertThat(writer.nickname()).isEqualTo("user7"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(),
+                () -> assertThat(options).hasSize(2),
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
+        );
+    }
+
+    @Test
+    @DisplayName("존재하지 않은 게시글을 가져오려 할 시, 예외를 던진다.")
+    void throwExceptionNotFoundPost() {
+        // given
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        // when, then
+        assertThatThrownBy(() -> postService.getPostById(1L, member))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
     }
 
 }

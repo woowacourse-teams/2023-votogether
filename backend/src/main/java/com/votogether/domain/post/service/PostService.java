@@ -5,6 +5,7 @@ import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostDetailResponse;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -192,4 +193,10 @@ public class PostService {
         return ageRange;
     }
 
+    public PostDetailResponse getPostById(final Long postId, final Member loginMember) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+
+        return PostDetailResponse.of(post, loginMember);
+    }
 }

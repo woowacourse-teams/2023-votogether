@@ -2,6 +2,7 @@ package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.response.PostDetailResponse;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.PostClosingType;
@@ -35,7 +36,7 @@ public class PostController {
 
     @Operation(summary = "게시글 작성", description = "게시글을 저장한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "게시물 생성되었습니다."),
+            @ApiResponse(responseCode = "201", description = "게시글 생성 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -48,9 +49,9 @@ public class PostController {
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
-    @Operation(summary = "게시글 조회", description = "게시글을 조회한다.")
+    @Operation(summary = "전체 게시글 조회", description = "게시글을 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게시글을 조회했습니다."),
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @GetMapping
@@ -64,6 +65,20 @@ public class PostController {
                 postService.getAllPostBySortTypeAndClosingType(loginMember, page, postClosingType, postSortType);
 
         return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "게시글 상세 조회", description = "한 게시글의 상세를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")
+    })
+    @GetMapping("{postId}")
+    public ResponseEntity<PostDetailResponse> getPost(
+            @PathVariable final Long postId,
+            @Auth final Member loginMember
+    ) {
+        final PostDetailResponse response = postService.getPostById(postId, loginMember);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "게시글 투표 통계 조회", description = "게시글 투표에 대한 전체 통계를 조회한다.")

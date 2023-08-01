@@ -18,10 +18,14 @@ export default function UserReportModal({ handleCancelClick }: UserReportModalPr
   return (
     <CommentModal
       title="유저 신고하기"
-      primaryText="신고"
-      secondaryText="취소"
-      primaryClick={() => {}}
-      secondaryClick={handleCancelClick}
+      primaryButton={{
+        text: '신고',
+        handleClick: () => {},
+      }}
+      secondaryButton={{
+        text: '취소',
+        handleClick: handleCancelClick,
+      }}
     >
       <Select<UserReportMessage>
         aria-label="유저 신고 방법 선택"

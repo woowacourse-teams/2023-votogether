@@ -18,10 +18,14 @@ export default function CommentReportModal({ handleCancelClick }: CommentReportM
   return (
     <CommentModal
       title="댓글 신고하기"
-      primaryText="신고"
-      secondaryText="취소"
-      primaryClick={() => {}}
-      secondaryClick={handleCancelClick}
+      primaryButton={{
+        text: '신고',
+        handleClick: () => {},
+      }}
+      secondaryButton={{
+        text: '취소',
+        handleClick: handleCancelClick,
+      }}
     >
       <Select<CommentReportMessage>
         aria-label="댓글 신고 방법 선택"

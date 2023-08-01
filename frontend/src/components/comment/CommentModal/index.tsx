@@ -4,22 +4,26 @@ import SquareButton from '@components/common/SquareButton';
 
 import * as S from './style';
 
+interface ButtonProps {
+  text: string;
+  handleClick: () => void;
+}
+
 interface CommentModalProps extends PropsWithChildren {
   title: string;
-  secondaryText: string;
-  primaryText: string;
-  primaryClick: () => void;
-  secondaryClick: () => void;
+  primaryButton: ButtonProps;
+  secondaryButton: ButtonProps;
 }
 
 export default function CommentModal({
   title,
-  primaryText,
-  primaryClick,
-  secondaryText,
-  secondaryClick,
+  primaryButton,
+  secondaryButton,
   children,
 }: CommentModalProps) {
+  const { text: primaryText, handleClick: primaryClick } = primaryButton;
+  const { text: secondaryText, handleClick: secondaryClick } = secondaryButton;
+
   return (
     <S.Container>
       <S.ModalContainer>

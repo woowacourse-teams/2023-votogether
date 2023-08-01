@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { COMMENT_MENU } from '@constants/comment';
+import { COMMENT_MENU } from '../../constants';
 
 import CommentMenu from '.';
 

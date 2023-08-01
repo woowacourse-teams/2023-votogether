@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 
-import { type CommentAction, type CommentMenuItem } from '@type/comment';
+import { type CommentAction, type CommentMenuItem } from '@components/comment/CommentList/types';
 
 import * as S from './style';
 

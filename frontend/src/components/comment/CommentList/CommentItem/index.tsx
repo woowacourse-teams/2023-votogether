@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { type Comment, type CommentAction, type CommentUser } from '@type/comment';
+import { Comment } from '@type/comment';
 
 import { useToggle } from '@hooks/useToggle';
 
@@ -9,9 +9,10 @@ import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
 import CommentReportModal from '@components/report/CommentReportModal';
 import UserReportModal from '@components/report/UserReportModal';
 
-import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '@constants/comment';
-
 import ellipsis from '@assets/ellipsis-horizontal.svg';
+
+import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '../constants';
+import { type CommentAction, type CommentUser } from '../types';
 
 import CommentMenu from './CommentMenu';
 import * as S from './style';

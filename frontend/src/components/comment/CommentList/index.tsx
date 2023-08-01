@@ -37,7 +37,7 @@ export default function CommentList({
       return COMMENT_USER.WRITER;
     }
 
-    return COMMENT_USER.NORMAL;
+    return COMMENT_USER.NOT_WRITER;
   };
 
   return (

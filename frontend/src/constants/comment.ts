@@ -4,7 +4,7 @@ export const COMMENT_MAX_LENGTH = 200;
 
 export const COMMENT_USER = {
   GUEST: 'GUEST',
-  NORMAL: 'NORMAL',
+  NOT_WRITER: 'NOT_WRITER',
   WRITER: 'WRITER',
 } as const;
 
@@ -16,13 +16,13 @@ export const COMMENT_ACTION = {
 } as const;
 
 export const COMMENT_USER_MENU: Record<CommentUser, CommentMenu> = {
-  [COMMENT_USER.GUEST]: COMMENT_USER.NORMAL,
-  [COMMENT_USER.NORMAL]: COMMENT_USER.NORMAL,
+  [COMMENT_USER.GUEST]: COMMENT_USER.NOT_WRITER,
+  [COMMENT_USER.NOT_WRITER]: COMMENT_USER.NOT_WRITER,
   [COMMENT_USER.WRITER]: COMMENT_USER.WRITER,
 } as const;
 
 export const COMMENT_MENU: Record<CommentMenu, CommentMenuItem[]> = {
-  [COMMENT_USER.NORMAL]: [
+  [COMMENT_USER.NOT_WRITER]: [
     { color: 'black', content: '유저 신고', action: COMMENT_ACTION.USER_REPORT },
     { color: 'black', content: '댓글 신고', action: COMMENT_ACTION.COMMENT_REPORT },
   ],

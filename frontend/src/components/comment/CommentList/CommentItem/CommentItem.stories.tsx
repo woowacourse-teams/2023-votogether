@@ -22,5 +22,5 @@ export const WriterUser: Story = {
 };
 
 export const NotWriterUser: Story = {
-  render: () => <CommentItem comment={MOCK_COMMENT_LIST[0]} userType={COMMENT_USER.NORMAL} />,
+  render: () => <CommentItem comment={MOCK_COMMENT_LIST[0]} userType={COMMENT_USER.NOT_WRITER} />,
 };

@@ -38,5 +38,6 @@ export const Menu = styled.button<{ $color: CommentMenuItem['color'] }>`
 
   &:last-child {
     border-radius: 0 0 6px 6px;
+    border-bottom: none;
   }
 `;

@@ -16,5 +16,5 @@ export const WriterUser: Story = {
 };
 
 export const NotWriterUser: Story = {
-  render: () => <CommentMenu menuList={COMMENT_MENU.NORMAL} handleMenuClick={() => {}} />,
+  render: () => <CommentMenu menuList={COMMENT_MENU.NOT_WRITER} handleMenuClick={() => {}} />,
 };

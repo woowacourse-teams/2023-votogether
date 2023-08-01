@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { MOCK_COMMENT_LIST } from '@mocks/mockData/comment';
+import { MOCK_TRANSFORMED_COMMENT_LIST } from '@mocks/mockData/comment';
 
 import CommentTextForm from '.';
 
@@ -17,6 +17,9 @@ export const InitForm: Story = {
 
 export const EditForm: Story = {
   render: () => (
-    <CommentTextForm initialComment={MOCK_COMMENT_LIST[0].content} handleCancelClick={() => {}} />
+    <CommentTextForm
+      initialComment={MOCK_TRANSFORMED_COMMENT_LIST[0].content}
+      handleCancelClick={() => {}}
+    />
   ),
 };

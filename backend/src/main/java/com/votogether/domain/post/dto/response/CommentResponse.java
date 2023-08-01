@@ -10,12 +10,16 @@ import java.time.LocalDateTime;
 public record CommentResponse(
         @Schema(description = "댓글 ID", example = "1")
         Long id,
+
         CommentMember member,
+
         @Schema(description = "댓글 내용", example = "재밌어요!")
         String content,
+
         @Schema(description = "댓글 작성시각", example = "2023-08-01 10:56")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
+
         @Schema(description = "댓글 수정시각", example = "2023-08-01 13:56")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime updatedAt

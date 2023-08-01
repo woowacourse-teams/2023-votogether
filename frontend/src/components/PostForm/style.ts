@@ -41,11 +41,11 @@ export const Wrapper = styled.div`
 export const LeftSide = styled.div<{ $hasImage: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 25px 40px 400px ${props => (props.$hasImage ? '170px' : '50px')};
+  grid-template-rows: 35px 40px 400px ${props => (props.$hasImage ? '170px' : '50px')};
   gap: 5px;
 
   @media (min-width: ${theme.breakpoint.md}) {
-    grid-template-rows: 30px 50px auto ${props => (props.$hasImage ? '180px' : '60px')};
+    grid-template-rows: 40px 50px auto ${props => (props.$hasImage ? '180px' : '60px')};
   }
 `;
 

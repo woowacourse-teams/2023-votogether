@@ -6,17 +6,21 @@ import { useNavigate } from 'react-router-dom';
 import { PostInfo } from '@type/post';
 
 import { useContentImage } from '@hooks/useContentImage';
+import { useMultiSelect } from '@hooks/useMultiSelect';
 import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
 import { useWritingOption } from '@hooks/useWritingOption';
 
 import Modal from '@components/common/Modal';
+import MultiSelect from '@components/common/MultiSelect';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
+
+import { MOCK_CATEGORY_LIST } from '@mocks/mockData/categoryList';
 
 import { DEADLINE_OPTION } from './constants';
 import ContentImagePart from './ContentImageSection';
@@ -31,6 +35,7 @@ interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
 
 const MAX_TITLE_LENGTH = 100;
 const MAX_CONTENT_LENGTH = 1000;
+const CATEGORY_COUNT_LIMIT = 3;
 
 export default function PostForm({ data, mutate, isError, error }: PostFormProps) {
   const {
@@ -157,6 +162,11 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     return `${timeMessage.join(' ')}  후에 마감됩니다.`;
   };
 
+  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
+    categoryIds ?? [],
+    CATEGORY_COUNT_LIMIT
+  );
+
   return (
     <>
       <S.HeaderWrapper>
@@ -170,11 +180,13 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
-            <select>
-              {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
-              <option>카테고리1</option>
-              <option>카테고리2</option>
-            </select>
+            <MultiSelect
+              selectedOptionList={selectedOptionList}
+              optionList={MOCK_CATEGORY_LIST}
+              handleOptionAdd={handleOptionAdd}
+              handleOptionDelete={handleOptionDelete}
+              placeholder="카테고리를 선택해주세요."
+            />
             <S.Title
               value={writingTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e, 100)}

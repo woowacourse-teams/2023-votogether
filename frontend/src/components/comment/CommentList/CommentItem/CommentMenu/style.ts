@@ -4,7 +4,7 @@ import { CommentMenuItem } from '@type/comment';
 
 const COLOR_PALETTE: Record<CommentMenuItem['color'], string> = {
   red: 'var(--primary-color)',
-  black: 'var(--dark-gray)',
+  black: '#727171',
 };
 
 export const Container = styled.div`
@@ -33,13 +33,10 @@ export const Menu = styled.button<{ $color: CommentMenuItem['color'] }>`
   }
 
   &:first-child {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    border-radius: 6px 6px 0 0;
   }
 
   &:last-child {
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-bottom: none;
+    border-radius: 0 0 6px 6px;
   }
 `;

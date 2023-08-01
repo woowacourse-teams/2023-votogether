@@ -1,6 +1,7 @@
 package com.votogether.domain.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Gender;
@@ -9,7 +10,9 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +105,36 @@ class PostRepositoryTest {
 
         // then
         assertThat(numberOfPosts).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("회원이 작성한 글을 전부 반환한다.")
+    void findAllByWriter() {
+        // given
+        Member member = MemberFixtures.MALE_30.get();
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(member)
+                .postBody(postBody)
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .build();
+
+        memberRepository.save(member);
+        postRepository.save(post);
+
+        // when
+        List<Post> posts = postRepository.findAllByWriter(member);
+
+        // then
+        assertAll(
+                () -> assertThat(posts).hasSize(1),
+                () -> assertThat(posts.get(0)).usingRecursiveComparison().isEqualTo(post)
+        );
     }
 
 }

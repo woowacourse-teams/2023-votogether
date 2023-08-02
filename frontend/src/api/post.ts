@@ -30,8 +30,8 @@ export const getPost = async (postId: number): Promise<PostInfo> => {
   return await getFetch<PostInfo>(`/posts/${postId}`);
 };
 
-export const createPost = async (token: string, newPost: FormData) => {
-  return await multiPostFetch(token, `${BASE_URL}/posts`, newPost);
+export const createPost = async (newPost: FormData) => {
+  return await multiPostFetch(`${BASE_URL}/posts`, newPost);
 };
 
 export const editPost = async (postId: number, updatedPost: FormData) => {

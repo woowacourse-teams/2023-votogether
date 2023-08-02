@@ -57,7 +57,7 @@ const MOCK_DATA: PostInfo = {
 };
 
 export const NewPost = () => {
-  const { mutate, isError, error } = useCreatePost('');
+  const { mutate, isError, error } = useCreatePost();
   return (
     <>
       <PostForm mutate={mutate} isError={isError} error={error} />

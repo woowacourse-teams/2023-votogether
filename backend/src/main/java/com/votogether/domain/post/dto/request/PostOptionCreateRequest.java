@@ -11,6 +11,8 @@ public record PostOptionCreateRequest(
         @Schema(description = "선택지 내용", example = "content")
         @NotBlank(message = "해당 선택지의 내용을 입력해주세요.")
         @Length(max = 50, message = "선택지의 내용은 최대 50자까지 입력 가능합니다.")
-        String content
+        String content,
+
+        String imageUrl
 ) {
 }

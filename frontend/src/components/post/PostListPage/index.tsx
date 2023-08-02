@@ -14,6 +14,8 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
+import { scrollToTop } from '@utils/scrollToTop';
+
 import * as S from './style';
 
 export default function PostListPage() {
@@ -24,10 +26,6 @@ export default function PostListPage() {
   const { data: categoryList } = useCategoryList(isLoggedIn);
 
   const handleLogoutClick = () => {};
-
-  const scrollToTop = () => {
-    window.scroll({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <S.Container>

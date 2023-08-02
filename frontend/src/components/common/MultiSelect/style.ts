@@ -7,6 +7,10 @@ export const Container = styled.div`
 
   font: var(--text-caption);
 
+  & > * {
+    background-color: var(--white);
+  }
+
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-body);
   }

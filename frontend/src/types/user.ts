@@ -18,6 +18,7 @@ export interface ModifyNicknameRequest {
   nickname: string;
 }
 
+
 export interface LoggedInfo {
   accessToken: string;
   isLogin: boolean;

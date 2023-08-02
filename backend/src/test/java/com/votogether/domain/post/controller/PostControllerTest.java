@@ -2,9 +2,7 @@ package com.votogether.domain.post.controller;
 
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -17,8 +15,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
-import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
@@ -295,6 +293,22 @@ class PostControllerTest {
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(response);
+    }
+
+    @Test
+    @DisplayName("게시글을 조기 마감 합니다")
+    void postClosedEarly() {
+        // given
+        long postId = 1L;
+
+        // when
+        ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .when().patch("/posts/{postId}/close", postId)
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
 }

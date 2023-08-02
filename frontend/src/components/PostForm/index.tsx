@@ -6,17 +6,23 @@ import { useNavigate } from 'react-router-dom';
 import { PostInfo } from '@type/post';
 
 import { useContentImage } from '@hooks/useContentImage';
+import { useMultiSelect } from '@hooks/useMultiSelect';
 import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
 import { useWritingOption } from '@hooks/useWritingOption';
 
 import Modal from '@components/common/Modal';
+import MultiSelect from '@components/common/MultiSelect';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
+import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
+
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
+
+import { MOCK_CATEGORY_LIST } from '@mocks/mockData/categoryList';
 
 import { DEADLINE_OPTION } from './constants';
 import ContentImagePart from './ContentImageSection';
@@ -31,6 +37,7 @@ interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
 
 const MAX_TITLE_LENGTH = 100;
 const MAX_CONTENT_LENGTH = 1000;
+const CATEGORY_COUNT_LIMIT = 3;
 
 export default function PostForm({ data, mutate, isError, error }: PostFormProps) {
   const {
@@ -157,6 +164,11 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     return `${timeMessage.join(' ')}  후에 마감됩니다.`;
   };
 
+  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
+    categoryIds ?? [],
+    CATEGORY_COUNT_LIMIT
+  );
+
   return (
     <>
       <S.HeaderWrapper>
@@ -169,60 +181,71 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       </S.HeaderWrapper>
       <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
-          <S.LeftSide>
-            <select>
-              {categoryIds && categoryIds.map(({ id, name }) => <option key={id}>{name}✅</option>)}
-              <option>카테고리1</option>
-              <option>카테고리2</option>
-            </select>
+          <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
+            <MultiSelect
+              selectedOptionList={selectedOptionList}
+              optionList={MOCK_CATEGORY_LIST}
+              handleOptionAdd={handleOptionAdd}
+              handleOptionDelete={handleOptionDelete}
+              placeholder="카테고리를 선택해주세요."
+            />
             <S.Title
               value={writingTitle}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTitleChange(e, 100)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleTitleChange(e, POST_TITLE_MAX_LENGTH)
+              }
               placeholder="제목을 입력해주세요"
               maxLength={MAX_TITLE_LENGTH}
               required
             />
             <S.Content
               value={writingContent}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange(e, 1000)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                handleContentChange(e, POST_DESCRIPTION_MAX_LENGTH)
+              }
               placeholder="내용을 입력해주세요"
               maxLength={MAX_CONTENT_LENGTH}
               required
             />
-            <ContentImagePart contentImageHook={contentImageHook} />
+            <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>
+              <ContentImagePart size="lg" contentImageHook={contentImageHook} />
+            </S.ContentImagePartWrapper>
           </S.LeftSide>
           <S.RightSide>
             <S.OptionListWrapper>
               <WritingVoteOptionList writingOptionHook={writingOptionHook} />
             </S.OptionListWrapper>
             <S.Deadline>
-              {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
+              <S.DeadlineDescription>
+                {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
+                {data && (
+                  <S.Description>
+                    글 작성일({startTime})로부터 하루 이후 (
+                    {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택
+                    가능합니다.
+                  </S.Description>
+                )}
+                {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
+              </S.DeadlineDescription>
+              <S.ButtonWrapper>
+                {DEADLINE_OPTION.map(option => (
+                  <SquareButton
+                    aria-label={option}
+                    key={option}
+                    type="button"
+                    onClick={() => handleDeadlineButtonClick(option)}
+                    theme="blank"
+                  >
+                    {option}
+                  </SquareButton>
+                ))}
+                {
+                  <SquareButton type="button" onClick={openComponent} theme="blank">
+                    사용자 지정
+                  </SquareButton>
+                }
+              </S.ButtonWrapper>
             </S.Deadline>
-            {data && (
-              <S.Description>
-                글 작성일({startTime})로부터 하루 이후 (
-                {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택 가능합니다.
-              </S.Description>
-            )}
-            {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
-            <S.ButtonWrapper>
-              {DEADLINE_OPTION.map(option => (
-                <SquareButton
-                  aria-label={option}
-                  key={option}
-                  type="button"
-                  onClick={() => handleDeadlineButtonClick(option)}
-                  theme="blank"
-                >
-                  {option}
-                </SquareButton>
-              ))}
-              {
-                <SquareButton type="button" onClick={openComponent} theme="blank">
-                  사용자 지정
-                </SquareButton>
-              }
-            </S.ButtonWrapper>
             <S.SaveButtonWrapper>
               <SquareButton theme="fill" type="submit" form="form-post">
                 저장

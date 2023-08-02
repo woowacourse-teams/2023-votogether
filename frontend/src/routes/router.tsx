@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
 import Home from '@pages/Home';
+import MyInfo from '@pages/MyInfo';
 import CreatePost from '@pages/post/CreatePost';
 import EditPost from '@pages/post/EditPost';
 import PostDetailPage from '@pages/post/PostDetail';
@@ -46,9 +47,9 @@ const router = createBrowserRouter([
   {
     path: PATH.USER,
     children: [
+      { path: 'myPage', element: <MyInfo /> },
       { path: 'posts', element: <Home /> },
       { path: 'votes', element: <Home /> },
-      { path: 'myPage', element: <Home /> },
     ],
   },
 ]);

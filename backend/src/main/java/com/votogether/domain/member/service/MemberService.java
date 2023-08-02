@@ -43,7 +43,7 @@ public class MemberService {
         final int numberOfVotes = voteRepository.countByMember(member);
 
         return new MemberInfoResponse(
-                member.getNickname().getValue(),
+                member.getNickname(),
                 member.getPoint(),
                 numberOfPosts,
                 numberOfVotes

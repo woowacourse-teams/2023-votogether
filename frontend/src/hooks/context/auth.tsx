@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, createContext, useEffect, useState } f
 
 import { LoggedInfo } from '@type/user';
 
-import { useUserLogin } from '@hooks/query/useUser';
+import { useUserInfo } from '@hooks/query/user/useUserInfo';
 
 import { getCookieToken } from '@utils/cookie';
 
@@ -20,7 +20,7 @@ export const AuthContext = createContext({} as Auth);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loggedInfo, setLoggedInfo] = useState(notLoggedInfo);
-  const { data: userInfo } = useUserLogin(loggedInfo.accessToken);
+  const { data: userInfo } = useUserInfo(loggedInfo.isLogin);
   if (userInfo) setLoggedInfo(origin => ({ ...origin, userInfo }));
 
   useEffect(() => {

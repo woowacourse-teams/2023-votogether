@@ -1,5 +1,7 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { AuthContext } from '@hooks/context/auth';
 
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
@@ -15,8 +17,9 @@ interface LayoutProps extends PropsWithChildren {
 export default function Layout({ children, isSidebarVisible }: LayoutProps) {
   const navigate = useNavigate();
 
-  //추후 구현 예정
-  const userInfo = undefined;
+  const { loggedInfo } = useContext(AuthContext);
+
+  const userInfo = loggedInfo.userInfo;
   const categoryList = MOCK_FAVORITE_CATEGORIES;
   const selectedCategory = undefined;
   const handleLogoutClick = () => {};

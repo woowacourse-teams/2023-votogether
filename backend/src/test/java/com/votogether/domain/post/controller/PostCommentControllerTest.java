@@ -18,6 +18,7 @@ import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.exception.GlobalExceptionHandler;
 import com.votogether.fixtures.MemberFixtures;
+import com.votogether.global.jwt.JwtAuthenticationFilter;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.common.mapper.TypeRef;
@@ -57,6 +58,7 @@ class PostCommentControllerTest {
                 MockMvcBuilders
                         .standaloneSetup(new PostCommentController(postCommentService))
                         .setControllerAdvice(GlobalExceptionHandler.class)
+                        .addFilters(new JwtAuthenticationFilter(tokenProcessor))
         );
     }
 

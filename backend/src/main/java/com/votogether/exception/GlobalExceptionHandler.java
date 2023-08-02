@@ -1,8 +1,8 @@
 package com.votogether.exception;
 
+import com.votogether.domain.post.exception.PostExceptionType;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 
 @Slf4j
 @RestControllerAdvice
@@ -62,6 +63,17 @@ public class GlobalExceptionHandler {
         log.warn("[" + e.getClass() + "] : " + e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ExceptionResponse.from(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleMultipartException(final MultipartException e) {
+        System.out.println("================================");
+        System.out.println("GlobalExceptionHandler.handleMultipartException");
+        e.printStackTrace();
+
+        log.warn("[" + e.getClass() + "] : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ExceptionResponse.from(new BadRequestException(PostExceptionType.WRONG_IMAGE)));
     }
 
 }

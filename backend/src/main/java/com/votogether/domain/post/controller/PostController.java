@@ -47,7 +47,6 @@ public class PostController {
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member member
     ) {
-        System.out.println("request = " + request);
         final long postId = postService.save(request, member, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }

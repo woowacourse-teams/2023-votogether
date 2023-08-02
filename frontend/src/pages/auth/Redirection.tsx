@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { AuthResponse } from '@type/auth';
 
@@ -16,6 +16,7 @@ export default function Redirection() {
   const { loggedInfo, setLoggedInfo } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [params] = useSearchParams();
 
   const navigate = useNavigate();
 
@@ -24,7 +25,6 @@ export default function Redirection() {
       setIsLoading(true);
       setErrorMessage('');
 
-      const params = new URL(document.location.toString()).searchParams;
       const code = params.get('code');
       const REGISTER_API_URL = `${process.env.VOTOGETHER_BASE_URL}/auth/kakao/callback?code=${code}`;
 

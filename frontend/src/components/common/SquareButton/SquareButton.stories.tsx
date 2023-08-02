@@ -17,3 +17,7 @@ export const ColorBlank: Story = {
 export const ColorFill: Story = {
   render: () => <SquareButton theme="fill">버 튼</SquareButton>,
 };
+
+export const ColorGray: Story = {
+  render: () => <SquareButton theme="gray">버 튼</SquareButton>,
+};

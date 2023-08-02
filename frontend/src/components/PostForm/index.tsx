@@ -1,10 +1,12 @@
 import type { UseMutateFunction } from '@tanstack/react-query';
 
-import React, { HTMLAttributes, useState } from 'react';
+import React, { HTMLAttributes, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
+import { AuthContext } from '@hooks/context/auth';
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useContentImage } from '@hooks/useContentImage';
 import { useMultiSelect } from '@hooks/useMultiSelect';
 import { useText } from '@hooks/useText';
@@ -20,9 +22,8 @@ import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList'
 
 import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
 
+import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
-
-import { MOCK_CATEGORY_LIST } from '@mocks/mockData/categoryList';
 
 import { DEADLINE_OPTION } from './constants';
 import ContentImagePart from './ContentImageSection';
@@ -53,6 +54,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
   const navigate = useNavigate();
   const writingOptionHook = useWritingOption(voteInfo?.options);
   const contentImageHook = useContentImage(imageUrl);
+  const { isLogged } = useContext(AuthContext).loggedInfo;
+  const { data: categoryList } = useCategoryList(isLogged);
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -64,6 +67,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
+
+  const categoryOptionList = changeCategoryToOption(categoryList ?? []);
 
   const handleDeadlineButtonClick = (option: string) => {
     setTime(formatTimeWithOption(option));
@@ -184,7 +189,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
             <MultiSelect
               selectedOptionList={selectedOptionList}
-              optionList={MOCK_CATEGORY_LIST}
+              optionList={categoryOptionList}
               handleOptionAdd={handleOptionAdd}
               handleOptionDelete={handleOptionDelete}
               placeholder="카테고리를 선택해주세요."

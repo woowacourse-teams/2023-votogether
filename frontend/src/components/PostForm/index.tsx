@@ -96,8 +96,13 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const contentImageFileList: File[] = [];
       const optionImageFileList: File[] = [];
       fileInputList.forEach((item, index) => {
-        if (imageUrlList[index] === '') item.value = '';
-        if (item.files) {
+        if (!item.files) return;
+
+        if (imageUrlList[index] === '') {
+          index === 0
+            ? contentImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
+            : optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'));
+        } else {
           index === 0
             ? contentImageFileList.push(item.files[0])
             : optionImageFileList.push(item.files[0]);
@@ -112,7 +117,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       });
 
       const updatedPostTexts = {
-        categoryIds: [1, 2], // 다중 선택 컴포넌트 구현 후 수정 예정
+        categoryIds: [1, 2],
         title: writingTitle ?? '',
         imageUrl: imageUrl ?? '',
         content: writingContent ?? '',
@@ -168,7 +173,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     categoryIds ?? [],
     CATEGORY_COUNT_LIMIT
   );
-
   return (
     <>
       <S.HeaderWrapper>

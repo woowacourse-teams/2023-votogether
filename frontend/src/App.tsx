@@ -13,14 +13,14 @@ import { theme } from '@styles/theme';
 const queryClient = new QueryClient();
 
 const App = () => (
-  <AuthProvider>
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <RouterProvider router={router} />
-      </QueryClientProvider>
-    </ThemeProvider>
-  </AuthProvider>
+      </ThemeProvider>
+    </AuthProvider>
+  </QueryClientProvider>
 );
 
 export default App;

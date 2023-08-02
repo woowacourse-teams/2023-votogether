@@ -42,9 +42,9 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart(name = "request") @Valid final PostCreateRequest request,
-            @RequestPart(name = "contentImages") final List<MultipartFile> contentImages,
-            @RequestPart(name = "optionImages") final List<MultipartFile> optionImages,
+            @RequestPart @Valid final PostCreateRequest request,
+            @RequestPart final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member loginMember
     ) {
         final long postId = postService.save(request, loginMember, contentImages, optionImages);

@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { AuthResponse } from '@type/auth';
+
 import { AuthContext } from '@hooks/context/auth';
 
 import { getCookieToken, setCookieToken } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
-
-interface AuthResponse {
-  accessToken: string;
-}
 
 const getAuthInfo = async (url: string): Promise<AuthResponse> => {
   return await getFetch<AuthResponse>(url);
@@ -46,7 +44,7 @@ export default function Redirection() {
           setLoggedInfo({
             ...loggedInfo,
             accessToken: getCookieToken().accessToken,
-            isLogin: true,
+            isLogged: true,
           });
 
           navigate('/');

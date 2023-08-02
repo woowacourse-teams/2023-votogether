@@ -4,7 +4,6 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
-import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
@@ -100,13 +99,17 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    // TODO: 2023/07/19 응답값 DTO로 변환해주기
     @Operation(summary = "투표한 게시글 조회", description = "회원이 투표한 게시글 목록을 최신순으로 조회한다.")
     @ApiResponse(responseCode = "200", description = "투표한 게시글 조회 성공")
     @GetMapping("/votes/me")
-    public ResponseEntity<List<Post>> getPostsVotedOn(@Auth final Member member) {
-        final List<Post> postsVotedOn = postService.getPostsVotedOn(member);
-        return ResponseEntity.status(HttpStatus.OK).body(postsVotedOn);
+    public ResponseEntity<List<PostResponse>> getPostsVotedByMe(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            @Auth final Member member
+    ) {
+        final List<PostResponse> posts = postService.getPostsVotedByMember(page, postClosingType, postSortType, member);
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
 }

@@ -9,10 +9,19 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.vote.entity.Vote;
+import com.votogether.domain.vote.repository.VoteRepository;
+import com.votogether.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 
 @RepositoryTest
 class PostRepositoryTest {
@@ -22,6 +31,12 @@ class PostRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private PostOptionRepository postOptionRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
 
     @Test
     @DisplayName("Post를 저장한다")
@@ -107,6 +122,156 @@ class PostRepositoryTest {
 
         // then
         assertThat(numberOfPosts).isEqualTo(2);
+    }
+
+    @Nested
+    @DisplayName("회원이 투표한 게시글 목록을 조회한다.")
+    class findPostsVotedByMember {
+
+        @Test
+        @DisplayName("마감된 게시글 목록만 가져온다.")
+        void findClosedPostsVotedByMember() {
+            // given
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+
+            Post openPost = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(openPost)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+
+            Post closedPost = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption1 = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(closedPost)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+
+            voteRepository.save(Vote.builder().member(member).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(member).postOption(postOption1).build());
+
+            // when
+            PageRequest pageRequest = PageRequest.of(0, 10, PostSortType.LATEST.getSort());
+            Slice<Post> posts = postRepository.findClosedPostsVotedByMember(member, pageRequest);
+
+            // then
+            assertThat(posts).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("마감되지 않은 게시글 목록만 가져온다.")
+        void findOpenPostsVotedByMember() {
+            // given
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+
+            Post openPost = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(openPost)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+
+            Post closedPost = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption1 = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(closedPost)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+
+            voteRepository.save(Vote.builder().member(member).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(member).postOption(postOption1).build());
+
+            // when
+            PageRequest pageRequest = PageRequest.of(0, 10, PostSortType.LATEST.getSort());
+            Slice<Post> posts = postRepository.findOpenPostsVotedByMember(member, pageRequest);
+
+            // then
+            assertThat(posts).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("모든 게시글 목록을 가져온다.")
+        void findPostsVotedByMember() {
+            // given
+            Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+
+            Post openPost = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(openPost)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+
+            Post closedPost = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption1 = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(closedPost)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+
+            voteRepository.save(Vote.builder().member(member).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(member).postOption(postOption1).build());
+
+            // when
+            PageRequest pageRequest = PageRequest.of(0, 10, PostSortType.LATEST.getSort());
+            Slice<Post> posts = postRepository.findPostsVotedByMember(member, pageRequest);
+
+            // then
+            assertThat(posts).hasSize(2);
+        }
+
     }
 
 }

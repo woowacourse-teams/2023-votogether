@@ -18,16 +18,15 @@ import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.post.util.ImageUploader;
 import com.votogether.domain.vote.dto.VoteStatus;
-import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +43,7 @@ public class PostService {
     private static final int MAXIMUM_DEADLINE = 3;
 
     private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
+    private final Map<PostClosingType, BiFunction<Member, Pageable, Slice<Post>>> postsVotedByMemberMapper;
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;
     private final CategoryRepository categoryRepository;
@@ -61,7 +61,9 @@ public class PostService {
         this.voteRepository = voteRepository;
 
         this.postClosingTypeMapper = new EnumMap<>(PostClosingType.class);
+        this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
         initPostClosingTypeMapper();
+        initPostsVotedByMemberMapper();
     }
 
     private void initPostClosingTypeMapper() {
@@ -70,6 +72,12 @@ public class PostService {
                 postRepository.findByDeadlineAfter(LocalDateTime.now(), pageable));
         postClosingTypeMapper.put(PostClosingType.CLOSED, pageable ->
                 postRepository.findByDeadlineBefore(LocalDateTime.now(), pageable));
+    }
+
+    private void initPostsVotedByMemberMapper() {
+        postsVotedByMemberMapper.put(PostClosingType.ALL, postRepository::findPostsVotedByMember);
+        postsVotedByMemberMapper.put(PostClosingType.PROGRESS, postRepository::findOpenPostsVotedByMember);
+        postsVotedByMemberMapper.put(PostClosingType.CLOSED, postRepository::findClosedPostsVotedByMember);
     }
 
     @Transactional
@@ -215,16 +223,20 @@ public class PostService {
         return ageRange;
     }
 
-    public List<Post> getPostsVotedOn(final Member member) {
-        final List<Vote> votes = voteRepository.findAllByMember(member);
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsVotedByMember(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Member member
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getSort());
 
-        final List<Post> posts = votes.stream()
-                .map(vote -> vote.getPostOption().getPost())
-                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+        Slice<Post> posts = postsVotedByMemberMapper.get(postClosingType).apply(member, pageable);
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, member))
                 .toList();
-
-        // TODO: 2023/07/19 List<Post> -> List<PostResponse> 로 바꾸어서 응답하기
-        return posts;
     }
 
 }

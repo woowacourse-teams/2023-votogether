@@ -26,7 +26,7 @@ export default function Redirection() {
 
       const params = new URL(document.location.toString()).searchParams;
       const code = params.get('code');
-      const REGISTER_API_URL = `${process.env.API_URL}/auth/kakao/callback?code=${code}`;
+      const REGISTER_API_URL = `${process.env.VOTOGETHER_BASE_URL}/auth/kakao/callback?code=${code}`;
 
       await getAuthInfo(REGISTER_API_URL)
         .finally(() => {

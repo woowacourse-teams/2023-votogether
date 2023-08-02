@@ -9,7 +9,7 @@ import {
   deleteFetch,
 } from '@utils/fetch';
 
-const BASE_URL = process.env.API_URL;
+const BASE_URL = process.env.VOTOGETHER_BASE_URL;
 
 export const votePost = async (postId: number, optionId: number) => {
   return await postFetch(`/posts/${postId}/options/${optionId}`, '');

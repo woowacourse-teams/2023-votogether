@@ -136,12 +136,12 @@ public class PostService {
     }
 
     private void addContentImageIfPresent(final Post post, final List<MultipartFile> contentImages) {
-        if (contentImagesPresent(contentImages)) {
+        if (isContentImagesPresent(contentImages)) {
             post.addContentImage(ImageUploader.upload(contentImages.get(0)));
         }
     }
 
-    private boolean contentImagesPresent(final List<MultipartFile> contentImages) {
+    private boolean isContentImagesPresent(final List<MultipartFile> contentImages) {
         return !Objects.isNull(contentImages) && !contentImages.isEmpty();
     }
 

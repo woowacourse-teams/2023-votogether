@@ -152,7 +152,7 @@ public class Post extends BaseEntity {
 
     private void validateVoter(final Member voter) {
         if (Objects.equals(this.writer.getId(), voter.getId())) {
-            throw new BadRequestException(PostExceptionType.NOT_VOTER);
+            throw new BadRequestException(PostExceptionType.POST_WRITER_ARE_NOT_VOTER);
         }
     }
 

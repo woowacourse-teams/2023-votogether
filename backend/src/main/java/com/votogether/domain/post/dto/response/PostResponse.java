@@ -42,7 +42,9 @@ public record PostResponse(
     }
 
     private static List<CategoryResponse> getCategories(final Post post) {
-        return post.getPostCategories().getPostCategories().stream()
+        return post.getPostCategories()
+                .getPostCategories()
+                .stream()
                 .map(PostCategory::getCategory)
                 .map(CategoryResponse::of)
                 .toList();
@@ -52,7 +54,9 @@ public record PostResponse(
             final Post post,
             final Member loginMember
     ) {
-        return post.getPostOptions().getPostOptions().stream()
+        return post.getPostOptions()
+                .getPostOptions()
+                .stream()
                 .map(postOption ->
                         PostOptionResponse.of(
                                 postOption,

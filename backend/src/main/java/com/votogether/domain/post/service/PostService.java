@@ -142,7 +142,7 @@ public class PostService {
     }
 
     private boolean isContentImagesPresent(final List<MultipartFile> contentImages) {
-        return !Objects.isNull(contentImages) && !contentImages.isEmpty();
+        return Objects.nonNull(contentImages) && !contentImages.isEmpty();
     }
 
     @Transactional(readOnly = true)

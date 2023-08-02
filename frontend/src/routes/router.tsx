@@ -14,10 +14,15 @@ const router = createBrowserRouter([
   {
     path: PATH.HOME,
     element: <Home />,
-    children: [
-      { path: 'search', element: <Home /> },
-      { path: 'login', element: <Home /> },
-    ],
+    children: [{ path: 'search', element: <Home /> }],
+  },
+  {
+    path: PATH.LOGIN,
+    element: <Login />,
+  },
+  {
+    path: 'auth/kakao/callback',
+    element: <Redirection />,
   },
   {
     path: PATH.POST,
@@ -35,16 +40,8 @@ const router = createBrowserRouter([
         path: 'result/:postId',
         element: <VoteStatisticsPage />,
       },
-      { path: 'category/:categoryId', element: <Home /> },
+      { path: 'posts/category/:categoryId', element: <Home /> },
     ],
-  },
-  {
-    path: 'login',
-    element: <Login />,
-  },
-  {
-    path: 'auth/kakao/callback',
-    element: <Redirection />,
   },
   {
     path: PATH.USER,

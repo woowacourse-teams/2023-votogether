@@ -21,7 +21,10 @@ export const AuthContext = createContext({} as Auth);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loggedInfo, setLoggedInfo] = useState(notLoggedInfo);
   const { data: userInfo } = useUserInfo(loggedInfo.isLogged);
-  if (userInfo) setLoggedInfo(origin => ({ ...origin, userInfo }));
+
+  useEffect(() => {
+    if (userInfo) setLoggedInfo(origin => ({ ...origin, userInfo }));
+  }, [userInfo]);
 
   useEffect(() => {
     const accessToken = getCookieToken().accessToken;

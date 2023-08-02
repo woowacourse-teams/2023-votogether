@@ -9,6 +9,8 @@ import {
   deleteFetch,
 } from '@utils/fetch';
 
+const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+
 export const votePost = async (postId: number, optionId: number) => {
   return await postFetch(`/posts/${postId}/options/${optionId}`, '');
 };
@@ -29,11 +31,11 @@ export const getPost = async (postId: number): Promise<PostInfo> => {
 };
 
 export const createPost = async (newPost: FormData) => {
-  return await multiPostFetch('/posts', newPost);
+  return await multiPostFetch(`${BASE_URL}/posts`, newPost);
 };
 
 export const editPost = async (postId: number, updatedPost: FormData) => {
-  return await multiPutFetch(`/posts/${postId}`, updatedPost);
+  return await multiPutFetch(`http://3.35.232.54/api/posts/${postId}`, updatedPost);
 };
 
 export const removePost = async (postId: number) => {

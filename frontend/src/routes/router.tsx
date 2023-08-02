@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import Login from '@pages/auth/Login';
+import Redirection from '@pages/auth/Redirection';
 import Home from '@pages/Home';
 import MyInfo from '@pages/MyInfo';
 import CreatePost from '@pages/post/CreatePost';
@@ -13,10 +15,15 @@ const router = createBrowserRouter([
   {
     path: PATH.HOME,
     element: <Home />,
-    children: [
-      { path: 'search', element: <Home /> },
-      { path: 'login', element: <Home /> },
-    ],
+    children: [{ path: 'search', element: <Home /> }],
+  },
+  {
+    path: PATH.LOGIN,
+    element: <Login />,
+  },
+  {
+    path: 'auth/kakao/callback',
+    element: <Redirection />,
   },
   {
     path: PATH.POST,
@@ -34,7 +41,7 @@ const router = createBrowserRouter([
         path: 'result/:postId',
         element: <VoteStatisticsPage />,
       },
-      { path: 'category/:categoryId', element: <Home /> },
+      { path: 'posts/category/:categoryId', element: <Home /> },
     ],
   },
   {

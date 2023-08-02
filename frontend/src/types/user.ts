@@ -17,3 +17,10 @@ export interface UserInfoResponse {
 export interface ModifyNicknameRequest {
   nickname: string;
 }
+
+
+export interface LoggedInfo {
+  accessToken: string;
+  isLogged: boolean;
+  userInfo?: UserInfoResponse;
+}

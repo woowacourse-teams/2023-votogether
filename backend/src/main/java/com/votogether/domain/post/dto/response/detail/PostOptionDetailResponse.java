@@ -24,14 +24,4 @@ public record PostOptionDetailResponse(
         );
     }
 
-    @Override
-    public String toString() {
-        return "OptionResponse{" +
-                "optionId=" + optionId +
-                ", content='" + content + '\'' +
-                ", voteCount=" + voteCount +
-                ", votePercent=" + votePercent +
-                '}';
-    }
-
 }

@@ -5,6 +5,7 @@ import com.votogether.domain.post.dto.response.CategoryResponse;
 import com.votogether.domain.post.dto.response.WriterResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostCategories;
 import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostContentImage;
 import java.time.LocalDateTime;
@@ -32,13 +33,14 @@ public record PostDetailResponse(
             contentImageUrl.append(contentImages.get(0).getImageUrl());
         }
 
+        final PostCategories postCategories = post.getPostCategories();
         return new PostDetailResponse(
                 post.getId(),
                 WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 contentImageUrl.toString(),
-                getCategories(post),
+                getCategories(postCategories.getPostCategories()),
                 post.getCreatedAt(),
                 post.getDeadline(),
                 VoteDetailResponse.of(
@@ -49,8 +51,8 @@ public record PostDetailResponse(
         );
     }
 
-    private static List<CategoryResponse> getCategories(final Post post) {
-        return post.getPostCategories().getPostCategories().stream()
+    private static List<CategoryResponse> getCategories(final List<PostCategory> postCategories) {
+        return postCategories.stream()
                 .map(PostCategory::getCategory)
                 .map(CategoryResponse::of)
                 .toList();
@@ -69,20 +71,6 @@ public record PostDetailResponse(
                         )
                 )
                 .toList();
-    }
-
-    @Override
-    public String toString() {
-        return "PostResponse{" +
-                "postId=" + postId +
-                ", writer=" + writer +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", categories=" + categories +
-                ", createdAt=" + createdAt +
-                ", deadline=" + deadline +
-                ", voteInfo=" + voteInfo +
-                '}' + "\n\n";
     }
 
 }

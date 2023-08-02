@@ -63,18 +63,4 @@ public record PostResponse(
                 .toList();
     }
 
-    @Override
-    public String toString() {
-        return "PostResponse{" +
-                "postId=" + postId +
-                ", writer=" + writer +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", categories=" + categories +
-                ", createdAt=" + createdAt +
-                ", deadline=" + deadline +
-                ", voteInfo=" + voteInfo +
-                '}' + "\n\n";
-    }
-
 }

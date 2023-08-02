@@ -11,11 +11,4 @@ public record CategoryResponse(
         return new CategoryResponse(category.getId(), category.getName());
     }
 
-    @Override
-    public String toString() {
-        return "CategoryResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

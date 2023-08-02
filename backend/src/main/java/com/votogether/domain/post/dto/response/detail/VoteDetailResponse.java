@@ -16,13 +16,4 @@ public record VoteDetailResponse(
         return new VoteDetailResponse(selectedOptionId, finalTotalVoteCount, options);
     }
 
-    @Override
-    public String toString() {
-        return "VoteInfoResponse{" +
-                "selectedOptionId=" + selectedOptionId +
-                ", totalVoteCount=" + totalVoteCount +
-                ", options=" + options +
-                '}';
-    }
-
 }

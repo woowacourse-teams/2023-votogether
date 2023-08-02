@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Category } from '@type/category';
 
-import { getGuestCategoryList, getUserCategoryList } from '@api/wus/categoryList';
+import { getGuestCategoryList, getUserCategoryList } from '@api/categoryList';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

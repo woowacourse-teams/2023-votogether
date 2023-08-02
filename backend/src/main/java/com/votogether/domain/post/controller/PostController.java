@@ -45,10 +45,10 @@ public class PostController {
             @RequestPart @Valid final PostCreateRequest request,
             @RequestPart final List<MultipartFile> contentImages,
             @RequestPart final List<MultipartFile> optionImages,
-            @Auth final Member loginMember
+            @Auth final Member member
     ) {
         System.out.println("request = " + request);
-        final long postId = postService.save(request, loginMember, contentImages, optionImages);
+        final long postId = postService.save(request, member, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
@@ -62,10 +62,10 @@ public class PostController {
             final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
-            @Auth final Member loginMember
+            @Auth final Member member
     ) {
         final List<PostResponse> responses =
-                postService.getAllPostBySortTypeAndClosingType(loginMember, page, postClosingType, postSortType);
+                postService.getAllPostBySortTypeAndClosingType(member, page, postClosingType, postSortType);
 
         return ResponseEntity.ok(responses);
     }
@@ -78,9 +78,9 @@ public class PostController {
     @GetMapping("{postId}")
     public ResponseEntity<PostDetailResponse> getPost(
             @PathVariable final Long postId,
-            @Auth final Member loginMember
+            @Auth final Member member
     ) {
-        final PostDetailResponse response = postService.getPostById(postId, loginMember);
+        final PostDetailResponse response = postService.getPostById(postId, member);
         return ResponseEntity.ok(response);
     }
 

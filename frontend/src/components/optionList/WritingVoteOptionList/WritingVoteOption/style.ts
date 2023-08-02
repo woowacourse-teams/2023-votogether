@@ -13,7 +13,7 @@ export const OptionContainer = styled.div`
   align-items: center;
 
   width: 100%;
-  padding: 20px;
+  padding: 15px;
   border-radius: 4px;
 
   background-color: #e6e6e6;
@@ -40,8 +40,6 @@ export const ContentTextArea = styled.textarea`
   resize: none;
 
   @media (min-width: ${theme.breakpoint.md}) {
-    height: 120px;
-
     font: var(--text-body);
   }
 `;

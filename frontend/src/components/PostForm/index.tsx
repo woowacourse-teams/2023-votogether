@@ -24,6 +24,7 @@ import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/p
 
 import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
+import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 
 import { DEADLINE_OPTION } from './constants';
 import ContentImagePart from './ContentImageSection';
@@ -146,36 +147,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
       navigate('/');
     }
-  };
-
-  const getDeadlineTime = ({
-    day,
-    hour,
-    minute,
-  }: {
-    day: number;
-    hour: number;
-    minute: number;
-  }) => {
-    const timeMessage = [];
-
-    if (day === 0 && hour === 0 && minute === 0) {
-      return '마감 시간을 선택해주세요';
-    }
-
-    if (day > 0) {
-      timeMessage.push(`${day}일`);
-    }
-
-    if (hour > 0) {
-      timeMessage.push(`${hour}시간`);
-    }
-
-    if (minute > 0) {
-      timeMessage.push(`${minute}분`);
-    }
-
-    return `${timeMessage.join(' ')}  후에 마감됩니다.`;
   };
 
   return (

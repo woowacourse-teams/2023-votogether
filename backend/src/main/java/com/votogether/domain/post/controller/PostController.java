@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,12 +48,8 @@ public class PostController {
             @Auth final Member loginMember
     ) {
         System.out.println("PostController.save");
-        if (!(Objects.isNull(contentImages) || contentImages.isEmpty())) {
-            System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
-        }
-        if (!optionImages.get(0).isEmpty()) {
-            System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
-        }
+        System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
+        System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
         System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
         final long postId = postService.save(request, loginMember, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();

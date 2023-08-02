@@ -9,8 +9,16 @@ export const Wrapper = styled.div`
   align-items: center;
   gap: 30px;
 
-  padding-top: 70px;
+  padding-top: 55px;
   position: relative;
+
+  @media (min-width: 768px) {
+    padding-top: 20px;
+  }
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    padding-top: 20px;
+  }
 `;
 
 export const HeaderWrapper = styled.div`
@@ -19,6 +27,10 @@ export const HeaderWrapper = styled.div`
   position: fixed;
 
   z-index: ${theme.zIndex.header};
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    display: none;
+  }
 `;
 
 export const ProfileSection = styled.section`

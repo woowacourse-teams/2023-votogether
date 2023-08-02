@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
+import { Suspense, useContext } from 'react';
 
+import { AuthContext } from '@hooks/context/auth';
 import { useCategoryList } from '@hooks/query/category/useCategoryList';
-import { useUserInfo } from '@hooks/query/user/useUserInfo';
 import { useDrawer } from '@hooks/useDrawer';
 
 import AddButton from '@components/common/AddButton';
@@ -19,10 +19,9 @@ import * as S from './style';
 export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
-  //추후 구현 예정
-  const isLoggedIn = true; //로그인한 유저라고 가정
+  const { loggedInfo } = useContext(AuthContext);
+  const isLoggedIn = loggedInfo.isLogin;
   const { data: categoryList } = useCategoryList(isLoggedIn);
-  const { data: userInfo } = useUserInfo();
 
   const handleLogoutClick = () => {};
 
@@ -38,7 +37,7 @@ export default function PostListPage() {
       <S.DrawerWrapper>
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
           <Dashboard
-            userInfo={userInfo}
+            userInfo={loggedInfo.userInfo}
             categoryList={categoryList ?? []}
             handleLogoutClick={handleLogoutClick}
           />

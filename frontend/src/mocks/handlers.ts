@@ -3,9 +3,9 @@ import { mockComment } from './comment';
 import { example } from './example/get';
 import { mockVoteResult } from './getVoteDetail';
 import { mockPost } from './post';
+import { mockPostList } from './postList';
 import { mockUserInfo } from './userInfo';
 import { mockVote } from './vote';
-import { mockPostList } from './wus/post';
 
 export const handlers = [
   ...example,

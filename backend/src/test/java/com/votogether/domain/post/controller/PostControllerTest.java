@@ -297,4 +297,20 @@ class PostControllerTest {
         assertThat(result).usingRecursiveComparison().isEqualTo(response);
     }
 
+    @Test
+    @DisplayName("게시글을 조기 마감 합니다")
+    void postClosedEarly() {
+        // given
+        long postId = 1L;
+
+        // when
+        ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .when().patch("/posts/{postId}/close", postId)
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
 }

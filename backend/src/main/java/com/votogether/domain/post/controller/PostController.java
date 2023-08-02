@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,6 +97,20 @@ public class PostController {
     ) {
         final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId, member);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "게시글 조기 마감", description = "게시글을 조기 마감한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물이 조기 마감 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
+    })
+    @PatchMapping("/{postId}/close")
+    public ResponseEntity<Void> closePostEarly(
+            @PathVariable final Long postId,
+            @Auth final Member loginMember
+    ) {
+        postService.closePostEarlyById(postId, loginMember);
+        return ResponseEntity.ok().build();
     }
 
 }

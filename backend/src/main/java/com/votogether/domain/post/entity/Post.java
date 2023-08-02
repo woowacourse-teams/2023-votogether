@@ -19,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,10 +107,6 @@ public class Post extends BaseEntity {
                 .toList();
     }
 
-    public boolean hasPostOption(final PostOption postOption) {
-        return postOptions.contains(postOption);
-    }
-
     public void validateDeadlineNotExceedByMaximumDeadline(final int maximumDeadline) {
         LocalDateTime maximumDeadlineFromNow = LocalDateTime.now().plusDays(maximumDeadline);
         if (this.deadline.isAfter(maximumDeadlineFromNow)) {
@@ -118,13 +115,9 @@ public class Post extends BaseEntity {
     }
 
     public void validateWriter(final Member member) {
-        if (!Objects.equals(this.writer.getId(), member.getId())) {
+        if (!Objects.equals(this.writer, member)) {
             throw new BadRequestException(PostExceptionType.NOT_WRITER);
         }
-    }
-
-    public boolean isClosed() {
-        return deadline.isBefore(LocalDateTime.now());
     }
 
     public Vote makeVote(final Member voter, final PostOption postOption) {
@@ -140,26 +133,43 @@ public class Post extends BaseEntity {
         return vote;
     }
 
+    public void validateDeadLine() {
+        if (isClosed()) {
+            throw new BadRequestException(PostExceptionType.POST_CLOSED);
+        }
+    }
+
+    private boolean isClosed() {
+        return deadline.isBefore(LocalDateTime.now());
+    }
+
     private void validateVoter(final Member voter) {
         if (Objects.equals(this.writer.getId(), voter.getId())) {
             throw new BadRequestException(PostExceptionType.NOT_VOTER);
         }
     }
 
-    private void validateDeadLine() {
-        if (isClosed()) {
-            throw new IllegalStateException("게시글이 이미 마감되었습니다.");
-        }
-    }
-
     private void validatePostOption(final PostOption postOption) {
         if (!hasPostOption(postOption)) {
-            throw new IllegalArgumentException("해당 게시글에서 존재하지 않는 선택지 입니다.");
+            throw new BadRequestException(PostExceptionType.POST_OPTION_NOT_FOUND);
         }
     }
 
-    public boolean isWriter(final Member member) {
-        return Objects.equals(this.writer, member);
+    private boolean hasPostOption(final PostOption postOption) {
+        return postOptions.contains(postOption);
+    }
+
+    public void validateHalfDeadLine() {
+        final Duration betweenDuration = Duration.between(getCreatedAt(), this.deadline);
+        final LocalDateTime midpoint = getCreatedAt().plus(betweenDuration.dividedBy(2));
+
+        if (midpoint.isAfter(LocalDateTime.now())) {
+            throw new BadRequestException(PostExceptionType.POST_NOT_HALF_DEADLINE);
+        }
+    }
+
+    public void closeEarly() {
+        this.deadline = LocalDateTime.now();
     }
 
     public void addContentImage(final String contentImageUrl) {

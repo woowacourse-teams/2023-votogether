@@ -1,6 +1,5 @@
 package com.votogether.domain.post.entity;
 
-import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,6 +13,7 @@ import com.votogether.exception.BadRequestException;
 import com.votogether.fixtures.MemberFixtures;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -103,41 +103,79 @@ class PostTest {
     }
 
     @Test
-    @DisplayName("게시글의 작성자 여부를 확인한다.")
-    void isWriter() {
+    @DisplayName("게시글의 마감 여부에 따라 예외를 던질 지 결정한다.")
+    void throwExceptionIsDeadlinePassed() {
         // given
-        Post post = Post.builder()
-                .writer(MALE_30.get())
+        final Member writer = MemberFixtures.MALE_30.get();
+        ReflectionTestUtils.setField(writer, "id", 1L);
+
+        Post post1 = Post.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.of(2000, 1, 1, 1, 1))
                 .build();
 
-        // when
-        boolean result1 = post.isWriter(MALE_30.get());
+        Post post2 = Post.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.of(9999, 1, 1, 1, 1))
+                .build();
 
-        // then
-        assertThat(result1).isTrue();
+        // when, then
+        assertAll(
+                () -> assertThatThrownBy(post1::validateDeadLine)
+                        .isInstanceOf(BadRequestException.class)
+                        .hasMessage(PostExceptionType.POST_CLOSED.getMessage()),
+                () -> assertThatNoException()
+                        .isThrownBy(post2::validateDeadLine)
+        );
     }
 
     @Test
-    @DisplayName("게시글의 마감 여부를 확인한다.")
-    void isClosed() {
+    @DisplayName("게시글의 마감까지 절반의 시간을 넘겼는 지에 따라 예외를 던질 지 결정한다.")
+    void throwExceptionIsHalfToTheDeadline() {
         // given
-        Post postA = Post.builder()
-                .deadline(LocalDateTime.of(2022, 1, 1, 0, 0))
-                .build();
+        final Member writer = MemberFixtures.MALE_30.get();
+        ReflectionTestUtils.setField(writer, "id", 1L);
 
-        Post postB = Post.builder()
-                .deadline(LocalDateTime.of(3222, 1, 1, 0, 0))
+        Post post1 = Post.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.of(9999, 1, 1, 1, 1))
+                .build();
+        ReflectionTestUtils.setField(post1, "createdAt", LocalDateTime.now());
+
+        Post post2 = Post.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.now().plus(100, ChronoUnit.MILLIS))
+                .build();
+        ReflectionTestUtils.setField(post2, "createdAt", LocalDateTime.now());
+
+        // when, then
+        assertAll(
+                () -> assertThatThrownBy(post1::validateHalfDeadLine)
+                        .isInstanceOf(BadRequestException.class)
+                        .hasMessage(PostExceptionType.POST_NOT_HALF_DEADLINE.getMessage()),
+                () -> {
+                    Thread.sleep(50);
+                    assertThatNoException()
+                            .isThrownBy(post2::validateHalfDeadLine);
+
+                }
+        );
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감 합니다.")
+    void closedEarly() {
+        // given
+        LocalDateTime deadline = LocalDateTime.of(2100, 1, 1, 0, 0);
+        Post post = Post.builder()
+                .deadline(deadline)
                 .build();
 
         // when
-        boolean resultA = postA.isClosed();
-        boolean resultB = postB.isClosed();
+        post.closeEarly();
 
         // then
-        assertAll(
-                () -> assertThat(resultA).isTrue(),
-                () -> assertThat(resultB).isFalse()
-        );
+        assertThat(post.getDeadline()).isBefore(deadline);
     }
 
 }

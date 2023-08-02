@@ -19,7 +19,6 @@ import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"})
-@ToString
 @Getter
 @Entity
 public class Member extends BaseEntity {

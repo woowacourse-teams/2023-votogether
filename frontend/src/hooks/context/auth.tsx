@@ -12,7 +12,7 @@ interface Auth {
 }
 
 const notLoggedInfo: LoggedInfo = {
-  isLogin: false,
+  isLogged: false,
   accessToken: '',
 };
 
@@ -20,7 +20,7 @@ export const AuthContext = createContext({} as Auth);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loggedInfo, setLoggedInfo] = useState(notLoggedInfo);
-  const { data: userInfo } = useUserInfo(loggedInfo.isLogin);
+  const { data: userInfo } = useUserInfo(loggedInfo.isLogged);
   if (userInfo) setLoggedInfo(origin => ({ ...origin, userInfo }));
 
   useEffect(() => {

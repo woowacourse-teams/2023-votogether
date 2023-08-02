@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"})
@@ -47,7 +48,7 @@ public class Member extends BaseEntity {
     private String socialId;
 
     @Column(nullable = false)
-    private Integer point;
+    private int point;
 
     @Builder
     private Member(
@@ -71,7 +72,7 @@ public class Member extends BaseEntity {
     public static Member from(final KakaoMemberResponse response) {
         final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
-                .nickname("익명의 손님" + nicknameNumberGenerator.generate())
+                .nickname("익명의손님" + nicknameNumberGenerator.generate())
                 .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
                 .ageRange(response.kakaoAccount().ageRange())
                 .birthday(response.kakaoAccount().birthday())

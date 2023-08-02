@@ -7,6 +7,7 @@ import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.exception.BadRequestException;
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -28,12 +29,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import org.hibernate.annotations.Formula;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 public class Post extends BaseEntity {
+
+    private static final Integer FIRST_OPTION_SEQUENCE = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +44,7 @@ public class Post extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member writer;
 
     @Embedded
     private PostBody postBody;
@@ -55,16 +58,22 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "datetime(2)", nullable = false)
     private LocalDateTime deadline;
 
+    @Basic(fetch = FetchType.LAZY)
+    @Formula("(select count(v.id) from Vote v where v.post_option_id in "
+            + "(select po.id from Post_Option po where po.post_id = id)"
+            + ")")
+    private long totalVoteCount;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
     private Post(
-            final Member member,
+            final Member writer,
             final PostBody postBody,
             final LocalDateTime deadline
     ) {
-        this.member = member;
+        this.writer = writer;
         this.postBody = postBody;
         this.deadline = deadline;
         this.postCategories = new PostCategories();
@@ -77,52 +86,51 @@ public class Post extends BaseEntity {
 
     public void mapPostOptionsByElements(
             final List<String> postOptionContents,
-            final Post post,
-            final List<MultipartFile> images
+            final List<String> optionImageUrls
     ) {
-        this.postOptions.addAllPostOptions(toPostOptionEntities(postOptionContents, post, images));
+        this.postOptions.addAllPostOptions(toPostOptions(postOptionContents, optionImageUrls));
     }
 
-    private List<PostOption> toPostOptionEntities(
+    private List<PostOption> toPostOptions(
             final List<String> postOptionContents,
-            final Post post,
-            final List<MultipartFile> images
+            final List<String> optionImageUrls
     ) {
-        return IntStream.range(0, postOptionContents.size())
+        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
                 .mapToObj(postOptionSequence ->
                         PostOption.of(
-                                postOptionContents.get(postOptionSequence),
-                                post,
+                                postOptionContents.get(postOptionSequence - 1),
+                                this,
                                 postOptionSequence,
-                                images.get(postOptionSequence)
+                                optionImageUrls.get(postOptionSequence - 1)
                         )
                 )
                 .toList();
     }
 
-    public boolean hasPostOption(final PostOption postOption) {
-        return postOptions.contains(postOption);
+    public void validateDeadlineNotExceedByMaximumDeadline(final int maximumDeadline) {
+        LocalDateTime maximumDeadlineFromNow = LocalDateTime.now().plusDays(maximumDeadline);
+        if (this.deadline.isAfter(maximumDeadlineFromNow)) {
+            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
+        }
     }
 
     public void validateWriter(final Member member) {
-        if (!Objects.equals(this.member, member)) {
+        if (!Objects.equals(this.writer, member)) {
             throw new BadRequestException(PostExceptionType.NOT_WRITER);
         }
     }
 
-    public boolean isClosed() {
-        return deadline.isBefore(LocalDateTime.now());
-    }
-
-    public Vote makeVote(Member member, PostOption postOption) {
+    public Vote makeVote(final Member voter, final PostOption postOption) {
         validateDeadLine();
-        validateWriter(member);
+        validateVoter(voter);
         validatePostOption(postOption);
 
-        return Vote.builder()
-                .member(member)
-                .postOption(postOption)
+        final Vote vote = Vote.builder()
+                .member(voter)
                 .build();
+
+        postOption.addVote(vote);
+        return vote;
     }
 
     public void validateDeadLine() {
@@ -131,10 +139,24 @@ public class Post extends BaseEntity {
         }
     }
 
-    private void validatePostOption(PostOption postOption) {
+    private boolean isClosed() {
+        return deadline.isBefore(LocalDateTime.now());
+    }
+
+    private void validateVoter(final Member voter) {
+        if (Objects.equals(this.writer.getId(), voter.getId())) {
+            throw new BadRequestException(PostExceptionType.NOT_VOTER);
+        }
+    }
+
+    private void validatePostOption(final PostOption postOption) {
         if (!hasPostOption(postOption)) {
             throw new BadRequestException(PostExceptionType.POST_OPTION_NOT_FOUND);
         }
+    }
+
+    private boolean hasPostOption(final PostOption postOption) {
+        return postOptions.contains(postOption);
     }
 
     public void validateHalfDeadLine() {
@@ -150,9 +172,24 @@ public class Post extends BaseEntity {
         this.deadline = LocalDateTime.now();
     }
 
+    public void addContentImage(final String contentImageUrl) {
+        this.postBody.addContentImage(this, contentImageUrl);
+    }
+
+    public long getFinalTotalVoteCount(final Member loginMember) {
+        if (isVisibleVoteResult(loginMember)) {
+            return this.totalVoteCount;
+        }
+
+        return -1L;
+    }
+
+    public boolean isVisibleVoteResult(final Member member) {
+        return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
+    }
+
     public void addComment(final Comment comment) {
         comments.add(comment);
         comment.setPost(this);
     }
-
 }

@@ -1,5 +1,6 @@
 package com.votogether.domain.post.entity;
 
+import com.votogether.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
@@ -20,8 +21,16 @@ public class PostOptions {
         this.postOptions.addAll(postOptions);
     }
 
-    public boolean contains(final PostOption postOption) {
+    public Boolean contains(final PostOption postOption) {
         return postOptions.contains(postOption);
+    }
+
+    public Long getSelectedOptionId(final Member member) {
+        return postOptions.stream()
+                .filter(postOption -> postOption.hasMemberVote(member))
+                .findAny()
+                .map(PostOption::getId)
+                .orElse(0L);
     }
 
 }

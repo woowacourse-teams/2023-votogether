@@ -13,3 +13,7 @@ export interface UserInfoResponse {
   voteCount: number;
   badge?: string;
 }
+
+export interface ModifyNicknameRequest {
+  nickname: string;
+}

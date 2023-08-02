@@ -24,6 +24,9 @@ public class ImageUploader {
         try {
             Files.write(Paths.get(imageUrl), image.getBytes());
         } catch (IOException ignore) {
+            System.out.println("ImageUploader.upload");
+            System.out.println("imageUrl = " + imageUrl);
+            ignore.printStackTrace();
             throw new BadRequestException(PostExceptionType.WRONG_IMAGE);
         }
 

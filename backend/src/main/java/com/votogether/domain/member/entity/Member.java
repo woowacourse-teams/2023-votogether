@@ -15,11 +15,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"})
-@ToString
 @Getter
 @Entity
 public class Member extends BaseEntity {
@@ -89,6 +87,10 @@ public class Member extends BaseEntity {
 
     public void changeNickname(final String nickname) {
         this.nickname = new Nickname(nickname);
+    }
+
+    public String getNickname() {
+        return nickname.getValue();
     }
 
 }

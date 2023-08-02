@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
+import { useUserInfo } from '@hooks/query/user/useUserInfo';
 import { useDrawer } from '@hooks/useDrawer';
 
 import AddButton from '@components/common/AddButton';
@@ -12,7 +14,7 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
-import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
+import { scrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
 
@@ -20,14 +22,11 @@ export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
   //추후 구현 예정
-  const categoryList = MOCK_FAVORITE_CATEGORIES;
-  const userInfo = undefined;
-  const handleFavoriteClick = () => {};
-  const handleLogoutClick = () => {};
+  const isLoggedIn = true; //로그인한 유저라고 가정
+  const { data: categoryList } = useCategoryList(isLoggedIn);
+  const { data: userInfo } = useUserInfo();
 
-  const scrollToTop = () => {
-    window.scroll({ top: 0, behavior: 'smooth' });
-  };
+  const handleLogoutClick = () => {};
 
   return (
     <S.Container>
@@ -38,8 +37,7 @@ export default function PostListPage() {
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
           <Dashboard
             userInfo={userInfo}
-            categoryList={categoryList}
-            handleFavoriteClick={handleFavoriteClick}
+            categoryList={categoryList ?? []}
             handleLogoutClick={handleLogoutClick}
           />
         </Drawer>

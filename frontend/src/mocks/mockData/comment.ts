@@ -1,4 +1,6 @@
-import { CommentResponse } from '@type/comment';
+import { Comment, CommentResponse } from '@type/comment';
+
+import { transformCommentListResponse } from '@api/comment';
 
 export const MOCK_COMMENT_LIST: CommentResponse[] = [];
 
@@ -35,9 +37,12 @@ const getMockComment = (): CommentResponse => ({
     id: Math.floor(Math.random() * 100000),
     nickname: nicknameList[Math.floor(Math.random() * 8)],
   },
-  updatedAt: '2023.7.28. 07:43',
+  updatedAt: Math.random() > 0.5 ? '2023.7.27. 07:43' : '2023.7.28. 07:43',
 });
 
 for (let index = 0; index < 50; index++) {
   MOCK_COMMENT_LIST.push(getMockComment());
 }
+
+export const MOCK_TRANSFORMED_COMMENT_LIST: Comment[] =
+  transformCommentListResponse(MOCK_COMMENT_LIST);

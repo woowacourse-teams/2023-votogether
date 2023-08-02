@@ -13,11 +13,12 @@ export const SORTING = {
   POPULAR: 'popular',
 } as const;
 
-export const POST_CONTENT = {
+export const POST_TYPE = {
   ALL: 'posts',
   MY_POST: 'myPost',
   MY_VOTE: 'myVote',
   CATEGORY: 'category',
+  SEARCH: 'search',
 } as const;
 
 export const REQUEST_STATUS_OPTION = {
@@ -32,8 +33,21 @@ export const REQUEST_SORTING_OPTION = {
 } as const;
 
 export const REQUEST_POST_KIND_URL = {
-  [POST_CONTENT.ALL]: 'posts',
-  [POST_CONTENT.MY_POST]: 'posts/me',
-  [POST_CONTENT.MY_VOTE]: 'posts/votes/me',
-  [POST_CONTENT.CATEGORY]: 'posts/categories',
+  [POST_TYPE.ALL]: 'posts',
+  [POST_TYPE.MY_POST]: 'posts/me',
+  [POST_TYPE.MY_VOTE]: 'posts/votes/me',
+  [POST_TYPE.CATEGORY]: 'posts/categories',
+  [POST_TYPE.SEARCH]: 'posts/search',
 } as const;
+
+export const SEARCH_KEYWORD = 'keyword';
+
+export const MAX_FILE_SIZE = 5000000;
+
+export const POST_TITLE_MAX_LENGTH = 100;
+
+export const POST_DESCRIPTION_MAX_LENGTH = 1000;
+
+export const SEARCH_KEYWORD_MAX_LENGTH = 100;
+
+export const POST_LIST_MAX_LENGTH = 10;

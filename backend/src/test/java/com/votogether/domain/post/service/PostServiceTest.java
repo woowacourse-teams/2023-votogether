@@ -20,6 +20,7 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -37,10 +38,10 @@ import com.votogether.exception.NotFoundException;
 import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.fixtures.MemberFixtures;
 import jakarta.persistence.EntityManager;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -90,27 +91,41 @@ class PostServiceTest {
 
         MockMultipartFile file1 = new MockMultipartFile(
                 "image1",
-                "test.png",
+                "test1.png",
                 "image/png",
-                new FileInputStream(new File("src/test/resources/images/testImage1.PNG"))
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
         );
         MockMultipartFile file2 = new MockMultipartFile(
-                "image1",
-                "test.png",
+                "image2",
+                "test2.png",
                 "image/png",
-                new FileInputStream(new File("src/test/resources/images/testImage2.PNG"))
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        MockMultipartFile file3 = new MockMultipartFile(
+                "image3",
+                "test3.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
         );
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .categoryIds(List.of(category1.getId(), category2.getId()))
                 .title("title")
                 .content("content")
-                .postOptionContents(List.of("피자", "치킨"))
-                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .postOptions(List.of(
+                        PostOptionCreateRequest.builder()
+                                .content("option1")
+                                .build(),
+                        PostOptionCreateRequest.builder()
+                                .content("option2")
+                                .build()
+                ))
+                .deadline(LocalDateTime.now().plusDays(2))
                 .build();
 
         // when
-        Long savedPostId = postService.save(postCreateRequest, member, List.of(file1, file2));
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
 
         // then
         assertThat(savedPostId).isNotNull();
@@ -352,6 +367,99 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("해당 게시글을 조기 마감 합니다")
+    void postClosedEarlyById() throws InterruptedException {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.now().plus(100, ChronoUnit.MILLIS);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+        Thread.sleep(50);
+
+        // when
+        postService.closePostEarlyById(post.getId(), writer);
+
+        // then
+        assertAll(
+                () -> assertThat(foundPost.getId()).isEqualTo(post.getId()),
+                () -> assertThat(foundPost.getDeadline()).isBefore(oldDeadline)
+        );
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 작성자가 아니면 예외를 던진다.")
+    void throwExceptionNotWriterPostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.of(2100, 7, 12, 0, 0);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), MemberFixtures.MALE_30.get()))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("해당 게시글 작성자가 아닙니다.");
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 마감이 된 게시글이면 예외를 던진다.")
+    void throwExceptionDeadLinePostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.of(2000, 7, 12, 0, 0);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("게시글이 이미 마감되었습니다.");
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 마감 시간까지의 시간 중 반 이상이 지나지 않은 게시글이면 예외를 던진다.")
+    void throwExceptionHalfDeadLinePostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.now().plusMinutes(1);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("게시글이 마감 시간까지 절반의 시간 이상이 지나지 않으면 조기마감을 할 수 없습니다.");
+    }
+
+    @Test
     @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
     void getAllPostBySortTypeAndClosingType() {
         // given
@@ -387,42 +495,67 @@ class PostServiceTest {
                 "Hello, World!22".getBytes()
         );
 
+        MockMultipartFile file3 = new MockMultipartFile(
+                "file3",
+                "hello3.txt",
+                "text/plain",
+                "Hello, World!33".getBytes()
+        );
+
         for (int postSequence = 30; postSequence > 0; postSequence--) {
-            List<String> options = new ArrayList<>() {
+            List<PostOptionCreateRequest> options = new ArrayList<>() {
                 {
-                    add("option1");
-                    add("option2");
+                    add(
+                            PostOptionCreateRequest.builder()
+                                    .content("option1")
+                                    .build()
+                    );
+                    add(
+                            PostOptionCreateRequest.builder()
+                                    .content("option2")
+                                    .build()
+                    );
                 }
             };
 
-            List<MultipartFile> images = new ArrayList<>() {
+            List<MultipartFile> optionImages = new ArrayList<>() {
                 {
                     add(file1);
                     add(file2);
                 }
             };
 
+            List<MultipartFile> contentImages = new ArrayList<>() {
+                {
+                    add(file3);
+                }
+            };
+
             if (postSequence % 2 == 0) {
-                MockMultipartFile file3 = new MockMultipartFile(
-                        "file3",
-                        "hello3.txt",
+                MockMultipartFile file4 = new MockMultipartFile(
+                        "file4",
+                        "hello4.txt",
                         "text/plain",
-                        "Hello, World!33".getBytes()
+                        "Hello, World!44".getBytes()
                 );
 
-                images.add(file3);
-                options.add("option3");
+                optionImages.add(file4);
+                options.add(
+                        PostOptionCreateRequest.builder()
+                                .content("option3")
+                                .build()
+                );
             }
 
             PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                     .categoryIds(List.of(0L, 2L))
                     .title("title" + postSequence)
                     .content("content" + postSequence)
-                    .postOptionContents(options)
-                    .deadline(LocalDateTime.of(2100, 7, 19, 11, postSequence))
+                    .postOptions(options)
+                    .deadline(LocalDateTime.now().plusDays(2))
                     .build();
 
-            Long savedPostId = postService.save(postCreateRequest, writer, images);
+            Long savedPostId = postService.save(postCreateRequest, writer, contentImages, optionImages);
             Post post = postRepository.findById(savedPostId).get();
 
             List<PostOption> postOptions = post.getPostOptions().getPostOptions();

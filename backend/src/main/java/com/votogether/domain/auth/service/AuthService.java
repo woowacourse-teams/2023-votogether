@@ -25,7 +25,7 @@ public class AuthService {
         final Member member = Member.from(response);
         final Member registeredMember = memberService.register(member);
         final String token = tokenProcessor.generateToken(registeredMember);
-        return new LoginResponse(token, registeredMember.getNickname().getValue());
+        return new LoginResponse(token, registeredMember.getNickname());
     }
 
 }

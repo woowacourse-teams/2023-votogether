@@ -28,7 +28,7 @@ class MemberRepositoryTest {
             Member savedMember = memberRepository.save(MemberFixtures.MALE_20.get());
 
             // when
-            boolean isExist = memberRepository.existsByNickname(savedMember.getNickname());
+            boolean isExist = memberRepository.existsByNickname(new Nickname(savedMember.getNickname()));
 
             // then
             assertThat(isExist).isTrue();

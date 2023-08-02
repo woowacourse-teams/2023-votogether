@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import { Category } from '@type/category';
 
+import { useCategoryFavoriteToggle } from '@hooks/query/category/useCategoryFavoriteToggle';
+
 import chevronDown from '@assets/chevron-down.svg';
 import chevronUp from '@assets/chevron-up.svg';
 
@@ -10,14 +12,12 @@ import * as S from './style';
 interface CategoryToggleProps {
   title: string;
   categoryList: Category[];
-  handleFavoriteClick: (categoryId: number) => void;
   isInitialOpen?: boolean;
 }
 
 export default function CategoryToggle({
   title,
   categoryList,
-  handleFavoriteClick,
   isInitialOpen = true,
 }: CategoryToggleProps) {
   const [isToggleOpen, setIsToggleOpen] = useState(isInitialOpen);
@@ -25,6 +25,8 @@ export default function CategoryToggle({
   const handleToggleClick = () => {
     setIsToggleOpen(prevIsToggleOpen => !prevIsToggleOpen);
   };
+
+  const { mutate } = useCategoryFavoriteToggle();
 
   return (
     <S.Container>
@@ -43,7 +45,7 @@ export default function CategoryToggle({
             <S.CategoryItem key={id}>
               <S.Circle
                 title="즐겨찾기 버튼"
-                onClick={() => handleFavoriteClick(id)}
+                onClick={() => mutate({ id, isFavorite })}
                 $isFavorite={isFavorite}
               />
               <S.CategoryNameLink to={`/posts/category/${id}`}>{name}</S.CategoryNameLink>

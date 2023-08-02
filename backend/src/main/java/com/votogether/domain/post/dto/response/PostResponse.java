@@ -4,9 +4,11 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Schema(description = "게시글에 관련한 데이터들입니다.")
 public record PostResponse(
         Long postId,
         WriterResponse writer,
@@ -24,7 +26,7 @@ public record PostResponse(
 
         return new PostResponse(
                 post.getId(),
-                WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
+                WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 getCategories(post),

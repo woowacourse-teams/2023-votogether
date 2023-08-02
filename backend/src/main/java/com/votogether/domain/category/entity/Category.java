@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"name"})
+@EqualsAndHashCode(of = {"id"})
 @Getter
 public class Category extends BaseEntity {
 

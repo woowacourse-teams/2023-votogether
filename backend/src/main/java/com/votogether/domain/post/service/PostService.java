@@ -5,6 +5,7 @@ import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -15,6 +16,7 @@ import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.post.util.ImageUploader;
 import com.votogether.domain.vote.dto.VoteStatus;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
@@ -36,7 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class PostService {
 
-    private static final Integer BASIC_PAGING_SIZE = 10;
+    private static final int BASIC_PAGING_SIZE = 10;
+    private static final int MAXIMUM_DEADLINE = 3;
 
     private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
     private final PostRepository postRepository;
@@ -71,10 +74,12 @@ public class PostService {
     public Long save(
             final PostCreateRequest postCreateRequest,
             final Member loginMember,
-            final List<MultipartFile> images
+            final List<MultipartFile> contentImages,
+            final List<MultipartFile> optionImages
     ) {
         final List<Category> categories = categoryRepository.findAllById(postCreateRequest.categoryIds());
-        final Post post = toPostEntity(postCreateRequest, loginMember, images, categories);
+        final Post post = toPostEntity(postCreateRequest, loginMember, contentImages, optionImages, categories);
+        post.validateDeadlineNotExceedByMaximumDeadline(MAXIMUM_DEADLINE);
 
         return postRepository.save(post).getId();
     }
@@ -82,19 +87,23 @@ public class PostService {
     private Post toPostEntity(
             final PostCreateRequest postCreateRequest,
             final Member loginMember,
-            final List<MultipartFile> images,
+            final List<MultipartFile> contentImages,
+            final List<MultipartFile> optionImages,
             final List<Category> categories
     ) {
         final Post post = toPost(postCreateRequest, loginMember);
 
-        final List<String> postOptionContents = postCreateRequest.postOptionContents();
-        post.mapPostOptionsByElements(postOptionContents, images);
+        post.mapPostOptionsByElements(getPostOptionContents(postCreateRequest), parseOptionImageUrls(optionImages));
         post.mapCategories(categories);
+        post.addContentImage(ImageUploader.upload(contentImages.get(0)));
 
         return post;
     }
 
-    private Post toPost(final PostCreateRequest postCreateRequest, final Member loginMember) {
+    private Post toPost(
+            final PostCreateRequest postCreateRequest,
+            final Member loginMember
+    ) {
         return Post.builder()
                 .writer(loginMember)
                 .postBody(toPostBody(postCreateRequest))
@@ -107,6 +116,18 @@ public class PostService {
                 .title(postCreateRequest.title())
                 .content(postCreateRequest.content())
                 .build();
+    }
+
+    private List<String> getPostOptionContents(final PostCreateRequest postCreateRequest) {
+        return postCreateRequest.postOptions().stream()
+                .map(PostOptionCreateRequest::content)
+                .toList();
+    }
+
+    private List<String> parseOptionImageUrls(final List<MultipartFile> optionImages) {
+        return optionImages.stream()
+                .map(ImageUploader::upload)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -190,6 +211,17 @@ public class PostService {
             return "60~";
         }
         return ageRange;
+    }
+
+    @Transactional
+    public void closePostEarlyById(final Long id, final Member loginMember) {
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+
+        post.validateWriter(loginMember);
+        post.validateDeadLine();
+        post.validateHalfDeadLine();
+        post.closeEarly();
     }
 
 }

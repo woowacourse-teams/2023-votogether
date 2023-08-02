@@ -52,5 +52,5 @@ export const Time = styled.div<{ $isPicked: boolean }>`
 `;
 
 export const Empty = styled.div`
-  height: 36px;
+  height: 37px;
 `;

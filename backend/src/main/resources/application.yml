@@ -13,6 +13,11 @@ spring:
     hibernate:
       ddl-auto: create
 
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
   h2:
     console:
       enabled: true

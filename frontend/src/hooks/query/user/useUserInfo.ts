@@ -6,9 +6,9 @@ import { getUserInfo } from '@api/wus/userInfo';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const useUserInfo = () => {
+export const useUserInfo = (isLogin: boolean) => {
   const { data, error, isLoading, isError } = useQuery<UserInfoResponse>(
-    [QUERY_KEY.USER_INFO],
+    [QUERY_KEY.USER_INFO, isLogin],
     getUserInfo
   );
 

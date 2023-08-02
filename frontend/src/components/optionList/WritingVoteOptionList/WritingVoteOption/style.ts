@@ -84,8 +84,8 @@ background-color: #bebebe;
 cursor: pointer;
 
 @media (min-width: ${theme.breakpoint.md}) {
- width:28px;
- height:28px;
+ width:20px;
+ height:20px;
 }
 `;
 

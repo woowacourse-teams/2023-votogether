@@ -15,6 +15,7 @@ const imageSize = {
 
 export const ContentImageWrapper = styled.div<{ $size: Size }>`
   width: ${props => imageSize[props.$size]};
+  height: 100%;
 
   position: relative;
 `;

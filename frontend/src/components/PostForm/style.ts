@@ -6,6 +6,7 @@ export const HeaderWrapper = styled.div`
   width: 100%;
 
   position: fixed;
+  left: 0;
 
   z-index: ${theme.zIndex.header};
 
@@ -27,29 +28,42 @@ export const Wrapper = styled.div`
   grid-template-columns: 1fr;
   gap: 20px;
 
-  margin: 70px 10px 20px 10px;
+  padding: 70px 10px 20px 10px;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     grid-template-columns: 2fr 1fr;
-    gap: 50px;
+    gap: 30px;
 
-    margin: 30px 80px 20px 80px;
-    height: 100%;
+    padding: 30px 40px 20px 40px;
+  }
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    grid-template-columns: 1fr 300px;
+    padding: 30px 80px 20px 8cqb;
+  }
+
+  @media (min-width: ${theme.breakpoint.lg}) {
+    grid-template-columns: 1fr 400px;
   }
 `;
 
 export const LeftSide = styled.div<{ $hasImage: boolean }>`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 35px 40px 400px ${props => (props.$hasImage ? '100vw' : '50px')};
-  gap: 5px;
+  display: flex;
+  flex-direction: column;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    grid-template-rows: 40px 50px auto ${props => (props.$hasImage ? '180px' : '60px')};
+    display: grid;
+    grid-template-rows: max-content max-content minmax(max-content, 1fr) max-content;
+
+    height: calc(100vh - 130px);
+
+    overflow-y: ${({ $hasImage }) => $hasImage && 'scroll'};
   }
 `;
 
 export const Title = styled.input`
+  padding: 10px;
+
   color: gray;
 
   font: var(--text-title);
@@ -60,10 +74,15 @@ export const Title = styled.input`
 
   @media (min-width: ${theme.breakpoint.lg}) {
     font-size: 2.8rem;
+    line-height: 3.6rem;
   }
 `;
 
 export const Content = styled.textarea`
+  min-height: 300px;
+  padding: 10px;
+  margin-bottom: 10px;
+
   color: gray;
 
   resize: none;
@@ -73,32 +92,31 @@ export const Content = styled.textarea`
 
   @media (min-width: ${theme.breakpoint.md}) {
     font-size: 1.8rem;
+    line-height: 2.4rem;
   }
 
   @media (min-width: ${theme.breakpoint.lg}) {
-    height: 670px;
-
     font-size: 2rem;
+    line-height: 2.8rem;
   }
 `;
 
 export const ContentImagePartWrapper = styled.div<{ $hasImage: boolean }>`
+  justify-self: ${props => props.$hasImage && 'center'};
+  height: 100%;
+
   @media (min-width: ${theme.breakpoint.sm}) {
-    width: ${props => props.$hasImage && '80%'};
+    max-width: ${({ $hasImage }) => $hasImage && '800px'};
+    width: ${({ $hasImage }) => $hasImage && '80%'};
   }
 `;
 
 export const RightSide = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-
-  margin: 0 5px;
+  grid-template-rows: auto max-content max-content;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 400px auto 50px;
+    height: calc(100vh - 130px);
   }
 `;
 
@@ -121,7 +139,6 @@ export const Deadline = styled.div`
 
   @media (min-width: ${theme.breakpoint.sm}) {
     margin: 10px 0;
-    height: 160px;
   }
 `;
 
@@ -161,7 +178,7 @@ export const SaveButtonWrapper = styled.div`
     display: flex;
 
     width: 100%;
-    height: 100%;
+    height: 60px;
 
     visibility: visible;
   }

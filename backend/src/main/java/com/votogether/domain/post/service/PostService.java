@@ -170,6 +170,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public PostDetailResponse getPostById(final Long postId, final Member loginMember) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+
+        post.validateWriter(loginMember);
+
+        return PostDetailResponse.of(post, loginMember);
+    }
+
+    @Transactional(readOnly = true)
     public VoteOptionStatisticsResponse getVoteStatistics(final long postId, final Member member) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
@@ -226,12 +236,5 @@ public class PostService {
             return "60~";
         }
         return ageRange;
-    }
-
-    public PostDetailResponse getPostById(final Long postId, final Member loginMember) {
-        final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
-
-        return PostDetailResponse.of(post, loginMember);
     }
 }

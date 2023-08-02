@@ -580,6 +580,52 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("한 게시글의 상세를 조회할 때, 작성자가 아니면 예외를 던진다.")
+    void throwExceptionNotWriterGetPost() throws IOException {
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3);
+
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
+                .content("option1")
+                .build();
+
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
+                .content("option2")
+                .build();
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(option1, option2))
+                .deadline(deadline)
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(), List.of(file1, file2));
+
+        // when, then
+        assertThatThrownBy(() -> postService.getPostById(savedPostId, MemberFixtures.MALE_20.get()))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(PostExceptionType.NOT_WRITER.getMessage());
+    }
+
+    @Test
     @DisplayName("존재하지 않은 게시글을 가져오려 할 시, 예외를 던진다.")
     void throwExceptionNotFoundPost() {
         // given

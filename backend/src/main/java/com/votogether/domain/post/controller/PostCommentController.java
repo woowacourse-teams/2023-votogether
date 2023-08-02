@@ -3,6 +3,7 @@ package com.votogether.domain.post.controller;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.CommentRegisterRequest;
 import com.votogether.domain.post.dto.request.CommentUpdateRequest;
+import com.votogether.domain.post.dto.response.CommentResponse;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.exception.ExceptionResponse;
 import com.votogether.global.jwt.Auth;
@@ -14,10 +15,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,6 +53,21 @@ public class PostCommentController {
     ) {
         postCommentService.createComment(member, postId, commentRegisterRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "게시글 댓글 목록 조회", description = "게시글 댓글 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 댓글 목록 조회 성공"),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 게시글",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            )
+    })
+    @GetMapping("/{postId}/comments")
+    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable final Long postId) {
+        final List<CommentResponse> response = postCommentService.getComments(postId);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "게시글 댓글 수정", description = "게시글 댓글을 수정한다.")

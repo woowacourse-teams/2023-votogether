@@ -8,6 +8,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.dto.request.CommentRegisterRequest;
 import com.votogether.domain.post.dto.request.CommentUpdateRequest;
+import com.votogether.domain.post.dto.response.CommentResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
@@ -17,6 +18,7 @@ import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import com.votogether.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -73,6 +75,56 @@ class PostCommentServiceTest {
 
             // then
             assertThat(commentRepository.findAll()).hasSize(1);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("게시글 댓글 목록 조회")
+    class GetComments {
+
+        @Test
+        @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
+        void emptyPost() {
+            // given, when, then
+            assertThatThrownBy(() -> postCommentService.getComments(-1L))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("게시글 댓글 목록을 조회한다.")
+        void getComments() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Post post = postRepository.save(
+                    Post.builder()
+                            .writer(member)
+                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                            .build()
+            );
+            Comment commentA = commentRepository.save(
+                    Comment.builder()
+                            .member(member)
+                            .post(post)
+                            .content("commentA")
+                            .build()
+            );
+            Comment commentB = commentRepository.save(
+                    Comment.builder()
+                            .member(member)
+                            .post(post)
+                            .content("commentB")
+                            .build()
+            );
+
+            // when
+            List<CommentResponse> response = postCommentService.getComments(post.getId());
+
+            // then
+            assertThat(response).usingRecursiveComparison()
+                    .isEqualTo(List.of(CommentResponse.from(commentA), CommentResponse.from(commentB)));
         }
 
     }

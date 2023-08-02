@@ -3,8 +3,8 @@ package com.votogether.domain.post.dto.response.detail;
 import java.util.List;
 
 public record VoteDetailResponse(
-        long selectedOptionId,
-        long totalVoteCount,
+        Long selectedOptionId,
+        Long totalVoteCount,
         List<PostOptionDetailResponse> options
 ) {
 

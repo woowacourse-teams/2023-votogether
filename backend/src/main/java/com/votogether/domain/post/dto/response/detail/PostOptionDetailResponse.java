@@ -3,16 +3,16 @@ package com.votogether.domain.post.dto.response.detail;
 import com.votogether.domain.post.entity.PostOption;
 
 public record PostOptionDetailResponse(
-        long optionId,
+        Long optionId,
         String content,
         String imageUrl,
-        int voteCount,
-        double votePercent
+        Integer voteCount,
+        Double votePercent
 ) {
 
     public static PostOptionDetailResponse of(
             final PostOption postOption,
-            final boolean isVisibleVoteResult,
+            final Boolean isVisibleVoteResult,
             final Long totalVoteCount
     ) {
         return new PostOptionDetailResponse(

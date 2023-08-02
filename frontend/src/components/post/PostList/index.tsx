@@ -13,6 +13,8 @@ import type { PostSorting, PostStatus } from '@components/post/PostListPage/type
 
 import { SORTING, STATUS } from '@constants/post';
 
+import EmptyPostList from '../EmptyPostList';
+
 import * as S from './style';
 
 export default function PostList() {
@@ -42,6 +44,8 @@ export default function PostList() {
     }
   }, [isIntersecting, fetchNextPage, hasNextPage]);
 
+  const isEmptyList = data?.pages[0].postList.length === 0;
+
   return (
     <S.Container>
       <S.SelectContainer>
@@ -61,6 +65,7 @@ export default function PostList() {
         </S.SelectWrapper>
       </S.SelectContainer>
       <S.PostListContainer>
+        {isEmptyList && <EmptyPostList keyword={postOptionalOption.keyword} />}
         {data?.pages.map((postListInfo, pageIndex) => (
           <React.Fragment key={pageIndex}>
             {postListInfo.postList.map((post, index) => {

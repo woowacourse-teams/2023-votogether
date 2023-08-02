@@ -64,6 +64,10 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
+  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
+    categoryIds ?? [],
+    CATEGORY_COUNT_LIMIT
+  );
 
   const handleDeadlineButtonClick = (option: string) => {
     setTime(formatTimeWithOption(option));
@@ -117,7 +121,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       });
 
       const updatedPostTexts = {
-        categoryIds: [1, 2],
+        categoryIds: selectedOptionList.map(option => option.id),
         title: writingTitle ?? '',
         imageUrl: imageUrl ?? '',
         content: writingContent ?? '',
@@ -169,10 +173,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     return `${timeMessage.join(' ')}  후에 마감됩니다.`;
   };
 
-  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
-    categoryIds ?? [],
-    CATEGORY_COUNT_LIMIT
-  );
   return (
     <>
       <S.HeaderWrapper>

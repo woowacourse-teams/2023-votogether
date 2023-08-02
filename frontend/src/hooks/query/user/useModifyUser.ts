@@ -8,11 +8,18 @@ export const useModifyUser = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation({
     mutationFn: (nickname: string) => modifyNickname(nickname),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO] });
+    onMutate: async newNickname => {
+      await queryClient.cancelQueries({ queryKey: [QUERY_KEY.USER_INFO] });
+      const previousNickname = queryClient.getQueryData([QUERY_KEY.USER_INFO]);
+      queryClient.setQueryData([QUERY_KEY.USER_INFO], newNickname);
+
+      return { previousNickname, newNickname };
     },
-    onError: () => {
-      window.console.error('닉네임 변경에 실패했습니다.');
+    onError: (error, __, context) => {
+      queryClient.setQueryData([QUERY_KEY.USER_INFO], context?.previousNickname);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO] });
     },
   });
 

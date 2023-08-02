@@ -29,7 +29,7 @@ export default function PostList() {
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
     useSelect<PostSorting>(SORTING.LATEST);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList(
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPostListEmpty } = usePostList(
     {
       postType,
       postSorting: selectedSortingOption,
@@ -43,8 +43,6 @@ export default function PostList() {
       fetchNextPage();
     }
   }, [isIntersecting, fetchNextPage, hasNextPage]);
-
-  const isEmptyList = data?.pages[0].postList.length === 0;
 
   return (
     <S.Container>
@@ -65,7 +63,7 @@ export default function PostList() {
         </S.SelectWrapper>
       </S.SelectContainer>
       <S.PostListContainer>
-        {isEmptyList && <EmptyPostList keyword={postOptionalOption.keyword} />}
+        {isPostListEmpty && <EmptyPostList keyword={postOptionalOption.keyword} />}
         {data?.pages.map((postListInfo, pageIndex) => (
           <React.Fragment key={pageIndex}>
             {postListInfo.postList.map((post, index) => {

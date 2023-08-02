@@ -2,7 +2,6 @@ package com.votogether.domain.post.entity;
 
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.util.ImageUploader;
 import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,7 +20,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

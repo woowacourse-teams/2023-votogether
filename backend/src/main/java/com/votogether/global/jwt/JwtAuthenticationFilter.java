@@ -21,13 +21,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/health-check",
             "/auth/kakao/callback",
             "/categories/guest",
-            "/swagger-ui.html",
-            "/h2-console"
+            "/swagger-ui.html"
     );
 
     private static final List<String> ALLOWED_START_URIS = List.of(
             "/v3/api-docs",
-            "/swagger-ui"
+            "/swagger-ui",
+            "/h2-console"
     );
 
     private static final Map<String, String> MATCH_URI_METHOD = new HashMap<>(

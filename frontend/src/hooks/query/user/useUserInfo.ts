@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { UserInfoResponse } from '@type/user';
 
-import { getUserInfo } from '@api/wus/userInfo';
+import { getUserInfo } from '@api/userInfo';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

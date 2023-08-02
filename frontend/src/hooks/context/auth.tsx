@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const accessToken = getCookieToken().accessToken;
-    if (accessToken) setLoggedInfo(origin => ({ ...origin, accessToken }));
+    if (accessToken) setLoggedInfo(origin => ({ ...origin, accessToken, isLogged: true }));
   }, []);
 
   return (

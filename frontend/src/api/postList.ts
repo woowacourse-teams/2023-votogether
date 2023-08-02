@@ -10,7 +10,7 @@ import {
 
 import { getFetch } from '@utils/fetch';
 
-const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
+const BASE_URL = process.env.VOTOGETHER_BASE_URL;
 
 export const makePostListUrl = (
   requiredOption: PostListByRequiredOption,

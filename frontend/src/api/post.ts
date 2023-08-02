@@ -12,7 +12,7 @@ import {
 const BASE_URL = process.env.VOTOGETHER_BASE_URL;
 
 export const votePost = async (postId: number, optionId: number) => {
-  return await postFetch(`/posts/${postId}/options/${optionId}`, '');
+  return await postFetch(`${BASE_URL}/posts/${postId}/options/${optionId}`, '');
 };
 
 interface OptionData {
@@ -22,12 +22,12 @@ interface OptionData {
 
 export const changeVotedOption = async (postId: number, optionData: OptionData) => {
   return await patchFetch(
-    `/posts/${postId}/options?source=${optionData.originOptionId}&target=${optionData.newOptionId}`
+    `${BASE_URL}/posts/${postId}/options?source=${optionData.originOptionId}&target=${optionData.newOptionId}`
   );
 };
 
 export const getPost = async (postId: number): Promise<PostInfo> => {
-  return await getFetch<PostInfo>(`/posts/${postId}`);
+  return await getFetch<PostInfo>(`${BASE_URL}/posts/${postId}`);
 };
 
 export const createPost = async (newPost: FormData) => {
@@ -35,13 +35,13 @@ export const createPost = async (newPost: FormData) => {
 };
 
 export const editPost = async (postId: number, updatedPost: FormData) => {
-  return await multiPutFetch(`http://3.35.232.54/api/posts/${postId}`, updatedPost);
+  return await multiPutFetch(`${BASE_URL}/posts/${postId}`, updatedPost);
 };
 
 export const removePost = async (postId: number) => {
-  return await deleteFetch(`/posts/${postId}`);
+  return await deleteFetch(`${BASE_URL}/posts/${postId}`);
 };
 
 export const setEarlyClosePost = async (postId: number) => {
-  return await patchFetch(`/posts/${postId}/close`);
+  return await patchFetch(`${BASE_URL}/posts/${postId}/close`);
 };

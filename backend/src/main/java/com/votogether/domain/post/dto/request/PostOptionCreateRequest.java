@@ -13,6 +13,6 @@ public record PostOptionCreateRequest(
         @Length(max = 50, message = "선택지의 내용은 최대 50자까지 입력 가능합니다.")
         String content,
 
-        String inageUrl
+        String imageUrl
 ) {
 }

@@ -21,9 +21,8 @@ import * as S from './style';
 export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
-  const { loggedInfo } = useContext(AuthContext);
-  const isLoggedIn = loggedInfo.isLogin;
-  const { data: categoryList } = useCategoryList(isLoggedIn);
+  const { isLogged, userInfo } = useContext(AuthContext).loggedInfo;
+  const { data: categoryList } = useCategoryList(isLogged);
 
   const handleLogoutClick = () => {};
 
@@ -35,7 +34,7 @@ export default function PostListPage() {
       <S.DrawerWrapper>
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
           <Dashboard
-            userInfo={loggedInfo.userInfo}
+            userInfo={userInfo}
             categoryList={categoryList ?? []}
             handleLogoutClick={handleLogoutClick}
           />

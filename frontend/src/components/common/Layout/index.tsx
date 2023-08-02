@@ -19,7 +19,6 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
 
   const { loggedInfo } = useContext(AuthContext);
 
-  const userInfo = loggedInfo.userInfo;
   const categoryList = MOCK_FAVORITE_CATEGORIES;
   const selectedCategory = undefined;
   const handleLogoutClick = () => {};
@@ -37,7 +36,7 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
         {isSidebarVisible && (
           <S.DashboardWrapper>
             <Dashboard
-              userInfo={userInfo}
+              userInfo={loggedInfo.userInfo}
               categoryList={categoryList}
               selectedCategory={selectedCategory}
               handleLogoutClick={handleLogoutClick}

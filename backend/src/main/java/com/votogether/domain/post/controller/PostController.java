@@ -50,7 +50,7 @@ public class PostController {
     ) {
         System.out.println("PostController.save");
         if (!(Objects.isNull(contentImages) || contentImages.isEmpty())) {
-            System.out.println("contentImages = " + contentImages.get(0));
+            System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
         }
         if (!optionImages.get(0).isEmpty()) {
             System.out.println("optionImages = " + optionImages.get(0).getOriginalFilename());

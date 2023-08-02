@@ -19,7 +19,7 @@ export const TimeBox = styled.div`
   scrollbar-width: none;
 `;
 
-export const Time = styled.div<{ isPicked: boolean }>`
+export const Time = styled.div<{ $isPicked: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,8 +27,8 @@ export const Time = styled.div<{ isPicked: boolean }>`
   width: 100%;
   height: 50px;
 
-  background: ${props => (props.isPicked ? '#F2F2F2' : 'var(--white)')};
+  background: ${props => (props.$isPicked ? '#F2F2F2' : 'var(--white)')};
 
   font: var(--text-small);
-  font-weight: ${props => (props.isPicked ? 'bold' : 'light')};
+  font-weight: ${props => (props.$isPicked ? 'bold' : 'light')};
 `;

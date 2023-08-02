@@ -26,7 +26,7 @@ public record PostResponse(
 
         return new PostResponse(
                 post.getId(),
-                WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
+                WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 getCategories(post),

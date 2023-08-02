@@ -5,7 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/swagger-ui"
     );
 
+    private static final Map<String, String> MATCH_URI_METHOD = new HashMap<>(
+            Map.ofEntries(
+                    Map.entry("^/posts/.+/comments$", "GET")
+            )
+    );
+
     private final TokenProcessor tokenProcessor;
 
     @Override
@@ -44,8 +52,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) {
-        return ALLOWED_URIS.stream().anyMatch(url -> request.getRequestURI().contains(url))
-                || ALLOWED_START_URIS.stream().anyMatch(url -> request.getRequestURI().startsWith(url));
+        return containsAllowedUris(request) || startsWithAllowedStartUris(request) || matchesUriPattern(request);
+    }
+
+    private boolean containsAllowedUris(final HttpServletRequest request) {
+        return ALLOWED_URIS.stream()
+                .anyMatch(url -> request.getRequestURI().contains(url));
+    }
+
+    private boolean startsWithAllowedStartUris(final HttpServletRequest request) {
+        return ALLOWED_START_URIS.stream()
+                .anyMatch(url -> request.getRequestURI().startsWith(url));
+    }
+
+    private boolean matchesUriPattern(final HttpServletRequest request) {
+        return MATCH_URI_METHOD.keySet()
+                .stream()
+                .anyMatch(key -> isMatchUriAndMethod(request, key));
+    }
+
+    private boolean isMatchUriAndMethod(final HttpServletRequest request, final String uriPattern) {
+        return request.getRequestURI().matches(uriPattern)
+                && MATCH_URI_METHOD.get(uriPattern).equalsIgnoreCase(request.getMethod());
     }
 
 }

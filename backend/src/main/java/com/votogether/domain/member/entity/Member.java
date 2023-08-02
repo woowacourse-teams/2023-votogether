@@ -90,4 +90,8 @@ public class Member extends BaseEntity {
         this.nickname = new Nickname(nickname);
     }
 
+    public String getNickname() {
+        return nickname.getValue();
+    }
+
 }

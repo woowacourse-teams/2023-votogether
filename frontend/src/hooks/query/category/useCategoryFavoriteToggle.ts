@@ -13,7 +13,7 @@ export const useCategoryFavoriteToggle = () => {
       isFavorite ? removeFavoriteCategory(id) : addFavoriteCategory(id),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEY.CATEGORIES, 'favorite']);
+        queryClient.invalidateQueries([QUERY_KEY.CATEGORIES]);
       },
       onError: error => {
         window.console.log('Category favorite toggle error', error);

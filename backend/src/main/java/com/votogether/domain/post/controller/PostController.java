@@ -43,15 +43,21 @@ public class PostController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
-            @RequestPart(name = "request") @Valid final PostCreateRequest request,
-            @RequestPart(name = "contentImages", required = false) final List<MultipartFile> contentImages,
-            @RequestPart(name = "optionImages") final List<MultipartFile> optionImages,
+            @RequestPart @Valid final PostCreateRequest request,
+            @RequestPart(required = false) final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member loginMember
     ) {
         System.out.println("PostController.save");
-        System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
-        System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
-        System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
+        System.out.println("contentImages = " + contentImages);
+        if (contentImages != null && !contentImages.isEmpty()) {
+            System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
+        }
+        System.out.println("optionImages = " + optionImages);
+        if (optionImages != null && !optionImages.isEmpty()) {
+            System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
+            System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
+        }
         final long postId = postService.save(request, loginMember, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }

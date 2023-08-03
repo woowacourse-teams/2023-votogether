@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
-export const VoteOptionListContainer = styled.ul`
+export const VoteOptionListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;

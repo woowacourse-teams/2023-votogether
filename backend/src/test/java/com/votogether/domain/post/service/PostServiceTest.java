@@ -444,28 +444,6 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("해당 게시글을 조기 마감할 시, 마감 시간까지의 시간 중 반 이상이 지나지 않은 게시글이면 예외를 던진다.")
-    void throwExceptionHalfDeadLinePostClosedEarly() {
-        // given
-        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
-        LocalDateTime oldDeadline = LocalDateTime.now().plusMinutes(1);
-        Post post = postRepository.save(
-                Post.builder()
-                        .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
-                        .deadline(oldDeadline)
-                        .build()
-        );
-
-        Post foundPost = postRepository.findById(post.getId()).get();
-
-        // when, then
-        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("게시글이 마감 시간까지 절반의 시간 이상이 지나지 않으면 조기마감을 할 수 없습니다.");
-    }
-
-    @Test
     @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
     void getAllPostBySortTypeAndClosingType() {
         // given

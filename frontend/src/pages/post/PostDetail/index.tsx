@@ -1,13 +1,14 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { useFetch } from '@hooks/useFetch';
 
 import { getPost, removePost, setEarlyClosePost } from '@api/post';
 
+import CommentList from '@components/comment/CommentList';
 import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
-import { MOCK_NOT_VOTE_POST } from '@components/common/Post/mockData';
 
 import { checkClosedPost } from '@utils/time';
 
@@ -24,6 +25,8 @@ export default function PostDetailPage() {
   const userId = 12121221;
 
   const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
+  const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
+  // const { data: userInfo, isLoading: isUserInfoLoading, error } = useUserInfo(isLoggedIn);
 
   if (!postData) {
     return (
@@ -45,6 +48,7 @@ export default function PostDetailPage() {
     return <div>로딩중</div>;
   }
 
+  window.console.log(postData);
   const isWriter = postData.writer.id === userId;
   const isClosed = checkClosedPost(postData.deadline);
 
@@ -95,12 +99,20 @@ export default function PostDetailPage() {
         </NarrowTemplateHeader>
       </S.HeaderContainer>
       <S.Container>
-        <Post postInfo={MOCK_NOT_VOTE_POST} isPreview={false} />
+        <Post postInfo={postData} isPreview={false} />
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}
           handleEvent={{ movePage, controlPost }}
         />
+        {!isCommentLoading && commentData && (
+          <CommentList
+            commentList={commentData}
+            memberId={userId}
+            isGuest={false}
+            postWriterName={'익명의손님1'}
+          />
+        )}
       </S.Container>
     </Layout>
   );

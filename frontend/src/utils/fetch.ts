@@ -18,6 +18,7 @@ const makeFetchMultiHeaders = () => {
   const cookie = getCookieToken();
 
   return {
+    'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryjq2E86w76Hc7PqWS',
     Authorization: `Bearer ${cookie.accessToken}`,
   };
 };

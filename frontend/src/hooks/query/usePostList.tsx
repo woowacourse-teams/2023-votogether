@@ -24,6 +24,7 @@ export const usePostList = (
 
           return lastPage.pageNumber + 1;
         },
+        suspense: true,
       }
     );
 

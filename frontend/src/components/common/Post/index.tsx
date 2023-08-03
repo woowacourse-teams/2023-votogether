@@ -34,7 +34,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   return (
     <S.Container>
       <S.DetailLink to={`${PATH.POST}/${postId}`} $isPreview={isPreview}>
-        <S.Category>{category.map(category => category.name).join(' | ')}</S.Category>
+        <S.Category>{category?.map(category => category.name).join(' | ')}</S.Category>
         <S.Title $isPreview={isPreview}>{title}</S.Title>
         <S.Wrapper>
           <span>{writer.nickname}</span>

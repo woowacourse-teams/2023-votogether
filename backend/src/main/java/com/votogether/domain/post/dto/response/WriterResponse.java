@@ -5,12 +5,8 @@ public record WriterResponse(
         String nickname
 ) {
 
-    @Override
-    public String toString() {
-        return "WriterResponse{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                '}';
+    public static WriterResponse of(final Long id, final String nickname) {
+        return new WriterResponse(id, nickname);
     }
 
 }

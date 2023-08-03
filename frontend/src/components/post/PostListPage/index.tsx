@@ -1,8 +1,7 @@
-import React, { Suspense } from 'react';
+import { Suspense, useContext } from 'react';
 
-import { Category } from '@type/category';
-import { User } from '@type/user';
-
+import { AuthContext } from '@hooks/context/auth';
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useDrawer } from '@hooks/useDrawer';
 
 import AddButton from '@components/common/AddButton';
@@ -15,26 +14,17 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
+import { scrollToTop } from '@utils/scrollToTop';
+
 import * as S from './style';
 
-interface PostListPageProps {
-  userInfo?: User;
-  categoryList: Category[];
-  handleFavoriteClick: (categoryId: number) => void;
-  handleLogoutClick: () => void;
-}
-
-export default function PostListPage({
-  categoryList,
-  userInfo,
-  handleFavoriteClick,
-  handleLogoutClick,
-}: PostListPageProps) {
+export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
-  const scrollToTop = () => {
-    window.scroll({ top: 0, behavior: 'smooth' });
-  };
+  const { isLogged, userInfo } = useContext(AuthContext).loggedInfo;
+  const { data: categoryList } = useCategoryList(isLogged);
+
+  const handleLogoutClick = () => {};
 
   return (
     <S.Container>
@@ -45,8 +35,7 @@ export default function PostListPage({
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
           <Dashboard
             userInfo={userInfo}
-            categoryList={categoryList}
-            handleFavoriteClick={handleFavoriteClick}
+            categoryList={categoryList ?? []}
             handleLogoutClick={handleLogoutClick}
           />
         </Drawer>

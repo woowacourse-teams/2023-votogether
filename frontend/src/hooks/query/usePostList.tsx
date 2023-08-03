@@ -1,31 +1,30 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { PostList } from '@type/post';
+import { PostList, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
 
-import { getPostList } from '@api/wus/postList';
+import { getPostList } from '@api/postList';
 
-import { PostSorting, PostStatus } from '@components/post/PostListPage/types';
+import { POST_LIST_MAX_LENGTH } from '@constants/post';
 
-interface UsePostList {
-  postSorting: PostSorting;
-  postStatus: PostStatus;
-  categoryId?: number;
-}
+export const usePostList = (
+  requiredOption: Omit<PostListByRequiredOption, 'pageNumber'>,
+  optionalOption: PostListByOptionalOption
+) => {
+  const { postSorting, postStatus } = requiredOption;
+  const { categoryId, keyword } = optionalOption;
 
-const MAX_LIST_LENGTH = 10;
-
-export const usePostList = ({ postSorting, postStatus, categoryId }: UsePostList) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<PostList>(
-      ['posts', postSorting, postStatus, categoryId],
+      ['posts', postSorting, postStatus, categoryId, keyword],
       ({ pageParam = 0 }) =>
-        getPostList({ postSorting, postStatus, pageNumber: pageParam, categoryId }),
+        getPostList({ ...requiredOption, pageNumber: pageParam }, optionalOption),
       {
         getNextPageParam: lastPage => {
-          if (lastPage.postList.length !== MAX_LIST_LENGTH) return;
+          if (lastPage.postList.length !== POST_LIST_MAX_LENGTH) return;
 
           return lastPage.pageNumber + 1;
         },
+        suspense: true,
       }
     );
 

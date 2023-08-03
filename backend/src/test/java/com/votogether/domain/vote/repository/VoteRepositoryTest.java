@@ -43,7 +43,7 @@ class VoteRepositoryTest {
 
         Post post = postRepository.save(
                 Post.builder()
-                        .member(member)
+                        .writer(member)
                         .postBody(PostBody.builder().title("title").content("content").build())
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
@@ -76,7 +76,7 @@ class VoteRepositoryTest {
 
         Post post = postRepository.save(
                 Post.builder()
-                        .member(member)
+                        .writer(member)
                         .postBody(PostBody.builder().title("title").content("content").build())
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
@@ -109,7 +109,7 @@ class VoteRepositoryTest {
 
         Post postA = postRepository.save(
                 Post.builder()
-                        .member(member)
+                        .writer(member)
                         .postBody(PostBody.builder().title("title").content("content").build())
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
@@ -123,7 +123,7 @@ class VoteRepositoryTest {
         );
         Post postB = postRepository.save(
                 Post.builder()
-                        .member(member)
+                        .writer(member)
                         .postBody(PostBody.builder().title("title").content("content").build())
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
@@ -167,7 +167,7 @@ class VoteRepositoryTest {
 
         Post post = postRepository.save(
                 Post.builder()
-                        .member(writer)
+                        .writer(writer)
                         .postBody(PostBody.builder().title("title").content("content").build())
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
@@ -219,7 +219,7 @@ class VoteRepositoryTest {
 
         Post post = postRepository.save(
                 Post.builder()
-                        .member(writer)
+                        .writer(writer)
                         .postBody(PostBody.builder().title("title").content("content").build())
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
@@ -250,6 +250,40 @@ class VoteRepositoryTest {
                 new VoteStatus("70~79", Gender.FEMALE, 1),
                 new VoteStatus("80~89", Gender.FEMALE, 1)
         );
+    }
+
+    @Test
+    @DisplayName("해당 회원이 투표한 개수를 반환한다.")
+    void countByMember() {
+        // given
+        Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                        .build()
+        );
+        PostOption postOption = postOptionRepository.save(
+                PostOption.builder()
+                        .post(post)
+                        .sequence(1)
+                        .content("치킨")
+                        .build()
+        );
+        Vote vote = Vote.builder()
+                .member(member)
+                .postOption(postOption)
+                .build();
+
+        voteRepository.save(vote);
+
+        // when
+        int numberOfVote = voteRepository.countByMember(member);
+
+        // then
+        assertThat(numberOfVote).isEqualTo(1);
     }
 
 }

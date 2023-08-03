@@ -7,7 +7,7 @@ export const Dialog = styled.dialog<{
   $placement: 'left' | 'right';
 }>`
   width: ${({ $width }) => $width};
-  height: 100%;
+  min-height: 100%;
 
   position: fixed;
   top: 0;

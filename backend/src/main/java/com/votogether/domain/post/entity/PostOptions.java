@@ -21,16 +21,16 @@ public class PostOptions {
         this.postOptions.addAll(postOptions);
     }
 
-    public boolean contains(final PostOption postOption) {
+    public Boolean contains(final PostOption postOption) {
         return postOptions.contains(postOption);
     }
 
-    public Integer getSelectOption(final Member member) {
+    public Long getSelectedOptionId(final Member member) {
         return postOptions.stream()
-                .filter(postOption -> postOption.isVoteByMember(member))
-                .findFirst()
-                .map(PostOption::getSequence)
-                .orElse(0);
+                .filter(postOption -> postOption.hasMemberVote(member))
+                .findAny()
+                .map(PostOption::getId)
+                .orElse(0L);
     }
 
 }

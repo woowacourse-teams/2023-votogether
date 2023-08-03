@@ -7,16 +7,8 @@ public record CategoryResponse(
         String name
 ) {
 
-    public CategoryResponse(final Category category) {
-        this(category.getId(), category.getName());
-    }
-
-    @Override
-    public String toString() {
-        return "CategoryResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    public static CategoryResponse of(Category category) {
+        return new CategoryResponse(category.getId(), category.getName());
     }
 
 }

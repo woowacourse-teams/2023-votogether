@@ -65,7 +65,6 @@ export const LoggedIn: Story = {
     <Dashboard
       userInfo={MOCK_USER_INFO}
       categoryList={MOCK_CATEGORIES}
-      handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}
     />
   ),
@@ -76,7 +75,6 @@ export const FavoriteCategory: Story = {
     <Dashboard
       userInfo={MOCK_USER_INFO}
       categoryList={MOCK_FAVORITE_CATEGORIES}
-      handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}
     />
   ),
@@ -88,7 +86,6 @@ export const SelectedCategory: Story = {
       userInfo={MOCK_USER_INFO}
       categoryList={MOCK_FAVORITE_CATEGORIES}
       selectedCategory="패션"
-      handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}
     />
   ),
@@ -99,18 +96,11 @@ export const LongCategoryList: Story = {
     <Dashboard
       userInfo={MOCK_USER_INFO}
       categoryList={MOCK_LONG_CATEGORIES}
-      handleFavoriteClick={() => {}}
       handleLogoutClick={() => {}}
     />
   ),
 };
 
 export const Guest: Story = {
-  render: () => (
-    <Dashboard
-      categoryList={MOCK_CATEGORIES}
-      handleFavoriteClick={() => {}}
-      handleLogoutClick={() => {}}
-    />
-  ),
+  render: () => <Dashboard categoryList={MOCK_CATEGORIES} handleLogoutClick={() => {}} />,
 };

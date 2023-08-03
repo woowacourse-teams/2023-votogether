@@ -1,7 +1,8 @@
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import type { Category } from '@type/category';
-import type { User } from '@type/user';
+import { AuthContext } from '@hooks/context/auth';
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
 
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
@@ -9,36 +10,34 @@ import WideHeader from '@components/common/WideHeader';
 import * as S from './style';
 
 interface LayoutProps extends PropsWithChildren {
-  userInfo?: User;
-  categoryList: Category[];
-  selectedCategory?: string;
   isSidebarVisible: boolean;
-  handleFavoriteClick: (categoryId: number) => void;
-  handleLogoutClick: () => void;
 }
 
-export default function Layout({
-  userInfo,
-  categoryList,
-  selectedCategory,
-  isSidebarVisible,
-  handleFavoriteClick,
-  handleLogoutClick,
-  children,
-}: LayoutProps) {
+export default function Layout({ children, isSidebarVisible }: LayoutProps) {
+  const navigate = useNavigate();
+
+  const { loggedInfo } = useContext(AuthContext);
+
+  const { data: categoryList } = useCategoryList(loggedInfo.isLogged);
+  const selectedCategory = undefined;
+  const handleLogoutClick = () => {};
+
+  const movePostListPage = () => {
+    navigate('/');
+  };
+
   return (
     <S.Container>
       <S.WideHeaderWrapper>
-        <WideHeader />
+        <WideHeader handleLogoClick={movePostListPage} />
       </S.WideHeaderWrapper>
       <S.ContentContainer>
         {isSidebarVisible && (
           <S.DashboardWrapper>
             <Dashboard
-              userInfo={userInfo}
-              categoryList={categoryList}
+              userInfo={loggedInfo.userInfo}
+              categoryList={categoryList ?? []}
               selectedCategory={selectedCategory}
-              handleFavoriteClick={handleFavoriteClick}
               handleLogoutClick={handleLogoutClick}
             />
           </S.DashboardWrapper>

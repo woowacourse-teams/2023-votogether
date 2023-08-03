@@ -2,6 +2,7 @@ import { getCookieToken } from './cookie';
 
 const headers = {
   Authorization: `Bearer `,
+  'Content-Type': 'application/json',
 };
 
 const makeFetchHeaders = () => {
@@ -42,6 +43,7 @@ export const postFetch = async <T, R>(url: string, body: T): Promise<R | void> =
     body: JSON.stringify(body),
     headers: makeFetchHeaders(),
   });
+  window.console.log(response);
 
   if (!response.ok) {
     throw new Error('에러');

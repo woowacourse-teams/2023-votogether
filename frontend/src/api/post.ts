@@ -42,7 +42,7 @@ export const votePost = async (postId: number, optionId: number) => {
   return await postFetch(`${BASE_URL}/posts/${postId}/options/${optionId}`, '');
 };
 
-interface OptionData {
+export interface OptionData {
   originOptionId: number;
   newOptionId: number;
 }

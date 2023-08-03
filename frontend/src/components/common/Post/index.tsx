@@ -1,6 +1,7 @@
 import { PostInfo } from '@type/post';
 
-import { changeVotedOption, votePost } from '@api/post';
+import { useCreateVote } from '@hooks/query/post/useCreateVote';
+import { useEditVote } from '@hooks/query/post/useEditVote';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
@@ -16,16 +17,17 @@ interface PostProps {
 
 export default function Post({ postInfo, isPreview }: PostProps) {
   const { postId, category, title, writer, createTime, deadline, content, voteInfo } = postInfo;
-
+  const { mutate: createVote } = useCreateVote({ isPreview, postId });
+  const { mutate: editVote } = useEditVote({ isPreview, postId });
   const handleVoteClick = (newOptionId: number) => {
     if (voteInfo.selectedOptionId === newOptionId) return;
 
     if (voteInfo.selectedOptionId === POST.NOT_VOTE) {
-      votePost(postId, newOptionId);
+      createVote(newOptionId);
       return;
     }
 
-    changeVotedOption(postId, {
+    editVote({
       originOptionId: voteInfo.selectedOptionId,
       newOptionId,
     });

@@ -22,7 +22,7 @@ export default function MyInfo() {
 
   if (!userInfo) {
     navigate('/');
-    return;
+    return <></>;
   }
 
   return (

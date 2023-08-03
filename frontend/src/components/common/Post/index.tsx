@@ -57,8 +57,8 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         <S.Wrapper>
           <span aria-label="작성자">{writer.nickname}</span>
           <S.Wrapper>
-            <span aria-label="작성일시">{startTime}</span>
-            <span aria-label="투표 마감일시">{endTime}</span>
+            <span aria-label="작성일시">{createTime}</span>
+            <span aria-label="투표 마감일시">{deadline}</span>
           </S.Wrapper>
         </S.Wrapper>
         <S.Content aria-label="내용" $isPreview={isPreview}>

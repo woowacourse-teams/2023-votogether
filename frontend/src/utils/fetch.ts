@@ -1,17 +1,31 @@
+import { getCookieToken } from './cookie';
+
 const headers = {
   'Content-Type': 'application/json;charset=utf-8',
   Authorization: `Bearer `,
 };
 
-const multiHeaders = {
-  'Content-Type': 'multipart/form-data',
-  Authorization: `Bearer `,
+const makeFetchHeaders = () => {
+  const cookie = getCookieToken();
+
+  return {
+    ...headers,
+    Authorization: `Bearer ${cookie.accessToken}`,
+  };
+};
+
+const makeFetchMultiHeaders = () => {
+  const cookie = getCookieToken();
+
+  return {
+    Authorization: `Bearer ${cookie.accessToken}`,
+  };
 };
 
 export const getFetch = async <T>(url: string): Promise<T> => {
   const response = await fetch(url, {
     method: 'GET',
-    headers,
+    headers: makeFetchHeaders(),
   });
 
   const data = await response.json();
@@ -27,7 +41,7 @@ export const postFetch = async <T, R>(url: string, body: T): Promise<R | void> =
   const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
-    headers,
+    headers: makeFetchHeaders(),
   });
 
   const data = await response.json();
@@ -43,7 +57,7 @@ export const putFetch = async <T, R>(url: string, body: T): Promise<R | void> =>
   const response = await fetch(url, {
     method: 'PUT',
     body: JSON.stringify(body),
-    headers,
+    headers: makeFetchHeaders(),
   });
 
   const data = await response.json();
@@ -58,7 +72,7 @@ export const putFetch = async <T, R>(url: string, body: T): Promise<R | void> =>
 export const patchFetch = async <T>(url: string, body?: T) => {
   const response = await fetch(url, {
     method: 'PATCH',
-    headers,
+    headers: makeFetchHeaders(),
     body: JSON.stringify(body),
   });
 
@@ -74,7 +88,7 @@ export const patchFetch = async <T>(url: string, body?: T) => {
 export const deleteFetch = async (url: string) => {
   const response = await fetch(url, {
     method: 'DELETE',
-    headers,
+    headers: makeFetchHeaders(),
   });
 
   return response;
@@ -84,7 +98,7 @@ export const multiPostFetch = async (url: string, body: FormData) => {
   const response = await fetch(url, {
     method: 'POST',
     body,
-    headers: multiHeaders,
+    headers: makeFetchMultiHeaders(),
   });
 
   const data = await response.json();
@@ -100,7 +114,7 @@ export const multiPutFetch = async (url: string, body: FormData) => {
   const response = await fetch(url, {
     method: 'PUT',
     body,
-    headers: multiHeaders,
+    headers: makeFetchMultiHeaders(),
   });
 
   const data = await response.json();

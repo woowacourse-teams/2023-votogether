@@ -19,15 +19,15 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.CategoryResponse;
+import com.votogether.domain.post.dto.response.PostResponse;
+import com.votogether.domain.post.dto.response.WriterResponse;
 import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
 import com.votogether.domain.post.dto.response.detail.PostOptionDetailResponse;
-import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.detail.VoteDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
-import com.votogether.domain.post.dto.response.WriterResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
@@ -47,6 +47,7 @@ import jakarta.persistence.EntityManager;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -372,7 +373,100 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 조회한다")
+    @DisplayName("해당 게시글을 조기 마감 합니다")
+    void postClosedEarlyById() throws InterruptedException {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.now().plus(100, ChronoUnit.MILLIS);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+        Thread.sleep(50);
+
+        // when
+        postService.closePostEarlyById(post.getId(), writer);
+
+        // then
+        assertAll(
+                () -> assertThat(foundPost.getId()).isEqualTo(post.getId()),
+                () -> assertThat(foundPost.getDeadline()).isBefore(oldDeadline)
+        );
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 작성자가 아니면 예외를 던진다.")
+    void throwExceptionNotWriterPostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.of(2100, 7, 12, 0, 0);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), MemberFixtures.MALE_30.get()))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("해당 게시글 작성자가 아닙니다.");
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 마감이 된 게시글이면 예외를 던진다.")
+    void throwExceptionDeadLinePostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.of(2000, 7, 12, 0, 0);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("게시글이 이미 마감되었습니다.");
+    }
+
+    @Test
+    @DisplayName("해당 게시글을 조기 마감할 시, 마감 시간까지의 시간 중 반 이상이 지나지 않은 게시글이면 예외를 던진다.")
+    void throwExceptionHalfDeadLinePostClosedEarly() {
+        // given
+        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
+        LocalDateTime oldDeadline = LocalDateTime.now().plusMinutes(1);
+        Post post = postRepository.save(
+                Post.builder()
+                        .writer(writer)
+                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline)
+                        .build()
+        );
+
+        Post foundPost = postRepository.findById(post.getId()).get();
+
+        // when, then
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("게시글이 마감 시간까지 절반의 시간 이상이 지나지 않으면 조기마감을 할 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
     void getAllPostBySortTypeAndClosingType() {
         // given
         Member writer = MALE_30.get();
@@ -429,8 +523,6 @@ class PostServiceTest {
                     );
                 }
             };
-
-
 
             List<MultipartFile> optionImages = new ArrayList<>() {
                 {

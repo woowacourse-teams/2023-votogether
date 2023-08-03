@@ -36,7 +36,7 @@ public record PostDetailResponse(
         final PostCategories postCategories = post.getPostCategories();
         return new PostDetailResponse(
                 post.getId(),
-                WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
+                WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 contentImageUrl.toString(),

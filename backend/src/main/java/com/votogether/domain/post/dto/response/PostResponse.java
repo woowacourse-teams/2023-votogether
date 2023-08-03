@@ -1,5 +1,6 @@
 package com.votogether.domain.post.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.response.vote.VoteResponse;
 import com.votogether.domain.post.entity.Post;
@@ -16,8 +17,13 @@ public record PostResponse(
         String title,
         String content,
         List<CategoryResponse> categories,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline,
+
         VoteResponse voteInfo
 ) {
 
@@ -27,7 +33,7 @@ public record PostResponse(
 
         return new PostResponse(
                 post.getId(),
-                WriterResponse.of(writer.getId(), writer.getNickname().getValue()),
+                WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 getCategories(post),

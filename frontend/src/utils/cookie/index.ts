@@ -15,3 +15,17 @@ export function getCookieToken() {
   });
   return cookieContent as Record<CookieKey, any>;
 }
+
+interface MemberPayload {
+  memberId: number;
+  iat: number;
+  exp: number;
+}
+
+export function getMemberId(token: string): MemberPayload {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const decodedData = JSON.parse(atob(base64));
+
+  return decodedData;
+}

@@ -10,6 +10,7 @@ import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
 
+import { getCookieToken, getMemberId } from '@utils/cookie';
 import { checkClosedPost } from '@utils/time';
 
 import BottomButtonPart from './BottomButtonPart';
@@ -22,7 +23,9 @@ export default function PostDetailPage() {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const userId = 12121221;
+  const token = getCookieToken().accessToken;
+  const decodedPayload = getMemberId(token);
+  const memberId = decodedPayload.memberId;
 
   const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
   const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
@@ -49,7 +52,7 @@ export default function PostDetailPage() {
   }
 
   window.console.log(postData);
-  const isWriter = postData.writer.id === userId;
+  const isWriter = postData.writer.id === memberId;
   const isClosed = checkClosedPost(postData.deadline);
 
   const movePage = {
@@ -108,7 +111,7 @@ export default function PostDetailPage() {
         {!isCommentLoading && commentData && (
           <CommentList
             commentList={commentData}
-            memberId={userId}
+            memberId={memberId}
             isGuest={false}
             postWriterName={'익명의손님1'}
           />

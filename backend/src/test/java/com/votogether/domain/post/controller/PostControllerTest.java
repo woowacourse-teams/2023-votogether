@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -359,7 +360,7 @@ class PostControllerTest {
         Post post = Post.builder()
                 .writer(MALE_30.get())
                 .postBody(postBody)
-                .deadline(LocalDateTime.now().plusDays(3L))
+                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
         PostResponse postResponse = PostResponse.of(post, MALE_30.get());

@@ -40,6 +40,7 @@ export default function OptionStatistics({
   return (
     <S.Container>
       <WrittenVoteOption
+        ariaLabel=""
         key={voteOption.id}
         {...voteOption}
         isPreview={false}

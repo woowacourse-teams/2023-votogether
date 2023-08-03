@@ -42,7 +42,7 @@ public record PostDetailResponse(
                 WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
-                contentImageUrl.toString(),
+                convertImageUrl(contentImageUrl.toString()),
                 getCategories(postCategories.getPostCategories()),
                 post.getCreatedAt(),
                 post.getDeadline(),
@@ -52,6 +52,10 @@ public record PostDetailResponse(
                         getOptions(post, loginMember)
                 )
         );
+    }
+
+    private static String convertImageUrl(final String imageUrl) {
+        return imageUrl.contains("없는사진") ? "" : imageUrl;
     }
 
     private static List<CategoryResponse> getCategories(final List<PostCategory> postCategories) {

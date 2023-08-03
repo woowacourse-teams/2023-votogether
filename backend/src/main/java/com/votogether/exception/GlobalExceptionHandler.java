@@ -78,7 +78,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ExceptionResponse> handleMissingServletRequestPartException(final MissingServletRequestPartException e) {
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestPartException(
+            final MissingServletRequestPartException e
+    ) {
         System.out.println("================================");
         System.out.println("GlobalExceptionHandler.handleMissingServletRequestPartException");
         e.printStackTrace();

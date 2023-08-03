@@ -1,5 +1,6 @@
 package com.votogether.domain.post.dto.response.detail;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.response.CategoryResponse;
 import com.votogether.domain.post.dto.response.WriterResponse;
@@ -18,7 +19,9 @@ public record PostDetailResponse(
         String content,
         String imageUrl,
         List<CategoryResponse> categories,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline,
         VoteDetailResponse voteInfo
 ) {

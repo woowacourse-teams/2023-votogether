@@ -18,25 +18,25 @@ public class ImageUploader {
     public static String upload(final MultipartFile image) {
         final long milli = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
 
-        final String absolutePath = new File("").getAbsolutePath();
-        final String imageFolderPath = absolutePath + "/images/";
-        final String imageUrl = imageFolderPath + milli + "_" + image.getOriginalFilename();
+        final String rootPath = new File("").getAbsolutePath() + File.separator;
+        final String imageDirPath = "static" + File.separator + "images" + File.separator;
+        final String imageFileName = milli + "_" + image.getOriginalFilename();
 
         try {
-            File imageFolder = new File(imageFolderPath);
+            File imageFolder = new File(rootPath + imageDirPath);
             if (!imageFolder.exists()) {
                 imageFolder.mkdirs(); // Creates the directory if it does not exist
             }
 
-            Files.write(Paths.get(imageUrl), image.getBytes());
+            Files.write(Paths.get(rootPath + imageDirPath + imageFileName), image.getBytes());
         } catch (IOException ignore) {
             System.out.println("ImageUploader.upload");
-            System.out.println("imageUrl = " + imageUrl);
+            System.out.println("imageUrl = " + imageDirPath + imageFileName);
             ignore.printStackTrace();
             throw new BadRequestException(PostExceptionType.WRONG_IMAGE);
         }
 
-        return imageUrl;
+        return imageDirPath + imageFileName;
     }
 
 }

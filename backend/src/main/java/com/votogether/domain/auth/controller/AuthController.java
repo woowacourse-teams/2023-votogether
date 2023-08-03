@@ -19,7 +19,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "카카오 로그인 하기", description = "카카오 계정으로 로그인을 한다.")
+    @Operation(summary = "카카오 로그인 하기e", description = "카카오 계정으로 로그인을 한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "카카오 로그인 성공"),
             @ApiResponse(responseCode = "400", description = "올바르지 않은 요청"),

@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostService {
-    private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
+    private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;;
 
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;

@@ -1,45 +1,49 @@
-package com.votogether.domain.post.dto.response;
+package com.votogether.domain.post.dto.response.detail;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.response.vote.VoteResponse;
+import com.votogether.domain.post.dto.response.CategoryResponse;
+import com.votogether.domain.post.dto.response.WriterResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostCategories;
 import com.votogether.domain.post.entity.PostCategory;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.votogether.domain.post.entity.PostContentImage;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Schema(description = "게시글에 관련한 데이터들입니다.")
-public record PostResponse(
+public record PostDetailResponse(
         Long postId,
         WriterResponse writer,
         String title,
         String content,
+        String imageUrl,
         List<CategoryResponse> categories,
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline,
-
-        VoteResponse voteInfo
+        VoteDetailResponse voteInfo
 ) {
 
-    public static PostResponse of(final Post post, final Member loginMember) {
+    public static PostDetailResponse of(final Post post, final Member loginMember) {
         final Member writer = post.getWriter();
         final PostBody postBody = post.getPostBody();
+        final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
+        final StringBuilder contentImageUrl = new StringBuilder();
 
-        return new PostResponse(
+        if (!contentImages.isEmpty()) {
+            contentImageUrl.append(contentImages.get(0).getImageUrl());
+        }
+
+        final PostCategories postCategories = post.getPostCategories();
+        return new PostDetailResponse(
                 post.getId(),
                 WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
-                getCategories(post),
+                contentImageUrl.toString(),
+                getCategories(postCategories.getPostCategories()),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                VoteResponse.of(
+                VoteDetailResponse.of(
                         post.getPostOptions().getSelectedOptionId(loginMember),
                         post.getFinalTotalVoteCount(loginMember),
                         getOptions(post, loginMember)
@@ -47,24 +51,20 @@ public record PostResponse(
         );
     }
 
-    private static List<CategoryResponse> getCategories(final Post post) {
-        return post.getPostCategories()
-                .getPostCategories()
-                .stream()
+    private static List<CategoryResponse> getCategories(final List<PostCategory> postCategories) {
+        return postCategories.stream()
                 .map(PostCategory::getCategory)
                 .map(CategoryResponse::of)
                 .toList();
     }
 
-    private static List<PostOptionResponse> getOptions(
+    private static List<PostOptionDetailResponse> getOptions(
             final Post post,
             final Member loginMember
     ) {
-        return post.getPostOptions()
-                .getPostOptions()
-                .stream()
+        return post.getPostOptions().getPostOptions().stream()
                 .map(postOption ->
-                        PostOptionResponse.of(
+                        PostOptionDetailResponse.of(
                                 postOption,
                                 post.isVisibleVoteResult(loginMember),
                                 post.getFinalTotalVoteCount(loginMember)

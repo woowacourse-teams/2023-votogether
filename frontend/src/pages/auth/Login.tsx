@@ -10,7 +10,7 @@ import kakaoLogin from '@assets/kakao_login_medium_wide.svg';
 export default function Login() {
   const navigate = useNavigate();
   const CLIENT_ID = `${process.env.VOTOGETHER_REST_API_KEY}`;
-  const REDIRECT_URI = `${process.env.VOTOGETHER_CLIENT_REDIRECT_URL}`;
+  const REDIRECT_URI = `${process.env.VOTOGETHER_SERVER_REDIRECT_URL}`;
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
   return (

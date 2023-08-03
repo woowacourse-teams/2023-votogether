@@ -1,22 +1,24 @@
-package com.votogether.domain.post.dto.response;
+package com.votogether.domain.post.dto.response.detail;
 
 import com.votogether.domain.post.entity.PostOption;
 
-public record PostOptionResponse(
+public record PostOptionDetailResponse(
         Long optionId,
         String content,
+        String imageUrl,
         Integer voteCount,
         Double votePercent
 ) {
 
-    public static PostOptionResponse of(
+    public static PostOptionDetailResponse of(
             final PostOption postOption,
-            final boolean isVisibleVoteResult,
+            final Boolean isVisibleVoteResult,
             final Long totalVoteCount
     ) {
-        return new PostOptionResponse(
+        return new PostOptionDetailResponse(
                 postOption.getId(),
                 postOption.getContent(),
+                postOption.getImageUrl(),
                 postOption.getVoteCount(isVisibleVoteResult),
                 postOption.getVotePercent(totalVoteCount)
         );

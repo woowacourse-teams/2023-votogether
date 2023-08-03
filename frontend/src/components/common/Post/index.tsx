@@ -17,7 +17,7 @@ interface PostProps {
 }
 
 export default function Post({ postInfo, isPreview }: PostProps) {
-  const { postId, category, title, writer, startTime, endTime, content, voteInfo } = postInfo;
+  const { postId, category, title, writer, createTime, deadline, content, voteInfo } = postInfo;
 
   const handleVoteClick = (newOptionId: number) => {
     if (voteInfo.selectedOptionId === newOptionId) return;

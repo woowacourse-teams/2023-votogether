@@ -19,11 +19,20 @@ public class ImageUploader {
         final long milli = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
 
         final String absolutePath = new File("").getAbsolutePath();
-        final String imageUrl = absolutePath + "/images/" + milli + "_" + image.getOriginalFilename();
+        final String imageFolderPath = absolutePath + "/images/";
+        final String imageUrl = imageFolderPath + milli + "_" + image.getOriginalFilename();
 
         try {
+            File imageFolder = new File(imageFolderPath);
+            if (!imageFolder.exists()) {
+                imageFolder.mkdirs(); // Creates the directory if it does not exist
+            }
+
             Files.write(Paths.get(imageUrl), image.getBytes());
         } catch (IOException ignore) {
+            System.out.println("ImageUploader.upload");
+            System.out.println("imageUrl = " + imageUrl);
+            ignore.printStackTrace();
             throw new BadRequestException(PostExceptionType.WRONG_IMAGE);
         }
 

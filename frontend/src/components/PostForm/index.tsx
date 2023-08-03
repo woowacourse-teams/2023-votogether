@@ -1,10 +1,12 @@
 import type { UseMutateFunction } from '@tanstack/react-query';
 
-import React, { HTMLAttributes, useState } from 'react';
+import React, { HTMLAttributes, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
+import { AuthContext } from '@hooks/context/auth';
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useContentImage } from '@hooks/useContentImage';
 import { useMultiSelect } from '@hooks/useMultiSelect';
 import { useText } from '@hooks/useText';
@@ -20,9 +22,9 @@ import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList'
 
 import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
 
+import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
-
-import { MOCK_CATEGORY_LIST } from '@mocks/mockData/categoryList';
+import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 
 import { DEADLINE_OPTION } from './constants';
 import ContentImagePart from './ContentImageSection';
@@ -44,8 +46,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     title,
     content,
     category: categoryIds,
-    startTime,
-    endTime: deadline,
+    createTime,
+    deadline,
     voteInfo,
     imageUrl,
   } = data ?? {};
@@ -53,6 +55,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
   const navigate = useNavigate();
   const writingOptionHook = useWritingOption(voteInfo?.options);
   const contentImageHook = useContentImage(imageUrl);
+  const { isLogged } = useContext(AuthContext).loggedInfo;
+  const { data: categoryList } = useCategoryList(isLogged);
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -60,10 +64,16 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     hour: 0,
     minute: 0,
   });
-  const baseTime = startTime ? new Date(startTime) : new Date();
+  const baseTime = createTime ? new Date(createTime) : new Date();
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
+  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
+    categoryIds ?? [],
+    CATEGORY_COUNT_LIMIT
+  );
+
+  const categoryOptionList = changeCategoryToOption(categoryList ?? []);
 
   const handleDeadlineButtonClick = (option: string) => {
     setTime(formatTimeWithOption(option));
@@ -96,8 +106,13 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const contentImageFileList: File[] = [];
       const optionImageFileList: File[] = [];
       fileInputList.forEach((item, index) => {
-        if (imageUrlList[index] === '') item.value = '';
-        if (item.files) {
+        if (!item.files) return;
+
+        if (imageUrlList[index] === '') {
+          index === 0
+            ? contentImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
+            : optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'));
+        } else {
           index === 0
             ? contentImageFileList.push(item.files[0])
             : optionImageFileList.push(item.files[0]);
@@ -112,7 +127,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       });
 
       const updatedPostTexts = {
-        categoryIds: [1, 2], // 다중 선택 컴포넌트 구현 후 수정 예정
+        categoryIds: selectedOptionList.map(option => option.id),
         title: writingTitle ?? '',
         imageUrl: imageUrl ?? '',
         content: writingContent ?? '',
@@ -134,41 +149,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     }
   };
 
-  const getDeadlineTime = ({
-    day,
-    hour,
-    minute,
-  }: {
-    day: number;
-    hour: number;
-    minute: number;
-  }) => {
-    const timeMessage = [];
-
-    if (day === 0 && hour === 0 && minute === 0) {
-      return '마감 시간을 선택해주세요';
-    }
-
-    if (day > 0) {
-      timeMessage.push(`${day}일`);
-    }
-
-    if (hour > 0) {
-      timeMessage.push(`${hour}시간`);
-    }
-
-    if (minute > 0) {
-      timeMessage.push(`${minute}분`);
-    }
-
-    return `${timeMessage.join(' ')}  후에 마감됩니다.`;
-  };
-
-  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
-    categoryIds ?? [],
-    CATEGORY_COUNT_LIMIT
-  );
-
   return (
     <>
       <S.HeaderWrapper>
@@ -184,7 +164,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
             <MultiSelect
               selectedOptionList={selectedOptionList}
-              optionList={MOCK_CATEGORY_LIST}
+              optionList={categoryOptionList}
               handleOptionAdd={handleOptionAdd}
               handleOptionDelete={handleOptionDelete}
               placeholder="카테고리를 선택해주세요."
@@ -220,7 +200,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                 {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
                   <S.Description>
-                    글 작성일({startTime})로부터 하루 이후 (
+                    글 작성일({createTime})로부터 하루 이후 (
                     {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택
                     가능합니다.
                   </S.Description>

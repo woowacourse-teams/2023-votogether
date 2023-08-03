@@ -25,8 +25,8 @@ export default function EditPost() {
       { id: 13217, name: '게임' },
       { id: 13219, name: '연예' },
     ],
-    startTime: '2023-07-18 12:40',
-    endTime: '2023-08-15 12:40',
+    createTime: '2023-07-18 12:40',
+    deadline: '2023-08-15 12:40',
     voteInfo: {
       selectedOptionId: 1,
       allPeopleCount: 0,

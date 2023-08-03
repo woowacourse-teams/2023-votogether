@@ -1,7 +1,6 @@
 import { getCookieToken } from './cookie';
 
 const headers = {
-  'Content-Type': 'application/json;charset=utf-8',
   Authorization: `Bearer `,
 };
 
@@ -44,11 +43,11 @@ export const postFetch = async <T, R>(url: string, body: T): Promise<R | void> =
     headers: makeFetchHeaders(),
   });
 
-  const data = await response.json();
-
   if (!response.ok) {
-    throw new Error(data.message);
+    throw new Error('에러');
   }
+
+  const data = await response.json();
 
   return data;
 };
@@ -76,10 +75,8 @@ export const patchFetch = async <T>(url: string, body?: T) => {
     body: JSON.stringify(body),
   });
 
-  const data = await response.json();
-
   if (!response.ok) {
-    throw new Error(data.message);
+    throw new Error('에러');
   }
 
   return response;

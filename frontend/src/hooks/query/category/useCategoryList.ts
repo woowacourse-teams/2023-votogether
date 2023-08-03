@@ -8,7 +8,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useCategoryList = (isLoggedIn: boolean) => {
   const { data, error, isLoading, isError } = useQuery<Category[]>(
-    [QUERY_KEY.CATEGORIES],
+    [QUERY_KEY.CATEGORIES, isLoggedIn],
     isLoggedIn ? getUserCategoryList : getGuestCategoryList
   );
 

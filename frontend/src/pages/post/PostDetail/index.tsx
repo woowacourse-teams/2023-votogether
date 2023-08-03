@@ -51,7 +51,6 @@ export default function PostDetailPage() {
     return <div>로딩중</div>;
   }
 
-  window.console.log(postData);
   const isWriter = postData.writer.id === memberId;
   const isClosed = checkClosedPost(postData.deadline);
 

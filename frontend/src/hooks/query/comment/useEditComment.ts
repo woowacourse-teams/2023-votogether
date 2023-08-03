@@ -1,16 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { CommentRequest, CommentResponse } from '@type/comment';
+import { Comment, CommentResponse } from '@type/comment';
 
 import { editComment } from '@api/comment';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const useEditComment = (
-  postId: number,
-  commentId: number,
-  updatedComment: CommentRequest
-) => {
+export const useEditComment = (postId: number, commentId: number, updatedComment: Comment) => {
   const queryClient = useQueryClient();
   const queryKey = [QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS];
 
@@ -22,11 +18,11 @@ export const useEditComment = (
         await queryClient.cancelQueries(queryKey);
 
         const oldCommentList: CommentResponse[] | undefined = queryClient.getQueryData(queryKey); // 기존 댓글 데이터의 snapshot
-        window.console.log('기존 댓글 데이터: ', oldCommentList);
 
         if (oldCommentList) {
           const updatedCommentList = oldCommentList.map(comment => {
             if (comment.id === commentId) return updatedComment;
+            return comment;
           });
 
           queryClient.setQueryData(queryKey, updatedCommentList); // 낙관적 업데이트 실시

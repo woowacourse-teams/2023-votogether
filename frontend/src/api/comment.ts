@@ -29,7 +29,9 @@ export const editComment = async (
   commentId: number,
   updatedComment: CommentRequest
 ) => {
-  return await putFetch(`${BASE_URL}/posts/${postId}/comments/${commentId}`, updatedComment);
+  return await putFetch(`${BASE_URL}/posts/${postId}/comments/${commentId}`, {
+    content: updatedComment.content,
+  });
 };
 
 export const deleteComment = async (postId: number, commentId: number) => {

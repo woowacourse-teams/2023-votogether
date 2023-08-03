@@ -12,12 +12,13 @@ export default meta;
 type Story = StoryObj<typeof CommentTextForm>;
 
 export const InitForm: Story = {
-  render: () => <CommentTextForm initialComment="" />,
+  render: () => <CommentTextForm commentId={-1} initialComment="" />,
 };
 
 export const EditForm: Story = {
   render: () => (
     <CommentTextForm
+      commentId={MOCK_TRANSFORMED_COMMENT_LIST[0].id}
       initialComment={MOCK_TRANSFORMED_COMMENT_LIST[0].content}
       handleCancelClick={() => {}}
     />

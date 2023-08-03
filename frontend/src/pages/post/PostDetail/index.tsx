@@ -1,14 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { useFetch } from '@hooks/useFetch';
 
 import { getPost, removePost, setEarlyClosePost } from '@api/post';
 
+import CommentList from '@components/comment/CommentList';
 import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
-import { MOCK_NOT_VOTE_POST } from '@components/common/Post/mockData';
 
+import { getCookieToken, getMemberId } from '@utils/cookie';
 import { checkClosedPost } from '@utils/time';
 
 import BottomButtonPart from './BottomButtonPart';
@@ -21,9 +23,13 @@ export default function PostDetailPage() {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const userId = 12121221;
+  const token = getCookieToken().accessToken;
+  const decodedPayload = getMemberId(token);
+  const memberId = decodedPayload.memberId;
 
   const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
+  const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
+  // const { data: userInfo, isLoading: isUserInfoLoading, error } = useUserInfo(isLoggedIn);
 
   if (!postData) {
     return (
@@ -45,7 +51,8 @@ export default function PostDetailPage() {
     return <div>로딩중</div>;
   }
 
-  const isWriter = postData.writer.id === userId;
+  window.console.log(postData);
+  const isWriter = postData.writer.id === memberId;
   const isClosed = checkClosedPost(postData.deadline);
 
   const movePage = {
@@ -95,12 +102,20 @@ export default function PostDetailPage() {
         </NarrowTemplateHeader>
       </S.HeaderContainer>
       <S.Container>
-        <Post postInfo={MOCK_NOT_VOTE_POST} isPreview={false} />
+        <Post postInfo={postData} isPreview={false} />
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}
           handleEvent={{ movePage, controlPost }}
         />
+        {!isCommentLoading && commentData && (
+          <CommentList
+            commentList={commentData}
+            memberId={memberId}
+            isGuest={false}
+            postWriterName={'익명의손님1'}
+          />
+        )}
       </S.Container>
     </Layout>
   );

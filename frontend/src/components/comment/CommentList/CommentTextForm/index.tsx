@@ -1,5 +1,8 @@
 import { ChangeEvent } from 'react';
+import { useParams } from 'react-router-dom';
 
+import { useCreateComment } from '@hooks/query/comment/useCreateComment';
+import { useEditComment } from '@hooks/query/comment/useEditComment';
 import { useText } from '@hooks/useText';
 
 import SquareButton from '@components/common/SquareButton';
@@ -9,20 +12,36 @@ import { COMMENT_MAX_LENGTH } from '@constants/comment';
 import * as S from './style';
 
 interface CommentTextFormProps {
+  commentId: number;
   initialComment: string;
   handleCancelClick?: () => void;
 }
 
 export default function CommentTextForm({
+  commentId,
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-  const { handleTextChange, text } = useText(initialComment);
+  const { handleTextChange, text: content } = useText(initialComment);
+
+  const params = useParams() as { postId: string };
+  const postId = Number(params.postId);
+
+  const { mutate: createComment } = useCreateComment(postId);
+  const { mutate: editComment } = useEditComment(postId, commentId, { content: initialComment });
+
+  const updateComment = initialComment
+    ? () => {
+        editComment();
+      }
+    : () => {
+        createComment({ content });
+      };
 
   return (
     <S.Container>
       <S.TextArea
-        value={text}
+        value={content}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, COMMENT_MAX_LENGTH)}
       />
       <S.ButtonContainer>
@@ -34,7 +53,7 @@ export default function CommentTextForm({
           </S.ButtonWrapper>
         )}
         <S.ButtonWrapper>
-          <SquareButton theme="blank" type="button">
+          <SquareButton onClick={() => updateComment()} theme="blank" type="button">
             저장
           </SquareButton>
         </S.ButtonWrapper>

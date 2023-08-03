@@ -27,11 +27,11 @@ export const getFetch = async <T>(url: string): Promise<T> => {
     headers: makeFetchHeaders(),
   });
 
-  const data = await response.json();
-
   if (!response.ok) {
-    throw new Error(data.message);
+    throw new Error('에러');
   }
+
+  const data = await response.json();
 
   return data;
 };

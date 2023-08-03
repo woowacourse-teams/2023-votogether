@@ -1,5 +1,6 @@
-package com.votogether.domain.post.dto.response;
+package com.votogether.domain.post.dto.response.vote;
 
+import com.votogether.domain.post.dto.response.PostOptionResponse;
 import java.util.List;
 
 public record VoteResponse(

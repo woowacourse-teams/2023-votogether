@@ -3,7 +3,8 @@ package com.votogether.domain.post.controller;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
-import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
+import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
+import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
@@ -37,7 +38,7 @@ public class PostController {
 
     @Operation(summary = "게시글 작성", description = "게시글을 저장한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "게시물 생성되었습니다."),
+            @ApiResponse(responseCode = "201", description = "게시글 생성 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -45,7 +46,7 @@ public class PostController {
             @RequestPart @Valid final PostCreateRequest request,
             @RequestPart(required = false) final List<MultipartFile> contentImages,
             @RequestPart final List<MultipartFile> optionImages,
-            @Auth final Member loginMember
+            @Auth final Member member
     ) {
         System.out.println("PostController.save");
 
@@ -59,13 +60,13 @@ public class PostController {
             System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
             System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
         }
-        final long postId = postService.save(request, loginMember, contentImages, optionImages);
+        final long postId = postService.save(request, member, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
     @Operation(summary = "전체 게시글 조회", description = "게시글을 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게시글을 조회했습니다."),
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
     })
     @GetMapping
@@ -73,12 +74,26 @@ public class PostController {
             final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
-            @Auth final Member loginMember
+            @Auth final Member member
     ) {
         final List<PostResponse> responses =
-                postService.getAllPostBySortTypeAndClosingType(loginMember, page, postClosingType, postSortType);
+                postService.getAllPostBySortTypeAndClosingType(member, page, postClosingType, postSortType);
 
         return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "게시글 상세 조회", description = "한 게시글의 상세를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")
+    })
+    @GetMapping("{postId}")
+    public ResponseEntity<PostDetailResponse> getPost(
+            @PathVariable final Long postId,
+            @Auth final Member member
+    ) {
+        final PostDetailResponse response = postService.getPostById(postId, member);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "게시글 투표 통계 조회", description = "게시글 투표에 대한 전체 통계를 조회한다.")

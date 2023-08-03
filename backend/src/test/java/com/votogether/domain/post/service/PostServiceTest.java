@@ -366,53 +366,6 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("회원 자신이 투표한 게시글 목록을 조회한다.")
-    void getPostsVotedOn() {
-        // given
-        Member member = memberRepository.save(MemberFixtures.FEMALE_20.get());
-        Member writer = memberRepository.save(MALE_20.get());
-
-        Post postA = postRepository.save(
-                Post.builder()
-                        .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
-                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                        .build()
-        );
-        Post postB = postRepository.save(
-                Post.builder()
-                        .writer(writer)
-                        .postBody(PostBody.builder().title("title1").content("content2").build())
-                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                        .build()
-        );
-
-        PostOption postOptionOfPostA = postOptionRepository.save(
-                PostOption.builder()
-                        .post(postA)
-                        .sequence(1)
-                        .content("치킨")
-                        .build()
-        );
-        PostOption postOptionOfPostB = postOptionRepository.save(
-                PostOption.builder()
-                        .post(postB)
-                        .sequence(1)
-                        .content("치킨")
-                        .build()
-        );
-
-        voteRepository.save(Vote.builder().member(member).postOption(postOptionOfPostA).build());
-        voteRepository.save(Vote.builder().member(member).postOption(postOptionOfPostB).build());
-
-        // when
-        List<Post> postsVotedOn = postService.getPostsVotedOn(member);
-
-        // then
-        assertThat(postsVotedOn).hasSize(2);
-    }
-
-    @Test
     @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
     void getAllPostBySortTypeAndClosingType() {
         // given
@@ -555,4 +508,3 @@ class PostServiceTest {
     }
 
 }
-

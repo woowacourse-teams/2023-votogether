@@ -26,7 +26,7 @@ describe('카테고리에 대한 통신(카테고리 목록 조회, 즐겨찾기
   });
 
   test('회원이 카테고리 즐겨찾기를 할 수 있다.', async () => {
-    MOCK_CATEGORY_LIST[1].favorite = false;
+    MOCK_CATEGORY_LIST[1].isFavorite = false;
 
     await addFavoriteCategory(MOCK_CATEGORY_LIST[1].id);
 
@@ -36,7 +36,7 @@ describe('카테고리에 대한 통신(카테고리 목록 조회, 즐겨찾기
   });
 
   test('회원이 카테고리 즐겨찾기를 해제할 수 있다.', async () => {
-    MOCK_CATEGORY_LIST[0].favorite = true;
+    MOCK_CATEGORY_LIST[0].isFavorite = true;
 
     await removeFavoriteCategory(MOCK_CATEGORY_LIST[0].id);
 

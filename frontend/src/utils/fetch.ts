@@ -33,7 +33,6 @@ export const getFetch = async <T>(url: string): Promise<T> => {
   }
 
   const data = await response.json();
-
   return data;
 };
 

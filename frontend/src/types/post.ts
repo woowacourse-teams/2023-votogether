@@ -8,6 +8,14 @@ export interface WrittenVoteOptionType {
   imageUrl: string;
 }
 
+export interface WrittenVoteOptionTypeResponse {
+  optionId: number;
+  content: string;
+  voteCount: number;
+  votePercent: number;
+  imageUrl: string;
+}
+
 export interface PostInfo {
   postId: number;
   title: string;
@@ -21,6 +29,22 @@ export interface PostInfo {
     selectedOptionId: number;
     allPeopleCount: number;
     options: WrittenVoteOptionType[];
+  };
+}
+
+export interface PostInfoResponse {
+  postId: number;
+  title: string;
+  writer: { id: number; nickname: string };
+  content: string;
+  imageUrl: string;
+  categories: { id: number; name: string }[];
+  createdAt: string;
+  deadline: string;
+  voteInfo: {
+    selectedOptionId: number;
+    totalVoteCount: number;
+    options: WrittenVoteOptionTypeResponse[];
   };
 }
 

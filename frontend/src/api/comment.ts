@@ -11,6 +11,7 @@ export const transformCommentListResponse = (commentList: CommentResponse[]): Co
     isEdit: comment.createdAt !== comment.updatedAt,
   }));
 };
+
 export const getCommentList = async (postId: number): Promise<Comment[]> => {
   const commentList = await getFetch<CommentResponse[]>(`/posts/${postId}/comments`);
 

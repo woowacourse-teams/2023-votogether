@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Category } from '@type/category';
 
-import { addFavoriteCategory, removeFavoriteCategory } from '@api/wus/categoryList';
+import { addFavoriteCategory, removeFavoriteCategory } from '@api/categoryList';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

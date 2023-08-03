@@ -15,7 +15,7 @@ interface PostProps {
 }
 
 export default function Post({ postInfo, isPreview }: PostProps) {
-  const { postId, category, title, writer, startTime, endTime, content, voteInfo } = postInfo;
+  const { postId, category, title, writer, createTime, deadline, content, voteInfo } = postInfo;
 
   const handleVoteClick = (newOptionId: number) => {
     if (voteInfo.selectedOptionId === newOptionId) return;
@@ -34,13 +34,13 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   return (
     <S.Container>
       <S.DetailLink to={`${PATH.POST}/${postId}`} $isPreview={isPreview}>
-        <S.Category>{category.map(category => category.name).join(' | ')}</S.Category>
+        <S.Category>{category?.map(category => category.name).join(' | ')}</S.Category>
         <S.Title $isPreview={isPreview}>{title}</S.Title>
         <S.Wrapper>
           <span>{writer.nickname}</span>
           <S.Wrapper>
-            <span>{startTime}</span>
-            <span>{endTime}</span>
+            <span>{createTime}</span>
+            <span>{deadline}</span>
           </S.Wrapper>
         </S.Wrapper>
         <S.Content $isPreview={isPreview}>{content}</S.Content>

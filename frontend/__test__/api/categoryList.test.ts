@@ -4,7 +4,7 @@ import {
   getUserCategoryList,
   removeFavoriteCategory,
   transformCategoryListResponse,
-} from '@api/wus/categoryList';
+} from '@api/categoryList';
 
 import { MOCK_CATEGORY_LIST, MOCK_GUEST_CATEGORY_LIST } from '@mocks/mockData/categoryList';
 

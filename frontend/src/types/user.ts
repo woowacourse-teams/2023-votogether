@@ -18,9 +18,8 @@ export interface ModifyNicknameRequest {
   nickname: string;
 }
 
-
 export interface LoggedInfo {
   accessToken: string;
   isLogged: boolean;
-  userInfo?: UserInfoResponse;
+  userInfo?: User;
 }

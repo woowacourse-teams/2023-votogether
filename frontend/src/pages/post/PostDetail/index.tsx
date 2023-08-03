@@ -46,7 +46,7 @@ export default function PostDetailPage() {
   }
 
   const isWriter = postData.writer.id === userId;
-  const isClosed = checkClosedPost(postData.endTime);
+  const isClosed = checkClosedPost(postData.deadline);
 
   const movePage = {
     moveWritePostPage: () => {

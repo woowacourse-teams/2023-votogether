@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ProgressBar from './ProgressBar';
 import * as S from './style';
 
@@ -12,6 +10,7 @@ interface WrittenVoteOptionProps {
   isSelected: boolean;
   isPreview: boolean;
   imageUrl: string;
+  ariaLabel: string;
 }
 
 export default function WrittenVoteOption({
@@ -23,23 +22,30 @@ export default function WrittenVoteOption({
   isSelected,
   isPreview,
   imageUrl,
+  ariaLabel,
 }: WrittenVoteOptionProps) {
   return (
-    <S.Container $isSelected={isSelected} onClick={handleVoteClick}>
+    <S.Container
+      aria-label={`${ariaLabel}${isSelected ? ' 선택된 선택지' : ''}`}
+      $isSelected={isSelected}
+      onClick={handleVoteClick}
+    >
       {!isPreview && imageUrl && <S.Image src={imageUrl} alt={text} />}
       {isPreview ? (
-        <S.PreviewContent>{text}</S.PreviewContent>
+        <S.PreviewContent aria-label="선택지 내용">{text}</S.PreviewContent>
       ) : (
-        <S.DetailContent>{text}</S.DetailContent>
+        <S.DetailContent aria-label="선택지 내용">{text}</S.DetailContent>
       )}
       {isVoted && (
         <>
-          <S.ProgressContainer>
+          <S.ProgressContainer aria-label={''}>
             <ProgressBar percent={percent} isSelected={isSelected} />
           </S.ProgressContainer>
           <S.TextContainer>
-            <S.PeopleText>{peopleCount}명</S.PeopleText>
-            <S.PercentText>({percent.toFixed(1)}%)</S.PercentText>
+            <S.PeopleText aria-label="투표한 인원">{peopleCount}명</S.PeopleText>
+            <S.PercentText aria-label="전체 투표 중 차지 비율">
+              ({percent.toFixed(1)}%)
+            </S.PercentText>
           </S.TextContainer>
         </>
       )}

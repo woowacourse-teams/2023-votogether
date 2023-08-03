@@ -1,12 +1,21 @@
 import { styled } from 'styled-components';
 
+import { Size } from '@type/style';
+
 export const ContentImageContainer = styled.div`
   display: grid;
   grid-template-columns: 40px auto;
 `;
 
-export const ContentImageWrapper = styled.div`
-  width: 60%;
+const imageSize = {
+  sm: '25%',
+  md: '50%',
+  lg: '100%',
+};
+
+export const ContentImageWrapper = styled.div<{ $size: Size }>`
+  width: ${props => imageSize[props.$size]};
+  height: 100%;
 
   position: relative;
 `;
@@ -19,21 +28,19 @@ export const ContentImage = styled.img`
   object-fit: cover;
 `;
 
-export const FileInputContainer = styled.div<{ $isVisible: boolean }>`
+export const FileInputContainer = styled.div`
   width: 100%;
-  margin: 5px;
   border-radius: 50%;
-
-  visibility: ${props => !props.$isVisible && 'hidden'};
 `;
 
 export const FileInput = styled.input`
   visibility: hidden;
 `;
 
-export const Label = styled.label`
-  display: block;
-
+export const Label = styled.label<{ $isVisible: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
   border: 2px solid var(--primary-color);
@@ -46,5 +53,6 @@ export const Label = styled.label`
   font: var(--text-body);
   text-align: center;
 
+  visibility: ${props => (props.$isVisible ? 'hidden' : '')};
   cursor: pointer;
 `;

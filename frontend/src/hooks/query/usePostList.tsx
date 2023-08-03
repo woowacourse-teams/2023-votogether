@@ -1,28 +1,30 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { PostList, PostListByOption } from '@type/post';
+import { PostList, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
 
 import { getPostList } from '@api/postList';
 
-const MAX_LIST_LENGTH = 10;
+import { POST_LIST_MAX_LENGTH } from '@constants/post';
 
-export const usePostList = ({
-  content,
-  postSorting,
-  postStatus,
-  categoryId,
-}: Omit<PostListByOption, 'pageNumber'>) => {
+export const usePostList = (
+  requiredOption: Omit<PostListByRequiredOption, 'pageNumber'>,
+  optionalOption: PostListByOptionalOption
+) => {
+  const { postSorting, postStatus } = requiredOption;
+  const { categoryId, keyword } = optionalOption;
+
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<PostList>(
-      ['posts', postSorting, postStatus, categoryId],
+      ['posts', postSorting, postStatus, categoryId, keyword],
       ({ pageParam = 0 }) =>
-        getPostList({ content, postSorting, postStatus, pageNumber: pageParam, categoryId }),
+        getPostList({ ...requiredOption, pageNumber: pageParam }, optionalOption),
       {
         getNextPageParam: lastPage => {
-          if (lastPage.postList.length !== MAX_LIST_LENGTH) return;
+          if (lastPage.postList.length !== POST_LIST_MAX_LENGTH) return;
 
           return lastPage.pageNumber + 1;
         },
+        suspense: true,
       }
     );
 

@@ -28,6 +28,8 @@ public record PostCreateRequest(
         @Length(max = 1000, message = "내용은 최대 1000자까지 입력 가능합니다.")
         String content,
 
+        String imageUrl,
+
         @Schema(description = "게시글의 여러 선택지")
         @Valid
         @NotNull(message = "선택지는 최소 2개 이상 등록해야 합니다.")

@@ -3,7 +3,7 @@ import {
   getUserInfo,
   modifyNickname,
   transformUserInfoResponse,
-} from '@api/wus/userInfo';
+} from '@api/userInfo';
 
 import { MOCK_USER_INFO } from '@mocks/mockData/user';
 

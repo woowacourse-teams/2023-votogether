@@ -6,6 +6,7 @@ export const HeaderWrapper = styled.div`
   width: 100%;
 
   position: fixed;
+  left: 0;
 
   z-index: ${theme.zIndex.header};
 
@@ -23,23 +24,40 @@ export const HeaderButton = styled.button`
 `;
 
 export const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  gap: 40px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
 
-  width: 100%;
-  padding: 70px 30px;
-
-  box-sizing: border-box;
+  padding: 70px 10px 20px 10px;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: start;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
 
-    padding: 30px 70px;
+    padding: 30px 40px 20px 40px;
+  }
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    grid-template-columns: 1fr 300px;
+    padding: 30px 80px 20px 8cqb;
+  }
+
+  @media (min-width: ${theme.breakpoint.lg}) {
+    grid-template-columns: 1fr 400px;
+  }
+`;
+
+export const LeftSide = styled.div<{ $hasImage: boolean }>`
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    display: grid;
+    grid-template-rows: max-content max-content minmax(max-content, 1fr) max-content;
+
+    height: calc(100vh - 130px);
+
+    overflow-y: ${({ $hasImage }) => $hasImage && 'scroll'};
   }
 `;
 
@@ -56,13 +74,14 @@ export const Title = styled.input`
 
   @media (min-width: ${theme.breakpoint.lg}) {
     font-size: 2.8rem;
+    line-height: 3.6rem;
   }
 `;
 
 export const Content = styled.textarea`
+  min-height: 300px;
   padding: 10px;
-
-  height: 300px;
+  margin-bottom: 10px;
 
   color: gray;
 
@@ -73,59 +92,66 @@ export const Content = styled.textarea`
 
   @media (min-width: ${theme.breakpoint.md}) {
     font-size: 1.8rem;
-    height: 470px;
+    line-height: 2.4rem;
   }
 
   @media (min-width: ${theme.breakpoint.lg}) {
-    height: 670px;
     font-size: 2rem;
+    line-height: 2.8rem;
+  }
+`;
+
+export const ContentImagePartWrapper = styled.div<{ $hasImage: boolean }>`
+  justify-self: ${props => props.$hasImage && 'center'};
+  height: 100%;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    max-width: ${({ $hasImage }) => $hasImage && '800px'};
+    width: ${({ $hasImage }) => $hasImage && '80%'};
   }
 `;
 
 export const RightSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 30px;
-
-  width: 100%;
-  height: 100%;
+  display: grid;
+  grid-template-rows: auto max-content max-content;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    max-width: 400px;
-
-    margin-top: 40px;
+    height: calc(100vh - 130px);
   }
-`;
-
-export const LeftSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  gap: 30px;
-
-  width: 100%;
 `;
 
 export const OptionListWrapper = styled.div`
   width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
   overflow-x: hidden;
 
-  padding-bottom: 40px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-
   @media (min-width: ${theme.breakpoint.sm}) {
-    height: 460px;
-
     overflow-y: auto;
   }
 `;
 
-export const Deadline = styled.p`
+export const Deadline = styled.div`
   font: var(--text-body);
   font-weight: bold;
   text-align: center;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    margin: 10px 0;
+  }
+`;
+
+export const DeadlineDescription = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  margin: 10px 0;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    margin: 10px 0;
+    min-height: 40px;
+  }
 `;
 
 export const Description = styled.div`
@@ -154,8 +180,6 @@ export const SaveButtonWrapper = styled.div`
     width: 100%;
     height: 60px;
 
-    margin-top: 40px;
-
     visibility: visible;
   }
 `;
@@ -183,6 +207,7 @@ export const CloseButton = styled.button`
 
   cursor: pointer;
 `;
+
 export const ModalBody = styled.div`
   display: flex;
   flex-direction: column;

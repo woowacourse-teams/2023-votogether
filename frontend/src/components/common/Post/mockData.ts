@@ -25,8 +25,8 @@ export const MOCK_NOT_VOTE_POST: PostInfo = {
       name: '상담',
     },
   ],
-  startTime: '2023-07-12 12:40',
-  endTime: '2023-07-20 18:40',
+  createTime: '2023-07-12 12:40',
+  deadline: '2023-07-20 18:40',
   voteInfo: {
     selectedOptionId: 0,
     allPeopleCount: 100,
@@ -88,8 +88,8 @@ export const MOCK_VOTE_POST: PostInfo = {
       name: '상담',
     },
   ],
-  startTime: '2023-07-12 12:40',
-  endTime: '2023-07-21 18:40',
+  createTime: '2023-07-12 12:40',
+  deadline: '2023-07-21 18:40',
   voteInfo: {
     selectedOptionId: 12312,
     allPeopleCount: 123,

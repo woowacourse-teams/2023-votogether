@@ -13,10 +13,17 @@ spring:
     hibernate:
       ddl-auto: create
 
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
   h2:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true
 
 logging:
   level:

@@ -19,14 +19,18 @@ import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
-import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
-import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
+import com.votogether.domain.post.dto.response.WriterResponse;
+import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
+import com.votogether.domain.post.dto.response.detail.VoteDetailResponse;
+import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
+import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.exception.GlobalExceptionHandler;
+import com.votogether.fixtures.MemberFixtures;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -188,7 +192,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
+    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 조회한다")
     void getAllPostBySortTypeAndClosingType() throws JsonProcessingException {
         // given
         int firstPage = 0;
@@ -224,12 +228,58 @@ class PostControllerTest {
 
         List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
         });
-        System.out.println(responses.get(0).deadline());
 
         // then
         assertAll(
                 () -> assertThat(responses).isNotEmpty(),
                 () -> assertThat(responses).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("한 게시글의 상세를 조회한다.")
+    void getPost() throws JsonProcessingException {
+        // given
+        long postId = 0L;
+        Member writer = MALE_30.get();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3L);
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(writer)
+                .postBody(postBody)
+                .deadline(deadline)
+                .build();
+
+        Member member = MemberFixtures.MALE_20.get();
+        given(postService.getPostById(postId, member)).willReturn(PostDetailResponse.of(post, member));
+
+        // when
+        String responseBody = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/{postId}", postId)
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .status(HttpStatus.OK)
+                .extract().asString();
+
+        PostDetailResponse response = mapper.readValue(responseBody, new TypeReference<>() {
+        });
+
+        // then
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+
+        assertAll(
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(response.deadline()).isEqualTo(deadline),
+                () -> assertThat(writerResponse.id()).isEqualTo(member.getId()),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero()
         );
     }
 
@@ -331,6 +381,22 @@ class PostControllerTest {
 
         // then
         assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
+    }
+
+    @Test
+    @DisplayName("게시글을 조기 마감 합니다")
+    void postClosedEarly() {
+        // given
+        long postId = 1L;
+
+        // when
+        ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .when().patch("/posts/{postId}/close", postId)
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
 }

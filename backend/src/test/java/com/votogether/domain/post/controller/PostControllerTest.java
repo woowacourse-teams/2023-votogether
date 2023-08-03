@@ -17,12 +17,12 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
-import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
 import com.votogether.domain.post.dto.response.PostResponse;
-import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
-import com.votogether.domain.post.dto.response.detail.VoteDetailResponse;
-import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.dto.response.WriterResponse;
+import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
+import com.votogether.domain.post.dto.response.detail.VoteDetailResponse;
+import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
+import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -274,7 +275,7 @@ class PostControllerTest {
         assertAll(
                 () -> assertThat(response.title()).isEqualTo("title"),
                 () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(response.deadline()).isEqualTo(deadline),
+                () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
                 () -> assertThat(writerResponse.id()).isEqualTo(member.getId()),
                 () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
                 () -> assertThat(voteDetailResponse.totalVoteCount()).isZero()

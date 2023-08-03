@@ -15,10 +15,10 @@ export const transformPostResponse = (post: PostInfoResponse): PostInfo => {
   return {
     category: post.categories.map(category => ({ id: category.id, name: category.name })),
     content: post.content,
-    endTime: post.deadline,
+    deadline: post.deadline,
     imageUrl: post.imageUrl,
     postId: post.postId,
-    startTime: post.createdAt,
+    createTime: post.createdAt,
     title: post.title,
     voteInfo: {
       allPeopleCount: post.voteInfo.totalVoteCount,

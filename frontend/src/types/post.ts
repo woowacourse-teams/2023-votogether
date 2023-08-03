@@ -23,8 +23,8 @@ export interface PostInfo {
   content: string;
   imageUrl: string;
   category: { id: number; name: string }[];
-  startTime: string;
-  endTime: string;
+  createTime: string;
+  deadline: string;
   voteInfo: {
     selectedOptionId: number;
     allPeopleCount: number;

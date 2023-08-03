@@ -46,8 +46,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     title,
     content,
     category: categoryIds,
-    startTime,
-    endTime: deadline,
+    createTime,
+    deadline,
     voteInfo,
     imageUrl,
   } = data ?? {};
@@ -64,7 +64,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     hour: 0,
     minute: 0,
   });
-  const baseTime = startTime ? new Date(startTime) : new Date();
+  const baseTime = createTime ? new Date(createTime) : new Date();
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
@@ -200,7 +200,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
                 {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
                   <S.Description>
-                    글 작성일({startTime})로부터 하루 이후 (
+                    글 작성일({createTime})로부터 하루 이후 (
                     {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택
                     가능합니다.
                   </S.Description>

@@ -16,7 +16,7 @@ export const mockPost = [
   }),
 
   rest.patch('/posts/:postId/close', (req, res, ctx) => {
-    MOCK_POST_INFO.endTime = '2023-07-13 18:40';
+    MOCK_POST_INFO.deadline = '2023-07-13 18:40';
 
     return res(
       ctx.delay(1000),

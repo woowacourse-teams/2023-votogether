@@ -1,3 +1,5 @@
+import { MouseEvent } from 'react';
+
 import { PostInfo } from '@type/post';
 
 import { changeVotedOption, votePost } from '@api/post';
@@ -31,19 +33,37 @@ export default function Post({ postInfo, isPreview }: PostProps) {
     });
   };
 
+  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!isPreview) e.preventDefault();
+  };
+
   return (
     <S.Container>
-      <S.DetailLink to={`${PATH.POST}/${postId}`} $isPreview={isPreview}>
-        <S.Category>{category?.map(category => category.name).join(' | ')}</S.Category>
-        <S.Title $isPreview={isPreview}>{title}</S.Title>
+      <S.DetailLink
+        to={isPreview ? `${PATH.POST}/${postId}` : '#'}
+        $isPreview={isPreview}
+        onClick={handleLinkClick}
+        aria-describedby={
+          isPreview ? '해당 게시물의 상세페이지로 이동하기' : '현재 상세페이지이므로 사용할 수 없음'
+        }
+        aria-disabled={isPreview ? false : true}
+      >
+        <S.Category aria-label="카테고리">
+          {category.map(category => category.name).join(' | ')}
+        </S.Category>
+        <S.Title aria-label="제목" $isPreview={isPreview}>
+          {title}
+        </S.Title>
         <S.Wrapper>
-          <span>{writer.nickname}</span>
+          <span aria-label="작성자">{writer.nickname}</span>
           <S.Wrapper>
-            <span>{createTime}</span>
-            <span>{deadline}</span>
+            <span aria-label="작성일시">{startTime}</span>
+            <span aria-label="투표 마감일시">{endTime}</span>
           </S.Wrapper>
         </S.Wrapper>
-        <S.Content $isPreview={isPreview}>{content}</S.Content>
+        <S.Content aria-label="내용" $isPreview={isPreview}>
+          {content}
+        </S.Content>
       </S.DetailLink>
       <WrittenVoteOptionList
         selectedOptionId={voteInfo.selectedOptionId}

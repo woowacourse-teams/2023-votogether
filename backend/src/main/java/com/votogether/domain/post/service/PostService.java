@@ -147,7 +147,7 @@ public class PostService {
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getSort());
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getPostBaseSort());
         final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
 
         return contents.stream()
@@ -230,7 +230,7 @@ public class PostService {
             final PostSortType postSortType,
             final Member member
     ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getSort());
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getVoteBaseSort());
 
         Slice<Post> posts = postsVotedByMemberMapper.get(postClosingType).apply(member, pageable);
 

@@ -45,7 +45,7 @@ export default function CommentList({
         {isGuest ? (
           <CommentLoginSection name={postWriterName} />
         ) : (
-          <CommentTextForm initialComment="" />
+          <CommentTextForm commentId={-1} initialComment="" />
         )}
       </S.TextOrLoginWrapper>
       <S.ListContainer>

@@ -99,8 +99,11 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "투표한 게시글 조회", description = "회원이 투표한 게시글 목록을 최신순으로 조회한다.")
-    @ApiResponse(responseCode = "200", description = "투표한 게시글 조회 성공")
+    @Operation(summary = "투표한 게시글 조회", description = "회원본인이 투표한 게시글 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원본인이 투표한 게시글 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력으로 실패.")
+    })
     @GetMapping("/votes/me")
     public ResponseEntity<List<PostResponse>> getPostsVotedByMe(
             final int page,

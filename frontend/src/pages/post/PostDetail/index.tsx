@@ -108,15 +108,15 @@ export default function PostDetailPage() {
           isWriter={isWriter}
           handleEvent={{ movePage, controlPost }}
         />
-        {!isCommentLoading && commentData && (
-          <CommentList
-            commentList={commentData}
-            memberId={memberId}
-            isGuest={false}
-            postWriterName={'익명의손님1'}
-          />
-        )}
       </S.Container>
+      {!isCommentLoading && commentData && (
+        <CommentList
+          commentList={commentData}
+          memberId={memberId}
+          isGuest={false}
+          postWriterName={'익명의손님1'}
+        />
+      )}
     </Layout>
   );
 }

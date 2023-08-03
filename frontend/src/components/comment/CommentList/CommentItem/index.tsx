@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
 
+import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
 import { useToggle } from '@hooks/useToggle';
 
 import CommentDeleteModal from '@components/comment/CommentDeleteModal';
@@ -27,6 +29,11 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const { member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
 
+  const params = useParams() as { postId: string };
+  const postId = Number(params.postId);
+
+  const { mutate } = useDeleteComment(postId, comment.id);
+
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
     setAction(menu);
@@ -34,6 +41,10 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
 
   const handleCancelClick = () => {
     setAction(null);
+  };
+
+  const handleDeleteClick = () => {
+    mutate();
   };
 
   const USER_TYPE = COMMENT_USER_MENU[userType];
@@ -69,7 +80,10 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         <S.Description>{content}</S.Description>
       )}
       {action === COMMENT_ACTION.DELETE && (
-        <CommentDeleteModal handleCancelClick={handleCancelClick} handleDeleteClick={() => {}} />
+        <CommentDeleteModal
+          handleCancelClick={handleCancelClick}
+          handleDeleteClick={handleDeleteClick}
+        />
       )}
       {action === COMMENT_ACTION.USER_REPORT && (
         <UserReportModal handleCancelClick={handleCancelClick} />

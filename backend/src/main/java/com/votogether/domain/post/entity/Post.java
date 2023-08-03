@@ -177,8 +177,10 @@ public class Post extends BaseEntity {
         return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
     }
 
-    public void blind() {
-        this.isHidden = true;
+    public void blind(final int reportCount) {
+        if (reportCount >= 5) {
+            this.isHidden = true;
+        }
     }
 
     public void addComment(final Comment comment) {

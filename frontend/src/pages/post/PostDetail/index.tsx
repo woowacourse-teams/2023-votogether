@@ -71,11 +71,11 @@ export default function PostDetailPage() {
   const controlPost = {
     setEarlyClosePost: async () => {
       await setEarlyClosePost(postId)
-        .catch(error => alert(error.message))
         .then(res => {
           alert('게시물을 즉시마감했습니다.');
           refetch();
-        });
+        })
+        .catch(error => alert(error.message));
     },
     removePost: async () => {
       if (!isClosed) alert('마감된 게시물만 삭제 가능합니다.');

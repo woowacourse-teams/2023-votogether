@@ -12,13 +12,13 @@ export default meta;
 type Story = StoryObj<typeof VoteStatistics>;
 
 export const SizeSm: Story = {
-  render: () => <VoteStatistics size="sm" voteResult={MOCK_VOTE_RESULT} />,
+  render: () => <VoteStatistics size="sm" voteResultResponse={MOCK_VOTE_RESULT} />,
 };
 
 export const SizeMd: Story = {
-  render: () => <VoteStatistics size="md" voteResult={MOCK_VOTE_RESULT} />,
+  render: () => <VoteStatistics size="md" voteResultResponse={MOCK_VOTE_RESULT} />,
 };
 
 export const SizeLg: Story = {
-  render: () => <VoteStatistics size="lg" voteResult={MOCK_VOTE_RESULT} />,
+  render: () => <VoteStatistics size="lg" voteResultResponse={MOCK_VOTE_RESULT} />,
 };

@@ -75,7 +75,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       {action === COMMENT_ACTION.EDIT ? (
         <S.TextFormWrapper>
           <CommentTextForm
-            commentId={-1}
+            commentId={comment.id}
             initialComment={content}
             handleCancelClick={handleCancelClick}
           />

@@ -174,8 +174,6 @@ public class PostService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
-        post.validateWriter(loginMember);
-
         return PostDetailResponse.of(post, loginMember);
     }
 

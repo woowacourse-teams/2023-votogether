@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @Slf4j
 @RestControllerAdvice
@@ -69,6 +70,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleMultipartException(final MultipartException e) {
         System.out.println("================================");
         System.out.println("GlobalExceptionHandler.handleMultipartException");
+        e.printStackTrace();
+
+        log.warn("[" + e.getClass() + "] : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ExceptionResponse.from(new BadRequestException(PostExceptionType.WRONG_IMAGE)));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestPartException(
+            final MissingServletRequestPartException e
+    ) {
+        System.out.println("================================");
+        System.out.println("GlobalExceptionHandler.handleMissingServletRequestPartException");
         e.printStackTrace();
 
         log.warn("[" + e.getClass() + "] : " + e.getMessage());

@@ -19,6 +19,17 @@ interface CommentListProps {
   postWriterName: string;
 }
 
+const initialComment = {
+  id: -1,
+  member: {
+    id: -1,
+    nickname: '',
+  },
+  content: '',
+  createdAt: '',
+  isEdit: false,
+};
+
 export default function CommentList({
   commentList,
   memberId,
@@ -45,7 +56,7 @@ export default function CommentList({
         {isGuest ? (
           <CommentLoginSection name={postWriterName} />
         ) : (
-          <CommentTextForm initialComment="" />
+          <CommentTextForm commentId={-1} initialComment={initialComment} />
         )}
       </S.TextOrLoginWrapper>
       <S.ListContainer>

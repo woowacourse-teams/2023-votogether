@@ -5,6 +5,7 @@ import { PostList, PostListByOptionalOption, PostListByRequiredOption } from '@t
 import { getPostList } from '@api/postList';
 
 import { POST_LIST_MAX_LENGTH } from '@constants/post';
+import { QUERY_KEY } from '@constants/queryKey';
 
 export const usePostList = (
   requiredOption: Omit<PostListByRequiredOption, 'pageNumber'>,
@@ -15,7 +16,7 @@ export const usePostList = (
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<PostList>(
-      ['posts', postSorting, postStatus, categoryId, keyword],
+      [QUERY_KEY.POSTS, postSorting, postStatus, categoryId, keyword],
       ({ pageParam = 0 }) =>
         getPostList({ ...requiredOption, pageNumber: pageParam }, optionalOption),
       {
@@ -24,6 +25,7 @@ export const usePostList = (
 
           return lastPage.pageNumber + 1;
         },
+        suspense: true,
       }
     );
 

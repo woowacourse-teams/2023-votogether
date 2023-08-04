@@ -13,7 +13,6 @@ import com.votogether.exception.BadRequestException;
 import com.votogether.fixtures.MemberFixtures;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -126,39 +125,6 @@ class PostTest {
                         .hasMessage(PostExceptionType.POST_CLOSED.getMessage()),
                 () -> assertThatNoException()
                         .isThrownBy(post2::validateDeadLine)
-        );
-    }
-
-    @Test
-    @DisplayName("게시글의 마감까지 절반의 시간을 넘겼는 지에 따라 예외를 던질 지 결정한다.")
-    void throwExceptionIsHalfToTheDeadline() {
-        // given
-        final Member writer = MemberFixtures.MALE_30.get();
-        ReflectionTestUtils.setField(writer, "id", 1L);
-
-        Post post1 = Post.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.of(9999, 1, 1, 1, 1))
-                .build();
-        ReflectionTestUtils.setField(post1, "createdAt", LocalDateTime.now());
-
-        Post post2 = Post.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.now().plus(100, ChronoUnit.MILLIS))
-                .build();
-        ReflectionTestUtils.setField(post2, "createdAt", LocalDateTime.now());
-
-        // when, then
-        assertAll(
-                () -> assertThatThrownBy(post1::validateHalfDeadLine)
-                        .isInstanceOf(BadRequestException.class)
-                        .hasMessage(PostExceptionType.POST_NOT_HALF_DEADLINE.getMessage()),
-                () -> {
-                    Thread.sleep(50);
-                    assertThatNoException()
-                            .isThrownBy(post2::validateHalfDeadLine);
-
-                }
         );
     }
 

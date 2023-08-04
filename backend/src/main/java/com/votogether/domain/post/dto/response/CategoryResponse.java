@@ -3,7 +3,7 @@ package com.votogether.domain.post.dto.response;
 import com.votogether.domain.category.entity.Category;
 
 public record CategoryResponse(
-        long id,
+        Long id,
         String name
 ) {
 
@@ -11,11 +11,4 @@ public record CategoryResponse(
         return new CategoryResponse(category.getId(), category.getName());
     }
 
-    @Override
-    public String toString() {
-        return "CategoryResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

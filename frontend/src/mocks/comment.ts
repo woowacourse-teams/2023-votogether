@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { MOCK_COMMENT_LIST } from './mockData/comment';
 
 export const mockComment = [
-  rest.get('/posts/:postId/comments', (req, res, ctx) => {
+  rest.get(`${process.env.VOTOGETHER_BASE_URL}/posts/:postId/comments`, (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.status(200), ctx.json(MOCK_COMMENT_LIST));
   }),
 

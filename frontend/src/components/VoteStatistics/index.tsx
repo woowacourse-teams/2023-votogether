@@ -1,13 +1,21 @@
 import { MouseEvent, useState } from 'react';
 
+import { Size } from '@type/style';
+
 import OneLineGraph from './OneLineGraph';
 import * as S from './style';
 import TwoLineGraph from './TwoLineGraph';
-import { GraphProps } from './type';
+import { VoteResultResponse } from './type';
+import { transVoteStatisticsFormat } from './util';
 
 interface RadioMode {
   all: string;
   gender: string;
+}
+
+export interface VoteStatisticsProps {
+  voteResultResponse: VoteResultResponse;
+  size: Size;
 }
 
 const radioMode: RadioMode = {
@@ -17,10 +25,12 @@ const radioMode: RadioMode = {
 
 type RadioCategory = keyof RadioMode;
 
-export default function VoteStatistics({ voteResult, size }: GraphProps) {
+export default function VoteStatistics({ voteResultResponse, size }: VoteStatisticsProps) {
   const [currentRadioMode, setCurrentRadioMode] = useState<RadioCategory>('all');
 
   const radioModeKey = Object.keys(radioMode) as RadioCategory[];
+
+  const voteResult = transVoteStatisticsFormat(voteResultResponse);
 
   const changeMode = (e: MouseEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -48,8 +58,8 @@ export default function VoteStatistics({ voteResult, size }: GraphProps) {
           );
         })}
       </S.CategoryWrapper>
-      {currentRadioMode === 'all' && <OneLineGraph size={size} voteResult={voteResult} />}
-      {currentRadioMode === 'gender' && <TwoLineGraph size={size} voteResult={voteResult} />}
+      {currentRadioMode === 'all' && <OneLineGraph size={size} ageGroup={voteResult.ageGroup} />}
+      {currentRadioMode === 'gender' && <TwoLineGraph size={size} ageGroup={voteResult.ageGroup} />}
     </S.Container>
   );
 }

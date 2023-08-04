@@ -14,9 +14,9 @@ export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
   };
 };
 
-const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
+const BASE_URL = process.env.VOTOGETHER_BASE_URL;
 
-export const getUserInfo = async () => {
+export const getUserInfo = async (): Promise<User> => {
   const userInfo = await getFetch<UserInfoResponse>(`${BASE_URL}/members/me`);
 
   return transformUserInfoResponse(userInfo);

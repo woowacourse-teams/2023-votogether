@@ -1,0 +1,104 @@
+{
+  "extends": ["react-app", "eslint:recommended"],
+  "rules": {
+    "no-var": "error", // var 금지
+    "no-multiple-empty-lines": "error", // 여러 줄 공백 금지
+    "no-console": ["error", { "allow": ["warn", "error", "info"] }],
+    "eqeqeq": "error", // 일치 연산자 사용 필수
+    "dot-notation": "error", // 가능하다면 dot notation 사용
+    "no-unused-vars": "error", // 사용하지 않는 변수 금지
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "type",
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "unknown"
+        ],
+        "newlines-between": "always",
+        "pathGroups": [
+          {
+            "pattern": "react*",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "@type/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@hooks/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@atoms/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@selectors/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@routes/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@api/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@pages/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@components/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@constants/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@utils/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@styles/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@assets/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@mocks/**",
+            "group": "internal",
+            "position": "after"
+          }
+        ],
+        "alphabetize": {
+          "caseInsensitive": true,
+          "order": "asc"
+        },
+        "pathGroupsExcludedImportTypes": []
+      }
+    ]
+  }
+}

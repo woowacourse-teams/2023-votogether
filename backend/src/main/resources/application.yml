@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MySQL
+    username: sa
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
+    hibernate:
+      ddl-auto: create
+
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+server:
+  forward-headers-strategy: FRAMEWORK
+
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLE}
+
+votogether:
+  openapi:
+    dev-url: http://localhost:8080
+    prod-url: ${PROD_URL}
+
+oauth:
+  kakao:
+    info:
+      grant_type: ${GRANT_TYPE}
+      client_id: ${CLIENT_ID}
+      client_secret: ${CLIENT_SECRET}
+      redirect_uri: ${REDIRECT_URI}
+
+jwt:
+  token:
+    secret-key: ${SECRET_KEY}
+    expiration-time: ${EXPIRATION_TIME}

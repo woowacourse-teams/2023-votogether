@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "es2021",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "noEmit": false,
+    "baseUrl": "src",
+    "paths": {
+      "@assets/*": ["assets/*"],
+      "@pages/*": ["pages/*"],
+      "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@styles/*": ["styles/*"],
+      "@utils/*": ["utils/*"],
+      "@constants/*": ["constants/*"],
+      "@type/*": ["types/*"],
+      "@atoms/*": ["atoms/*"],
+      "@selectors/*": ["selectors/*"],
+      "@routes/*": ["routes/*"],
+      "@api/*": ["api/*"],
+      "@mocks/*": ["mocks/*"]
+    },
+    "outDir": "./dist"
+  },
+  "include": ["src", "src/custom.d.ts", "__test__", "styled-components.d.ts", "env.d.ts"],
+  "exclude": ["node_modules"]
+}

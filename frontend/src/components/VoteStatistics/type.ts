@@ -1,31 +1,45 @@
 import { Size } from '@type/style';
 
 export interface GraphProps {
-  voteResult: VoteResult;
+  ageGroup: VoteDetailResult[];
   size: Size;
 }
 
-interface VoteDetailResult {
-  name: string;
+export const AGE_OPTION = [
+  '10대 미만',
+  '10대',
+  '20대',
+  '30대',
+  '40대',
+  '50대',
+  '60대 이상',
+] as const;
+
+export type AgeCategory = (typeof AGE_OPTION)[number];
+
+export interface VoteDetailResult {
+  name: AgeCategory;
   total: number;
   female: number;
   male: number;
 }
 
-export const AGE_OPTION = [
-  'underTeenager',
-  'teenager',
-  'twenties',
-  'thirties',
-  'forties',
-  'fifties',
-  'aboveFifties',
-] as const;
+export interface VoteResult {
+  ageGroup: VoteDetailResult[];
+  total: number;
+  female: number;
+  male: number;
+}
 
-export type AgeCategory = (typeof AGE_OPTION)[number];
-
-export type VoteResultAge = Record<AgeCategory, VoteDetailResult>;
-
-export interface VoteResult extends VoteDetailResult {
-  age: VoteResultAge;
+export interface VoteDetailResultResponse {
+  ageGroup: AgeCategory;
+  voteCount: number;
+  femaleCount: number;
+  maleCount: number;
+}
+export interface VoteResultResponse {
+  ageGroup: VoteDetailResultResponse[];
+  totalVoteCount: number;
+  totalFemaleCount: number;
+  totalMaleCount: number;
 }

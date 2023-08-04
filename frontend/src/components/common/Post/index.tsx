@@ -1,7 +1,8 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useContext } from 'react';
 
 import { PostInfo } from '@type/post';
 
+import { AuthContext } from '@hooks/context/auth';
 import { useCreateVote } from '@hooks/query/post/useCreateVote';
 import { useEditVote } from '@hooks/query/post/useEditVote';
 
@@ -19,9 +20,13 @@ interface PostProps {
 
 export default function Post({ postInfo, isPreview }: PostProps) {
   const { postId, category, title, writer, createTime, deadline, content, voteInfo } = postInfo;
+  const { loggedInfo } = useContext(AuthContext);
   const { mutate: createVote } = useCreateVote({ isPreview, postId });
   const { mutate: editVote } = useEditVote({ isPreview, postId });
+
   const handleVoteClick = (newOptionId: number) => {
+    if (writer.nickname === loggedInfo.userInfo?.nickname) return;
+
     if (voteInfo.selectedOptionId === newOptionId) return;
 
     if (voteInfo.selectedOptionId === POST.NOT_VOTE) {
@@ -68,6 +73,8 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         </S.Content>
       </S.DetailLink>
       <WrittenVoteOptionList
+        //현재 contextAPI 안에 유저 ID가 없어서 nickname으로 대체
+        isWriter={writer.nickname === loggedInfo.userInfo?.nickname}
         selectedOptionId={voteInfo.selectedOptionId}
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}

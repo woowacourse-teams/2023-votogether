@@ -16,7 +16,7 @@ export const getCartList = async () => {
 };
 
 export const createCart = async () => {
-  return await postFetch<Cart, { id: number }>('api/cart', { id: 12, text: '생성' });
+  return await postFetch<Cart>('api/cart', { id: 12, text: '생성' });
 };
 
 export const editCart = async () => {

@@ -1,6 +1,8 @@
 import { ChangeEvent } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Comment } from '@type/comment';
+
 import { useCreateComment } from '@hooks/query/comment/useCreateComment';
 import { useEditComment } from '@hooks/query/comment/useEditComment';
 import { useText } from '@hooks/useText';
@@ -10,10 +12,9 @@ import SquareButton from '@components/common/SquareButton';
 import { COMMENT_MAX_LENGTH } from '@constants/comment';
 
 import * as S from './style';
-
 interface CommentTextFormProps {
   commentId: number;
-  initialComment: string;
+  initialComment: Comment;
   handleCancelClick?: () => void;
 }
 
@@ -22,21 +23,25 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-  const { handleTextChange, text: content } = useText(initialComment);
+  const { handleTextChange, text: content, resetText } = useText(initialComment.content);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
   const { mutate: createComment } = useCreateComment(postId);
-  const { mutate: editComment } = useEditComment(postId, commentId, { content: initialComment });
+  const { mutate: editComment } = useEditComment(postId, commentId, { ...initialComment, content });
 
-  const updateComment = initialComment
-    ? () => {
-        editComment();
-      }
-    : () => {
-        createComment({ content });
-      };
+  const updateComment =
+    initialComment.id !== -1
+      ? () => {
+          editComment();
+          handleCancelClick && handleCancelClick();
+        }
+      : () => {
+          resetText();
+          createComment({ content });
+          handleCancelClick && handleCancelClick();
+        };
 
   return (
     <S.Container>

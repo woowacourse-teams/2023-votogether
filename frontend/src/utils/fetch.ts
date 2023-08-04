@@ -33,25 +33,23 @@ export const getFetch = async <T>(url: string): Promise<T> => {
   }
 
   const data = await response.json();
-
   return data;
 };
 
-export const postFetch = async <T, R>(url: string, body: T): Promise<R | void> => {
+export const postFetch = async <T>(url: string, body: T): Promise<void> => {
   const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: makeFetchHeaders(),
   });
-  window.console.log(response);
 
   if (!response.ok) {
     throw new Error('에러');
   }
 
-  const data = await response.json();
+  // const data = await response.json();
 
-  return data;
+  return;
 };
 
 export const putFetch = async <T, R>(url: string, body: T): Promise<R | void> => {
@@ -61,13 +59,13 @@ export const putFetch = async <T, R>(url: string, body: T): Promise<R | void> =>
     headers: makeFetchHeaders(),
   });
 
-  const data = await response.json();
+  // const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message);
+    throw new Error('error');
   }
 
-  return data;
+  return;
 };
 
 export const patchFetch = async <T>(url: string, body?: T) => {
@@ -100,13 +98,13 @@ export const multiPostFetch = async (url: string, body: FormData) => {
     headers: makeFetchMultiHeaders(),
   });
 
-  const data = await response.json();
+  // const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message);
+    throw new Error('error');
   }
 
-  return data;
+  return;
 };
 
 export const multiPutFetch = async (url: string, body: FormData) => {

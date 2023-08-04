@@ -6,7 +6,7 @@ export const transformCategoryListResponse = (categoryList: CategoryResponse[]) 
   return categoryList.map(category => ({
     id: category.id,
     name: category.name,
-    isFavorite: category.favorite,
+    isFavorite: category.isFavorite,
   }));
 };
 

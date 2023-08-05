@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.RandomStringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"})
@@ -89,6 +90,15 @@ public class Member extends BaseEntity {
 
     public void changeNickname(final String nickname) {
         this.nickname = new Nickname(nickname);
+    }
+
+    public void changeNicknameByReport() {
+        final String reportedNickname = "Pause" + RandomStringUtils.random(10, false, true);
+        this.nickname = new Nickname(reportedNickname);
+    }
+
+    public String getNickname() {
+        return this.nickname.getValue();
     }
 
 }

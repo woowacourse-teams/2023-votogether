@@ -5,6 +5,7 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.exception.BadRequestException;
 import jakarta.persistence.Basic;
@@ -180,6 +181,18 @@ public class Post extends BaseEntity {
     public void blind(final int reportCount) {
         if (reportCount >= 5) {
             this.isHidden = true;
+        }
+    }
+
+    public void validateMine(final Member member) {
+        if (this.writer.equals(member)) {
+            throw new BadRequestException(ReportExceptionType.REPORT_MY_POST);
+        }
+    }
+
+    public void validateHidden() {
+        if (this.isHidden) {
+            throw new BadRequestException(ReportExceptionType.ALREADY_HIDDEN_POST);
         }
     }
 

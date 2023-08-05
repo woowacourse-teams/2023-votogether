@@ -28,7 +28,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    if (userInfo) setLoggedInfo(origin => ({ ...origin, userInfo }));
+    if (userInfo && loggedInfo.isLogged) {
+      setLoggedInfo(origin => ({ ...origin, userInfo }));
+    }
   }, [userInfo]);
 
   useEffect(() => {

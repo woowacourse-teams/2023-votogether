@@ -43,12 +43,12 @@ class ReportServiceTest {
     CommentRepository commentRepository;
 
     @Nested
-    @DisplayName("게시글 신고")
-    class reportPost {
+    @DisplayName("게시글 신고기능은")
+    class ReportPost {
 
         @Test
-        @DisplayName("투표글 신고가 되는지 확인한다.")
-        void ReportPost() {
+        @DisplayName("정상적으로 동작한다.")
+        void reportPost() {
             // given
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
@@ -213,11 +213,11 @@ class ReportServiceTest {
     }
 
     @Nested
-    @DisplayName("댓글 신고")
+    @DisplayName("댓글 신고기능은")
     class ReportComment {
 
         @Test
-        @DisplayName("댓글 신고가 되는지 확인한다.")
+        @DisplayName("정상적으로 동작한다.")
         void reportComment() {
             // given
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
@@ -418,6 +418,77 @@ class ReportServiceTest {
 
             // then
             assertThat(comment.isHidden()).isTrue();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("닉네임 신고기능은")
+    class ReportNickname {
+
+        @Test
+        @DisplayName("정상적으로 동작한다.")
+        void reportNickname() {
+            // given
+            Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
+            Member reported = memberRepository.save(MemberFixtures.FEMALE_30.get());
+
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reported.getId(), "불건전한 닉네임");
+
+            // when, then
+            assertDoesNotThrow(() -> reportService.report(reporter, request));
+        }
+
+        @Test
+        @DisplayName("자신의 닉네임을 신고하는 경우 예외가 발생한다.")
+        void reportOwnNicknameThrowsException() {
+            // given
+            Member reporter = memberRepository.save(MemberFixtures.FEMALE_30.get());
+
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reporter.getId(), "불건전한 닉네임");
+
+            // when, then
+            assertThatThrownBy(() -> reportService.report(reporter, request))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("자신의 닉네임은 신고할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("하나의 회원이 다른 회원의 닉네임을 중복하여 신고하면 예외를 던진다.")
+        void reportDuplicated() {
+            // given
+            Member reporter = memberRepository.save(MemberFixtures.FEMALE_20.get());
+            Member reported = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reported.getId(), "불건전한 닉네임");
+
+            // when
+            reportService.report(reporter, request);
+
+            // then
+            assertThatThrownBy(() -> reportService.report(reporter, request))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("하나의 닉네임에 대해서 중복하여 신고할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("닉네임 신고가 3회가 되면 닉네임이 자동변경처리가 된다.")
+        void reportAndBlind() {
+            // given
+            Member reporter1 = memberRepository.save(MemberFixtures.FEMALE_20.get());
+            Member reporter2 = memberRepository.save(MemberFixtures.FEMALE_30.get());
+            Member reporter3 = memberRepository.save(MemberFixtures.FEMALE_40.get());
+            Member reported = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reported.getId(), "불건전한 닉네임");
+
+            // when
+            reportService.report(reporter1, request);
+            reportService.report(reporter2, request);
+            reportService.report(reporter3, request);
+
+            // then
+            assertThat(reported.getNickname()).contains("Pause1");
         }
 
     }

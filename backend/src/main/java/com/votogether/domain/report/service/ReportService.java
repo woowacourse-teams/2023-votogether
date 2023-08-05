@@ -1,6 +1,8 @@
 package com.votogether.domain.report.service;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.CommentExceptionType;
@@ -26,6 +28,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public void report(final Member reporter, final ReportRequest request) {
@@ -145,15 +148,17 @@ public class ReportService {
             final ReportRequest request,
             final ReportType reportType
     ) {
+        final Member reportedMember = memberRepository.findById(request.id())
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
         validateNickname(reporter, request, reportType);
 
         final Report report = Report.builder()
                 .member(reporter)
                 .reportType(reportType)
-                .targetId(request.id())
+                .targetId(reportedMember.getId())
                 .build();
         reportRepository.save(report);
-        reporter.changeNicknameByReport();
+        changeNicknameByReport(reportedMember, reportType);
     }
 
     private void validateNickname(
@@ -166,7 +171,7 @@ public class ReportService {
     }
 
     private void validateMyNickname(final Member reporter, final ReportRequest request) {
-        if (!Objects.equals(reporter.getId(), request.id())) {
+        if (Objects.equals(reporter.getId(), request.id())) {
             throw new BadRequestException(ReportExceptionType.REPORT_MY_NICKNAME);
         }
     }
@@ -180,6 +185,11 @@ public class ReportService {
                 .ifPresent(it -> {
                     throw new BadRequestException(ReportExceptionType.DUPLICATE_NICKNAME_REPORT);
                 });
+    }
+
+    private void changeNicknameByReport(final Member reportedMember, final ReportType reportType) {
+        final int reportCount = reportRepository.countByReportTypeAndTargetId(reportType, reportedMember.getId());
+        reportedMember.changeNicknameByReport(reportCount);
     }
 
 }

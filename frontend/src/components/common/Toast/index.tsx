@@ -5,8 +5,13 @@ import * as S from './style';
 interface ToastProps {
   children: string;
   size: Size | 'free';
+  position: 'top' | 'bottom';
 }
 
-export default function Toast({ children, size }: ToastProps) {
-  return <S.Wrapper $size={size}>{children}</S.Wrapper>;
+export default function Toast({ children, size, position }: ToastProps) {
+  return (
+    <S.Wrapper $position={position}>
+      <S.Content $size={size}>{children}</S.Content>
+    </S.Wrapper>
+  );
 }

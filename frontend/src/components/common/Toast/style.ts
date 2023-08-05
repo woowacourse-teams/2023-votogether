@@ -4,6 +4,13 @@ import { Size } from '@type/style';
 
 import { toastTime } from '@constants/animation';
 
+import { theme } from '@styles/theme';
+
+const position = {
+  top: '25%',
+  bottom: '85%',
+};
+
 const squareSize = {
   sm: { width: '250px', height: '30px' },
   md: { width: '400px', height: '35px' },
@@ -20,7 +27,22 @@ export const fadeInOutAnimation = keyframes`
   }
 `;
 
-export const Wrapper = styled.div<{ $size: Size | 'free' }>`
+export const Wrapper = styled.div<{ $position: 'top' | 'bottom' }>`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: ${props => position[props.$position]};
+  align-items: end;
+  justify-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+`;
+
+export const Content = styled.div<{ $size: Size | 'free' }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,8 +51,6 @@ export const Wrapper = styled.div<{ $size: Size | 'free' }>`
   height: ${props => squareSize[props.$size].height};
   border-radius: 4px;
 
-  position: fixed;
-
   background-color: rgba(0, 0, 0, 0.5);
   color: var(--white);
 
@@ -38,4 +58,6 @@ export const Wrapper = styled.div<{ $size: Size | 'free' }>`
   letter-spacing: 1px;
 
   animation: ${fadeInOutAnimation} ${toastTime}s linear infinite;
+
+  z-index: ${theme.zIndex.modal};
 `;

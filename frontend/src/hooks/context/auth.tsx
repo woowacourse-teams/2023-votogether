@@ -9,6 +9,7 @@ import { getCookieToken } from '@utils/cookie';
 interface Auth {
   loggedInfo: LoggedInfo;
   setLoggedInfo: Dispatch<SetStateAction<LoggedInfo>>;
+  clearLoggedInfo: () => void;
 }
 
 const notLoggedInfo: LoggedInfo = {
@@ -22,6 +23,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loggedInfo, setLoggedInfo] = useState(notLoggedInfo);
   const { data: userInfo } = useUserInfo(loggedInfo.isLogged);
 
+  const clearLoggedInfo = () => {
+    setLoggedInfo(notLoggedInfo);
+  };
+
   useEffect(() => {
     if (userInfo) setLoggedInfo(origin => ({ ...origin, userInfo }));
   }, [userInfo]);
@@ -32,6 +37,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loggedInfo, setLoggedInfo }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ loggedInfo, setLoggedInfo, clearLoggedInfo }}>
+      {children}
+    </AuthContext.Provider>
   );
 }

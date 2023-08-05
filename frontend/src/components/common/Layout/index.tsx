@@ -7,6 +7,8 @@ import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
 
+import { clearCookieToken } from '@utils/cookie';
+
 import * as S from './style';
 
 interface LayoutProps extends PropsWithChildren {
@@ -16,11 +18,15 @@ interface LayoutProps extends PropsWithChildren {
 export default function Layout({ children, isSidebarVisible }: LayoutProps) {
   const navigate = useNavigate();
 
-  const { loggedInfo } = useContext(AuthContext);
+  const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
 
   const { data: categoryList } = useCategoryList(loggedInfo.isLogged);
   const selectedCategory = undefined;
-  const handleLogoutClick = () => {};
+
+  const handleLogoutClick = () => {
+    clearCookieToken('accessToken');
+    clearLoggedInfo();
+  };
 
   const movePostListPage = () => {
     navigate('/');

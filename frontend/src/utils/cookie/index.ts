@@ -13,6 +13,7 @@ export function getCookieToken() {
     const [key, value] = pair.split('=');
     cookieContent[key] = value;
   });
+
   return cookieContent as Record<CookieKey, any>;
 }
 
@@ -29,3 +30,7 @@ export function getMemberId(token: string): MemberPayload {
 
   return decodedData;
 }
+
+export const clearCookieToken = (key: CookieKey) => {
+  document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};

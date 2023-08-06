@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class ReportController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 신고 대상")
     })
     @PostMapping("/report")
-    public ResponseEntity<Void> report(@Auth final Member member, @Valid final ReportRequest request) {
+    public ResponseEntity<Void> report(@Auth final Member member, @Valid @RequestBody final ReportRequest request) {
         reportService.report(member, request);
         return ResponseEntity.ok().build();
     }

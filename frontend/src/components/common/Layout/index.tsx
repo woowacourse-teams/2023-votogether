@@ -1,10 +1,11 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { AuthContext } from '@hooks/context/auth';
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
 
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
-
-import { MOCK_FAVORITE_CATEGORIES } from '@mocks/mockData/category';
 
 import * as S from './style';
 
@@ -15,11 +16,10 @@ interface LayoutProps extends PropsWithChildren {
 export default function Layout({ children, isSidebarVisible }: LayoutProps) {
   const navigate = useNavigate();
 
-  //추후 구현 예정
-  const userInfo = undefined;
-  const categoryList = MOCK_FAVORITE_CATEGORIES;
+  const { loggedInfo } = useContext(AuthContext);
+
+  const { data: categoryList } = useCategoryList(loggedInfo.isLogged);
   const selectedCategory = undefined;
-  const handleFavoriteClick = () => {};
   const handleLogoutClick = () => {};
 
   const movePostListPage = () => {
@@ -35,10 +35,9 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
         {isSidebarVisible && (
           <S.DashboardWrapper>
             <Dashboard
-              userInfo={userInfo}
-              categoryList={categoryList}
+              userInfo={loggedInfo.userInfo}
+              categoryList={categoryList ?? []}
               selectedCategory={selectedCategory}
-              handleFavoriteClick={handleFavoriteClick}
               handleLogoutClick={handleLogoutClick}
             />
           </S.DashboardWrapper>

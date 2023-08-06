@@ -8,6 +8,14 @@ export interface WrittenVoteOptionType {
   imageUrl: string;
 }
 
+export interface WrittenVoteOptionTypeResponse {
+  optionId: number;
+  content: string;
+  voteCount: number;
+  votePercent: number;
+  imageUrl: string;
+}
+
 export interface PostInfo {
   postId: number;
   title: string;
@@ -15,12 +23,28 @@ export interface PostInfo {
   content: string;
   imageUrl: string;
   category: { id: number; name: string }[];
-  startTime: string;
-  endTime: string;
+  createTime: string;
+  deadline: string;
   voteInfo: {
     selectedOptionId: number;
     allPeopleCount: number;
     options: WrittenVoteOptionType[];
+  };
+}
+
+export interface PostInfoResponse {
+  postId: number;
+  title: string;
+  writer: { id: number; nickname: string };
+  content: string;
+  imageUrl: string;
+  categories: { id: number; name: string }[];
+  createdAt: string;
+  deadline: string;
+  voteInfo: {
+    selectedOptionId: number;
+    totalVoteCount: number;
+    options: WrittenVoteOptionTypeResponse[];
   };
 }
 
@@ -29,10 +53,14 @@ export interface PostList {
   postList: PostInfo[];
 }
 
-export interface PostListByOption {
-  content: PostRequestKind;
+export interface PostListByRequiredOption {
+  postType: PostRequestKind;
   postStatus: PostStatus;
   postSorting: PostSorting;
   pageNumber: number;
-  categoryId?: number;
+}
+
+export interface PostListByOptionalOption {
+  categoryId: number;
+  keyword: string;
 }

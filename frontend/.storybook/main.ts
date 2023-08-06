@@ -34,5 +34,10 @@ const config: StorybookConfig = {
     return config;
   },
   staticDirs: ['./public'],
+  env: config => ({
+    ...config,
+    VOTOGETHER_BASE_URL: '',
+    VOTOGETHER_MOCKING_URL: '',
+  }),
 };
 export default config;

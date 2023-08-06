@@ -13,3 +13,13 @@ export interface UserInfoResponse {
   voteCount: number;
   badge?: string;
 }
+
+export interface ModifyNicknameRequest {
+  nickname: string;
+}
+
+export interface LoggedInfo {
+  accessToken: string;
+  isLogged: boolean;
+  userInfo?: User;
+}

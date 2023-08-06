@@ -17,8 +17,8 @@ const convertTimeFromStringToNumber = (date: string) => {
   return Number([...datePieces, ...timePieces].join(''));
 };
 
-export const checkClosedPost = (endTime: string) => {
+export const checkClosedPost = (deadline: string) => {
   const nowTimeNumber = convertNowTimeToNumber();
-  const endTimeNumber = convertTimeFromStringToNumber(endTime);
+  const endTimeNumber = convertTimeFromStringToNumber(deadline);
   return nowTimeNumber >= endTimeNumber;
 };

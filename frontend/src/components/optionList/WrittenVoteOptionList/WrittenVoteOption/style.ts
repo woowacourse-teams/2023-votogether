@@ -2,9 +2,10 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
-export const Container = styled.li<{ $isSelected: boolean }>`
+export const Container = styled.button<{ $isSelected: boolean }>`
   display: flex;
   flex-direction: column;
+  align-items: stretch;
 
   border: ${({ $isSelected }) =>
     $isSelected ? '2px solid var(--primary-color)' : '1px solid rgba(0, 0, 0, 0.1)'};
@@ -12,6 +13,8 @@ export const Container = styled.li<{ $isSelected: boolean }>`
   padding: 10px 15px;
 
   color: #5b5b5b;
+
+  text-align: left;
 
   cursor: pointer;
 

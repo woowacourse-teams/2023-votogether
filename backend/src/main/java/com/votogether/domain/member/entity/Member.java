@@ -15,12 +15,15 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"})
 @Getter
 @Entity
 public class Member extends BaseEntity {
+
+    private static final String INITIAL_NICKNAME_PREFIX = "USER1";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,9 +72,8 @@ public class Member extends BaseEntity {
     }
 
     public static Member from(final KakaoMemberResponse response) {
-        final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
-                .nickname("익명의손님" + nicknameNumberGenerator.generate())
+                .nickname(INITIAL_NICKNAME_PREFIX + RandomStringUtils.random(10, true, true))
                 .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
                 .ageRange(response.kakaoAccount().ageRange())
                 .birthday(response.kakaoAccount().birthday())

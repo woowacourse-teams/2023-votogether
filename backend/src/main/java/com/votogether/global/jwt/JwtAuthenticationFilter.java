@@ -57,11 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) {
         return containsAllowedUris(request) || startsWithAllowedStartUris(request)
-                || matchesUriPattern(request) || endsWithAllowedEndUris(request);
-    }
-
-    private static boolean endsWithAllowedEndUris(final HttpServletRequest request) {
-        return ALLOWED_END_URIS.stream().anyMatch(url -> request.getRequestURI().endsWith("/guest"));
+                || endsWithAllowedEndUris(request) || matchesUriPattern(request);
     }
 
     private boolean containsAllowedUris(final HttpServletRequest request) {
@@ -72,6 +68,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean startsWithAllowedStartUris(final HttpServletRequest request) {
         return ALLOWED_START_URIS.stream()
                 .anyMatch(url -> request.getRequestURI().startsWith(url));
+    }
+
+    private boolean endsWithAllowedEndUris(final HttpServletRequest request) {
+        return ALLOWED_END_URIS.stream().anyMatch(url -> request.getRequestURI().endsWith(url));
     }
 
     private boolean matchesUriPattern(final HttpServletRequest request) {

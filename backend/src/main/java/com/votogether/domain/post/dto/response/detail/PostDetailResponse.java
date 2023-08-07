@@ -26,34 +26,6 @@ public record PostDetailResponse(
         VoteDetailResponse voteInfo
 ) {
 
-    public static PostDetailResponse from(final Post post) {
-        final Member writer = post.getWriter();
-        final PostBody postBody = post.getPostBody();
-        final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
-        final StringBuilder contentImageUrl = new StringBuilder();
-
-        if (!contentImages.isEmpty()) {
-            contentImageUrl.append(contentImages.get(0).getImageUrl());
-        }
-
-        final PostCategories postCategories = post.getPostCategories();
-        return new PostDetailResponse(
-                post.getId(),
-                WriterResponse.of(writer.getId(), writer.getNickname()),
-                postBody.getTitle(),
-                postBody.getContent(),
-                convertImageUrl(contentImageUrl.toString()),
-                getCategories(postCategories.getPostCategories()),
-                post.getCreatedAt(),
-                post.getDeadline(),
-                VoteDetailResponse.of(
-                        0,
-                        -1,
-                        getOptionsByGuest(post)
-                )
-        );
-    }
-
     public static PostDetailResponse of(final Post post, final Member loginMember) {
         final Member writer = post.getWriter();
         final PostBody postBody = post.getPostBody();
@@ -103,18 +75,6 @@ public record PostDetailResponse(
                                 postOption,
                                 post.isVisibleVoteResult(loginMember),
                                 post.getFinalTotalVoteCount(loginMember)
-                        )
-                )
-                .toList();
-    }
-
-    private static List<PostOptionDetailResponse> getOptionsByGuest(final Post post) {
-        return post.getPostOptions().getPostOptions().stream()
-                .map(postOption ->
-                        PostOptionDetailResponse.of(
-                                postOption,
-                                false,
-                                -1L
                         )
                 )
                 .toList();

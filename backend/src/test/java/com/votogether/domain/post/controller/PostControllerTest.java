@@ -283,6 +283,49 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("비회원이 한 게시글을 상세 조회한다.")
+    void getPostByGuest() {
+        // given
+        long postId = 0L;
+        Member writer = MALE_30.get();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3L);
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(writer)
+                .postBody(postBody)
+                .deadline(deadline)
+                .build();
+
+        given(postService.getPostById(postId, null)).willReturn(PostDetailResponse.of(post, null));
+
+        // when
+        PostDetailResponse response = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/{postId}/guest", postId)
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .status(HttpStatus.OK)
+                .extract()
+                .as(PostDetailResponse.class);
+
+        // then
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+
+        assertAll(
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isEqualTo(-1)
+        );
+    }
+
+    @Test
     @DisplayName("게시글에 대한 전체 투표 통계를 조회한다.")
     void getVoteStatistics() {
         // given

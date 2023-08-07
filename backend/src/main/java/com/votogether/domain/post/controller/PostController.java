@@ -96,6 +96,19 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "게시글 상세 조회(비회원)", description = "비회원이 한 게시글의 상세를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")
+    })
+    @GetMapping("{postId}/guest")
+    public ResponseEntity<PostDetailResponse> getPostByGuest(
+            @PathVariable final Long postId
+    ) {
+        final PostDetailResponse response = postService.getPostById(postId, null);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "게시글 투표 통계 조회", description = "게시글 투표에 대한 전체 통계를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 투표 통계 조회 성공"),

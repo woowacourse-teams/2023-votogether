@@ -9,12 +9,4 @@ public record WriterResponse(
         return new WriterResponse(id, nickname);
     }
 
-    @Override
-    public String toString() {
-        return "WriterResponse{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                '}';
-    }
-
 }

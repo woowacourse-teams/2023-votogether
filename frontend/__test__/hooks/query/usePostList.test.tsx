@@ -7,7 +7,7 @@ import { usePostList } from '@hooks/query/usePostList';
 
 import { POST_TYPE, SORTING, STATUS } from '@constants/post';
 
-import { MOCK_POST_LIST } from '@mocks/mockData/postList';
+import { MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/postList';
 
 const queryClient = new QueryClient();
 
@@ -35,7 +35,9 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
       }
     );
 
-    await waitFor(() => expect(result.current.data?.pages[0].postList).toEqual(MOCK_POST_LIST));
+    await waitFor(() =>
+      expect(result.current.data?.pages[0].postList).toEqual(MOCK_TRANSFORM_POST_LIST)
+    );
   });
 
   test('카테고리별 게시글 목록을 불러온다.', async () => {
@@ -57,7 +59,9 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
       }
     );
 
-    await waitFor(() => expect(result.current.data?.pages[0].postList).toEqual(MOCK_POST_LIST));
+    await waitFor(() =>
+      expect(result.current.data?.pages[0].postList).toEqual(MOCK_TRANSFORM_POST_LIST)
+    );
   });
 
   test('내가 작성한 게시글 목록을 불러온다.', async () => {
@@ -79,7 +83,9 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
       }
     );
 
-    await waitFor(() => expect(result.current.data?.pages[0].postList).toEqual(MOCK_POST_LIST));
+    await waitFor(() =>
+      expect(result.current.data?.pages[0].postList).toEqual(MOCK_TRANSFORM_POST_LIST)
+    );
   });
 
   test('내가 투표한 게시글 목록을 불러온다.', async () => {
@@ -101,7 +107,9 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
       }
     );
 
-    await waitFor(() => expect(result.current.data?.pages[0].postList).toEqual(MOCK_POST_LIST));
+    await waitFor(() =>
+      expect(result.current.data?.pages[0].postList).toEqual(MOCK_TRANSFORM_POST_LIST)
+    );
   });
 
   test('내가 검색한 게시글 목록을 불러온다.', async () => {
@@ -123,7 +131,9 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
       }
     );
 
-    await waitFor(() => expect(result.current.data?.pages[0].postList).toEqual(MOCK_POST_LIST));
+    await waitFor(() =>
+      expect(result.current.data?.pages[0].postList).toEqual(MOCK_TRANSFORM_POST_LIST)
+    );
   });
 
   test('게시글 목록이 존재할 경우 isPostListEmpty는 false를 반환한다.', async () => {

@@ -1,4 +1,4 @@
-import { PostInfo, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
+import { PostInfoResponse, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
 
 import {
   REQUEST_STATUS_OPTION,
@@ -10,7 +10,9 @@ import {
 
 import { getFetch } from '@utils/fetch';
 
-const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
+import { transformPostResponse } from './post';
+
+const BASE_URL = process.env.VOTOGETHER_BASE_URL;
 
 export const makePostListUrl = (
   requiredOption: PostListByRequiredOption,
@@ -44,10 +46,10 @@ export const getPostList = async (
 
   const postListUrl = makePostListUrl(requiredOption, optionalOption);
 
-  const postList = await getFetch<PostInfo[]>(postListUrl);
+  const postList = await getFetch<PostInfoResponse[]>(postListUrl);
 
   return {
     pageNumber,
-    postList,
+    postList: postList.map(post => transformPostResponse(post)),
   };
 };

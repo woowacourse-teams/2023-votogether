@@ -1,7 +1,7 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '@type/user';
-
+import { AuthContext } from '@hooks/context/auth';
 import { useToggle } from '@hooks/useToggle';
 
 import Accordion from '@components/common/Accordion';
@@ -18,13 +18,12 @@ export default function MyInfo() {
   const navigate = useNavigate();
   const { isOpen, openComponent, closeComponent } = useToggle();
 
-  // const { data: userInfo, error, isLoading, isError } = useUserInfo(); // 유저 정보 조회 관련 pr merge 필요
-  const MOCK_USER_INFO: User = {
-    nickname: '우아한 코끼리',
-    postCount: 4,
-    voteCount: 128,
-    userPoint: 200,
-  };
+  const { userInfo } = useContext(AuthContext).loggedInfo;
+
+  if (!userInfo) {
+    navigate('/');
+    return <></>;
+  }
 
   return (
     <Layout isSidebarVisible={true}>
@@ -40,7 +39,7 @@ export default function MyInfo() {
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.ProfileSection>
-          <UserProfile userInfo={MOCK_USER_INFO} />
+          <UserProfile userInfo={userInfo} />
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">

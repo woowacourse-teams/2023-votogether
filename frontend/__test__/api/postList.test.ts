@@ -2,7 +2,7 @@ import { getPostList } from '@api/postList';
 
 import { POST_TYPE, SORTING, STATUS } from '@constants/post';
 
-import { MOCK_POST_LIST } from '@mocks/mockData/postList';
+import { MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/postList';
 
 describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확인한다.', () => {
   test('게시글 목록의 개수는 10개씩 불러온다.', async () => {
@@ -36,7 +36,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       }
     );
 
-    expect(data.postList).toEqual(MOCK_POST_LIST);
+    expect(data.postList).toEqual(MOCK_TRANSFORM_POST_LIST);
   });
 
   test('게시글 페이지의 정보를 불러온다.', async () => {
@@ -70,7 +70,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       }
     );
 
-    expect(data.postList).toEqual(MOCK_POST_LIST);
+    expect(data.postList).toEqual(MOCK_TRANSFORM_POST_LIST);
   });
 
   test('내가 작성한 게시글 페이지의 정보를 불러온다.', async () => {
@@ -87,7 +87,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       }
     );
 
-    expect(data.postList).toEqual(MOCK_POST_LIST);
+    expect(data.postList).toEqual(MOCK_TRANSFORM_POST_LIST);
   });
 
   test('내가 투표한 게시글 페이지의 정보를 불러온다.', async () => {
@@ -104,7 +104,7 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       }
     );
 
-    expect(data.postList).toEqual(MOCK_POST_LIST);
+    expect(data.postList).toEqual(MOCK_TRANSFORM_POST_LIST);
   });
 
   test('내가 검색한 게시글 페이지의 정보를 불러온다.', async () => {
@@ -121,6 +121,6 @@ describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확�
       }
     );
 
-    expect(data.postList).toEqual(MOCK_POST_LIST);
+    expect(data.postList).toEqual(MOCK_TRANSFORM_POST_LIST);
   });
 });

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useFetch } from '@hooks/useFetch';
 
@@ -15,7 +15,8 @@ import OptionStatistics from './OptionStatistics';
 import * as S from './style';
 
 export default function VoteStatisticsPage() {
-  const postId = 1;
+  const params = useParams() as { postId: string };
+  const postId = Number(params.postId);
 
   const navigate = useNavigate();
 
@@ -25,7 +26,7 @@ export default function VoteStatisticsPage() {
     isLoading: isPostLoading,
   } = useFetch(() => getPost(postId));
   const {
-    data: voteResult,
+    data: voteResultResponse,
     errorMessage: voteResultError,
     isLoading: isVoteResultLoading,
   } = useFetch(() => getPostStatistics(postId));
@@ -57,7 +58,9 @@ export default function VoteStatisticsPage() {
                 <LoadingSpinner size="sm" />
               </S.LoadingWrapper>
             )}
-            {voteResult && <VoteStatistics voteResult={voteResult} size="md" />}
+            {voteResultResponse && (
+              <VoteStatistics voteResultResponse={voteResultResponse} size="md" />
+            )}
 
             {postDetail.voteInfo.options.map(option => {
               const { postId, voteInfo } = postDetail;

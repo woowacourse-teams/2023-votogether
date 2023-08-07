@@ -42,11 +42,11 @@ const createMockPostListResponse = (
 ) => {
   const page = Number(req.url.searchParams.get('page'));
 
-  const keyword = Number(req.url.searchParams.get('keyword'));
+  const keyword = req.url.searchParams.get('keyword');
 
   if (page === null) return;
 
-  if (keyword === 999) {
+  if (keyword === '999') {
     return res(ctx.status(200), ctx.json([]));
   }
 

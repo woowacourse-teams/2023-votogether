@@ -27,6 +27,7 @@ export const TextCardContainer = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 5px;
+
   padding: 30px 15px;
 
   font: var(--text-caption);

@@ -23,7 +23,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 @Entity
 public class Member extends BaseEntity {
 
-    private static final String INITIAL_NICKNAME_PREFIX = "USER1";
+    private static final String INITIAL_NICKNAME_PREFIX = "익명의손님";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

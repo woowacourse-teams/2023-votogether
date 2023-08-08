@@ -44,7 +44,7 @@ public class VoteService {
     private void validateAlreadyVoted(final Member member, final Post post) {
         final PostOptions postOptions = post.getPostOptions();
         final List<Vote> alreadyVoted =
-                voteRepository.findByMemberAndPostOptionIn(member, postOptions.getPostOptions());
+                voteRepository.findAllByMemberAndPostOptionIn(member, postOptions.getPostOptions());
         if (!alreadyVoted.isEmpty()) {
             throw new IllegalStateException("해당 게시물에는 이미 투표하였습니다.");
         }

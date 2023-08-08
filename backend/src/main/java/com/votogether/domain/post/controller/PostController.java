@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -124,6 +125,22 @@ public class PostController {
     ) {
         final VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(postId, optionId, member);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "투표한 게시글 조회", description = "회원본인이 투표한 게시글 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원본인이 투표한 게시글 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력으로 실패.")
+    })
+    @GetMapping("/votes/me")
+    public ResponseEntity<List<PostResponse>> getPostsVotedByMe(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            @Auth final Member member
+    ) {
+        final List<PostResponse> posts = postService.getPostsVotedByMember(page, postClosingType, postSortType, member);
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     @Operation(summary = "게시글 조기 마감", description = "게시글을 조기 마감한다.")

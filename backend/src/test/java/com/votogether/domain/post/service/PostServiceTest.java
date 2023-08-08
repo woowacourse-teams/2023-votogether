@@ -43,6 +43,10 @@ import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.fixtures.MemberFixtures;
+import com.votogether.test.persister.MemberTestPersister;
+import com.votogether.test.persister.PostOptionTestPersister;
+import com.votogether.test.persister.PostTestPersister;
+import com.votogether.test.persister.VoteTestPersister;
 import jakarta.persistence.EntityManager;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -59,6 +63,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @ServiceTest
 class PostServiceTest {
+
+    @Autowired
+    EntityManager entityManager;
 
     @Autowired
     PostService postService;
@@ -85,7 +92,16 @@ class PostServiceTest {
     VoteService voteService;
 
     @Autowired
-    EntityManager entityManager;
+    MemberTestPersister memberTestPersister;
+
+    @Autowired
+    PostTestPersister postTestPersister;
+
+    @Autowired
+    PostOptionTestPersister postOptionTestPersister;
+
+    @Autowired
+    VoteTestPersister voteTestPersister;
 
     @Test
     @DisplayName("게시글을 등록한다")
@@ -582,6 +598,62 @@ class PostServiceTest {
                 () -> assertThat(firstResponse.voteInfo().totalVoteCount()).isEqualTo(32),
                 () -> assertThat(secondResponse.voteInfo().options()).hasSize(2),
                 () -> assertThat(secondResponse.voteInfo().totalVoteCount()).isEqualTo(31)
+        );
+    }
+
+    @Test
+    @DisplayName("비회원 게시글 목록 조회 시 마감된 게시글은 결과를 확인할 수 있고, 진행중인 게시글은 결과를 확인할 수 없다.")
+    void getPostsGuest() {
+        // given
+        List<Member> members = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            members.add(memberTestPersister.builder().save());
+        }
+
+        Post closedPost = postTestPersister.builder()
+                .writer(members.get(members.size() - 1))
+                .deadline(LocalDateTime.of(2022, 12, 25, 0, 0))
+                .save();
+
+        for (int j = 0; j < 2; j++) {
+            PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
+            for (int k = 0; k < 4; k++) {
+                voteTestPersister.builder().member(members.get(k)).postOption(postOption).save();
+            }
+        }
+
+        Post notClosedPost = postTestPersister.builder()
+                .writer(members.get(members.size() - 1))
+                .deadline(LocalDateTime.of(3022, 12, 25, 0, 0))
+                .save();
+
+        for (int j = 0; j < 2; j++) {
+            PostOption postOption = postOptionTestPersister.builder().post(notClosedPost).save();
+            for (int k = 0; k < 4; k++) {
+                voteTestPersister.builder().member(members.get(k)).postOption(postOption).save();
+            }
+        }
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> result = postService.getPostsGuest(0, PostClosingType.ALL, PostSortType.LATEST);
+
+        for (final PostResponse postResponse : result) {
+            System.out.println(postResponse.createdAt());
+        }
+
+        // then
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0).voteInfo().totalVoteCount()).isEqualTo(-1),
+                () -> assertThat(result.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(-1),
+                () -> assertThat(result.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(-1),
+                () -> assertThat(result.get(1).voteInfo().totalVoteCount()).isEqualTo(8),
+                () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4),
+                () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4)
         );
     }
 

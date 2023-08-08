@@ -170,6 +170,21 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public List<PostResponse> getPostsGuest(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts =
+                postRepository.findAllByClosingTypeAndSortType(postClosingType, postSortType, pageable);
+
+        return posts.stream()
+                .map(PostResponse::forGuest)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public PostDetailResponse getPostById(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));

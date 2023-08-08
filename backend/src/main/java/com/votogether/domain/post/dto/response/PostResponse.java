@@ -73,4 +73,17 @@ public record PostResponse(
                 .toList();
     }
 
+    public static PostResponse forGuest(final Post post) {
+        return new PostResponse(
+                post.getId(),
+                WriterResponse.from(post.getWriter()),
+                post.getPostBody().getTitle(),
+                post.getPostBody().getContent(),
+                getCategories(post),
+                post.getCreatedAt(),
+                post.getDeadline(),
+                VoteResponse.forGuest(post)
+        );
+    }
+
 }

@@ -138,7 +138,7 @@ public class Post extends BaseEntity {
         }
     }
 
-    private boolean isClosed() {
+    public boolean isClosed() {
         return deadline.isBefore(LocalDateTime.now());
     }
 

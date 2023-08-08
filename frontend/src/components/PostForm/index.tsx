@@ -139,13 +139,6 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       formData.append('request', JSON.stringify(updatedPostTexts));
 
       mutate(formData);
-
-      if (isError && error instanceof Error) {
-        alert(error.message);
-        return;
-      }
-
-      navigate('/');
     }
   };
 

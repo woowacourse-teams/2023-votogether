@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +45,7 @@ public class PostService {
     private static final int MAXIMUM_DEADLINE = 3;
 
     private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
+    private final Map<PostClosingType, BiFunction<Member, Pageable, Slice<Post>>> postsVotedByMemberMapper;
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;
     private final CategoryRepository categoryRepository;
@@ -61,7 +63,9 @@ public class PostService {
         this.voteRepository = voteRepository;
 
         this.postClosingTypeMapper = new EnumMap<>(PostClosingType.class);
+        this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
         initPostClosingTypeMapper();
+        initPostsVotedByMemberMapper();
     }
 
     private void initPostClosingTypeMapper() {
@@ -70,6 +74,12 @@ public class PostService {
                 postRepository.findByDeadlineAfter(LocalDateTime.now(), pageable));
         postClosingTypeMapper.put(PostClosingType.CLOSED, pageable ->
                 postRepository.findByDeadlineBefore(LocalDateTime.now(), pageable));
+    }
+
+    private void initPostsVotedByMemberMapper() {
+        postsVotedByMemberMapper.put(PostClosingType.ALL, postRepository::findPostsVotedByMember);
+        postsVotedByMemberMapper.put(PostClosingType.PROGRESS, postRepository::findOpenPostsVotedByMember);
+        postsVotedByMemberMapper.put(PostClosingType.CLOSED, postRepository::findClosedPostsVotedByMember);
     }
 
     @Transactional
@@ -152,7 +162,7 @@ public class PostService {
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getSort());
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getPostBaseSort());
         final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
 
         return contents.stream()
@@ -235,7 +245,23 @@ public class PostService {
         }
         return ageRange;
     }
+    
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsVotedByMember(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Member member
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getVoteBaseSort());
 
+        Slice<Post> posts = postsVotedByMemberMapper.get(postClosingType).apply(member, pageable);
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, member))
+                .toList();
+    }
+    
     @Transactional
     public void closePostEarlyById(final Long id, final Member loginMember) {
         final Post post = postRepository.findById(id)

@@ -11,12 +11,17 @@ export default function CommentDeleteModal({
   handleCancelClick,
   handleDeleteClick,
 }: CommentDeleteModalProps) {
+  const handlePrimaryButtonClick = () => {
+    handleDeleteClick();
+    handleCancelClick();
+  };
+
   return (
     <TwoButtonModal
       title="댓글 삭제하기"
       primaryButton={{
         text: '삭제',
-        handleClick: handleDeleteClick,
+        handleClick: handlePrimaryButtonClick,
       }}
       secondaryButton={{
         text: '취소',

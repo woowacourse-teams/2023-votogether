@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { TIMEBOX_CHILD_HEIGHT } from './constants';
+
 export const Container = styled.div`
   width: 33.3%;
   height: 99px;
@@ -9,9 +11,11 @@ export const Container = styled.div`
 
 export const TimeBox = styled.div`
   width: 100%;
-  height: 100%;
+  height: ${`${TIMEBOX_CHILD_HEIGHT * 3}px`};
 
   position: absolute;
+
+  background-color: rgba(0, 0, 0, 0);
 
   text-align: center;
 
@@ -27,14 +31,14 @@ export const TimeBox = styled.div`
 
 export const PickedTimeOverlay = styled.div`
   width: 100%;
-  height: 33%;
+  height: 33px;
 
   position: absolute;
   top: 33%;
 
   background-color: rgba(128, 128, 128, 0.2);
 
-  z-index: 99999;
+  z-index: -1;
 `;
 
 export const Time = styled.div<{ $isPicked: boolean }>`
@@ -43,7 +47,7 @@ export const Time = styled.div<{ $isPicked: boolean }>`
   align-items: center;
 
   width: 100%;
-  height: 33%;
+  height: ${`${TIMEBOX_CHILD_HEIGHT}px`};
 
   color: ${props => !props.$isPicked && 'gray'};
 
@@ -52,5 +56,5 @@ export const Time = styled.div<{ $isPicked: boolean }>`
 `;
 
 export const Empty = styled.div`
-  height: 37px;
+  height: ${`${TIMEBOX_CHILD_HEIGHT}px`};
 `;

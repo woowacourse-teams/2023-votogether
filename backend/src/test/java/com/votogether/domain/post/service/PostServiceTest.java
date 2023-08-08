@@ -641,10 +641,6 @@ class PostServiceTest {
         // when
         List<PostResponse> result = postService.getPostsGuest(0, PostClosingType.ALL, PostSortType.LATEST);
 
-        for (final PostResponse postResponse : result) {
-            System.out.println(postResponse.createdAt());
-        }
-
         // then
         assertAll(
                 () -> assertThat(result).hasSize(2),

@@ -6,11 +6,9 @@ import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.stereotype.Component;
 
-@Persister
 @RequiredArgsConstructor
-@Component
+@Persister
 public class MemberTestPersister {
 
     private final MemberRepository memberRepository;

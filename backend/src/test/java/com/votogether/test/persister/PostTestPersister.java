@@ -6,11 +6,9 @@ import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.repository.PostRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Persister
 @RequiredArgsConstructor
-@Component
+@Persister
 public class PostTestPersister {
 
     private final MemberTestPersister memberTestPersister;

@@ -5,11 +5,9 @@ import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Persister
 @RequiredArgsConstructor
-@Component
+@Persister
 public class VoteTestPersister {
 
     private final MemberTestPersister memberTestPersister;

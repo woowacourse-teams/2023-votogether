@@ -5,11 +5,9 @@ import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.stereotype.Component;
 
-@Persister
 @RequiredArgsConstructor
-@Component
+@Persister
 public class PostOptionTestPersister {
 
     private final PostTestPersister postTestPersister;

@@ -9,8 +9,8 @@ import { useToggle } from '@hooks/useToggle';
 
 import { reportContent } from '@api/report';
 
-import CommentDeleteModal from '@components/comment/CommentDeleteModal';
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
+import DeleteModal from '@components/common/DeleteModal';
 import ReportModal from '@components/ReportModal';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
@@ -102,7 +102,8 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         <S.Description>{content}</S.Description>
       )}
       {action === COMMENT_ACTION.DELETE && (
-        <CommentDeleteModal
+        <DeleteModal
+          target="댓글"
           handleCancelClick={handleCancelClick}
           handleDeleteClick={handleDeleteClick}
         />

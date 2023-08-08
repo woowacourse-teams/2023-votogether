@@ -25,6 +25,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 @Entity
 public class Member extends BaseEntity {
 
+    private static final String INITIAL_NICKNAME_PREFIX = "익명의손님";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -72,9 +74,8 @@ public class Member extends BaseEntity {
     }
 
     public static Member from(final KakaoMemberResponse response) {
-        final NicknameNumberGenerator nicknameNumberGenerator = new NicknameNumberGenerator();
         return Member.builder()
-                .nickname("익명의손님" + nicknameNumberGenerator.generate())
+                .nickname(INITIAL_NICKNAME_PREFIX + RandomStringUtils.random(10, true, true))
                 .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
                 .ageRange(response.kakaoAccount().ageRange())
                 .birthday(response.kakaoAccount().birthday())

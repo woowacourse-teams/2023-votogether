@@ -71,10 +71,8 @@ public class Comment extends BaseEntity {
         }
     }
 
-    public void blind(final int reportCount) {
-        if (reportCount >= 5) {
-            this.isHidden = true;
-        }
+    public void blind() {
+        this.isHidden = true;
     }
 
     public void validateMine(final Member reporter) {

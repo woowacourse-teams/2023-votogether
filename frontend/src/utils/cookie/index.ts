@@ -32,5 +32,6 @@ export function getMemberId(token: string): MemberPayload {
 }
 
 export const clearCookieToken = (key: CookieKey) => {
-  document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  const expirationTime = new Date(Date.now() - 1);
+  document.cookie = `${encodeURIComponent(key)}=; expires=${expirationTime.toUTCString()}; path=/;`;
 };

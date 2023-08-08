@@ -81,6 +81,7 @@ public class ReportService {
                 .member(reporter)
                 .reportType(request.type())
                 .targetId(request.id())
+                .reason(request.reason())
                 .build();
         reportRepository.save(report);
     }

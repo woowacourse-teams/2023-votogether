@@ -44,15 +44,20 @@ public class Report extends BaseEntity {
     @Column(nullable = false)
     private Long targetId;
 
+    @Column(nullable = false, length = 50)
+    private String reason;
+
     @Builder
     private Report(
             final Member member,
             final ReportType reportType,
-            final Long targetId
+            final Long targetId,
+            final String reason
     ) {
         this.member = member;
         this.reportType = reportType;
         this.targetId = targetId;
+        this.reason = reason;
     }
 
 }

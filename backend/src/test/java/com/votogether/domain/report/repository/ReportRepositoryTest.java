@@ -54,6 +54,7 @@ class ReportRepositoryTest {
                 .member(member)
                 .reportType(reportType)
                 .targetId(post.getId())
+                .reason("불건전한 게시글")
                 .build();
         reportRepository.save(report);
 
@@ -88,6 +89,7 @@ class ReportRepositoryTest {
                 .targetId(post.getId())
                 .reportType(ReportType.POST)
                 .member(member)
+                .reason("불건전한 게시글")
                 .build();
         reportRepository.save(report);
 

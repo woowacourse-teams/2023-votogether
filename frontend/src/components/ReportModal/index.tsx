@@ -10,7 +10,7 @@ import { REPORT_TYPE } from './constants';
 interface UserReportModalProps {
   reportType: ReportType;
   handleCancelClick: () => void;
-  handleReportClick: () => void;
+  handleReportClick: (reason: string) => void;
 }
 
 export default function ReportModal({
@@ -27,7 +27,7 @@ export default function ReportModal({
       title={name}
       primaryButton={{
         text: '신고',
-        handleClick: handleReportClick,
+        handleClick: () => handleReportClick(selectedOption),
       }}
       secondaryButton={{
         text: '취소',

@@ -1,20 +1,38 @@
+import { useState } from 'react';
+
+import { MenuItem } from '@type/menu';
+
+import { useToggle } from '@hooks/useToggle';
+
+import DeleteModal from '@components/common/DeleteModal';
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import IconButton from '@components/common/IconButton';
+import PostMenu from '@components/common/PostMenu';
 import TagButton from '@components/common/TagButton';
+import ReportModal from '@components/ReportModal';
 
 import * as S from './style';
 
 type MovePageEvent = 'moveWritePostPage' | 'moveVoteStatisticsPage' | 'movePostListPage';
-type ControlPostEvent = 'setEarlyClosePost' | 'removePost' | 'reportPost';
 
 interface PostDetailPageChildProps {
   isWriter: boolean;
   isClosed: boolean;
   handleEvent: {
     movePage: Record<MovePageEvent, () => void>;
-    controlPost: Record<ControlPostEvent, () => void>;
+    controlPost: {
+      setEarlyClosePost: () => void;
+      removePost: () => void;
+      reportPost: (reason: string) => void;
+      reportNickname: (reason: string) => void;
+    };
   };
 }
+
+const menuList: MenuItem[] = [
+  { color: 'black', content: '닉네임 신고', action: 'NICKNAME_REPORT' },
+  { color: 'black', content: '게시글 신고', action: 'POST_REPORT' },
+];
 
 export default function InnerHeaderPart({
   isWriter,
@@ -22,18 +40,36 @@ export default function InnerHeaderPart({
   handleEvent: { movePage, controlPost },
 }: PostDetailPageChildProps) {
   const { moveWritePostPage, moveVoteStatisticsPage, movePostListPage } = movePage;
-  const { setEarlyClosePost, removePost, reportPost } = controlPost;
+  const { setEarlyClosePost, removePost, reportPost, reportNickname } = controlPost;
+  const { isOpen, toggleComponent, closeComponent } = useToggle();
+  const [action, setAction] = useState<string | null>(null);
+
+  const handleMenuClick = (action: string) => {
+    closeComponent();
+    setAction(action);
+  };
+
+  const handleCancelClick = () => {
+    setAction(null);
+  };
 
   return (
     <>
       <IconButton category="back" onClick={movePostListPage} />
       <S.HeaderWrapper>
         {!isWriter ? (
-          <HeaderTextButton onClick={reportPost}>신고</HeaderTextButton>
+          <>
+            <HeaderTextButton onClick={toggleComponent}>신고</HeaderTextButton>
+            {isOpen && (
+              <S.MenuWrapper>
+                <PostMenu menuList={menuList} handleMenuClick={handleMenuClick} />
+              </S.MenuWrapper>
+            )}
+          </>
         ) : !isClosed ? (
           <>
             <HeaderTextButton onClick={moveWritePostPage}>수정</HeaderTextButton>
-            <HeaderTextButton onClick={removePost}>삭제</HeaderTextButton>
+            <HeaderTextButton onClick={() => handleMenuClick('DELETE')}>삭제</HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton size="sm" onClick={setEarlyClosePost}>
                 조기마감
@@ -42,13 +78,34 @@ export default function InnerHeaderPart({
           </>
         ) : (
           <>
-            <HeaderTextButton onClick={removePost}>삭제</HeaderTextButton>
+            <HeaderTextButton onClick={() => handleMenuClick('DELETE')}>삭제</HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton size="sm" onClick={moveVoteStatisticsPage}>
                 통계보기
               </TagButton>
             </S.TagButtonWrapper>
           </>
+        )}
+        {action === 'DELETE' && (
+          <DeleteModal
+            target="게시물"
+            handleCancelClick={handleCancelClick}
+            handleDeleteClick={removePost}
+          />
+        )}
+        {action === 'POST_REPORT' && (
+          <ReportModal
+            reportType="POST"
+            handleReportClick={reportPost}
+            handleCancelClick={handleCancelClick}
+          />
+        )}
+        {action === 'NICKNAME_REPORT' && (
+          <ReportModal
+            reportType="NICKNAME"
+            handleReportClick={reportNickname}
+            handleCancelClick={handleCancelClick}
+          />
         )}
       </S.HeaderWrapper>
     </>

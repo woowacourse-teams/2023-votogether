@@ -1,9 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { ReportRequest } from '@type/report';
+
 import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { useFetch } from '@hooks/useFetch';
 
 import { getPost, removePost, setEarlyClosePost } from '@api/post';
+import { reportContent } from '@api/report';
 
 import CommentList from '@components/comment/CommentList';
 import Layout from '@components/common/Layout';
@@ -84,8 +87,19 @@ export default function PostDetailPage() {
         .catch(error => alert(error.message))
         .then(res => alert('게시물을 삭제했습니다.'));
     },
-    reportPost: () => {
-      //아직 api 논의하지 않음
+    reportPost: async (reason: string) => {
+      const reportData = { type: 'POST', id: postId, reason } as ReportRequest;
+
+      await reportContent(reportData)
+        .catch(error => alert('게시물 신고가 샐패했습니다.'))
+        .then(res => alert('게시물을 신고했습니다.'));
+    },
+    reportNickname: async (reason: string) => {
+      const reportData = { type: 'NICKNAME', id: postData.writer.id, reason } as ReportRequest;
+
+      await reportContent(reportData)
+        .catch(error => alert('작성자 닉네임 신고가 샐패했습니다.'))
+        .then(res => alert('작성자 닉네임을 신고했습니다.'));
     },
   };
 

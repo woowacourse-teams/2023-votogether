@@ -11,3 +11,10 @@ export const TagButtonWrapper = styled.div`
   margin-right: 10px;
   right: 10px;
 `;
+
+export const MenuWrapper = styled.div`
+  position: absolute;
+  top: 45px;
+  margin-right: 10px;
+  right: 10px;
+`;

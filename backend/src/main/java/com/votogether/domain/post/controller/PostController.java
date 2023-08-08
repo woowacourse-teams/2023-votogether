@@ -157,5 +157,15 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<List<PostResponse>> getPostsByMe(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            @Auth final Member member) {
+        List<PostResponse> responses = postService.findPostsByWriter(page, postClosingType, postSortType, member);
+        return ResponseEntity.ok(responses);
+    }
+
 }
 

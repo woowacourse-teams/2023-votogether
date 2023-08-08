@@ -13,6 +13,7 @@ export function getCookieToken() {
     const [key, value] = pair.split('=');
     cookieContent[key] = value;
   });
+
   return cookieContent as Record<CookieKey, any>;
 }
 
@@ -29,3 +30,8 @@ export function getMemberId(token: string): MemberPayload {
 
   return decodedData;
 }
+
+export const clearCookieToken = (key: CookieKey) => {
+  const expirationTime = new Date(Date.now() - 1);
+  document.cookie = `${encodeURIComponent(key)}=; expires=${expirationTime.toUTCString()}; path=/;`;
+};

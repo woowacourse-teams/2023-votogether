@@ -21,7 +21,7 @@ import * as S from './style';
 export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
-  const { isLogged, userInfo } = useContext(AuthContext).loggedInfo;
+  const { isLoggedIn: isLogged, userInfo } = useContext(AuthContext).loggedInfo;
   const { data: categoryList } = useCategoryList(isLogged);
 
   const handleLogoutClick = () => {};

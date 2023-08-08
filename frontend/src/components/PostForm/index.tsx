@@ -55,7 +55,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
   const navigate = useNavigate();
   const writingOptionHook = useWritingOption(voteInfo?.options);
   const contentImageHook = useContentImage(imageUrl);
-  const { isLogged } = useContext(AuthContext).loggedInfo;
+  const { isLoggedIn: isLogged } = useContext(AuthContext).loggedInfo;
   const { data: categoryList } = useCategoryList(isLogged);
 
   const { isOpen, openComponent, closeComponent } = useToggle();

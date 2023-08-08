@@ -13,7 +13,7 @@ interface Auth {
 }
 
 const notLoggedInfo: LoggedInfo = {
-  isLogged: false,
+  isLoggedIn: false,
   accessToken: '',
 };
 
@@ -21,21 +21,21 @@ export const AuthContext = createContext({} as Auth);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loggedInfo, setLoggedInfo] = useState(notLoggedInfo);
-  const { data: userInfo } = useUserInfo(loggedInfo.isLogged);
+  const { data: userInfo } = useUserInfo(loggedInfo.isLoggedIn);
 
   const clearLoggedInfo = () => {
     setLoggedInfo(notLoggedInfo);
   };
 
   useEffect(() => {
-    if (userInfo && loggedInfo.isLogged) {
+    if (userInfo && loggedInfo.isLoggedIn) {
       setLoggedInfo(origin => ({ ...origin, userInfo }));
     }
   }, [userInfo]);
 
   useEffect(() => {
     const accessToken = getCookieToken().accessToken;
-    if (accessToken) setLoggedInfo(origin => ({ ...origin, accessToken, isLogged: true }));
+    if (accessToken) setLoggedInfo(origin => ({ ...origin, accessToken, isLoggedIn: true }));
   }, []);
 
   return (

@@ -20,7 +20,7 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
 
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
 
-  const { data: categoryList } = useCategoryList(loggedInfo.isLogged);
+  const { data: categoryList } = useCategoryList(loggedInfo.isLoggedIn);
   const selectedCategory = undefined;
 
   const handleLogoutClick = () => {

@@ -44,7 +44,7 @@ export default function Redirection() {
           setLoggedInfo({
             ...loggedInfo,
             accessToken: getCookieToken().accessToken,
-            isLogged: true,
+            isLoggedIn: true,
           });
 
           navigate('/');

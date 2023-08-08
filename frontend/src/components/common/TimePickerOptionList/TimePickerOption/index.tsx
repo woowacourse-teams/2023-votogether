@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { TIME_UNIT, TIMEBOX_CHILD_HEIGHT } from './constants';
 import * as S from './style';
@@ -18,43 +18,55 @@ export default function TimePickerOption({
   const timeBoxRef = useRef<HTMLDivElement>(null);
   const timeBoxChildRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const handleScroll = () => {
     const timeBox = timeBoxRef.current;
-    const timeBoxChild = timeBoxChildRef.current;
-    if (!timeBox || !timeBoxChild) return;
 
-    timeBox.scrollTop = timeBoxChild.offsetHeight * (currentTime - 1);
-  }, []);
+    if (!timeBox) return;
+
+    const pickedTimeIndex = Math.round(timeBox.scrollTop / TIMEBOX_CHILD_HEIGHT);
+
+    if (pickedTimeIndex >= 0 && pickedTimeIndex < timeUnit) {
+      handlePickTime(option, pickedTimeIndex);
+    }
+  };
+
+  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    const timeBox = timeBoxRef.current;
+
+    if (!timeBox) return;
+
+    if (event.deltaY > 0) {
+      timeBox.scrollTop += TIMEBOX_CHILD_HEIGHT;
+    }
+    if (event.deltaY < 0) {
+      timeBox.scrollTop -= TIMEBOX_CHILD_HEIGHT;
+    }
+  };
 
   useEffect(() => {
     const timeBox = timeBoxRef.current;
 
     if (!timeBox) return;
-    window.console.log(timeBox.scrollTop);
 
-    if (currentTime === 0) timeBox.scrollTop = 0;
+    const cancelWheel = (e: WheelEvent) => e.preventDefault();
+    timeBox.addEventListener('wheel', cancelWheel, { passive: false });
 
-    const handleScroll = () => {
-      const pickedTimeIndex = Math.floor(
-        (timeBox.scrollTop + timeBox.clientHeight / 2) / TIMEBOX_CHILD_HEIGHT
-      );
+    return () => timeBox.removeEventListener('wheel', cancelWheel);
+  }, []);
 
-      if (pickedTimeIndex >= 0 && pickedTimeIndex < timeUnit) {
-        handlePickTime(option, pickedTimeIndex);
-      }
-    };
+  useEffect(() => {
+    const timeBox = timeBoxRef.current;
+    const timeBoxChild = timeBoxChildRef.current;
+    if (!timeBox || !timeBoxChild) return;
 
-    timeBox.addEventListener('scroll', handleScroll);
-
-    return () => {
-      timeBox.removeEventListener('scroll', handleScroll);
-    };
-  }, [currentTime, handlePickTime, option, timeUnit]);
+    timeBox.scrollTop = timeBoxChild.offsetHeight * currentTime;
+  }, []);
 
   return (
     <S.Container>
       <S.PickedTimeOverlay />
-      <S.TimeBox ref={timeBoxRef}>
+      <S.TimeBox onScroll={handleScroll} ref={timeBoxRef} onWheel={handleWheel}>
+        <S.Empty />
         {Array.from({ length: timeUnit }).map((_, index) => (
           <S.Time
             key={index}

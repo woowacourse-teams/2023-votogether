@@ -1,12 +1,12 @@
 import { MouseEvent } from 'react';
 
-import { MenuItem } from '@type/menu';
+import { PostAction, PostMenuItem } from '@type/menu';
 
 import * as S from './style';
 
 interface PostMenuProps {
-  menuList: MenuItem[];
-  handleMenuClick: (menu: string) => void;
+  menuList: PostMenuItem[];
+  handleMenuClick: (menu: PostAction) => void;
 }
 
 export default function PostMenu({ menuList, handleMenuClick }: PostMenuProps) {

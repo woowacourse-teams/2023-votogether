@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { MenuItem } from '@type/menu';
+import { PostAction, PostMenuItem } from '@type/menu';
 
 import { useToggle } from '@hooks/useToggle';
 
@@ -29,7 +29,7 @@ interface PostDetailPageChildProps {
   };
 }
 
-const menuList: MenuItem[] = [
+const menuList: PostMenuItem[] = [
   { color: 'black', content: '닉네임 신고', action: 'NICKNAME_REPORT' },
   { color: 'black', content: '게시글 신고', action: 'POST_REPORT' },
 ];
@@ -42,9 +42,9 @@ export default function InnerHeaderPart({
   const { moveWritePostPage, moveVoteStatisticsPage, movePostListPage } = movePage;
   const { setEarlyClosePost, removePost, reportPost, reportNickname } = controlPost;
   const { isOpen, toggleComponent, closeComponent } = useToggle();
-  const [action, setAction] = useState<string | null>(null);
+  const [action, setAction] = useState<PostAction | null>(null);
 
-  const handleMenuClick = (action: string) => {
+  const handleMenuClick = (action: PostAction) => {
     closeComponent();
     setAction(action);
   };

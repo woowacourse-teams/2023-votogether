@@ -1,7 +1,7 @@
 import { useSelect } from '@hooks/useSelect';
 
-import CommentModal from '@components/comment/CommentModal';
 import Select from '@components/common/Select';
+import TwoButtonModal from '@components/common/TwoButtonModal';
 
 import { COMMENT_REPORT_KIND, COMMENT_REPORT_MESSAGE } from './constants';
 import { type CommentReportMessage } from './types';
@@ -16,7 +16,7 @@ export default function CommentReportModal({ handleCancelClick }: CommentReportM
   );
 
   return (
-    <CommentModal
+    <TwoButtonModal
       title="댓글 신고하기"
       primaryButton={{
         text: '신고',
@@ -33,6 +33,6 @@ export default function CommentReportModal({ handleCancelClick }: CommentReportM
         handleOptionChange={handleOptionChange}
         selectedOption={COMMENT_REPORT_MESSAGE[selectedOption]}
       />
-    </CommentModal>
+    </TwoButtonModal>
   );
 }

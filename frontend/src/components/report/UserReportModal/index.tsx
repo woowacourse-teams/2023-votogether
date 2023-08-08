@@ -1,7 +1,7 @@
 import { useSelect } from '@hooks/useSelect';
 
-import CommentModal from '@components/comment/CommentModal';
 import Select from '@components/common/Select';
+import TwoButtonModal from '@components/common/TwoButtonModal';
 
 import { USER_REPORT_KIND, USER_REPORT_MESSAGE } from './constants';
 import { type UserReportMessage } from './types';
@@ -16,7 +16,7 @@ export default function UserReportModal({ handleCancelClick }: UserReportModalPr
   );
 
   return (
-    <CommentModal
+    <TwoButtonModal
       title="유저 신고하기"
       primaryButton={{
         text: '신고',
@@ -33,6 +33,6 @@ export default function UserReportModal({ handleCancelClick }: UserReportModalPr
         handleOptionChange={handleOptionChange}
         selectedOption={USER_REPORT_MESSAGE[selectedOption]}
       />
-    </CommentModal>
+    </TwoButtonModal>
   );
 }

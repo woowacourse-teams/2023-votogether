@@ -1,4 +1,4 @@
-import CommentModal from '../CommentModal';
+import TwoButtonModal from '../../common/TwoButtonModal';
 
 import * as S from './style';
 
@@ -12,7 +12,7 @@ export default function CommentDeleteModal({
   handleDeleteClick,
 }: CommentDeleteModalProps) {
   return (
-    <CommentModal
+    <TwoButtonModal
       title="댓글 삭제하기"
       primaryButton={{
         text: '삭제',
@@ -24,6 +24,6 @@ export default function CommentDeleteModal({
       }}
     >
       <S.Description>{`댓글을 삭제하시겠습니까?\n댓글이 삭제되고 취소할 수 없습니다.`}</S.Description>
-    </CommentModal>
+    </TwoButtonModal>
   );
 }

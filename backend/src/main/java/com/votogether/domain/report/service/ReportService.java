@@ -32,159 +32,125 @@ public class ReportService {
 
     @Transactional
     public void report(final Member reporter, final ReportRequest request) {
-        final ReportType reportType = ReportType.valueOf(request.type());
-
-        if (reportType == ReportType.POST) {
-            reportPost(reporter, request, reportType);
+        if (request.type() == ReportType.POST) {
+            reportPost(reporter, request);
         }
-        if (reportType == ReportType.COMMENT) {
-            reportComment(reporter, request, reportType);
+        if (request.type() == ReportType.COMMENT) {
+            reportComment(reporter, request);
         }
-        if (reportType == ReportType.NICKNAME) {
-            reportNickname(reporter, request, reportType);
+        if (request.type() == ReportType.NICKNAME) {
+            reportNickname(reporter, request);
         }
     }
 
     private void reportPost(
             final Member reporter,
-            final ReportRequest request,
-            final ReportType reportType
+            final ReportRequest request
     ) {
         final Post reportedPost = postRepository.findById(request.id())
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
-        validatePost(reporter, reportedPost, reportType, request.id());
+        validatePost(reporter, reportedPost, request);
 
-        final Report report = Report.builder()
-                .member(reporter)
-                .reportType(reportType)
-                .targetId(request.id())
-                .build();
-        reportRepository.save(report);
-        blindPost(reportType, request.id(), reportedPost);
+        saveReport(reporter, request);
+        blindPost(request, reportedPost);
     }
 
     private void validatePost(
             final Member reporter,
             final Post reportedPost,
-            final ReportType reportType,
-            final Long targetId
+            final ReportRequest request
     ) {
         reportedPost.validateMine(reporter);
         reportedPost.validateHidden();
-        validateDuplicatedPostReport(reporter, reportType, targetId);
+        validateDuplicatedReport(reporter, request, ReportExceptionType.DUPLICATE_POST_REPORT);
     }
 
-    private void validateDuplicatedPostReport(
+    private void validateDuplicatedReport(
             final Member reporter,
-            final ReportType reportType,
-            final Long targetId
+            final ReportRequest request,
+            final ReportExceptionType exceptionType
     ) {
-        reportRepository.findByMemberAndReportTypeAndTargetId(reporter, reportType, targetId)
-                .ifPresent(it -> {
-                    throw new BadRequestException(ReportExceptionType.DUPLICATE_POST_REPORT);
+        reportRepository.findByMemberAndReportTypeAndTargetId(reporter, request.type(), request.id())
+                .ifPresent(report -> {
+                    throw new BadRequestException(exceptionType);
                 });
     }
 
+    private void saveReport(final Member reporter, final ReportRequest request) {
+        final Report report = Report.builder()
+                .member(reporter)
+                .reportType(request.type())
+                .targetId(request.id())
+                .build();
+        reportRepository.save(report);
+    }
+
     private void blindPost(
-            final ReportType reportType,
-            final Long targetId,
+            final ReportRequest request,
             final Post reportedPost
     ) {
-        final int reportCount = reportRepository.countByReportTypeAndTargetId(reportType, targetId);
-        reportedPost.blind(reportCount);
+        final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
+        if (reportCount >= 5) {
+            reportedPost.blind();
+        }
     }
 
     private void reportComment(
             final Member reporter,
-            final ReportRequest request,
-            final ReportType reportType
+            final ReportRequest request
     ) {
         final Comment reportedComment = commentRepository.findById(request.id())
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
-        validateComment(reporter, request, reportType, reportedComment);
+        validateComment(reporter, request, reportedComment);
 
-        final Report report = Report.builder()
-                .member(reporter)
-                .reportType(reportType)
-                .targetId(request.id())
-                .build();
-        reportRepository.save(report);
-        blindComment(request, reportType, reportedComment);
+        saveReport(reporter, request);
+        blindComment(request, reportedComment);
     }
 
     private void validateComment(
             final Member reporter,
             final ReportRequest request,
-            final ReportType reportType,
             final Comment reportedComment
     ) {
         reportedComment.validateMine(reporter);
         reportedComment.validateHidden();
-        validateDuplicatedCommentReport(reporter, request, reportType);
-    }
-
-    private void validateDuplicatedCommentReport(
-            final Member reporter,
-            final ReportRequest request,
-            final ReportType reportType
-    ) {
-        reportRepository.findByMemberAndReportTypeAndTargetId(reporter, reportType, request.id())
-                .ifPresent(it -> {
-                    throw new BadRequestException(ReportExceptionType.DUPLICATE_COMMENT_REPORT);
-                });
+        validateDuplicatedReport(reporter, request, ReportExceptionType.DUPLICATE_COMMENT_REPORT);
     }
 
     private void blindComment(
             final ReportRequest request,
-            final ReportType reportType,
             final Comment reportedComment
     ) {
-        final int reportCount = reportRepository.countByReportTypeAndTargetId(reportType, request.id());
-        reportedComment.blind(reportCount);
+        final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
+        if (reportCount >= 5) {
+            reportedComment.blind();
+        }
     }
 
     private void reportNickname(
             final Member reporter,
-            final ReportRequest request,
-            final ReportType reportType
+            final ReportRequest request
     ) {
         final Member reportedMember = memberRepository.findById(request.id())
                 .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
-        validateNickname(reporter, request, reportType);
+        validateNickname(reporter, request);
 
-        final Report report = Report.builder()
-                .member(reporter)
-                .reportType(reportType)
-                .targetId(reportedMember.getId())
-                .build();
-        reportRepository.save(report);
-        changeNicknameByReport(reportedMember, reportType);
+        saveReport(reporter, request);
+        changeNicknameByReport(reportedMember, request.type());
     }
 
     private void validateNickname(
             final Member reporter,
-            final ReportRequest request,
-            final ReportType reportType
+            final ReportRequest request
     ) {
         validateMyNickname(reporter, request);
-        validateDuplicatedNicknameReport(reporter, request, reportType);
+        validateDuplicatedReport(reporter, request, ReportExceptionType.DUPLICATE_NICKNAME_REPORT);
     }
 
     private void validateMyNickname(final Member reporter, final ReportRequest request) {
         if (Objects.equals(reporter.getId(), request.id())) {
             throw new BadRequestException(ReportExceptionType.REPORT_MY_NICKNAME);
         }
-    }
-
-    private void validateDuplicatedNicknameReport(
-            final Member reporter,
-            final ReportRequest request,
-            final ReportType reportType
-    ) {
-        reportRepository.findByMemberAndReportTypeAndTargetId(reporter, reportType, request.id())
-                .ifPresent(it -> {
-                    throw new BadRequestException(ReportExceptionType.DUPLICATE_NICKNAME_REPORT);
-                });
     }
 
     private void changeNicknameByReport(final Member reportedMember, final ReportType reportType) {

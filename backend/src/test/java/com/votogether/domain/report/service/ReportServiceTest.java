@@ -66,7 +66,7 @@ class ReportServiceTest {
 
             postRepository.save(post);
 
-            ReportRequest request = new ReportRequest(ReportType.POST.name(), post.getId(), "불건전한 게시글");
+            ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
             assertDoesNotThrow(() -> reportService.report(reporter, request));
@@ -78,7 +78,7 @@ class ReportServiceTest {
             // given
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            ReportRequest request = new ReportRequest(ReportType.POST.name(), -1L, "불건전한 게시글");
+            ReportRequest request = new ReportRequest(ReportType.POST, -1L, "불건전한 게시글");
 
             // when, then
             assertThatThrownBy(() -> reportService.report(writer, request))
@@ -105,7 +105,7 @@ class ReportServiceTest {
 
             postRepository.save(post);
 
-            ReportRequest request = new ReportRequest(ReportType.POST.name(), post.getId(), "불건전한 게시글");
+            ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
             assertThatThrownBy(() -> reportService.report(writer, request))
@@ -134,7 +134,7 @@ class ReportServiceTest {
 
             postRepository.save(post);
 
-            ReportRequest request = new ReportRequest(ReportType.POST.name(), post.getId(), "불건전한 게시글");
+            ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
             assertThatThrownBy(() -> reportService.report(reporter, request))
@@ -162,7 +162,7 @@ class ReportServiceTest {
 
             postRepository.save(post);
 
-            ReportRequest request = new ReportRequest(ReportType.POST.name(), post.getId(), "불건전한 게시글");
+            ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when
             reportService.report(reporter, request);
@@ -197,7 +197,7 @@ class ReportServiceTest {
 
             postRepository.save(post);
 
-            ReportRequest request = new ReportRequest(ReportType.POST.name(), post.getId(), "불건전한 게시글");
+            ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when
             reportService.report(reporter1, request);
@@ -244,7 +244,7 @@ class ReportServiceTest {
             postRepository.save(post);
             commentRepository.save(comment);
 
-            ReportRequest request = new ReportRequest(ReportType.COMMENT.name(), comment.getId(), "불건전한 게시글");
+            ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 게시글");
 
             // when, then
             assertDoesNotThrow(() -> reportService.report(reporter, request));
@@ -256,7 +256,7 @@ class ReportServiceTest {
             // given
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            ReportRequest request = new ReportRequest(ReportType.COMMENT.name(), -1L, "불건전한 댓글");
+            ReportRequest request = new ReportRequest(ReportType.COMMENT, -1L, "불건전한 댓글");
 
             // when, then
             assertThatThrownBy(() -> reportService.report(writer, request))
@@ -291,7 +291,7 @@ class ReportServiceTest {
             postRepository.save(post);
             commentRepository.save(comment);
 
-            ReportRequest request = new ReportRequest(ReportType.COMMENT.name(), comment.getId(), "불건전한 댓글");
+            ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when, then
             assertThatThrownBy(() -> reportService.report(writer, request))
@@ -328,7 +328,7 @@ class ReportServiceTest {
             postRepository.save(post);
             commentRepository.save(comment);
 
-            ReportRequest request = new ReportRequest(ReportType.COMMENT.name(), comment.getId(), "불건전한 댓글");
+            ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when, then
             assertThatThrownBy(() -> reportService.report(reporter, request))
@@ -364,7 +364,7 @@ class ReportServiceTest {
             postRepository.save(post);
             commentRepository.save(comment);
 
-            ReportRequest request = new ReportRequest(ReportType.COMMENT.name(), comment.getId(), "불건전한 댓글");
+            ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when
             reportService.report(reporter, request);
@@ -407,7 +407,7 @@ class ReportServiceTest {
             postRepository.save(post);
             commentRepository.save(comment);
 
-            ReportRequest request = new ReportRequest(ReportType.COMMENT.name(), comment.getId(), "불건전한 댓글");
+            ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when
             reportService.report(reporter1, request);
@@ -433,7 +433,7 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
             Member reported = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reported.getId(), "불건전한 닉네임");
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 
             // when, then
             assertDoesNotThrow(() -> reportService.report(reporter, request));
@@ -445,7 +445,7 @@ class ReportServiceTest {
             // given
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reporter.getId(), "불건전한 닉네임");
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME, reporter.getId(), "불건전한 닉네임");
 
             // when, then
             assertThatThrownBy(() -> reportService.report(reporter, request))
@@ -460,7 +460,7 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_20.get());
             Member reported = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
 
-            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reported.getId(), "불건전한 닉네임");
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 
             // when
             reportService.report(reporter, request);
@@ -480,7 +480,7 @@ class ReportServiceTest {
             Member reporter3 = memberRepository.save(MemberFixtures.FEMALE_40.get());
             Member reported = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
 
-            ReportRequest request = new ReportRequest(ReportType.NICKNAME.name(), reported.getId(), "불건전한 닉네임");
+            ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 
             // when
             reportService.report(reporter1, request);

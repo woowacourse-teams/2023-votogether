@@ -27,7 +27,7 @@ public class ReportController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 신고 대상")
     })
     @PostMapping("/report")
-    public ResponseEntity<Void> report(@Auth final Member member, @Valid @RequestBody final ReportRequest request) {
+    public ResponseEntity<Void> report(@Valid @RequestBody final ReportRequest request, @Auth final Member member) {
         reportService.report(member, request);
         return ResponseEntity.ok().build();
     }

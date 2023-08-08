@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -19,9 +20,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"member_id", "reportType", "targetId"})
-})
+@Table(
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"member_id", "reportType", "targetId"})},
+        indexes = {@Index(columnList = "reportType, targetId")}
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity

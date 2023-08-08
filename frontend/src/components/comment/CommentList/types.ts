@@ -6,7 +6,7 @@ export type CommentUser = (typeof COMMENT_USER)[keyof typeof COMMENT_USER];
 
 export type CommentMenu = Exclude<CommentUser, 'GUEST'>;
 
-export interface PostMenuItem {
+export interface CommentMenuItem {
   content: string;
   color: 'black' | 'red';
   action: CommentAction;

@@ -1,15 +1,15 @@
 import { MouseEvent } from 'react';
 
-import { type CommentAction, type PostMenuItem } from '@components/comment/CommentList/types';
+import { type CommentAction, type CommentMenuItem } from '@components/comment/CommentList/types';
 
 import * as S from './style';
 
-interface PostMenuProps {
-  menuList: PostMenuItem[];
+interface CommentMenuProps {
+  menuList: CommentMenuItem[];
   handleMenuClick: (menu: CommentAction) => void;
 }
 
-export default function PostMenu({ menuList, handleMenuClick }: PostMenuProps) {
+export default function CommentMenu({ menuList, handleMenuClick }: CommentMenuProps) {
   return (
     <S.Container>
       {menuList.map(({ content, color, action }) => (

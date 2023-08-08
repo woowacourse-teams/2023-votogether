@@ -1,8 +1,8 @@
 import { styled } from 'styled-components';
 
-import { type PostMenuItem } from '../../comment/CommentList/types';
+import { type CommentMenuItem } from '../../types';
 
-const COLOR_PALETTE: Record<PostMenuItem['color'], string> = {
+const COLOR_PALETTE: Record<CommentMenuItem['color'], string> = {
   red: 'var(--primary-color)',
   black: '#727171',
 };
@@ -19,7 +19,7 @@ export const Container = styled.div`
   font: var(--text-caption);
 `;
 
-export const Menu = styled.button<{ $color: PostMenuItem['color'] }>`
+export const Menu = styled.button<{ $color: CommentMenuItem['color'] }>`
   padding: 10px 15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 

@@ -113,7 +113,7 @@ export const CloseByESC = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.keyCode === 27) {
+      if (event.key === 'Escape') {
         closeModal();
       }
     };

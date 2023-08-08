@@ -13,12 +13,17 @@ export default function DeleteModal({
   handleCancelClick,
   handleDeleteClick,
 }: DeleteModalProps) {
+  const handlePrimaryButtonClick = () => {
+    handleDeleteClick();
+    handleCancelClick();
+  };
+
   return (
     <TwoButtonModal
       title={`${target} 삭제하기`}
       primaryButton={{
         text: '삭제',
-        handleClick: handleDeleteClick,
+        handleClick: handlePrimaryButtonClick,
       }}
       secondaryButton={{
         text: '취소',

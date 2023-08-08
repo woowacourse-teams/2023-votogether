@@ -22,12 +22,17 @@ export default function ReportModal({
   const defaultReportMessage = Object.keys(reportMessageList)[0];
   const { selectedOption, handleOptionChange } = useSelect(defaultReportMessage);
 
+  const handlePrimaryButtonClick = () => {
+    handleReportClick(selectedOption);
+    handleCancelClick();
+  };
+
   return (
     <TwoButtonModal
       title={name}
       primaryButton={{
         text: '신고',
-        handleClick: () => handleReportClick(selectedOption),
+        handleClick: handlePrimaryButtonClick,
       }}
       secondaryButton={{
         text: '취소',

@@ -400,4 +400,40 @@ class PostControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @Test
+    @DisplayName("회원본인이 작성한 게시글 목록을 조회한다.")
+    void getPostsByWriter() {
+        // given
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(MALE_30.get())
+                .postBody(postBody)
+                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                .build();
+
+        PostResponse postResponse = PostResponse.of(post, MALE_30.get());
+
+        given(postService.findPostsByWriter(anyInt(), any(), any(), any(Member.class)))
+                .willReturn(List.of(postResponse));
+
+        // when
+        List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+                .param("page", 0)
+                .param("postClosingType", PostClosingType.PROGRESS)
+                .param("postSortType", PostSortType.LATEST)
+                .when().get("/posts/me")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<PostResponse>>() {
+                }.getType());
+
+        // then
+        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
+    }
+
 }

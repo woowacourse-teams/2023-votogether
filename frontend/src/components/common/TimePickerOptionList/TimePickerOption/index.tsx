@@ -1,18 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { TIME_UNIT, TIMEBOX_CHILD_HEIGHT } from './constants';
 import * as S from './style';
 
 interface TimePickerOptionProps {
-  handlePickTime: (option: string, updatedTime: number) => void;
   currentTime: number;
   option: string;
+  handlePickTime: (option: string, updatedTime: number) => void;
 }
 
 export default function TimePickerOption({
-  handlePickTime,
   currentTime,
   option,
+  handlePickTime,
 }: TimePickerOptionProps) {
   const timeUnit = TIME_UNIT[option];
   const timeBoxRef = useRef<HTMLDivElement>(null);
@@ -23,13 +23,14 @@ export default function TimePickerOption({
     const timeBoxChild = timeBoxChildRef.current;
     if (!timeBox || !timeBoxChild) return;
 
-    timeBox.scrollTop = timeBoxChild.offsetHeight * currentTime;
+    timeBox.scrollTop = timeBoxChild.offsetHeight * (currentTime - 1);
   }, []);
 
   useEffect(() => {
     const timeBox = timeBoxRef.current;
 
     if (!timeBox) return;
+    window.console.log(timeBox.scrollTop);
 
     if (currentTime === 0) timeBox.scrollTop = 0;
 
@@ -51,16 +52,20 @@ export default function TimePickerOption({
   }, [currentTime, handlePickTime, option, timeUnit]);
 
   return (
-    <S.TimeBox ref={timeBoxRef}>
-      {Array.from({ length: timeUnit }).map((_, index) => (
-        <S.Time
-          key={index}
-          ref={index === currentTime ? timeBoxChildRef : null}
-          $isPicked={currentTime === index}
-        >
-          {index}
-        </S.Time>
-      ))}
-    </S.TimeBox>
+    <S.Container>
+      <S.PickedTimeOverlay />
+      <S.TimeBox ref={timeBoxRef}>
+        {Array.from({ length: timeUnit }).map((_, index) => (
+          <S.Time
+            key={index}
+            ref={index === currentTime ? timeBoxChildRef : null}
+            $isPicked={currentTime === index}
+          >
+            {index}
+          </S.Time>
+        ))}
+        <S.Empty />
+      </S.TimeBox>
+    </S.Container>
   );
 }

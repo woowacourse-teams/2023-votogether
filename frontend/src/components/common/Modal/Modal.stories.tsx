@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { styled } from 'styled-components';
 
@@ -94,6 +94,47 @@ export const WithCloseButton = () => {
               This is Content
             </S.Body>
           </>
+        </Modal>
+      )}
+    </>
+  );
+};
+
+export const CloseByESC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.keyCode === 27) {
+        closeModal();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      <SquareButton onClick={openModal} theme="blank">
+        Open Modal
+      </SquareButton>
+      {isOpen && (
+        <Modal size="sm" onModalClose={closeModal}>
+          <p>Close This Modal by ESC</p>
         </Modal>
       )}
     </>

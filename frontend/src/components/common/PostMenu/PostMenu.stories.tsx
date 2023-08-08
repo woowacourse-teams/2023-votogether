@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { MenuItem } from '@type/menu';
+import { PostMenuItem } from '@type/menu';
 
 import PostMenu from '.';
 
@@ -11,9 +11,9 @@ const meta: Meta<typeof PostMenu> = {
 export default meta;
 type Story = StoryObj<typeof PostMenu>;
 
-const menuList: MenuItem[] = [
-  { color: 'black', content: '닉네임 신고', action: 'nicknameReport' },
-  { color: 'black', content: '게시글 신고', action: 'postReport' },
+const menuList: PostMenuItem[] = [
+  { color: 'black', content: '닉네임 신고', action: 'NICKNAME_REPORT' },
+  { color: 'black', content: '게시글 신고', action: 'POST_REPORT' },
 ];
 
 export const Default: Story = {

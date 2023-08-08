@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
+import { ReportRequest } from '@type/report';
 
 import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
 import { useToggle } from '@hooks/useToggle';
+
+import { reportContent } from '@api/report';
 
 import CommentDeleteModal from '@components/comment/CommentDeleteModal';
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
@@ -36,6 +39,22 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
     setAction(menu);
+  };
+
+  const handleCommentReportClick = async (reason: string) => {
+    const reportData = { type: 'POST', id: postId, reason } as ReportRequest;
+
+    await reportContent(reportData)
+      .then(res => alert('댓글을 신고했습니다.'))
+      .catch(error => alert('댓글 신고가 실패했습니다.'));
+  };
+
+  const handleNicknameReportClick = async (reason: string) => {
+    const reportData = { type: 'NICKNAME', id: member.id, reason } as ReportRequest;
+
+    await reportContent(reportData)
+      .then(res => alert('작성자 닉네임을 신고했습니다.'))
+      .catch(error => alert('작성자 닉네임 신고가 실패했습니다.'));
   };
 
   const handleCancelClick = () => {
@@ -91,14 +110,14 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       {action === COMMENT_ACTION.USER_REPORT && (
         <ReportModal
           reportType="NICKNAME"
-          handleReportClick={() => {}}
+          handleReportClick={handleNicknameReportClick}
           handleCancelClick={handleCancelClick}
         />
       )}
       {action === COMMENT_ACTION.COMMENT_REPORT && (
         <ReportModal
           reportType="COMMENT"
-          handleReportClick={() => {}}
+          handleReportClick={handleCommentReportClick}
           handleCancelClick={handleCancelClick}
         />
       )}

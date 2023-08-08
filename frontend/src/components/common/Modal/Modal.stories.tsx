@@ -143,9 +143,9 @@ export const CloseByESC = () => {
 
 export const WithTimePicker = () => {
   const [time, setTime] = useState({
-    day: 0,
-    hour: 1,
-    minute: 3,
+    day: 2,
+    hour: 7,
+    minute: 58,
   });
   const [isOpen, setIsOpen] = useState(false);
 

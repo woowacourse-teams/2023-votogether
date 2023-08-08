@@ -4,6 +4,8 @@ import { AuthContext } from '@hooks/context/auth';
 import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useDrawer } from '@hooks/useDrawer';
 
+import ErrorBoundary from '@pages/ErrorBoundary';
+
 import AddButton from '@components/common/AddButton';
 import Dashboard from '@components/common/Dashboard';
 import Drawer from '@components/common/Drawer';
@@ -40,9 +42,11 @@ export default function PostListPage() {
           />
         </Drawer>
       </S.DrawerWrapper>
-      <Suspense fallback={<Skeleton />}>
-        <PostList />
-      </Suspense>
+      <ErrorBoundary fallback={<div>에러발생</div>}>
+        <Suspense fallback={<Skeleton />}>
+          <PostList />
+        </Suspense>
+      </ErrorBoundary>
       <S.ButtonContainer>
         <UpButton onClick={scrollToTop} />
         <S.AddButtonWrapper to={PATH.POST_WRITE}>

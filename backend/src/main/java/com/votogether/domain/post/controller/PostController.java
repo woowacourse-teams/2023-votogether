@@ -96,7 +96,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "게시글 상세 조회(비회원)", description = "비회원이 한 게시글의 상세를 조회한다.")
+    @Operation(summary = "게시글 상세 조회(비회원)", description = "비회원으로 게시글을 상세조회 한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")

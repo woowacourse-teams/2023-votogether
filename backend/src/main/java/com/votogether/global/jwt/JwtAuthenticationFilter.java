@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -57,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) {
         return containsAllowedUris(request) || startsWithAllowedStartUris(request)
-                || endsWithAllowedEndUris(request) || matchesUriPattern(request);
+                || matchesGuestRequest(request) || matchesUriPattern(request);
     }
 
     private boolean containsAllowedUris(final HttpServletRequest request) {
@@ -70,8 +72,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .anyMatch(url -> request.getRequestURI().startsWith(url));
     }
 
-    private boolean endsWithAllowedEndUris(final HttpServletRequest request) {
-        return ALLOWED_END_URIS.stream().anyMatch(url -> request.getRequestURI().endsWith(url));
+    private boolean matchesGuestRequest(final HttpServletRequest request) {
+        return ALLOWED_END_URIS.stream()
+                .anyMatch(url -> request.getRequestURI().endsWith(url) &&
+                        Objects.equals(request.getMethod(), HttpMethod.GET.name()));
     }
 
     private boolean matchesUriPattern(final HttpServletRequest request) {

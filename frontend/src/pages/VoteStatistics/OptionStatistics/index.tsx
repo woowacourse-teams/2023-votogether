@@ -49,7 +49,9 @@ export default function OptionStatistics({
         handleVoteClick={toggleOptionStatistics}
       />
       <S.StatisticsContainer>
-        {isStatisticsOpen && voteResult && <VoteStatistics voteResult={voteResult} size={size} />}
+        {isStatisticsOpen && voteResult && (
+          <VoteStatistics voteResultResponse={voteResult} size={size} />
+        )}
         {isStatisticsOpen && isLoading && (
           <S.LoadingWrapper>
             <LoadingSpinner size="sm" />

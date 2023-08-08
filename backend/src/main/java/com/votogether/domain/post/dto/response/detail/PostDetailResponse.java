@@ -1,5 +1,6 @@
 package com.votogether.domain.post.dto.response.detail;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.response.CategoryResponse;
 import com.votogether.domain.post.dto.response.WriterResponse;
@@ -18,7 +19,9 @@ public record PostDetailResponse(
         String content,
         String imageUrl,
         List<CategoryResponse> categories,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline,
         VoteDetailResponse voteInfo
 ) {
@@ -39,7 +42,7 @@ public record PostDetailResponse(
                 WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
-                contentImageUrl.toString(),
+                convertImageUrl(contentImageUrl.toString()),
                 getCategories(postCategories.getPostCategories()),
                 post.getCreatedAt(),
                 post.getDeadline(),
@@ -49,6 +52,10 @@ public record PostDetailResponse(
                         getOptions(post, loginMember)
                 )
         );
+    }
+
+    private static String convertImageUrl(final String imageUrl) {
+        return imageUrl.contains("없는사진") ? "" : imageUrl;
     }
 
     private static List<CategoryResponse> getCategories(final List<PostCategory> postCategories) {

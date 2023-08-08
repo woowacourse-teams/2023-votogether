@@ -1,8 +1,10 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useContext } from 'react';
 
 import { PostInfo } from '@type/post';
 
-import { changeVotedOption, votePost } from '@api/post';
+import { AuthContext } from '@hooks/context/auth';
+import { useCreateVote } from '@hooks/query/post/useCreateVote';
+import { useEditVote } from '@hooks/query/post/useEditVote';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
@@ -18,16 +20,21 @@ interface PostProps {
 
 export default function Post({ postInfo, isPreview }: PostProps) {
   const { postId, category, title, writer, createTime, deadline, content, voteInfo } = postInfo;
+  const { loggedInfo } = useContext(AuthContext);
+  const { mutate: createVote } = useCreateVote({ isPreview, postId });
+  const { mutate: editVote } = useEditVote({ isPreview, postId });
 
   const handleVoteClick = (newOptionId: number) => {
+    if (writer.nickname === loggedInfo.userInfo?.nickname) return;
+
     if (voteInfo.selectedOptionId === newOptionId) return;
 
     if (voteInfo.selectedOptionId === POST.NOT_VOTE) {
-      votePost(postId, newOptionId);
+      createVote(newOptionId);
       return;
     }
 
-    changeVotedOption(postId, {
+    editVote({
       originOptionId: voteInfo.selectedOptionId,
       newOptionId,
     });
@@ -57,8 +64,8 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         <S.Wrapper>
           <span aria-label="작성자">{writer.nickname}</span>
           <S.Wrapper>
-            <span aria-label="작성일시">{startTime}</span>
-            <span aria-label="투표 마감일시">{endTime}</span>
+            <span aria-label="작성일시">{createTime}</span>
+            <span aria-label="투표 마감일시">{deadline}</span>
           </S.Wrapper>
         </S.Wrapper>
         <S.Content aria-label="내용" $isPreview={isPreview}>
@@ -66,6 +73,8 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         </S.Content>
       </S.DetailLink>
       <WrittenVoteOptionList
+        //현재 contextAPI 안에 유저 ID가 없어서 nickname으로 대체
+        isWriter={writer.nickname === loggedInfo.userInfo?.nickname}
         selectedOptionId={voteInfo.selectedOptionId}
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}

@@ -51,3 +51,7 @@ export const POST_DESCRIPTION_MAX_LENGTH = 1000;
 export const SEARCH_KEYWORD_MAX_LENGTH = 100;
 
 export const POST_LIST_MAX_LENGTH = 10;
+
+export const DEFAULT_CATEGORY_ID = 0;
+
+export const DEFAULT_KEYWORD = '';

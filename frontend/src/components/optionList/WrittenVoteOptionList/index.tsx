@@ -7,6 +7,7 @@ import WrittenVoteOption from './WrittenVoteOption';
 
 interface WrittenVoteOptionListProps {
   isPreview: boolean;
+  isWriter: boolean;
   selectedOptionId: number;
   voteOptionList: WrittenVoteOptionType[];
   handleVoteClick: (newOptionId: number) => void;
@@ -14,6 +15,7 @@ interface WrittenVoteOptionListProps {
 
 export default function WrittenVoteOptionList({
   isPreview,
+  isWriter,
   voteOptionList,
   selectedOptionId,
   handleVoteClick,
@@ -26,7 +28,7 @@ export default function WrittenVoteOptionList({
           key={voteOption.id}
           {...voteOption}
           isPreview={isPreview}
-          isVoted={selectedOptionId !== POST.NOT_VOTE}
+          isVoted={selectedOptionId !== POST.NOT_VOTE || isWriter}
           isSelected={selectedOptionId === voteOption.id}
           handleVoteClick={() => handleVoteClick(voteOption.id)}
         />

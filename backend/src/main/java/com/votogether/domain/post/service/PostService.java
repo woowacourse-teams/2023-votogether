@@ -184,8 +184,6 @@ public class PostService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
-        post.validateWriter(loginMember);
-
         return PostDetailResponse.of(post, loginMember);
     }
 
@@ -247,7 +245,7 @@ public class PostService {
         }
         return ageRange;
     }
-
+    
     @Transactional(readOnly = true)
     public List<PostResponse> getPostsVotedByMember(
             final int page,
@@ -263,14 +261,14 @@ public class PostService {
                 .map(post -> PostResponse.of(post, member))
                 .toList();
     }
-
+    
+    @Transactional
     public void closePostEarlyById(final Long id, final Member loginMember) {
         final Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
 
         post.validateWriter(loginMember);
         post.validateDeadLine();
-        post.validateHalfDeadLine();
         post.closeEarly();
     }
 

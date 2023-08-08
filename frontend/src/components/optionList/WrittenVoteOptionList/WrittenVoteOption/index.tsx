@@ -24,13 +24,15 @@ export default function WrittenVoteOption({
   imageUrl,
   ariaLabel,
 }: WrittenVoteOptionProps) {
+  const imageBaseUrl = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
+
   return (
     <S.Container
       aria-label={`${ariaLabel}${isSelected ? ' 선택된 선택지' : ''}`}
       $isSelected={isSelected}
       onClick={handleVoteClick}
     >
-      {!isPreview && imageUrl && <S.Image src={imageUrl} alt={text} />}
+      {!isPreview && imageUrl && <S.Image src={`${imageBaseUrl}/${imageUrl}`} alt={text} />}
       {isPreview ? (
         <S.PreviewContent aria-label="선택지 내용">{text}</S.PreviewContent>
       ) : (

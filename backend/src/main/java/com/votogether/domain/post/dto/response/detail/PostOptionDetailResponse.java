@@ -18,10 +18,14 @@ public record PostOptionDetailResponse(
         return new PostOptionDetailResponse(
                 postOption.getId(),
                 postOption.getContent(),
-                postOption.getImageUrl(),
+                convertImageUrl(postOption.getImageUrl()),
                 postOption.getVoteCount(isVisibleVoteResult),
                 postOption.getVotePercent(totalVoteCount)
         );
+    }
+
+    private static String convertImageUrl(final String imageUrl) {
+        return imageUrl.contains("없는사진") ? "" : imageUrl;
     }
 
 }

@@ -444,28 +444,6 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("해당 게시글을 조기 마감할 시, 마감 시간까지의 시간 중 반 이상이 지나지 않은 게시글이면 예외를 던진다.")
-    void throwExceptionHalfDeadLinePostClosedEarly() {
-        // given
-        Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
-        LocalDateTime oldDeadline = LocalDateTime.now().plusMinutes(1);
-        Post post = postRepository.save(
-                Post.builder()
-                        .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
-                        .deadline(oldDeadline)
-                        .build()
-        );
-
-        Post foundPost = postRepository.findById(post.getId()).get();
-
-        // when, then
-        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("게시글이 마감 시간까지 절반의 시간 이상이 지나지 않으면 조기마감을 할 수 없습니다.");
-    }
-
-    @Test
     @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
     void getAllPostBySortTypeAndClosingType() {
         // given
@@ -669,52 +647,6 @@ class PostServiceTest {
                 () -> assertThat(options).hasSize(2),
                 () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
         );
-    }
-
-    @Test
-    @DisplayName("한 게시글의 상세를 조회할 때, 작성자가 아니면 예외를 던진다.")
-    void throwExceptionNotWriterGetPost() throws IOException {
-        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
-        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image1",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
-
-        LocalDateTime deadline = LocalDateTime.now().plusDays(3);
-
-        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
-                .content("option1")
-                .build();
-
-        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
-                .content("option2")
-                .build();
-
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(option1, option2))
-                .deadline(deadline)
-                .build();
-
-        Long savedPostId = postService.save(postCreateRequest, member, List.of(), List.of(file1, file2));
-
-        // when, then
-        assertThatThrownBy(() -> postService.getPostById(savedPostId, MemberFixtures.MALE_20.get()))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage(PostExceptionType.NOT_WRITER.getMessage());
     }
 
     @Test

@@ -277,7 +277,7 @@ class PostControllerTest {
         assertAll(
                 () -> assertThat(response.title()).isEqualTo("title"),
                 () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(response.deadline()).isEqualTo(deadline),
+                () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
                 () -> assertThat(writerResponse.id()).isEqualTo(member.getId()),
                 () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
                 () -> assertThat(voteDetailResponse.totalVoteCount()).isZero()

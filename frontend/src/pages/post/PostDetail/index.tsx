@@ -81,7 +81,8 @@ export default function PostDetailPage() {
         .catch(error => alert(error.message));
     },
     removePost: async () => {
-      if (!isClosed) alert('마감된 게시물만 삭제 가능합니다.');
+      if (postData.voteInfo.allPeopleCount >= 20)
+        return alert('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
 
       await removePost(postId)
         .then(res => alert('게시물을 삭제했습니다.'))

@@ -82,6 +82,20 @@ public class PostController {
         return ResponseEntity.ok(responses);
     }
 
+    @Operation(summary = "전체 게시글 조회(비회원)", description = "비회원이 전체 게시글을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "전체 게시글 조회 성공")
+    })
+    @GetMapping("/guest")
+    public ResponseEntity<List<PostResponse>> getPostsGuest(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType
+    ) {
+        final List<PostResponse> response = postService.getPostsGuest(page, postClosingType, postSortType);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "게시글 상세 조회", description = "한 게시글의 상세를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),

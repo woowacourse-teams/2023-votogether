@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -43,6 +44,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -233,6 +235,65 @@ class PostControllerTest {
                 () -> assertThat(responses).isNotEmpty(),
                 () -> assertThat(responses).hasSize(1)
         );
+    }
+
+    @Nested
+    @DisplayName("비회원 게시글 목록 조회")
+    class GetPostsGuest {
+
+        @Test
+        @DisplayName("마감 시간 타입으로 변환할 수 없으면 400 상태를 응답한다.")
+        void invalidPostClosingType() {
+            RestAssuredMockMvc.given().log().all()
+                    .param("page", 0)
+                    .param("postClosingType", "hello")
+                    .param("postSortType", PostSortType.LATEST)
+                    .when().get("/posts/guest")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DisplayName("정렬 타입으로 변환할 수 없으면 400 상태를 반환한다.")
+        void invalidPostSortType() {
+            RestAssuredMockMvc.given().log().all()
+                    .param("page", 0)
+                    .param("postClosingType", PostClosingType.ALL)
+                    .param("postSortType", "hello")
+                    .when().get("/posts/guest")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DisplayName("올바른 요청이라면 게시글 목록 응답과 200 상태를 반환한다.")
+        void getPostsGuest() {
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(MALE_30.get())
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L))
+                    .build();
+
+            given(postService.getPostsGuest(anyInt(), any(PostClosingType.class), any(PostSortType.class)))
+                    .willReturn(List.of(PostResponse.forGuest(post)));
+
+            RestAssuredMockMvc.given().log().all()
+                    .param("page", 0)
+                    .param("postClosingType", PostClosingType.ALL)
+                    .param("postSortType", PostSortType.LATEST)
+                    .when().get("/posts/guest")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.OK);
+        }
+
     }
 
     @Test

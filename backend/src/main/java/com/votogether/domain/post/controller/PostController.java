@@ -83,9 +83,7 @@ public class PostController {
     }
 
     @Operation(summary = "전체 게시글 조회(비회원)", description = "비회원이 전체 게시글을 조회한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "전체 게시글 조회 성공")
-    })
+    @ApiResponse(responseCode = "200", description = "전체 게시글 조회 성공")
     @GetMapping("/guest")
     public ResponseEntity<List<PostResponse>> getPostsGuest(
             final int page,

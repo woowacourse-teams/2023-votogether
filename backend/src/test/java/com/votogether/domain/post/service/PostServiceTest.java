@@ -605,33 +605,34 @@ class PostServiceTest {
     @DisplayName("비회원 게시글 목록 조회 시 마감된 게시글은 결과를 확인할 수 있고, 진행중인 게시글은 결과를 확인할 수 없다.")
     void getPostsGuest() {
         // given
-        List<Member> members = new ArrayList<>();
+        List<Member> voters = new ArrayList<>();
+        Member writer = memberTestPersister.builder().save();
 
         for (int i = 0; i < 5; i++) {
-            members.add(memberTestPersister.builder().save());
+            voters.add(memberTestPersister.builder().save());
         }
 
         Post closedPost = postTestPersister.builder()
-                .writer(members.get(members.size() - 1))
+                .writer(writer)
                 .deadline(LocalDateTime.of(2022, 12, 25, 0, 0))
                 .save();
 
         for (int j = 0; j < 2; j++) {
             PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
             for (int k = 0; k < 4; k++) {
-                voteTestPersister.builder().member(members.get(k)).postOption(postOption).save();
+                voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
             }
         }
 
         Post notClosedPost = postTestPersister.builder()
-                .writer(members.get(members.size() - 1))
+                .writer(writer)
                 .deadline(LocalDateTime.of(3022, 12, 25, 0, 0))
                 .save();
 
         for (int j = 0; j < 2; j++) {
             PostOption postOption = postOptionTestPersister.builder().post(notClosedPost).save();
             for (int k = 0; k < 4; k++) {
-                voteTestPersister.builder().member(members.get(k)).postOption(postOption).save();
+                voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
             }
         }
 
@@ -648,7 +649,7 @@ class PostServiceTest {
                 () -> assertThat(result.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(-1),
                 () -> assertThat(result.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(-1),
                 () -> assertThat(result.get(1).voteInfo().totalVoteCount()).isEqualTo(8),
-                () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4),
+                () -> assertThat(result.get(1).voteInfo().options().get(0).voteCount()).isEqualTo(4),
                 () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4)
         );
     }

@@ -8,8 +8,7 @@ import { useToggle } from '@hooks/useToggle';
 
 import CommentDeleteModal from '@components/comment/CommentDeleteModal';
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
-import CommentReportModal from '@components/report/CommentReportModal';
-import UserReportModal from '@components/report/UserReportModal';
+import ReportModal from '@components/ReportModal';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
@@ -90,10 +89,18 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         />
       )}
       {action === COMMENT_ACTION.USER_REPORT && (
-        <UserReportModal handleCancelClick={handleCancelClick} />
+        <ReportModal
+          reportType="NICKNAME"
+          handleReportClick={() => {}}
+          handleCancelClick={handleCancelClick}
+        />
       )}
       {action === COMMENT_ACTION.COMMENT_REPORT && (
-        <CommentReportModal handleCancelClick={handleCancelClick} />
+        <ReportModal
+          reportType="COMMENT"
+          handleReportClick={() => {}}
+          handleCancelClick={handleCancelClick}
+        />
       )}
     </S.Container>
   );

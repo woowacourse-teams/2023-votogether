@@ -93,14 +93,14 @@ export default function PostDetailPage() {
 
       await reportContent(reportData)
         .then(res => alert('게시물을 신고했습니다.'))
-        .catch(error => alert('게시물 신고가 샐패했습니다.'));
+        .catch(error => alert('게시물 신고가 실패했습니다.'));
     },
     reportNickname: async (reason: string) => {
       const reportData = { type: 'NICKNAME', id: postData.writer.id, reason } as ReportRequest;
 
       await reportContent(reportData)
         .then(res => alert('작성자 닉네임을 신고했습니다.'))
-        .catch(error => alert('작성자 닉네임 신고가 샐패했습니다.'));
+        .catch(error => alert('작성자 닉네임 신고가 실패했습니다.'));
     },
   };
 

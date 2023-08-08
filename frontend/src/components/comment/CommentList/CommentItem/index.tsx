@@ -13,10 +13,10 @@ import UserReportModal from '@components/report/UserReportModal';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
+import PostMenu from '../../../common/PostMenu';
 import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '../constants';
 import { type CommentAction, type CommentUser } from '../types';
 
-import CommentMenu from './CommentMenu';
 import * as S from './style';
 
 interface CommentItemProps {
@@ -66,7 +66,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
             <S.Image src={ellipsis}></S.Image>
             {isOpen && (
               <S.MenuWrapper>
-                <CommentMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
+                <PostMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
               </S.MenuWrapper>
             )}
           </S.MenuContainer>

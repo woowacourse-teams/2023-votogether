@@ -20,7 +20,7 @@ export const createCart = async () => {
 };
 
 export const editCart = async () => {
-  return await putFetch<Cart, { id: number }>('api/cart', { id: 12, text: '생성' });
+  return await putFetch<{ id: number }>('api/cart', { id: 12 });
 };
 
 // remove or delete

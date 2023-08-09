@@ -68,10 +68,10 @@ class PostServiceTest {
     EntityManager entityManager;
 
     @Autowired
-    PostService postService;
+    MemberRepository memberRepository;
 
     @Autowired
-    MemberRepository memberRepository;
+    MemberCategoryRepository memberCategoryRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -86,7 +86,7 @@ class PostServiceTest {
     VoteRepository voteRepository;
 
     @Autowired
-    MemberCategoryRepository memberCategoryRepository;
+    PostService postService;
 
     @Autowired
     VoteService voteService;
@@ -640,7 +640,7 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> result = postService.getPostsGuest(0, PostClosingType.ALL, PostSortType.LATEST);
+        List<PostResponse> result = postService.getPostsGuest(0, PostClosingType.ALL, PostSortType.LATEST, null);
 
         // then
         assertAll(

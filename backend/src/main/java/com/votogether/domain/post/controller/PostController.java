@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,11 +88,12 @@ public class PostController {
     @ApiResponse(responseCode = "200", description = "전체 게시글 조회 성공")
     @GetMapping("/guest")
     public ResponseEntity<List<PostResponse>> getPostsGuest(
-            final int page,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId
     ) {
-        final List<PostResponse> response = postService.getPostsGuest(page, postClosingType, postSortType);
+        final List<PostResponse> response = postService.getPostsGuest(page, postClosingType, postSortType, categoryId);
         return ResponseEntity.ok(response);
     }
 

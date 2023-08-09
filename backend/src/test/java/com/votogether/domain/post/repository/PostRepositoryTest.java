@@ -3,12 +3,15 @@ package com.votogether.domain.post.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.votogether.RepositoryTest;
+import com.votogether.domain.category.entity.Category;
+import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.PostSortType;
@@ -35,13 +38,19 @@ import org.springframework.data.domain.Slice;
 class PostRepositoryTest {
 
     @Autowired
-    PostRepository postRepository;
-
-    @Autowired
     MemberRepository memberRepository;
 
     @Autowired
+    PostRepository postRepository;
+
+    @Autowired
     PostOptionRepository postOptionRepository;
+
+    @Autowired
+    PostCategoryRepository postCategoryRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Autowired
     VoteRepository voteRepository;
@@ -150,15 +159,28 @@ class PostRepositoryTest {
 
         private List<Member> members;
         private List<Post> posts;
+        private List<Category> categories;
 
         @BeforeEach
         void setUp() {
             members = new ArrayList<>();
             posts = new ArrayList<>();
+            categories = new ArrayList<>();
 
             for (int i = 0; i < 11; i++) {
                 members.add(memberTestPersister.builder().save());
             }
+
+            Category categoryA = Category.builder()
+                    .name("개발")
+                    .build();
+
+            Category categoryB = Category.builder()
+                    .name("연애")
+                    .build();
+
+            categories.add(categoryRepository.save(categoryA));
+            categories.add(categoryRepository.save(categoryB));
 
             for (int i = 2; i > 0; i--) {
                 Post closedPost = postTestPersister.builder()
@@ -173,9 +195,20 @@ class PostRepositoryTest {
                 posts.add(closedPost);
                 posts.add(notClosedPost);
 
+                generatePostCategory(closedPost, categories.get(0));
+                generatePostCategory(notClosedPost, categories.get(0));
+
                 generatePostOptionAndVote(closedPost, i + 5);
                 generatePostOptionAndVote(notClosedPost, i + 7);
             }
+        }
+
+        private void generatePostCategory(Post post, Category category) {
+            PostCategory postCategory = PostCategory.builder()
+                    .post(post)
+                    .category(category)
+                    .build();
+            postCategoryRepository.save(postCategory);
         }
 
         private void generatePostOptionAndVote(Post post, int voteCount) {
@@ -194,8 +227,12 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result =
-                    postRepository.findAllByClosingTypeAndSortType(PostClosingType.ALL, PostSortType.LATEST, pageable);
+            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    pageable
+            );
 
             // then
             assertThat(result).containsExactly(posts.get(3), posts.get(2));
@@ -208,8 +245,12 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result =
-                    postRepository.findAllByClosingTypeAndSortType(PostClosingType.ALL, PostSortType.HOT, pageable);
+            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                    PostClosingType.ALL,
+                    PostSortType.HOT,
+                    null,
+                    pageable
+            );
 
             // then
             assertThat(result).containsExactly(posts.get(1), posts.get(3));
@@ -222,9 +263,10 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortType(
+            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
                     PostClosingType.PROGRESS,
                     PostSortType.LATEST,
+                    null,
                     pageable
             );
 
@@ -239,9 +281,10 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortType(
+            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
                     PostClosingType.PROGRESS,
                     PostSortType.HOT,
+                    null,
                     pageable
             );
 
@@ -256,9 +299,10 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortType(
+            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
                     PostClosingType.CLOSED,
                     PostSortType.LATEST,
+                    null,
                     pageable
             );
 
@@ -273,14 +317,33 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortType(
+            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
                     PostClosingType.CLOSED,
                     PostSortType.HOT,
+                    null,
                     pageable
             );
 
             // then
             assertThat(result).containsExactly(posts.get(0), posts.get(2));
+        }
+
+        @Test
+        @DisplayName("특정 카테고리의 진행중인 게시글을 인기순으로 조회한다.")
+        void getClosedPostsOrderByHotWithCategory() {
+            // given
+            Pageable pageable = PageRequest.of(0, 5);
+
+            // when
+            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                    PostClosingType.PROGRESS,
+                    PostSortType.HOT,
+                    categories.get(0).getId(),
+                    pageable
+            );
+
+            // then
+            assertThat(result).containsExactly(posts.get(1), posts.get(3));
         }
 
     }

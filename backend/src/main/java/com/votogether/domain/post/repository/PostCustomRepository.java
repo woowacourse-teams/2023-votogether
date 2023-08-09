@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostCustomRepository {
 
-    List<Post> findAllByClosingTypeAndSortType(
+    List<Post> findAllByClosingTypeAndSortTypeAndCategoryId(
             final PostClosingType postClosingType,
             final PostSortType postSortType,
+            final Long categoryId,
             final Pageable pageable
     );
 

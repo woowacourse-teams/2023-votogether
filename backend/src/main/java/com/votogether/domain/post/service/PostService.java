@@ -183,11 +183,16 @@ public class PostService {
     public List<PostResponse> getPostsGuest(
             final int page,
             final PostClosingType postClosingType,
-            final PostSortType postSortType
+            final PostSortType postSortType,
+            final Long categoryId
     ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
-        final List<Post> posts =
-                postRepository.findAllByClosingTypeAndSortType(postClosingType, postSortType, pageable);
+        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                postClosingType,
+                postSortType,
+                categoryId,
+                pageable
+        );
 
         return posts.stream()
                 .map(PostResponse::forGuest)

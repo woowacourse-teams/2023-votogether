@@ -1,19 +1,18 @@
-import React from 'react';
-
 import type { Preview } from '@storybook/react';
 
 import { initialize, mswDecorator } from 'msw-storybook-addon';
 
 import { GlobalStyle } from '../src/styles/globalStyle';
+import React from 'react';
 
 import { BrowserRouter } from 'react-router-dom';
 
-import { AuthProvider } from '../../frontend/src/hooks/context/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { handlers } from '../src/mocks/handlers';
 
 const queryClient = new QueryClient();
 initialize();
+
 
 const preview: Preview = {
   parameters: {
@@ -32,9 +31,7 @@ const preview: Preview = {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <GlobalStyle />
-          <AuthProvider>
-            <Story />
-          </AuthProvider>
+          <Story />
         </BrowserRouter>
       </QueryClientProvider>
     ),

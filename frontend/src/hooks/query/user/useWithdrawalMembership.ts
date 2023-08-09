@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { cancelMembership } from '@api/wus/userInfo';
+import { withdrawalMembership } from '@api/wus/userInfo';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const useCancelMembership = () => {
+export const useWithdrawalMembership = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation({
-    mutationFn: () => cancelMembership(),
+    mutationFn: () => withdrawalMembership(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO] });
     },

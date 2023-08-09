@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { modifyNickname } from '@api/wus/userInfo';
+import { modifyNickname } from '@api/userInfo';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { withdrawalMembership } from '@api/wus/userInfo';
+import { withdrawalMembership } from '@api/userInfo';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

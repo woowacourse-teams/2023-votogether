@@ -9,7 +9,7 @@ import {
   deleteFetch,
 } from '@utils/fetch';
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 
 export const transformPostResponse = (post: PostInfoResponse): PostInfo => {
   return {

@@ -92,6 +92,7 @@ public class TokenProcessor {
             log.info("토큰의 유효기간이 만료되었습니다.");
             throw new IllegalArgumentException("토큰의 유효기간이 만료되었습니다.");
         } catch (final IllegalArgumentException e) {
+            log.info("토큰의 내용이 비어있습니다.");
             throw new IllegalArgumentException("토큰의 내용이 비어있습니다.");
         } catch (final Exception e) {
             log.info("알 수 없는 토큰 유효성 문제가 발생했습니다.");

@@ -180,6 +180,26 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public List<PostResponse> getPostsGuest(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                postClosingType,
+                postSortType,
+                categoryId,
+                pageable
+        );
+
+        return posts.stream()
+                .map(PostResponse::forGuest)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public PostDetailResponse getPostById(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
@@ -245,7 +265,7 @@ public class PostService {
         }
         return ageRange;
     }
-    
+
     @Transactional(readOnly = true)
     public List<PostResponse> getPostsVotedByMember(
             final int page,
@@ -261,7 +281,7 @@ public class PostService {
                 .map(post -> PostResponse.of(post, member))
                 .toList();
     }
-    
+
     @Transactional
     public void closePostEarlyById(final Long id, final Member loginMember) {
         final Post post = postRepository.findById(id)

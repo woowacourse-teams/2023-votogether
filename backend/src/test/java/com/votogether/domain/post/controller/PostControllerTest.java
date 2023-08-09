@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,6 +45,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -55,17 +57,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @WebMvcTest(PostController.class)
 class PostControllerTest {
 
+    @Autowired
+    ObjectMapper mapper;
+
     @MockBean
-    PostService postService;
+    TokenProcessor tokenProcessor;
 
     @MockBean
     MemberService memberService;
 
     @MockBean
-    TokenProcessor tokenProcessor;
-
-    @Autowired
-    ObjectMapper mapper;
+    PostService postService;
 
     @BeforeEach
     void setUp() {
@@ -235,6 +237,93 @@ class PostControllerTest {
                 () -> assertThat(responses).isNotEmpty(),
                 () -> assertThat(responses).hasSize(1)
         );
+    }
+
+    @Nested
+    @DisplayName("비회원 게시글 목록 조회")
+    class GetPostsGuest {
+
+        @Test
+        @DisplayName("마감 시간 타입으로 변환할 수 없으면 400 상태를 응답한다.")
+        void invalidPostClosingType() {
+            RestAssuredMockMvc.given().log().all()
+                    .param("page", 0)
+                    .param("postClosingType", "hello")
+                    .param("postSortType", PostSortType.LATEST)
+                    .when().get("/posts/guest")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DisplayName("정렬 타입으로 변환할 수 없으면 400 상태를 반환한다.")
+        void invalidPostSortType() {
+            RestAssuredMockMvc.given().log().all()
+                    .param("page", 0)
+                    .param("postClosingType", PostClosingType.ALL)
+                    .param("postSortType", "hello")
+                    .when().get("/posts/guest")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DisplayName("카테고리가 없는 올바른 조회 요청이라면 게시글 목록 응답과 200 상태를 반환한다.")
+        void getPostsGuestWithoutCategory() {
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(MALE_30.get())
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L))
+                    .build();
+
+            given(postService.getPostsGuest(anyInt(), any(PostClosingType.class), any(PostSortType.class), isNull()))
+                    .willReturn(List.of(PostResponse.forGuest(post)));
+
+            RestAssuredMockMvc.given().log().all()
+                    .param("page", 0)
+                    .param("postClosingType", PostClosingType.ALL)
+                    .param("postSortType", PostSortType.LATEST)
+                    .when().get("/posts/guest")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.OK);
+        }
+
+        @Test
+        @DisplayName("카테고리가 있는 올바른 조회 요청이라면 게시글 목록 응답과 200 상태를 반환한다.")
+        void getPostsGuestWithCategory() {
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(MALE_30.get())
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L))
+                    .build();
+
+            given(postService.getPostsGuest(anyInt(), any(PostClosingType.class), any(PostSortType.class), anyLong()))
+                    .willReturn(List.of(PostResponse.forGuest(post)));
+
+            RestAssuredMockMvc.given().log().all()
+                    .param("page", 0)
+                    .param("postClosingType", PostClosingType.ALL)
+                    .param("postSortType", PostSortType.LATEST)
+                    .param("category", 1L)
+                    .when().get("/posts/guest")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.OK);
+        }
+
     }
 
     @Test

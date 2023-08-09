@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -47,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -283,6 +285,49 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("비회원이 한 게시글을 상세 조회한다.")
+    void getPostByGuest() {
+        // given
+        long postId = 0L;
+        Member writer = MALE_30.get();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3L);
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(writer)
+                .postBody(postBody)
+                .deadline(deadline)
+                .build();
+
+        given(postService.getPostById(postId, null)).willReturn(PostDetailResponse.of(post, null));
+
+        // when
+        PostDetailResponse response = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/{postId}/guest", postId)
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .status(HttpStatus.OK)
+                .extract()
+                .as(PostDetailResponse.class);
+
+        // then
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+
+        assertAll(
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isEqualTo(-1)
+        );
+    }
+
+    @Test
     @DisplayName("게시글에 대한 전체 투표 통계를 조회한다.")
     void getVoteStatistics() {
         // given
@@ -344,6 +389,42 @@ class PostControllerTest {
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(response);
+    }
+
+    @Test
+    @DisplayName("회원본인이 투표한 게시글 목록을 조회한다.")
+    void getPostsVotedByMember() {
+        // given
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(MALE_30.get())
+                .postBody(postBody)
+                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                .build();
+
+        PostResponse postResponse = PostResponse.of(post, MALE_30.get());
+
+        given(postService.getPostsVotedByMember(anyInt(), any(), any(), any(Member.class)))
+                .willReturn(List.of(postResponse));
+
+        // when
+        List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+                .param("page", 0)
+                .param("postClosingType", PostClosingType.PROGRESS)
+                .param("postSortType", PostSortType.LATEST)
+                .when().get("/posts/votes/me")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<PostResponse>>() {
+                }.getType());
+
+        // then
+        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
     }
 
     @Test

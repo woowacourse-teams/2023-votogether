@@ -9,6 +9,7 @@ const breakpoint = {
   lg: '1440px',
 };
 const zIndex = {
+  select: 1,
   header: 100,
   modal: 200,
 };

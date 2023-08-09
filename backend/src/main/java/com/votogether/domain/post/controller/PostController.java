@@ -184,6 +184,10 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "게시글 검색(회원)", description = "회원으로 키워드를 통해 게시글을 검색한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 검색 성공"),
+    })
     @GetMapping("/search")
     public ResponseEntity<List<PostResponse>> searchPostsWithKeyword(
             @RequestParam final String keyword,

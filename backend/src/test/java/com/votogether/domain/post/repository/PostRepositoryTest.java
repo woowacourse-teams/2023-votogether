@@ -383,6 +383,7 @@ class PostRepositoryTest {
     @DisplayName("회원이 투표한 게시글 목록을 조회한다.")
     class findPostsVotedByMember {
 
+        @Test
         @DisplayName("마감된 게시글 목록을 최신순으로 가져온다.")
         void findClosedPostsVotedByMember() throws InterruptedException {
             // given

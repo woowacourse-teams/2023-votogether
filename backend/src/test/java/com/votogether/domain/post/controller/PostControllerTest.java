@@ -572,4 +572,5 @@ class PostControllerTest {
         // then
         assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
     }
+
 }

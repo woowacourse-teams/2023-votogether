@@ -184,5 +184,19 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<PostResponse>> searchPostsWithKeyword(
+            @RequestParam final String keyword,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId,
+            @Auth final Member member
+    ) {
+        final List<PostResponse> responses =
+                postService.searchPostsWithKeyword(keyword, page, postClosingType, postSortType, categoryId, member);
+        return ResponseEntity.ok(responses);
+    }
+
 }
 

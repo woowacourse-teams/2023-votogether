@@ -80,8 +80,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         </S.Content>
       </S.DetailLink>
       <WrittenVoteOptionList
-        //현재 contextAPI 안에 유저 ID가 없어서 nickname으로 대체
-        isWriter={writer.nickname === loggedInfo.userInfo?.nickname}
+        isWriter={writer.id === loggedInfo.id}
         selectedOptionId={voteInfo.selectedOptionId}
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}

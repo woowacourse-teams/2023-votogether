@@ -88,7 +88,7 @@ export default function InnerHeaderPart({
         )}
         {action === 'DELETE' && (
           <DeleteModal
-            target="게시물"
+            target="POST"
             handleCancelClick={handleCancelClick}
             handleDeleteClick={removePost}
           />

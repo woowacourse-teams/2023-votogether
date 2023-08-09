@@ -89,14 +89,14 @@ export default function PostDetailPage() {
         .catch(error => alert(error.message));
     },
     reportPost: async (reason: string) => {
-      const reportData = { type: 'POST', id: postId, reason } as ReportRequest;
+      const reportData: ReportRequest = { type: 'POST', id: postId, reason };
 
       await reportContent(reportData)
         .then(res => alert('게시물을 신고했습니다.'))
         .catch(error => alert('게시물 신고가 실패했습니다.'));
     },
     reportNickname: async (reason: string) => {
-      const reportData = { type: 'NICKNAME', id: postData.writer.id, reason } as ReportRequest;
+      const reportData: ReportRequest = { type: 'NICKNAME', id: postData.writer.id, reason };
 
       await reportContent(reportData)
         .then(res => alert('작성자 닉네임을 신고했습니다.'))

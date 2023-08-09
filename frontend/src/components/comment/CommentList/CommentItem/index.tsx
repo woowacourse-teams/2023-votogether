@@ -42,7 +42,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   };
 
   const handleCommentReportClick = async (reason: string) => {
-    const reportData = { type: 'POST', id: postId, reason } as ReportRequest;
+    const reportData: ReportRequest = { type: 'POST', id: postId, reason };
 
     await reportContent(reportData)
       .then(res => alert('댓글을 신고했습니다.'))
@@ -50,7 +50,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   };
 
   const handleNicknameReportClick = async (reason: string) => {
-    const reportData = { type: 'NICKNAME', id: member.id, reason } as ReportRequest;
+    const reportData: ReportRequest = { type: 'NICKNAME', id: member.id, reason };
 
     await reportContent(reportData)
       .then(res => alert('작성자 닉네임을 신고했습니다.'))
@@ -103,7 +103,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       )}
       {action === COMMENT_ACTION.DELETE && (
         <DeleteModal
-          target="댓글"
+          target="COMMENT"
           handleCancelClick={handleCancelClick}
           handleDeleteClick={handleDeleteClick}
         />

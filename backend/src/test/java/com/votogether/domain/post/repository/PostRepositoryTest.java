@@ -18,11 +18,11 @@ import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.fixtures.MemberFixtures;
+import java.time.LocalDateTime;
 import com.votogether.test.persister.MemberTestPersister;
 import com.votogether.test.persister.PostOptionTestPersister;
 import com.votogether.test.persister.PostTestPersister;
 import com.votogether.test.persister.VoteTestPersister;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -350,7 +350,7 @@ class PostRepositoryTest {
 
     @Nested
     @DisplayName("회원이 투표한 게시글 목록을 조회한다.")
-    class FindPostsVotedByMember {
+    class findPostsVotedByMember {
 
         @Test
         @DisplayName("마감된 게시글 목록을 최신순으로 가져온다.")
@@ -535,7 +535,7 @@ class PostRepositoryTest {
         }
 
     }
-
+  
     @Nested
     @DisplayName("키워드 검색을 통해 게시글 목록을 조회한다.")
     class findPostsByKeyword {

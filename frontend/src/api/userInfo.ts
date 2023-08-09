@@ -26,6 +26,6 @@ export const modifyNickname = async (nickname: string) => {
   await patchFetch<ModifyNicknameRequest>(`${BASE_URL}/members/me/nickname`, { nickname });
 };
 
-export const withdrawalMembership = async () => {
+export const cancelMembership = async () => {
   await deleteFetch(`${BASE_URL}/members/me/delete`);
 };

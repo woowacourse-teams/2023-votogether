@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useState } from 'react';
+import { Dispatch, PropsWithChildren, SetStateAction, createContext, useState } from 'react';
 
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
@@ -15,7 +15,7 @@ interface PostOption {
 }
 interface PostOptionContextProps {
   postOption: PostOption;
-  setPostOption: (postOption: PostOption) => void;
+  setPostOption: Dispatch<SetStateAction<PostOption>>;
 }
 
 export default function PostOptionProvider({ children }: PropsWithChildren) {

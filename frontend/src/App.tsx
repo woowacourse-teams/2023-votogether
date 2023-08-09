@@ -15,14 +15,14 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <PostOptionProvider>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <AuthProvider>
+        <PostOptionProvider>
           <RouterProvider router={router} />
-        </ThemeProvider>
-      </PostOptionProvider>
-    </AuthProvider>
+        </PostOptionProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

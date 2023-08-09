@@ -110,7 +110,7 @@ export default function PostDetailPage() {
         <CommentList
           commentList={commentData}
           memberId={memberId}
-          isGuest={!!memberId}
+          isGuest={!memberId}
           postWriterName={'익명의손님1'}
         />
       )}

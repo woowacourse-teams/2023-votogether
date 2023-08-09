@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 
 import { AuthContext } from '@hooks/context/auth';
+import { PostOptionContext } from '@hooks/context/postOption';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
@@ -12,8 +13,6 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
-import { SORTING, STATUS } from '@constants/post';
-
 import * as S from './style';
 
 export default function PostList() {
@@ -24,10 +23,13 @@ export default function PostList() {
     rootMargin: '',
     thresholds: 0.1,
   });
+
+  const { postOption, setPostOption } = useContext(PostOptionContext);
+
   const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
-    useSelect<PostStatus>(STATUS.PROGRESS);
+    useSelect<PostStatus>(postOption.status);
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
-    useSelect<PostSorting>(SORTING.LATEST);
+    useSelect<PostSorting>(postOption.sorting);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList(
     {
@@ -50,14 +52,26 @@ export default function PostList() {
       <S.SelectContainer>
         <S.SelectWrapper>
           <Select<PostStatus>
-            handleOptionChange={handleStatusOptionChange}
+            handleOptionChange={(value: PostStatus) => {
+              setPostOption({
+                ...postOption,
+                status: value,
+              });
+              handleStatusOptionChange(value);
+            }}
             optionList={STATUS_OPTION}
             selectedOption={STATUS_OPTION[selectedStatusOption]}
           />
         </S.SelectWrapper>
         <S.SelectWrapper>
           <Select<PostSorting>
-            handleOptionChange={handleSortingOptionChange}
+            handleOptionChange={(value: PostSorting) => {
+              setPostOption({
+                ...postOption,
+                sorting: value,
+              });
+              handleSortingOptionChange(value);
+            }}
             optionList={SORTING_OPTION}
             selectedOption={SORTING_OPTION[selectedSortingOption]}
           />

@@ -4,9 +4,7 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.exception.CommentExceptionType;
-import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.exception.BadRequestException;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -43,20 +41,11 @@ public class Comment extends BaseEntity {
     @Embedded
     private Content content;
 
-    @Column(nullable = false)
-    private boolean isHidden;
-
     @Builder
-    private Comment(
-            final Post post,
-            final Member member,
-            final String content,
-            final boolean isHidden
-    ) {
+    private Comment(final Post post, final Member member, final String content) {
         this.post = post;
         this.member = member;
         this.content = new Content(content);
-        this.isHidden = isHidden;
     }
 
     public void validateWriter(final Member member) {
@@ -71,26 +60,9 @@ public class Comment extends BaseEntity {
         }
     }
 
-    public void blind() {
-        this.isHidden = true;
-    }
-
-    public void validateMine(final Member reporter) {
-        if (this.member.equals(reporter)) {
-            throw new BadRequestException(ReportExceptionType.REPORT_MY_COMMENT);
-        }
-    }
-
-    public void validateHidden() {
-        if (this.isHidden) {
-            throw new BadRequestException(ReportExceptionType.ALREADY_HIDDEN_COMMENT);
-        }
-    }
-
     public void updateContent(final String content) {
         this.content = new Content(content);
     }
-
 
     public String getContent() {
         return content.getValue();

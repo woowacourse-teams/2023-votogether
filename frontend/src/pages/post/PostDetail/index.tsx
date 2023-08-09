@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useCommentList } from '@hooks/query/comment/useCommentList';
-import { useFetch } from '@hooks/useFetch';
+import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
-import { getPost, removePost, setEarlyClosePost } from '@api/post';
+import { removePost, setEarlyClosePost } from '@api/post';
 
 import CommentList from '@components/comment/CommentList';
 import Layout from '@components/common/Layout';
@@ -27,7 +27,8 @@ export default function PostDetailPage() {
   const decodedPayload = getMemberId(token);
   const memberId = decodedPayload.memberId;
 
-  const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
+  const { data: postData, isError, isLoading } = usePostDetail(postId);
+  // const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
   const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
   // const { data: userInfo, isLoading: isUserInfoLoading, error } = useUserInfo(isLoggedIn);
 
@@ -41,7 +42,7 @@ export default function PostDetailPage() {
         </S.HeaderContainer>
         <S.Container>
           {isLoading && 'loading'}
-          {errorMessage && errorMessage}
+          {isError && 'error발생'}
         </S.Container>
       </Layout>
     );
@@ -73,7 +74,6 @@ export default function PostDetailPage() {
       await setEarlyClosePost(postId)
         .then(res => {
           alert('게시물을 즉시마감했습니다.');
-          refetch();
         })
         .catch(error => alert(error.message));
     },

@@ -7,7 +7,7 @@ import { getPost } from '@api/post';
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const usePostDetail = (postId: number) => {
-  const { data, error, isLoading } = useQuery<PostInfo>(
+  const { data, isError, isLoading } = useQuery<PostInfo>(
     [QUERY_KEY.POST_DETAIL, postId],
     () => getPost(postId),
     {
@@ -20,5 +20,5 @@ export const usePostDetail = (postId: number) => {
     }
   );
 
-  return { data, error, isLoading };
+  return { data, isError, isLoading };
 };

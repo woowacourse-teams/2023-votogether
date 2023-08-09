@@ -28,13 +28,13 @@ interface CommentItemProps {
 
 export default function CommentItem({ comment, userType }: CommentItemProps) {
   const { isOpen, toggleComponent, closeComponent } = useToggle();
-  const { member, content, createdAt, isEdit } = comment;
+  const { id, member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const { mutate } = useDeleteComment(postId, comment.id);
+  const { mutate } = useDeleteComment(postId, id);
 
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
@@ -42,7 +42,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   };
 
   const handleCommentReportClick = async (reason: string) => {
-    const reportData: ReportRequest = { type: 'POST', id: postId, reason };
+    const reportData: ReportRequest = { type: 'COMMENT', id, reason };
 
     await reportContent(reportData)
       .then(res => alert('댓글을 신고했습니다.'))
@@ -93,7 +93,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       {action === COMMENT_ACTION.EDIT ? (
         <S.TextFormWrapper>
           <CommentTextForm
-            commentId={comment.id}
+            commentId={id}
             initialComment={comment}
             handleCancelClick={handleCancelClick}
           />

@@ -260,7 +260,7 @@ public class PostService {
         }
         return ageRange;
     }
-    
+
     @Transactional(readOnly = true)
     public List<PostResponse> getPostsVotedByMember(
             final int page,
@@ -276,7 +276,7 @@ public class PostService {
                 .map(post -> PostResponse.of(post, member))
                 .toList();
     }
-    
+
     @Transactional
     public void closePostEarlyById(final Long id, final Member loginMember) {
         final Post post = postRepository.findById(id)

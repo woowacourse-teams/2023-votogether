@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { AuthContext } from '@hooks/context/auth';
 import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
@@ -10,7 +12,6 @@ import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
 
-import { getCookieToken, getMemberId } from '@utils/cookie';
 import { checkClosedPost } from '@utils/time';
 
 import BottomButtonPart from './BottomButtonPart';
@@ -23,14 +24,11 @@ export default function PostDetailPage() {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const token = getCookieToken().accessToken;
-  const decodedPayload = getMemberId(token);
-  const memberId = decodedPayload.memberId;
+  const { loggedInfo } = useContext(AuthContext);
+  const memberId = loggedInfo.id;
 
-  const { data: postData, isError, isLoading } = usePostDetail(postId);
-  // const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
+  const { data: postData, isError, isLoading } = usePostDetail(!loggedInfo.isLoggedIn, postId);
   const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
-  // const { data: userInfo, isLoading: isUserInfoLoading, error } = useUserInfo(isLoggedIn);
 
   if (!postData) {
     return (
@@ -112,7 +110,7 @@ export default function PostDetailPage() {
         <CommentList
           commentList={commentData}
           memberId={memberId}
-          isGuest={false}
+          isGuest={!!memberId}
           postWriterName={'익명의손님1'}
         />
       )}

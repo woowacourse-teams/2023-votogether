@@ -59,6 +59,12 @@ export const getPost = async (postId: number): Promise<PostInfo> => {
   return transformPostResponse(post);
 };
 
+export const getPostForGuest = async (postId: number): Promise<PostInfo> => {
+  const post = await getFetch<PostInfoResponse>(`${BASE_URL}/posts/${postId}/guest`);
+
+  return transformPostResponse(post);
+};
+
 export const createPost = async (newPost: FormData) => {
   return await multiPostFetch(`${BASE_URL}/posts`, newPost);
 };

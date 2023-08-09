@@ -9,9 +9,8 @@ export interface ReportRequest {
 }
 
 export type ReportMessage = keyof typeof REPORT_MESSAGE;
-export type ReportMessageList = { [key: string]: string };
 
 export interface ReportInfo {
   name: string;
-  reportMessageList: ReportMessageList;
+  reportMessageList: { [key: string]: string };
 }

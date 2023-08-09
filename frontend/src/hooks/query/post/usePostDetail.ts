@@ -14,9 +14,6 @@ export const usePostDetail = (postId: number) => {
       onSuccess: data => {
         return data;
       },
-      onError: error => {
-        window.console.error(error);
-      },
     }
   );
 

@@ -35,7 +35,7 @@ export const PostListContainer = styled.ul`
 `;
 
 export const SelectWrapper = styled.div`
-  width: 110px;
+  width: 100px;
 
   position: absolute;
 

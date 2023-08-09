@@ -15,10 +15,12 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"})
+@ToString
 @Getter
 @Entity
 public class Member extends BaseEntity {
@@ -91,8 +93,13 @@ public class Member extends BaseEntity {
         this.nickname = new Nickname(nickname);
     }
 
+    public void changeNicknameByReport() {
+        final String reportedNickname = "Pause1" + RandomStringUtils.random(9, true, true);
+        this.nickname = new Nickname(reportedNickname);
+    }
+
     public String getNickname() {
-        return nickname.getValue();
+        return this.nickname.getValue();
     }
 
 }

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-import { PostOptionContext } from '@hooks/context/postOption';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
@@ -14,8 +13,6 @@ import type { PostSorting, PostStatus } from '@components/post/PostListPage/type
 
 import { SORTING, STATUS } from '@constants/post';
 
-import EmptyPostList from '../EmptyPostList';
-
 import * as S from './style';
 
 export default function PostList() {
@@ -25,15 +22,12 @@ export default function PostList() {
     rootMargin: '',
     thresholds: 0.1,
   });
-
-  const { postOption, setPostOption } = useContext(PostOptionContext);
-
   const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
-    useSelect<PostStatus>(postOption.status);
+    useSelect<PostStatus>(STATUS.PROGRESS);
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
-    useSelect<PostSorting>(postOption.sorting);
+    useSelect<PostSorting>(SORTING.LATEST);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPostListEmpty } = usePostList(
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList(
     {
       postType,
       postSorting: selectedSortingOption,
@@ -53,35 +47,20 @@ export default function PostList() {
       <S.SelectContainer>
         <S.SelectWrapper>
           <Select<PostStatus>
-            handleOptionChange={(value: PostStatus) => {
-              setPostOption({
-                ...postOption,
-                status: value,
-              });
-              handleStatusOptionChange(value);
-            }}
+            handleOptionChange={handleStatusOptionChange}
             optionList={STATUS_OPTION}
             selectedOption={STATUS_OPTION[selectedStatusOption]}
           />
         </S.SelectWrapper>
         <S.SelectWrapper>
           <Select<PostSorting>
-            handleOptionChange={(value: PostSorting) => {
-              setPostOption({
-                ...postOption,
-                sorting: value,
-              });
-              handleSortingOptionChange(value);
-            }}
+            handleOptionChange={handleSortingOptionChange}
             optionList={SORTING_OPTION}
             selectedOption={SORTING_OPTION[selectedSortingOption]}
           />
         </S.SelectWrapper>
       </S.SelectContainer>
       <S.PostListContainer>
-        {isPostListEmpty && (
-          <EmptyPostList status={selectedStatusOption} keyword={postOptionalOption.keyword} />
-        )}
         {data?.pages.map((postListInfo, pageIndex) => (
           <React.Fragment key={pageIndex}>
             {postListInfo.postList.map((post, index) => {

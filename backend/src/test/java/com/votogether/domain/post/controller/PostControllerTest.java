@@ -2,11 +2,10 @@ package com.votogether.domain.post.controller;
 
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,17 +16,21 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
-import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
-import com.votogether.domain.post.dto.response.VoteCountForAgeGroupResponse;
-import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
+import com.votogether.domain.post.dto.response.WriterResponse;
+import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
+import com.votogether.domain.post.dto.response.detail.VoteDetailResponse;
+import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
+import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.exception.GlobalExceptionHandler;
+import com.votogether.fixtures.MemberFixtures;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -37,6 +40,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -188,7 +193,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 가져온다")
+    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 조회한다")
     void getAllPostBySortTypeAndClosingType() throws JsonProcessingException {
         // given
         int firstPage = 0;
@@ -224,12 +229,101 @@ class PostControllerTest {
 
         List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
         });
-        System.out.println(responses.get(0).deadline());
 
         // then
         assertAll(
                 () -> assertThat(responses).isNotEmpty(),
                 () -> assertThat(responses).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("한 게시글의 상세를 조회한다.")
+    void getPost() throws JsonProcessingException {
+        // given
+        long postId = 0L;
+        Member writer = MALE_30.get();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3L);
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(writer)
+                .postBody(postBody)
+                .deadline(deadline)
+                .build();
+
+        Member member = MemberFixtures.MALE_20.get();
+        given(postService.getPostById(postId, member)).willReturn(PostDetailResponse.of(post, member));
+
+        // when
+        String responseBody = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/{postId}", postId)
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .status(HttpStatus.OK)
+                .extract().asString();
+
+        PostDetailResponse response = mapper.readValue(responseBody, new TypeReference<>() {
+        });
+
+        // then
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+
+        assertAll(
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
+                () -> assertThat(writerResponse.id()).isEqualTo(member.getId()),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero()
+        );
+    }
+
+    @Test
+    @DisplayName("비회원이 한 게시글을 상세 조회한다.")
+    void getPostByGuest() {
+        // given
+        long postId = 0L;
+        Member writer = MALE_30.get();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3L);
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(writer)
+                .postBody(postBody)
+                .deadline(deadline)
+                .build();
+
+        given(postService.getPostById(postId, null)).willReturn(PostDetailResponse.of(post, null));
+
+        // when
+        PostDetailResponse response = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/{postId}/guest", postId)
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .status(HttpStatus.OK)
+                .extract()
+                .as(PostDetailResponse.class);
+
+        // then
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+
+        assertAll(
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isEqualTo(-1)
         );
     }
 
@@ -295,6 +389,58 @@ class PostControllerTest {
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(response);
+    }
+
+    @Test
+    @DisplayName("회원본인이 투표한 게시글 목록을 조회한다.")
+    void getPostsVotedByMember() {
+        // given
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(MALE_30.get())
+                .postBody(postBody)
+                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                .build();
+
+        PostResponse postResponse = PostResponse.of(post, MALE_30.get());
+
+        given(postService.getPostsVotedByMember(anyInt(), any(), any(), any(Member.class)))
+                .willReturn(List.of(postResponse));
+
+        // when
+        List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+                .param("page", 0)
+                .param("postClosingType", PostClosingType.PROGRESS)
+                .param("postSortType", PostSortType.LATEST)
+                .when().get("/posts/votes/me")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<PostResponse>>() {
+                }.getType());
+
+        // then
+        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
+    }
+
+    @Test
+    @DisplayName("게시글을 조기 마감 합니다")
+    void postClosedEarly() {
+        // given
+        long postId = 1L;
+
+        // when
+        ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .when().patch("/posts/{postId}/close", postId)
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
 }

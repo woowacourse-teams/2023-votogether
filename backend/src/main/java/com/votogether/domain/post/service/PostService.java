@@ -7,7 +7,8 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
-import com.votogether.domain.post.dto.response.VoteOptionStatisticsResponse;
+import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
+import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
@@ -26,6 +27,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +45,7 @@ public class PostService {
     private static final int MAXIMUM_DEADLINE = 3;
 
     private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
+    private final Map<PostClosingType, BiFunction<Member, Pageable, Slice<Post>>> postsVotedByMemberMapper;
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;
     private final CategoryRepository categoryRepository;
@@ -59,7 +63,9 @@ public class PostService {
         this.voteRepository = voteRepository;
 
         this.postClosingTypeMapper = new EnumMap<>(PostClosingType.class);
+        this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
         initPostClosingTypeMapper();
+        initPostsVotedByMemberMapper();
     }
 
     private void initPostClosingTypeMapper() {
@@ -68,6 +74,12 @@ public class PostService {
                 postRepository.findByDeadlineAfter(LocalDateTime.now(), pageable));
         postClosingTypeMapper.put(PostClosingType.CLOSED, pageable ->
                 postRepository.findByDeadlineBefore(LocalDateTime.now(), pageable));
+    }
+
+    private void initPostsVotedByMemberMapper() {
+        postsVotedByMemberMapper.put(PostClosingType.ALL, postRepository::findPostsVotedByMember);
+        postsVotedByMemberMapper.put(PostClosingType.PROGRESS, postRepository::findOpenPostsVotedByMember);
+        postsVotedByMemberMapper.put(PostClosingType.CLOSED, postRepository::findClosedPostsVotedByMember);
     }
 
     @Transactional
@@ -93,9 +105,12 @@ public class PostService {
     ) {
         final Post post = toPost(postCreateRequest, loginMember);
 
-        post.mapPostOptionsByElements(getPostOptionContents(postCreateRequest), parseOptionImageUrls(optionImages));
+        post.mapPostOptionsByElements(
+                getPostOptionContents(postCreateRequest),
+                uploadAndParseOptionImageUrls(optionImages)
+        );
         post.mapCategories(categories);
-        post.addContentImage(ImageUploader.upload(contentImages.get(0)));
+        addContentImageIfPresent(post, contentImages);
 
         return post;
     }
@@ -124,10 +139,20 @@ public class PostService {
                 .toList();
     }
 
-    private List<String> parseOptionImageUrls(final List<MultipartFile> optionImages) {
+    private List<String> uploadAndParseOptionImageUrls(final List<MultipartFile> optionImages) {
         return optionImages.stream()
                 .map(ImageUploader::upload)
                 .toList();
+    }
+
+    private void addContentImageIfPresent(final Post post, final List<MultipartFile> contentImages) {
+        if (isContentImagesPresent(contentImages)) {
+            post.addContentImage(ImageUploader.upload(contentImages.get(0)));
+        }
+    }
+
+    private boolean isContentImagesPresent(final List<MultipartFile> contentImages) {
+        return Objects.nonNull(contentImages) && !contentImages.isEmpty();
     }
 
     @Transactional(readOnly = true)
@@ -137,7 +162,7 @@ public class PostService {
             final PostClosingType postClosingType,
             final PostSortType postSortType
     ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getSort());
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getPostBaseSort());
         final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
 
         return contents.stream()
@@ -152,6 +177,14 @@ public class PostService {
         return postClosingTypeMapper.get(postClosingType)
                 .apply(pageable)
                 .getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public PostDetailResponse getPostById(final Long postId, final Member loginMember) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+
+        return PostDetailResponse.of(post, loginMember);
     }
 
     @Transactional(readOnly = true)
@@ -211,6 +244,32 @@ public class PostService {
             return "60~";
         }
         return ageRange;
+    }
+    
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsVotedByMember(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Member member
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getVoteBaseSort());
+
+        Slice<Post> posts = postsVotedByMemberMapper.get(postClosingType).apply(member, pageable);
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, member))
+                .toList();
+    }
+    
+    @Transactional
+    public void closePostEarlyById(final Long id, final Member loginMember) {
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+
+        post.validateWriter(loginMember);
+        post.validateDeadLine();
+        post.closeEarly();
     }
 
 }

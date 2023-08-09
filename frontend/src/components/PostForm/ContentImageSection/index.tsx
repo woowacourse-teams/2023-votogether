@@ -19,19 +19,21 @@ export default function ContentImageSection({ contentImageHook, size }: ContentI
 
   return (
     <>
-      {contentImage ? (
+      {contentImage && (
         <S.ContentImageContainer>
           <OptionCancelButton onClick={removeImage} />
           <S.ContentImageWrapper $size={size}>
             <S.ContentImage src={contentImage} alt="본문에 포함된 사진" />
           </S.ContentImageWrapper>
         </S.ContentImageContainer>
-      ) : (
+      )}
+      {
         <S.FileInputContainer>
           <S.Label
             htmlFor="content-image-upload"
             aria-label="본문 이미지 업로드 버튼"
             title="이미지 업로드"
+            $isVisible={!!contentImage}
           >
             본문에 사진 넣기
           </S.Label>
@@ -42,7 +44,7 @@ export default function ContentImageSection({ contentImageHook, size }: ContentI
             onChange={handleUploadImage}
           />
         </S.FileInputContainer>
-      )}
+      }
     </>
   );
 }

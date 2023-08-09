@@ -1,11 +1,21 @@
 import { styled } from 'styled-components';
 
-export const TimeBox = styled.div`
-  width: 33.3%;
-  height: 100px;
-  border: 1px solid white;
+import { TIMEBOX_CHILD_HEIGHT } from './constants';
 
-  background-color: #f2f2f2;
+export const Container = styled.div`
+  width: 33.3%;
+  height: 99px;
+
+  position: relative;
+`;
+
+export const TimeBox = styled.div`
+  width: 100%;
+  height: ${`${TIMEBOX_CHILD_HEIGHT * 3}px`};
+
+  position: absolute;
+
+  background-color: rgba(0, 0, 0, 0);
 
   text-align: center;
 
@@ -19,16 +29,32 @@ export const TimeBox = styled.div`
   scrollbar-width: none;
 `;
 
+export const PickedTimeOverlay = styled.div`
+  width: 100%;
+  height: 33px;
+
+  position: absolute;
+  top: 33%;
+
+  background-color: rgba(128, 128, 128, 0.2);
+
+  z-index: -1;
+`;
+
 export const Time = styled.div<{ $isPicked: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
 
   width: 100%;
-  height: 50px;
+  height: ${`${TIMEBOX_CHILD_HEIGHT}px`};
 
-  background: ${props => (props.$isPicked ? '#F2F2F2' : 'var(--white)')};
+  color: ${props => !props.$isPicked && 'gray'};
 
-  font: var(--text-small);
+  font: var(--text-body);
   font-weight: ${props => (props.$isPicked ? 'bold' : 'light')};
+`;
+
+export const Empty = styled.div`
+  height: ${`${TIMEBOX_CHILD_HEIGHT}px`};
 `;

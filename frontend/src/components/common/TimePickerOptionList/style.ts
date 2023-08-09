@@ -16,7 +16,7 @@ export const Container = styled.div`
   align-items: center;
 
   width: 100%;
-  border: 1px solid #f2f2f2;
+  border: 1px solid gray;
 `;
 
 export const PickedTimeText = styled.p`
@@ -25,6 +25,6 @@ export const PickedTimeText = styled.p`
   align-items: center;
   gap: 20px;
 
-  font: var(--text-body);
+  font: var(--text-caption);
   font-weight: bold;
 `;

@@ -19,5 +19,9 @@ export const useText = (originalText: string) => {
     event.target.setCustomValidity('');
   };
 
-  return { text, handleTextChange };
+  const resetText = () => {
+    setText('');
+  };
+
+  return { text, handleTextChange, resetText };
 };

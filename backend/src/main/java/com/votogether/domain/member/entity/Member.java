@@ -93,11 +93,9 @@ public class Member extends BaseEntity {
         this.nickname = new Nickname(nickname);
     }
 
-    public void changeNicknameByReport(final int reportCount) {
-        if (reportCount >= 3) {
-            final String reportedNickname = "Pause1" + RandomStringUtils.random(9, true, true);
-            this.nickname = new Nickname(reportedNickname);
-        }
+    public void changeNicknameByReport() {
+        final String reportedNickname = "Pause1" + RandomStringUtils.random(9, true, true);
+        this.nickname = new Nickname(reportedNickname);
     }
 
     public String getNickname() {

@@ -156,7 +156,9 @@ public class ReportService {
 
     private void changeNicknameByReport(final Member reportedMember, final ReportType reportType) {
         final int reportCount = reportRepository.countByReportTypeAndTargetId(reportType, reportedMember.getId());
-        reportedMember.changeNicknameByReport(reportCount);
+        if (reportCount >= 3) {
+            reportedMember.changeNicknameByReport();
+        }
     }
 
 }

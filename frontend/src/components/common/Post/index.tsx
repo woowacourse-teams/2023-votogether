@@ -11,6 +11,8 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
+import { checkClosedPost } from '@utils/time';
+
 import * as S from './style';
 
 interface PostProps {
@@ -23,6 +25,8 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   const { loggedInfo } = useContext(AuthContext);
   const { mutate: createVote } = useCreateVote({ isPreview, postId });
   const { mutate: editVote } = useEditVote({ isPreview, postId });
+
+  const isActive = !checkClosedPost(deadline);
 
   const handleVoteClick = (newOptionId: number) => {
     if (writer.nickname === loggedInfo.userInfo?.nickname) return;
@@ -58,6 +62,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         <S.Category aria-label="카테고리">
           {category.map(category => category.name).join(' | ')}
         </S.Category>
+        <S.ActivateState aria-label="마감 상태" $isActive={isActive} />
         <S.Title aria-label="제목" $isPreview={isPreview}>
           {title}
         </S.Title>

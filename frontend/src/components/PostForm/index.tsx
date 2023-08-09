@@ -33,15 +33,13 @@ import * as S from './style';
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
-  isError: boolean;
-  error: unknown;
 }
 
 const MAX_TITLE_LENGTH = 100;
 const MAX_CONTENT_LENGTH = 1000;
 const CATEGORY_COUNT_LIMIT = 3;
 
-export default function PostForm({ data, mutate, isError, error }: PostFormProps) {
+export default function PostForm({ data, mutate }: PostFormProps) {
   const {
     title,
     content,

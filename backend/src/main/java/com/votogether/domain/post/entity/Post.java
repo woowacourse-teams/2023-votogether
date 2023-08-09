@@ -54,7 +54,7 @@ public class Post extends BaseEntity {
     @Embedded
     private PostOptions postOptions;
 
-    @Column(columnDefinition = "datetime(2)", nullable = false)
+    @Column(columnDefinition = "datetime(6)", nullable = false)
     private LocalDateTime deadline;
 
     @Basic(fetch = FetchType.LAZY)
@@ -138,7 +138,7 @@ public class Post extends BaseEntity {
         }
     }
 
-    private boolean isClosed() {
+    public boolean isClosed() {
         return deadline.isBefore(LocalDateTime.now());
     }
 

@@ -5,6 +5,7 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.exception.BadRequestException;
 import jakarta.persistence.Basic;
@@ -57,6 +58,9 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "datetime(6)", nullable = false)
     private LocalDateTime deadline;
 
+    @Column(nullable = false)
+    private boolean isHidden;
+
     @Basic(fetch = FetchType.LAZY)
     @Formula("(select count(v.id) from Vote v where v.post_option_id in "
             + "(select po.id from Post_Option po where po.post_id = id)"
@@ -70,13 +74,15 @@ public class Post extends BaseEntity {
     private Post(
             final Member writer,
             final PostBody postBody,
-            final LocalDateTime deadline
+            final LocalDateTime deadline,
+            final boolean isHidden
     ) {
         this.writer = writer;
         this.postBody = postBody;
         this.deadline = deadline;
         this.postCategories = new PostCategories();
         this.postOptions = new PostOptions();
+        this.isHidden = isHidden;
     }
 
     public void mapCategories(final List<Category> categories) {
@@ -176,6 +182,22 @@ public class Post extends BaseEntity {
 
     public boolean isVisibleVoteResult(final Member member) {
         return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
+    }
+
+    public void blind() {
+        this.isHidden = true;
+    }
+
+    public void validateMine(final Member member) {
+        if (this.writer.equals(member)) {
+            throw new BadRequestException(ReportExceptionType.REPORT_MY_POST);
+        }
+    }
+
+    public void validateHidden() {
+        if (this.isHidden) {
+            throw new BadRequestException(ReportExceptionType.ALREADY_HIDDEN_POST);
+        }
     }
 
     public void addComment(final Comment comment) {

@@ -7,13 +7,22 @@ import org.springframework.data.domain.Sort.Direction;
 @Getter
 public enum PostSortType {
 
-    LATEST(Sort.by(Sort.Direction.DESC, "createdAt")),
-    HOT(Sort.by(Direction.DESC, "totalVoteCount"));
+    LATEST(
+            Sort.by(Direction.DESC, "createdAt"),
+            Sort.by(Direction.DESC, "postOption.post.createdAt")
+    ),
 
-    private final Sort sort;
+    HOT(
+            Sort.by(Direction.DESC, "totalVoteCount"),
+            Sort.by(Direction.DESC, "postOption.post.totalVoteCount")
+    );
 
-    PostSortType(final Sort sort) {
-        this.sort = sort;
+    private final Sort postBaseSort;
+    private final Sort voteBaseSort;
+
+    PostSortType(final Sort postBaseSort, final Sort voteBaseSort) {
+        this.postBaseSort = postBaseSort;
+        this.voteBaseSort = voteBaseSort;
     }
 
 }

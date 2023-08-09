@@ -1,5 +1,5 @@
 import {
-  cancelMembership,
+  withdrawalMembership,
   getUserInfo,
   modifyNickname,
   transformUserInfoResponse,
@@ -29,7 +29,7 @@ describe('서버와 통신하여 유저의 정보를 불러올 수 있어야 한
   });
 
   test('유저가 회원 탈퇴를 한다', async () => {
-    await cancelMembership();
+    await withdrawalMembership();
 
     expect(MOCK_USER_INFO.nickname).toBe('cancel');
   });

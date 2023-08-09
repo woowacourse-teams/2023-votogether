@@ -20,6 +20,6 @@ export interface ModifyNicknameRequest {
 
 export interface LoggedInfo {
   accessToken: string;
-  isLogged: boolean;
+  isLoggedIn: boolean;
   userInfo?: User;
 }

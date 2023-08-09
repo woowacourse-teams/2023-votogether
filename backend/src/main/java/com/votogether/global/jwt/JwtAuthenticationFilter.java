@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,6 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/v3/api-docs",
             "/swagger-ui",
             "/h2-console"
+    );
+
+    private static final List<String> ALLOWED_END_URIS = List.of(
+            "/guest"
     );
 
     private static final Map<String, String> MATCH_URI_METHOD = new HashMap<>(
@@ -52,7 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) {
-        return containsAllowedUris(request) || startsWithAllowedStartUris(request) || matchesUriPattern(request);
+        return containsAllowedUris(request) || startsWithAllowedStartUris(request)
+                || matchesGuestRequest(request) || matchesUriPattern(request);
     }
 
     private boolean containsAllowedUris(final HttpServletRequest request) {
@@ -63,6 +70,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean startsWithAllowedStartUris(final HttpServletRequest request) {
         return ALLOWED_START_URIS.stream()
                 .anyMatch(url -> request.getRequestURI().startsWith(url));
+    }
+
+    private boolean matchesGuestRequest(final HttpServletRequest request) {
+        return ALLOWED_END_URIS.stream()
+                .anyMatch(url -> request.getRequestURI().endsWith(url) &&
+                        Objects.equals(request.getMethod(), HttpMethod.GET.name()));
     }
 
     private boolean matchesUriPattern(final HttpServletRequest request) {

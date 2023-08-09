@@ -10,5 +10,9 @@ export default meta;
 type Story = StoryObj<typeof Skeleton>;
 
 export const Default: Story = {
-  render: () => <Skeleton />,
+  render: () => <Skeleton isLarge={true} />,
+};
+
+export const FirstBoxLarge: Story = {
+  render: () => <Skeleton isLarge={false} />,
 };

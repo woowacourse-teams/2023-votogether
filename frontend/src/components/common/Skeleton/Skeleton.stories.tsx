@@ -9,10 +9,10 @@ const meta: Meta<typeof Skeleton> = {
 export default meta;
 type Story = StoryObj<typeof Skeleton>;
 
-export const Default: Story = {
+export const FirstBoxLarge: Story = {
   render: () => <Skeleton isLarge={true} />,
 };
 
-export const FirstBoxLarge: Story = {
+export const FirstBoxSmall: Story = {
   render: () => <Skeleton isLarge={false} />,
 };

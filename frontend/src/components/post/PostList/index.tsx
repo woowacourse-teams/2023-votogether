@@ -75,7 +75,7 @@ export default function PostList() {
             })}
           </React.Fragment>
         ))}
-        {isFetchingNextPage && <Skeleton />}
+        {isFetchingNextPage && <Skeleton isLarge={false} />}
       </S.PostListContainer>
     </S.Container>
   );

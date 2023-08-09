@@ -4,17 +4,7 @@ import { Size } from '@type/style';
 
 import { theme } from '@styles/theme';
 
-const position = {
-  top: '25%',
-  bottom: '85%',
-};
-
-const squareSize = {
-  sm: { width: '250px', height: '40px' },
-  md: { width: '400px', height: '40px' },
-  lg: { width: '500px', height: '45px' },
-  free: { width: '80%', height: '50px' },
-};
+import { POSITION, SQUARE_SIZE } from '../ToastNSnackBarStyle';
 
 const fadeInAnimation = keyframes`
   0%{
@@ -28,7 +18,7 @@ const fadeInAnimation = keyframes`
 export const Wrapper = styled.div<{ $position: 'top' | 'bottom' }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: ${props => position[props.$position]};
+  grid-template-rows: ${props => POSITION[props.$position]};
   align-items: end;
   justify-items: center;
 
@@ -45,8 +35,8 @@ export const Content = styled.div<{ $size: Size | 'free'; $isOpen: boolean }>`
   align-items: center;
   justify-content: center;
 
-  width: ${props => squareSize[props.$size].width};
-  height: ${props => squareSize[props.$size].height};
+  width: ${props => SQUARE_SIZE[props.$size].width};
+  height: ${props => SQUARE_SIZE[props.$size].height};
   border: 2px solid var(--primary-color);
   border-radius: 4px;
 

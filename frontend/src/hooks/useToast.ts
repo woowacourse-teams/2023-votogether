@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { toastTime } from '@constants/animation';
+import { TOAST_TIME } from '@constants/animation';
 
 export const useToast = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +11,7 @@ export const useToast = () => {
 
     timeId = setTimeout(() => {
       if (isOpen) setIsOpen(false);
-    }, toastTime * 1000);
+    }, TOAST_TIME * 1000);
   };
 
   useEffect(() => {

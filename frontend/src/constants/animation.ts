@@ -1,2 +1,2 @@
 //초단위
-export const toastTime = 3;
+export const TOAST_TIME = 3;

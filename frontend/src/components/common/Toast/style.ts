@@ -2,21 +2,11 @@ import { keyframes, styled } from 'styled-components';
 
 import { Size } from '@type/style';
 
-import { toastTime } from '@constants/animation';
+import { TOAST_TIME } from '@constants/animation';
 
 import { theme } from '@styles/theme';
 
-const position = {
-  top: '25%',
-  bottom: '85%',
-};
-
-const squareSize = {
-  sm: { width: '250px', height: '30px' },
-  md: { width: '400px', height: '35px' },
-  lg: { width: '500px', height: '40px' },
-  free: { width: '80%', height: '40px' },
-};
+import { POSITION, SQUARE_SIZE } from '../ToastNSnackBarStyle';
 
 export const fadeInOutAnimation = keyframes`
   0%, 100%{
@@ -30,7 +20,7 @@ export const fadeInOutAnimation = keyframes`
 export const Wrapper = styled.div<{ $position: 'top' | 'bottom' }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: ${props => position[props.$position]};
+  grid-template-rows: ${props => POSITION[props.$position]};
   align-items: end;
   justify-items: center;
 
@@ -47,8 +37,8 @@ export const Content = styled.div<{ $size: Size | 'free' }>`
   align-items: center;
   justify-content: center;
 
-  width: ${props => squareSize[props.$size].width};
-  height: ${props => squareSize[props.$size].height};
+  width: ${props => SQUARE_SIZE[props.$size].width};
+  height: ${props => SQUARE_SIZE[props.$size].height};
   border-radius: 4px;
 
   background-color: rgba(0, 0, 0, 0.5);
@@ -57,7 +47,7 @@ export const Content = styled.div<{ $size: Size | 'free' }>`
   font: var(--text-caption);
   letter-spacing: 1px;
 
-  animation: ${fadeInOutAnimation} ${toastTime}s linear infinite;
+  animation: ${fadeInOutAnimation} ${TOAST_TIME}s linear infinite;
 
   z-index: ${theme.zIndex.modal};
 `;

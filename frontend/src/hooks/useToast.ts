@@ -4,21 +4,20 @@ import { toastTime } from '@constants/animation';
 
 export const useToast = () => {
   const [isOpen, setIsOpen] = useState(false);
+  let timeId: ReturnType<typeof setTimeout>;
 
   const openComponent = () => {
     setIsOpen(true);
+
+    timeId = setTimeout(() => {
+      if (isOpen) setIsOpen(false);
+    }, toastTime * 1000);
   };
 
   useEffect(() => {
-    let timeId: ReturnType<typeof setTimeout>;
-
-    if (isOpen) {
-      timeId = setTimeout(() => {
-        if (isOpen) setIsOpen(false);
-      }, toastTime * 1000);
-    }
-
-    return () => clearTimeout(timeId);
+    return () => {
+      if (!isOpen) clearTimeout(timeId);
+    };
   }, [isOpen]);
 
   return { isOpen, openComponent };

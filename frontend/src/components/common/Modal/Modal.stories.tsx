@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { styled } from 'styled-components';
 
@@ -100,11 +100,52 @@ export const WithCloseButton = () => {
   );
 };
 
+export const CloseByESC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      <SquareButton onClick={openModal} theme="blank">
+        Open Modal
+      </SquareButton>
+      {isOpen && (
+        <Modal size="sm" onModalClose={closeModal}>
+          <p>Close This Modal by ESC</p>
+        </Modal>
+      )}
+    </>
+  );
+};
+
 export const WithTimePicker = () => {
   const [time, setTime] = useState({
-    day: 0,
-    hour: 1,
-    minute: 3,
+    day: 2,
+    hour: 7,
+    minute: 58,
   });
   const [isOpen, setIsOpen] = useState(false);
 

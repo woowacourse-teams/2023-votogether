@@ -148,7 +148,7 @@ class VoteRepositoryTest {
         voteRepository.save(voteB);
 
         // when
-        List<Vote> votes = voteRepository.findByMemberAndPostOptionIn(member, List.of(postOptionA, postOptionB));
+        List<Vote> votes = voteRepository.findAllByMemberAndPostOptionIn(member, List.of(postOptionA, postOptionB));
 
         // then
         assertThat(votes).hasSize(2);

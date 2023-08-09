@@ -63,7 +63,9 @@ export default function PostList() {
         </S.SelectWrapper>
       </S.SelectContainer>
       <S.PostListContainer>
-        {isPostListEmpty && <EmptyPostList keyword={postOptionalOption.keyword} />}
+        {isPostListEmpty && (
+          <EmptyPostList status={selectedStatusOption} keyword={postOptionalOption.keyword} />
+        )}
         {data?.pages.map((postListInfo, pageIndex) => (
           <React.Fragment key={pageIndex}>
             {postListInfo.postList.map((post, index) => {

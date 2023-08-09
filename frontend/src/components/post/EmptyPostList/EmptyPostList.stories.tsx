@@ -10,9 +10,17 @@ export default meta;
 type Story = StoryObj<typeof EmptyPostList>;
 
 export const Default: Story = {
-  render: () => <EmptyPostList />,
+  render: () => <EmptyPostList status="all" />,
 };
 
-export const Keyword: Story = {
-  render: () => <EmptyPostList keyword="갤럭시" />,
+export const AllKeyword: Story = {
+  render: () => <EmptyPostList status="all" keyword="갤럭시" />,
+};
+
+export const ClosedKeyword: Story = {
+  render: () => <EmptyPostList status="closed" keyword="갤럭시" />,
+};
+
+export const ProgressKeyword: Story = {
+  render: () => <EmptyPostList status="progress" keyword="갤럭시" />,
 };

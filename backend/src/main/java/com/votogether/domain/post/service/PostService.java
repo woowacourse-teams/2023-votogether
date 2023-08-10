@@ -299,7 +299,11 @@ public class PostService {
     ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
         final List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortType(
-                member, postClosingType, postSortType, pageable);
+                member,
+                postClosingType,
+                postSortType,
+                pageable
+        );
 
         return posts.stream()
                 .map(post -> PostResponse.of(post, member))

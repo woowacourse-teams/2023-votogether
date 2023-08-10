@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
+import { ReportRequest } from '@type/report';
 
 import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
 import { useToggle } from '@hooks/useToggle';
 
-import CommentDeleteModal from '@components/comment/CommentDeleteModal';
+import { reportContent } from '@api/report';
+
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
-import CommentReportModal from '@components/report/CommentReportModal';
-import UserReportModal from '@components/report/UserReportModal';
+import DeleteModal from '@components/common/DeleteModal';
+import ReportModal from '@components/ReportModal';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
@@ -26,17 +28,33 @@ interface CommentItemProps {
 
 export default function CommentItem({ comment, userType }: CommentItemProps) {
   const { isOpen, toggleComponent, closeComponent } = useToggle();
-  const { member, content, createdAt, isEdit } = comment;
+  const { id, member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const { mutate } = useDeleteComment(postId, comment.id);
+  const { mutate } = useDeleteComment(postId, id);
 
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
     setAction(menu);
+  };
+
+  const handleCommentReportClick = async (reason: string) => {
+    const reportData: ReportRequest = { type: 'COMMENT', id, reason };
+
+    await reportContent(reportData)
+      .then(res => alert('댓글을 신고했습니다.'))
+      .catch(error => alert('댓글 신고가 실패했습니다.'));
+  };
+
+  const handleNicknameReportClick = async (reason: string) => {
+    const reportData: ReportRequest = { type: 'NICKNAME', id: member.id, reason };
+
+    await reportContent(reportData)
+      .then(res => alert('작성자 닉네임을 신고했습니다.'))
+      .catch(error => alert('작성자 닉네임 신고가 실패했습니다.'));
   };
 
   const handleCancelClick = () => {
@@ -75,7 +93,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       {action === COMMENT_ACTION.EDIT ? (
         <S.TextFormWrapper>
           <CommentTextForm
-            commentId={comment.id}
+            commentId={id}
             initialComment={comment}
             handleCancelClick={handleCancelClick}
           />
@@ -84,16 +102,25 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         <S.Description>{content}</S.Description>
       )}
       {action === COMMENT_ACTION.DELETE && (
-        <CommentDeleteModal
+        <DeleteModal
+          target="COMMENT"
           handleCancelClick={handleCancelClick}
           handleDeleteClick={handleDeleteClick}
         />
       )}
       {action === COMMENT_ACTION.USER_REPORT && (
-        <UserReportModal handleCancelClick={handleCancelClick} />
+        <ReportModal
+          reportType="NICKNAME"
+          handleReportClick={handleNicknameReportClick}
+          handleCancelClick={handleCancelClick}
+        />
       )}
       {action === COMMENT_ACTION.COMMENT_REPORT && (
-        <CommentReportModal handleCancelClick={handleCancelClick} />
+        <ReportModal
+          reportType="COMMENT"
+          handleReportClick={handleCommentReportClick}
+          handleCancelClick={handleCancelClick}
+        />
       )}
     </S.Container>
   );

@@ -44,7 +44,7 @@ public class PostOption extends BaseEntity {
     private String imageUrl;
 
     @OneToMany(mappedBy = "postOption", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private final List<Vote> votes = new ArrayList<>();
+    private List<Vote> votes = new ArrayList<>();
 
     @Builder
     private PostOption(
@@ -123,6 +123,10 @@ public class PostOption extends BaseEntity {
 
     private double calculateVotePercent(final Long totalVoteCount) {
         return ((double) this.votes.size() / totalVoteCount) * 100;
+    }
+
+    public int getVoteCount() {
+        return this.votes.size();
     }
 
 }

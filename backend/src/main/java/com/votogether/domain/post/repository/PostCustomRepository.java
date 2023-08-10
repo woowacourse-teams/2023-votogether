@@ -6,14 +6,15 @@ import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 
 public interface PostCustomRepository {
 
-    List<Post> findAllByClosingTypeAndSortType(
+    List<Post> findAllByClosingTypeAndSortTypeAndCategoryId(
             final PostClosingType postClosingType,
             final PostSortType postSortType,
+            final Long categoryId,
             final Pageable pageable
+
     );
 
     List<Post> findAllByWriterWithClosingTypeAndSortType(

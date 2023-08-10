@@ -1,6 +1,7 @@
 package com.votogether.domain.post.repository;
 
 import static com.votogether.domain.post.entity.QPost.post;
+import static com.votogether.domain.post.entity.QPostCategory.postCategory;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -23,20 +24,26 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Post> findAllByClosingTypeAndSortType(
+    public List<Post> findAllByClosingTypeAndSortTypeAndCategoryId(
             final PostClosingType postClosingType,
             final PostSortType postSortType,
+            final Long categoryId,
             final Pageable pageable
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
                 .join(post.writer).fetchJoin()
-                .where(deadlineEq(postClosingType))
+                .leftJoin(post.postCategories.postCategories, postCategory)
+                .where(
+                        categoryIdEq(categoryId),
+                        deadlineEq(postClosingType)
+                )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
+
 
     @Override
     public List<Post> findAllByWriterWithClosingTypeAndSortType(
@@ -53,6 +60,11 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private BooleanExpression categoryIdEq(final Long categoryId) {
+        return categoryId == null ? null : postCategory.category.id.eq(categoryId);
+
     }
 
     private BooleanExpression deadlineEq(final PostClosingType postClosingType) {

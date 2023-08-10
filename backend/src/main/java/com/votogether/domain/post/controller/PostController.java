@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,6 +84,19 @@ public class PostController {
         return ResponseEntity.ok(responses);
     }
 
+    @Operation(summary = "전체 게시글 조회(비회원)", description = "비회원이 전체 게시글을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "전체 게시글 조회 성공")
+    @GetMapping("/guest")
+    public ResponseEntity<List<PostResponse>> getPostsGuest(
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId
+    ) {
+        final List<PostResponse> response = postService.getPostsGuest(page, postClosingType, postSortType, categoryId);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "게시글 상세 조회", description = "한 게시글의 상세를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
@@ -94,6 +108,19 @@ public class PostController {
             @Auth final Member member
     ) {
         final PostDetailResponse response = postService.getPostById(postId, member);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "게시글 상세 조회(비회원)", description = "비회원으로 게시글을 상세조회 한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글")
+    })
+    @GetMapping("{postId}/guest")
+    public ResponseEntity<PostDetailResponse> getPostByGuest(
+            @PathVariable final Long postId
+    ) {
+        final PostDetailResponse response = postService.getPostById(postId, null);
         return ResponseEntity.ok(response);
     }
 

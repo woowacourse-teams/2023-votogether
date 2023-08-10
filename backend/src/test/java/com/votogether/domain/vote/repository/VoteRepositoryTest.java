@@ -158,8 +158,8 @@ class VoteRepositoryTest {
     @DisplayName("게시글의 연령대와 성별로 그룹화된 투표 통계를 조회한다.")
     void findVoteCountByPostIdGroupByAgeRangeAndGender() {
         // given
-        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
-        Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_10.get());
+        Member male10 = memberRepository.save(MemberFixtures.MALE_10.get());
         Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
         Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
         Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
@@ -188,7 +188,7 @@ class VoteRepositoryTest {
         );
 
         voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
-        voteRepository.save(Vote.builder().member(maleLate10).postOption(postOptionB).build());
+        voteRepository.save(Vote.builder().member(male10).postOption(postOptionB).build());
         voteRepository.save(Vote.builder().member(male60).postOption(postOptionA).build());
         voteRepository.save(Vote.builder().member(female70).postOption(postOptionB).build());
         voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
@@ -198,11 +198,11 @@ class VoteRepositoryTest {
 
         // then
         assertThat(result).containsExactly(
-                new VoteStatus("10~14", Gender.FEMALE, 1),
-                new VoteStatus("15~19", Gender.MALE, 1),
-                new VoteStatus("60~69", Gender.MALE, 1),
-                new VoteStatus("70~79", Gender.FEMALE, 1),
-                new VoteStatus("80~89", Gender.FEMALE, 1)
+                new VoteStatus(2005, Gender.FEMALE, 1),
+                new VoteStatus(2005, Gender.MALE, 1),
+                new VoteStatus(1955, Gender.MALE, 1),
+                new VoteStatus(1945, Gender.FEMALE, 1),
+                new VoteStatus(1935, Gender.FEMALE, 1)
         );
     }
 
@@ -210,8 +210,8 @@ class VoteRepositoryTest {
     @DisplayName("게시글 투표 옵션의 연령대와 성별로 그룹화된 투표 통계를 조회한다.")
     void findVoteCountByPostOptionIdGroupByAgeRangeAndGender() {
         // given
-        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
-        Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+        Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_10.get());
+        Member male10 = memberRepository.save(MemberFixtures.MALE_10.get());
         Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
         Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
         Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
@@ -233,7 +233,7 @@ class VoteRepositoryTest {
         );
 
         voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOption).build());
-        voteRepository.save(Vote.builder().member(maleLate10).postOption(postOption).build());
+        voteRepository.save(Vote.builder().member(male10).postOption(postOption).build());
         voteRepository.save(Vote.builder().member(male60).postOption(postOption).build());
         voteRepository.save(Vote.builder().member(female70).postOption(postOption).build());
         voteRepository.save(Vote.builder().member(female80).postOption(postOption).build());
@@ -244,11 +244,11 @@ class VoteRepositoryTest {
 
         // then
         assertThat(result).containsExactly(
-                new VoteStatus("10~14", Gender.FEMALE, 1),
-                new VoteStatus("15~19", Gender.MALE, 1),
-                new VoteStatus("60~69", Gender.MALE, 1),
-                new VoteStatus("70~79", Gender.FEMALE, 1),
-                new VoteStatus("80~89", Gender.FEMALE, 1)
+                new VoteStatus(2005, Gender.FEMALE, 1),
+                new VoteStatus(2005, Gender.MALE, 1),
+                new VoteStatus(1955, Gender.MALE, 1),
+                new VoteStatus(1945, Gender.FEMALE, 1),
+                new VoteStatus(1935, Gender.FEMALE, 1)
         );
     }
 
@@ -256,7 +256,7 @@ class VoteRepositoryTest {
     @DisplayName("해당 회원이 투표한 개수를 반환한다.")
     void countByMember() {
         // given
-        Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_10.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
         Post post = postRepository.save(
                 Post.builder()

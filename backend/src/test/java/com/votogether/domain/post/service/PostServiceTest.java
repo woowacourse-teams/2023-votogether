@@ -1,12 +1,12 @@
 package com.votogether.domain.post.service;
 
+import static com.votogether.fixtures.MemberFixtures.FEMALE_10;
 import static com.votogether.fixtures.MemberFixtures.FEMALE_70;
 import static com.votogether.fixtures.MemberFixtures.FEMALE_80;
-import static com.votogether.fixtures.MemberFixtures.FEMALE_EARLY_10;
+import static com.votogether.fixtures.MemberFixtures.MALE_10;
 import static com.votogether.fixtures.MemberFixtures.MALE_20;
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static com.votogether.fixtures.MemberFixtures.MALE_60;
-import static com.votogether.fixtures.MemberFixtures.MALE_LATE_10;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -43,6 +43,10 @@ import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import com.votogether.fixtures.CategoryFixtures;
 import com.votogether.fixtures.MemberFixtures;
+import com.votogether.test.persister.MemberTestPersister;
+import com.votogether.test.persister.PostOptionTestPersister;
+import com.votogether.test.persister.PostTestPersister;
+import com.votogether.test.persister.VoteTestPersister;
 import jakarta.persistence.EntityManager;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -61,10 +65,13 @@ import org.springframework.web.multipart.MultipartFile;
 class PostServiceTest {
 
     @Autowired
-    PostService postService;
+    EntityManager entityManager;
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    MemberCategoryRepository memberCategoryRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -79,13 +86,22 @@ class PostServiceTest {
     VoteRepository voteRepository;
 
     @Autowired
-    MemberCategoryRepository memberCategoryRepository;
+    PostService postService;
 
     @Autowired
     VoteService voteService;
 
     @Autowired
-    EntityManager entityManager;
+    MemberTestPersister memberTestPersister;
+
+    @Autowired
+    PostTestPersister postTestPersister;
+
+    @Autowired
+    PostOptionTestPersister postOptionTestPersister;
+
+    @Autowired
+    VoteTestPersister voteTestPersister;
 
     @Test
     @DisplayName("게시글을 등록한다")
@@ -174,8 +190,8 @@ class PostServiceTest {
         @DisplayName("전체 투표 통계를 조회한다.")
         void getVoteStatistics() {
             // given
-            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
-            Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_10.get());
+            Member male10 = memberRepository.save(MemberFixtures.MALE_10.get());
             Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
             Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
             Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
@@ -204,7 +220,7 @@ class PostServiceTest {
             );
 
             voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
-            voteRepository.save(Vote.builder().member(maleLate10).postOption(postOptionB).build());
+            voteRepository.save(Vote.builder().member(male10).postOption(postOptionB).build());
             voteRepository.save(Vote.builder().member(male60).postOption(postOptionA).build());
             voteRepository.save(Vote.builder().member(female70).postOption(postOptionB).build());
             voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
@@ -325,8 +341,8 @@ class PostServiceTest {
         @DisplayName("게시글 투표 옵션에 대한 투표 통계를 조회한다.")
         void getVoteOptionStatistics() {
             // given
-            Member femaleEarly10 = memberRepository.save(FEMALE_EARLY_10.get());
-            Member maleLate10 = memberRepository.save(MALE_LATE_10.get());
+            Member female10 = memberRepository.save(FEMALE_10.get());
+            Member male10 = memberRepository.save(MALE_10.get());
             Member male60 = memberRepository.save(MALE_60.get());
             Member female70 = memberRepository.save(FEMALE_70.get());
             Member female80 = memberRepository.save(FEMALE_80.get());
@@ -347,8 +363,8 @@ class PostServiceTest {
                             .build()
             );
 
-            voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOption).build());
-            voteRepository.save(Vote.builder().member(maleLate10).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(female10).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(male10).postOption(postOption).build());
             voteRepository.save(Vote.builder().member(male60).postOption(postOption).build());
             voteRepository.save(Vote.builder().member(female70).postOption(postOption).build());
             voteRepository.save(Vote.builder().member(female80).postOption(postOption).build());
@@ -550,11 +566,9 @@ class PostServiceTest {
                 Member memberToVote = Member.builder()
                         .nickname("Abel" + postSequence + voteCount)
                         .gender(Gender.MALE)
-                        .birthday("0712")
-                        .ageRange("30~39")
+                        .birthYear(2000)
                         .socialType(SocialType.KAKAO)
                         .socialId("Abel" + postSequence + voteCount)
-                        .point(0)
                         .build();
 
                 memberRepository.save(memberToVote);
@@ -582,6 +596,59 @@ class PostServiceTest {
                 () -> assertThat(firstResponse.voteInfo().totalVoteCount()).isEqualTo(32),
                 () -> assertThat(secondResponse.voteInfo().options()).hasSize(2),
                 () -> assertThat(secondResponse.voteInfo().totalVoteCount()).isEqualTo(31)
+        );
+    }
+
+    @Test
+    @DisplayName("비회원 게시글 목록 조회 시 마감된 게시글은 결과를 확인할 수 있고, 진행중인 게시글은 결과를 확인할 수 없다.")
+    void getPostsGuest() {
+        // given
+        List<Member> voters = new ArrayList<>();
+        Member writer = memberTestPersister.builder().save();
+
+        for (int i = 0; i < 5; i++) {
+            voters.add(memberTestPersister.builder().save());
+        }
+
+        Post closedPost = postTestPersister.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.of(2022, 12, 25, 0, 0))
+                .save();
+
+        for (int j = 0; j < 2; j++) {
+            PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
+            for (int k = 0; k < 4; k++) {
+                voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
+            }
+        }
+
+        Post notClosedPost = postTestPersister.builder()
+                .writer(writer)
+                .deadline(LocalDateTime.of(3022, 12, 25, 0, 0))
+                .save();
+
+        for (int j = 0; j < 2; j++) {
+            PostOption postOption = postOptionTestPersister.builder().post(notClosedPost).save();
+            for (int k = 0; k < 4; k++) {
+                voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
+            }
+        }
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> result = postService.getPostsGuest(0, PostClosingType.ALL, PostSortType.LATEST, null);
+
+        // then
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0).voteInfo().totalVoteCount()).isEqualTo(-1),
+                () -> assertThat(result.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(-1),
+                () -> assertThat(result.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(-1),
+                () -> assertThat(result.get(1).voteInfo().totalVoteCount()).isEqualTo(8),
+                () -> assertThat(result.get(1).voteInfo().options().get(0).voteCount()).isEqualTo(4),
+                () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4)
         );
     }
 

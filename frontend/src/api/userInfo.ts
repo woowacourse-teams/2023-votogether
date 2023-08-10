@@ -16,7 +16,9 @@ export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL;
 
-export const getUserInfo = async (): Promise<User> => {
+export const getUserInfo = async (isLoggedIn: boolean): Promise<User | null> => {
+  if (!isLoggedIn) return null;
+
   const userInfo = await getFetch<UserInfoResponse>(`${BASE_URL}/members/me`);
 
   return transformUserInfoResponse(userInfo);
@@ -26,6 +28,6 @@ export const modifyNickname = async (nickname: string) => {
   await patchFetch<ModifyNicknameRequest>(`${BASE_URL}/members/me/nickname`, { nickname });
 };
 
-export const cancelMembership = async () => {
+export const withdrawalMembership = async () => {
   await deleteFetch(`${BASE_URL}/members/me/delete`);
 };

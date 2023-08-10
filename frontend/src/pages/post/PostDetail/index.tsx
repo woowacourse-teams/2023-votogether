@@ -1,11 +1,15 @@
 import { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { ReportRequest } from '@type/report';
+
 import { AuthContext } from '@hooks/context/auth';
 import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { useDeletePost } from '@hooks/query/post/useDeletePost';
 import { useEarlyClosePost } from '@hooks/query/post/useEarlyClosePost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
+
+import { reportContent } from '@api/report';
 
 import CommentList from '@components/comment/CommentList';
 import Layout from '@components/common/Layout';
@@ -77,13 +81,25 @@ export default function PostDetailPage() {
   const controlPost = {
     setEarlyClosePost: earlyClosePost,
     deletePost: () => {
-      if (!isClosed) alert('마감된 게시물만 삭제 가능합니다.');
+      if (postData.voteInfo.allPeopleCount >= 20)
+        return alert('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
 
       deletePost();
       //추후 삭제가 되었을 때 nav로 홈으로 이동하도록 하기
     },
-    reportPost: () => {
-      //아직 api 논의하지 않음
+    reportPost: async (reason: string) => {
+      const reportData: ReportRequest = { type: 'POST', id: postId, reason };
+
+      await reportContent(reportData)
+        .then(res => alert('게시물을 신고했습니다.'))
+        .catch(error => alert('게시물 신고가 실패했습니다.'));
+    },
+    reportNickname: async (reason: string) => {
+      const reportData: ReportRequest = { type: 'NICKNAME', id: postData.writer.id, reason };
+
+      await reportContent(reportData)
+        .then(res => alert('작성자 닉네임을 신고했습니다.'))
+        .catch(error => alert('작성자 닉네임 신고가 실패했습니다.'));
     },
   };
 

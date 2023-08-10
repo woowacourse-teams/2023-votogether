@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 40px;
+  gap: 20px;
 
   position: relative;
 `;
@@ -18,19 +18,23 @@ export const HeaderWrapper = styled.div`
   position: fixed;
 
   z-index: ${theme.zIndex.header};
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    display: none;
+  }
 `;
 
 export const Title = styled.h1`
   width: 90%;
-
-  font-size: 60px;
-  text-align: center;
-
   margin-top: 60px;
+
+  font-size: 80px;
+  text-align: center;
 `;
 
 export const Description = styled.p`
   width: 90%;
+  margin: 20px 0;
 
   font: var(--text-title);
   text-align: center;

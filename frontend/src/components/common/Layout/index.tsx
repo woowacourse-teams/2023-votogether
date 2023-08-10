@@ -1,13 +1,10 @@
-import { PropsWithChildren, useContext } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { AuthContext } from '@hooks/context/auth';
-import { useCategoryList } from '@hooks/query/category/useCategoryList';
 
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
 
-import { clearCookieToken } from '@utils/cookie';
+import Skeleton from '../Skeleton';
 
 import * as S from './style';
 
@@ -17,16 +14,6 @@ interface LayoutProps extends PropsWithChildren {
 
 export default function Layout({ children, isSidebarVisible }: LayoutProps) {
   const navigate = useNavigate();
-
-  const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
-
-  const { data: categoryList } = useCategoryList(loggedInfo.isLoggedIn);
-  const selectedCategory = undefined;
-
-  const handleLogoutClick = () => {
-    clearCookieToken('accessToken');
-    clearLoggedInfo();
-  };
 
   const movePostListPage = () => {
     navigate('/');
@@ -40,12 +27,9 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
       <S.ContentContainer>
         {isSidebarVisible && (
           <S.DashboardWrapper>
-            <Dashboard
-              userInfo={loggedInfo.userInfo}
-              categoryList={categoryList ?? []}
-              selectedCategory={selectedCategory}
-              handleLogoutClick={handleLogoutClick}
-            />
+            <Suspense fallback={<Skeleton />}>
+              <Dashboard />
+            </Suspense>
           </S.DashboardWrapper>
         )}
         <S.MainContainer $isSidebarVisible={isSidebarVisible}>

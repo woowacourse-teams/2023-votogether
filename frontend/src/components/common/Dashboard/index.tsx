@@ -1,7 +1,9 @@
-import React from 'react';
+import { useContext } from 'react';
 
-import { Category } from '@type/category';
-import { User } from '@type/user';
+import { AuthContext } from '@hooks/context/auth';
+import { useCategoryList } from '@hooks/query/category/useCategoryList';
+
+import { clearCookieToken } from '@utils/cookie';
 
 import SquareButton from '../SquareButton';
 
@@ -10,28 +12,28 @@ import GuestProfile from './GuestProfile';
 import * as S from './style';
 import UserProfile from './UserProfile';
 
-interface DashboardProps {
-  categoryList: Category[];
-  selectedCategory?: string;
-  handleLogoutClick: () => void;
-  userInfo?: User;
-}
+export default function Dashboard() {
+  const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
+  const { userInfo, isLoggedIn } = loggedInfo;
 
-export default function Dashboard({
-  userInfo,
-  categoryList,
-  selectedCategory = '전체',
-  handleLogoutClick,
-}: DashboardProps) {
-  const favoriteCategory = categoryList.filter(category => category.isFavorite === true);
-  const allCategory = categoryList.filter(category => category.isFavorite === false);
+  const { data: categoryList } = useCategoryList(isLoggedIn);
+
+  const handleLogoutClick = () => {
+    clearCookieToken('accessToken');
+    clearLoggedInfo();
+  };
+
+  const selectedState = '전체';
+
+  const favoriteCategory = categoryList?.filter(category => category.isFavorite === true) ?? [];
+  const allCategory = categoryList?.filter(category => category.isFavorite === false) ?? [];
 
   return (
     <S.Container>
       {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
       <S.SelectCategoryWrapper>
         <S.Circle />
-        <S.SelectCategoryText>{selectedCategory}</S.SelectCategoryText>
+        <S.SelectCategoryText>{selectedState}</S.SelectCategoryText>
       </S.SelectCategoryWrapper>
       <S.ContentContainer>
         <S.CategoryToggleContainer>

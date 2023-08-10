@@ -1,7 +1,5 @@
-import { Suspense, useContext } from 'react';
+import { Suspense } from 'react';
 
-import { AuthContext } from '@hooks/context/auth';
-import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useDrawer } from '@hooks/useDrawer';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
@@ -23,11 +21,6 @@ import * as S from './style';
 export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
-  const { isLoggedIn: isLogged, userInfo } = useContext(AuthContext).loggedInfo;
-  const { data: categoryList } = useCategoryList(isLogged);
-
-  const handleLogoutClick = () => {};
-
   return (
     <S.Container>
       <S.HeaderWrapper>
@@ -35,11 +28,9 @@ export default function PostListPage() {
       </S.HeaderWrapper>
       <S.DrawerWrapper>
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
-          <Dashboard
-            userInfo={userInfo}
-            categoryList={categoryList ?? []}
-            handleLogoutClick={handleLogoutClick}
-          />
+          <Suspense fallback={<Skeleton />}>
+            <Dashboard />
+          </Suspense>
         </Drawer>
       </S.DrawerWrapper>
       <ErrorBoundary fallback={<div>에러발생</div>}>

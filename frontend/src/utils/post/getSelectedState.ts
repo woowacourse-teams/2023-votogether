@@ -18,7 +18,7 @@ export const getSelectedState = ({
   if (postType === 'category') {
     const selectedCategory = categoryList.find(category => category.id === categoryId);
 
-    return selectedCategory?.name;
+    return selectedCategory?.name ?? '전체';
   }
 
   if (postType === 'search') {

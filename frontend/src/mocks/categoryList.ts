@@ -4,11 +4,11 @@ import { MOCK_CATEGORY_LIST, MOCK_GUEST_CATEGORY_LIST } from '@mocks/mockData/ca
 
 export const mockCategoryHandlers = [
   rest.get('/categories', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(MOCK_CATEGORY_LIST), ctx.delay(2000));
+    return res(ctx.status(200), ctx.json(MOCK_CATEGORY_LIST));
   }),
 
   rest.get('/categories/guest', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(MOCK_GUEST_CATEGORY_LIST), ctx.delay(2000));
+    return res(ctx.status(200), ctx.json(MOCK_GUEST_CATEGORY_LIST));
   }),
 
   rest.post('/categories/:categoryId/like', (req, res, ctx) => {

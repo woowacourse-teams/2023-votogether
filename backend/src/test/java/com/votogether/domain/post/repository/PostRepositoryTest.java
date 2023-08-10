@@ -346,7 +346,7 @@ class PostRepositoryTest {
 
         @Test
         @DisplayName("마감된 게시글 목록을 최신순으로 가져온다.")
-        void findClosedPostsVotedByMember() throws InterruptedException {
+        void findClosedPostsVotedByMember() {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
             Member member = memberRepository.save(MemberFixtures.MALE_10.get());

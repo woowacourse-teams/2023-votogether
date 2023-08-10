@@ -390,7 +390,7 @@ class PostServiceTest {
 
     @Test
     @DisplayName("해당 게시글을 조기 마감 합니다")
-    void postClosedEarlyById() throws InterruptedException {
+    void postClosedEarlyById() {
         // given
         Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
         LocalDateTime oldDeadline = LocalDateTime.now().plus(100, ChronoUnit.MILLIS);

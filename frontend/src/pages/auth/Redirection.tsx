@@ -36,7 +36,10 @@ export default function Redirection() {
           setErrorMessage(error.message);
         })
         .then(res => {
-          if (!res) return setErrorMessage('잘못된 형식의 response');
+          if (!res) {
+            setErrorMessage('잘못된 형식의 response');
+            throw new Error('로그인 중 오류 발생');
+          }
 
           const { accessToken } = res;
           setCookieToken('accessToken', accessToken);
@@ -50,7 +53,7 @@ export default function Redirection() {
           navigate('/');
         });
     })();
-  }, [navigate, loggedInfo, setLoggedInfo]);
+  }, [navigate, loggedInfo, setLoggedInfo, params]);
 
   return (
     <div>

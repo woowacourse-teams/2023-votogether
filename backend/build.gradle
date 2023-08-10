@@ -28,12 +28,23 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 
+    //Start Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+
+    //To response to java.lang.NoClassDefFoundError
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    //End Querydsl
+
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'io.rest-assured:spring-mock-mvc'
@@ -45,3 +56,23 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+//Start Querydsl
+//Where To Create Querydsl Q Class
+def generated = 'src/main/generated'
+
+//Set Querydsl Q class Generated Target
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+//Add Q Class Target In Java Source Set
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+//When Gradle Clean, Delete Q Class Directory
+clean {
+    delete file(generated)
+}
+//End Querydsl

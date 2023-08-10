@@ -13,6 +13,8 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
+import EmptyPostList from '../EmptyPostList';
+
 import * as S from './style';
 
 export default function PostList() {
@@ -31,7 +33,7 @@ export default function PostList() {
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
     useSelect<PostSorting>(postOption.sorting);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostList(
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPostListEmpty } = usePostList(
     {
       postType,
       postSorting: selectedSortingOption,
@@ -78,6 +80,9 @@ export default function PostList() {
         </S.SelectWrapper>
       </S.SelectContainer>
       <S.PostListContainer>
+        {isPostListEmpty && (
+          <EmptyPostList status={selectedStatusOption} keyword={postOptionalOption.keyword} />
+        )}
         {data?.pages.map((postListInfo, pageIndex) => (
           <React.Fragment key={pageIndex}>
             {postListInfo.postList.map((post, index) => {

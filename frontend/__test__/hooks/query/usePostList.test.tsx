@@ -221,4 +221,52 @@ describe('usePostList 훅이 게시글 목록을 불러오는지 확인한다.',
       expect(result.current.data?.pages[0].postList).toEqual(MOCK_TRANSFORM_GUEST_POST_LIST)
     );
   });
+
+  test('게시글 목록이 존재할 경우 isPostListEmpty는 false를 반환한다.', async () => {
+    const { result } = renderHook(
+      () =>
+        usePostList(
+          {
+            postSorting: SORTING.POPULAR,
+            postStatus: STATUS.ALL,
+            postType: POST_TYPE.SEARCH,
+            isLoggedIn: true,
+          },
+          {
+            categoryId: 0,
+            keyword: '갤럭시',
+          }
+        ),
+      {
+        wrapper,
+      }
+    );
+
+    await waitFor(() => expect(result.current.data?.pages[0].postList.length).toBe(10));
+    await waitFor(() => expect(result.current.isPostListEmpty).toBe(false));
+  });
+
+  test('게시글 목록이 존재하지 않을 경우 isPostListEmpty는 true를 반환한다.', async () => {
+    const { result } = renderHook(
+      () =>
+        usePostList(
+          {
+            postSorting: SORTING.POPULAR,
+            postStatus: STATUS.ALL,
+            postType: POST_TYPE.SEARCH,
+            isLoggedIn: true,
+          },
+          {
+            categoryId: 0,
+            keyword: '999',
+          }
+        ),
+      {
+        wrapper,
+      }
+    );
+
+    await waitFor(() => expect(result.current.data?.pages[0].postList.length).toBe(0));
+    await waitFor(() => expect(result.current.isPostListEmpty).toBe(true));
+  });
 });

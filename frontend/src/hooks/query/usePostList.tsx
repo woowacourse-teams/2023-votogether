@@ -29,5 +29,7 @@ export const usePostList = (
       }
     );
 
-  return { data, error, fetchNextPage, hasNextPage, isFetchingNextPage };
+  const isPostListEmpty = data?.pages[0].postList.length === 0;
+
+  return { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isPostListEmpty };
 };

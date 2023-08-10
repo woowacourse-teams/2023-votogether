@@ -5,7 +5,7 @@ import TagButton from '@components/common/TagButton';
 import * as S from './style';
 
 type MovePageEvent = 'moveWritePostPage' | 'moveVoteStatisticsPage' | 'movePostListPage';
-type ControlPostEvent = 'setEarlyClosePost' | 'removePost' | 'reportPost';
+type ControlPostEvent = 'setEarlyClosePost' | 'deletePost' | 'reportPost';
 
 interface PostDetailPageChildProps {
   isWriter: boolean;
@@ -22,7 +22,7 @@ export default function InnerHeaderPart({
   handleEvent: { movePage, controlPost },
 }: PostDetailPageChildProps) {
   const { moveWritePostPage, moveVoteStatisticsPage, movePostListPage } = movePage;
-  const { setEarlyClosePost, removePost, reportPost } = controlPost;
+  const { setEarlyClosePost, deletePost, reportPost } = controlPost;
 
   return (
     <>
@@ -33,7 +33,7 @@ export default function InnerHeaderPart({
         ) : !isClosed ? (
           <>
             <HeaderTextButton onClick={moveWritePostPage}>수정</HeaderTextButton>
-            <HeaderTextButton onClick={removePost}>삭제</HeaderTextButton>
+            <HeaderTextButton onClick={deletePost}>삭제</HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton size="sm" onClick={setEarlyClosePost}>
                 조기마감
@@ -42,7 +42,7 @@ export default function InnerHeaderPart({
           </>
         ) : (
           <>
-            <HeaderTextButton onClick={removePost}>삭제</HeaderTextButton>
+            <HeaderTextButton onClick={deletePost}>삭제</HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton size="sm" onClick={moveVoteStatisticsPage}>
                 통계보기

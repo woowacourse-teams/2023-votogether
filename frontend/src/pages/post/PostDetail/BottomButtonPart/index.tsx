@@ -3,7 +3,7 @@ import SquareButton from '@components/common/SquareButton';
 import * as S from './style';
 
 type MovePageEvent = 'moveWritePostPage' | 'moveVoteStatisticsPage' | 'movePostListPage';
-type ControlPostEvent = 'setEarlyClosePost' | 'removePost' | 'reportPost';
+type ControlPostEvent = 'setEarlyClosePost' | 'deletePost' | 'reportPost';
 
 interface PostDetailPageChildProps {
   isWriter: boolean;
@@ -20,7 +20,7 @@ export default function BottomButtonPart({
   handleEvent: { movePage, controlPost },
 }: PostDetailPageChildProps) {
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
-  const { setEarlyClosePost, removePost, reportPost } = controlPost;
+  const { setEarlyClosePost, deletePost, reportPost } = controlPost;
 
   return (
     <S.BottomButtonContainer>
@@ -36,7 +36,7 @@ export default function BottomButtonPart({
           <SquareButton theme="blank" onClick={moveWritePostPage}>
             수 정
           </SquareButton>
-          <SquareButton theme="fill" onClick={removePost}>
+          <SquareButton theme="fill" onClick={deletePost}>
             삭 제
           </SquareButton>
         </>
@@ -45,7 +45,7 @@ export default function BottomButtonPart({
           <SquareButton theme="fill" onClick={moveVoteStatisticsPage}>
             통계보기
           </SquareButton>
-          <SquareButton theme="fill" onClick={removePost}>
+          <SquareButton theme="fill" onClick={deletePost}>
             삭 제
           </SquareButton>
         </>

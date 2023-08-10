@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useCommentList } from '@hooks/query/comment/useCommentList';
+import { useDeletePost } from '@hooks/query/post/useDeletePost';
+import { useEarlyClosePost } from '@hooks/query/post/useEarlyClosePost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
-
-import { removePost, setEarlyClosePost } from '@api/post';
 
 import CommentList from '@components/comment/CommentList';
 import Layout from '@components/common/Layout';
@@ -27,7 +27,14 @@ export default function PostDetailPage() {
   const { loggedInfo } = useContext(AuthContext);
   const memberId = loggedInfo.id;
 
-  const { data: postData, isError, isLoading } = usePostDetail(!loggedInfo.isLoggedIn, postId);
+  const {
+    data: postData,
+    isLoading,
+    isError: isPostError,
+    error: postError,
+  } = usePostDetail(!loggedInfo.isLoggedIn, postId);
+  const { mutate: deletePost } = useDeletePost(postId);
+  const { mutate: earlyClosePost } = useEarlyClosePost(postId);
   const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
 
   if (!postData) {
@@ -40,7 +47,7 @@ export default function PostDetailPage() {
         </S.HeaderContainer>
         <S.Container>
           {isLoading && 'loading'}
-          {isError && 'error발생'}
+          {isPostError && postError instanceof Error && postError.message}
         </S.Container>
       </Layout>
     );
@@ -68,19 +75,12 @@ export default function PostDetailPage() {
   };
 
   const controlPost = {
-    setEarlyClosePost: async () => {
-      await setEarlyClosePost(postId)
-        .then(res => {
-          alert('게시물을 즉시마감했습니다.');
-        })
-        .catch(error => alert(error.message));
-    },
-    removePost: async () => {
+    setEarlyClosePost: earlyClosePost,
+    deletePost: () => {
       if (!isClosed) alert('마감된 게시물만 삭제 가능합니다.');
 
-      await removePost(postId)
-        .catch(error => alert(error.message))
-        .then(res => alert('게시물을 삭제했습니다.'));
+      deletePost();
+      //추후 삭제가 되었을 때 nav로 홈으로 이동하도록 하기
     },
     reportPost: () => {
       //아직 api 논의하지 않음

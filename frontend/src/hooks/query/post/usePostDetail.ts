@@ -9,7 +9,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 export const usePostDetail = (isGuest: boolean, postId: number) => {
   const fetchApi = isGuest ? getPostForGuest : getPost;
 
-  const { data, isError, isLoading } = useQuery<PostInfo>(
+  const { data, isError, isLoading, error } = useQuery<PostInfo>(
     [QUERY_KEY.POST_DETAIL, postId],
     () => fetchApi(postId),
     {
@@ -22,5 +22,5 @@ export const usePostDetail = (isGuest: boolean, postId: number) => {
     }
   );
 
-  return { data, isError, isLoading };
+  return { data, isError, isLoading, error };
 };

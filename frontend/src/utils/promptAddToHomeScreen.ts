@@ -5,7 +5,7 @@ export const promptAddToHomeScreen = () => {
 
   const isAlreadyAddedToHomeScreen = window.matchMedia('(display-mode: standalone)').matches;
 
-  if (isMobileDevice || isAlreadyAddedToHomeScreen) return;
+  if (!isMobileDevice || isAlreadyAddedToHomeScreen) return;
 
   const addToHomeScreen = window.confirm(
     'VoTogether를 홈화면에 추가하시겠습니까? 추가하시면 어플처럼 사용하실 수 있습니다.'

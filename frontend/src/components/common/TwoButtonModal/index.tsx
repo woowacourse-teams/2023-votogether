@@ -15,7 +15,7 @@ interface CommentModalProps extends PropsWithChildren {
   secondaryButton: ButtonProps;
 }
 
-export default function CommentModal({
+export default function TwoButtonModal({
   title,
   primaryButton,
   secondaryButton,

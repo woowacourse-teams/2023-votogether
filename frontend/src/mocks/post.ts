@@ -46,4 +46,13 @@ export const mockPost = [
       ctx.json({ message: '게시글이 성공적으로 수정되었습니다!!' })
     );
   }),
+
+  //게시글 삭제
+  rest.delete('/posts/:postId', (req, res, ctx) => {
+    return res(
+      ctx.delay(1000),
+      ctx.status(200),
+      ctx.json({ message: '게시글이 성공적으로 삭제되었습니다!!' })
+    );
+  }),
 ];

@@ -1,12 +1,12 @@
 package com.votogether.domain.post.service;
 
+import static com.votogether.fixtures.MemberFixtures.FEMALE_10;
 import static com.votogether.fixtures.MemberFixtures.FEMALE_70;
 import static com.votogether.fixtures.MemberFixtures.FEMALE_80;
-import static com.votogether.fixtures.MemberFixtures.FEMALE_EARLY_10;
+import static com.votogether.fixtures.MemberFixtures.MALE_10;
 import static com.votogether.fixtures.MemberFixtures.MALE_20;
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static com.votogether.fixtures.MemberFixtures.MALE_60;
-import static com.votogether.fixtures.MemberFixtures.MALE_LATE_10;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -190,8 +190,8 @@ class PostServiceTest {
         @DisplayName("전체 투표 통계를 조회한다.")
         void getVoteStatistics() {
             // given
-            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
-            Member maleLate10 = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member femaleEarly10 = memberRepository.save(MemberFixtures.FEMALE_10.get());
+            Member male10 = memberRepository.save(MemberFixtures.MALE_10.get());
             Member male60 = memberRepository.save(MemberFixtures.MALE_60.get());
             Member female70 = memberRepository.save(MemberFixtures.FEMALE_70.get());
             Member female80 = memberRepository.save(MemberFixtures.FEMALE_80.get());
@@ -220,7 +220,7 @@ class PostServiceTest {
             );
 
             voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
-            voteRepository.save(Vote.builder().member(maleLate10).postOption(postOptionB).build());
+            voteRepository.save(Vote.builder().member(male10).postOption(postOptionB).build());
             voteRepository.save(Vote.builder().member(male60).postOption(postOptionA).build());
             voteRepository.save(Vote.builder().member(female70).postOption(postOptionB).build());
             voteRepository.save(Vote.builder().member(female80).postOption(postOptionA).build());
@@ -341,8 +341,8 @@ class PostServiceTest {
         @DisplayName("게시글 투표 옵션에 대한 투표 통계를 조회한다.")
         void getVoteOptionStatistics() {
             // given
-            Member femaleEarly10 = memberRepository.save(FEMALE_EARLY_10.get());
-            Member maleLate10 = memberRepository.save(MALE_LATE_10.get());
+            Member female10 = memberRepository.save(FEMALE_10.get());
+            Member male10 = memberRepository.save(MALE_10.get());
             Member male60 = memberRepository.save(MALE_60.get());
             Member female70 = memberRepository.save(FEMALE_70.get());
             Member female80 = memberRepository.save(FEMALE_80.get());
@@ -363,8 +363,8 @@ class PostServiceTest {
                             .build()
             );
 
-            voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOption).build());
-            voteRepository.save(Vote.builder().member(maleLate10).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(female10).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(male10).postOption(postOption).build());
             voteRepository.save(Vote.builder().member(male60).postOption(postOption).build());
             voteRepository.save(Vote.builder().member(female70).postOption(postOption).build());
             voteRepository.save(Vote.builder().member(female80).postOption(postOption).build());
@@ -566,11 +566,9 @@ class PostServiceTest {
                 Member memberToVote = Member.builder()
                         .nickname("Abel" + postSequence + voteCount)
                         .gender(Gender.MALE)
-                        .birthday("0712")
-                        .ageRange("30~39")
+                        .birthYear(2000)
                         .socialType(SocialType.KAKAO)
                         .socialId("Abel" + postSequence + voteCount)
-                        .point(0)
                         .build();
 
                 memberRepository.save(memberToVote);

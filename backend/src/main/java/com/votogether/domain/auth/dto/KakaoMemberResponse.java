@@ -11,10 +11,7 @@ public record KakaoMemberResponse(
 
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record KakaoAccount(
-            String email,
-            String ageRange,
-            String birthday,
-            String gender
+            String email
     ) {
     }
 

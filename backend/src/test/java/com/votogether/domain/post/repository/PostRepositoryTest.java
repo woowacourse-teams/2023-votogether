@@ -18,11 +18,11 @@ import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.fixtures.MemberFixtures;
-import java.time.LocalDateTime;
 import com.votogether.test.persister.MemberTestPersister;
 import com.votogether.test.persister.PostOptionTestPersister;
 import com.votogether.test.persister.PostTestPersister;
 import com.votogether.test.persister.VoteTestPersister;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,17 +78,10 @@ class PostRepositoryTest {
 
         final Member member = Member.builder()
                 .gender(Gender.MALE)
-                .point(0)
                 .socialType(SocialType.KAKAO)
                 .nickname("user1")
-                .gender(Gender.MALE)
-                .birthday("0718")
-                .ageRange("10~14")
-                .socialType(SocialType.KAKAO)
+                .birthYear(2000)
                 .socialId("kakao@gmail.com")
-                .ageRange("30~39")
-                .birthday("0101")
-                .point(0)
                 .build();
 
         final Post post = Post.builder()
@@ -113,11 +106,9 @@ class PostRepositoryTest {
         Member member = Member.builder()
                 .nickname("user1")
                 .gender(Gender.MALE)
+                .birthYear(2000)
                 .socialType(SocialType.KAKAO)
                 .socialId("kakao@gmail.com")
-                .ageRange("30~39")
-                .birthday("0101")
-                .point(0)
                 .build();
 
         PostBody postBody1 = PostBody.builder()
@@ -350,14 +341,14 @@ class PostRepositoryTest {
 
     @Nested
     @DisplayName("회원이 투표한 게시글 목록을 조회한다.")
-    class findPostsVotedByMember {
+    class FindPostsVotedByMember {
 
         @Test
         @DisplayName("마감된 게시글 목록을 최신순으로 가져온다.")
         void findClosedPostsVotedByMember() throws InterruptedException {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_10.get());
 
             Post openPost = postRepository.save(
                     Post.builder()
@@ -424,7 +415,7 @@ class PostRepositoryTest {
         void findOpenPostsVotedByMember() {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_10.get());
             Member member1 = memberRepository.save(MemberFixtures.MALE_60.get());
 
             Post openPost = postRepository.save(
@@ -491,7 +482,7 @@ class PostRepositoryTest {
         void findPostsVotedByMember() {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_10.get());
 
             Post openPost = postRepository.save(
                     Post.builder()

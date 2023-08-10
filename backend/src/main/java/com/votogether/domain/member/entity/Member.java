@@ -35,14 +35,11 @@ public class Member extends BaseEntity {
     private Nickname nickname;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 20)
     private Gender gender;
 
-    @Column(nullable = false)
-    private String ageRange;
-
-    @Column(nullable = false)
-    private String birthday;
+    @Column
+    private Integer birthYear;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
@@ -51,42 +48,27 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String socialId;
 
-    @Column(nullable = false)
-    private int point;
-
     @Builder
     private Member(
             final String nickname,
             final Gender gender,
-            final String ageRange,
-            final String birthday,
+            final Integer birthYear,
             final SocialType socialType,
-            final String socialId,
-            final Integer point
+            final String socialId
     ) {
         this.nickname = new Nickname(nickname);
         this.gender = gender;
-        this.ageRange = ageRange;
-        this.birthday = birthday;
+        this.birthYear = birthYear;
         this.socialType = socialType;
         this.socialId = socialId;
-        this.point = point;
     }
 
     public static Member from(final KakaoMemberResponse response) {
         return Member.builder()
                 .nickname(INITIAL_NICKNAME_PREFIX + RandomStringUtils.random(10, true, true))
-                .gender(Gender.valueOf(response.kakaoAccount().gender().toUpperCase()))
-                .ageRange(response.kakaoAccount().ageRange())
-                .birthday(response.kakaoAccount().birthday())
                 .socialType(SocialType.KAKAO)
                 .socialId(String.valueOf(response.id()))
-                .point(0)
                 .build();
-    }
-
-    public void plusPoint(final int point) {
-        this.point = this.point + point;
     }
 
     public void changeNickname(final String nickname) {

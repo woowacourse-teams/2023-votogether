@@ -91,7 +91,6 @@ public class Comment extends BaseEntity {
         this.content = new Content(content);
     }
 
-
     public String getContent() {
         return content.getValue();
     }

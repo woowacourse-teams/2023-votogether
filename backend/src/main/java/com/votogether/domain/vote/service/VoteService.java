@@ -36,7 +36,6 @@ public class VoteService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 선택지가 존재하지 않습니다."));
 
         final Vote vote = post.makeVote(member, postOption);
-        member.plusPoint(1);
         voteRepository.save(vote);
     }
 

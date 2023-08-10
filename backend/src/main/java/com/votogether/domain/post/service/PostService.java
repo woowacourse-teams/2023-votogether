@@ -2,8 +2,10 @@ package com.votogether.domain.post.service;
 
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
+import com.votogether.domain.member.entity.AgeRange;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
@@ -22,9 +24,10 @@ import com.votogether.domain.vote.dto.VoteStatus;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -243,27 +246,22 @@ public class PostService {
     private Map<String, Map<Gender, Long>> groupVoteStatus(final List<VoteStatus> voteStatuses) {
         return voteStatuses.stream()
                 .collect(Collectors.groupingBy(
-                        status -> groupAgeRange(status.ageRange()),
-                        HashMap::new,
+                        status -> groupAgeRange(status.birthYear()),
+                        LinkedHashMap::new,
                         Collectors.groupingBy(
                                 VoteStatus::gender,
-                                HashMap::new,
+                                LinkedHashMap::new,
                                 Collectors.summingLong(VoteStatus::count)
                         )
                 ));
     }
 
-    private String groupAgeRange(final String ageRange) {
-        final List<String> teens = List.of("10~14", "15~19");
-        final List<String> over60 = List.of("60~69", "70~79", "80~89", "90~");
-
-        if (teens.contains(ageRange)) {
-            return "10~19";
+    private String groupAgeRange(final Integer birthYear) {
+        final int age = LocalDate.now().getYear() - birthYear + 1;
+        if (age <= 0) {
+            throw new BadRequestException(MemberExceptionType.INVALID_AGE);
         }
-        if (over60.contains(ageRange)) {
-            return "60~";
-        }
-        return ageRange;
+        return AgeRange.from(age).getName();
     }
 
     @Transactional(readOnly = true)

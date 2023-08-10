@@ -1,6 +1,7 @@
 package com.votogether.domain.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
@@ -609,7 +610,6 @@ class PostRepositoryTest {
                             .content("치킨")
                             .build()
             );
-
         }
 
         @Test
@@ -624,9 +624,11 @@ class PostRepositoryTest {
             );
 
             //then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.get(0)).isEqualTo(closedPost1_V0);
-            assertThat(posts.get(1)).isEqualTo(closedPost_V1);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(closedPost1_V0),
+                    () -> assertThat(posts.get(1)).isEqualTo(closedPost_V1)
+            );
         }
 
         @Test
@@ -641,9 +643,11 @@ class PostRepositoryTest {
             );
 
             //then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.get(0)).isEqualTo(closedPost_V1);
-            assertThat(posts.get(1)).isEqualTo(closedPost1_V0);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(closedPost_V1),
+                    () -> assertThat(posts.get(1)).isEqualTo(closedPost1_V0)
+            );
         }
 
         @Test
@@ -658,9 +662,11 @@ class PostRepositoryTest {
             );
 
             //then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.get(0)).isEqualTo(openPost1_V1);
-            assertThat(posts.get(1)).isEqualTo(openPost_V2);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(openPost1_V1),
+                    () -> assertThat(posts.get(1)).isEqualTo(openPost_V2)
+            );
         }
 
         @Test
@@ -675,9 +681,11 @@ class PostRepositoryTest {
             );
 
             //then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.get(0)).isEqualTo(openPost_V2);
-            assertThat(posts.get(1)).isEqualTo(openPost1_V1);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(openPost_V2),
+                    () -> assertThat(posts.get(1)).isEqualTo(openPost1_V1)
+            );
         }
 
         @Test
@@ -692,9 +700,11 @@ class PostRepositoryTest {
             );
 
             //then
-            assertThat(posts).hasSize(4);
-            assertThat(posts.get(0)).isEqualTo(openPost_V2);
-            assertThat(posts.get(3)).isEqualTo(closedPost1_V0);
+            assertAll(
+                    () -> assertThat(posts).hasSize(4),
+                    () -> assertThat(posts.get(0)).isEqualTo(openPost_V2),
+                    () -> assertThat(posts.get(3)).isEqualTo(closedPost1_V0)
+            );
         }
 
     }

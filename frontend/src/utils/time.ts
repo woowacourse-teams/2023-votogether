@@ -44,7 +44,9 @@ export const convertTimeToWord = (date: string) => {
 
   if (Math.round(positiveTimeDifference / (time.hour * time.minute)) > 0)
     return `${Math.round(positiveTimeDifference / (time.hour * time.minute))}일 ${afterBefore}`;
+
   if (Math.round(positiveTimeDifference / time.minute) > 0)
     return `${Math.round(positiveTimeDifference / time.minute)}시간 ${afterBefore}`;
+
   return `${positiveTimeDifference}분 ${afterBefore}`;
 };

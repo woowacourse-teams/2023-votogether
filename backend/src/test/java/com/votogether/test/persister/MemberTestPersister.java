@@ -21,11 +21,9 @@ public class MemberTestPersister {
 
         private String nickname;
         private Gender gender;
-        private String ageRange;
-        private String birthday;
+        private Integer birthYear;
         private SocialType socialType;
         private String socialId;
-        private int point;
 
         public MemberBuilder nickname(String nickname) {
             this.nickname = nickname;
@@ -37,13 +35,8 @@ public class MemberTestPersister {
             return this;
         }
 
-        public MemberBuilder ageRange(String ageRange) {
-            this.ageRange = ageRange;
-            return this;
-        }
-
-        public MemberBuilder birthday(String birthday) {
-            this.birthday = birthday;
+        public MemberBuilder birthday(Integer birthday) {
+            this.birthYear = birthday;
             return this;
         }
 
@@ -57,20 +50,13 @@ public class MemberTestPersister {
             return this;
         }
 
-        public MemberBuilder point(int point) {
-            this.point = point;
-            return this;
-        }
-
         public Member save() {
             Member member = Member.builder()
                     .nickname(nickname == null ? RandomStringUtils.random(10, true, true) : nickname)
                     .gender(gender == null ? Gender.MALE : gender)
-                    .ageRange(ageRange == null ? "20~29" : ageRange)
-                    .birthday(birthday == null ? "1225" : birthday)
+                    .birthYear(birthYear == null ? 1995 : birthYear)
                     .socialType(socialType == null ? SocialType.KAKAO : socialType)
                     .socialId(socialId == null ? "id" : socialId)
-                    .point(point)
                     .build();
             return memberRepository.save(member);
         }

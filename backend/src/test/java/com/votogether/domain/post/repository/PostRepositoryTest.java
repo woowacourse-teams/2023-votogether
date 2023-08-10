@@ -78,17 +78,10 @@ class PostRepositoryTest {
 
         final Member member = Member.builder()
                 .gender(Gender.MALE)
-                .point(0)
                 .socialType(SocialType.KAKAO)
                 .nickname("user1")
-                .gender(Gender.MALE)
-                .birthday("0718")
-                .ageRange("10~14")
-                .socialType(SocialType.KAKAO)
+                .birthYear(2000)
                 .socialId("kakao@gmail.com")
-                .ageRange("30~39")
-                .birthday("0101")
-                .point(0)
                 .build();
 
         final Post post = Post.builder()
@@ -113,11 +106,9 @@ class PostRepositoryTest {
         Member member = Member.builder()
                 .nickname("user1")
                 .gender(Gender.MALE)
+                .birthYear(2000)
                 .socialType(SocialType.KAKAO)
                 .socialId("kakao@gmail.com")
-                .ageRange("30~39")
-                .birthday("0101")
-                .point(0)
                 .build();
 
         PostBody postBody1 = PostBody.builder()
@@ -357,7 +348,7 @@ class PostRepositoryTest {
         void findClosedPostsVotedByMember() throws InterruptedException {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_10.get());
 
             Post openPost = postRepository.save(
                     Post.builder()
@@ -424,7 +415,7 @@ class PostRepositoryTest {
         void findOpenPostsVotedByMember() {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_10.get());
             Member member1 = memberRepository.save(MemberFixtures.MALE_60.get());
 
             Post openPost = postRepository.save(
@@ -491,7 +482,7 @@ class PostRepositoryTest {
         void findPostsVotedByMember() {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member member = memberRepository.save(MemberFixtures.MALE_LATE_10.get());
+            Member member = memberRepository.save(MemberFixtures.MALE_10.get());
 
             Post openPost = postRepository.save(
                     Post.builder()
@@ -535,5 +526,5 @@ class PostRepositoryTest {
         }
 
     }
-    
+
 }

@@ -198,7 +198,7 @@ class VoteRepositoryTest {
 
         // then
         assertThat(result).containsExactly(
-                new VoteStatus(2010, Gender.FEMALE, 1),
+                new VoteStatus(2005, Gender.FEMALE, 1),
                 new VoteStatus(2005, Gender.MALE, 1),
                 new VoteStatus(1955, Gender.MALE, 1),
                 new VoteStatus(1945, Gender.FEMALE, 1),
@@ -244,7 +244,7 @@ class VoteRepositoryTest {
 
         // then
         assertThat(result).containsExactly(
-                new VoteStatus(2010, Gender.FEMALE, 1),
+                new VoteStatus(2005, Gender.FEMALE, 1),
                 new VoteStatus(2005, Gender.MALE, 1),
                 new VoteStatus(1955, Gender.MALE, 1),
                 new VoteStatus(1945, Gender.FEMALE, 1),

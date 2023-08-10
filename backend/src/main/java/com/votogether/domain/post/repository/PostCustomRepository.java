@@ -14,7 +14,6 @@ public interface PostCustomRepository {
             final PostSortType postSortType,
             final Long categoryId,
             final Pageable pageable
-
     );
 
     List<Post> findAllByWriterWithClosingTypeAndSortType(

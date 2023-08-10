@@ -44,7 +44,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .fetch();
     }
 
-
     @Override
     public List<Post> findAllByWriterWithClosingTypeAndSortType(
             final Member writer,
@@ -64,7 +63,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     private BooleanExpression categoryIdEq(final Long categoryId) {
         return categoryId == null ? null : postCategory.category.id.eq(categoryId);
-
     }
 
     private BooleanExpression deadlineEq(final PostClosingType postClosingType) {

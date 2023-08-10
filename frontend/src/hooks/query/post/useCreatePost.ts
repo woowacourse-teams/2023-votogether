@@ -2,8 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createPost } from '@api/post';
 
-import { DEFAULT_CATEGORY_ID, DEFAULT_KEYWORD, SORTING, STATUS } from '@constants/post';
 import { QUERY_KEY } from '@constants/queryKey';
+
+const IS_LOGGED_IN = true;
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
@@ -11,13 +12,7 @@ export const useCreatePost = () => {
     (post: FormData) => createPost(post),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([
-          QUERY_KEY.POSTS,
-          SORTING.LATEST,
-          STATUS.PROGRESS,
-          DEFAULT_CATEGORY_ID,
-          DEFAULT_KEYWORD,
-        ]);
+        queryClient.invalidateQueries([QUERY_KEY.USER_INFO, IS_LOGGED_IN]);
       },
       onError: error => {
         window.console.log('createPost error', error);

@@ -12,8 +12,6 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
-import { SORTING, STATUS } from '@constants/post';
-
 import EmptyPostList from '../EmptyPostList';
 
 import * as S from './style';

@@ -5,6 +5,8 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const Container = styled.li`
+  width: 100%;
+
   font: var(--text-small);
   letter-spacing: 0.5px;
   line-height: 1.5;

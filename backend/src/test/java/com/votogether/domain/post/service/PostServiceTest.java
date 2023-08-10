@@ -727,4 +727,23 @@ class PostServiceTest {
                 .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
     }
 
+    @Test
+    @DisplayName("회원 본인이 작성한 게시글 목록을 가져온다.")
+    void getPostsByWriter() {
+        // given
+        Member writer = memberTestPersister.builder().save();
+        Post post = postTestPersister.builder().writer(writer).save();
+
+        // when
+        List<PostResponse> responses =
+                postService.findPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(1),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(post.getId()),
+                () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId())
+        );
+    }
+
 }

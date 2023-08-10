@@ -31,7 +31,7 @@ class MemberCategoryRepositoryTest {
     @DisplayName("멤버가 선호하는 카테고리를 저장한다.")
     void save() {
         // given
-        Member member = memberRepository.save(MemberFixtures.MALE_EARLY_10.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_10.get());
         Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
         MemberCategory memberCategory = MemberCategory.builder()
@@ -51,7 +51,7 @@ class MemberCategoryRepositoryTest {
     @DisplayName("멤버와 카테고리를 통해 멤버 카테고리를 조회한다.")
     void findByMemberAndCategory() {
         // given
-        Member member = memberRepository.save(MemberFixtures.MALE_EARLY_10.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_10.get());
         Category category = categoryRepository.save(CategoryFixtures.DEVELOP.get());
 
         MemberCategory memberCategory = MemberCategory.builder()

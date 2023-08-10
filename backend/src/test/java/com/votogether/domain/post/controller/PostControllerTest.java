@@ -549,7 +549,8 @@ class PostControllerTest {
 
         PostResponse postResponse = PostResponse.of(post, MALE_30.get());
 
-        given(postService.findPostsByWriter(anyInt(), any(), any(), any(Member.class)))
+        given(postService.findPostsByWriter(
+                anyInt(), any(PostClosingType.class), any(PostSortType.class), any(Member.class)))
                 .willReturn(List.of(postResponse));
 
         // when

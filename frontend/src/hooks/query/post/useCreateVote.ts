@@ -10,6 +10,8 @@ export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postI
   const { mutate } = useMutation({
     mutationFn: (optionId: number) => votePost(postId, optionId),
     onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEY.USER_INFO, true]);
+
       if (isPreview) {
         queryClient.invalidateQueries({
           predicate: ({ queryKey }) => queryKey[0] === QUERY_KEY.POSTS,

@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { User } from '@type/user';
+
 import { AuthContext } from '@hooks/context/auth';
 import { useToggle } from '@hooks/useToggle';
 
@@ -20,11 +22,6 @@ export default function MyInfo() {
 
   const { userInfo } = useContext(AuthContext).loggedInfo;
 
-  if (!userInfo) {
-    navigate('/');
-    return <></>;
-  }
-
   return (
     <Layout isSidebarVisible={true}>
       <S.Wrapper>
@@ -39,7 +36,7 @@ export default function MyInfo() {
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.ProfileSection>
-          <UserProfile userInfo={userInfo} />
+          <UserProfile userInfo={userInfo ?? ({} as User)} />
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">

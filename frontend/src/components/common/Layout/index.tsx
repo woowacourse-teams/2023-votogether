@@ -1,6 +1,8 @@
 import { PropsWithChildren, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import ErrorBoundary from '@pages/ErrorBoundary';
+
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
 
@@ -27,9 +29,11 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
       <S.ContentContainer>
         {isSidebarVisible && (
           <S.DashboardWrapper>
-            <Suspense fallback={<Skeleton />}>
-              <Dashboard />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<Skeleton />}>
+                <Dashboard />
+              </Suspense>
+            </ErrorBoundary>
           </S.DashboardWrapper>
         )}
         <S.MainContainer $isSidebarVisible={isSidebarVisible}>

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 
+import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
@@ -18,6 +19,7 @@ import * as S from './style';
 
 export default function PostList() {
   const { postType, postOptionalOption } = usePostRequestInfo();
+  const { loggedInfo } = useContext(AuthContext);
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
@@ -36,6 +38,7 @@ export default function PostList() {
       postType,
       postSorting: selectedSortingOption,
       postStatus: selectedStatusOption,
+      isLoggedIn: loggedInfo.isLoggedIn,
     },
     postOptionalOption
   );

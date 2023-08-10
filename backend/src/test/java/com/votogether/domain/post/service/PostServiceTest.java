@@ -403,7 +403,6 @@ class PostServiceTest {
         );
 
         Post foundPost = postRepository.findById(post.getId()).get();
-        Thread.sleep(50);
 
         // when
         postService.closePostEarlyById(post.getId(), writer);

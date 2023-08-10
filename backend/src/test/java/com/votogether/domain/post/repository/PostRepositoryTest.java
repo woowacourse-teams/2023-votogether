@@ -380,8 +380,6 @@ class PostRepositoryTest {
                             .build()
             );
 
-            Thread.sleep(10);
-
             Post closedPost1 = postRepository.save(
                     Post.builder()
                             .writer(writer)
@@ -553,7 +551,6 @@ class PostRepositoryTest {
                             .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                             .build()
             );
-            Thread.sleep(10);
 
             PostOption postOption = postOptionRepository.save(
                     PostOption.builder()
@@ -572,7 +569,6 @@ class PostRepositoryTest {
                             .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                             .build()
             );
-            Thread.sleep(10);
 
             PostOption postOption3 = postOptionRepository.save(
                     PostOption.builder()
@@ -589,7 +585,6 @@ class PostRepositoryTest {
                             .postBody(PostBody.builder().title("title").content("content").build())
                             .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
                             .build());
-            Thread.sleep(10);
 
             PostOption postOption1 = postOptionRepository.save(
                     PostOption.builder()

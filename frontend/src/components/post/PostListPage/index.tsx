@@ -42,7 +42,7 @@ export default function PostListPage() {
           />
         </Drawer>
       </S.DrawerWrapper>
-      <ErrorBoundary fallback={<div>에러발생</div>}>
+      <ErrorBoundary>
         <Suspense fallback={<Skeleton />}>
           <PostList />
         </Suspense>

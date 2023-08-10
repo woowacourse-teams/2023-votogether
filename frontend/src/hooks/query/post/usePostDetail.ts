@@ -11,12 +11,7 @@ export const usePostDetail = (postId: number) => {
     [QUERY_KEY.POST_DETAIL, postId],
     () => getPost(postId),
     {
-      onSuccess: data => {
-        return data;
-      },
-      onError: error => {
-        window.console.error(error);
-      },
+      suspense: true,
     }
   );
 

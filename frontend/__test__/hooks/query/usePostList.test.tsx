@@ -7,7 +7,7 @@ import { usePostList } from '@hooks/query/usePostList';
 
 import { POST_TYPE, SORTING, STATUS } from '@constants/post';
 
-import { MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/postList';
+import { MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/post';
 
 const queryClient = new QueryClient();
 

@@ -556,7 +556,8 @@ class PostControllerTest {
                 .willReturn(List.of(postResponse));
 
         // when
-        List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+        List<PostResponse> result = RestAssuredMockMvc
+                .given().log().all()
                 .param("page", 0)
                 .param("postClosingType", PostClosingType.PROGRESS)
                 .param("postSortType", PostSortType.LATEST)

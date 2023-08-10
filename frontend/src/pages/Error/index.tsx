@@ -7,6 +7,7 @@ import * as S from './style';
 
 export default function Error() {
   const navigate = useNavigate();
+
   return (
     <Layout isSidebarVisible={false}>
       <S.Wrapper>
@@ -26,7 +27,7 @@ export default function Error() {
               navigate(-1);
             }}
           >
-            뒤로 가기
+            다시 시도
           </SquareButton>
         </S.ButtonWrapper>
       </S.Wrapper>

@@ -295,13 +295,15 @@ public class PostService {
             final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
+            final Long categoryId,
             final Member member
     ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
-        final List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortType(
+        final List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                 member,
                 postClosingType,
                 postSortType,
+                categoryId,
                 pageable
         );
 

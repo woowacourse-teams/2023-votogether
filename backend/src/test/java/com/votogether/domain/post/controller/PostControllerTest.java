@@ -3,7 +3,6 @@ package com.votogether.domain.post.controller;
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.startsWith;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -44,7 +43,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -552,8 +550,12 @@ class PostControllerTest {
         PostResponse postResponse = PostResponse.of(post, MALE_30.get());
 
         given(postService.findPostsByWriter(
-                anyInt(), any(PostClosingType.class), any(PostSortType.class), any(Member.class)))
-                .willReturn(List.of(postResponse));
+                anyInt(),
+                any(PostClosingType.class),
+                any(PostSortType.class),
+                anyLong(),
+                any(Member.class))
+        ).willReturn(List.of(postResponse));
 
         // when
         List<PostResponse> result = RestAssuredMockMvc
@@ -561,6 +563,7 @@ class PostControllerTest {
                 .param("page", 0)
                 .param("postClosingType", PostClosingType.PROGRESS)
                 .param("postSortType", PostSortType.LATEST)
+                .param("category", 1L)
                 .when().get("/posts/me")
                 .then().log().all()
                 .status(HttpStatus.OK)

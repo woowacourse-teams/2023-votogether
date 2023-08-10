@@ -190,12 +190,14 @@ public class PostController {
     })
     @GetMapping("/me")
     public ResponseEntity<List<PostResponse>> getPostsByMe(
-            final int page,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId,
             @Auth final Member member
     ) {
-        final List<PostResponse> responses = postService.findPostsByWriter(page, postClosingType, postSortType, member);
+        final List<PostResponse> responses =
+                postService.findPostsByWriter(page, postClosingType, postSortType, categoryId, member);
         return ResponseEntity.ok(responses);
     }
 

@@ -540,7 +540,7 @@ class PostRepositoryTest {
         Post closedPost1_V0;
 
         @BeforeEach
-        void setUp() throws InterruptedException {
+        void setUp() {
             writer = memberRepository.save(MemberFixtures.MALE_20.get());
             voter = memberRepository.save(MemberFixtures.FEMALE_OVER_90.get());
             voter1 = memberRepository.save(MemberFixtures.MALE_60.get());
@@ -616,10 +616,11 @@ class PostRepositoryTest {
         @DisplayName("마감된 게시글을 최신순으로 가져온다.")
         void findClosedPostsWithLatest() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortType(
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                     writer,
                     PostClosingType.CLOSED,
                     PostSortType.LATEST,
+                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -635,10 +636,11 @@ class PostRepositoryTest {
         @DisplayName("마감된 게시글을 투표순으로 가져온다.")
         void findClosedPostsWithHot() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortType(
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                     writer,
                     PostClosingType.CLOSED,
                     PostSortType.HOT,
+                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -654,10 +656,11 @@ class PostRepositoryTest {
         @DisplayName("마감안된 게시글을 최신순으로 가져온다.")
         void findOpenPostsWithLatest() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortType(
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                     writer,
                     PostClosingType.PROGRESS,
                     PostSortType.LATEST,
+                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -673,10 +676,11 @@ class PostRepositoryTest {
         @DisplayName("마감안된 게시글을 인기순으로 가져온다.")
         void findOpenPostsWithHot() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortType(
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                     writer,
                     PostClosingType.PROGRESS,
                     PostSortType.HOT,
+                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -692,10 +696,11 @@ class PostRepositoryTest {
         @DisplayName("마감여부와 관계없이 게시글을 인기순으로 조회한다.")
         void findPostsByHot() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortType(
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                     writer,
                     PostClosingType.ALL,
                     PostSortType.HOT,
+                    null,
                     PageRequest.of(0, 10)
             );
 

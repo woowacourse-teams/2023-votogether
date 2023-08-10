@@ -45,16 +45,21 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public List<Post> findAllByWriterWithClosingTypeAndSortType(
+    public List<Post> findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
             final Member writer,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
+            final Long categoryId,
             final Pageable pageable
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
                 .join(post.writer).fetchJoin()
-                .where(post.writer.eq(writer).and(deadlineEq(postClosingType)))
+                .where(
+                        categoryIdEq(categoryId),
+                        deadlineEq(postClosingType),
+                        post.writer.eq(writer)
+                )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

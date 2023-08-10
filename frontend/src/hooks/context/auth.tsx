@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (userInfo && loggedInfo.isLoggedIn) {
       setLoggedInfo(origin => ({ ...origin, userInfo }));
     }
-  }, [userInfo]);
+  }, [loggedInfo.isLoggedIn, userInfo]);
 
   useEffect(() => {
     const accessToken = getCookieToken().accessToken;

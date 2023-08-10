@@ -549,7 +549,7 @@ class PostControllerTest {
 
         PostResponse postResponse = PostResponse.of(post, MALE_30.get());
 
-        given(postService.findPostsByWriter(
+        given(postService.getPostsByWriter(
                 anyInt(),
                 any(PostClosingType.class),
                 any(PostSortType.class),

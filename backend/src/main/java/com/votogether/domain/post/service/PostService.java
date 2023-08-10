@@ -291,7 +291,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> findPostsByWriter(
+    public List<PostResponse> getPostsByWriter(
             final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType,

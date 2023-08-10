@@ -197,7 +197,7 @@ public class PostController {
             @Auth final Member member
     ) {
         final List<PostResponse> responses =
-                postService.findPostsByWriter(page, postClosingType, postSortType, categoryId, member);
+                postService.getPostsByWriter(page, postClosingType, postSortType, categoryId, member);
         return ResponseEntity.ok(responses);
     }
 

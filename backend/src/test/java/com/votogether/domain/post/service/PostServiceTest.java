@@ -736,7 +736,7 @@ class PostServiceTest {
 
         // when
         List<PostResponse> responses =
-                postService.findPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
+                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
 
         // then
         assertAll(

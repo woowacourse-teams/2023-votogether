@@ -530,6 +530,7 @@ class PostRepositoryTest {
     @Nested
     @DisplayName("회원이 작성한 게시글 목록을 조회한다.")
     class findPostsByWriter {
+
         Member writer;
         Member voter;
         Member voter1;

@@ -51,16 +51,15 @@ class MemberControllerTest {
         Member member = Member.builder()
                 .nickname("저문")
                 .gender(Gender.MALE)
-                .ageRange("20~29")
+                .birthYear(2000)
                 .socialId("abc123")
                 .socialType(SocialType.KAKAO)
-                .birthday("0101")
-                .point(1234)
                 .build();
         TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
         MemberInfoResponse memberInfoResponse = new MemberInfoResponse(
                 "저문",
-                1234,
+                Gender.MALE,
+                1988,
                 0,
                 0
         );
@@ -82,7 +81,6 @@ class MemberControllerTest {
         // then
         assertAll(
                 () -> assertThat(response.nickname()).isEqualTo("저문"),
-                () -> assertThat(response.point()).isEqualTo(1234),
                 () -> assertThat(response.postCount()).isEqualTo(0),
                 () -> assertThat(response.voteCount()).isEqualTo(0)
         );

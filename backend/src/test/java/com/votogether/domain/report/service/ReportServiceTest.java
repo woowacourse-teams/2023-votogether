@@ -147,7 +147,7 @@ class ReportServiceTest {
         void reportDuplicated() {
             // given
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_20.get());
-            Member writer = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
             PostBody postBody = PostBody.builder()
                     .title("title")
@@ -182,7 +182,7 @@ class ReportServiceTest {
             Member reporter3 = memberRepository.save(MemberFixtures.FEMALE_40.get());
             Member reporter4 = memberRepository.save(MemberFixtures.FEMALE_50.get());
             Member reporter5 = memberRepository.save(MemberFixtures.FEMALE_60.get());
-            Member writer = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
             PostBody postBody = PostBody.builder()
                     .title("title")
@@ -341,7 +341,7 @@ class ReportServiceTest {
         void reportDuplicated() {
             // given
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_20.get());
-            Member writer = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
             PostBody postBody = PostBody.builder()
                     .title("title")
@@ -384,7 +384,7 @@ class ReportServiceTest {
             Member reporter3 = memberRepository.save(MemberFixtures.FEMALE_40.get());
             Member reporter4 = memberRepository.save(MemberFixtures.FEMALE_50.get());
             Member reporter5 = memberRepository.save(MemberFixtures.FEMALE_60.get());
-            Member writer = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
             PostBody postBody = PostBody.builder()
                     .title("title")
@@ -458,7 +458,7 @@ class ReportServiceTest {
         void reportDuplicated() {
             // given
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_20.get());
-            Member reported = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member reported = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
             ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 
@@ -478,7 +478,7 @@ class ReportServiceTest {
             Member reporter1 = memberRepository.save(MemberFixtures.FEMALE_20.get());
             Member reporter2 = memberRepository.save(MemberFixtures.FEMALE_30.get());
             Member reporter3 = memberRepository.save(MemberFixtures.FEMALE_40.get());
-            Member reported = memberRepository.save(MemberFixtures.FEMALE_EARLY_10.get());
+            Member reported = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
             ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 

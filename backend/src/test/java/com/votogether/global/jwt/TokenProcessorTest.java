@@ -34,11 +34,9 @@ class TokenProcessorTest {
         Member member = Member.builder()
                 .nickname("저문")
                 .gender(Gender.MALE)
-                .ageRange("20~29")
-                .birthday("0101")
+                .birthYear(1966)
+                .socialId("abc123")
                 .socialType(SocialType.KAKAO)
-                .socialId("123123")
-                .point(0)
                 .build();
 
         memberRepository.save(member);
@@ -62,11 +60,9 @@ class TokenProcessorTest {
             Member member = Member.builder()
                     .nickname("저문")
                     .gender(Gender.MALE)
-                    .ageRange("20~29")
-                    .birthday("0101")
+                    .birthYear(1966)
+                    .socialId("abc123")
                     .socialType(SocialType.KAKAO)
-                    .socialId("123123")
-                    .point(0)
                     .build();
             memberRepository.save(member);
 
@@ -89,11 +85,9 @@ class TokenProcessorTest {
             Member member = Member.builder()
                     .nickname("저문")
                     .gender(Gender.MALE)
-                    .ageRange("20~29")
-                    .birthday("0101")
+                    .birthYear(1966)
+                    .socialId("abc123")
                     .socialType(SocialType.KAKAO)
-                    .socialId("123123")
-                    .point(0)
                     .build();
             memberRepository.save(member);
 

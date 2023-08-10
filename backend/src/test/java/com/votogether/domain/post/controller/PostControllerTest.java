@@ -3,6 +3,7 @@ package com.votogether.domain.post.controller;
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -566,7 +568,10 @@ class PostControllerTest {
                 }.getType());
 
         // then
-        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
+        assertAll(
+                () -> assertThat(result).hasSize(1),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse)
+        );
     }
 
 }

@@ -728,4 +728,51 @@ class PostServiceTest {
                 .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
     }
 
+    @Test
+    @DisplayName("회원으로 키워드를 통해 게시글 목록을 검색한다.")
+    void getPostsByKeyword() {
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        Post closedPost = postTestPersister.builder()
+                .postBody(PostBody.builder().title("제목").content("키워요").build())
+                .deadline(LocalDateTime.now().minusDays(3L))
+                .save();
+        Post openPost = postTestPersister.builder()
+                .postBody(PostBody.builder().title("키워드").content("안녕").build())
+                .deadline(LocalDateTime.now().plusDays(3L))
+                .save();
+
+        PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(openPost).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().member(member).postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> responses = postService.searchPostsWithKeyword(
+                "키워",
+                0,
+                PostClosingType.ALL,
+                PostSortType.LATEST,
+                null,
+                member);
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(2),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(openPost.getId()),
+                () -> assertThat(responses.get(1).postId()).isEqualTo(closedPost.getId()),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(0), "키워")).isTrue(),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(1), "키워")).isTrue(),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(1L),
+                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(-1L)
+        );
+    }
+
+    private boolean hasKeywordInPostResponse(PostResponse postResponse, String keyword) {
+        return postResponse.title().contains(keyword) || postResponse.content().contains(keyword);
+    }
+
 }

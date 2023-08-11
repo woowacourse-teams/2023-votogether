@@ -1,19 +1,21 @@
-import { PropsWithChildren, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { PropsWithChildren } from 'react';
+import { useLocation, Navigate } from 'react-router-dom';
 
 import { PATH } from '@constants/path';
 
 import { getCookieToken } from '@utils/cookie';
 
-const PrivateRoute = ({ children }: PropsWithChildren) => {
-  const navigate = useNavigate();
+interface Route extends PropsWithChildren {
+  isAuthenticated?: boolean;
+  path?: (typeof PATH)[keyof typeof PATH];
+}
+
+const PrivateRoute = ({ children, isAuthenticated = true, path = PATH.LOGIN }: Route) => {
+  const location = useLocation();
   const isLoggedIn = getCookieToken().accessToken;
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate(PATH.LOGIN);
-    }
-  }, [isLoggedIn, navigate]);
+  if (!isLoggedIn || !isAuthenticated)
+    return <Navigate to={path} state={{ from: location }} replace />;
 
   return children;
 };

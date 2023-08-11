@@ -83,3 +83,9 @@ export const InstallButton = styled.button`
 
   cursor: pointer;
 `;
+
+export const IosContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;

@@ -1,11 +1,16 @@
 import React from 'react';
 
+import arrowUp from '@assets/arrow-up-on-square.svg';
 import logo from '@assets/logo.svg';
 import cancel from '@assets/x_mark_black.svg';
 
 import * as S from './style';
 
-export default function MobileInstallPrompt() {
+interface MobileInstallPromptProps {
+  platform: 'ios' | 'android';
+}
+
+export default function MobileInstallPrompt({ platform }: MobileInstallPromptProps) {
   return (
     <S.Container>
       <S.Header>
@@ -22,7 +27,13 @@ export default function MobileInstallPrompt() {
           </S.Description>
         </S.HeaderContent>
       </S.Header>
-      <S.InstallButton>홈 화면에 추가</S.InstallButton>
+      {platform === 'ios' && (
+        <S.IosContainer>
+          <S.IconImage src={arrowUp} alt="추가하기 아이콘" />
+          <S.Description>버튼을 눌러 홈 화면에 추가하기를 통해 설치를 해주세요</S.Description>
+        </S.IosContainer>
+      )}
+      {platform === 'android' && <S.InstallButton>홈 화면에 추가</S.InstallButton>}
     </S.Container>
   );
 }

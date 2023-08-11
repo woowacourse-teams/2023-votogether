@@ -10,6 +10,7 @@ import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,8 +68,18 @@ public class MemberService {
 
     @Transactional
     public void updateDetails(final MemberDetailRequest request, final Member member) {
+        validateExistentDetails(request, member);
         member.updateGender(request.gender());
         member.updateBirthYear(request.birthYear());
+    }
+
+    private static void validateExistentDetails(final MemberDetailRequest request, final Member member) {
+        if (member.getGender() == request.gender()) {
+            throw new BadRequestException(MemberExceptionType.SAME_GENDER);
+        }
+        if (Objects.equals(member.getBirthYear(), request.birthYear())) {
+            throw new BadRequestException(MemberExceptionType.SAME_BIRTH_YEAR);
+        }
     }
 
     @Transactional

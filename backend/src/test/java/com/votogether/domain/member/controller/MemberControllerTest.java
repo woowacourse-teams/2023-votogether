@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
+import com.votogether.domain.member.dto.MemberDetailRequest;
 import com.votogether.domain.member.dto.MemberInfoResponse;
 import com.votogether.domain.member.dto.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.entity.Gender;
@@ -23,6 +24,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -134,6 +138,89 @@ class MemberControllerTest {
                     .contentType(ContentType.JSON)
                     .body(memberNicknameUpdateRequest)
                     .when().patch("/members/me/nickname")
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("회원 정보 수정을 할 때")
+    class UpdateDetails {
+
+        @Test
+        @DisplayName("요청이 정상적이라면 성공한다.")
+        void updateDetails() throws Exception {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            MemberDetailRequest request = new MemberDetailRequest(Gender.MALE, 2000);
+
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
+            willDoNothing().given(memberService).updateDetails(request, member);
+
+            // when
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when().patch("/members/me/detail")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value());
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {1, 22, 4444})
+        @DisplayName("출생년도가 4자리가 아니라면 400을 반환한다.")
+        void invalidRangeOfBirthYear(int birthYear) throws Exception {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            MemberDetailRequest request = new MemberDetailRequest(Gender.MALE, birthYear);
+
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
+            willDoNothing().given(memberService).updateDetails(request, member);
+
+            // when
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when().patch("/members/me/detail")
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @ParameterizedTest
+        @NullSource
+        @DisplayName("출생년도가 빈 값이면 400을 반환한다.")
+        void invalidNullOfBirthYear(Integer birthYear) throws Exception {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            MemberDetailRequest request = new MemberDetailRequest(Gender.MALE, birthYear);
+
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
+            willDoNothing().given(memberService).updateDetails(request, member);
+
+            // when
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when().patch("/members/me/detail")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }

@@ -11,6 +11,8 @@ public enum MemberExceptionType implements ExceptionType {
     ALREADY_EXISTENT_NICKNAME(802, "이미 중복된 닉네임이 존재합니다."),
     NONEXISTENT_MEMBER(803, "해당 회원이 존재하지 않습니다."),
     INVALID_AGE(804, "존재할 수 없는 연령입니다."),
+    SAME_GENDER(805, "같은 성별로 변경할 수 없습니다."),
+    SAME_BIRTH_YEAR(806, "같은 출생년도로 변경할 수 없습니다."),
     ;
 
     private final int code;

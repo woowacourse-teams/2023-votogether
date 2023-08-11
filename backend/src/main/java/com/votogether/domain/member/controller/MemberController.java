@@ -52,10 +52,10 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "회원 닉네임 변경", description = "회원 닉네임을 변경한다.")
+    @Operation(summary = "회원 상세 정보 변경", description = "회원의 로그인 직후에 상세정보를 설정한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "닉네임 변경 성공"),
-            @ApiResponse(responseCode = "400", description = "올바르지 않은 변경할 닉네임 요청")
+            @ApiResponse(responseCode = "200", description = "상세정보 변경 성공"),
+            @ApiResponse(responseCode = "400", description = "올바르지 않은 상세정보 변경 요청")
     })
     @PatchMapping("/me/detail")
     public ResponseEntity<Void> updateDetails(

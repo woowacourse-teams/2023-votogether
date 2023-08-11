@@ -1,17 +1,19 @@
-import React, { PropsWithChildren, useContext } from 'react';
-import { useLocation, Navigate } from 'react-router-dom';
-
-import { AuthContext } from '@hooks/context/auth';
+import { PropsWithChildren, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PATH } from '@constants/path';
 
-const PrivateRoute = ({ children }: PropsWithChildren) => {
-  const { loggedInfo } = useContext(AuthContext);
-  const location = useLocation();
+import { getCookieToken } from '@utils/cookie';
 
-  if (!loggedInfo.isLoggedIn) {
-    return <Navigate to={PATH.LOGIN} state={{ from: location }} replace />;
-  }
+const PrivateRoute = ({ children }: PropsWithChildren) => {
+  const navigate = useNavigate();
+  const isLoggedIn = getCookieToken().accessToken;
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate(PATH.LOGIN);
+    }
+  }, [isLoggedIn, navigate]);
 
   return children;
 };

@@ -20,7 +20,8 @@ export default function MyInfo() {
   const navigate = useNavigate();
   const { isOpen, openComponent, closeComponent } = useToggle();
 
-  const { userInfo } = useContext(AuthContext).loggedInfo;
+  const { loggedInfo } = useContext(AuthContext);
+  const { userInfo } = loggedInfo;
 
   return (
     <Layout isSidebarVisible={true}>

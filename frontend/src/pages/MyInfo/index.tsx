@@ -1,8 +1,11 @@
-import { useContext } from 'react';
+import { useContext, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
+import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
+
+import { modifyNickname } from '@api/userInfo';
 
 import Accordion from '@components/common/Accordion';
 import UserProfile from '@components/common/Dashboard/UserProfile';
@@ -12,6 +15,8 @@ import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 
+import { NICKNAME_MAX_LENGTH } from '@constants/user';
+
 import * as S from './style';
 
 export default function MyInfo() {
@@ -20,10 +25,22 @@ export default function MyInfo() {
 
   const { userInfo } = useContext(AuthContext).loggedInfo;
 
+  const { text: newNickname, handleTextChange: handleNicknameChange } = useText(
+    userInfo?.nickname ?? ''
+  );
+
   if (!userInfo) {
     navigate('/');
     return <></>;
   }
+
+  const handleModifyNickname = () => {
+    modifyNickname(newNickname);
+  };
+
+  const handleWithdrawlMembership = () => {
+    handleWithdrawlMembership();
+  };
 
   return (
     <Layout isSidebarVisible={true}>
@@ -43,9 +60,15 @@ export default function MyInfo() {
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">
-            <S.Input placeholder="새로운 닉네임을 입력해주세요" />
+            <S.Input
+              value={newNickname}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleNicknameChange(e, NICKNAME_MAX_LENGTH)
+              }
+              placeholder="새로운 닉네임을 입력해주세요"
+            />
             <S.ButtonWrapper>
-              <SquareButton aria-label="닉네임 변경" theme="fill">
+              <SquareButton aria-label="닉네임 변경" theme="fill" onClick={handleModifyNickname}>
                 변경
               </SquareButton>
             </S.ButtonWrapper>
@@ -64,7 +87,11 @@ export default function MyInfo() {
                     탈퇴 버튼 클릭 시, <br></br>계정은 삭제되며 복구되지 않아요.
                   </S.ModalDescription>
                   <S.ButtonListWrapper>
-                    <SquareButton aria-label="회원 탈퇴" theme="fill">
+                    <SquareButton
+                      onClick={handleWithdrawlMembership}
+                      aria-label="회원 탈퇴"
+                      theme="fill"
+                    >
                       탈퇴
                     </SquareButton>
                     <SquareButton onClick={closeComponent} aria-label="회원 탈퇴" theme="blank">

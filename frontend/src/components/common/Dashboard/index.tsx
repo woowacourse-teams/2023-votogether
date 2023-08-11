@@ -12,7 +12,7 @@ import UserProfile from './UserProfile';
 
 interface DashboardProps {
   categoryList: Category[];
-  selectedCategory?: string;
+  selectedState: string;
   handleLogoutClick: () => void;
   userInfo?: User;
 }
@@ -20,7 +20,7 @@ interface DashboardProps {
 export default function Dashboard({
   userInfo,
   categoryList,
-  selectedCategory = '전체',
+  selectedState,
   handleLogoutClick,
 }: DashboardProps) {
   const favoriteCategory = categoryList.filter(category => category.isFavorite === true);
@@ -31,7 +31,7 @@ export default function Dashboard({
       {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
       <S.SelectCategoryWrapper>
         <S.Circle />
-        <S.SelectCategoryText>{selectedCategory}</S.SelectCategoryText>
+        <S.SelectCategoryText>{selectedState}</S.SelectCategoryText>
       </S.SelectCategoryWrapper>
       <S.ContentContainer>
         <S.CategoryToggleContainer>

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 
+import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
@@ -12,14 +13,13 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
-import { SORTING, STATUS } from '@constants/post';
-
 import EmptyPostList from '../EmptyPostList';
 
 import * as S from './style';
 
 export default function PostList() {
   const { postType, postOptionalOption } = usePostRequestInfo();
+  const { loggedInfo } = useContext(AuthContext);
   const { targetRef, isIntersecting } = useIntersectionObserver({
     root: null,
     rootMargin: '',
@@ -38,6 +38,7 @@ export default function PostList() {
       postType,
       postSorting: selectedSortingOption,
       postStatus: selectedStatusOption,
+      isLoggedIn: loggedInfo.isLoggedIn,
     },
     postOptionalOption
   );

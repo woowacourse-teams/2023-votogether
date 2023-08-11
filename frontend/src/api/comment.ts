@@ -2,7 +2,7 @@ import { Comment, CommentRequest, CommentResponse } from '@type/comment';
 
 import { getFetch, postFetch, putFetch, deleteFetch } from '@utils/fetch';
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 
 export const transformCommentListResponse = (commentList: CommentResponse[]): Comment[] => {
   return commentList.map(comment => ({

@@ -36,7 +36,7 @@ export const REQUEST_POST_KIND_URL = {
   [POST_TYPE.ALL]: 'posts',
   [POST_TYPE.MY_POST]: 'posts/me',
   [POST_TYPE.MY_VOTE]: 'posts/votes/me',
-  [POST_TYPE.CATEGORY]: 'posts/categories',
+  [POST_TYPE.CATEGORY]: 'posts',
   [POST_TYPE.SEARCH]: 'posts/search',
 } as const;
 

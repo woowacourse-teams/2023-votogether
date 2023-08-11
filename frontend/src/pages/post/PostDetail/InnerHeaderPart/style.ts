@@ -6,8 +6,17 @@ export const HeaderWrapper = styled.div`
 `;
 
 export const TagButtonWrapper = styled.div`
+  margin-right: 10px;
+
   position: absolute;
   top: 55px;
+  right: 10px;
+`;
+
+export const MenuWrapper = styled.div`
   margin-right: 10px;
+
+  position: absolute;
+  top: 45px;
   right: 10px;
 `;

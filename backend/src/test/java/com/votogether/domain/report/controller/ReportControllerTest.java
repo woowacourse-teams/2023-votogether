@@ -58,11 +58,9 @@ class ReportControllerTest {
             Member member = Member.builder()
                     .nickname("저문")
                     .gender(Gender.MALE)
-                    .ageRange("20~29")
+                    .birthYear(1977)
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
-                    .birthday("0101")
-                    .point(1234)
                     .build();
 
             TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
@@ -91,11 +89,9 @@ class ReportControllerTest {
             Member member = Member.builder()
                     .nickname("저문")
                     .gender(Gender.MALE)
-                    .ageRange("20~29")
+                    .birthYear(1966)
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
-                    .birthday("0101")
-                    .point(1234)
                     .build();
 
             TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
@@ -124,11 +120,9 @@ class ReportControllerTest {
             Member member = Member.builder()
                     .nickname("저문")
                     .gender(Gender.MALE)
-                    .ageRange("20~29")
+                    .birthYear(1966)
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
-                    .birthday("0101")
-                    .point(1234)
                     .build();
 
             TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
@@ -160,11 +154,9 @@ class ReportControllerTest {
         Member member = Member.builder()
                 .nickname("저문")
                 .gender(Gender.MALE)
-                .ageRange("20~29")
+                .birthYear(1966)
                 .socialId("abc123")
                 .socialType(SocialType.KAKAO)
-                .birthday("0101")
-                .point(1234)
                 .build();
 
         TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
@@ -194,11 +186,9 @@ class ReportControllerTest {
         Member member = Member.builder()
                 .nickname("저문")
                 .gender(Gender.MALE)
-                .ageRange("20~29")
+                .birthYear(1966)
                 .socialId("abc123")
                 .socialType(SocialType.KAKAO)
-                .birthday("0101")
-                .point(1234)
                 .build();
 
         TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);

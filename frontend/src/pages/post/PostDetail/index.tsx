@@ -1,9 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { ReportRequest } from '@type/report';
+
 import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { useFetch } from '@hooks/useFetch';
 
 import { getPost, removePost, setEarlyClosePost } from '@api/post';
+import { reportContent } from '@api/report';
 
 import CommentList from '@components/comment/CommentList';
 import Layout from '@components/common/Layout';
@@ -78,14 +81,26 @@ export default function PostDetailPage() {
         .catch(error => alert(error.message));
     },
     removePost: async () => {
-      if (!isClosed) alert('마감된 게시물만 삭제 가능합니다.');
+      if (postData.voteInfo.allPeopleCount >= 20)
+        return alert('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
 
       await removePost(postId)
-        .catch(error => alert(error.message))
-        .then(res => alert('게시물을 삭제했습니다.'));
+        .then(res => alert('게시물을 삭제했습니다.'))
+        .catch(error => alert(error.message));
     },
-    reportPost: () => {
-      //아직 api 논의하지 않음
+    reportPost: async (reason: string) => {
+      const reportData: ReportRequest = { type: 'POST', id: postId, reason };
+
+      await reportContent(reportData)
+        .then(res => alert('게시물을 신고했습니다.'))
+        .catch(error => alert('게시물 신고가 실패했습니다.'));
+    },
+    reportNickname: async (reason: string) => {
+      const reportData: ReportRequest = { type: 'NICKNAME', id: postData.writer.id, reason };
+
+      await reportContent(reportData)
+        .then(res => alert('작성자 닉네임을 신고했습니다.'))
+        .catch(error => alert('작성자 닉네임 신고가 실패했습니다.'));
     },
   };
 

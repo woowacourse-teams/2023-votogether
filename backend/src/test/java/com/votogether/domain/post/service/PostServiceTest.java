@@ -8,6 +8,7 @@ import static com.votogether.fixtures.MemberFixtures.MALE_20;
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static com.votogether.fixtures.MemberFixtures.MALE_60;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -924,6 +925,126 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.getPostById(1L, member))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제한다")
+    void delete() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image2",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        MockMultipartFile file3 = new MockMultipartFile(
+                "image3",
+                "test3.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
+        );
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(
+                        PostOptionCreateRequest.builder()
+                                .content("option1")
+                                .build(),
+                        PostOptionCreateRequest.builder()
+                                .content("option2")
+                                .build()
+                ))
+                .deadline(LocalDateTime.now().plusDays(2))
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
+
+        // when, then
+        assertThatNoException()
+                .isThrownBy(() -> postService.delete(savedPostId));
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제할 시, 투표가 20개 이상 진행된 게시글이면 예외를 던진다.")
+    void throwExceptionDeleteVoteOverTwenty() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image2",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        MockMultipartFile file3 = new MockMultipartFile(
+                "image3",
+                "test3.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
+        );
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(
+                        PostOptionCreateRequest.builder()
+                                .content("option1")
+                                .build(),
+                        PostOptionCreateRequest.builder()
+                                .content("option2")
+                                .build()
+                ))
+                .deadline(LocalDateTime.now().plusDays(2))
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
+        final Post post = postRepository.findById(savedPostId).get();
+
+        for (int voteCount = 0; voteCount < 20; voteCount++) {
+            Member memberToVote = Member.builder()
+                    .nickname("Abel" + voteCount)
+                    .gender(Gender.MALE)
+                    .birthYear(2000)
+                    .socialType(SocialType.KAKAO)
+                    .socialId("Abel" + voteCount)
+                    .build();
+
+            memberRepository.save(memberToVote);
+
+            final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+            PostOption perPostOption = postOptions.get(voteCount % postOptions.size());
+            voteService.vote(memberToVote, savedPostId, perPostOption.getId());
+        }
+
+        entityManager.clear();
+
+        // when, then
+        assertThatThrownBy(() -> postService.delete(savedPostId))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES.getMessage());
     }
 
 }

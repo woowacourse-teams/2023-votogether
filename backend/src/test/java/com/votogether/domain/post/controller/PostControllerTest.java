@@ -532,4 +532,18 @@ class PostControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @Test
+    @DisplayName("게시글을 삭제합니다")
+    void delete() {
+        // given
+        long postId = 1L;
+
+        // when, then
+        RestAssuredMockMvc.given().log().all()
+                .when().delete("/posts/{postId}", postId)
+                .then().log().all()
+                .assertThat()
+                .status(HttpStatus.NO_CONTENT);
+    }
+
 }

@@ -290,4 +290,13 @@ public class PostService {
         post.closeEarly();
     }
 
+    @Transactional
+    public void delete(final Long postId) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+        post.validatePossibleToDelete();
+
+        postRepository.deleteById(postId);
+    }
+
 }

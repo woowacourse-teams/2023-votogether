@@ -210,4 +210,11 @@ public class Post extends BaseEntity {
         comments.add(comment);
         comment.setPost(this);
     }
+
+    public void validatePossibleToDelete() {
+        if (this.totalVoteCount >= 20) {
+            throw new BadRequestException(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES);
+        }
+    }
+
 }

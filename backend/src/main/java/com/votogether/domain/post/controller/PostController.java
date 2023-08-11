@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -182,6 +183,17 @@ public class PostController {
     ) {
         postService.closePostEarlyById(postId, loginMember);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물이 삭제 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
+    })
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long postId) {
+        postService.delete(postId);
+        return ResponseEntity.noContent().build();
     }
 
 }

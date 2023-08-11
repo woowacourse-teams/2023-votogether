@@ -1,9 +1,11 @@
 import { Fragment, useEffect, useState } from 'react';
 
+import { BeforeInstallPromptEvent } from '../../../../window';
+
 import MobileInstallPrompt from './MobileInstallPrompt';
 
 export default function AppInstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const isDeviceIOS = /iPad|iPhone|iPod/.test(window.navigator.userAgent);
 
   useEffect(() => {
@@ -14,7 +16,7 @@ export default function AppInstallPrompt() {
     };
   }, []);
 
-  const handleBeforeInstallPrompt = (event: Event) => {
+  const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
     event.preventDefault();
     setDeferredPrompt(event);
   };

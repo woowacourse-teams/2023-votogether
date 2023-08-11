@@ -1,5 +1,6 @@
 package com.votogether.domain.member.service;
 
+import com.votogether.domain.member.dto.MemberDetailRequest;
 import com.votogether.domain.member.dto.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.Nickname;
@@ -62,6 +63,12 @@ public class MemberService {
         if (isExist) {
             throw new BadRequestException(MemberExceptionType.ALREADY_EXISTENT_NICKNAME);
         }
+    }
+
+    @Transactional
+    public void updateDetails(final MemberDetailRequest request, final Member member) {
+        member.updateGender(request.gender());
+        member.updateBirthYear(request.birthYear());
     }
 
     @Transactional

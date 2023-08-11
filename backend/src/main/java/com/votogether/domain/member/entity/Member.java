@@ -80,6 +80,14 @@ public class Member extends BaseEntity {
         this.nickname = new Nickname(reportedNickname);
     }
 
+    public void updateGender(final Gender gender) {
+        this.gender = gender;
+    }
+
+    public void updateBirthYear(final Integer birthYear) {
+        this.birthYear = birthYear;
+    }
+
     public String getNickname() {
         return this.nickname.getValue();
     }

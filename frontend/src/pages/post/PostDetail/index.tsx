@@ -3,15 +3,15 @@ import { Suspense } from 'react';
 import ErrorBoundary from '@pages/ErrorBoundary';
 
 import Layout from '@components/common/Layout';
-import Skeleton from '@components/common/Skeleton';
 
 import PostDetail from './PostDetail';
+import PostDetailFallback from './PostDetailFallback';
 
 export default function PostDetailPage() {
   return (
     <Layout isSidebarVisible={true}>
       <ErrorBoundary>
-        <Suspense fallback={<Skeleton isLarge={true} />}>
+        <Suspense fallback={<PostDetailFallback />}>
           <PostDetail />
         </Suspense>
       </ErrorBoundary>

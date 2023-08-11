@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
 import { ReportRequest } from '@type/report';
 
 import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
+import { useToast } from '@hooks/useToast';
 import { useToggle } from '@hooks/useToggle';
 
 import { reportContent } from '@api/report';
 
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
 import DeleteModal from '@components/common/DeleteModal';
+import Toast from '@components/common/Toast';
 import ReportModal from '@components/ReportModal';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
@@ -28,13 +30,14 @@ interface CommentItemProps {
 
 export default function CommentItem({ comment, userType }: CommentItemProps) {
   const { isOpen, toggleComponent, closeComponent } = useToggle();
+  const { isToastOpen, openToast, toastMessage } = useToast();
   const { id, member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const { mutate } = useDeleteComment(postId, id);
+  const { mutate, isError, error } = useDeleteComment(postId, id);
 
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
@@ -45,16 +48,24 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
     const reportData: ReportRequest = { type: 'COMMENT', id, reason };
 
     await reportContent(reportData)
-      .then(res => alert('댓글을 신고했습니다.'))
-      .catch(error => alert('댓글 신고가 실패했습니다.'));
+      .then(res => {
+        openToast('댓글을 신고했습니다.');
+      })
+      .catch(e => {
+        openToast(e instanceof Error ? e.message : '댓글 신고가 실패했습니다');
+      });
   };
 
   const handleNicknameReportClick = async (reason: string) => {
     const reportData: ReportRequest = { type: 'NICKNAME', id: member.id, reason };
 
     await reportContent(reportData)
-      .then(res => alert('작성자 닉네임을 신고했습니다.'))
-      .catch(error => alert('작성자 닉네임 신고가 실패했습니다.'));
+      .then(res => {
+        openToast('작성자 닉네임을 신고했습니다.');
+      })
+      .catch(e => {
+        openToast(e instanceof Error ? e.message : '작성자 닉네임 신고가 실패했습니다.');
+      });
   };
 
   const handleCancelClick = () => {
@@ -64,6 +75,10 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const handleDeleteClick = () => {
     mutate();
   };
+
+  useEffect(() => {
+    isError && error instanceof Error && openToast(error.message);
+  }, [isError, error]);
 
   const USER_TYPE = COMMENT_USER_MENU[userType];
 
@@ -121,6 +136,11 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           handleReportClick={handleCommentReportClick}
           handleCancelClick={handleCancelClick}
         />
+      )}
+      {isToastOpen && (
+        <Toast size="md" position="bottom">
+          {toastMessage}
+        </Toast>
       )}
     </S.Container>
   );

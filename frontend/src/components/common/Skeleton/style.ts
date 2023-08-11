@@ -23,25 +23,25 @@ const Box = styled.div`
 `;
 
 export const FirstBox = styled(Box)<{ $isLarge: boolean }>`
-  height: ${props => (props.$isLarge ? '250px' : '110px')};
+  height: ${props => (props.$isLarge ? '40vh' : '30vh')};
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    height: ${props => (props.$isLarge ? '280px' : '140px')};
+    height: ${props => (props.$isLarge ? '44vh' : '34vh')};
   }
 `;
 
 export const SecondBox = styled(Box)`
-  height: 20px;
+  height: 4vh;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    height: 30px;
+    height: 6vh;
   }
 `;
 
 export const ThirdBox = styled(Box)`
-  height: 10px;
+  height: 2vh;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    height: 15px;
+    height: 4vh;
   }
 `;

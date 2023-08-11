@@ -733,6 +733,14 @@ class PostServiceTest {
         // given
         Member writer = memberTestPersister.builder().save();
         Post post = postTestPersister.builder().writer(writer).save();
+        PostOption postOption = postOptionTestPersister.builder().post(post).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(post).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
 
         // when
         List<PostResponse> responses =
@@ -742,7 +750,8 @@ class PostServiceTest {
         assertAll(
                 () -> assertThat(responses).hasSize(1),
                 () -> assertThat(responses.get(0).postId()).isEqualTo(post.getId()),
-                () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId())
+                () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId()),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(3L)
         );
     }
 

@@ -2,6 +2,7 @@ package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -64,6 +66,36 @@ public class PostController {
         }
         final long postId = postService.save(request, member, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
+    }
+
+    @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시글 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
+    })
+    @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> update(
+            @PathVariable final Long postId,
+            @RequestPart @Valid final PostUpdateRequest request,
+            @RequestPart(required = false) final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> optionImages,
+            @Auth final Member member
+    ) {
+        System.out.println("PostController.update");
+
+        System.out.println("contentImages = " + contentImages);
+        if (contentImages != null && !contentImages.isEmpty()) {
+            System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
+        }
+
+        System.out.println("optionImages = " + optionImages);
+        if (optionImages != null && !optionImages.isEmpty()) {
+            System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
+            System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
+        }
+
+        postService.update(postId, request, member, contentImages, optionImages);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "전체 게시글 조회", description = "게시글을 조회한다.")

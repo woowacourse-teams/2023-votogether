@@ -144,4 +144,59 @@ class PostTest {
         assertThat(post.getDeadline()).isBefore(deadline);
     }
 
+    @Test
+    @DisplayName("게시글을 수정한다.")
+    void update() {
+        // given
+        final Member writer = MemberFixtures.MALE_30.get();
+        final PostBody postBody1 = PostBody.builder()
+                .title("title1")
+                .content("content1")
+                .build();
+        final Post post = Post.builder()
+                .writer(writer)
+                .postBody(postBody1)
+                .deadline(LocalDateTime.now().plusDays(3))
+                .build();
+
+        final PostBody postBody2 = PostBody.builder()
+                .title("title2")
+                .content("content2")
+                .build();
+
+        Category categoryA = Category.builder().name("category1").build();
+        Category categoryB = Category.builder().name("category2").build();
+
+        List<Category> categories = List.of(categoryA, categoryB);
+
+        // when
+        final LocalDateTime deadline = LocalDateTime.now().plusDays(2);
+        post.update(
+                postBody2,
+                "oldContentUrl",
+                List.of("newContentUrl"),
+                categories,
+                List.of("option1", "option2"),
+                List.of("optionImage1", "optionImage2"),
+                List.of("newOptionImage1", "newOptionImage2"),
+                deadline
+        );
+
+        // then
+        final PostBody postBody = post.getPostBody();
+        final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+        final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
+        final LocalDateTime actualDeadline = post.getDeadline();
+        assertAll(
+                () -> assertThat(postBody.getTitle()).isEqualTo("title2"),
+                () -> assertThat(postBody.getContent()).isEqualTo("content2"),
+                () -> assertThat(postOptions.get(0).getContent()).isEqualTo("option1"),
+                () -> assertThat(postOptions.get(0).getImageUrl()).isEqualTo("newOptionImage1"),
+                () -> assertThat(postCategories.get(0).getCategory().getName()).isEqualTo("category1"),
+                () -> assertThat(actualDeadline).hasYear(deadline.getYear()),
+                () -> assertThat(actualDeadline).hasMonth(deadline.getMonth()),
+                () -> assertThat(actualDeadline).hasDayOfMonth(deadline.getDayOfMonth())
+        );
+    }
+
 }

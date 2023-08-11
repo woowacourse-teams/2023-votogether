@@ -8,6 +8,8 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionUpdateRequest;
+import com.votogether.domain.post.dto.request.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
@@ -109,8 +111,8 @@ public class PostService {
         final Post post = toPost(postCreateRequest, loginMember);
 
         post.mapPostOptionsByElements(
-                getPostOptionContents(postCreateRequest),
-                uploadAndParseOptionImageUrls(optionImages)
+                transformElements(postCreateRequest.postOptions(), PostOptionCreateRequest::content),
+                transformElements(optionImages, ImageUploader::upload)
         );
         post.mapCategories(categories);
         addContentImageIfPresent(post, contentImages);
@@ -124,28 +126,16 @@ public class PostService {
     ) {
         return Post.builder()
                 .writer(loginMember)
-                .postBody(toPostBody(postCreateRequest))
+                .postBody(toPostBody(postCreateRequest.title(), postCreateRequest.content()))
                 .deadline(postCreateRequest.deadline())
                 .build();
     }
 
-    private PostBody toPostBody(final PostCreateRequest postCreateRequest) {
+    private PostBody toPostBody(final String title, final String content) {
         return PostBody.builder()
-                .title(postCreateRequest.title())
-                .content(postCreateRequest.content())
+                .title(title)
+                .content(content)
                 .build();
-    }
-
-    private List<String> getPostOptionContents(final PostCreateRequest postCreateRequest) {
-        return postCreateRequest.postOptions().stream()
-                .map(PostOptionCreateRequest::content)
-                .toList();
-    }
-
-    private List<String> uploadAndParseOptionImageUrls(final List<MultipartFile> optionImages) {
-        return optionImages.stream()
-                .map(ImageUploader::upload)
-                .toList();
     }
 
     private void addContentImageIfPresent(final Post post, final List<MultipartFile> contentImages) {
@@ -197,9 +187,7 @@ public class PostService {
                 pageable
         );
 
-        return posts.stream()
-                .map(PostResponse::forGuest)
-                .toList();
+        return transformElements(posts, PostResponse::forGuest);
     }
 
     @Transactional(readOnly = true)
@@ -288,6 +276,38 @@ public class PostService {
         post.validateWriter(loginMember);
         post.validateDeadLine();
         post.closeEarly();
+    }
+
+    @Transactional
+    public void update(
+            final long postId,
+            final PostUpdateRequest request,
+            final Member member,
+            final List<MultipartFile> contentImages,
+            final List<MultipartFile> optionImages
+    ) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+        post.validateWriter(member);
+        post.validateDeadLine();
+
+
+        post.update(
+                toPostBody(request.title(), request.content()),
+                request.imageUrl(),
+                transformElements(contentImages, ImageUploader::upload),
+                categoryRepository.findAllById(request.categoryIds()),
+                transformElements(request.postOptions(), PostOptionUpdateRequest::content),
+                transformElements(request.postOptions(), PostOptionUpdateRequest::imageUrl),
+                transformElements(optionImages, ImageUploader::upload),
+                request.deadline()
+        );
+    }
+
+    private <T, R> List<R> transformElements(final List<T> elements, final Function<T, R> process) {
+        return elements.stream()
+                .map(process)
+                .toList();
     }
 
 }

@@ -2,6 +2,9 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
+import { GENDER_COLOR } from './GraphStyle';
+import { Gender } from './type';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,13 +42,6 @@ export const GenderExplain = styled.span`
     line-height: initial;
   }
 `;
-
-type Gender = 'FEMALE' | 'MALE';
-
-const GENDER_COLOR: Record<Gender, string> = {
-  FEMALE: 'var(--graph-color-purple)',
-  MALE: 'var(--graph-color-green)',
-};
 
 export const ColorIcon = styled.span<{ $gender: Gender }>`
   width: 12px;

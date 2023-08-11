@@ -4,6 +4,13 @@ import { Size } from '@type/style';
 
 import { theme } from '@styles/theme';
 
+import { Gender } from './type';
+
+export const GENDER_COLOR: Record<Gender, string> = {
+  FEMALE: 'var(--graph-color-purple)',
+  MALE: 'var(--graph-color-green)',
+};
+
 const size: Record<Size, { height: string; linePositionTop: string }> = {
   sm: { height: '200px', linePositionTop: '165px' },
   md: { height: '230px', linePositionTop: '194px' },

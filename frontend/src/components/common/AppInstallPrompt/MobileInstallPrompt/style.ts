@@ -4,11 +4,11 @@ import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 
-  padding: 30px 20px;
-  border-top: 1px solid black;
+  width: 100vw;
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
 
   position: fixed;
   bottom: 0;
@@ -17,6 +17,15 @@ export const Container = styled.div`
   background-color: white;
 
   z-index: ${theme.zIndex.modal};
+`;
+
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: max-content;
+  padding: 30px 20px;
 `;
 
 export const Header = styled.div`
@@ -93,5 +102,6 @@ export const InstallButton = styled.button`
 export const IosContainer = styled.div`
   display: flex;
   align-items: center;
+  align-self: end;
   gap: 8px;
 `;

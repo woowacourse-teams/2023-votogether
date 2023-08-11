@@ -29,7 +29,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   const { mutate: createVote } = useCreateVote({ isPreview, postId });
   const { mutate: editVote } = useEditVote({ isPreview, postId });
 
-  const imageBaseUrl = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
+  const IMAGE_BASE_URL = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
 
   const isActive = !checkClosedPost(deadline);
 
@@ -102,7 +102,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
           {content}
         </S.Content>
         {!isPreview && imageUrl && (
-          <S.Image src={`${imageBaseUrl}/${imageUrl}`} alt={'본문에 포함된 이미지'} />
+          <S.Image src={`${IMAGE_BASE_URL}/${imageUrl}`} alt={'본문에 포함된 이미지'} />
         )}
       </S.DetailLink>
       <WrittenVoteOptionList

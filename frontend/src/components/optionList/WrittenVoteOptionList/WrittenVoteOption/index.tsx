@@ -24,7 +24,7 @@ export default function WrittenVoteOption({
   imageUrl,
   ariaLabel,
 }: WrittenVoteOptionProps) {
-  const imageBaseUrl = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
+  const IMAGE_BASE_URL = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
 
   return (
     <S.Container
@@ -33,7 +33,7 @@ export default function WrittenVoteOption({
       onClick={handleVoteClick}
     >
       {!isPreview && imageUrl && (
-        <S.Image src={`${imageBaseUrl}/${imageUrl}`} alt={'선택지에 포함된 이미지'} />
+        <S.Image src={`${IMAGE_BASE_URL}/${imageUrl}`} alt={'선택지에 포함된 이미지'} />
       )}
       {isPreview ? (
         <S.PreviewContent aria-label="선택지 내용">{text}</S.PreviewContent>

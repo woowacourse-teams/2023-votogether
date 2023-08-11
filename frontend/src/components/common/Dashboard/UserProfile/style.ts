@@ -16,7 +16,7 @@ export const NickName = styled.span`
 
 export const UserInfoContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
 export const TextCardContainer = styled.div`

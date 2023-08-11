@@ -41,6 +41,7 @@ export const LeftSideBar = () => {
           userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
           handleLogoutClick={() => {}}
+          selectedState="전체"
         />
       </Drawer>
     </div>
@@ -58,6 +59,7 @@ export const RightSideBar = () => {
           userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
           handleLogoutClick={() => {}}
+          selectedState="전체"
         />
       </Drawer>
     </div>

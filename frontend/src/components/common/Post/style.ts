@@ -6,7 +6,7 @@ import { theme } from '@styles/theme';
 
 export const Container = styled.li`
   width: 100%;
-  
+
   position: relative;
 
   font: var(--text-small);
@@ -24,6 +24,26 @@ export const Category = styled.span`
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-caption);
   }
+`;
+
+export const ImageIconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--header);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+
+  position: absolute;
+  right: 25px;
+  top: 0;
+`;
+
+export const ImageIcon = styled.img`
+  width: 13px;
+  height: 13px;
 `;
 
 export const ActivateState = styled.div<{ $isActive: boolean }>`
@@ -96,4 +116,18 @@ export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
   gap: 10px;
 
   pointer-events: ${({ $isPreview }) => !$isPreview && 'none'};
+`;
+
+export const Image = styled.img`
+  border-radius: 4px;
+  margin-bottom: 10px;
+
+  width: 100%;
+
+  aspect-ratio: 1/1;
+  object-fit: cover;
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    margin-bottom: 20px;
+  }
 `;

@@ -62,7 +62,7 @@ export default function EditPost() {
 
   useEffect(() => {
     isError && error instanceof Error && openToast(error.message);
-  }, [isError, error]);
+  }, [isError, error, openToast]);
 
   return (
     <Layout isSidebarVisible={false}>

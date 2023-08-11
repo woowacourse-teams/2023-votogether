@@ -5,13 +5,13 @@ import SquareButton from '@components/common/SquareButton';
 
 import * as S from './style';
 
-export default function Error() {
+export default function Error({ message }: { message?: string }) {
   const navigate = useNavigate();
 
   return (
     <Layout isSidebarVisible={false}>
       <S.Wrapper>
-        <S.Description>요청 중 오류가 발생했습니다.</S.Description>
+        <S.Description>{message ? message : '요청 중 오류가 발생했습니다.'}</S.Description>
         <S.ButtonWrapper>
           <SquareButton
             theme="fill"

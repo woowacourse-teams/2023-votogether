@@ -5,6 +5,10 @@ import { AuthResponse } from '@type/auth';
 
 import { AuthContext } from '@hooks/context/auth';
 
+import Error from '@pages/Error';
+
+import LoadingSpinner from '@components/common/LoadingSpinner';
+
 import { getCookieToken, setCookieToken } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
 
@@ -37,8 +41,7 @@ export default function Redirection() {
         })
         .then(res => {
           if (!res) {
-            setErrorMessage('잘못된 형식의 response');
-            throw new Error('로그인 중 오류 발생');
+            return setErrorMessage('로그인 중 오류가 발생했습니다.');
           }
 
           const { accessToken } = res;
@@ -55,10 +58,12 @@ export default function Redirection() {
     })();
   }, [navigate, loggedInfo, setLoggedInfo, params]);
 
-  return (
-    <div>
-      {isLoading && '로그인 중입니다...'}
-      {errorMessage && errorMessage}
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div style={{ margin: '100px' }}>
+        <LoadingSpinner size="md" />
+      </div>
+    );
+
+  if (errorMessage) return <Error message={errorMessage} />;
 }

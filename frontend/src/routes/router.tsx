@@ -2,7 +2,6 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
-import Error from '@pages/Error';
 import Home from '@pages/Home';
 import MyInfo from '@pages/MyInfo';
 import NotFound from '@pages/NotFound';
@@ -28,7 +27,6 @@ const router = createBrowserRouter([
   {
     path: 'auth/kakao/callback',
     element: <Redirection />,
-    errorElement: <Error />,
   },
   {
     path: PATH.POST,

@@ -33,7 +33,7 @@ export default function PostDetailPage() {
     isError: isPostError,
     error: postError,
   } = usePostDetail(!loggedInfo.isLoggedIn, postId);
-  const { mutate: deletePost } = useDeletePost(postId);
+  const { mutate: deletePost } = useDeletePost(postId, loggedInfo.isLoggedIn);
   const { mutate: earlyClosePost } = useEarlyClosePost(postId);
   const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
 

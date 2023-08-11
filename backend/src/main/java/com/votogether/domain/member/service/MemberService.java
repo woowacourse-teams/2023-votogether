@@ -69,8 +69,7 @@ public class MemberService {
     @Transactional
     public void updateDetails(final MemberDetailRequest request, final Member member) {
         validateExistentDetails(request, member);
-        member.updateGender(request.gender());
-        member.updateBirthYear(request.birthYear());
+        member.updateDetails(request.gender(), request.birthYear());
     }
 
     private static void validateExistentDetails(final MemberDetailRequest request, final Member member) {

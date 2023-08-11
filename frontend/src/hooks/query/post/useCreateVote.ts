@@ -7,7 +7,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postId: number }) => {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isError, error } = useMutation({
     mutationFn: (optionId: number) => votePost(postId, optionId),
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEY.USER_INFO, true]);
@@ -26,5 +26,5 @@ export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postI
     },
   });
 
-  return { mutate };
+  return { mutate, isError, error };
 };

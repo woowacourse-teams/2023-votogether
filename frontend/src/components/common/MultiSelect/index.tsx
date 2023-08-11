@@ -1,6 +1,6 @@
 import type { Option } from './types';
 
-import { useState, MouseEvent } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import OptionCancelButton from '@components/optionList/WritingVoteOptionList/WritingVoteOption/OptionCancelButton';
 
@@ -25,6 +25,7 @@ export default function MultiSelect({
   placeholder = '여러 개의 옵션을 선택해주세요',
 }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const filteredOptionList = optionList.filter(
     option => !selectedOptionList.some(selected => selected.id === option.id)
@@ -34,16 +35,29 @@ export default function MultiSelect({
     setIsOpen(!isOpen);
   };
 
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
   return (
     <S.Container>
-      <S.Wrapper onClick={handleToggleWrapper}>
+      <S.Wrapper ref={wrapperRef} onClick={handleToggleWrapper}>
         <S.SelectedOptionListContainer>
           {selectedOptionList.length === 0 && <span>{placeholder} </span>}
           {selectedOptionList.map(({ id, name }) => (
-            <S.SelectedOption key={id} onClick={(e: MouseEvent) => e.stopPropagation()}>
+            <S.SelectedOption key={id} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
               <span>{name}</span>
               <OptionCancelButton
-                onClick={(e: MouseEvent) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   handleOptionDelete(id);
                 }}

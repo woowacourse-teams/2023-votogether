@@ -16,18 +16,20 @@ export default function CategorySection() {
 
   const { data: categoryList } = useCategoryList(isLoggedIn);
 
+  const categoryListFallback = categoryList ?? [];
+
   const { postOptionalOption, postType } = usePostRequestInfo();
   const { categoryId, keyword } = postOptionalOption;
 
   const selectedState = getSelectedState({
     categoryId,
     keyword,
-    categoryList: categoryList ?? [],
+    categoryList: categoryListFallback,
     postType,
   });
 
-  const favoriteCategory = categoryList?.filter(category => category.isFavorite === true) ?? [];
-  const allCategory = categoryList?.filter(category => category.isFavorite === false) ?? [];
+  const favoriteCategory = categoryListFallback.filter(category => category.isFavorite === true);
+  const allCategory = categoryListFallback?.filter(category => category.isFavorite === false);
 
   return (
     <>

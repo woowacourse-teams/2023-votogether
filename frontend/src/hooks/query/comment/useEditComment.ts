@@ -10,7 +10,7 @@ export const useEditComment = (postId: number, commentId: number, updatedComment
   const queryClient = useQueryClient();
   const queryKey = [QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS];
 
-  const { mutate, isLoading, isError, error } = useMutation(
+  const { mutate, isSuccess, isLoading, isError, error } = useMutation(
     () => editComment(postId, commentId, updatedComment),
     {
       onMutate: async () => {
@@ -45,5 +45,5 @@ export const useEditComment = (postId: number, commentId: number, updatedComment
     }
   );
 
-  return { mutate, isLoading, isError, error };
+  return { mutate, isSuccess, isLoading, isError, error };
 };

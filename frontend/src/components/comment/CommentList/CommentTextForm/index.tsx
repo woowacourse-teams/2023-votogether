@@ -25,7 +25,7 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-  const { handleTextChange, text: content, resetText } = useText(initialComment.content);
+  const { text: content, handleTextChange, resetText } = useText(initialComment.content);
   const { isToastOpen, openToast, toastMessage } = useToast();
 
   const params = useParams() as { postId: string };
@@ -39,19 +39,18 @@ export default function CommentTextForm({
   } = useCreateComment(postId);
   const {
     mutate: editComment,
-    // isError: isEditError,
-    // error: editError,
+    isSuccess: isEditSuccess,
+    isError: isEditError,
+    error: editError,
   } = useEditComment(postId, commentId, { ...initialComment, content });
 
   const updateComment =
     initialComment.id !== -1
       ? () => {
           editComment();
-          handleCancelClick && handleCancelClick();
         }
       : () => {
           createComment({ content });
-          handleCancelClick && handleCancelClick();
         };
 
   useEffect(() => {
@@ -59,13 +58,16 @@ export default function CommentTextForm({
   }, [isCreateSuccess]);
 
   useEffect(() => {
+    isEditSuccess && handleCancelClick && handleCancelClick();
+  }, [isEditSuccess]);
+
+  useEffect(() => {
     isCreateError && createError instanceof Error && openToast(createError.message);
   }, [isCreateError, createError]);
 
-  //지금 안됨.. isError가 안옴..
-  // useEffect(() => {
-  //   isEditError && editError instanceof Error && openToast(editError.message);
-  // }, [isEditError, editError]);
+  useEffect(() => {
+    isEditError && editError instanceof Error && openToast(editError.message);
+  }, [isEditError, editError]);
 
   return (
     <S.Container>

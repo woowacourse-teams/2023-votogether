@@ -2,12 +2,14 @@ import { Category } from '@type/category';
 
 import { PostRequestKind } from '@components/post/PostListPage/types';
 
-interface SelectedState {
+export interface SelectedState {
   postType: PostRequestKind;
   categoryId: number;
   keyword: string;
   categoryList: Category[];
 }
+
+const SLICED_LENGTH_NUMBER = 10;
 
 export const getSelectedState = ({
   postType,
@@ -22,7 +24,9 @@ export const getSelectedState = ({
   }
 
   if (postType === 'search') {
-    return keyword;
+    return keyword.length > SLICED_LENGTH_NUMBER
+      ? `${keyword.slice(0, SLICED_LENGTH_NUMBER)}...`
+      : keyword;
   }
 
   if (postType === 'myPost') {

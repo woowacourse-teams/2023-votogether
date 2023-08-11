@@ -283,4 +283,10 @@ public class Post extends BaseEntity {
         return postOptionImageUrls.get(postOptionIndex);
     }
 
+    public void validateDeadLineToModify(final LocalDateTime deadlineToModify) {
+        if (getCreatedAt().plusDays(3).isBefore(deadlineToModify)) {
+            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
+        }
+    }
+
 }

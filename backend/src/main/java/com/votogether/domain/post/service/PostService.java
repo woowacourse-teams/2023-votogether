@@ -290,6 +290,7 @@ public class PostService {
                 .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
         post.validateWriter(member);
         post.validateDeadLine();
+        post.validateDeadLineToModify(request.deadline());
 
 
         post.update(

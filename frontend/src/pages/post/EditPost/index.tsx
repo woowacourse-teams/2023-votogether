@@ -14,7 +14,7 @@ export default function EditPost() {
 
   const { postId } = useParams();
 
-  const { data } = usePostDetail(Number(postId));
+  const { data } = usePostDetail(true, Number(postId));
   const { mutate, isSuccess, isError, error } = useEditPost(Number(postId));
 
   useEffect(() => {

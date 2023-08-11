@@ -2,7 +2,7 @@ import { getPostList } from '@api/postList';
 
 import { POST_TYPE, SORTING, STATUS } from '@constants/post';
 
-import { MOCK_TRANSFORM_GUEST_POST_LIST, MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/postList';
+import { MOCK_TRANSFORM_GUEST_POST_LIST, MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/post';
 
 describe('서버와 통신하여 전체 게시글 목록을 불러오는지 확인한다.', () => {
   test('게시글 목록의 개수는 10개씩 불러온다.', async () => {

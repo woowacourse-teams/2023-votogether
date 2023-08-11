@@ -21,5 +21,6 @@ export interface ModifyNicknameRequest {
 export interface LoggedInfo {
   accessToken: string;
   isLoggedIn: boolean;
+  id?: number;
   userInfo?: User;
 }

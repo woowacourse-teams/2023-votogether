@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { AuthContext } from '@hooks/context/auth';
 import { useEditPost } from '@hooks/query/post/useEditPost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
@@ -13,8 +14,9 @@ export default function EditPost() {
   const navigate = useNavigate();
 
   const { postId } = useParams();
+  const { loggedInfo } = useContext(AuthContext);
 
-  const { data } = usePostDetail(Number(postId));
+  const { data } = usePostDetail(loggedInfo.isLoggedIn, Number(postId));
   const { mutate, isSuccess, isError, error } = useEditPost(Number(postId));
 
   useEffect(() => {

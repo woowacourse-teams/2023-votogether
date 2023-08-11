@@ -2,8 +2,10 @@ import { useContext } from 'react';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useCategoryList } from '@hooks/query/category/useCategoryList';
+import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 
 import { clearCookieToken } from '@utils/cookie';
+import { getSelectedState } from '@utils/post/getSelectedState';
 
 import SquareButton from '../SquareButton';
 
@@ -18,12 +20,20 @@ export default function Dashboard() {
 
   const { data: categoryList } = useCategoryList(isLoggedIn);
 
+  const { postOptionalOption, postType } = usePostRequestInfo();
+  const { categoryId, keyword } = postOptionalOption;
+
+  const selectedState = getSelectedState({
+    categoryId,
+    keyword,
+    categoryList: categoryList ?? [],
+    postType,
+  });
+
   const handleLogoutClick = () => {
     clearCookieToken('accessToken');
     clearLoggedInfo();
   };
-
-  const selectedState = '전체';
 
   const favoriteCategory = categoryList?.filter(category => category.isFavorite === true) ?? [];
   const allCategory = categoryList?.filter(category => category.isFavorite === false) ?? [];

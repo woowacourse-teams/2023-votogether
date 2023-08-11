@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -11,6 +13,10 @@ export const Container = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
+
+  background-color: white;
+
+  z-index: ${theme.zIndex.modal};
 `;
 
 export const Header = styled.div`
@@ -21,10 +27,10 @@ export const Header = styled.div`
 `;
 
 export const LogoImage = styled.img`
+  border-radius: 16px;
+
   width: 80px;
   height: 80px;
-
-  border-radius: 16px;
 `;
 
 export const HeaderContent = styled.div`

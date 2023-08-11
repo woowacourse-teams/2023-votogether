@@ -1,5 +1,3 @@
-import React from 'react';
-
 import arrowUp from '@assets/arrow-up-on-square.svg';
 import logo from '@assets/logo.svg';
 import cancel from '@assets/x_mark_black.svg';
@@ -8,9 +6,15 @@ import * as S from './style';
 
 interface MobileInstallPromptProps {
   platform: 'ios' | 'android';
+  handleInstallClick: () => void;
+  handleCancelClick: () => void;
 }
 
-export default function MobileInstallPrompt({ platform }: MobileInstallPromptProps) {
+export default function MobileInstallPrompt({
+  platform,
+  handleInstallClick,
+  handleCancelClick,
+}: MobileInstallPromptProps) {
   return (
     <S.Container>
       <S.Header>
@@ -18,7 +22,7 @@ export default function MobileInstallPrompt({ platform }: MobileInstallPromptPro
         <S.HeaderContent>
           <S.HeaderTop>
             <S.Title>VoTogether</S.Title>
-            <S.CancelButton>
+            <S.CancelButton onClick={handleCancelClick}>
               <S.IconImage src={cancel} alt="취소 아이콘" />
             </S.CancelButton>
           </S.HeaderTop>
@@ -33,7 +37,9 @@ export default function MobileInstallPrompt({ platform }: MobileInstallPromptPro
           <S.Description>버튼을 눌러 홈 화면에 추가하기를 통해 설치를 해주세요</S.Description>
         </S.IosContainer>
       )}
-      {platform === 'android' && <S.InstallButton>홈 화면에 추가</S.InstallButton>}
+      {platform === 'android' && (
+        <S.InstallButton onClick={handleInstallClick}>홈 화면에 추가</S.InstallButton>
+      )}
     </S.Container>
   );
 }

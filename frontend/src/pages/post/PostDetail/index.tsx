@@ -29,7 +29,7 @@ export default function PostDetailPage() {
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
-  const { isOpen: isToastOpen, openToast, toastMessage } = useToast();
+  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const { loggedInfo } = useContext(AuthContext);
   const memberId = loggedInfo.id;

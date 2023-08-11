@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TOAST_TIME } from '@constants/animation';
 
 export const useToast = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isToastOpen, setIsToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const timeIdRef = useRef<number>();
 
@@ -16,11 +16,11 @@ export const useToast = () => {
   const openToast = (message: string) => {
     clear();
 
-    setIsOpen(true);
+    setIsToastOpen(true);
     setToastMessage(message);
 
     timeIdRef.current = window.setTimeout(() => {
-      setIsOpen(false);
+      setIsToastOpen(false);
     }, TOAST_TIME * 1000);
   };
 
@@ -28,5 +28,5 @@ export const useToast = () => {
     return clear;
   }, []);
 
-  return { isOpen, toastMessage, openToast };
+  return { isToastOpen, toastMessage, openToast };
 };

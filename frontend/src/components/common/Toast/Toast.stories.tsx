@@ -11,11 +11,11 @@ const meta: Meta<typeof Toast> = {
 export default meta;
 
 export const SizeCase = () => {
-  const { isOpen: isSmOpen, openToast: openSmComponent, toastMessage: smMessage } = useToast();
-  const { isOpen: isMdOpen, openToast: openMdComponent, toastMessage: mdMessage } = useToast();
-  const { isOpen: isLgOpen, openToast: openLgComponent, toastMessage: lgMessage } = useToast();
+  const { isToastOpen: isSmOpen, openToast: openSmComponent, toastMessage: smMessage } = useToast();
+  const { isToastOpen: isMdOpen, openToast: openMdComponent, toastMessage: mdMessage } = useToast();
+  const { isToastOpen: isLgOpen, openToast: openLgComponent, toastMessage: lgMessage } = useToast();
   const {
-    isOpen: isFreeOpen,
+    isToastOpen: isFreeOpen,
     openToast: openFreeComponent,
     toastMessage: freeMessage,
   } = useToast();
@@ -71,9 +71,13 @@ export const SizeCase = () => {
 };
 
 export const PositionCase = () => {
-  const { isOpen: isTopOpen, openToast: openTopComponent, toastMessage: topMessage } = useToast();
   const {
-    isOpen: isBottomOpen,
+    isToastOpen: isTopOpen,
+    openToast: openTopComponent,
+    toastMessage: topMessage,
+  } = useToast();
+  const {
+    isToastOpen: isBottomOpen,
     openToast: openBottomComponent,
     toastMessage: bottomMessage,
   } = useToast();

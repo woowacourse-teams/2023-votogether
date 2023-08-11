@@ -1,10 +1,13 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
 import { useEditPost } from '@hooks/query/post/useEditPost';
+import { useToast } from '@hooks/useToast';
 
 import Layout from '@components/common/Layout';
+import Toast from '@components/common/Toast';
 import PostForm from '@components/PostForm';
 
 export default function EditPost() {
@@ -12,6 +15,7 @@ export default function EditPost() {
 
   // const { data } = usePostDetailQuery({ postId});
   const { mutate, isError, error } = useEditPost(Number(postId));
+  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const MOCK_DATA: PostInfo = {
     postId: 1,
@@ -56,9 +60,18 @@ export default function EditPost() {
     },
   };
 
+  useEffect(() => {
+    isError && error instanceof Error && openToast(error.message);
+  }, [isError, error]);
+
   return (
     <Layout isSidebarVisible={false}>
       <PostForm data={MOCK_DATA} mutate={mutate} isError={isError} error={error} />
+      {isToastOpen && (
+        <Toast size="md" position="bottom">
+          {toastMessage}
+        </Toast>
+      )}
     </Layout>
   );
 }

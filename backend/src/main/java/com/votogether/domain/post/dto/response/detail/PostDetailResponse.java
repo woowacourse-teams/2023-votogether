@@ -47,7 +47,7 @@ public record PostDetailResponse(
                 post.getCreatedAt(),
                 post.getDeadline(),
                 VoteDetailResponse.of(
-                        post.getPostOptions().getSelectedOptionId(loginMember),
+                        post.getSelectedOptionId(loginMember),
                         post.getFinalTotalVoteCount(loginMember),
                         getOptions(post, loginMember)
                 )

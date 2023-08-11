@@ -125,6 +125,10 @@ public class Post extends BaseEntity {
         }
     }
 
+    public long getSelectedOptionId(final Member member) {
+        return this.postOptions.getSelectedOptionId(member);
+    }
+
     public Vote makeVote(final Member voter, final PostOption postOption) {
         validateDeadLine();
         validateVoter(voter);
@@ -181,7 +185,9 @@ public class Post extends BaseEntity {
     }
 
     public boolean isVisibleVoteResult(final Member member) {
-        return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
+        return this.postOptions.getSelectedOptionId(member) != 0
+                || this.writer.equals(member)
+                || isClosed();
     }
 
     public void blind() {

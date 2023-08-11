@@ -20,7 +20,8 @@ const MOCK_USER_INFO: User = {
   nickname: '우아한 코끼리',
   postCount: 4,
   voteCount: 128,
-  userPoint: 200,
+  gender: 'MALE',
+  birthYear: 1997,
 };
 
 const MOCK_CATEGORIES: Category[] = [

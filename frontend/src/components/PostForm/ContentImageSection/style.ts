@@ -7,14 +7,14 @@ export const ContentImageContainer = styled.div`
   grid-template-columns: 40px auto;
 `;
 
-const imageSize = {
+const IMAGE_SIZE = {
   sm: '25%',
   md: '50%',
   lg: '100%',
 };
 
 export const ContentImageWrapper = styled.div<{ $size: Size }>`
-  width: ${props => imageSize[props.$size]};
+  width: ${props => IMAGE_SIZE[props.$size]};
   height: 100%;
 
   position: relative;

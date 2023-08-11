@@ -34,6 +34,7 @@ import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.post.entity.PostOptions;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostOptionRepository;
@@ -655,11 +656,11 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("한 게시글의 상세를 조회한다.")
-    void getPost() throws IOException {
+    @DisplayName("한 게시글의 상세를 조회할 시, 작성자면 투표 결과를 알 수 있다.")
+    void getPostByWriter() throws IOException {
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
         MockMultipartFile file1 = new MockMultipartFile(
                 "image1",
@@ -692,14 +693,14 @@ class PostServiceTest {
                 .deadline(deadline)
                 .build();
 
-        Long savedPostId = postService.save(postCreateRequest, member, List.of(), List.of(file1, file2));
+        Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
 
         // when
-        PostDetailResponse response = postService.getPostById(savedPostId, member);
+        PostDetailResponse response = postService.getPostById(savedPostId, writer);
 
         // then
         List<CategoryResponse> categories = response.categories();
-        WriterResponse writer = response.writer();
+        WriterResponse writerResponse = response.writer();
         VoteDetailResponse voteDetailResponse = response.voteInfo();
         List<PostOptionDetailResponse> options = voteDetailResponse.options();
 
@@ -707,12 +708,209 @@ class PostServiceTest {
                 () -> assertThat(response.postId()).isEqualTo(savedPostId),
                 () -> assertThat(response.title()).isEqualTo("title"),
                 () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(response.deadline()).isEqualTo(deadline),
                 () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
-                () -> assertThat(writer.id()).isEqualTo(member.getId()),
-                () -> assertThat(writer.nickname()).isEqualTo("user7"),
+                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
                 () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(),
+                () -> assertThat(options).hasSize(2),
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
+        );
+    }
+
+    @Test
+    @DisplayName("한 게시글의 상세를 조회할 시, 해당 게시글의 투표자면 결과를 알 수 있다.")
+    void getPostByVoter() throws IOException {
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member voter = memberRepository.save(MemberFixtures.MALE_20.get());
+        Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3);
+
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
+                .content("option1")
+                .build();
+
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
+                .content("option2")
+                .build();
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(option1, option2))
+                .deadline(deadline)
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
+        Post post = postRepository.findById(savedPostId).get();
+        PostOptions postOptions = post.getPostOptions();
+        PostOption postOption = postOptions.getPostOptions().get(0);
+        voteService.vote(voter, savedPostId, postOption.getId());
+
+        entityManager.clear();
+
+        // when
+        PostDetailResponse response = postService.getPostById(savedPostId, voter);
+
+        // then
+        List<CategoryResponse> categories = response.categories();
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+
+        assertAll(
+                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
+                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user10"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isOne(),
+                () -> assertThat(options).hasSize(2),
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
+        );
+    }
+
+    @Test
+    @DisplayName("한 게시글의 상세를 조회할 시, 마감된 게시글이면 투표 결과를 알 수 있다.")
+    void getClosedPost() throws IOException {
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.FEMALE_10.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        LocalDateTime deadline = LocalDateTime.now();
+
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
+                .content("option1")
+                .build();
+
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
+                .content("option2")
+                .build();
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(option1, option2))
+                .deadline(deadline)
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
+
+        // when
+        PostDetailResponse response = postService.getPostById(savedPostId, member);
+
+        // then
+        List<CategoryResponse> categories = response.categories();
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+
+        assertAll(
+                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
+                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(),
+                () -> assertThat(options).hasSize(2),
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
+        );
+    }
+
+    @Test
+    @DisplayName("한 게시글의 상세를 조회할 시, 작성자, 투표자, 마감된 게시글이 전부 아니면 투표 결과를 알 수 없다.")
+    void getPostInvisibleResult() throws IOException {
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.FEMALE_10.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image1",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        LocalDateTime deadline = LocalDateTime.now().plusDays(3);
+
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
+                .content("option1")
+                .build();
+
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
+                .content("option2")
+                .build();
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(option1, option2))
+                .deadline(deadline)
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
+
+        // when
+        PostDetailResponse response = postService.getPostById(savedPostId, member);
+
+        // then
+        List<CategoryResponse> categories = response.categories();
+        WriterResponse writerResponse = response.writer();
+        VoteDetailResponse voteDetailResponse = response.voteInfo();
+        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+
+        assertAll(
+                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+                () -> assertThat(response.title()).isEqualTo("title"),
+                () -> assertThat(response.content()).isEqualTo("content"),
+                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
+                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isEqualTo(-1),
                 () -> assertThat(options).hasSize(2),
                 () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
         );

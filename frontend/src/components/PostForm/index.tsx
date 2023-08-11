@@ -1,7 +1,7 @@
 import type { UseMutateFunction } from '@tanstack/react-query';
 
 import React, { HTMLAttributes, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
@@ -20,9 +20,11 @@ import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
+import { PATH } from '@constants/path';
 import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
 
 import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
+import { checkWriter } from '@utils/post/checkWriter';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 
@@ -43,6 +45,7 @@ const CATEGORY_COUNT_LIMIT = 3;
 
 export default function PostForm({ data, mutate, isError, error }: PostFormProps) {
   const {
+    postId,
     title,
     content,
     category: categoryIds,
@@ -50,6 +53,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
     deadline,
     voteInfo,
     imageUrl,
+    writer,
   } = data ?? {};
 
   const navigate = useNavigate();
@@ -141,6 +145,8 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       mutate(formData);
     }
   };
+
+  if (postId && writer && !checkWriter(writer.id)) return <Navigate to={PATH.HOME} />;
 
   return (
     <>

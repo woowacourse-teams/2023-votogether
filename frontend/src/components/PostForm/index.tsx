@@ -10,6 +10,7 @@ import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useContentImage } from '@hooks/useContentImage';
 import { useMultiSelect } from '@hooks/useMultiSelect';
 import { useText } from '@hooks/useText';
+import { useToast } from '@hooks/useToast';
 import { useToggle } from '@hooks/useToggle';
 import { useWritingOption } from '@hooks/useWritingOption';
 
@@ -18,6 +19,7 @@ import MultiSelect from '@components/common/MultiSelect';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
+import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
@@ -57,6 +59,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
   const contentImageHook = useContentImage(imageUrl);
   const { isLoggedIn: isLogged } = useContext(AuthContext).loggedInfo;
   const { data: categoryList } = useCategoryList(isLogged);
+  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -126,11 +129,23 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
         return { content: text, imageUrl: imageUrl };
       });
 
+      //예외처리
+      if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
+      if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
+      if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
+      if (writingContent.trim() === '') return openToast('내용은 필수로 입력해야 합니다.');
+      if (writingOptionList.length < 2) return openToast('선택지는 최소 2개 입력해주세요.');
+      if (writingOptionList.length > 5) return openToast('선택지는 최대 5개 입력할 수 있습니다.');
+      if (writingOptionList.some(option => option.content.trim() === ''))
+        return openToast('선택지에 글을 입력해주세요.');
+      if (Object.values(time).reduce((a, b) => a + b, 0) < 1)
+        return openToast('시간은 필수로 입력해야 합니다.');
+
       const updatedPostTexts = {
         categoryIds: selectedOptionList.map(option => option.id),
-        title: writingTitle ?? '',
-        imageUrl: imageUrl ?? '',
-        content: writingContent ?? '',
+        title: writingTitle,
+        imageUrl: imageUrl,
+        content: writingContent,
         postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),
         // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
@@ -246,6 +261,11 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
           </Modal>
         )}
       </form>
+      {isToastOpen && (
+        <Toast size="md" position="bottom">
+          {toastMessage}
+        </Toast>
+      )}
     </>
   );
 }

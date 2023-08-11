@@ -144,7 +144,7 @@ export default function PostForm({ data, mutate, isError, error }: PostFormProps
       const updatedPostTexts = {
         categoryIds: selectedOptionList.map(option => option.id),
         title: writingTitle,
-        imageUrl: imageUrl,
+        imageUrl: contentImageHook.contentImage,
         content: writingContent,
         postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),

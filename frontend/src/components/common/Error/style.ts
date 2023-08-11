@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 
   position: relative;
 `;
@@ -36,20 +36,33 @@ export const Description = styled.p`
   width: 90%;
   margin: 20px 0;
 
-  font: var(--text-title);
+  font: var(--text-body);
   text-align: center;
 `;
 
 export const Direction = styled.div`
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 `;
 
 export const Text = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
   font: var(--text-body);
   text-decoration: underline;
 
   cursor: pointer;
+`;
+
+export const RetryText = styled.p`
+  color: gray;
+  font: var(--text-caption);
 `;
 
 export const ButtonWrapper = styled.div`

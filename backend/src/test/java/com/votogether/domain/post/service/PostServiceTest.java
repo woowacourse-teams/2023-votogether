@@ -930,4 +930,97 @@ class PostServiceTest {
                 .hasMessage(PostExceptionType.NOT_WRITER.getMessage());
     }
 
+    @Test
+    @DisplayName("게시글 수정 시, 마감된 게시글이면 예외를 던진다.")
+    void throwExceptionUpdateClosedPost() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image2",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        MockMultipartFile file3 = new MockMultipartFile(
+                "image3",
+                "test3.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
+        );
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(
+                        PostOptionCreateRequest.builder()
+                                .content("option1")
+                                .build(),
+                        PostOptionCreateRequest.builder()
+                                .content("option2")
+                                .build()
+                ))
+                .deadline(LocalDateTime.now())
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
+
+
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        MockMultipartFile file4 = new MockMultipartFile(
+                "image4",
+                "test4.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file5 = new MockMultipartFile(
+                "image5",
+                "test5.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        MockMultipartFile file6 = new MockMultipartFile(
+                "image6",
+                "test6.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
+        );
+
+        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
+                .categoryIds(List.of(category2.getId()))
+                .title("title2")
+                .content("content2")
+                .postOptions(List.of(
+                        PostOptionUpdateRequest.builder()
+                                .content("option3")
+                                .build(),
+                        PostOptionUpdateRequest.builder()
+                                .content("option4")
+                                .build()
+                ))
+                .deadline(LocalDateTime.now().plusDays(1))
+                .build();
+
+        // when, then
+        assertThatThrownBy(() -> postService.update(
+                savedPostId,
+                postUpdateRequest,
+                writer,
+                List.of(file4),
+                List.of(file5, file6)
+        ))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(PostExceptionType.POST_CLOSED.getMessage());
+    }
+
 }

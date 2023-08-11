@@ -11,71 +11,59 @@ const meta: Meta<typeof Toast> = {
 export default meta;
 
 export const SizeCase = () => {
-  const { isOpen: isSmOpen, openComponent: openSmComponent } = useToast();
-  const { isOpen: isMdOpen, openComponent: openMdComponent } = useToast();
-  const { isOpen: isLgOpen, openComponent: openLgComponent } = useToast();
-  const { isOpen: isFreeOpen, openComponent: openFreeComponent } = useToast();
-
-  const handleSmButtonClick = () => {
-    openSmComponent();
-  };
-
-  const handleMdButtonClick = () => {
-    openMdComponent();
-  };
-
-  const handleLgButtonClick = () => {
-    openLgComponent();
-  };
-
-  const handleFreeButtonClick = () => {
-    openFreeComponent();
-  };
+  const { isOpen: isSmOpen, openToast: openSmComponent, toastMessage: smMessage } = useToast();
+  const { isOpen: isMdOpen, openToast: openMdComponent, toastMessage: mdMessage } = useToast();
+  const { isOpen: isLgOpen, openToast: openLgComponent, toastMessage: lgMessage } = useToast();
+  const {
+    isOpen: isFreeOpen,
+    openToast: openFreeComponent,
+    toastMessage: freeMessage,
+  } = useToast();
 
   return (
     <>
       <button
-        onClick={handleSmButtonClick}
+        onClick={() => openSmComponent('게시물이 삭제되었습니다.')}
         style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
       >
         sm 사이즈 토스트 열기 버튼
       </button>
       {isSmOpen && (
         <Toast size="sm" position="bottom">
-          게시물이 삭제되었습니다.
+          {smMessage}
         </Toast>
       )}
       <button
-        onClick={handleMdButtonClick}
+        onClick={() => openMdComponent('게시물이 삭제되었습니다.')}
         style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
       >
         md 사이즈 토스트 열기 버튼
       </button>
       {isMdOpen && (
         <Toast size="md" position="bottom">
-          게시물이 삭제되었습니다.
+          {mdMessage}
         </Toast>
       )}
       <button
-        onClick={handleLgButtonClick}
+        onClick={() => openLgComponent('게시물이 삭제되었습니다.')}
         style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
       >
         lg 사이즈 토스트 열기 버튼
       </button>
       {isLgOpen && (
         <Toast size="lg" position="bottom">
-          게시물이 삭제되었습니다.
+          {lgMessage}
         </Toast>
       )}
       <button
-        onClick={handleFreeButtonClick}
+        onClick={() => openFreeComponent('게시물이 삭제되었습니다.')}
         style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
       >
         free 사이즈 토스트 열기 버튼
       </button>
       {isFreeOpen && (
         <Toast size="free" position="bottom">
-          게시물이 삭제되었습니다.
+          {freeMessage}
         </Toast>
       )}
     </>
@@ -83,39 +71,35 @@ export const SizeCase = () => {
 };
 
 export const PositionCase = () => {
-  const { isOpen: isTopOpen, openComponent: openTopComponent } = useToast();
-  const { isOpen: isBottomOpen, openComponent: openBottomComponent } = useToast();
-
-  const handleSmButtonClick = () => {
-    openTopComponent();
-  };
-
-  const handleMdButtonClick = () => {
-    openBottomComponent();
-  };
+  const { isOpen: isTopOpen, openToast: openTopComponent, toastMessage: topMessage } = useToast();
+  const {
+    isOpen: isBottomOpen,
+    openToast: openBottomComponent,
+    toastMessage: bottomMessage,
+  } = useToast();
 
   return (
     <>
       <button
-        onClick={handleSmButtonClick}
+        onClick={() => openTopComponent('게시물이 삭제되었습니다.')}
         style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
       >
         top position 토스트 열기 버튼
       </button>
       {isTopOpen && (
         <Toast size="sm" position="top">
-          게시물이 삭제되었습니다.
+          {topMessage}
         </Toast>
       )}
       <button
-        onClick={handleMdButtonClick}
+        onClick={() => openBottomComponent('게시물이 삭제되었습니다.')}
         style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
       >
         bottom position 토스트 열기 버튼
       </button>
       {isBottomOpen && (
         <Toast size="sm" position="bottom">
-          게시물이 삭제되었습니다.
+          {bottomMessage}
         </Toast>
       )}
     </>

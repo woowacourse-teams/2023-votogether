@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ReportRequest } from '@type/report';
@@ -29,8 +29,7 @@ export default function PostDetailPage() {
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
-  const { isOpen: isToastOpen, openComponent: openToast } = useToast();
-  const [toastMessage, setToastMessage] = useState('');
+  const { isOpen: isToastOpen, openToast, toastMessage } = useToast();
 
   const { loggedInfo } = useContext(AuthContext);
   const memberId = loggedInfo.id;
@@ -52,8 +51,7 @@ export default function PostDetailPage() {
 
   useEffect(() => {
     if (isDeleteError && deleteError instanceof Error) {
-      setToastMessage(deleteError.message);
-      openToast();
+      openToast(deleteError.message);
     }
   }, [isDeleteError, deleteError]);
 
@@ -89,8 +87,7 @@ export default function PostDetailPage() {
   const movePage = {
     moveWritePostPage: () => {
       if (postData.voteInfo.allPeopleCount) {
-        setToastMessage('투표한 사용자가 있어 글 수정이 불가합니다.');
-        openToast();
+        openToast('투표한 사용자가 있어 글 수정이 불가합니다.');
       }
 
       navigate(`/posts/write/${postId}`);
@@ -107,8 +104,7 @@ export default function PostDetailPage() {
     setEarlyClosePost: earlyClosePost,
     deletePost: () => {
       if (postData.voteInfo.allPeopleCount >= 20) {
-        setToastMessage('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
-        openToast();
+        openToast('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
         return;
       }
 
@@ -119,12 +115,10 @@ export default function PostDetailPage() {
 
       await reportContent(reportData)
         .then(res => {
-          setToastMessage('게시물을 신고했습니다.');
-          openToast();
+          openToast('게시물을 신고했습니다.');
         })
         .catch(e => {
-          setToastMessage(e instanceof Error ? e.message : '게시물 신고가 실패했습니다');
-          openToast();
+          openToast(e instanceof Error ? e.message : '게시물 신고가 실패했습니다');
         });
     },
     reportNickname: async (reason: string) => {
@@ -132,12 +126,10 @@ export default function PostDetailPage() {
 
       await reportContent(reportData)
         .then(res => {
-          setToastMessage('작성자 닉네임을 신고했습니다.');
-          openToast();
+          openToast('작성자 닉네임을 신고했습니다.');
         })
         .catch(e => {
-          setToastMessage(e instanceof Error ? e.message : '작성자 닉네임 신고가 실패했습니다.');
-          openToast();
+          openToast(e instanceof Error ? e.message : '작성자 닉네임 신고가 실패했습니다.');
         });
     },
   };

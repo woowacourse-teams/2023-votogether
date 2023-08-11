@@ -31,7 +31,6 @@ export const ImageIconWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: var(--header);
   width: 15px;
   height: 15px;
   border-radius: 50%;
@@ -39,6 +38,8 @@ export const ImageIconWrapper = styled.div`
   position: absolute;
   right: 25px;
   top: 0;
+
+  background-color: var(--header);
 `;
 
 export const ImageIcon = styled.img`
@@ -94,11 +95,11 @@ export const Wrapper = styled.div`
 export const Content = styled.p<{ $isPreview: boolean }>`
   display: -webkit-box;
 
+  margin: 10px 0;
+
   font: var(--text-caption);
   text-overflow: ellipsis;
   word-break: break-word;
-
-  margin: 10px 0;
 
   overflow: hidden;
 
@@ -119,10 +120,9 @@ export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
 `;
 
 export const Image = styled.img`
+  width: 100%;
   border-radius: 4px;
   margin-bottom: 10px;
-
-  width: 100%;
 
   aspect-ratio: 1/1;
   object-fit: cover;

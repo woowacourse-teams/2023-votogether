@@ -75,7 +75,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         <S.Category aria-label="카테고리">
           {category.map(category => category.name).join(' | ')}
         </S.Category>
-        {checkIncludeImage() && (
+        {isPreview && checkIncludeImage() && (
           <S.ImageIconWrapper>
             <S.ImageIcon src={photoIcon} alt="해당 게시물은 사진을 포함하고 있습니다." />
           </S.ImageIconWrapper>

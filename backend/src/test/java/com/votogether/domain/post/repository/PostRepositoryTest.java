@@ -631,6 +631,26 @@ class PostRepositoryTest {
             assertThat(posts).hasSize(4);
         }
 
+        @Test
+        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목 + 내용)")
+        void searchPostsWithKeywordInTitleAndContent() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "1",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
+            );
+        }
+
     }
 
 }

@@ -10,7 +10,7 @@ export const useToast = () => {
     setIsOpen(true);
 
     timeId = setTimeout(() => {
-      if (isOpen) setIsOpen(false);
+      setIsOpen(false);
     }, TOAST_TIME * 1000);
   };
 

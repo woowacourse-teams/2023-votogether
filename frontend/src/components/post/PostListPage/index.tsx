@@ -28,11 +28,7 @@ export default function PostListPage() {
       </S.HeaderWrapper>
       <S.DrawerWrapper>
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
-          <ErrorBoundary>
-            <Suspense fallback={<Skeleton isLarge={true} />}>
-              <Dashboard />
-            </Suspense>
-          </ErrorBoundary>
+          <Dashboard />
         </Drawer>
       </S.DrawerWrapper>
       <ErrorBoundary>

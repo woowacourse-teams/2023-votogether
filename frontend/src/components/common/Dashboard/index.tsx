@@ -1,56 +1,38 @@
-import { useContext } from 'react';
+import { Suspense, useContext } from 'react';
 
 import { AuthContext } from '@hooks/context/auth';
-import { useCategoryList } from '@hooks/query/category/useCategoryList';
-import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
+
+import ErrorBoundary from '@pages/ErrorBoundary';
 
 import { clearCookieToken } from '@utils/cookie';
-import { getSelectedState } from '@utils/post/getSelectedState';
 
+import Skeleton from '../Skeleton';
 import SquareButton from '../SquareButton';
 
-import CategoryToggle from './CategoryToggle';
+import CategorySection from './CategorySection';
 import GuestProfile from './GuestProfile';
 import * as S from './style';
 import UserProfile from './UserProfile';
 
 export default function Dashboard() {
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
-  const { userInfo, isLoggedIn } = loggedInfo;
-
-  const { data: categoryList } = useCategoryList(isLoggedIn);
-
-  const { postOptionalOption, postType } = usePostRequestInfo();
-  const { categoryId, keyword } = postOptionalOption;
-
-  const selectedState = getSelectedState({
-    categoryId,
-    keyword,
-    categoryList: categoryList ?? [],
-    postType,
-  });
+  const { userInfo } = loggedInfo;
 
   const handleLogoutClick = () => {
     clearCookieToken('accessToken');
     clearLoggedInfo();
   };
 
-  const favoriteCategory = categoryList?.filter(category => category.isFavorite === true) ?? [];
-  const allCategory = categoryList?.filter(category => category.isFavorite === false) ?? [];
-
   return (
     <S.Container>
       {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
-      <S.SelectCategoryWrapper>
-        <S.Circle />
-        <S.SelectCategoryText>{selectedState}</S.SelectCategoryText>
-      </S.SelectCategoryWrapper>
-      <S.ContentContainer>
-        <S.CategoryToggleContainer>
-          {userInfo && <CategoryToggle title="즐겨찾기" categoryList={favoriteCategory} />}
-          <CategoryToggle title="카테고리 모아보기" categoryList={allCategory} />
-        </S.CategoryToggleContainer>
-      </S.ContentContainer>
+      <S.CategorySectionWrapper>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton isLarge={true} />}>
+            <CategorySection />
+          </Suspense>
+        </ErrorBoundary>
+      </S.CategorySectionWrapper>
       {userInfo && (
         <S.ButtonWrapper>
           <SquareButton theme="blank" onClick={handleLogoutClick}>

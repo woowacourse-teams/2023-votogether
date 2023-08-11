@@ -9,7 +9,6 @@ import { useDeletePost } from '@hooks/query/post/useDeletePost';
 import { useEarlyClosePost } from '@hooks/query/post/useEarlyClosePost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
-
 import { reportContent } from '@api/report';
 
 import CommentList from '@components/comment/CommentList';
@@ -128,8 +127,8 @@ export default function PostDetailPage() {
           <CommentList
             commentList={commentData ?? []}
             memberId={memberId}
-            isGuest={false}
-            postWriterName={'익명의손님1'}
+            isGuest={!loggedInfo.isLoggedIn}
+            postWriterName={postData.writer.nickname}
           />
         </S.BottomContainer>
       )}

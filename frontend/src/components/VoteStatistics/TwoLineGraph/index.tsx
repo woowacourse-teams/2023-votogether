@@ -15,16 +15,16 @@ export default function TwoLineGraph({ ageGroup, size }: GraphProps) {
         return (
           <S.OptionContainer key={ageResult.name} $size={size}>
             <S.DataWrapper>
-              <S.OptionLengthWrapper $gender="female">
+              <S.OptionLengthWrapper $gender="FEMALE">
                 <span aria-label="투표한 여자수">{ageResult.female}</span>
                 <S.OptionLength
                   $amount={(ageResult.female / maxVoteAmount) * 100}
-                  $gender="female"
+                  $gender="FEMALE"
                 />
               </S.OptionLengthWrapper>
-              <S.OptionLengthWrapper $gender="male">
+              <S.OptionLengthWrapper $gender="MALE">
                 <span aria-label="투표한 남자수">{ageResult.male}</span>
-                <S.OptionLength $amount={(ageResult.male / maxVoteAmount) * 100} $gender="male" />
+                <S.OptionLength $amount={(ageResult.male / maxVoteAmount) * 100} $gender="MALE" />
               </S.OptionLengthWrapper>
             </S.DataWrapper>
             <span aria-label="투표한 나이대">{ageResult.name}</span>

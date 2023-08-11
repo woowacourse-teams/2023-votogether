@@ -69,7 +69,7 @@ export default function InnerHeaderPart({
         ) : !isClosed ? (
           <>
             <HeaderTextButton onClick={moveWritePostPage}>수정</HeaderTextButton>
-            <HeaderTextButton onClick={deletePost}>삭제</HeaderTextButton>
+            <HeaderTextButton onClick={() => handleMenuClick('DELETE')}>삭제</HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton size="sm" onClick={setEarlyClosePost}>
                 조기마감
@@ -78,7 +78,7 @@ export default function InnerHeaderPart({
           </>
         ) : (
           <>
-            <HeaderTextButton onClick={deletePost}>삭제</HeaderTextButton>
+            <HeaderTextButton onClick={() => handleMenuClick('DELETE')}>삭제</HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton size="sm" onClick={moveVoteStatisticsPage}>
                 통계보기

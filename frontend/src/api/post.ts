@@ -74,8 +74,9 @@ export const editPost = async (postId: number, updatedPost: FormData) => {
   return await multiPutFetch(`${BASE_URL}/posts/${postId}`, updatedPost);
 };
 
-export const deletePost = async (postId: number) => {
-  return await deleteFetch(`${BASE_URL}/posts/${postId}`);
+
+export const removePost = async (postId: number) => {
+  return await deleteFetch(`${MOCK_URL}/posts/${postId}`);
 };
 
 export const setEarlyClosePost = async (postId: number) => {

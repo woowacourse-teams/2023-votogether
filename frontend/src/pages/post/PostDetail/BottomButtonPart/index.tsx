@@ -29,6 +29,7 @@ export default function BottomButtonPart({
 }: PostDetailPageChildProps) {
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
+
   const [action, setAction] = useState<string | null>(null);
 
   const handleActionButtonClick = (action: string) => {
@@ -58,7 +59,8 @@ export default function BottomButtonPart({
           <SquareButton theme="blank" onClick={moveWritePostPage}>
             수 정
           </SquareButton>
-          <SquareButton theme="fill" onClick={deletePost}>
+
+          <SquareButton theme="fill" onClick={() => handleActionButtonClick('DELETE')}>
             삭 제
           </SquareButton>
         </>
@@ -67,7 +69,7 @@ export default function BottomButtonPart({
           <SquareButton theme="fill" onClick={moveVoteStatisticsPage}>
             통계보기
           </SquareButton>
-          <SquareButton theme="fill" onClick={deletePost}>
+          <SquareButton theme="fill" onClick={() => handleActionButtonClick('DELETE')}>
             삭 제
           </SquareButton>
         </>

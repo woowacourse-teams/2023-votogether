@@ -56,12 +56,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   const checkIncludeImage = () => {
     if (imageUrl !== '') return true;
 
-    const hasOptionImageUrl = voteInfo.options
-      .map(option => option.imageUrl)
-      .some(url => url !== '');
-    if (hasOptionImageUrl) return true;
-
-    return false;
+    return voteInfo.options.map(option => option.imageUrl).some(url => url !== '');
   };
 
   return (

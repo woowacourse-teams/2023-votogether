@@ -18,17 +18,19 @@ export const makePostListUrl = (
   requiredOption: PostListByRequiredOption,
   optionalOption: PostListByOptionalOption
 ) => {
-  const { pageNumber, postSorting, postStatus, postType } = requiredOption;
+  const { pageNumber, postSorting, postStatus, postType, isLoggedIn } = requiredOption;
   const { categoryId, keyword } = optionalOption;
 
   const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
   const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
 
-  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[postType]}`;
+  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[postType]}${
+    isLoggedIn ? '' : '/guest'
+  }`;
   const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
 
   if (categoryId > 0 && postType === POST_TYPE.CATEGORY) {
-    return `${POST_BASE_URL}/${categoryId}?${OPTION_URL}`;
+    return `${POST_BASE_URL}/?${OPTION_URL}&category=${categoryId}`;
   }
 
   if (postType === POST_TYPE.SEARCH) {

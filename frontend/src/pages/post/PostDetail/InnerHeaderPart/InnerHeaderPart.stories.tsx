@@ -17,7 +17,7 @@ const handleEvent = {
   },
   controlPost: {
     setEarlyClosePost: () => {},
-    removePost: () => {},
+    deletePost: () => {},
     reportPost: (reason: string) => {},
     reportNickname: (reason: string) => {},
   },

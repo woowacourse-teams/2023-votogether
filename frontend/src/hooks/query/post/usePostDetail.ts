@@ -2,18 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 
 import { PostInfo } from '@type/post';
 
-import { getPost } from '@api/post';
+import { getPost, getPostForGuest } from '@api/post';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const usePostDetail = (postId: number) => {
-  const { data, error, isLoading } = useQuery<PostInfo>(
+export const usePostDetail = (isGuest: boolean, postId: number) => {
+  const fetchApi = isGuest ? getPostForGuest : getPost;
+
+  const { data, isError, isLoading, error } = useQuery<PostInfo>(
     [QUERY_KEY.POST_DETAIL, postId],
-    () => getPost(postId),
+    () => fetchApi(postId),
     {
       suspense: true,
     }
   );
 
-  return { data, error, isLoading };
+  return { data, isError, isLoading, error };
 };

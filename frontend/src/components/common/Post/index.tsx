@@ -11,6 +11,8 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
+import { checkClosedPost, convertTimeToWord } from '@utils/time';
+
 import * as S from './style';
 
 interface PostProps {
@@ -23,6 +25,8 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   const { loggedInfo } = useContext(AuthContext);
   const { mutate: createVote } = useCreateVote({ isPreview, postId });
   const { mutate: editVote } = useEditVote({ isPreview, postId });
+
+  const isActive = !checkClosedPost(deadline);
 
   const handleVoteClick = (newOptionId: number) => {
     if (writer.nickname === loggedInfo.userInfo?.nickname) return;
@@ -58,14 +62,17 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         <S.Category aria-label="카테고리">
           {category.map(category => category.name).join(' | ')}
         </S.Category>
+        <S.ActivateState aria-label="마감 상태" $isActive={isActive} />
         <S.Title aria-label="제목" $isPreview={isPreview}>
           {title}
         </S.Title>
         <S.Wrapper>
           <span aria-label="작성자">{writer.nickname}</span>
           <S.Wrapper>
-            <span aria-label="작성일시">{createTime}</span>
-            <span aria-label="투표 마감일시">{deadline}</span>
+            <span aria-label="작성일시">{convertTimeToWord(createTime)}</span>
+            <span aria-label="투표 마감일시">
+              {isActive ? convertTimeToWord(deadline) : '마감 완료'}
+            </span>
           </S.Wrapper>
         </S.Wrapper>
         <S.Content aria-label="내용" $isPreview={isPreview}>
@@ -73,8 +80,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         </S.Content>
       </S.DetailLink>
       <WrittenVoteOptionList
-        //현재 contextAPI 안에 유저 ID가 없어서 nickname으로 대체
-        isWriter={writer.nickname === loggedInfo.userInfo?.nickname}
+        isWriter={writer.id === loggedInfo.id}
         selectedOptionId={voteInfo.selectedOptionId}
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}

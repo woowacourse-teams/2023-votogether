@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         path: 'result/:postId',
         element: <VoteStatisticsPage />,
       },
-      { path: 'posts/category/:categoryId', element: <Home /> },
+      { path: 'category/:categoryId', element: <Home /> },
     ],
   },
   {

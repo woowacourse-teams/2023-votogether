@@ -1,6 +1,7 @@
-import { Suspense } from 'react';
+import { Suspense, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { AuthContext } from '@hooks/context/auth';
 import { useCommentList } from '@hooks/query/comment/useCommentList';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
@@ -14,20 +15,21 @@ import PostDetailFetcher from './PostDetailFetcher';
 export default function PostDetailPage() {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
+  const { loggedInfo } = useContext(AuthContext);
   const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
 
   return (
     <Layout isSidebarVisible={true}>
       <ErrorBoundary>
-        <Suspense fallback={<Skeleton />}>
+        <Suspense fallback={<Skeleton isLarge={true} />}>
           <PostDetailFetcher postId={postId} memberId={1} />
         </Suspense>
       </ErrorBoundary>
       {!isCommentLoading && commentData && (
         <CommentList
           commentList={commentData}
-          memberId={1}
-          isGuest={false}
+          memberId={loggedInfo.id}
+          isGuest={!loggedInfo.isLoggedIn}
           postWriterName={'익명의손님1'}
         />
       )}

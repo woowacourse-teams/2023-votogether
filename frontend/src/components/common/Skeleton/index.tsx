@@ -1,11 +1,13 @@
-import React from 'react';
-
 import * as S from './style';
 
-export default function Skeleton() {
+interface SkeletonProps {
+  isLarge: boolean;
+}
+
+export default function Skeleton({ isLarge }: SkeletonProps) {
   return (
     <S.Container>
-      <S.FirstBox />
+      <S.FirstBox $isLarge={isLarge} />
       <S.SecondBox />
       <S.ThirdBox />
     </S.Container>

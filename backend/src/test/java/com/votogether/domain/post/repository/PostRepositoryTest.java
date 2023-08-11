@@ -1,6 +1,7 @@
 package com.votogether.domain.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
@@ -406,8 +407,10 @@ class PostRepositoryTest {
             Slice<Post> posts = postRepository.findClosedPostsVotedByMember(member, pageRequest);
 
             // then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(closedPost1);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(closedPost1)
+            );
         }
 
         @Test
@@ -473,8 +476,10 @@ class PostRepositoryTest {
             Slice<Post> posts = postRepository.findOpenPostsVotedByMember(member, pageRequest);
 
             // then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(openPost1);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(openPost1)
+            );
         }
 
         @Test
@@ -526,10 +531,11 @@ class PostRepositoryTest {
         }
 
     }
-  
+
     @Nested
     @DisplayName("키워드 검색을 통해 게시글 목록을 조회한다.")
-    class findPostsByKeyword {
+    class FindingPostsByKeyword {
+
         Category development;
         Category love;
 
@@ -573,51 +579,52 @@ class PostRepositoryTest {
         @DisplayName("특정 카테고리에 속한 게시글 목록을 키워드를 통해 검색한다.")
         void searchPostsWithCategory() {
             // when
-            Pageable pageable = PageRequest.of(0, 10);
             List<Post> posts = postRepository.findAllWithKeyword(
                     "자바",
                     PostClosingType.ALL,
                     PostSortType.LATEST,
                     development.getId(),
-                    pageable
+                    PageRequest.of(0, 10)
             );
 
             //then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.get(0)).isEqualTo(devOpenPost);
-            assertThat(posts.get(1)).isEqualTo(devClosedPost);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(devOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devClosedPost)
+            );
         }
 
         @Test
         @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목)")
         void searchPostsWithKeywordInTitle() {
             // when
-            Pageable pageable = PageRequest.of(0, 10);
             List<Post> posts = postRepository.findAllWithKeyword(
                     "제목1",
                     PostClosingType.ALL,
                     PostSortType.LATEST,
                     null,
-                    pageable
+                    PageRequest.of(0, 10)
             );
 
             //then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.get(0)).isEqualTo(loveOpenPost);
-            assertThat(posts.get(1)).isEqualTo(devOpenPost);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
+            );
         }
 
         @Test
         @DisplayName("게시글 목록을 키워드를 통해 검색한다.(내용)")
         void searchPostsWithKeywordInContent() {
             // when
-            Pageable pageable = PageRequest.of(0, 10);
             List<Post> posts = postRepository.findAllWithKeyword(
                     "내용",
                     PostClosingType.ALL,
                     PostSortType.LATEST,
                     null,
-                    pageable
+                    PageRequest.of(0, 10)
             );
 
             //then

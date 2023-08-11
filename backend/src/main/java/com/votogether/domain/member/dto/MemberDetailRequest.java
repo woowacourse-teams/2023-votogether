@@ -13,8 +13,8 @@ public record MemberDetailRequest(
         Gender gender,
         @Schema(description = "출생년도", example = "2000")
         @NotNull(message = "출생년도는 빈 값일 수 없습니다.")
-        @Min(value = 4, message = "출생년도는 4자리만 가능합니다.")
-        @Max(value = 4, message = "출생년도는 4자리만 가능합니다.")
+        @Min(value = 1000, message = "출생년도는 1000년 이상부터 가능합니다.")
+        @Max(value = 2100, message = "출생년도는 2100년까지만 가능합니다.")
         Integer birthYear
 ) {
 }

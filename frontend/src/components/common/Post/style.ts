@@ -5,6 +5,8 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const Container = styled.li`
+  position: relative;
+
   font: var(--text-small);
   letter-spacing: 0.5px;
   line-height: 1.5;
@@ -20,6 +22,18 @@ export const Category = styled.span`
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-caption);
   }
+`;
+
+export const ActivateState = styled.div<{ $isActive: boolean }>`
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  background-color: ${({ $isActive }) => ($isActive ? 'var(--active-post)' : 'var(--dark-gray)')};
 `;
 
 export const Title = styled.p<{ $isPreview: boolean }>`

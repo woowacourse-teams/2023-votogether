@@ -30,7 +30,7 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
         {isSidebarVisible && (
           <S.DashboardWrapper>
             <ErrorBoundary>
-              <Suspense fallback={<Skeleton />}>
+              <Suspense fallback={<Skeleton isLarge={true} />}>
                 <Dashboard />
               </Suspense>
             </ErrorBoundary>

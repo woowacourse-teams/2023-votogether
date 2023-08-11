@@ -9,7 +9,7 @@ import {
   deleteFetch,
 } from '@utils/fetch';
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 const MOCK_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export const transformPostResponse = (post: PostInfoResponse): PostInfo => {
@@ -56,6 +56,12 @@ export const changeVotedOption = async (postId: number, optionData: OptionData) 
 
 export const getPost = async (postId: number): Promise<PostInfo> => {
   const post = await getFetch<PostInfoResponse>(`${BASE_URL}/posts/${postId}`);
+
+  return transformPostResponse(post);
+};
+
+export const getPostForGuest = async (postId: number): Promise<PostInfo> => {
+  const post = await getFetch<PostInfoResponse>(`${BASE_URL}/posts/${postId}/guest`);
 
   return transformPostResponse(post);
 };

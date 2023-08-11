@@ -29,14 +29,14 @@ export default function PostListPage() {
       <S.DrawerWrapper>
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
           <ErrorBoundary>
-            <Suspense fallback={<Skeleton />}>
+            <Suspense fallback={<Skeleton isLarge={true} />}>
               <Dashboard />
             </Suspense>
           </ErrorBoundary>
         </Drawer>
       </S.DrawerWrapper>
       <ErrorBoundary>
-        <Suspense fallback={<Skeleton />}>
+        <Suspense fallback={<Skeleton isLarge={true} />}>
           <PostList />
         </Suspense>
       </ErrorBoundary>

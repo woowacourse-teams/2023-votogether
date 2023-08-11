@@ -62,11 +62,19 @@ export const LeftSide = styled.div<{ $hasImage: boolean }>`
 `;
 
 export const Title = styled.input`
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
   padding: 10px;
+  margin-top: 10px;
 
   color: gray;
 
   font: var(--text-title);
+
+  &:focus {
+    outline: none !important;
+    border-color: var(--slate);
+  }
 
   @media (min-width: ${theme.breakpoint.md}) {
     font-size: 2.4rem;
@@ -80,7 +88,10 @@ export const Title = styled.input`
 
 export const Content = styled.textarea`
   min-height: 300px;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
   padding: 10px;
+  margin-top: 7px;
   margin-bottom: 10px;
 
   color: gray;
@@ -89,6 +100,11 @@ export const Content = styled.textarea`
 
   font: var(--text-caption);
   font-family: 'Raleway', sans-serif;
+
+  &:focus {
+    outline: none !important;
+    border-color: var(--slate);
+  }
 
   @media (min-width: ${theme.breakpoint.md}) {
     font-size: 1.8rem;

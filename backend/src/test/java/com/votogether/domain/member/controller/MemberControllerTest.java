@@ -58,7 +58,7 @@ class MemberControllerTest {
         TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
         MemberInfoResponse memberInfoResponse = new MemberInfoResponse(
                 "저문",
-                Gender.MALE,
+                Gender.MALE.getName(),
                 1988,
                 0,
                 0

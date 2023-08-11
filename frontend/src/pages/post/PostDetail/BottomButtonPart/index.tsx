@@ -15,7 +15,7 @@ interface PostDetailPageChildProps {
     movePage: Record<MovePageEvent, () => void>;
     controlPost: {
       setEarlyClosePost: () => void;
-      removePost: () => void;
+      deletePost: () => void;
       reportPost: (reason: string) => void;
       reportNickname: (reason: string) => void;
     };
@@ -28,7 +28,8 @@ export default function BottomButtonPart({
   handleEvent: { movePage, controlPost },
 }: PostDetailPageChildProps) {
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
-  const { setEarlyClosePost, removePost, reportPost, reportNickname } = controlPost;
+  const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
+
   const [action, setAction] = useState<string | null>(null);
 
   const handleActionButtonClick = (action: string) => {
@@ -58,6 +59,7 @@ export default function BottomButtonPart({
           <SquareButton theme="blank" onClick={moveWritePostPage}>
             수 정
           </SquareButton>
+
           <SquareButton theme="fill" onClick={() => handleActionButtonClick('DELETE')}>
             삭 제
           </SquareButton>
@@ -76,7 +78,7 @@ export default function BottomButtonPart({
         <DeleteModal
           target="POST"
           handleCancelClick={handleCancelClick}
-          handleDeleteClick={removePost}
+          handleDeleteClick={deletePost}
         />
       )}
       {action === 'POST_REPORT' && (

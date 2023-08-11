@@ -6,7 +6,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useEditPost = (postId: number) => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, isError, error } = useMutation(
+  const { mutate, isLoading, isSuccess, isError, error } = useMutation(
     (updatedPost: FormData) => editPost(postId, updatedPost),
     {
       onSuccess: () => {
@@ -18,5 +18,5 @@ export const useEditPost = (postId: number) => {
     }
   );
 
-  return { mutate, isLoading, isError, error };
+  return { mutate, isLoading, isSuccess, isError, error };
 };

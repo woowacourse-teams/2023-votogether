@@ -57,7 +57,7 @@ public record PostResponse(
     }
 
     private static String convertImageUrl(final String imageUrl) {
-        return imageUrl == null || imageUrl.contains("없는사진") ? "" : imageUrl;
+        return imageUrl == null ? "" : imageUrl;
     }
 
     private static List<CategoryResponse> getCategories(final Post post) {

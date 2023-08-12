@@ -24,7 +24,7 @@ public record PostOptionResponse(
     }
 
     private static String convertImageUrl(final String imageUrl) {
-        return imageUrl == null || imageUrl.contains("없는사진") ? "" : imageUrl;
+        return imageUrl == null ? "" : imageUrl;
     }
 
     public static PostOptionResponse of(

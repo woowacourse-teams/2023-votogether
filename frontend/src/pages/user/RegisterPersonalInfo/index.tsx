@@ -94,19 +94,19 @@ export default function RegisterPersonalInfo() {
                   <S.Radio
                     type="radio"
                     name="gender"
-                    value="FEMALE"
+                    value="MALE"
                     onChange={handleFormInputChange}
                   />
-                  여성
+                  남성
                 </S.Label>
                 <S.Label>
                   <S.Radio
                     type="radio"
                     name="gender"
-                    value="MALE"
+                    value="FEMALE"
                     onChange={handleFormInputChange}
                   />
-                  남성
+                  여성
                 </S.Label>
               </S.GenderLabel>
             </S.Label>

@@ -531,7 +531,6 @@ class PostRepositoryTest {
     }
 
     @Nested
-<<<<<<< HEAD
     @DisplayName("키워드 검색을 통해 게시글 목록을 조회한다.")
     class FindingPostsByKeyword {
 
@@ -591,7 +590,68 @@ class PostRepositoryTest {
                     () -> assertThat(posts).hasSize(2),
                     () -> assertThat(posts.get(0)).isEqualTo(devOpenPost),
                     () -> assertThat(posts.get(1)).isEqualTo(devClosedPost)
-=======
+            );
+        }
+
+        @Test
+        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목)")
+        void searchPostsWithKeywordInTitle() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "제목1",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
+            );
+        }
+
+        @Test
+        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(내용)")
+        void searchPostsWithKeywordInContent() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "내용",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertThat(posts).hasSize(4);
+        }
+
+        @Test
+        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목 + 내용)")
+        void searchPostsWithKeywordInTitleAndContent() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "1",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
+            );
+        }
+
+    }
+
+    @Nested
     @DisplayName("회원이 작성한 게시글 목록을 조회한다.")
     class findPostsByWriter {
 
@@ -674,26 +734,16 @@ class PostRepositoryTest {
                             .sequence(1)
                             .content("치킨")
                             .build()
->>>>>>> dev
             );
         }
 
         @Test
-<<<<<<< HEAD
-        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목)")
-        void searchPostsWithKeywordInTitle() {
-            // when
-            List<Post> posts = postRepository.findAllWithKeyword(
-                    "제목1",
-                    PostClosingType.ALL,
-=======
         @DisplayName("마감된 게시글을 최신순으로 가져온다.")
         void findClosedPostsWithLatest() {
             // when
             List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                     writer,
                     PostClosingType.CLOSED,
->>>>>>> dev
                     PostSortType.LATEST,
                     null,
                     PageRequest.of(0, 10)
@@ -702,26 +752,12 @@ class PostRepositoryTest {
             //then
             assertAll(
                     () -> assertThat(posts).hasSize(2),
-<<<<<<< HEAD
-                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
-                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
-=======
                     () -> assertThat(posts.get(0)).isEqualTo(closedPost1_V0),
                     () -> assertThat(posts.get(1)).isEqualTo(closedPost_V1)
->>>>>>> dev
             );
         }
 
         @Test
-<<<<<<< HEAD
-        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(내용)")
-        void searchPostsWithKeywordInContent() {
-            // when
-            List<Post> posts = postRepository.findAllWithKeyword(
-                    "내용",
-                    PostClosingType.ALL,
-                    PostSortType.LATEST,
-=======
         @DisplayName("마감된 게시글을 투표순으로 가져온다.")
         void findClosedPostsWithHot() {
             // when
@@ -729,24 +765,11 @@ class PostRepositoryTest {
                     writer,
                     PostClosingType.CLOSED,
                     PostSortType.HOT,
->>>>>>> dev
                     null,
                     PageRequest.of(0, 10)
             );
 
             //then
-<<<<<<< HEAD
-            assertThat(posts).hasSize(4);
-        }
-
-        @Test
-        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목 + 내용)")
-        void searchPostsWithKeywordInTitleAndContent() {
-            // when
-            List<Post> posts = postRepository.findAllWithKeyword(
-                    "1",
-                    PostClosingType.ALL,
-=======
             assertAll(
                     () -> assertThat(posts).hasSize(2),
                     () -> assertThat(posts.get(0)).isEqualTo(closedPost_V1),
@@ -761,7 +784,6 @@ class PostRepositoryTest {
             List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
                     writer,
                     PostClosingType.PROGRESS,
->>>>>>> dev
                     PostSortType.LATEST,
                     null,
                     PageRequest.of(0, 10)
@@ -770,10 +792,6 @@ class PostRepositoryTest {
             //then
             assertAll(
                     () -> assertThat(posts).hasSize(2),
-<<<<<<< HEAD
-                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
-                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
-=======
                     () -> assertThat(posts.get(0)).isEqualTo(openPost1_V1),
                     () -> assertThat(posts.get(1)).isEqualTo(openPost_V2)
             );
@@ -816,7 +834,6 @@ class PostRepositoryTest {
                     () -> assertThat(posts).hasSize(4),
                     () -> assertThat(posts.get(0)).isEqualTo(openPost_V2),
                     () -> assertThat(posts.get(3)).isEqualTo(closedPost1_V0)
->>>>>>> dev
             );
         }
 

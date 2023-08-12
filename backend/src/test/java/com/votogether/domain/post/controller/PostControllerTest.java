@@ -714,8 +714,16 @@ class PostControllerTest {
 
     @Test
     @DisplayName("키워드를 통해 게시글 목록을 조회한다.")
-    void searchPostsWithKeyword() {
+    void searchPostsWithKeyword() throws JsonProcessingException {
         // given
+        long postId = 1L;
+        Member member = MemberFixtures.FEMALE_20.get();
+
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(member);
+
         PostBody postBody = PostBody.builder()
                 .title("title")
                 .content("content")
@@ -727,13 +735,14 @@ class PostControllerTest {
                 .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
-        PostResponse postResponse = PostResponse.of(post, MALE_30.get());
+        PostResponse postResponse = PostResponse.of(post, member);
 
         given(postService.searchPostsWithKeyword(anyString(), anyInt(), any(), any(), anyLong(), any(Member.class)))
                 .willReturn(List.of(postResponse));
 
         // when
         List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .param("keyword", "하이")
                 .param("page", 0)
                 .param("postClosingType", PostClosingType.PROGRESS)

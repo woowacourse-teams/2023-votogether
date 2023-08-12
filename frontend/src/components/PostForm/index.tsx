@@ -11,6 +11,8 @@ import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
 import { useWritingOption } from '@hooks/useWritingOption';
 
+import ErrorBoundary from '@pages/ErrorBoundary';
+
 import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
@@ -58,7 +60,6 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     minute: 0,
   });
   const baseTime = createTime ? new Date(createTime) : new Date();
-  // { selectedOptionList, handleOptionAdd, handleOptionDelete }
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
   const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
@@ -143,7 +144,9 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
-            <CategoryWrapper multiSelectHook={multiSelectHook} />
+            <ErrorBoundary>
+              <CategoryWrapper multiSelectHook={multiSelectHook} />
+            </ErrorBoundary>
             <S.Title
               value={writingTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

@@ -18,8 +18,8 @@ interface CategoryWrapperProps {
 
 export default function CategoryWrapper({ multiSelectHook }: CategoryWrapperProps) {
   const { selectedOptionList, handleOptionAdd, handleOptionDelete } = multiSelectHook;
-  const { isLoggedIn: isLogged } = useContext(AuthContext).loggedInfo;
-  const { data: categoryList } = useCategoryList(isLogged);
+  const { isLoggedIn } = useContext(AuthContext).loggedInfo;
+  const { data: categoryList } = useCategoryList(isLoggedIn);
 
   const categoryOptionList = changeCategoryToOption(categoryList ?? []);
 

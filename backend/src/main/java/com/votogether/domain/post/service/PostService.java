@@ -288,6 +288,7 @@ public class PostService {
     ) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+        post.validateExistVote();
         post.validateWriter(member);
         post.validateDeadLine();
         post.validateDeadLineToModify(request.deadline());

@@ -295,4 +295,10 @@ public class Post extends BaseEntity {
         }
     }
 
+    public void validateExistVote() {
+        if (totalVoteCount > 0) {
+            throw new BadRequestException(PostExceptionType.VOTING_PROGRESS_NOT_EDITABLE);
+        }
+    }
+
 }

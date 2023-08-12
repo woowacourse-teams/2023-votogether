@@ -42,12 +42,12 @@ export default function CommentTextForm({
     isSuccess: isEditSuccess,
     isError: isEditError,
     error: editError,
-  } = useEditComment(postId, commentId, { ...initialComment, content });
+  } = useEditComment(postId, commentId);
 
   const updateComment =
     initialComment.id !== -1
       ? () => {
-          editComment();
+          editComment({ ...initialComment, content });
         }
       : () => {
           createComment({ content });

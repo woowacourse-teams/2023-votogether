@@ -6,11 +6,10 @@ import { editComment } from '@api/comment';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const useEditComment = (postId: number, commentId: number, updatedComment: Comment) => {
+export const useEditComment = (postId: number, commentId: number) => {
   const queryClient = useQueryClient();
-
   const { mutate, isSuccess, isLoading, isError, error } = useMutation(
-    () => editComment(postId, commentId, updatedComment),
+    (updatedComment: Comment) => editComment(postId, commentId, updatedComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS]);

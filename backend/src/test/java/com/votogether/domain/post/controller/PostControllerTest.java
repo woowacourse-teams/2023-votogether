@@ -713,7 +713,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("키워드를 통해 게시글 목록을 조회한다.")
+    @DisplayName("(회원) 키워드를 통해 게시글 목록을 조회한다.")
     void searchPostsWithKeyword() throws JsonProcessingException {
         // given
         long postId = 1L;
@@ -758,6 +758,50 @@ class PostControllerTest {
         // then
         assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
     }
+
+    @Test
+    @DisplayName("(비회원) 키워드를 통해 게시글 목록을 조회한다.")
+    void searchPostsWithKeywordForGuest() {
+        // given
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(MALE_30.get())
+                .postBody(postBody)
+                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                .build();
+
+        PostResponse postResponse = PostResponse.forGuest(post);
+
+        given(postService.searchPostsWithKeywordForGuest(
+                anyString(),
+                anyInt(),
+                any(PostClosingType.class),
+                any(PostSortType.class),
+                anyLong())
+        ).willReturn(List.of(postResponse));
+
+        // when
+        List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+                .param("keyword", "하이")
+                .param("page", 0)
+                .param("postClosingType", PostClosingType.PROGRESS)
+                .param("postSortType", PostSortType.LATEST)
+                .param("category", 1L)
+                .when().get("/posts/search/guest")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<PostResponse>>() {
+                }.getType());
+
+        // then
+        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
+    }
+
 
     @DisplayName("게시글을 삭제한다.")
     void delete() {

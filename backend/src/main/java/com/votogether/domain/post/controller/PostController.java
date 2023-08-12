@@ -2,6 +2,7 @@ package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
+import com.votogether.domain.post.dto.request.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
@@ -20,10 +21,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -46,7 +49,7 @@ public class PostController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
             @RequestPart @Valid final PostCreateRequest request,
-            @RequestPart(required = false) final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> contentImages,
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member member
     ) {
@@ -66,6 +69,36 @@ public class PostController {
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
+    @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시글 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
+    })
+    @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> update(
+            @PathVariable final Long postId,
+            @RequestPart @Valid final PostUpdateRequest request,
+            @RequestPart final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> optionImages,
+            @Auth final Member member
+    ) {
+        System.out.println("PostController.update");
+
+        System.out.println("contentImages = " + contentImages);
+        if (contentImages != null && !contentImages.isEmpty()) {
+            System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
+        }
+
+        System.out.println("optionImages = " + optionImages);
+        if (optionImages != null && !optionImages.isEmpty()) {
+            System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
+            System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
+        }
+
+        postService.update(postId, request, member, contentImages, optionImages);
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "전체 게시글 조회", description = "게시글을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
@@ -73,14 +106,19 @@ public class PostController {
     })
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPost(
-            final int page,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(name = "category", required = false) final Long categoryId,
             @Auth final Member member
     ) {
-        final List<PostResponse> responses =
-                postService.getAllPostBySortTypeAndClosingType(member, page, postClosingType, postSortType);
-
+        final List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(
+                page,
+                postClosingType,
+                postSortType,
+                categoryId,
+                member
+        );
         return ResponseEntity.ok(responses);
     }
 
@@ -184,5 +222,71 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "게시글 검색(회원)", description = "회원으로 키워드를 통해 게시글을 검색한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 검색 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 쿼리 파라미터값 입력"),
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<PostResponse>> searchPostsWithKeyword(
+            @RequestParam final String keyword,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId,
+            @Auth final Member member
+    ) {
+        final List<PostResponse> responses =
+                postService.searchPostsWithKeyword(keyword, page, postClosingType, postSortType, categoryId, member);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "작성한 게시글 조회", description = "회원본인이 작성한 게시글 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원본인이 작성한 게시글 조회 성공")
+    })
+    @GetMapping("/me")
+    public ResponseEntity<List<PostResponse>> getPostsByMe(
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId,
+            @Auth final Member member
+    ) {
+        final List<PostResponse> responses =
+                postService.getPostsByWriter(page, postClosingType, postSortType, categoryId, member);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물이 삭제 되었습니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력입니다.")
+    })
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long postId) {
+        postService.delete(postId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "게시글 검색(비회원)", description = "비회원으로 키워드를 통해 게시글을 검색한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 검색 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 쿼리 파라미터값 입력"),
+    })
+    @GetMapping("/search/guest")
+    public ResponseEntity<List<PostResponse>> searchPostsWithKeywordForGuest(
+            @RequestParam final String keyword,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId
+    ) {
+        final List<PostResponse> responses =
+                postService.searchPostsWithKeywordForGuest(keyword, page, postClosingType, postSortType, categoryId);
+        return ResponseEntity.ok(responses);
+    }
+
 }
+
 

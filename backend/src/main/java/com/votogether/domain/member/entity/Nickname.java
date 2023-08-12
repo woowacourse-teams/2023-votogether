@@ -17,7 +17,7 @@ public class Nickname {
     private static final int MINIMUM_NICKNAME_LENGTH = 2;
     private static final int MAXIMUM_NICKNAME_LENGTH = 15;
 
-    @Column(name = "nickname", length = 15, unique = true, nullable = false)
+    @Column(name = "nickname", length = 20, unique = true, nullable = false)
     private String value;
 
     public Nickname(final String nickname) {

@@ -6,6 +6,7 @@ import static com.votogether.domain.post.entity.QPostCategory.postCategory;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostSortType;
@@ -43,6 +44,28 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .fetch();
     }
 
+    @Override
+    public List<Post> findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+            final Member writer,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Pageable pageable
+    ) {
+        return jpaQueryFactory
+                .selectFrom(post)
+                .join(post.writer).fetchJoin()
+                .where(
+                        categoryIdEq(categoryId),
+                        deadlineEq(postClosingType),
+                        post.writer.eq(writer)
+                )
+                .orderBy(orderBy(postSortType))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
     private BooleanExpression categoryIdEq(final Long categoryId) {
         return categoryId == null ? null : postCategory.category.id.eq(categoryId);
     }
@@ -69,6 +92,34 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             default:
                 return OrderByNull.DEFAULT;
         }
+    }
+
+    @Override
+    public List<Post> findAllWithKeyword(
+            final String keyword,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Pageable pageable
+    ) {
+        return jpaQueryFactory
+                .selectFrom(post)
+                .join(post.writer).fetchJoin()
+                .leftJoin(post.postCategories.postCategories, postCategory)
+                .where(
+                        containsKeywordInTitleOrContent(keyword),
+                        categoryIdEq(categoryId),
+                        deadlineEq(postClosingType)
+                )
+                .orderBy(orderBy(postSortType))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    private BooleanExpression containsKeywordInTitleOrContent(final String keyword) {
+        return post.postBody.title.contains(keyword)
+                .or(post.postBody.content.contains(keyword));
     }
 
 }

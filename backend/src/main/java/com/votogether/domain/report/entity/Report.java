@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Table(
         uniqueConstraints = {@UniqueConstraint(columnNames = {"member_id", "reportType", "targetId"})},
-        indexes = {@Index(columnList = "reportType, targetId")}
+        indexes = {@Index(columnList = "targetId, reportType")}
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -38,7 +38,7 @@ public class Report extends BaseEntity {
     private Member member;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(length = 10, nullable = false)
+    @Column(length = 20, nullable = false)
     private ReportType reportType;
 
     @Column(nullable = false)

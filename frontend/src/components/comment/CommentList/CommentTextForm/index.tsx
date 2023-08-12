@@ -9,7 +9,7 @@ import { useText } from '@hooks/useText';
 
 import SquareButton from '@components/common/SquareButton';
 
-import { COMMENT_MAX_LENGTH } from '@constants/comment';
+import { COMMENT } from '@constants/comment';
 
 import * as S from './style';
 interface CommentTextFormProps {
@@ -47,7 +47,7 @@ export default function CommentTextForm({
     <S.Container>
       <S.TextArea
         value={content}
-        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, COMMENT_MAX_LENGTH)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, COMMENT)}
       />
       <S.ButtonContainer>
         {handleCancelClick && (

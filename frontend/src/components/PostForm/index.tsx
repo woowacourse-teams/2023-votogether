@@ -20,7 +20,7 @@ import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
-import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
+import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
@@ -34,10 +34,6 @@ interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
 }
-
-const MAX_TITLE_LENGTH = 100;
-const MAX_CONTENT_LENGTH = 1000;
-const CATEGORY_COUNT_LIMIT = 3;
 
 export default function PostForm({ data, mutate }: PostFormProps) {
   const {
@@ -163,19 +159,21 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             <S.Title
               value={writingTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleTitleChange(e, POST_TITLE_MAX_LENGTH)
+                handleTitleChange(e, POST_TITLE)
               }
               placeholder="제목을 입력해주세요"
-              maxLength={MAX_TITLE_LENGTH}
+              maxLength={POST_TITLE.MAX_LENGTH}
+              minLength={POST_TITLE.MIN_LENGTH}
               required
             />
             <S.Content
               value={writingContent}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                handleContentChange(e, POST_DESCRIPTION_MAX_LENGTH)
+                handleContentChange(e, POST_CONTENT)
               }
               placeholder="내용을 입력해주세요"
-              maxLength={MAX_CONTENT_LENGTH}
+              maxLength={POST_CONTENT.MAX_LENGTH}
+              minLength={POST_CONTENT.MIN_LENGTH}
               required
             />
             <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>

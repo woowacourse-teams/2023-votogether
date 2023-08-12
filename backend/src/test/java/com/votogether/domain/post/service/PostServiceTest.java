@@ -1657,5 +1657,6 @@ class PostServiceTest {
 
     private boolean hasKeywordInPostResponse(PostResponse postResponse, String keyword) {
         return postResponse.title().contains(keyword) || postResponse.content().contains(keyword);
-
     }
+
+}

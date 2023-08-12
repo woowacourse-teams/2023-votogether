@@ -94,4 +94,32 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         }
     }
 
+    @Override
+    public List<Post> findAllWithKeyword(
+            final String keyword,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Pageable pageable
+    ) {
+        return jpaQueryFactory
+                .selectFrom(post)
+                .join(post.writer).fetchJoin()
+                .leftJoin(post.postCategories.postCategories, postCategory)
+                .where(
+                        containsKeywordInTitleOrContent(keyword),
+                        categoryIdEq(categoryId),
+                        deadlineEq(postClosingType)
+                )
+                .orderBy(orderBy(postSortType))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    private BooleanExpression containsKeywordInTitleOrContent(final String keyword) {
+        return post.postBody.title.contains(keyword)
+                .or(post.postBody.content.contains(keyword));
+    }
+
 }

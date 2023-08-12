@@ -4,6 +4,9 @@ import { Size } from '@type/style';
 
 import { theme } from '@styles/theme';
 
+import { GENDER_COLOR } from '../GraphStyle';
+import { Gender } from '../type';
+
 export const OptionContainer = styled.div<{ $size: Size }>`
   display: flex;
   flex-direction: column;
@@ -37,7 +40,7 @@ export const DataWrapper = styled.div`
   }
 `;
 
-export const OptionLengthWrapper = styled.div<{ $gender: 'female' | 'male' }>`
+export const OptionLengthWrapper = styled.div<{ $gender: Gender }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -49,16 +52,15 @@ export const OptionLengthWrapper = styled.div<{ $gender: 'female' | 'male' }>`
 
   & > :first-child {
     position: relative;
-    left: ${props => props.$gender === 'male' && '3px'};
-    right: ${props => props.$gender === 'female' && '3px'};
+    left: ${props => props.$gender === 'MALE' && '3px'};
+    right: ${props => props.$gender === 'FEMALE' && '3px'};
   }
 `;
 
-export const OptionLength = styled.div<{ $amount: number; $gender: 'female' | 'male' }>`
+export const OptionLength = styled.div<{ $amount: number; $gender: Gender }>`
   height: ${props => `${props.$amount}% `};
   width: 100%;
   border-radius: 5px 5px 0 0;
 
-  background-color: ${props =>
-    props.$gender === 'female' ? 'var(--graph-color-purple)' : 'var(--graph-color-green)'};
+  background-color: ${props => GENDER_COLOR[props.$gender]};
 `;

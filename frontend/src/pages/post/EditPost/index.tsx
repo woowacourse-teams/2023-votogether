@@ -14,7 +14,8 @@ export default function EditPost() {
 
   const { postId } = useParams();
 
-  const { data } = usePostDetail(Number(postId));
+  //해당 페이지는 게스트는 접근할 수 없으므로 필수적으로 true
+  const { data } = usePostDetail(true, Number(postId));
   const { mutate, isSuccess, isError, error } = useEditPost(Number(postId));
 
   useEffect(() => {

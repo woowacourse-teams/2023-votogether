@@ -1,20 +1,22 @@
-import { useContext } from 'react';
+import { Suspense, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 import { ReportRequest } from '@type/report';
 
 import { AuthContext } from '@hooks/context/auth';
-import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { useDeletePost } from '@hooks/query/post/useDeletePost';
 import { useEarlyClosePost } from '@hooks/query/post/useEarlyClosePost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
 import { reportContent } from '@api/report';
 
+import ErrorBoundary from '@pages/ErrorBoundary';
+
 import CommentList from '@components/comment/CommentList';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
+import Skeleton from '@components/common/Skeleton';
 
 import { checkClosedPost } from '@utils/time';
 
@@ -35,7 +37,6 @@ export default function PostDetail() {
   const { data: postData } = usePostDetail(!loggedInfo.isLoggedIn, postId);
   const { mutate: deletePost } = useDeletePost(postId, loggedInfo.isLoggedIn);
   const { mutate: earlyClosePost } = useEarlyClosePost(postId);
-  const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
 
   const postDataFallback = postData ?? ({} as PostInfo);
 
@@ -105,16 +106,13 @@ export default function PostDetail() {
           handleEvent={{ movePage, controlPost }}
         />
       </S.MainContainer>
-      {!isCommentLoading && (
-        <S.BottomContainer>
-          <CommentList
-            commentList={commentData ?? []}
-            memberId={memberId}
-            isGuest={!loggedInfo.isLoggedIn}
-            postWriterName={postDataFallback.writer.nickname}
-          />
-        </S.BottomContainer>
-      )}
+      <S.BottomContainer>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton isLarge={true} />}>
+            <CommentList postId={postId} postWriterName={postDataFallback.writer.nickname} />
+          </Suspense>
+        </ErrorBoundary>
+      </S.BottomContainer>
     </>
   );
 }

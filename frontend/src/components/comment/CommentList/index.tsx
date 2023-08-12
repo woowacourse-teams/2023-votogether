@@ -1,5 +1,7 @@
-import { type Comment } from '@type/comment';
+import { useContext } from 'react';
 
+import { AuthContext } from '@hooks/context/auth';
+import { useCommentList } from '@hooks/query/comment/useCommentList';
 import { useMoreComment } from '@hooks/useMoreComment';
 
 import SquareButton from '@components/common/SquareButton';
@@ -13,9 +15,7 @@ import { COMMENT_USER } from './constants';
 import * as S from './style';
 
 interface CommentListProps {
-  commentList: Comment[];
-  memberId?: number;
-  isGuest: boolean;
+  postId: number;
   postWriterName: string;
 }
 
@@ -31,12 +31,19 @@ const initialComment = {
 };
 
 export default function CommentList({
-  commentList,
-  memberId,
-  isGuest,
+  postId,
+
   postWriterName,
 }: CommentListProps) {
-  const { slicedCommentList, handleMoreComment, hasMoreComment } = useMoreComment(commentList);
+  const { data: commentList } = useCommentList(postId);
+  const { loggedInfo } = useContext(AuthContext);
+  const { isLoggedIn, id: memberId } = loggedInfo;
+
+  const isGuest = !isLoggedIn;
+
+  const { slicedCommentList, handleMoreComment, hasMoreComment } = useMoreComment(
+    commentList ?? []
+  );
 
   const getUserType = (writerId: number) => {
     if (isGuest) {

@@ -1,7 +1,9 @@
-import { ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 
 import * as S from './style';
 
-export default function NarrowTemplateHeader({ children }: { children: ReactNode }) {
+interface NarrowTemplateHeaderProps extends PropsWithChildren {}
+
+export default function NarrowTemplateHeader({ children }: NarrowTemplateHeaderProps) {
   return <S.Container>{children}</S.Container>;
 }

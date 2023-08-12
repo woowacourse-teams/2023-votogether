@@ -262,6 +262,28 @@ public class PostService {
         post.closeEarly();
     }
 
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsByWriter(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Member member
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                member,
+                postClosingType,
+                postSortType,
+                categoryId,
+                pageable
+        );
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, member))
+                .toList();
+    }
+
     @Transactional
     public void delete(final Long postId) {
         final Post post = postRepository.findById(postId)

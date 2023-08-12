@@ -13,9 +13,6 @@ export const usePostDetail = (isGuest: boolean, postId: number) => {
     [QUERY_KEY.POST_DETAIL, postId],
     () => fetchApi(postId),
     {
-      onSuccess: data => {
-        return data;
-      },
       suspense: true,
     }
   );

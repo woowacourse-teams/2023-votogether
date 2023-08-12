@@ -2,8 +2,6 @@ import { PropsWithChildren } from 'react';
 
 import * as S from './style';
 
-interface NarrowTemplateHeaderProps extends PropsWithChildren {}
-
-export default function NarrowTemplateHeader({ children }: NarrowTemplateHeaderProps) {
+export default function NarrowTemplateHeader({ children }: PropsWithChildren) {
   return <S.Container>{children}</S.Container>;
 }

@@ -13,9 +13,10 @@ type Story = StoryObj<typeof UserProfile>;
 
 const MOCK_USER_INFO: User = {
   nickname: '우아한 코끼리',
+  gender: 'MALE',
+  birthYear: 1989,
   postCount: 4,
   voteCount: 128,
-  userPoint: 200,
 };
 
 export const NoBadge: Story = {
@@ -23,5 +24,5 @@ export const NoBadge: Story = {
 };
 
 export const Badge: Story = {
-  render: () => <UserProfile userInfo={{ ...MOCK_USER_INFO, badge: '만근자' }} />,
+  render: () => <UserProfile userInfo={{ ...MOCK_USER_INFO }} />,
 };

@@ -1,6 +1,6 @@
 export interface User {
   nickname: string;
-  gender: number;
+  gender: string;
   birthYear: number;
   postCount: number;
   voteCount: number;
@@ -8,7 +8,7 @@ export interface User {
 
 export interface UserInfoResponse {
   nickname: string;
-  gender: number;
+  gender: string;
   birthYear: number;
   postCount: number;
   voteCount: number;

@@ -14,9 +14,10 @@ type Story = StoryObj<typeof Dashboard>;
 
 const MOCK_USER_INFO: User = {
   nickname: '우아한 코끼리',
+  gender: 'MALE',
+  birthYear: 1989,
   postCount: 4,
   voteCount: 128,
-  userPoint: 200,
 };
 
 const MOCK_CATEGORIES: Category[] = [

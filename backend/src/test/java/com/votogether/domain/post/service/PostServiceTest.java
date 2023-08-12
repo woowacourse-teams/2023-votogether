@@ -954,8 +954,8 @@ class PostServiceTest {
         // given
         Member writer = memberTestPersister.builder().save();
         Post post = postTestPersister.builder().writer(writer).save();
-        PostOption postOption = postOptionTestPersister.builder().post(post).save();
-        PostOption postOption1 = postOptionTestPersister.builder().post(post).save();
+        PostOption postOption = postOptionTestPersister.builder().post(post).sequence(1).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(post).sequence(2).save();
         voteTestPersister.builder().postOption(postOption).save();
         voteTestPersister.builder().postOption(postOption).save();
         voteTestPersister.builder().postOption(postOption1).save();

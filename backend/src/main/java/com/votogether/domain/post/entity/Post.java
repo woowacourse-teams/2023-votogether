@@ -67,7 +67,7 @@ public class Post extends BaseEntity {
             + ")")
     private long totalVoteCount;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
@@ -211,6 +211,12 @@ public class Post extends BaseEntity {
         comment.setPost(this);
     }
 
+    public void validatePossibleToDelete() {
+        if (this.totalVoteCount >= 20) {
+            throw new BadRequestException(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES);
+        }
+    }
+
     public void update(
             final PostBody postBody,
             final String oldContentImageUrl,
@@ -258,7 +264,8 @@ public class Post extends BaseEntity {
             final List<String> postOptionImageUrls
     ) {
         this.postOptions = new PostOptions();
-        mapPostOptionsByElements(postOptionContents, getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls));
+        mapPostOptionsByElements(postOptionContents,
+                getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls));
     }
 
     private List<String> getPostOptionImageUrls(

@@ -8,6 +8,7 @@ import static com.votogether.fixtures.MemberFixtures.MALE_20;
 import static com.votogether.fixtures.MemberFixtures.MALE_30;
 import static com.votogether.fixtures.MemberFixtures.MALE_60;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -19,6 +20,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.post.dto.request.CommentRegisterRequest;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionUpdateRequest;
@@ -32,11 +34,17 @@ import com.votogether.domain.post.dto.response.detail.VoteDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostClosingType;
+import com.votogether.domain.post.entity.PostContentImage;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.PostOptions;
 import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.repository.CommentRepository;
+import com.votogether.domain.post.repository.PostCategoryRepository;
+import com.votogether.domain.post.repository.PostContentImageRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
@@ -56,6 +64,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -105,6 +114,18 @@ class PostServiceTest {
 
     @Autowired
     VoteTestPersister voteTestPersister;
+
+    @Autowired
+    PostCategoryRepository postCategoryRepository;
+
+    @Autowired
+    PostContentImageRepository postContentImageRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    PostCommentService postCommentService;
 
     @Test
     @DisplayName("게시글을 등록한다")
@@ -927,6 +948,151 @@ class PostServiceTest {
                 .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
     }
 
+    void delete() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image2",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        MockMultipartFile file3 = new MockMultipartFile(
+                "image3",
+                "test3.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
+        );
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(
+                        PostOptionCreateRequest.builder()
+                                .content("option1")
+                                .build(),
+                        PostOptionCreateRequest.builder()
+                                .content("option2")
+                                .build()
+                ))
+                .deadline(LocalDateTime.now().plusDays(2))
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
+        final Post post = postRepository.findById(savedPostId).get();
+        final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+
+        Member voter = MALE_30.get();
+        memberRepository.save(voter);
+        PostOption perPostOption = postOptions.get(0);
+        voteService.vote(voter, savedPostId, perPostOption.getId());
+
+        CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest("hello");
+        postCommentService.createComment(voter, post.getId(), commentRegisterRequest);
+        entityManager.flush();
+        entityManager.clear();
+
+        final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
+        final PostBody postBody = post.getPostBody();
+        final PostContentImage postContentImage = postBody.getPostContentImages().getContentImages().get(0);
+        final List<Vote> votes = postOptions.stream()
+                .map(PostOption::getVotes)
+                .flatMap(Collection::stream)
+                .toList();
+        final List<Comment> comments = post.getComments();
+
+        // when, then
+        assertAll(
+                () -> assertThatNoException().isThrownBy(() -> postService.delete(savedPostId)),
+                () -> assertThat(postCategoryRepository.findById(postCategories.get(0).getId())).isNotPresent(),
+                () -> assertThat(postContentImageRepository.findById(postContentImage.getId())).isNotPresent(),
+                () -> assertThat(postOptionRepository.findById(postOptions.get(0).getId())).isNotPresent(),
+                () -> assertThat(voteRepository.findById(votes.get(0).getId())).isNotPresent(),
+                () -> assertThat(commentRepository.findById(comments.get(0).getId())).isNotPresent()
+        );
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제할 시, 투표가 20개 이상 진행된 게시글이면 예외를 던진다.")
+    void throwExceptionDeleteVoteOverTwenty() throws IOException {
+        // given
+        Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
+        Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "test1.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG")
+        );
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image2",
+                "test2.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG")
+        );
+
+        MockMultipartFile file3 = new MockMultipartFile(
+                "image3",
+                "test3.png",
+                "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG")
+        );
+
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .categoryIds(List.of(category1.getId(), category2.getId()))
+                .title("title")
+                .content("content")
+                .postOptions(List.of(
+                        PostOptionCreateRequest.builder()
+                                .content("option1")
+                                .build(),
+                        PostOptionCreateRequest.builder()
+                                .content("option2")
+                                .build()
+                ))
+                .deadline(LocalDateTime.now().plusDays(2))
+                .build();
+
+        Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
+        final Post post = postRepository.findById(savedPostId).get();
+
+        for (int voteCount = 0; voteCount < 20; voteCount++) {
+            Member memberToVote = Member.builder()
+                    .nickname("Abel" + voteCount)
+                    .gender(Gender.MALE)
+                    .birthYear(2000)
+                    .socialType(SocialType.KAKAO)
+                    .socialId("Abel" + voteCount)
+                    .build();
+
+            memberRepository.save(memberToVote);
+
+            final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+            PostOption perPostOption = postOptions.get(voteCount % postOptions.size());
+            voteService.vote(memberToVote, savedPostId, perPostOption.getId());
+        }
+
+        entityManager.clear();
+
+        // when, then
+        assertThatThrownBy(() -> postService.delete(savedPostId))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES.getMessage());
+    }
+
     @Test
     @DisplayName("게시글을 수정한다")
     void update() throws IOException {
@@ -1310,7 +1476,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시글을 수정한다")
+    @DisplayName("게시글을 수정할 시, 해당 게시글이 투표가 되어있으면 예외를 던진다.")
     void throwExceptionUpdateVotingProgress() throws IOException {
         // given
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());

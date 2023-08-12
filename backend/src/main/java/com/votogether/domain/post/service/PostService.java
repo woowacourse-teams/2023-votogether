@@ -279,6 +279,15 @@ public class PostService {
     }
 
     @Transactional
+    public void delete(final Long postId) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+        post.validatePossibleToDelete();
+
+        postRepository.deleteById(postId);
+    }
+
+    @Transactional
     public void update(
             final long postId,
             final PostUpdateRequest request,

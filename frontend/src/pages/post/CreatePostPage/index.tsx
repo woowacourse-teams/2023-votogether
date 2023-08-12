@@ -6,7 +6,7 @@ import { useCreatePost } from '@hooks/query/post/useCreatePost';
 import Layout from '@components/common/Layout';
 import PostForm from '@components/PostForm';
 
-export default function CreatePost() {
+export default function CreatePostPage() {
   const navigate = useNavigate();
 
   const { mutate, isSuccess, isError, error } = useCreatePost();

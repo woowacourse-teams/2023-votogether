@@ -4,8 +4,8 @@ import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
 import Home from '@pages/Home';
 import MyInfo from '@pages/MyInfo';
-import CreatePost from '@pages/post/CreatePost';
-import EditPost from '@pages/post/EditPost';
+import CreatePostPage from '@pages/post/CreatePostPage';
+import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetail';
 import VoteStatisticsPage from '@pages/VoteStatistics';
 
@@ -28,10 +28,10 @@ const router = createBrowserRouter([
   {
     path: PATH.POST,
     children: [
-      { path: 'write', element: <CreatePost /> },
+      { path: 'write', element: <CreatePostPage /> },
       {
         path: 'write/:postId',
-        element: <EditPost />,
+        element: <EditPostPage />,
       },
       {
         path: ':postId',

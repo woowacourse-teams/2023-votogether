@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEditPost } from '@hooks/query/post/useEditPost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
-import Layout from '@components/common/Layout';
 import PostForm from '@components/PostForm';
 
 import { PATH } from '@constants/path';
@@ -34,9 +33,5 @@ export default function EditPost() {
     }
   }, [isError, error]);
 
-  return (
-    <Layout isSidebarVisible={false}>
-      <PostForm data={data} mutate={mutate} />
-    </Layout>
-  );
+  return <PostForm data={data} mutate={mutate} />;
 }

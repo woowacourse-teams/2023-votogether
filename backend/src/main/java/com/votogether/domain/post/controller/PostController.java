@@ -48,7 +48,7 @@ public class PostController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> save(
             @RequestPart @Valid final PostCreateRequest request,
-            @RequestPart(required = false) final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> contentImages,
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member member
     ) {
@@ -77,7 +77,7 @@ public class PostController {
     public ResponseEntity<Void> update(
             @PathVariable final Long postId,
             @RequestPart @Valid final PostUpdateRequest request,
-            @RequestPart(required = false) final List<MultipartFile> contentImages,
+            @RequestPart final List<MultipartFile> contentImages,
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member member
     ) {

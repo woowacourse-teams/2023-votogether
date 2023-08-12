@@ -1,12 +1,11 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '@type/user';
-
 import { AuthContext } from '@hooks/context/auth';
 import { useToggle } from '@hooks/useToggle';
 
 import Accordion from '@components/common/Accordion';
+import GuestProfile from '@components/common/Dashboard/GuestProfile';
 import UserProfile from '@components/common/Dashboard/UserProfile';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
@@ -37,7 +36,7 @@ export default function MyInfo() {
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.ProfileSection>
-          <UserProfile userInfo={userInfo ?? ({} as User)} />
+          {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">

@@ -8,6 +8,7 @@ import com.votogether.ServiceTest;
 import com.votogether.domain.member.dto.MemberDetailRequest;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.fixtures.MemberFixtures;
@@ -108,10 +109,15 @@ class MemberServiceTest {
     class UpdateDetails {
 
         @Test
-        @DisplayName("정상적으로 성공한다.")
+        @DisplayName("성별과 출생년도가 null이면 정상적으로 성공한다.")
         void updateDetailsSuccess() {
             // given
-            Member member = memberTestPersister.builder().save();
+            Member unsavedMember = Member.builder()
+                    .nickname("저문")
+                    .socialType(SocialType.KAKAO)
+                    .socialId("123123123")
+                    .build();
+            Member member = memberRepository.save(unsavedMember);
             MemberDetailRequest request = new MemberDetailRequest(Gender.FEMALE, 2000);
 
             // when
@@ -125,29 +131,41 @@ class MemberServiceTest {
         }
 
         @Test
-        @DisplayName("기존 성별과 같으면 예외가 발생한다.")
+        @DisplayName("기존 성별이 지정되어 있으면 예외가 발생한다.")
         void updateDetailsSameGender() {
             // given
-            Member member = memberTestPersister.builder().save();
-            MemberDetailRequest request = new MemberDetailRequest(Gender.MALE, 2000);
+            Member unsavedMember = Member.builder()
+                    .nickname("저문")
+                    .gender(Gender.MALE)
+                    .socialType(SocialType.KAKAO)
+                    .socialId("123123123")
+                    .build();
+            Member member = memberRepository.save(unsavedMember);
+            MemberDetailRequest request = new MemberDetailRequest(Gender.FEMALE, 2000);
 
             // when, then
             assertThatThrownBy(() -> memberService.updateDetails(request, member))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("같은 성별로 변경할 수 없습니다.");
+                    .hasMessage("이미 성별이 할당되어 있습니다.");
         }
 
         @Test
-        @DisplayName("기존 출생년도와 같으면 예외가 발생한다.")
+        @DisplayName("기존 출생년도가 지정되어 있으면 예외가 발생한다.")
         void updateDetailsSameBirthYear() {
             // given
-            Member member = memberTestPersister.builder().save();
-            MemberDetailRequest request = new MemberDetailRequest(Gender.FEMALE, 1995);
+            Member unsavedMember = Member.builder()
+                    .nickname("저문")
+                    .birthYear(2000)
+                    .socialType(SocialType.KAKAO)
+                    .socialId("123123123")
+                    .build();
+            Member member = memberRepository.save(unsavedMember);
+            MemberDetailRequest request = new MemberDetailRequest(Gender.MALE, 1995);
 
             // when, then
             assertThatThrownBy(() -> memberService.updateDetails(request, member))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("같은 출생년도로 변경할 수 없습니다.");
+                    .hasMessage("이미 출생년도가 할당되어 있습니다.");
         }
 
     }

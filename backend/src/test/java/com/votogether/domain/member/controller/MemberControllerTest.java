@@ -174,8 +174,8 @@ class MemberControllerTest {
         }
 
         @ParameterizedTest
-        @ValueSource(ints = {1, 22, 4444})
-        @DisplayName("출생년도가 4자리가 아니라면 400을 반환한다.")
+        @ValueSource(ints = {1, 222, 55555})
+        @DisplayName("유효하지 않은 출생년도라면 400을 반환한다.")
         void invalidRangeOfBirthYear(int birthYear) throws Exception {
             // given
             Member member = MemberFixtures.MALE_20.get();

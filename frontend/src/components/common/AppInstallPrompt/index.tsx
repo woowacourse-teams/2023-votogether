@@ -25,13 +25,7 @@ export default function AppInstallPrompt() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
 
-      deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
-        if (choiceResult.outcome === 'accepted') {
-          window.console.log('사용자가 설치 프롬프트에 동의했습니다.');
-        } else {
-          window.console.log('사용자가 설치 프롬프트를 무시했습니다.');
-        }
-
+      deferredPrompt.userChoice.then(() => {
         setDeferredPrompt(null);
       });
     }

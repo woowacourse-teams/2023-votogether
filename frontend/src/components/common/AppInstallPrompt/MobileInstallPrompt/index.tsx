@@ -28,14 +28,16 @@ export default function MobileInstallPrompt({
               </S.CancelButton>
             </S.HeaderTop>
             <S.Description>
-              VoTogether는 앱에서 원활히 사용할 수 있습니다. 설치하시겠습니까?
+              VoTogether는 앱처럼 원활히 사용할 수 있습니다. 설치하시겠습니까?
             </S.Description>
           </S.HeaderContent>
         </S.Header>
         {platform === 'ios' && (
           <S.IosContainer>
-            <S.IconImage src={arrowUp} alt="추가하기 아이콘" />
-            <S.Description>버튼을 눌러 홈 화면에 추가하기를 통해 설치를 해주세요</S.Description>
+            <S.Description>
+              브라우저 메뉴바에서 <S.IconImage src={arrowUp} alt="추가하기 아이콘" /> 모양 버튼을
+              눌러 "홈 화면에 추가하기"를 통해 설치를 할 수 있습니다.
+            </S.Description>
           </S.IosContainer>
         )}
         {platform === 'android' && (

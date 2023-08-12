@@ -7,6 +7,8 @@
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 6px;
 
+  background-color: var(--white);
+
   font: var(--text-caption);
 `,Menu=styled_components_browser_esm.zo.button`
   padding: 10px 15px;
@@ -30,4 +32,4 @@
     border-bottom: none;
   }
 `;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function PostMenu({menuList,handleMenuClick}){return(0,jsx_runtime.jsx)(Container,{children:menuList.map((({content,color,action})=>(0,jsx_runtime.jsx)(Menu,{type:"button",$color:color,onClick:event=>{event.stopPropagation(),handleMenuClick(action)},children:content},content)))})}PostMenu.displayName="PostMenu";try{PostMenu.displayName="PostMenu",PostMenu.__docgenInfo={description:"",displayName:"PostMenu",props:{menuList:{defaultValue:null,description:"",name:"menuList",required:!0,type:{name:"PostMenuItem[]"}},handleMenuClick:{defaultValue:null,description:"",name:"handleMenuClick",required:!0,type:{name:"(menu: PostAction) => void"}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/PostMenu/index.tsx#PostMenu"]={docgenInfo:PostMenu.__docgenInfo,name:"PostMenu",path:"src/components/common/PostMenu/index.tsx#PostMenu"})}catch(__react_docgen_typescript_loader_error){}}}]);
-//# sourceMappingURL=components-common-PostMenu-PostMenu-stories.b452442d.iframe.bundle.js.map
+//# sourceMappingURL=components-common-PostMenu-PostMenu-stories.5eeeb739.iframe.bundle.js.map

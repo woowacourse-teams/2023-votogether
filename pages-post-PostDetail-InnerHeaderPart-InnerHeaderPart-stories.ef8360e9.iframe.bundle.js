@@ -42,6 +42,8 @@
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 6px;
 
+  background-color: var(--white);
+
   font: var(--text-caption);
 `,Menu=styled_components_browser_esm.zo.button`
   padding: 10px 15px;
@@ -228,4 +230,4 @@
       background-position-x: -200%;
     }
   `}}},"./src/assets/chevron-down.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-down.f97a5bb1.svg"},"./src/assets/chevron-up.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-up.a1eb858b.svg"}}]);
-//# sourceMappingURL=pages-post-PostDetail-InnerHeaderPart-InnerHeaderPart-stories.805fe500.iframe.bundle.js.map
+//# sourceMappingURL=pages-post-PostDetail-InnerHeaderPart-InnerHeaderPart-stories.ef8360e9.iframe.bundle.js.map

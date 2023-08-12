@@ -8,7 +8,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useCreateComment = (postId: number) => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, isError, error } = useMutation(
+  const { mutate, isSuccess, isLoading, isError, error } = useMutation(
     (newComment: CommentRequest) => createComment(postId, newComment),
     {
       onSuccess: () => {
@@ -20,5 +20,5 @@ export const useCreateComment = (postId: number) => {
     }
   );
 
-  return { mutate, isLoading, isError, error };
+  return { mutate, isSuccess, isLoading, isError, error };
 };

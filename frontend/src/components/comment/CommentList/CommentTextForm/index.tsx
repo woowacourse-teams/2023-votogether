@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
@@ -6,8 +6,10 @@ import { Comment } from '@type/comment';
 import { useCreateComment } from '@hooks/query/comment/useCreateComment';
 import { useEditComment } from '@hooks/query/comment/useEditComment';
 import { useText } from '@hooks/useText';
+import { useToast } from '@hooks/useToast';
 
 import SquareButton from '@components/common/SquareButton';
+import Toast from '@components/common/Toast';
 
 import { COMMENT_MAX_LENGTH } from '@constants/comment';
 
@@ -23,25 +25,49 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-  const { handleTextChange, text: content, resetText } = useText(initialComment.content);
+  const { text: content, handleTextChange, resetText } = useText(initialComment.content);
+  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const { mutate: createComment } = useCreateComment(postId);
-  const { mutate: editComment } = useEditComment(postId, commentId, { ...initialComment, content });
+  const {
+    mutate: createComment,
+    isSuccess: isCreateSuccess,
+    isError: isCreateError,
+    error: createError,
+  } = useCreateComment(postId);
+  const {
+    mutate: editComment,
+    isSuccess: isEditSuccess,
+    isError: isEditError,
+    error: editError,
+  } = useEditComment(postId, commentId);
 
   const updateComment =
     initialComment.id !== -1
       ? () => {
-          editComment();
-          handleCancelClick && handleCancelClick();
+          editComment({ ...initialComment, content });
         }
       : () => {
-          resetText();
           createComment({ content });
-          handleCancelClick && handleCancelClick();
         };
+
+  useEffect(() => {
+    isCreateSuccess && resetText();
+  }, [isCreateSuccess]);
+
+  useEffect(() => {
+    isEditSuccess && handleCancelClick && handleCancelClick();
+  }, [isEditSuccess]);
+
+  useEffect(() => {
+    isCreateError && createError instanceof Error && openToast(createError.message);
+  }, [isCreateError, createError]);
+
+  useEffect(() => {
+    isEditError && editError instanceof Error && openToast(editError.message);
+  }, [isEditError, editError]);
 
   return (
     <S.Container>
@@ -63,6 +89,11 @@ export default function CommentTextForm({
           </SquareButton>
         </S.ButtonWrapper>
       </S.ButtonContainer>
+      {isToastOpen && (
+        <Toast size="md" position="bottom">
+          {toastMessage}
+        </Toast>
+      )}
     </S.Container>
   );
 }

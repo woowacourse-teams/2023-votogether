@@ -948,6 +948,34 @@ class PostServiceTest {
                 .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
     }
 
+    @Test
+    @DisplayName("회원 본인이 작성한 게시글 목록을 가져온다.")
+    void getPostsByWriter() {
+        // given
+        Member writer = memberTestPersister.builder().save();
+        Post post = postTestPersister.builder().writer(writer).save();
+        PostOption postOption = postOptionTestPersister.builder().post(post).sequence(1).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(post).sequence(2).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> responses =
+                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(1),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(post.getId()),
+                () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId()),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(3L)
+        );
+    }
+
     void delete() throws IOException {
         // given
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());

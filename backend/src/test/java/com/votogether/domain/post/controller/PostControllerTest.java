@@ -31,6 +31,7 @@ import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
+import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.exception.GlobalExceptionHandler;
@@ -659,6 +660,60 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("회원본인이 작성한 게시글 목록을 조회한다.")
+    void getPostsByWriter() throws JsonProcessingException {
+        // given
+        long postId = 1L;
+        Member member = MemberFixtures.FEMALE_20.get();
+
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(member);
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(member)
+                .postBody(postBody)
+                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                .build();
+
+        PostResponse postResponse = PostResponse.of(post, member);
+
+        given(postService.getPostsByWriter(
+                anyInt(),
+                any(PostClosingType.class),
+                any(PostSortType.class),
+                anyLong(),
+                any(Member.class))
+        ).willReturn(List.of(postResponse));
+
+        // when
+        List<PostResponse> result = RestAssuredMockMvc
+                .given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .param("page", 0)
+                .param("postClosingType", PostClosingType.PROGRESS)
+                .param("postSortType", PostSortType.LATEST)
+                .param("category", 1L)
+                .when().get("/posts/me")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<PostResponse>>() {
+                }.getType());
+
+        // then
+        assertAll(
+                () -> assertThat(result).hasSize(1),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse)
+        );
+    }
+
     @DisplayName("게시글을 삭제한다.")
     void delete() {
         // given

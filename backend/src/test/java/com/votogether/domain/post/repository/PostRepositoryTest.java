@@ -1,6 +1,7 @@
 package com.votogether.domain.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
@@ -345,7 +346,7 @@ class PostRepositoryTest {
 
         @Test
         @DisplayName("마감된 게시글 목록을 최신순으로 가져온다.")
-        void findClosedPostsVotedByMember() throws InterruptedException {
+        void findClosedPostsVotedByMember() {
             // given
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
             Member member = memberRepository.save(MemberFixtures.MALE_10.get());
@@ -379,8 +380,6 @@ class PostRepositoryTest {
                             .content("치킨")
                             .build()
             );
-
-            Thread.sleep(10);
 
             Post closedPost1 = postRepository.save(
                     Post.builder()
@@ -523,6 +522,194 @@ class PostRepositoryTest {
 
             // then
             assertThat(posts).hasSize(2);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("회원이 작성한 게시글 목록을 조회한다.")
+    class findPostsByWriter {
+
+        Member writer;
+        Member voter;
+        Member voter1;
+
+        Post openPost_V2;
+        Post openPost1_V1;
+        Post closedPost_V1;
+        Post closedPost1_V0;
+
+        @BeforeEach
+        void setUp() {
+            writer = memberRepository.save(MemberFixtures.MALE_20.get());
+            voter = memberRepository.save(MemberFixtures.FEMALE_OVER_90.get());
+            voter1 = memberRepository.save(MemberFixtures.MALE_60.get());
+
+            openPost_V2 = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
+                            .build()
+            );
+
+            PostOption postOption = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(openPost_V2)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+            voteRepository.save(Vote.builder().member(voter).postOption(postOption).build());
+            voteRepository.save(Vote.builder().member(voter1).postOption(postOption).build());
+
+            openPost1_V1 = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
+                            .build()
+            );
+
+            PostOption postOption3 = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(openPost1_V1)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+            voteRepository.save(Vote.builder().member(voter).postOption(postOption3).build());
+
+            closedPost_V1 = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
+                            .build());
+
+            PostOption postOption1 = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(closedPost_V1)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+            voteRepository.save(Vote.builder().member(voter).postOption(postOption1).build());
+
+            closedPost1_V0 = postRepository.save(
+                    Post.builder()
+                            .writer(writer)
+                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(1001, 7, 12, 0, 0))
+                            .build()
+            );
+            PostOption postOption2 = postOptionRepository.save(
+                    PostOption.builder()
+                            .post(closedPost1_V0)
+                            .sequence(1)
+                            .content("치킨")
+                            .build()
+            );
+        }
+
+        @Test
+        @DisplayName("마감된 게시글을 최신순으로 가져온다.")
+        void findClosedPostsWithLatest() {
+            // when
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                    writer,
+                    PostClosingType.CLOSED,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(closedPost1_V0),
+                    () -> assertThat(posts.get(1)).isEqualTo(closedPost_V1)
+            );
+        }
+
+        @Test
+        @DisplayName("마감된 게시글을 투표순으로 가져온다.")
+        void findClosedPostsWithHot() {
+            // when
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                    writer,
+                    PostClosingType.CLOSED,
+                    PostSortType.HOT,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(closedPost_V1),
+                    () -> assertThat(posts.get(1)).isEqualTo(closedPost1_V0)
+            );
+        }
+
+        @Test
+        @DisplayName("마감안된 게시글을 최신순으로 가져온다.")
+        void findOpenPostsWithLatest() {
+            // when
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                    writer,
+                    PostClosingType.PROGRESS,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(openPost1_V1),
+                    () -> assertThat(posts.get(1)).isEqualTo(openPost_V2)
+            );
+        }
+
+        @Test
+        @DisplayName("마감안된 게시글을 인기순으로 가져온다.")
+        void findOpenPostsWithHot() {
+            // when
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                    writer,
+                    PostClosingType.PROGRESS,
+                    PostSortType.HOT,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(openPost_V2),
+                    () -> assertThat(posts.get(1)).isEqualTo(openPost1_V1)
+            );
+        }
+
+        @Test
+        @DisplayName("마감여부와 관계없이 게시글을 인기순으로 조회한다.")
+        void findPostsByHot() {
+            // when
+            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                    writer,
+                    PostClosingType.ALL,
+                    PostSortType.HOT,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(4),
+                    () -> assertThat(posts.get(0)).isEqualTo(openPost_V2),
+                    () -> assertThat(posts.get(3)).isEqualTo(closedPost1_V0)
+            );
         }
 
     }

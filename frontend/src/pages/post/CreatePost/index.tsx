@@ -30,7 +30,7 @@ export default function CreatePost() {
 
   return (
     <Layout isSidebarVisible={false}>
-      <PostForm mutate={mutate} isError={isError} error={error} />
+      <PostForm mutate={mutate} />
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

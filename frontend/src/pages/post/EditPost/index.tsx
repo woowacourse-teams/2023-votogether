@@ -1,14 +1,9 @@
 import { useEffect } from 'react';
-
 import { useNavigate, useParams } from 'react-router-dom';
-        
-import { PostInfo } from '@type/post';
 
 import { useEditPost } from '@hooks/query/post/useEditPost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
-
 import { useToast } from '@hooks/useToast';
-
 
 import Layout from '@components/common/Layout';
 import Toast from '@components/common/Toast';
@@ -48,7 +43,7 @@ export default function EditPost() {
 
   return (
     <Layout isSidebarVisible={false}>
-      <PostForm data={MOCK_DATA} mutate={mutate} isError={isError} error={error} />
+      <PostForm data={data} mutate={mutate} />
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

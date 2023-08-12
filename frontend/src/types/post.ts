@@ -58,6 +58,7 @@ export interface PostListByRequiredOption {
   postStatus: PostStatus;
   postSorting: PostSorting;
   pageNumber: number;
+  isLoggedIn: boolean;
 }
 
 export interface PostListByOptionalOption {

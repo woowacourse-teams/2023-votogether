@@ -22,7 +22,7 @@ interface PostDetailPageChildProps {
     movePage: Record<MovePageEvent, () => void>;
     controlPost: {
       setEarlyClosePost: () => void;
-      removePost: () => void;
+      deletePost: () => void;
       reportPost: (reason: string) => void;
       reportNickname: (reason: string) => void;
     };
@@ -40,7 +40,7 @@ export default function InnerHeaderPart({
   handleEvent: { movePage, controlPost },
 }: PostDetailPageChildProps) {
   const { moveWritePostPage, moveVoteStatisticsPage, movePostListPage } = movePage;
-  const { setEarlyClosePost, removePost, reportPost, reportNickname } = controlPost;
+  const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
   const { isOpen, toggleComponent, closeComponent } = useToggle();
   const [action, setAction] = useState<PostAction | null>(null);
 
@@ -90,7 +90,7 @@ export default function InnerHeaderPart({
           <DeleteModal
             target="POST"
             handleCancelClick={handleCancelClick}
-            handleDeleteClick={removePost}
+            handleDeleteClick={deletePost}
           />
         )}
         {action === 'POST_REPORT' && (

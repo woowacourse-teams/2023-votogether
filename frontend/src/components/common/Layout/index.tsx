@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useCategoryList } from '@hooks/query/category/useCategoryList';
+import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
 
 import { clearCookieToken } from '@utils/cookie';
+import { getSelectedState } from '@utils/post/getSelectedState';
 
 import * as S from './style';
 
@@ -21,7 +23,15 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
 
   const { data: categoryList } = useCategoryList(loggedInfo.isLoggedIn);
-  const selectedCategory = undefined;
+  const { postOptionalOption, postType } = usePostRequestInfo();
+  const { categoryId, keyword } = postOptionalOption;
+
+  const selectedState = getSelectedState({
+    categoryId,
+    keyword,
+    categoryList: categoryList ?? [],
+    postType,
+  });
 
   const handleLogoutClick = () => {
     clearCookieToken('accessToken');
@@ -43,7 +53,7 @@ export default function Layout({ children, isSidebarVisible }: LayoutProps) {
             <Dashboard
               userInfo={loggedInfo.userInfo}
               categoryList={categoryList ?? []}
-              selectedCategory={selectedCategory}
+              selectedState={selectedState}
               handleLogoutClick={handleLogoutClick}
             />
           </S.DashboardWrapper>

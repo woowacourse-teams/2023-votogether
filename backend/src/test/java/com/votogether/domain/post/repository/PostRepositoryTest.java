@@ -205,7 +205,7 @@ class PostRepositoryTest {
 
         private void generatePostOptionAndVote(Post post, int voteCount) {
             for (int j = 0; j < 5; j++) {
-                PostOption postOption = postOptionTestPersister.builder().post(post).save();
+                PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(post).save();
                 for (int k = 0; k < voteCount; k++) {
                     voteTestPersister.builder().member(members.get(k)).postOption(postOption).save();
                 }

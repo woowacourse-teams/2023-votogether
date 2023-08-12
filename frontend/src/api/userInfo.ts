@@ -3,14 +3,14 @@ import type { UserInfoResponse, User, ModifyNicknameRequest } from '@type/user';
 import { deleteFetch, getFetch, patchFetch } from '@utils/fetch';
 
 export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
-  const { nickname, postCount, userPoint, voteCount, badge } = userInfo;
+  const { nickname, postCount, gender, voteCount, birthYear } = userInfo;
 
   return {
     nickname,
     postCount,
-    userPoint,
+    gender,
     voteCount,
-    badge,
+    birthYear,
   };
 };
 

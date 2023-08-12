@@ -1,11 +1,14 @@
+import { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ReportRequest } from '@type/report';
 
+import { AuthContext } from '@hooks/context/auth';
 import { useCommentList } from '@hooks/query/comment/useCommentList';
-import { useFetch } from '@hooks/useFetch';
+import { useDeletePost } from '@hooks/query/post/useDeletePost';
+import { useEarlyClosePost } from '@hooks/query/post/useEarlyClosePost';
+import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
-import { getPost, removePost, setEarlyClosePost } from '@api/post';
 import { reportContent } from '@api/report';
 
 import CommentList from '@components/comment/CommentList';
@@ -13,7 +16,6 @@ import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
 
-import { getCookieToken, getMemberId } from '@utils/cookie';
 import { checkClosedPost } from '@utils/time';
 
 import BottomButtonPart from './BottomButtonPart';
@@ -26,13 +28,18 @@ export default function PostDetailPage() {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const token = getCookieToken().accessToken;
-  const decodedPayload = getMemberId(token);
-  const memberId = decodedPayload.memberId;
+  const { loggedInfo } = useContext(AuthContext);
+  const memberId = loggedInfo.id;
 
-  const { data: postData, errorMessage, isLoading, refetch } = useFetch(() => getPost(postId));
+  const {
+    data: postData,
+    isLoading,
+    isError: isPostError,
+    error: postError,
+  } = usePostDetail(!loggedInfo.isLoggedIn, postId);
+  const { mutate: deletePost } = useDeletePost(postId, loggedInfo.isLoggedIn);
+  const { mutate: earlyClosePost } = useEarlyClosePost(postId);
   const { data: commentData, isLoading: isCommentLoading } = useCommentList(postId);
-  // const { data: userInfo, isLoading: isUserInfoLoading, error } = useUserInfo(isLoggedIn);
 
   if (!postData) {
     return (
@@ -42,10 +49,10 @@ export default function PostDetailPage() {
             <></>
           </NarrowTemplateHeader>
         </S.HeaderContainer>
-        <S.Container>
+        <S.MainContainer>
           {isLoading && 'loading'}
-          {errorMessage && errorMessage}
-        </S.Container>
+          {isPostError && postError instanceof Error && postError.message}
+        </S.MainContainer>
       </Layout>
     );
   }
@@ -72,21 +79,13 @@ export default function PostDetailPage() {
   };
 
   const controlPost = {
-    setEarlyClosePost: async () => {
-      await setEarlyClosePost(postId)
-        .then(res => {
-          alert('게시물을 즉시마감했습니다.');
-          refetch();
-        })
-        .catch(error => alert(error.message));
-    },
-    removePost: async () => {
+    setEarlyClosePost: earlyClosePost,
+    deletePost: () => {
       if (postData.voteInfo.allPeopleCount >= 20)
         return alert('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
 
-      await removePost(postId)
-        .then(res => alert('게시물을 삭제했습니다.'))
-        .catch(error => alert(error.message));
+      deletePost();
+      //추후 삭제가 되었을 때 nav로 홈으로 이동하도록 하기
     },
     reportPost: async (reason: string) => {
       const reportData: ReportRequest = { type: 'POST', id: postId, reason };
@@ -115,21 +114,23 @@ export default function PostDetailPage() {
           />
         </NarrowTemplateHeader>
       </S.HeaderContainer>
-      <S.Container>
+      <S.MainContainer>
         <Post postInfo={postData} isPreview={false} />
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}
           handleEvent={{ movePage, controlPost }}
         />
-      </S.Container>
-      {!isCommentLoading && commentData && (
-        <CommentList
-          commentList={commentData}
-          memberId={memberId}
-          isGuest={false}
-          postWriterName={'익명의손님1'}
-        />
+      </S.MainContainer>
+      {!isCommentLoading && (
+        <S.BottomContainer>
+          <CommentList
+            commentList={commentData ?? []}
+            memberId={memberId}
+            isGuest={!loggedInfo.isLoggedIn}
+            postWriterName={postData.writer.nickname}
+          />
+        </S.BottomContainer>
       )}
     </Layout>
   );

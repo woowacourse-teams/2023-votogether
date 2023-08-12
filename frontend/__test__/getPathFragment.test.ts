@@ -1,6 +1,6 @@
 import { getPathFragment } from '@utils/getPathFragment';
 
-describe('useUrlDetection를 사용했을 때 path의 값만 나오도록 한다.', () => {
+describe('getPathFragment 사용했을 때 path의 값만 나오도록 한다.', () => {
   test('/posts/category/12인 경우, /posts/category를 반환한다.', () => {
     const result = getPathFragment('/posts/category/12');
 

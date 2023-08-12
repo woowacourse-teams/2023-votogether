@@ -639,7 +639,7 @@ class PostServiceTest {
                 .save();
 
         for (int j = 0; j < 2; j++) {
-            PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
+            PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(closedPost).save();
             for (int k = 0; k < 4; k++) {
                 voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
             }
@@ -651,7 +651,7 @@ class PostServiceTest {
                 .save();
 
         for (int j = 0; j < 2; j++) {
-            PostOption postOption = postOptionTestPersister.builder().post(notClosedPost).save();
+            PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(notClosedPost).save();
             for (int k = 0; k < 4; k++) {
                 voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
             }

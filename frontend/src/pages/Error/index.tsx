@@ -24,10 +24,10 @@ export default function Error({ message }: { message?: string }) {
           <SquareButton
             theme="gray"
             onClick={() => {
-              navigate(-1);
+              window.location.reload();
             }}
           >
-            다시 시도
+            새로 고침
           </SquareButton>
         </S.ButtonWrapper>
       </S.Wrapper>

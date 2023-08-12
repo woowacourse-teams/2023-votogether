@@ -29,6 +29,8 @@ export const Title = styled.h1`
   margin-top: 60px;
 
   font-size: 20px;
+  font-weight: bold;
+
   text-align: center;
 `;
 
@@ -48,21 +50,15 @@ export const Direction = styled.div`
   gap: 10px;
 `;
 
-export const Text = styled.p`
+export const RetryText = styled.p`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-around;
   gap: 10px;
 
+  padding: 12px;
+
   font: var(--text-body);
-  text-decoration: underline;
-
-  cursor: pointer;
-`;
-
-export const RetryText = styled.p`
-  color: gray;
-  font: var(--text-caption);
+  font-weight: bold;
 `;
 
 export const ButtonWrapper = styled.div`

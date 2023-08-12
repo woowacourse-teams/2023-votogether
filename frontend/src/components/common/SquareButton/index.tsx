@@ -1,10 +1,10 @@
-import { ButtonHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 import * as S from './style';
 
 interface SquareButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   theme: 'blank' | 'fill' | 'gray';
-  children: string;
+  children: ReactNode;
 }
 
 /* 마감시간, 확인, 취소 등 사용될 버튼

@@ -13,6 +13,7 @@ export const useCategoryList = (isLoggedIn: boolean) => {
     {
       cacheTime: 60 * 60 * 1000,
       staleTime: 60 * 60 * 1000,
+      suspense: true,
     }
   );
 

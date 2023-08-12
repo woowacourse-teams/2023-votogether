@@ -1,12 +1,10 @@
 import type { UseMutateFunction } from '@tanstack/react-query';
 
-import React, { HTMLAttributes, useContext, useState } from 'react';
+import React, { HTMLAttributes, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
-import { AuthContext } from '@hooks/context/auth';
-import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useContentImage } from '@hooks/useContentImage';
 import { useMultiSelect } from '@hooks/useMultiSelect';
 import { useText } from '@hooks/useText';
@@ -14,7 +12,6 @@ import { useToggle } from '@hooks/useToggle';
 import { useWritingOption } from '@hooks/useWritingOption';
 
 import Modal from '@components/common/Modal';
-import MultiSelect from '@components/common/MultiSelect';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
@@ -22,10 +19,10 @@ import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList'
 
 import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/post';
 
-import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 
+import CategoryWrapper from './CategoryWrapper';
 import { DEADLINE_OPTION } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
@@ -53,8 +50,6 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const navigate = useNavigate();
   const writingOptionHook = useWritingOption(voteInfo?.options);
   const contentImageHook = useContentImage(imageUrl);
-  const { isLoggedIn: isLogged } = useContext(AuthContext).loggedInfo;
-  const { data: categoryList } = useCategoryList(isLogged);
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -63,15 +58,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     minute: 0,
   });
   const baseTime = createTime ? new Date(createTime) : new Date();
-
+  // { selectedOptionList, handleOptionAdd, handleOptionDelete }
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
-  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
-    categoryIds ?? [],
-    CATEGORY_COUNT_LIMIT
-  );
-
-  const categoryOptionList = changeCategoryToOption(categoryList ?? []);
+  const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
 
   const handleDeadlineButtonClick = (option: string) => {
     setTime(formatTimeWithOption(option));
@@ -125,7 +115,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       });
 
       const updatedPostTexts = {
-        categoryIds: selectedOptionList.map(option => option.id),
+        categoryIds: multiSelectHook.selectedOptionList.map(option => option.id),
         title: writingTitle ?? '',
         imageUrl: imageUrl ?? '',
         content: writingContent ?? '',
@@ -153,13 +143,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
-            <MultiSelect
-              selectedOptionList={selectedOptionList}
-              optionList={categoryOptionList}
-              handleOptionAdd={handleOptionAdd}
-              handleOptionDelete={handleOptionDelete}
-              placeholder="카테고리를 선택해주세요."
-            />
+            <CategoryWrapper multiSelectHook={multiSelectHook} />
             <S.Title
               value={writingTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

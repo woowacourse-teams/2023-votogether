@@ -32,12 +32,6 @@ export default function EditPost() {
   }, [isSuccess, navigate, postId]);
 
   useEffect(() => {
-    if (isError && error instanceof Error) {
-      alert(error.message);
-    }
-  }, [isError, error]);
-
-  useEffect(() => {
     isError && error instanceof Error && openToast(error.message);
   }, [isError, error, openToast]);
 

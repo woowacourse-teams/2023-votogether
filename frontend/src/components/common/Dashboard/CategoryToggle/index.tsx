@@ -32,9 +32,7 @@ export default function CategoryToggle({
   };
 
   useEffect(() => {
-    if (isError && error instanceof Error) {
-      openToast(error.message);
-    }
+    isError && error instanceof Error && openToast(error.message);
   }, [isError, error]);
 
   return (

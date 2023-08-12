@@ -405,8 +405,10 @@ class PostRepositoryTest {
             Slice<Post> posts = postRepository.findClosedPostsVotedByMember(member, pageRequest);
 
             // then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(closedPost1);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(closedPost1)
+            );
         }
 
         @Test
@@ -472,8 +474,10 @@ class PostRepositoryTest {
             Slice<Post> posts = postRepository.findOpenPostsVotedByMember(member, pageRequest);
 
             // then
-            assertThat(posts).hasSize(2);
-            assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(openPost1);
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.getContent().get(0)).usingRecursiveComparison().isEqualTo(openPost1)
+            );
         }
 
         @Test
@@ -522,6 +526,127 @@ class PostRepositoryTest {
 
             // then
             assertThat(posts).hasSize(2);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("키워드 검색을 통해 게시글 목록을 조회한다.")
+    class FindingPostsByKeyword {
+
+        Category development;
+        Category love;
+
+        Post devClosedPost;
+        Post devOpenPost;
+        Post loveClosedPost;
+        Post loveOpenPost;
+
+        @BeforeEach
+        void setUp() {
+            development = categoryRepository.save(Category.builder().name("개발").build());
+            love = categoryRepository.save(Category.builder().name("연애").build());
+
+            devClosedPost = postTestPersister.builder()
+                    .postBody(PostBody.builder().title("자바제목").content("자바내용").build())
+                    .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
+                    .save();
+            postCategoryRepository.save(PostCategory.builder().post(devClosedPost).category(development).build());
+
+            devOpenPost = postTestPersister.builder()
+                    .postBody(PostBody.builder().title("자바제목1").content("자바내용1").build())
+                    .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
+                    .save();
+            postCategoryRepository.save(PostCategory.builder().post(devOpenPost).category(development).build());
+
+            loveClosedPost = postTestPersister.builder()
+                    .postBody(PostBody.builder().title("커플제목").content("커플내용").build())
+                    .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
+                    .save();
+            postCategoryRepository.save(PostCategory.builder().post(loveClosedPost).category(love).build());
+
+            loveOpenPost = postTestPersister.builder()
+                    .postBody(PostBody.builder().title("커플제목1").content("커플내용1").build())
+                    .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
+                    .save();
+            postCategoryRepository.save(PostCategory.builder().post(loveOpenPost).category(love).build());
+
+        }
+
+        @Test
+        @DisplayName("특정 카테고리에 속한 게시글 목록을 키워드를 통해 검색한다.")
+        void searchPostsWithCategory() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "자바",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    development.getId(),
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(devOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devClosedPost)
+            );
+        }
+
+        @Test
+        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목)")
+        void searchPostsWithKeywordInTitle() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "제목1",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
+            );
+        }
+
+        @Test
+        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(내용)")
+        void searchPostsWithKeywordInContent() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "내용",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertThat(posts).hasSize(4);
+        }
+
+        @Test
+        @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목 + 내용)")
+        void searchPostsWithKeywordInTitleAndContent() {
+            // when
+            List<Post> posts = postRepository.findAllWithKeyword(
+                    "1",
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    null,
+                    PageRequest.of(0, 10)
+            );
+
+            //then
+            assertAll(
+                    () -> assertThat(posts).hasSize(2),
+                    () -> assertThat(posts.get(0)).isEqualTo(loveOpenPost),
+                    () -> assertThat(posts.get(1)).isEqualTo(devOpenPost)
+            );
         }
 
     }

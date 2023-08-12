@@ -16,6 +16,14 @@ public interface PostCustomRepository {
             final Pageable pageable
     );
 
+    List<Post> findAllWithKeyword(
+            final String keyword,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Pageable pageable
+    );
+
     List<Post> findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
             final Member writer,
             final PostClosingType postClosingType,

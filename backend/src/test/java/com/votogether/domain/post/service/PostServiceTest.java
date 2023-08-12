@@ -949,33 +949,6 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("회원 본인이 작성한 게시글 목록을 가져온다.")
-    void getPostsByWriter() {
-        // given
-        Member writer = memberTestPersister.builder().save();
-        Post post = postTestPersister.builder().writer(writer).save();
-        PostOption postOption = postOptionTestPersister.builder().post(post).sequence(1).save();
-        PostOption postOption1 = postOptionTestPersister.builder().post(post).sequence(2).save();
-        voteTestPersister.builder().postOption(postOption).save();
-        voteTestPersister.builder().postOption(postOption).save();
-        voteTestPersister.builder().postOption(postOption1).save();
-
-        entityManager.flush();
-        entityManager.clear();
-
-        // when
-        List<PostResponse> responses =
-                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
-
-        // then
-        assertAll(
-                () -> assertThat(responses).hasSize(1),
-                () -> assertThat(responses.get(0).postId()).isEqualTo(post.getId()),
-                () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId()),
-                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(3L)
-        );
-    }
-
     void delete() throws IOException {
         // given
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
@@ -1609,6 +1582,82 @@ class PostServiceTest {
         ))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(PostExceptionType.VOTING_PROGRESS_NOT_EDITABLE.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 본인이 작성한 게시글 목록을 가져온다.")
+    void getPostsByWriter() {
+        // given
+        Member writer = memberTestPersister.builder().save();
+        Post post = postTestPersister.builder().writer(writer).save();
+        PostOption postOption = postOptionTestPersister.builder().post(post).sequence(1).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(post).sequence(2).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> responses =
+                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(1),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(post.getId()),
+                () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId()),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(3L)
+        );
+    }
+
+    @Test
+    @DisplayName("회원으로 키워드를 통해 게시글 목록을 검색한다.")
+    void getPostsByKeyword() {
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+        Member member1 = memberRepository.save(MemberFixtures.MALE_30.get());
+
+        Post openPost = postTestPersister.builder()
+                .postBody(PostBody.builder().title("제목").content("키워요").build())
+                .deadline(LocalDateTime.now().plusDays(3L))
+                .save();
+        Post openPost1 = postTestPersister.builder()
+                .postBody(PostBody.builder().title("키워드").content("안녕").build())
+                .deadline(LocalDateTime.now().plusDays(3L))
+                .save();
+
+        PostOption postOption = postOptionTestPersister.builder().post(openPost).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(openPost1).save();
+        voteTestPersister.builder().member(member).postOption(postOption).save();
+        voteTestPersister.builder().member(member1).postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> responses = postService.searchPostsWithKeyword(
+                "키워",
+                0,
+                PostClosingType.ALL,
+                PostSortType.LATEST,
+                null,
+                member);
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(2),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(openPost1.getId()),
+                () -> assertThat(responses.get(1).postId()).isEqualTo(openPost.getId()),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(0), "키워")).isTrue(),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(1), "키워")).isTrue(),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(-1L),
+                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L)
+        );
+    }
+
+    private boolean hasKeywordInPostResponse(PostResponse postResponse, String keyword) {
+        return postResponse.title().contains(keyword) || postResponse.content().contains(keyword);
     }
 
 }

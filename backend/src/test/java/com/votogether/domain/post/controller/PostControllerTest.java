@@ -31,7 +31,6 @@ import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostClosingType;
-import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.exception.GlobalExceptionHandler;
@@ -659,7 +658,6 @@ class PostControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @Test
     @DisplayName("회원본인이 작성한 게시글 목록을 조회한다.")
     void getPostsByWriter() throws JsonProcessingException {
         // given
@@ -712,6 +710,53 @@ class PostControllerTest {
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse)
         );
+    }
+
+    @Test
+    @DisplayName("키워드를 통해 게시글 목록을 조회한다.")
+    void searchPostsWithKeyword() throws JsonProcessingException {
+        // given
+        long postId = 1L;
+        Member member = MemberFixtures.FEMALE_20.get();
+
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(member);
+
+        PostBody postBody = PostBody.builder()
+                .title("title")
+                .content("content")
+                .build();
+
+        Post post = Post.builder()
+                .writer(MALE_30.get())
+                .postBody(postBody)
+                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                .build();
+
+        PostResponse postResponse = PostResponse.of(post, member);
+
+        given(postService.searchPostsWithKeyword(anyString(), anyInt(), any(), any(), anyLong(), any(Member.class)))
+                .willReturn(List.of(postResponse));
+
+        // when
+        List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .param("keyword", "하이")
+                .param("page", 0)
+                .param("postClosingType", PostClosingType.PROGRESS)
+                .param("postSortType", PostSortType.LATEST)
+                .param("category", 1L)
+                .when().get("/posts/search")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<PostResponse>>() {
+                }.getType());
+
+        // then
+        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
     }
 
     @DisplayName("게시글을 삭제한다.")

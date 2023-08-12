@@ -106,14 +106,19 @@ public class PostController {
     })
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPost(
-            final int page,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(name = "category", required = false) final Long categoryId,
             @Auth final Member member
     ) {
-        final List<PostResponse> responses =
-                postService.getAllPostBySortTypeAndClosingType(member, page, postClosingType, postSortType);
-
+        final List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(
+                page,
+                postClosingType,
+                postSortType,
+                categoryId,
+                member
+        );
         return ResponseEntity.ok(responses);
     }
 

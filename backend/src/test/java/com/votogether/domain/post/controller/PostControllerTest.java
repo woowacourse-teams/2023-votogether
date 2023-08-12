@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
@@ -34,6 +35,7 @@ import com.votogether.domain.post.entity.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.exception.GlobalExceptionHandler;
 import com.votogether.fixtures.MemberFixtures;
+import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -53,8 +55,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(PostController.class)
 class PostControllerTest {
@@ -72,12 +76,13 @@ class PostControllerTest {
     PostService postService;
 
     @BeforeEach
-    void setUp() {
+    void setUp(final WebApplicationContext webApplicationContext) {
         RestAssuredMockMvc.standaloneSetup(
                 MockMvcBuilders
                         .standaloneSetup(new PostController(postService))
                         .setControllerAdvice(GlobalExceptionHandler.class)
         );
+        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
     }
 
     @Test
@@ -120,9 +125,15 @@ class PostControllerTest {
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList(), anyList())).willReturn(savedPostId);
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when, then
         String locationStartsWith = "/posts/";
         ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .contentType(ContentType.MULTIPART)
                 .multiPart("request", postRequestJson, "application/json")
                 .multiPart("contentImages", resultFileName3, new FileInputStream(file3), "image/png")
@@ -177,8 +188,14 @@ class PostControllerTest {
         long savedPostId = 1L;
         given(postService.save(any(), any(), anyList(), anyList())).willReturn(savedPostId);
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when
         ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .contentType(ContentType.MULTIPART)
                 .multiPart("request", postRequestJson, "application/json")
                 .multiPart("contentImages", resultFileName3, new FileInputStream(file3), "image/png")
@@ -196,50 +213,127 @@ class PostControllerTest {
         );
     }
 
-    @Test
-    @DisplayName("정렬 유형 및 마감 유형별로 모든 게시물 조회한다")
-    void getAllPostBySortTypeAndClosingType() throws JsonProcessingException {
-        // given
-        int firstPage = 0;
+    @Nested
+    @DisplayName("전체 게시글 목록 조회에서")
+    class GetAllPost {
 
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
+        @Test
+        @DisplayName("page에 숫자가 아닌 다른 값이 들어온 경우 400을 반환한다.")
+        void invalidPage() throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
 
-        Post post = Post.builder()
-                .writer(MALE_30.get())
-                .postBody(postBody)
-                .deadline(LocalDateTime.now().plusDays(3L))
-                .build();
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .param("page", "abc")
+                    .param("postClosingType", PostClosingType.CLOSED)
+                    .param("postSortType", PostSortType.LATEST)
+                    .when().get("/posts")
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST);
+        }
 
-        given(postService.getAllPostBySortTypeAndClosingType(
-                any(Member.class),
-                eq(firstPage),
-                eq(PostClosingType.PROGRESS),
-                eq(PostSortType.LATEST)))
-                .willReturn(List.of(PostResponse.of(post, MALE_30.get())));
+        @Test
+        @DisplayName("PageClosingType이 아닌 다른 값이 들어온 경우 400을 반환한다.")
+        void invalidPostClosingType() throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
 
-        // when
-        String responseBody = RestAssuredMockMvc.given().log().all()
-                .param("page", firstPage)
-                .param("postClosingType", PostClosingType.PROGRESS)
-                .param("postSortType", PostSortType.LATEST)
-                .when().get("/posts")
-                .then().log().all()
-                .contentType(ContentType.JSON)
-                .status(HttpStatus.OK)
-                .extract().asString();
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .param("page", 0)
+                    .param("postClosingType", "abc")
+                    .param("postSortType", PostSortType.LATEST)
+                    .when().get("/posts")
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST);
+        }
 
-        List<PostResponse> responses = mapper.readValue(responseBody, new TypeReference<>() {
-        });
+        @Test
+        @DisplayName("PostSortType이 아닌 다른 값이 들어온 경우 400을 반환한다.")
+        void invalidPostSortType() throws Exception {
+            // given
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
 
-        // then
-        assertAll(
-                () -> assertThat(responses).isNotEmpty(),
-                () -> assertThat(responses).hasSize(1)
-        );
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .param("page", 0)
+                    .param("postClosingType", PostClosingType.CLOSED)
+                    .param("postSortType", "abc")
+                    .when().get("/posts")
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST);
+        }
+
+        @Test
+        @DisplayName("정렬 유형, 마감 유형, 카테고리로 모든 게시물 조회한다")
+        void getAllPostBySortTypeAndClosingTypeAndCategoryId() throws Exception {
+            // given
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(MALE_30.get())
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L))
+                    .build();
+
+            TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+            given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+            given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+            given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
+            given(postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(
+                            eq(0),
+                            eq(PostClosingType.PROGRESS),
+                            eq(PostSortType.LATEST),
+                            anyLong(),
+                            any(Member.class)
+                    )
+            ).willReturn(List.of(PostResponse.of(post, MALE_30.get())));
+
+            // when
+            List<PostResponse> responses = RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                    .param("page", 0)
+                    .param("postClosingType", PostClosingType.PROGRESS)
+                    .param("postSortType", PostSortType.LATEST)
+                    .param("category", 1L)
+                    .when().get("/posts")
+                    .then().log().all()
+                    .contentType(ContentType.JSON)
+                    .status(HttpStatus.OK)
+                    .extract()
+                    .as(new ParameterizedTypeReference<List<PostResponse>>() {
+                    }.getType());
+
+            // then
+            assertAll(
+                    () -> assertThat(responses).isNotEmpty(),
+                    () -> assertThat(responses).hasSize(1)
+            );
+        }
+
     }
+
 
     @Nested
     @DisplayName("비회원 게시글 목록 조회")
@@ -350,8 +444,14 @@ class PostControllerTest {
         Member member = MemberFixtures.MALE_20.get();
         given(postService.getPostById(postId, member)).willReturn(PostDetailResponse.of(post, member));
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when
         String responseBody = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .when().get("/posts/{postId}", postId)
                 .then().log().all()
                 .contentType(ContentType.JSON)
@@ -420,7 +520,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("게시글에 대한 전체 투표 통계를 조회한다.")
-    void getVoteStatistics() {
+    void getVoteStatistics() throws Exception {
         // given
         VoteOptionStatisticsResponse response = new VoteOptionStatisticsResponse(
                 17,
@@ -438,8 +538,14 @@ class PostControllerTest {
         );
         given(postService.getVoteStatistics(anyLong(), any(Member.class))).willReturn(response);
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when
         VoteOptionStatisticsResponse result = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .when().get("/posts/{postId}/options", 1)
                 .then().log().all()
                 .status(HttpStatus.OK)
@@ -452,7 +558,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("게시글 투표 옵션에 대한 투표 통계를 조회한다.")
-    void getVoteOptionStatistics() {
+    void getVoteOptionStatistics() throws Exception {
         // given
         VoteOptionStatisticsResponse response = new VoteOptionStatisticsResponse(
                 17,
@@ -470,8 +576,14 @@ class PostControllerTest {
         );
         given(postService.getVoteOptionStatistics(anyLong(), anyLong(), any(Member.class))).willReturn(response);
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when
         VoteOptionStatisticsResponse result = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .when().get("/posts/{postId}/options/{optionId}", 1, 1)
                 .then().log().all()
                 .status(HttpStatus.OK)
@@ -484,7 +596,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("회원본인이 투표한 게시글 목록을 조회한다.")
-    void getPostsVotedByMember() {
+    void getPostsVotedByMember() throws Exception {
         // given
         PostBody postBody = PostBody.builder()
                 .title("title")
@@ -502,8 +614,14 @@ class PostControllerTest {
         given(postService.getPostsVotedByMember(anyInt(), any(), any(), any(Member.class)))
                 .willReturn(List.of(postResponse));
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when
         List<PostResponse> result = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .param("page", 0)
                 .param("postClosingType", PostClosingType.PROGRESS)
                 .param("postSortType", PostSortType.LATEST)
@@ -519,13 +637,19 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 조기 마감 합니다")
-    void postClosedEarly() {
+    @DisplayName("게시글을 조기 마감한다.")
+    void postClosedEarly() throws Exception {
         // given
         long postId = 1L;
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when
         ExtractableResponse<MockMvcResponse> response = RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .when().patch("/posts/{postId}/close", postId)
                 .then().log().all()
                 .extract();
@@ -535,7 +659,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 삭제합니다")
+    @DisplayName("게시글을 삭제한다.")
     void delete() {
         // given
         long postId = 1L;
@@ -549,7 +673,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 수정한다")
+    @DisplayName("게시글을 수정한다.")
     void update() throws IOException {
         // given
         PostOptionUpdateRequest postOptionUpdateRequest1 = PostOptionUpdateRequest.builder()
@@ -585,8 +709,14 @@ class PostControllerTest {
 
         String postRequestJson = mapper.writeValueAsString(postUpdateRequest);
 
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
         // when, then
         RestAssuredMockMvc.given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .contentType(ContentType.MULTIPART)
                 .multiPart("request", postRequestJson, "application/json")
                 .multiPart("contentImages", resultFileName3, new FileInputStream(file3), "image/png")

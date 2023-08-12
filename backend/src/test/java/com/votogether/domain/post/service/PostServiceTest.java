@@ -62,7 +62,6 @@ import jakarta.persistence.EntityManager;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -604,11 +603,12 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingType(
-                memberToAllPostVote,
+        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(
                 0,
                 PostClosingType.PROGRESS,
-                PostSortType.HOT
+                PostSortType.HOT,
+                null,
+                memberToAllPostVote
         );
 
         // then

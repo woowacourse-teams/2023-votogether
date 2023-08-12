@@ -307,7 +307,7 @@ public class PostService {
             final PostClosingType postClosingType,
             final PostSortType postSortType,
             final Long categoryId
-            ) {
+    ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
         final List<Post> posts =
                 postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);

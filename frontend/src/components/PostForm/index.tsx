@@ -27,8 +27,9 @@ import { POST_DESCRIPTION_MAX_LENGTH, POST_TITLE_MAX_LENGTH } from '@constants/p
 import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
+import { checkIrreplaceableTime } from '@utils/time';
 
-import { DEADLINE_OPTION } from './constants';
+import { DEADLINE_OPTION, DeadlineOption } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
 
@@ -58,6 +59,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const { isLoggedIn: isLogged } = useContext(AuthContext).loggedInfo;
   const { data: categoryList } = useCategoryList(isLogged);
   const { isToastOpen, openToast, toastMessage } = useToast();
+  const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정'>();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
@@ -66,6 +68,21 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     minute: 0,
   });
   const baseTime = createTime ? new Date(createTime) : new Date();
+  const closeModal = () => {
+    if (data && checkIrreplaceableTime(time, data.createTime)) {
+      openToast('마감시간 지정 조건을 다시 확인해주세요.');
+      const updatedTime = {
+        day: 0,
+        hour: 0,
+        minute: 0,
+      };
+      setTime(updatedTime);
+      setSelectTimeOption(undefined);
+    }
+
+    setSelectTimeOption(Object.values(time).every(time => time === 0) ? undefined : '사용자지정');
+    closeComponent();
+  };
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
@@ -76,8 +93,13 @@ export default function PostForm({ data, mutate }: PostFormProps) {
 
   const categoryOptionList = changeCategoryToOption(categoryList ?? []);
 
-  const handleDeadlineButtonClick = (option: string) => {
-    setTime(formatTimeWithOption(option));
+  const handleDeadlineButtonClick = (option: DeadlineOption) => {
+    const targetTime = formatTimeWithOption(option);
+
+    if (data && checkIrreplaceableTime(targetTime, data.createTime))
+      return openToast('마감시간 지정 조건을 다시 확인해주세요.');
+    setSelectTimeOption(option);
+    setTime(targetTime);
   };
 
   const handleResetButton = () => {
@@ -206,11 +228,12 @@ export default function PostForm({ data, mutate }: PostFormProps) {
                 {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
                   <S.Description>
-                    글 작성일({createTime})로부터 하루 이후 (
-                    {addTimeToDate({ day: 1, hour: 0, minute: 0 }, baseTime)})까지만 선택
+                    현재 시간으로부터 글 작성일({createTime})로부터 3일 이내 (
+                    {addTimeToDate({ day: 3, hour: 0, minute: 0 }, baseTime)})까지만 선택
                     가능합니다.
                   </S.Description>
                 )}
+                {data && <S.Description>* 작성일시로부터 마감시간이 계산됩니다. </S.Description>}
                 {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
               </S.DeadlineDescription>
               <S.ButtonWrapper>
@@ -220,13 +243,17 @@ export default function PostForm({ data, mutate }: PostFormProps) {
                     key={option}
                     type="button"
                     onClick={() => handleDeadlineButtonClick(option)}
-                    theme="blank"
+                    theme={selectTimeOption === option ? 'fill' : 'blank'}
                   >
                     {option}
                   </SquareButton>
                 ))}
                 {
-                  <SquareButton type="button" onClick={openComponent} theme="blank">
+                  <SquareButton
+                    type="button"
+                    onClick={openComponent}
+                    theme={selectTimeOption === '사용자지정' ? 'fill' : 'blank'}
+                  >
                     사용자 지정
                   </SquareButton>
                 }
@@ -240,11 +267,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
           </S.RightSide>
         </S.Wrapper>
         {isOpen && (
-          <Modal size="sm" onModalClose={closeComponent}>
+          <Modal size="sm" onModalClose={closeModal}>
             <>
               <S.ModalHeader>
                 <h3>마감 시간 선택</h3>
-                <S.CloseButton onClick={closeComponent}>X</S.CloseButton>
+                <S.CloseButton onClick={closeModal}>X</S.CloseButton>
               </S.ModalHeader>
               <S.ModalBody>
                 <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>

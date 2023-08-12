@@ -6,6 +6,7 @@ import com.votogether.domain.post.dto.response.vote.VoteResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
+import com.votogether.domain.post.entity.PostContentImage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,7 @@ public record PostResponse(
         WriterResponse writer,
         String title,
         String content,
+        String imageUrl,
         List<CategoryResponse> categories,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
@@ -30,12 +32,19 @@ public record PostResponse(
     public static PostResponse of(final Post post, final Member loginMember) {
         final Member writer = post.getWriter();
         final PostBody postBody = post.getPostBody();
+        final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
+        final StringBuilder contentImageUrl = new StringBuilder();
+
+        if (!contentImages.isEmpty()) {
+            contentImageUrl.append(contentImages.get(0).getImageUrl());
+        }
 
         return new PostResponse(
                 post.getId(),
                 WriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
+                convertImageUrl(contentImageUrl.toString()),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),
@@ -45,6 +54,10 @@ public record PostResponse(
                         getOptions(post, loginMember)
                 )
         );
+    }
+
+    private static String convertImageUrl(final String imageUrl) {
+        return imageUrl == null ? "" : imageUrl;
     }
 
     private static List<CategoryResponse> getCategories(final Post post) {
@@ -74,11 +87,20 @@ public record PostResponse(
     }
 
     public static PostResponse forGuest(final Post post) {
+        final PostBody postBody = post.getPostBody();
+        final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
+        final StringBuilder contentImageUrl = new StringBuilder();
+
+        if (!contentImages.isEmpty()) {
+            contentImageUrl.append(contentImages.get(0).getImageUrl());
+        }
+
         return new PostResponse(
                 post.getId(),
                 WriterResponse.from(post.getWriter()),
                 post.getPostBody().getTitle(),
                 post.getPostBody().getContent(),
+                convertImageUrl(contentImageUrl.toString()),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),

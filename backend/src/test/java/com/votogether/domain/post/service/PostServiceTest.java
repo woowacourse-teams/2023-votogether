@@ -20,6 +20,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.post.dto.request.CommentRegisterRequest;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.response.CategoryResponse;
@@ -31,11 +32,17 @@ import com.votogether.domain.post.dto.response.detail.VoteDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostClosingType;
+import com.votogether.domain.post.entity.PostContentImage;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.PostOptions;
 import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.repository.CommentRepository;
+import com.votogether.domain.post.repository.PostCategoryRepository;
+import com.votogether.domain.post.repository.PostContentImageRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
@@ -55,6 +62,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -104,6 +112,18 @@ class PostServiceTest {
 
     @Autowired
     VoteTestPersister voteTestPersister;
+
+    @Autowired
+    PostCategoryRepository postCategoryRepository;
+
+    @Autowired
+    PostContentImageRepository postContentImageRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    PostCommentService postCommentService;
 
     @Test
     @DisplayName("게시글을 등록한다")
@@ -933,7 +953,7 @@ class PostServiceTest {
         // given
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+        Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
         MockMultipartFile file1 = new MockMultipartFile(
                 "image1",
@@ -970,11 +990,40 @@ class PostServiceTest {
                 .deadline(LocalDateTime.now().plusDays(2))
                 .build();
 
-        Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
+        Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
+        final Post post = postRepository.findById(savedPostId).get();
+        final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
+
+        Member voter = MALE_30.get();
+        memberRepository.save(voter);
+        PostOption perPostOption = postOptions.get(0);
+        voteService.vote(voter, savedPostId, perPostOption.getId());
+
+        CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest("hello");
+        postCommentService.createComment(voter, post.getId(), commentRegisterRequest);
+        entityManager.flush();
+        entityManager.clear();
+
+        final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
+        final PostBody postBody = post.getPostBody();
+        final PostContentImage postContentImage = postBody.getPostContentImages().getContentImages().get(0);
+        final List<Vote> votes = postOptions.stream()
+                .map(PostOption::getVotes)
+                .flatMap(Collection::stream)
+                .toList();
+        final List<Comment> comments = post.getComments();
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0).getContent()).isEqualTo("hello");
 
         // when, then
-        assertThatNoException()
-                .isThrownBy(() -> postService.delete(savedPostId));
+        assertAll(
+                () -> assertThatNoException().isThrownBy(() -> postService.delete(savedPostId)),
+                () -> assertThat(postCategoryRepository.findById(postCategories.get(0).getId())).isNotPresent(),
+                () -> assertThat(postContentImageRepository.findById(postContentImage.getId())).isNotPresent(),
+                () -> assertThat(postOptionRepository.findById(postOptions.get(0).getId())).isNotPresent(),
+                () -> assertThat(voteRepository.findById(votes.get(0).getId())).isNotPresent(),
+                () -> assertThat(commentRepository.findById(comments.get(0).getId())).isNotPresent()
+        );
     }
 
     @Test

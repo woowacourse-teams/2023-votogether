@@ -6,6 +6,7 @@ import com.votogether.domain.post.entity.PostOption;
 public record PostOptionResponse(
         Long optionId,
         String content,
+        String imageUrl,
         Integer voteCount,
         Double votePercent
 ) {
@@ -16,9 +17,14 @@ public record PostOptionResponse(
         return new PostOptionResponse(
                 postOption.getId(),
                 postOption.getContent(),
+                convertImageUrl(postOption.getImageUrl()),
                 post.isClosed() ? postOption.getVoteCount() : HIDDEN_COUNT,
                 post.isClosed() ? ((double) postOption.getVoteCount() / post.getTotalVoteCount()) * 100 : HIDDEN_COUNT
         );
+    }
+
+    private static String convertImageUrl(final String imageUrl) {
+        return imageUrl == null || imageUrl.contains("없는사진") ? "" : imageUrl;
     }
 
     public static PostOptionResponse of(
@@ -29,6 +35,7 @@ public record PostOptionResponse(
         return new PostOptionResponse(
                 postOption.getId(),
                 postOption.getContent(),
+                convertImageUrl(postOption.getImageUrl()),
                 postOption.getVoteCount(isVisibleVoteResult),
                 postOption.getVotePercent(totalVoteCount)
         );

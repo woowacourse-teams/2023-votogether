@@ -269,6 +269,24 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "게시글 검색(비회원)", description = "비회원으로 키워드를 통해 게시글을 검색한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 검색 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 쿼리 파라미터값 입력"),
+    })
+    @GetMapping("/search/guest")
+    public ResponseEntity<List<PostResponse>> searchPostsWithKeywordForGuest(
+            @RequestParam final String keyword,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId
+    ) {
+        final List<PostResponse> responses =
+                postService.searchPostsWithKeywordForGuest(keyword, page, postClosingType, postSortType, categoryId);
+        return ResponseEntity.ok(responses);
+    }
+
 }
 
 

@@ -301,6 +301,21 @@ public class PostService {
                 .toList();
     }
 
+    public List<PostResponse> searchPostsWithKeywordForGuest(
+            final String keyword,
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId
+            ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts =
+                postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);
+
+        return posts.stream()
+                .map(post -> PostResponse.forGuest(post))
+                .toList();
+    }
 
     @Transactional
     public void delete(final Long postId) {

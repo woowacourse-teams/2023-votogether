@@ -1,24 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { TOAST_TIME } from '@constants/animation';
 
 export const useToast = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  let timeId: ReturnType<typeof setTimeout>;
+  const [isToastOpen, setIsToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const timeIdRef = useRef<number>();
 
-  const openComponent = () => {
-    setIsOpen(true);
+  const clear = () => {
+    if (timeIdRef.current) {
+      window.clearTimeout(timeIdRef.current);
+    }
+  };
 
-    timeId = setTimeout(() => {
-      if (isOpen) setIsOpen(false);
+  const openToast = (message: string) => {
+    clear();
+
+    setIsToastOpen(true);
+    setToastMessage(message);
+
+    timeIdRef.current = window.setTimeout(() => {
+      setIsToastOpen(false);
     }, TOAST_TIME * 1000);
   };
 
   useEffect(() => {
-    return () => {
-      if (!isOpen) clearTimeout(timeId);
-    };
-  }, [isOpen]);
+    return clear;
+  }, []);
 
-  return { isOpen, openComponent };
+  return { isToastOpen, toastMessage, openToast };
 };

@@ -1,3 +1,5 @@
+import { addTimeToDate } from './post/formatTime';
+
 const convertNowTimeToNumber = () => {
   const now = new Date();
 
@@ -21,6 +23,25 @@ export const checkClosedPost = (deadline: string) => {
   const nowTimeNumber = convertNowTimeToNumber();
   const endTimeNumber = convertTimeFromStringToNumber(deadline);
   return nowTimeNumber >= endTimeNumber;
+};
+
+type TimeType = 'day' | 'hour' | 'minute';
+
+//시간 수정을 할 수 없다면 true
+export const checkIrreplaceableTime = (addTime: Record<TimeType, number>, createTime: string) => {
+  const changedDeadline = addTimeToDate(addTime, new Date(createTime));
+  // changedDeadline가 undefined인 경우는 작성일시에서 시간이 더해지지 않았을 경우라 거절
+  if (!changedDeadline) return true;
+
+  const limitDeadline = addTimeToDate({ day: 3, hour: 0, minute: 0 }, new Date(createTime))!;
+  const changedDeadlineNumber = convertTimeFromStringToNumber(changedDeadline);
+  const limitDeadlineNumber = convertTimeFromStringToNumber(limitDeadline);
+
+  //작성일시로부터 3일된 일시보다 지정하고자 하는 일시가 크다면 거절
+  if (changedDeadlineNumber >= limitDeadlineNumber) return true;
+
+  //지금 일시보다 지정하고자 하는 일시가 작다면 거절
+  return changedDeadlineNumber <= convertNowTimeToNumber();
 };
 
 const time = {

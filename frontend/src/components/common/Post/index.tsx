@@ -1,10 +1,11 @@
-import { MouseEvent, useContext } from 'react';
+import { MouseEvent, useContext, useEffect } from 'react';
 
 import { PostInfo } from '@type/post';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useCreateVote } from '@hooks/query/post/useCreateVote';
 import { useEditVote } from '@hooks/query/post/useEditVote';
+import { useToast } from '@hooks/useToast';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
@@ -13,6 +14,7 @@ import { POST } from '@constants/vote';
 
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
+import Toast from '../Toast';
 import photoIcon from '@assets/photo_white.svg';
 
 import * as S from './style';
@@ -26,8 +28,18 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   const { postId, category, imageUrl, title, writer, createTime, deadline, content, voteInfo } =
     postInfo;
   const { loggedInfo } = useContext(AuthContext);
-  const { mutate: createVote } = useCreateVote({ isPreview, postId });
-  const { mutate: editVote } = useEditVote({ isPreview, postId });
+  const { isToastOpen, openToast, toastMessage } = useToast();
+
+  const {
+    mutate: createVote,
+    isError: isCreateError,
+    error: createError,
+  } = useCreateVote({ isPreview, postId });
+  const {
+    mutate: editVote,
+    isError: isEditError,
+    error: editError,
+  } = useEditVote({ isPreview, postId });
 
   const IMAGE_BASE_URL = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
 
@@ -53,7 +65,19 @@ export default function Post({ postInfo, isPreview }: PostProps) {
     if (!isPreview) e.preventDefault();
   };
 
-  const checkIncludeImage = () => {
+  useEffect(() => {
+    if (isCreateError && createError instanceof Error) {
+      openToast(createError.message);
+    }
+  }, [isCreateError, createError]);
+
+  useEffect(() => {
+    if (isEditError && editError instanceof Error) {
+      openToast(editError.message);
+    }
+  }, [isEditError, editError]);
+
+      const checkIncludeImage = () => {
     if (imageUrl !== '') return true;
 
     return voteInfo.options.map(option => option.imageUrl).some(url => url !== '');
@@ -107,6 +131,11 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         isPreview={isPreview}
         voteOptionList={voteInfo.options}
       />
+      {isToastOpen && (
+        <Toast size="md" position="bottom">
+          {toastMessage}
+        </Toast>
+      )}
     </S.Container>
   );
 }

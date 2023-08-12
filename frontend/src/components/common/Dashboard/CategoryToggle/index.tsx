@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Category } from '@type/category';
 
 import { useCategoryFavoriteToggle } from '@hooks/query/category/useCategoryFavoriteToggle';
+import { useToast } from '@hooks/useToast';
+
+import Toast from '@components/common/Toast';
 
 import chevronDown from '@assets/chevron-down.svg';
 import chevronUp from '@assets/chevron-up.svg';
@@ -21,12 +24,16 @@ export default function CategoryToggle({
   isInitialOpen = true,
 }: CategoryToggleProps) {
   const [isToggleOpen, setIsToggleOpen] = useState(isInitialOpen);
+  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { mutate, isError, error } = useCategoryFavoriteToggle();
 
   const handleToggleClick = () => {
     setIsToggleOpen(prevIsToggleOpen => !prevIsToggleOpen);
   };
 
-  const { mutate } = useCategoryFavoriteToggle();
+  useEffect(() => {
+    isError && error instanceof Error && openToast(error.message);
+  }, [isError, error]);
 
   return (
     <S.Container>
@@ -52,6 +59,11 @@ export default function CategoryToggle({
             </S.CategoryItem>
           ))}
         </S.CategoryList>
+      )}
+      {isToastOpen && (
+        <Toast size="md" position="bottom">
+          {toastMessage}
+        </Toast>
       )}
     </S.Container>
   );

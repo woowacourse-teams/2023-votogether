@@ -1,5 +1,6 @@
 package com.votogether.domain.member.controller;
 
+import com.votogether.domain.member.dto.MemberDetailRequest;
 import com.votogether.domain.member.dto.MemberInfoResponse;
 import com.votogether.domain.member.dto.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.entity.Member;
@@ -48,6 +49,20 @@ public class MemberController {
             @Valid @RequestBody final MemberNicknameUpdateRequest request
     ) {
         memberService.changeNickname(member, request.nickname());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "회원 상세 정보 변경", description = "회원의 로그인 직후에 상세정보를 설정한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상세정보 변경 성공"),
+            @ApiResponse(responseCode = "400", description = "올바르지 않은 상세정보 변경 요청")
+    })
+    @PatchMapping("/me/detail")
+    public ResponseEntity<Void> updateDetails(
+            @Valid @RequestBody final MemberDetailRequest request,
+            @Auth final Member member
+    ) {
+        memberService.updateDetails(request, member);
         return ResponseEntity.ok().build();
     }
 

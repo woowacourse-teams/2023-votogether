@@ -45,7 +45,8 @@ export const MainWrapper = styled.section`
 `;
 
 export const Title = styled.h1`
-  width: 96%;
+  width: 90%;
+  margin-top: 20px;
 
   font-size: 30px;
   font-weight: bold;
@@ -55,21 +56,69 @@ export const InfoForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 25px;
 
   width: 90%;
 `;
 
-export const Info = styled.div`
+export const TermsList = styled.ul`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  width: 90%;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 `;
 
 export const Label = styled.label`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+
   font: var(--text-body);
+
+  p {
+    font-weight: bold;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: none;
+    -webkit-appearance: none; /* Safari and Chrome */
+  }
 `;
+
+export const GenderLabel = styled.label`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 30px;
+
+  margin-left: 20px;
+`;
+
+export const Input = styled.input`
+  width: 70%;
+  height: 20px;
+  border: 1px solid #f2f2f2;
+  padding: 20px;
+
+  input[type='number'] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: none;
+    -webkit-appearance: none; /* Safari and Chrome */
+  }
+`;
+
+export const Radio = styled.input`
+  font-size: 14px;
+  font-weight: light;
+`;
+
+export const Checkbox = styled.input`
+  width: 20px;
+  height: 20px;
+`;
+
 export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: end;
@@ -77,10 +126,4 @@ export const ButtonWrapper = styled.div`
   width: 90px;
   height: 50px;
   margin-left: 70%;
-`;
-
-export const Input = styled.input`
-  width: 80%;
-  border: 1px solid #f2f2f2;
-  padding: 20px;
 `;

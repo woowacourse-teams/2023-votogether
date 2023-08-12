@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { updateUserInfo } from '@api/userInfo';
+
 import Accordion from '@components/common/Accordion';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
@@ -51,6 +53,9 @@ export default function RegisterPersonalInfo() {
       return;
     }
 
+    const submittedUserInfo = { gender: gender, birthYear: Number(birthYear) };
+    updateUserInfo(submittedUserInfo);
+
     alert('개인 정보 등록 완료!');
     navigate('/');
   };
@@ -67,48 +72,59 @@ export default function RegisterPersonalInfo() {
         <S.MainWrapper>
           <S.InfoForm onSubmit={handleUserInfoFormSubmit}>
             <Accordion title="개인정보 수집 약관 및 동의">
-              <ul>
-                <li>개인정보 항목: 성별, 나이</li>
-                <li>수집 방법: 회원가입 후 개인정보 등록 페이지에서 성별, 나이 저장</li>
+              <S.TermsList>
+                <li>• 개인정보 항목: 성별, 나이</li>
+                <li>• 수집 방법: 회원가입 후 개인정보 등록 페이지에서 성별, 나이 저장</li>
                 <li>
-                  수집 목적: 투표한 이용자의 성별 및 나이에 대한 투표 통계 제공 (단, 투표 통계는 글
-                  작성자에 한하여 제공됨)
+                  • 수집 목적: 투표한 이용자의 성별 및 나이에 대한 투표 통계 제공 (단, 투표 통계는
+                  글 작성자에 한하여 제공됨)
                 </li>
-                <li>보유 근거: 정보주체 동의</li>
-                <li>보유 기간: 회원 탈퇴 시 즉시 삭제</li>
-              </ul>
-              <p>
-                개인 정보 수집에 대한 동의를 거부할 수 있습니다. (단, 동의가 없을 경우 일부 서비스
-                이용에 제한이 있습니다.)
-              </p>
+                <li>• 보유 근거: 정보주체 동의</li>
+                <li>• 보유 기간: 회원 탈퇴 시 즉시 삭제</li>
+                <p>
+                  * 개인 정보 수집에 대한 동의를 거부할 수 있습니다. (단, 동의가 없을 경우 일부
+                  서비스 이용에 제한이 있습니다.)
+                </p>
+              </S.TermsList>
             </Accordion>
-            <S.Info>
-              <S.Label>성별</S.Label>
-              <label>
-                <input type="radio" name="gender" value="female" onChange={handleFormInputChange} />
-                여성
-              </label>
-              <label>
-                <input type="radio" name="gender" value="male" onChange={handleFormInputChange} />
-                남성
-              </label>
-            </S.Info>
-            <S.Info>
-              <S.Label>
-                출생년도
-                <S.Input
-                  value={userInfoForm.birthYear}
-                  name="birthYear"
-                  onChange={handleFormInputChange}
-                  placeholder="출생년도를 입력해주세요"
-                  size={4}
-                  max={BIRTH_YEAR.MAX_LENGTH}
-                  min={BIRTH_YEAR.MIN_LENGTH}
-                />
-              </S.Label>
-            </S.Info>
             <S.Label>
-              <input
+              <p>성별</p>
+              <S.GenderLabel>
+                <S.Label>
+                  <S.Radio
+                    type="radio"
+                    name="gender"
+                    value="FEMALE"
+                    onChange={handleFormInputChange}
+                  />
+                  여성
+                </S.Label>
+                <S.Label>
+                  <S.Radio
+                    type="radio"
+                    name="gender"
+                    value="MALE"
+                    onChange={handleFormInputChange}
+                  />
+                  남성
+                </S.Label>
+              </S.GenderLabel>
+            </S.Label>
+            <S.Label>
+              <p>출생 연도</p>
+              <S.Input
+                type="number"
+                value={userInfoForm.birthYear}
+                name="birthYear"
+                onChange={handleFormInputChange}
+                placeholder="출생 연도를 입력해주세요"
+                size={4}
+                min={BIRTH_YEAR.MIN_LENGTH}
+                max={BIRTH_YEAR.MAX_LENGTH}
+              />
+            </S.Label>
+            <S.Label>
+              <S.Checkbox
                 type="checkbox"
                 name="isTermsAgreed"
                 checked={userInfoForm.isTermsAgreed}

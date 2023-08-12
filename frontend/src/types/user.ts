@@ -1,17 +1,17 @@
 export interface User {
   nickname: string;
-  userPoint: number;
+  gender: number;
+  birthYear: number;
   postCount: number;
   voteCount: number;
-  badge?: string;
 }
 
 export interface UserInfoResponse {
   nickname: string;
-  userPoint: number;
+  gender: number;
+  birthYear: number;
   postCount: number;
   voteCount: number;
-  badge?: string;
 }
 
 export interface ModifyNicknameRequest {
@@ -23,4 +23,9 @@ export interface LoggedInfo {
   isLoggedIn: boolean;
   id?: number;
   userInfo?: User;
+}
+
+export interface UpdateUserInfoRequest {
+  gender: 'MALE' | 'FEMALE';
+  birthYear: number;
 }

@@ -5,6 +5,7 @@ import { AuthContext } from '@hooks/context/auth';
 import { useToggle } from '@hooks/useToggle';
 
 import Accordion from '@components/common/Accordion';
+import GuestProfile from '@components/common/Dashboard/GuestProfile';
 import UserProfile from '@components/common/Dashboard/UserProfile';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
@@ -18,12 +19,8 @@ export default function MyInfo() {
   const navigate = useNavigate();
   const { isOpen, openComponent, closeComponent } = useToggle();
 
-  const { userInfo } = useContext(AuthContext).loggedInfo;
-
-  if (!userInfo) {
-    navigate('/');
-    return <></>;
-  }
+  const { loggedInfo } = useContext(AuthContext);
+  const { userInfo } = loggedInfo;
 
   return (
     <Layout isSidebarVisible={true}>
@@ -39,7 +36,7 @@ export default function MyInfo() {
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.ProfileSection>
-          <UserProfile userInfo={userInfo} />
+          {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">

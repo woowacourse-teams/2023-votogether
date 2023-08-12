@@ -7,7 +7,7 @@ export const mockPost = [
     return res(ctx.delay(1000), ctx.status(200), ctx.json(MOCK_POST_INFO));
   }),
 
-  rest.get('/posts/guest/:postId', (req, res, ctx) => {
+  rest.get('/posts/:postId/guest', (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.status(200), ctx.json(MOCK_GUEST_POST_INFO));
   }),
 

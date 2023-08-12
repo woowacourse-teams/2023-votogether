@@ -10,7 +10,7 @@ export default function PostDetailFallback() {
   const navigate = useNavigate();
 
   return (
-    <S.SkeletonWrapper>
+    <S.Container>
       <S.HeaderContainer>
         <NarrowTemplateHeader>
           <IconButton
@@ -21,7 +21,9 @@ export default function PostDetailFallback() {
           />
         </NarrowTemplateHeader>
       </S.HeaderContainer>
-      <Skeleton isLarge={true} />
-    </S.SkeletonWrapper>
+      <S.SkeletonWrapper>
+        <Skeleton isLarge={true} />
+      </S.SkeletonWrapper>
+    </S.Container>
   );
 }

@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
-export const SkeletonWrapper = styled.div`
+export const Container = styled.div`
   margin-top: 70px;
 
   @media (min-width: ${theme.breakpoint.sm}) {
@@ -20,4 +20,8 @@ export const HeaderContainer = styled.div`
   @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
   }
+`;
+
+export const SkeletonWrapper = styled.div`
+  padding: 0 10px;
 `;

@@ -30,11 +30,7 @@ const initialComment = {
   isEdit: false,
 };
 
-export default function CommentList({
-  postId,
-
-  postWriterName,
-}: CommentListProps) {
+export default function CommentList({ postId, postWriterName }: CommentListProps) {
   const { data: commentList } = useCommentList(postId);
   const { loggedInfo } = useContext(AuthContext);
   const { isLoggedIn, id: memberId } = loggedInfo;

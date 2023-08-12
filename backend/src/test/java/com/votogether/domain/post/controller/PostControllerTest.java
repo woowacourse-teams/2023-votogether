@@ -19,6 +19,8 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionUpdateRequest;
+import com.votogether.domain.post.dto.request.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.WriterResponse;
 import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
@@ -79,7 +81,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("게시글을 등록한다")
+    @DisplayName("게시글을 작성한다")
     void save() throws IOException {
         // given
         PostOptionCreateRequest postOptionCreateRequest1 = PostOptionCreateRequest.builder()
@@ -530,6 +532,55 @@ class PostControllerTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("게시글을 수정한다")
+    void update() throws IOException {
+        // given
+        PostOptionUpdateRequest postOptionUpdateRequest1 = PostOptionUpdateRequest.builder()
+                .content("optionContent1")
+                .build();
+
+        PostOptionUpdateRequest postOptionUpdateRequest2 = PostOptionUpdateRequest.builder()
+                .content("optionContent2")
+                .build();
+
+        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
+                .categoryIds(List.of(0L))
+                .title("title")
+                .content("content")
+                .deadline(LocalDateTime.now().plusDays(2))
+                .postOptions(List.of(postOptionUpdateRequest1, postOptionUpdateRequest2))
+                .build();
+
+        String fileName1 = "testImage1.PNG";
+        String resultFileName1 = "testResultImage1.PNG";
+        String filePath1 = "src/test/resources/images/" + fileName1;
+        File file1 = new File(filePath1);
+
+        String fileName2 = "testImage2.PNG";
+        String resultFileName2 = "testResultImage2.PNG";
+        String filePath2 = "src/test/resources/images/" + fileName2;
+        File file2 = new File(filePath2);
+
+        String fileName3 = "testImage3.PNG";
+        String resultFileName3 = "testResultImage3.PNG";
+        String filePath3 = "src/test/resources/images/" + fileName3;
+        File file3 = new File(filePath3);
+
+        String postRequestJson = mapper.writeValueAsString(postUpdateRequest);
+
+        // when, then
+        RestAssuredMockMvc.given().log().all()
+                .contentType(ContentType.MULTIPART)
+                .multiPart("request", postRequestJson, "application/json")
+                .multiPart("contentImages", resultFileName3, new FileInputStream(file3), "image/png")
+                .multiPart("optionImages", resultFileName1, new FileInputStream(file1), "image/png")
+                .multiPart("optionImages", resultFileName2, new FileInputStream(file2), "image/png")
+                .when().put("/posts/1", 1)
+                .then().log().all()
+                .status(HttpStatus.OK);
     }
 
 }

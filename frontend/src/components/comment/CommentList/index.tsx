@@ -14,7 +14,7 @@ import * as S from './style';
 
 interface CommentListProps {
   commentList: Comment[];
-  memberId: number;
+  memberId?: number;
   isGuest: boolean;
   postWriterName: string;
 }

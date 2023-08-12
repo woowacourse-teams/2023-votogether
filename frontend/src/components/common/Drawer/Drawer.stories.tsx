@@ -20,7 +20,8 @@ const MOCK_USER_INFO: User = {
   nickname: '우아한 코끼리',
   postCount: 4,
   voteCount: 128,
-  userPoint: 200,
+  gender: 'MALE',
+  birthYear: 1997,
 };
 
 const MOCK_CATEGORIES: Category[] = [
@@ -41,6 +42,7 @@ export const LeftSideBar = () => {
           userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
           handleLogoutClick={() => {}}
+          selectedState="전체"
         />
       </Drawer>
     </div>
@@ -58,6 +60,7 @@ export const RightSideBar = () => {
           userInfo={MOCK_USER_INFO}
           categoryList={MOCK_CATEGORIES}
           handleLogoutClick={() => {}}
+          selectedState="전체"
         />
       </Drawer>
     </div>

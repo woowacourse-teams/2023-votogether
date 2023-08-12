@@ -34,6 +34,7 @@ export const GlobalStyle = createGlobalStyle`
     --header: #1f1f1f;
     --graph-color-purple:#853DE1;
     --graph-color-green:#5AEAA5;
+    --active-post: #00DFA2;
     
     /* Fonts *****************************************/
     --text-title: 600 2rem/2.4rem san-serif;

@@ -11,12 +11,12 @@ export const usePostList = (
   requiredOption: Omit<PostListByRequiredOption, 'pageNumber'>,
   optionalOption: PostListByOptionalOption
 ) => {
-  const { postSorting, postStatus } = requiredOption;
+  const { postSorting, postStatus, isLoggedIn, postType } = requiredOption;
   const { categoryId, keyword } = optionalOption;
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<PostList>(
-      [QUERY_KEY.POSTS, postSorting, postStatus, categoryId, keyword],
+      [QUERY_KEY.POSTS, postSorting, postStatus, categoryId, keyword, isLoggedIn, postType],
       ({ pageParam = 0 }) =>
         getPostList({ ...requiredOption, pageNumber: pageParam }, optionalOption),
       {

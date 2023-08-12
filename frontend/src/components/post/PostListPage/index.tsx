@@ -3,6 +3,7 @@ import { Suspense, useContext } from 'react';
 import { AuthContext } from '@hooks/context/auth';
 import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useDrawer } from '@hooks/useDrawer';
+import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
@@ -16,6 +17,7 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
+import { getSelectedState } from '@utils/post/getSelectedState';
 import { scrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
@@ -25,6 +27,15 @@ export default function PostListPage() {
 
   const { isLoggedIn: isLogged, userInfo } = useContext(AuthContext).loggedInfo;
   const { data: categoryList } = useCategoryList(isLogged);
+  const { postOptionalOption, postType } = usePostRequestInfo();
+  const { categoryId, keyword } = postOptionalOption;
+
+  const selectedState = getSelectedState({
+    categoryId,
+    keyword,
+    categoryList: categoryList ?? [],
+    postType,
+  });
 
   const handleLogoutClick = () => {};
 
@@ -39,11 +50,12 @@ export default function PostListPage() {
             userInfo={userInfo}
             categoryList={categoryList ?? []}
             handleLogoutClick={handleLogoutClick}
+            selectedState={selectedState}
           />
         </Drawer>
       </S.DrawerWrapper>
       <ErrorBoundary fallback={<div>에러발생</div>}>
-        <Suspense fallback={<Skeleton />}>
+        <Suspense fallback={<Skeleton isLarge={true} />}>
           <PostList />
         </Suspense>
       </ErrorBoundary>

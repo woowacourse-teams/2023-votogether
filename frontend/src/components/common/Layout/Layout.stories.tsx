@@ -14,16 +14,16 @@ type Story = StoryObj<typeof Layout>;
 export const VisibleCategory: Story = {
   render: () => (
     <Layout isSidebarVisible={true}>
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
     </Layout>
   ),
 };
@@ -31,16 +31,16 @@ export const VisibleCategory: Story = {
 export const HiddenCategory: Story = {
   render: () => (
     <Layout isSidebarVisible={false}>
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
+      <Skeleton isLarge={false} />
     </Layout>
   ),
 };

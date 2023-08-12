@@ -16,6 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageUploader {
 
     public static String upload(final MultipartFile image) {
+        if (image.getOriginalFilename().contains("없는사진")) {
+            return "";
+        }
+
         final long milli = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
 
         final String rootPath = new File("").getAbsolutePath() + File.separator;

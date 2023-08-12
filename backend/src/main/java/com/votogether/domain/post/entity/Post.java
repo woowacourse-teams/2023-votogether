@@ -67,7 +67,7 @@ public class Post extends BaseEntity {
             + ")")
     private long totalVoteCount;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
@@ -123,6 +123,10 @@ public class Post extends BaseEntity {
         if (!Objects.equals(this.writer, member)) {
             throw new BadRequestException(PostExceptionType.NOT_WRITER);
         }
+    }
+
+    public long getSelectedOptionId(final Member member) {
+        return this.postOptions.getSelectedOptionId(member);
     }
 
     public Vote makeVote(final Member voter, final PostOption postOption) {
@@ -181,7 +185,9 @@ public class Post extends BaseEntity {
     }
 
     public boolean isVisibleVoteResult(final Member member) {
-        return this.postOptions.getSelectedOptionId(member) != 0 || this.writer.equals(member);
+        return this.postOptions.getSelectedOptionId(member) != 0
+                || this.writer.equals(member)
+                || isClosed();
     }
 
     public void blind() {
@@ -204,4 +210,102 @@ public class Post extends BaseEntity {
         comments.add(comment);
         comment.setPost(this);
     }
+
+    public void validatePossibleToDelete() {
+        if (this.totalVoteCount >= 20) {
+            throw new BadRequestException(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES);
+        }
+    }
+
+    public void update(
+            final PostBody postBody,
+            final String oldContentImageUrl,
+            final List<String> contentImageUrls,
+            final List<Category> categories,
+            final List<String> postOptionContents,
+            final List<String> oldPostOptionImageUrls,
+            final List<String> postOptionImageUrls,
+            final LocalDateTime deadline
+    ) {
+        updatePostBody(postBody, oldContentImageUrl, contentImageUrls);
+        updatePostCategories(categories);
+        updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
+        this.deadline = deadline;
+    }
+
+    private void updatePostBody(
+            final PostBody postBody,
+            final String oldContentImageUrl,
+            final List<String> contentImageUrls
+    ) {
+        this.postBody = postBody;
+        this.postBody.addContentImage(this, getContentImageUrl(oldContentImageUrl, contentImageUrls));
+    }
+
+    private String getContentImageUrl(
+            final String oldContentImageUrl,
+            final List<String> contentImageUrls
+    ) {
+        if (contentImageUrls.isEmpty()) {
+            return oldContentImageUrl;
+        }
+
+        return contentImageUrls.get(0);
+    }
+
+    private void updatePostCategories(final List<Category> categories) {
+        this.postCategories = new PostCategories();
+        this.postCategories.mapPostAndCategories(this, categories);
+    }
+
+    private void updatePostOptions(
+            final List<String> postOptionContents,
+            final List<String> oldPostOptionImageUrls,
+            final List<String> postOptionImageUrls
+    ) {
+        this.postOptions = new PostOptions();
+        mapPostOptionsByElements(postOptionContents,
+                getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls));
+    }
+
+    private List<String> getPostOptionImageUrls(
+            final List<String> oldPostOptionImageUrls,
+            final List<String> postOptionImageUrls
+    ) {
+        return IntStream.range(0, postOptionImageUrls.size())
+                .mapToObj(postOptionIndex ->
+                        getPostOptionImageUrl(
+                                postOptionIndex,
+                                oldPostOptionImageUrls,
+                                postOptionImageUrls
+                        )
+                )
+                .toList();
+    }
+
+    private String getPostOptionImageUrl(
+            final int postOptionIndex,
+            final List<String> oldPostOptionImageUrls,
+            final List<String> postOptionImageUrls
+    ) {
+        final String postOptionImageUrl = postOptionImageUrls.get(postOptionIndex);
+        if (postOptionImageUrl.isEmpty()) {
+            return oldPostOptionImageUrls.get(postOptionIndex);
+        }
+
+        return postOptionImageUrls.get(postOptionIndex);
+    }
+
+    public void validateDeadLineToModify(final LocalDateTime deadlineToModify) {
+        if (getCreatedAt().plusDays(3).isBefore(deadlineToModify)) {
+            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
+        }
+    }
+
+    public void validateExistVote() {
+        if (totalVoteCount > 0) {
+            throw new BadRequestException(PostExceptionType.VOTING_PROGRESS_NOT_EDITABLE);
+        }
+    }
+
 }

@@ -8,6 +8,8 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.post.dto.request.PostCreateRequest;
 import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
+import com.votogether.domain.post.dto.request.PostOptionUpdateRequest;
+import com.votogether.domain.post.dto.request.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.PostResponse;
 import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
@@ -25,7 +27,6 @@ import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,7 +48,6 @@ public class PostService {
     private static final int BASIC_PAGING_SIZE = 10;
     private static final int MAXIMUM_DEADLINE = 3;
 
-    private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
     private final Map<PostClosingType, BiFunction<Member, Pageable, Slice<Post>>> postsVotedByMemberMapper;
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;
@@ -65,18 +65,8 @@ public class PostService {
         this.categoryRepository = categoryRepository;
         this.voteRepository = voteRepository;
 
-        this.postClosingTypeMapper = new EnumMap<>(PostClosingType.class);
         this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
-        initPostClosingTypeMapper();
         initPostsVotedByMemberMapper();
-    }
-
-    private void initPostClosingTypeMapper() {
-        postClosingTypeMapper.put(PostClosingType.ALL, postRepository::findAll);
-        postClosingTypeMapper.put(PostClosingType.PROGRESS, pageable ->
-                postRepository.findByDeadlineAfter(LocalDateTime.now(), pageable));
-        postClosingTypeMapper.put(PostClosingType.CLOSED, pageable ->
-                postRepository.findByDeadlineBefore(LocalDateTime.now(), pageable));
     }
 
     private void initPostsVotedByMemberMapper() {
@@ -109,8 +99,8 @@ public class PostService {
         final Post post = toPost(postCreateRequest, loginMember);
 
         post.mapPostOptionsByElements(
-                getPostOptionContents(postCreateRequest),
-                uploadAndParseOptionImageUrls(optionImages)
+                transformElements(postCreateRequest.postOptions(), PostOptionCreateRequest::content),
+                transformElements(optionImages, ImageUploader::upload)
         );
         post.mapCategories(categories);
         addContentImageIfPresent(post, contentImages);
@@ -124,28 +114,16 @@ public class PostService {
     ) {
         return Post.builder()
                 .writer(loginMember)
-                .postBody(toPostBody(postCreateRequest))
+                .postBody(toPostBody(postCreateRequest.title(), postCreateRequest.content()))
                 .deadline(postCreateRequest.deadline())
                 .build();
     }
 
-    private PostBody toPostBody(final PostCreateRequest postCreateRequest) {
+    private PostBody toPostBody(final String title, final String content) {
         return PostBody.builder()
-                .title(postCreateRequest.title())
-                .content(postCreateRequest.content())
+                .title(title)
+                .content(content)
                 .build();
-    }
-
-    private List<String> getPostOptionContents(final PostCreateRequest postCreateRequest) {
-        return postCreateRequest.postOptions().stream()
-                .map(PostOptionCreateRequest::content)
-                .toList();
-    }
-
-    private List<String> uploadAndParseOptionImageUrls(final List<MultipartFile> optionImages) {
-        return optionImages.stream()
-                .map(ImageUploader::upload)
-                .toList();
     }
 
     private void addContentImageIfPresent(final Post post, final List<MultipartFile> contentImages) {
@@ -159,27 +137,23 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPostBySortTypeAndClosingType(
-            final Member loginMember,
+    public List<PostResponse> getAllPostBySortTypeAndClosingTypeAndCategoryId(
             final int page,
             final PostClosingType postClosingType,
-            final PostSortType postSortType
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Member loginMember
     ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getPostBaseSort());
-        final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
-
-        return contents.stream()
+        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                postClosingType,
+                postSortType,
+                categoryId,
+                pageable
+        );
+        return posts.stream()
                 .map(post -> PostResponse.of(post, loginMember))
                 .toList();
-    }
-
-    private List<Post> findContentsBySortTypeAndClosingType(
-            final PostClosingType postClosingType,
-            final Pageable pageable
-    ) {
-        return postClosingTypeMapper.get(postClosingType)
-                .apply(pageable)
-                .getContent();
     }
 
     @Transactional(readOnly = true)
@@ -197,9 +171,7 @@ public class PostService {
                 pageable
         );
 
-        return posts.stream()
-                .map(PostResponse::forGuest)
-                .toList();
+        return transformElements(posts, PostResponse::forGuest);
     }
 
     @Transactional(readOnly = true)
@@ -283,11 +255,33 @@ public class PostService {
     @Transactional
     public void closePostEarlyById(final Long id, final Member loginMember) {
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
         post.validateWriter(loginMember);
         post.validateDeadLine();
         post.closeEarly();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsByWriter(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Member member
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                member,
+                postClosingType,
+                postSortType,
+                categoryId,
+                pageable
+        );
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, member))
+                .toList();
     }
 
     public List<PostResponse> searchPostsWithKeyword(
@@ -304,6 +298,49 @@ public class PostService {
 
         return posts.stream()
                 .map(post -> PostResponse.of(post, member))
+                .toList();
+    }
+
+
+    @Transactional
+    public void delete(final Long postId) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+        post.validatePossibleToDelete();
+
+        postRepository.deleteById(postId);
+    }
+
+    @Transactional
+    public void update(
+            final long postId,
+            final PostUpdateRequest request,
+            final Member member,
+            final List<MultipartFile> contentImages,
+            final List<MultipartFile> optionImages
+    ) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+        post.validateExistVote();
+        post.validateWriter(member);
+        post.validateDeadLine();
+        post.validateDeadLineToModify(request.deadline());
+
+        post.update(
+                toPostBody(request.title(), request.content()),
+                request.imageUrl(),
+                transformElements(contentImages, ImageUploader::upload),
+                categoryRepository.findAllById(request.categoryIds()),
+                transformElements(request.postOptions(), PostOptionUpdateRequest::content),
+                transformElements(request.postOptions(), PostOptionUpdateRequest::imageUrl),
+                transformElements(optionImages, ImageUploader::upload),
+                request.deadline()
+        );
+    }
+
+    private <T, R> List<R> transformElements(final List<T> elements, final Function<T, R> process) {
+        return elements.stream()
+                .map(process)
                 .toList();
     }
 

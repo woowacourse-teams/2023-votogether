@@ -15,7 +15,7 @@ import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 
-import { NICKNAME_MAX_LENGTH } from '@constants/user';
+import { NICKNAME } from '@constants/user';
 
 import * as S from './style';
 
@@ -62,9 +62,7 @@ export default function MyInfo() {
           <Accordion title="닉네임 변경">
             <S.Input
               value={newNickname}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleNicknameChange(e, NICKNAME_MAX_LENGTH)
-              }
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleNicknameChange(e, NICKNAME)}
               placeholder="새로운 닉네임을 입력해주세요"
             />
             <S.ButtonWrapper>

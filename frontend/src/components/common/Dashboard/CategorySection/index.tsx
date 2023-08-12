@@ -29,14 +29,14 @@ export default function CategorySection() {
   });
 
   const favoriteCategory = categoryListFallback.filter(category => category.isFavorite === true);
-  const allCategory = categoryListFallback?.filter(category => category.isFavorite === false);
+  const allCategory = categoryListFallback.filter(category => category.isFavorite === false);
 
   return (
     <>
-      <S.SelectCategoryWrapper>
+      <S.SelectedStateWrapper>
         <S.Circle />
-        <S.SelectCategoryText>{selectedState}</S.SelectCategoryText>
-      </S.SelectCategoryWrapper>
+        <S.SelectedStateText>{selectedState}</S.SelectedStateText>
+      </S.SelectedStateWrapper>
       <S.ContentContainer>
         <S.CategoryToggleContainer>
           {userInfo && <CategoryToggle title="즐겨찾기" categoryList={favoriteCategory} />}

@@ -18,7 +18,7 @@ export const ContentContainer = styled.div`
   }
 `;
 
-export const SelectCategoryWrapper = styled.div`
+export const SelectedStateWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
@@ -37,7 +37,7 @@ export const Circle = styled.div`
   background-color: var(--red);
 `;
 
-export const SelectCategoryText = styled.span`
+export const SelectedStateText = styled.span`
   font: var(--text-body);
 `;
 

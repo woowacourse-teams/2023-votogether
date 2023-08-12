@@ -24,5 +24,5 @@ export const NoBadge: Story = {
 };
 
 export const Badge: Story = {
-  render: () => <UserProfile userInfo={{ ...MOCK_USER_INFO }} />,
+  render: () => <UserProfile userInfo={MOCK_USER_INFO} />,
 };

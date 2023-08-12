@@ -43,3 +43,5 @@ export interface VoteResultResponse {
   totalFemaleCount: number;
   totalMaleCount: number;
 }
+
+export type Gender = 'FEMALE' | 'MALE';

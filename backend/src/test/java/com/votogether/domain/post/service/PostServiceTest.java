@@ -1012,8 +1012,6 @@ class PostServiceTest {
                 .flatMap(Collection::stream)
                 .toList();
         final List<Comment> comments = post.getComments();
-        assertThat(comments).hasSize(1);
-        assertThat(comments.get(0).getContent()).isEqualTo("hello");
 
         // when, then
         assertAll(

@@ -1,7 +1,6 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AuthContext } from '@hooks/context/auth';
 import { useEditPost } from '@hooks/query/post/useEditPost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
@@ -14,9 +13,9 @@ export default function EditPost() {
   const navigate = useNavigate();
 
   const { postId } = useParams();
-  const { loggedInfo } = useContext(AuthContext);
 
-  const { data } = usePostDetail(loggedInfo.isLoggedIn, Number(postId));
+  //해당 페이지는 게스트는 접근할 수 없으므로 필수적으로 true
+  const { data } = usePostDetail(true, Number(postId));
   const { mutate, isSuccess, isError, error } = useEditPost(Number(postId));
 
   useEffect(() => {

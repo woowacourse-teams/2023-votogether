@@ -49,10 +49,10 @@ export default function PostDetailPage() {
             <></>
           </NarrowTemplateHeader>
         </S.HeaderContainer>
-        <S.Container>
+        <S.MainContainer>
           {isLoading && 'loading'}
           {isPostError && postError instanceof Error && postError.message}
-        </S.Container>
+        </S.MainContainer>
       </Layout>
     );
   }
@@ -114,21 +114,23 @@ export default function PostDetailPage() {
           />
         </NarrowTemplateHeader>
       </S.HeaderContainer>
-      <S.Container>
+      <S.MainContainer>
         <Post postInfo={postData} isPreview={false} />
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}
           handleEvent={{ movePage, controlPost }}
         />
-      </S.Container>
-      {!isCommentLoading && commentData && (
-        <CommentList
-          commentList={commentData}
-          memberId={memberId}
-          isGuest={!memberId}
-          postWriterName={'익명의손님1'}
-        />
+      </S.MainContainer>
+      {!isCommentLoading && (
+        <S.BottomContainer>
+          <CommentList
+            commentList={commentData ?? []}
+            memberId={memberId}
+            isGuest={!loggedInfo.isLoggedIn}
+            postWriterName={postData.writer.nickname}
+          />
+        </S.BottomContainer>
       )}
     </Layout>
   );

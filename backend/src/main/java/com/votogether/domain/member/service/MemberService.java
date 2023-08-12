@@ -44,7 +44,7 @@ public class MemberService {
 
         return new MemberInfoResponse(
                 member.getNickname(),
-                member.getGender().getName(),
+                member.getGender(),
                 member.getBirthYear(),
                 numberOfPosts,
                 numberOfVotes

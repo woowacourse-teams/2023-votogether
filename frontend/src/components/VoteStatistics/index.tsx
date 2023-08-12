@@ -58,6 +58,18 @@ export default function VoteStatistics({ voteResultResponse, size }: VoteStatist
           );
         })}
       </S.CategoryWrapper>
+      <S.GenderExplain>
+        {currentRadioMode === 'gender' && (
+          <>
+            <label>
+              <S.ColorIcon $gender="FEMALE" /> 여자
+            </label>
+            <label>
+              <S.ColorIcon $gender="MALE" /> 남자
+            </label>
+          </>
+        )}
+      </S.GenderExplain>
       {currentRadioMode === 'all' && <OneLineGraph size={size} ageGroup={voteResult.ageGroup} />}
       {currentRadioMode === 'gender' && <TwoLineGraph size={size} ageGroup={voteResult.ageGroup} />}
     </S.Container>

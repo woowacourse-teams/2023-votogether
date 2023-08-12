@@ -30,6 +30,7 @@ export const WideHeaderWrapper = styled.div`
 `;
 
 export const DashboardWrapper = styled.aside`
+  width: 225px;
   height: 90vh;
 
   position: fixed;

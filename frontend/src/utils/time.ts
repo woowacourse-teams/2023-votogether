@@ -25,10 +25,10 @@ export const checkClosedPost = (deadline: string) => {
   return nowTimeNumber >= endTimeNumber;
 };
 
-type timeType = 'day' | 'hour' | 'minute';
+type TimeType = 'day' | 'hour' | 'minute';
 
 //시간 수정을 할 수 없다면 true
-export const checkIrreplaceableTime = (addTime: Record<timeType, number>, createTime: string) => {
+export const checkIrreplaceableTime = (addTime: Record<TimeType, number>, createTime: string) => {
   const changedDeadline = addTimeToDate(addTime, new Date(createTime));
   // changedDeadline가 undefined인 경우는 작성일시에서 시간이 더해지지 않았을 경우라 거절
   if (!changedDeadline) return true;

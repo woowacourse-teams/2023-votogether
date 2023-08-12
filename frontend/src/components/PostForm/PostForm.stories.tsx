@@ -57,20 +57,20 @@ const MOCK_DATA: PostInfo = {
 };
 
 export const NewPost = () => {
-  const { mutate, isError, error } = useCreatePost();
+  const { mutate } = useCreatePost();
   return (
     <>
-      <PostForm mutate={mutate} isError={isError} error={error} />
+      <PostForm mutate={mutate} />
     </>
   );
 };
 
 export const OldPost = () => {
   const examplePostId = 1;
-  const { mutate, isError, error } = useEditPost(examplePostId);
+  const { mutate } = useEditPost(examplePostId);
   return (
     <>
-      <PostForm data={MOCK_DATA} mutate={mutate} isError={isError} error={error} />
+      <PostForm data={MOCK_DATA} mutate={mutate} />
     </>
   );
 };

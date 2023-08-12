@@ -16,9 +16,6 @@ export const usePostDetail = (isGuest: boolean, postId: number) => {
       onSuccess: data => {
         return data;
       },
-      onError: error => {
-        window.console.error(error);
-      },
     }
   );
 

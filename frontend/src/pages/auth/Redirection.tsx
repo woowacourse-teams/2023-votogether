@@ -9,7 +9,7 @@ import Error from '@pages/Error';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 
-import { getCookieToken, setCookieToken } from '@utils/cookie';
+import { getCookieToken, getMemberId, setCookieToken } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
 
 const getAuthInfo = async (url: string): Promise<AuthResponse> => {
@@ -47,8 +47,12 @@ export default function Redirection() {
           const { accessToken } = res;
           setCookieToken('accessToken', accessToken);
 
+          const decodedPayload = getMemberId(accessToken);
+          const id = decodedPayload.memberId;
+
           setLoggedInfo({
             ...loggedInfo,
+            id,
             accessToken: getCookieToken().accessToken,
             isLoggedIn: true,
           });

@@ -1,16 +1,21 @@
-import type { UserInfoResponse, User, ModifyNicknameRequest } from '@type/user';
+import type {
+  UserInfoResponse,
+  User,
+  ModifyNicknameRequest,
+  UpdateUserInfoRequest,
+} from '@type/user';
 
 import { deleteFetch, getFetch, patchFetch } from '@utils/fetch';
 
 export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
-  const { nickname, postCount, gender, voteCount, birthYear } = userInfo;
+  const { nickname, gender, birthYear, postCount, voteCount } = userInfo;
 
   return {
     nickname,
-    postCount,
     gender,
-    voteCount,
     birthYear,
+    postCount,
+    voteCount,
   };
 };
 
@@ -30,4 +35,8 @@ export const modifyNickname = async (nickname: string) => {
 
 export const withdrawalMembership = async () => {
   await deleteFetch(`${BASE_URL}/members/me/delete`);
+};
+
+export const updateUserInfo = async (userInfo: UpdateUserInfoRequest) => {
+  await patchFetch<UpdateUserInfoRequest>(`${BASE_URL}/members/me/detail`, userInfo);
 };

@@ -16,4 +16,5 @@ export const PATH = {
   USER_POST: `${BASE_PATH.USER}/posts`,
   USER_VOTE: `${BASE_PATH.USER}/votes`,
   USER_INFO: `${BASE_PATH.USER}/myPage`,
+  USER_INFO_REGISTER: `${BASE_PATH.USER}/register`,
 };

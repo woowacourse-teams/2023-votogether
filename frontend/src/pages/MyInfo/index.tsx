@@ -64,7 +64,7 @@ export default function MyInfo() {
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.ProfileSection>
-          {loggedInfo.userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
+          {loggedInfo.userInfo ? <UserProfile userInfo={loggedInfo.userInfo} /> : <GuestProfile />}
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">

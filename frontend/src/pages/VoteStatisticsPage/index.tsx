@@ -7,8 +7,8 @@ import { getPostStatistics } from '@api/voteResult';
 
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
-import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
+import Skeleton from '@components/common/Skeleton';
 import VoteStatistics from '@components/VoteStatistics';
 
 import { PATH } from '@constants/path';
@@ -54,7 +54,7 @@ export default function VoteStatisticsPage() {
         {postError && <div>{postError}</div>}
         {isPostLoading && (
           <S.LoadingWrapper>
-            <LoadingSpinner size="md" />
+            <Skeleton isLarge={true} />
           </S.LoadingWrapper>
         )}
         {postDetail && (
@@ -62,13 +62,12 @@ export default function VoteStatisticsPage() {
             {voteResultError && <div>{voteResultError}</div>}
             {isVoteResultLoading && (
               <S.LoadingWrapper>
-                <LoadingSpinner size="sm" />
+                <Skeleton isLarge={true} />
               </S.LoadingWrapper>
             )}
             {voteResultResponse && (
               <VoteStatistics voteResultResponse={voteResultResponse} size="md" />
             )}
-
             {postDetail.voteInfo.options.map(option => {
               const { postId, voteInfo } = postDetail;
               return (

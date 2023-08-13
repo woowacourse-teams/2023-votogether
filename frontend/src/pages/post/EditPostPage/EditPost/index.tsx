@@ -1,17 +1,22 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { useCreatePost } from '@hooks/query/post/useCreatePost';
+import { useEditPost } from '@hooks/query/post/useEditPost';
+import { usePostDetail } from '@hooks/query/post/usePostDetail';
 import { useToast } from '@hooks/useToast';
 
-import Layout from '@components/common/Layout';
 import Toast from '@components/common/Toast';
 import PostForm from '@components/PostForm';
 
-export default function CreatePost() {
+import { PATH } from '@constants/path';
+
+export default function EditPost() {
   const navigate = useNavigate();
 
-  const { mutate, isSuccess, isError, error } = useCreatePost();
+  const { postId } = useParams();
+
+  const { data } = usePostDetail(true, Number(postId));
+  const { mutate, isSuccess, isError, error } = useEditPost(Number(postId));
   const { isToastOpen, openToast, toastMessage } = useToast();
 
   useEffect(() => {
@@ -20,22 +25,22 @@ export default function CreatePost() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/');
+      navigate(`${PATH.POST}/${postId}`);
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate, postId]);
 
   useEffect(() => {
     isError && error instanceof Error && openToast(error.message);
-  }, [isError, error]);
+  }, [isError, error, openToast]);
 
   return (
-    <Layout isSidebarVisible={false}>
-      <PostForm mutate={mutate} />
+    <>
+      <PostForm data={data} mutate={mutate} />
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}
         </Toast>
       )}
-    </Layout>
+    </>
   );
 }

@@ -5,8 +5,8 @@ import Redirection from '@pages/auth/Redirection';
 import Home from '@pages/Home';
 import MyInfo from '@pages/MyInfo';
 import NotFound from '@pages/NotFound';
-import CreatePost from '@pages/post/CreatePost';
-import EditPost from '@pages/post/EditPost';
+import CreatePostPage from '@pages/post/CreatePostPage';
+import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetail';
 import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
 import VoteStatisticsPage from '@pages/VoteStatistics';
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         path: 'write',
         element: (
           <PrivateRoute>
-            <CreatePost />
+            <CreatePostPage />
           </PrivateRoute>
         ),
       },
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         path: 'write/:postId',
         element: (
           <PrivateRoute>
-            <EditPost />
+            <EditPostPage />
           </PrivateRoute>
         ),
       },

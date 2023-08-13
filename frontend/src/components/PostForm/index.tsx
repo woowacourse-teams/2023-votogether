@@ -1,12 +1,10 @@
 import type { UseMutateFunction } from '@tanstack/react-query';
 
-import React, { HTMLAttributes, useContext, useState } from 'react';
+import React, { HTMLAttributes, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
-import { AuthContext } from '@hooks/context/auth';
-import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { useContentImage } from '@hooks/useContentImage';
 import { useMultiSelect } from '@hooks/useMultiSelect';
 import { useText } from '@hooks/useText';
@@ -14,8 +12,9 @@ import { useToast } from '@hooks/useToast';
 import { useToggle } from '@hooks/useToggle';
 import { useWritingOption } from '@hooks/useWritingOption';
 
+import ErrorBoundary from '@pages/ErrorBoundary';
+
 import Modal from '@components/common/Modal';
-import MultiSelect from '@components/common/MultiSelect';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
@@ -25,12 +24,12 @@ import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList'
 import { PATH } from '@constants/path';
 import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
 
-import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 import { checkWriter } from '@utils/post/checkWriter';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 import { checkIrreplaceableTime } from '@utils/time';
 
+import CategoryWrapper from './CategoryWrapper';
 import { DEADLINE_OPTION, DeadlineOption } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
@@ -56,11 +55,8 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const navigate = useNavigate();
   const writingOptionHook = useWritingOption(voteInfo?.options);
   const contentImageHook = useContentImage(imageUrl);
-  const { isLoggedIn: isLogged } = useContext(AuthContext).loggedInfo;
-  const { data: categoryList } = useCategoryList(isLogged);
   const { isToastOpen, openToast, toastMessage } = useToast();
   const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정'>();
-
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState({
     day: 0,
@@ -86,12 +82,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
-  const { selectedOptionList, handleOptionAdd, handleOptionDelete } = useMultiSelect(
-    categoryIds ?? [],
-    CATEGORY_COUNT_LIMIT
-  );
-
-  const categoryOptionList = changeCategoryToOption(categoryList ?? []);
+  const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
 
   const handleDeadlineButtonClick = (option: DeadlineOption) => {
     const targetTime = formatTimeWithOption(option);
@@ -150,6 +141,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       });
 
       //예외처리
+      const { selectedOptionList } = multiSelectHook;
       if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
       if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
       if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
@@ -192,13 +184,9 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
-            <MultiSelect
-              selectedOptionList={selectedOptionList}
-              optionList={categoryOptionList}
-              handleOptionAdd={handleOptionAdd}
-              handleOptionDelete={handleOptionDelete}
-              placeholder="카테고리를 선택해주세요."
-            />
+            <ErrorBoundary>
+              <CategoryWrapper multiSelectHook={multiSelectHook} />
+            </ErrorBoundary>
             <S.Title
               value={writingTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

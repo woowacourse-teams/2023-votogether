@@ -1,24 +1,17 @@
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { useEditPost } from '@hooks/query/post/useEditPost';
-import { usePostDetail } from '@hooks/query/post/usePostDetail';
+import { useCreatePost } from '@hooks/query/post/useCreatePost';
 import { useToast } from '@hooks/useToast';
 
 import Layout from '@components/common/Layout';
 import Toast from '@components/common/Toast';
 import PostForm from '@components/PostForm';
 
-import { PATH } from '@constants/path';
-
-export default function EditPost() {
+export default function CreatePostPage() {
   const navigate = useNavigate();
 
-  const { postId } = useParams();
-
-  //해당 페이지는 게스트는 접근할 수 없으므로 필수적으로 true
-  const { data } = usePostDetail(true, Number(postId));
-  const { mutate, isSuccess, isError, error } = useEditPost(Number(postId));
+  const { mutate, isSuccess, isError, error } = useCreatePost();
   const { isToastOpen, openToast, toastMessage } = useToast();
 
   useEffect(() => {
@@ -27,17 +20,17 @@ export default function EditPost() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate(`${PATH.POST}/${postId}`);
+      navigate('/');
     }
-  }, [isSuccess, navigate, postId]);
+  }, [isSuccess, navigate]);
 
   useEffect(() => {
     isError && error instanceof Error && openToast(error.message);
-  }, [isError, error, openToast]);
+  }, [isError, error]);
 
   return (
     <Layout isSidebarVisible={false}>
-      <PostForm data={data} mutate={mutate} />
+      <PostForm mutate={mutate} />
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

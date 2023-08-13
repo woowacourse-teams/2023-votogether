@@ -66,9 +66,7 @@ export default function PostDetailPage() {
     return (
       <Layout isSidebarVisible={true}>
         <S.HeaderContainer>
-          <NarrowTemplateHeader>
-            <></>
-          </NarrowTemplateHeader>
+          <NarrowTemplateHeader />
         </S.HeaderContainer>
         <S.MainContainer>
           {isLoading && 'loading'}

@@ -17,14 +17,9 @@ import org.springframework.context.annotation.Configuration;
 public class OpenAPIConfig {
 
     private final String devUrl;
-    private final String prodUrl;
 
-    public OpenAPIConfig(
-            @Value("${votogether.openapi.dev-url}") final String devUrl,
-            @Value("${votogether.openapi.prod-url}") final String prodUrl
-    ) {
+    public OpenAPIConfig(@Value("${votogether.openapi.dev-url}") final String devUrl) {
         this.devUrl = devUrl;
-        this.prodUrl = prodUrl;
     }
 
     @Bean
@@ -32,10 +27,6 @@ public class OpenAPIConfig {
         final Server devServer = new Server();
         devServer.setUrl(devUrl);
         devServer.description("개발 환경 서버 URL");
-
-        final Server prodServer = new Server();
-        prodServer.setUrl(prodUrl);
-        prodServer.description("운영 환경 서버 URL");
 
         final Info info = new Info()
                 .title("VoTogether API")
@@ -55,7 +46,7 @@ public class OpenAPIConfig {
 
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(devServer, prodServer))
+                .servers(List.of(devServer))
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(List.of(securityRequirement));
     }

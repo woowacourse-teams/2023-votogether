@@ -7,6 +7,10 @@ export const mockUserInfo = [
     return res(ctx.status(200), ctx.json(MOCK_USER_INFO));
   }),
 
+  rest.patch('/members/me/detail', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ ok: '개인 정보가 성공적으로 저장되었습니다!' }));
+  }),
+
   rest.patch('/members/me/nickname', (req, res, ctx) => {
     MOCK_USER_INFO.nickname = 'wood';
 

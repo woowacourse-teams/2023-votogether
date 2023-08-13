@@ -8,6 +8,7 @@ import NotFound from '@pages/NotFound';
 import CreatePost from '@pages/post/CreatePost';
 import EditPost from '@pages/post/EditPost';
 import PostDetailPage from '@pages/post/PostDetail';
+import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
 import VoteStatisticsPage from '@pages/VoteStatistics';
 
 import { PATH } from '@constants/path';
@@ -75,6 +76,7 @@ const router = createBrowserRouter([
       },
       { path: 'posts', element: <Home /> },
       { path: 'votes', element: <Home /> },
+      { path: 'register', element: <RegisterPersonalInfo /> },
     ],
   },
   {

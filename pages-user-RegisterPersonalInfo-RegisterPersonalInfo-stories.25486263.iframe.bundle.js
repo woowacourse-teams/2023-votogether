@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkvotogether=self.webpackChunkvotogether||[]).push([[9993],{"./src/pages/MyInfo/MyInfo.stories.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.r(__webpack_exports__),__webpack_require__.d(__webpack_exports__,{Default:()=>Default,__namedExportsOrder:()=>__namedExportsOrder,default:()=>MyInfo_stories});var react=__webpack_require__("./node_modules/react/index.js"),dist=__webpack_require__("./node_modules/react-router/dist/index.js"),auth=__webpack_require__("./src/hooks/context/auth.tsx"),useToggle=__webpack_require__("./src/hooks/useToggle.tsx"),Accordion=__webpack_require__("./src/components/common/Accordion/index.tsx"),GuestProfile=__webpack_require__("./src/components/common/Dashboard/GuestProfile/index.tsx"),UserProfile=__webpack_require__("./src/components/common/Dashboard/UserProfile/index.tsx"),IconButton=__webpack_require__("./src/components/common/IconButton/index.tsx"),Layout=__webpack_require__("./src/components/common/Layout/index.tsx"),Modal=__webpack_require__("./src/components/common/Modal/index.tsx"),NarrowTemplateHeader=__webpack_require__("./src/components/common/NarrowTemplateHeader/index.tsx"),SquareButton=__webpack_require__("./src/components/common/SquareButton/index.tsx"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js"),theme=__webpack_require__("./src/styles/theme.ts");const Wrapper=styled_components_browser_esm.zo.div`
+"use strict";(self.webpackChunkvotogether=self.webpackChunkvotogether||[]).push([[7816],{"./src/pages/user/RegisterPersonalInfo/RegisterPersonalInfo.stories.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.r(__webpack_exports__),__webpack_require__.d(__webpack_exports__,{Default:()=>Default,__namedExportsOrder:()=>__namedExportsOrder,default:()=>RegisterPersonalInfo_stories});var react=__webpack_require__("./node_modules/react/index.js"),dist=__webpack_require__("./node_modules/react-router/dist/index.js"),userInfo=__webpack_require__("./src/api/userInfo.ts"),Accordion=__webpack_require__("./src/components/common/Accordion/index.tsx"),IconButton=__webpack_require__("./src/components/common/IconButton/index.tsx"),Layout=__webpack_require__("./src/components/common/Layout/index.tsx"),NarrowTemplateHeader=__webpack_require__("./src/components/common/NarrowTemplateHeader/index.tsx"),SquareButton=__webpack_require__("./src/components/common/SquareButton/index.tsx"),user=__webpack_require__("./src/constants/user.ts"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js"),theme=__webpack_require__("./src/styles/theme.ts");const Wrapper=styled_components_browser_esm.zo.main`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -6,6 +6,7 @@
   gap: 30px;
 
   padding-top: 55px;
+
   position: relative;
 
   @media (min-width: 768px) {
@@ -25,42 +26,75 @@
   @media (min-width: ${theme.r.breakpoint.md}) {
     display: none;
   }
-`,ProfileSection=styled_components_browser_esm.zo.section`
-  width: 90%;
-`,UserControlSection=styled_components_browser_esm.zo.section`
-  width: 90%;
-`,ButtonWrapper=styled_components_browser_esm.zo.div`
-  width: 90px;
-  height: 50px;
-`,Input=styled_components_browser_esm.zo.input`
-  width: 80%;
-  border: 1px solid #f2f2f2;
-  padding: 20px;
-`,ModalBody=styled_components_browser_esm.zo.div`
+`,MainWrapper=styled_components_browser_esm.zo.section`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
-
-  width: 90%;
-  margin: 40px 20px 0px 16px;
-
-  font: var(--text-caption);
-`,ModalTitle=styled_components_browser_esm.zo.div`
-  font: var(--text-title);
-`,ModalDescription=styled_components_browser_esm.zo.div`
-  font: var(--text-body);
-`,ButtonListWrapper=styled_components_browser_esm.zo.div`
-  display: flex;
-  justify-content: space-around;
   gap: 20px;
 
   width: 90%;
-  height: 50px;
-
+`,Title=styled_components_browser_esm.zo.h1`
+  width: 90%;
   margin-top: 20px;
-`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function MyInfo(){const navigate=(0,dist.s0)(),{isOpen,openComponent,closeComponent}=(0,useToggle.O)(),{loggedInfo}=(0,react.useContext)(auth.V),{userInfo}=loggedInfo;return(0,jsx_runtime.jsx)(Layout.Z,{isSidebarVisible:!0,children:(0,jsx_runtime.jsxs)(Wrapper,{children:[(0,jsx_runtime.jsx)(HeaderWrapper,{children:(0,jsx_runtime.jsx)(NarrowTemplateHeader.Z,{children:(0,jsx_runtime.jsx)(IconButton.Z,{category:"back",onClick:()=>{navigate(-1)}})})}),(0,jsx_runtime.jsx)(ProfileSection,{children:userInfo?(0,jsx_runtime.jsx)(UserProfile.Z,{userInfo}):(0,jsx_runtime.jsx)(GuestProfile.Z,{})}),(0,jsx_runtime.jsxs)(UserControlSection,{children:[(0,jsx_runtime.jsxs)(Accordion.Z,{title:"닉네임 변경",children:[(0,jsx_runtime.jsx)(Input,{placeholder:"새로운 닉네임을 입력해주세요"}),(0,jsx_runtime.jsx)(ButtonWrapper,{children:(0,jsx_runtime.jsx)(SquareButton.Z,{"aria-label":"닉네임 변경",theme:"fill",children:"변경"})})]}),(0,jsx_runtime.jsxs)(Accordion.Z,{title:"회원 탈퇴",children:[(0,jsx_runtime.jsx)(ButtonWrapper,{children:(0,jsx_runtime.jsx)(SquareButton.Z,{onClick:openComponent,"aria-label":"회원 탈퇴",theme:"blank",children:"회원 탈퇴"})}),isOpen&&(0,jsx_runtime.jsx)(Modal.Z,{size:"sm",onModalClose:closeComponent,children:(0,jsx_runtime.jsxs)(ModalBody,{children:[(0,jsx_runtime.jsx)(ModalTitle,{children:"정말 탈퇴하시겠어요?"}),(0,jsx_runtime.jsxs)(ModalDescription,{children:["탈퇴 버튼 클릭 시, ",(0,jsx_runtime.jsx)("br",{}),"계정은 삭제되며 복구되지 않아요."]}),(0,jsx_runtime.jsxs)(ButtonListWrapper,{children:[(0,jsx_runtime.jsx)(SquareButton.Z,{"aria-label":"회원 탈퇴",theme:"fill",children:"탈퇴"}),(0,jsx_runtime.jsx)(SquareButton.Z,{onClick:closeComponent,"aria-label":"회원 탈퇴",theme:"blank",children:"취소"})]})]})})]})]})]})})}MyInfo.displayName="MyInfo";const MyInfo_stories={component:MyInfo},Default={render:()=>(0,jsx_runtime.jsx)(MyInfo,{})};Default.parameters={...Default.parameters,docs:{...Default.parameters?.docs,source:{originalSource:"{\n  render: () => <MyInfo />\n}",...Default.parameters?.docs?.source}}};const __namedExportsOrder=["Default"]},"./src/components/common/Accordion/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>Accordion});var react=__webpack_require__("./node_modules/react/index.js"),chevron_down=__webpack_require__("./src/assets/chevron-down.svg"),chevron_up=__webpack_require__("./src/assets/chevron-up.svg"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js");const Wrapper=styled_components_browser_esm.ZP.div`
+
+  font-size: 30px;
+  font-weight: bold;
+`,InfoForm=styled_components_browser_esm.zo.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 25px;
+
+  width: 90%;
+`,TermsList=styled_components_browser_esm.zo.ul`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+`,Label=styled_components_browser_esm.zo.label`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+
+  font: var(--text-body);
+
+  p {
+    font-weight: bold;
+  }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`,GenderLabel=styled_components_browser_esm.zo.label`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 30px;
+
+  margin-left: 20px;
+`,Input=styled_components_browser_esm.zo.input`
+  width: 70%;
+  height: 20px;
+  border: 1px solid #f2f2f2;
+  padding: 20px;
+`,Radio=styled_components_browser_esm.zo.input`
+  font-size: 14px;
+  font-weight: light;
+`,Checkbox=styled_components_browser_esm.zo.input`
+  width: 20px;
+  height: 20px;
+`,ButtonWrapper=styled_components_browser_esm.zo.div`
+  display: flex;
+  justify-content: end;
+
+  width: 90px;
+  height: 50px;
+  margin-left: 70%;
+`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function RegisterPersonalInfo(){const navigate=(0,dist.s0)(),[userInfoForm,setUserInfoForm]=(0,react.useState)({gender:"",birthYear:"",isTermsAgreed:!1}),handleFormInputChange=e=>{const{name,value,type,checked}=e.target,newValue="checkbox"===type?checked:value;setUserInfoForm((prev=>({...prev,[name]:newValue})))};return(0,jsx_runtime.jsx)(Layout.Z,{isSidebarVisible:!0,children:(0,jsx_runtime.jsxs)(Wrapper,{children:[(0,jsx_runtime.jsx)(HeaderWrapper,{children:(0,jsx_runtime.jsx)(NarrowTemplateHeader.Z,{children:(0,jsx_runtime.jsx)(IconButton.Z,{category:"back"})})}),(0,jsx_runtime.jsx)(Title,{children:"개인 정보 등록"}),(0,jsx_runtime.jsx)(MainWrapper,{children:(0,jsx_runtime.jsxs)(InfoForm,{onSubmit:e=>{e.preventDefault();const{gender,birthYear,isTermsAgreed}=userInfoForm;if(!gender||!birthYear)return void alert("필수 개인 정보를 모두 입력해주세요.");if(isNaN(Number(birthYear)))return void alert("생년월일 값을 확인해주세요.");if(!isTermsAgreed)return void alert("개인 정보 약관에 동의해주세요.");const submittedUserInfo={gender,birthYear:Number(birthYear)};(0,userInfo.gS)(submittedUserInfo),alert("개인 정보 등록 완료!"),navigate("/")},children:[(0,jsx_runtime.jsx)(Accordion.Z,{title:"개인정보 수집 약관 및 동의",children:(0,jsx_runtime.jsxs)(TermsList,{children:[(0,jsx_runtime.jsx)("li",{children:"• 개인정보 항목: 성별, 나이"}),(0,jsx_runtime.jsx)("li",{children:"• 수집 방법: 회원가입 후 개인정보 등록 페이지에서 성별, 나이 저장"}),(0,jsx_runtime.jsx)("li",{children:"• 수집 목적: 투표한 이용자의 성별 및 나이에 대한 투표 통계 제공 (단, 투표 통계는 글 작성자에 한하여 제공됨)"}),(0,jsx_runtime.jsx)("li",{children:"• 보유 근거: 정보주체 동의"}),(0,jsx_runtime.jsx)("li",{children:"• 보유 기간: 회원 탈퇴 시 즉시 삭제"}),(0,jsx_runtime.jsx)("p",{children:"* 개인 정보 수집에 대한 동의를 거부할 수 있습니다. (단, 동의가 없을 경우 일부 서비스 이용에 제한이 있습니다.)"})]})}),(0,jsx_runtime.jsxs)(Label,{children:[(0,jsx_runtime.jsx)("p",{children:"성별"}),(0,jsx_runtime.jsxs)(GenderLabel,{children:[(0,jsx_runtime.jsxs)(Label,{children:[(0,jsx_runtime.jsx)(Radio,{type:"radio",name:"gender",value:"MALE",onChange:handleFormInputChange}),"남성"]}),(0,jsx_runtime.jsxs)(Label,{children:[(0,jsx_runtime.jsx)(Radio,{type:"radio",name:"gender",value:"FEMALE",onChange:handleFormInputChange}),"여성"]})]})]}),(0,jsx_runtime.jsxs)(Label,{children:[(0,jsx_runtime.jsx)("p",{children:"출생 연도"}),(0,jsx_runtime.jsx)(Input,{type:"number",value:userInfoForm.birthYear,name:"birthYear",onChange:handleFormInputChange,placeholder:"출생 연도를 입력해주세요",size:4,min:user.K.MIN_LENGTH,max:user.K.MAX_LENGTH})]}),(0,jsx_runtime.jsxs)(Label,{children:[(0,jsx_runtime.jsx)(Checkbox,{type:"checkbox",name:"isTermsAgreed",checked:userInfoForm.isTermsAgreed,onChange:handleFormInputChange}),"개인 정보 약관에 동의합니다."]}),(0,jsx_runtime.jsx)(ButtonWrapper,{children:(0,jsx_runtime.jsx)(SquareButton.Z,{type:"submit","aria-label":"사용자 개인 정보 저장",theme:"fill",children:"저장"})})]})})]})})}RegisterPersonalInfo.displayName="RegisterPersonalInfo";const RegisterPersonalInfo_stories={component:RegisterPersonalInfo},Default={render:()=>(0,jsx_runtime.jsx)(RegisterPersonalInfo,{})};Default.parameters={...Default.parameters,docs:{...Default.parameters?.docs,source:{originalSource:"{\n  render: () => <RegisterPersonalInfo />\n}",...Default.parameters?.docs?.source}}};const __namedExportsOrder=["Default"]},"./src/components/common/Accordion/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>Accordion});var react=__webpack_require__("./node_modules/react/index.js"),chevron_down=__webpack_require__("./src/assets/chevron-down.svg"),chevron_up=__webpack_require__("./src/assets/chevron-up.svg"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js");const Wrapper=styled_components_browser_esm.ZP.div`
   width: 100%;
 
   font: var(--text-caption);
@@ -178,37 +212,7 @@
   & :last-child {
     height: ${props=>"icon"!==props.content&&"60%"};
   }
-`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");const contentCategory={icon:{name:"로고 아이콘",url:logo},text:{name:"votogether",url:projectName_namespaceObject},full:{name:"votogether",url:""}};function LogoButton({content,...rest}){const src=contentCategory[content].url,ariaLabelText=contentCategory[content].name;return"full"===content?(0,jsx_runtime.jsxs)(Button,{content,"aria-label":ariaLabelText,...rest,children:[(0,jsx_runtime.jsx)("img",{src:logo,alt:"로고 아이콘"}),(0,jsx_runtime.jsx)("img",{src:projectName_namespaceObject,alt:"VoTogether"})]}):(0,jsx_runtime.jsx)(Button,{content,"aria-label":ariaLabelText,...rest,children:(0,jsx_runtime.jsx)("img",{src,alt:"로고 아이콘"})})}LogoButton.displayName="LogoButton";try{LogoButton.displayName="LogoButton",LogoButton.__docgenInfo={description:"",displayName:"LogoButton",props:{content:{defaultValue:null,description:"",name:"content",required:!0,type:{name:"enum",value:[{value:'"text"'},{value:'"icon"'},{value:'"full"'}]}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/LogoButton/index.tsx#LogoButton"]={docgenInfo:LogoButton.__docgenInfo,name:"LogoButton",path:"src/components/common/LogoButton/index.tsx#LogoButton"})}catch(__react_docgen_typescript_loader_error){}},"./src/components/common/Modal/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>Modal});var react=__webpack_require__("./node_modules/react/index.js"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js");const MODAL_SIZE={sm:"290px",md:"590px",lg:"700px"},All=styled_components_browser_esm.zo.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`,Backdrop=styled_components_browser_esm.zo.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
-  background: rgba(0, 0, 0, 0.35);
-`,Container=styled_components_browser_esm.zo.div`
-  display: grid;
-  grid-template-rows: 1fr 6fr;
-
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  width: ${props=>MODAL_SIZE[props.size]};
-  height: 290px;
-  border-radius: 12px;
-  border: 2px solid #f6f6f6;
-  padding: 5px;
-
-  background-color: white;
-
-  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function Modal({onModalClose,children,size}){const BackDropRef=(0,react.useRef)(null);return(0,react.useEffect)((()=>{const handler=e=>{e.target===BackDropRef.current&&onModalClose()};return document.addEventListener("click",handler),()=>document.removeEventListener("click",handler)}),[BackDropRef,onModalClose]),(0,jsx_runtime.jsxs)(All,{children:[(0,jsx_runtime.jsx)(Backdrop,{ref:BackDropRef}),(0,jsx_runtime.jsx)(Container,{size,children})]})}Modal.displayName="Modal";try{Modal.displayName="Modal",Modal.__docgenInfo={description:"",displayName:"Modal",props:{onModalClose:{defaultValue:null,description:"",name:"onModalClose",required:!0,type:{name:"() => void"}},size:{defaultValue:null,description:"",name:"size",required:!0,type:{name:"enum",value:[{value:'"sm"'},{value:'"md"'},{value:'"lg"'}]}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/Modal/index.tsx#Modal"]={docgenInfo:Modal.__docgenInfo,name:"Modal",path:"src/components/common/Modal/index.tsx#Modal"})}catch(__react_docgen_typescript_loader_error){}},"./src/components/common/NarrowTemplateHeader/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>NarrowTemplateHeader});const Container=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js").zo.div`
+`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");const contentCategory={icon:{name:"로고 아이콘",url:logo},text:{name:"votogether",url:projectName_namespaceObject},full:{name:"votogether",url:""}};function LogoButton({content,...rest}){const src=contentCategory[content].url,ariaLabelText=contentCategory[content].name;return"full"===content?(0,jsx_runtime.jsxs)(Button,{content,"aria-label":ariaLabelText,...rest,children:[(0,jsx_runtime.jsx)("img",{src:logo,alt:"로고 아이콘"}),(0,jsx_runtime.jsx)("img",{src:projectName_namespaceObject,alt:"VoTogether"})]}):(0,jsx_runtime.jsx)(Button,{content,"aria-label":ariaLabelText,...rest,children:(0,jsx_runtime.jsx)("img",{src,alt:"로고 아이콘"})})}LogoButton.displayName="LogoButton";try{LogoButton.displayName="LogoButton",LogoButton.__docgenInfo={description:"",displayName:"LogoButton",props:{content:{defaultValue:null,description:"",name:"content",required:!0,type:{name:"enum",value:[{value:'"text"'},{value:'"icon"'},{value:'"full"'}]}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/LogoButton/index.tsx#LogoButton"]={docgenInfo:LogoButton.__docgenInfo,name:"LogoButton",path:"src/components/common/LogoButton/index.tsx#LogoButton"})}catch(__react_docgen_typescript_loader_error){}},"./src/components/common/NarrowTemplateHeader/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>NarrowTemplateHeader});const Container=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js").zo.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -272,5 +276,5 @@
       height: 40%;
     }
   }
-`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function WideHeader({handleLogoClick}){return(0,jsx_runtime.jsxs)(Container,{children:[(0,jsx_runtime.jsx)(LogoButton.Z,{content:"full",onClick:handleLogoClick}),(0,jsx_runtime.jsx)(SearchBar.Z,{size:"sm"})]})}WideHeader.displayName="WideHeader";try{WideHeader.displayName="WideHeader",WideHeader.__docgenInfo={description:"",displayName:"WideHeader",props:{handleLogoClick:{defaultValue:null,description:"",name:"handleLogoClick",required:!0,type:{name:"() => void"}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/WideHeader/index.tsx#WideHeader"]={docgenInfo:WideHeader.__docgenInfo,name:"WideHeader",path:"src/components/common/WideHeader/index.tsx#WideHeader"})}catch(__react_docgen_typescript_loader_error){}},"./src/hooks/useToggle.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{O:()=>useToggle});var react__WEBPACK_IMPORTED_MODULE_0__=__webpack_require__("./node_modules/react/index.js");const useToggle=()=>{const[isOpen,setIsOpen]=(0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!1);return{isOpen,openComponent:()=>{setIsOpen(!0)},closeComponent:()=>{setIsOpen(!1)},toggleComponent:()=>{setIsOpen((prevIsOpen=>!prevIsOpen))}}}},"./src/assets/logo.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/logo.9ee58604.svg"}}]);
-//# sourceMappingURL=pages-MyInfo-MyInfo-stories.0ae43232.iframe.bundle.js.map
+`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function WideHeader({handleLogoClick}){return(0,jsx_runtime.jsxs)(Container,{children:[(0,jsx_runtime.jsx)(LogoButton.Z,{content:"full",onClick:handleLogoClick}),(0,jsx_runtime.jsx)(SearchBar.Z,{size:"sm"})]})}WideHeader.displayName="WideHeader";try{WideHeader.displayName="WideHeader",WideHeader.__docgenInfo={description:"",displayName:"WideHeader",props:{handleLogoClick:{defaultValue:null,description:"",name:"handleLogoClick",required:!0,type:{name:"() => void"}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/WideHeader/index.tsx#WideHeader"]={docgenInfo:WideHeader.__docgenInfo,name:"WideHeader",path:"src/components/common/WideHeader/index.tsx#WideHeader"})}catch(__react_docgen_typescript_loader_error){}},"./src/constants/user.ts":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{K:()=>BIRTH_YEAR,O:()=>NICKNAME});const NICKNAME={MAX_LENGTH:15,MIN_LENGTH:2},BIRTH_YEAR={MAX_LENGTH:(new Date).getFullYear(),MIN_LENGTH:1900}},"./src/assets/logo.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/logo.9ee58604.svg"}}]);
+//# sourceMappingURL=pages-user-RegisterPersonalInfo-RegisterPersonalInfo-stories.25486263.iframe.bundle.js.map

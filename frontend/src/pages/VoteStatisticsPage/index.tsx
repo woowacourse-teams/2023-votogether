@@ -5,6 +5,7 @@ import { useFetch } from '@hooks/useFetch';
 import { getPost } from '@api/post';
 import { getPostStatistics } from '@api/voteResult';
 
+import ErrorMessage from '@components/common/ErrorMessage';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
@@ -51,7 +52,7 @@ export default function VoteStatisticsPage() {
       </S.HeaderWrapper>
       <S.Container>
         <S.PageHeader>투표 통계</S.PageHeader>
-        {postError && <div>{postError}</div>}
+        {postError && <ErrorMessage />}
         {isPostLoading && (
           <S.LoadingWrapper>
             <Skeleton isLarge={true} />
@@ -59,7 +60,7 @@ export default function VoteStatisticsPage() {
         )}
         {postDetail && (
           <S.OptionContainer>
-            {voteResultError && <div>{voteResultError}</div>}
+            {voteResultError && <ErrorMessage />}
             {isVoteResultLoading && (
               <S.LoadingWrapper>
                 <Skeleton isLarge={true} />

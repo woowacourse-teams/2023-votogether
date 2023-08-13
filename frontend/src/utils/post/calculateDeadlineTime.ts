@@ -1,4 +1,12 @@
-export const calculateDeadlineTime = (createdAt: string, deadLine: string) => {
+export const calculateDeadlineTime = (createdAt?: string, deadLine?: string) => {
+  if (!createdAt || !deadLine) {
+    return {
+      day: 0,
+      hour: 0,
+      minute: 0,
+    };
+  }
+
   const createTimeNumber = new Date(createdAt);
 
   const deadlineTimeNumber = new Date(deadLine);

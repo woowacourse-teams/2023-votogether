@@ -65,4 +65,30 @@ describe('calculateDeadlineTime 함수를 이용해서 시작시간과 마감시
       minute: 59,
     });
   });
+
+  test('시작 시간이 undefined, 마감 시간: 2023-07-14 23:59 일 때 0일 0시간 0분을 반환한다.', () => {
+    const createdAt = undefined;
+    const deadline = '2023-07-14 23:59';
+
+    const result = calculateDeadlineTime(createdAt, deadline);
+
+    expect(result).toEqual({
+      day: 0,
+      hour: 0,
+      minute: 0,
+    });
+  });
+
+  test('시작 시간이 2023-07-14 23:59, 마감 시간: undefined 일 때 0일 0시간 0분을 반환한다.', () => {
+    const createdAt = '2023-07-14 23:59';
+    const deadline = undefined;
+
+    const result = calculateDeadlineTime(createdAt, deadline);
+
+    expect(result).toEqual({
+      day: 0,
+      hour: 0,
+      minute: 0,
+    });
+  });
 });

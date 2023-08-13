@@ -24,9 +24,11 @@ import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList'
 import { PATH } from '@constants/path';
 import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
 
+import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
+import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
 import { checkIrreplaceableTime } from '@utils/time';
 
 import CategoryWrapper from './CategoryWrapper';
@@ -56,13 +58,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const writingOptionHook = useWritingOption(voteInfo?.options);
   const contentImageHook = useContentImage(imageUrl);
   const { isToastOpen, openToast, toastMessage } = useToast();
-  const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정'>();
+  const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정' | null>(
+    getSelectedTimeOption(calculateDeadlineTime(createTime, deadline))
+  );
   const { isOpen, openComponent, closeComponent } = useToggle();
-  const [time, setTime] = useState({
-    day: 0,
-    hour: 0,
-    minute: 0,
-  });
+  const [time, setTime] = useState(calculateDeadlineTime(createTime, deadline));
   const baseTime = createTime ? new Date(createTime) : new Date();
   const closeModal = () => {
     if (data && checkIrreplaceableTime(time, data.createTime)) {
@@ -73,10 +73,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
         minute: 0,
       };
       setTime(updatedTime);
-      setSelectTimeOption(undefined);
+      setSelectTimeOption(null);
     }
 
-    setSelectTimeOption(Object.values(time).every(time => time === 0) ? undefined : '사용자지정');
+    setSelectTimeOption(Object.values(time).every(time => time === 0) ? null : '사용자지정');
     closeComponent();
   };
 

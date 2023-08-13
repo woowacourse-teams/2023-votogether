@@ -138,7 +138,7 @@ export default function PostDetail() {
       </S.MainContainer>
       <S.BottomContainer>
         <ErrorBoundary>
-          <Suspense fallback={<Skeleton isLarge={true} />}>
+          <Suspense fallback={<Skeleton isLarge={false} />}>
             <CommentList postId={postId} postWriterName={postDataFallback.writer.nickname} />
           </Suspense>
         </ErrorBoundary>

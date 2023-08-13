@@ -1,18 +1,21 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test;MODE=MySQL
-    username: sa
+    driver-class-name: ${DATASOURCE_DRIVER_CLASS_NAME}
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
         default_batch_fetch_size: 50
-    show-sql: true
 
     hibernate:
-      ddl-auto: create
+      ddl-auto: ${HIBERNATE_DDL_AUTO}
 
   servlet:
     multipart:
@@ -21,19 +24,12 @@ spring:
 
   h2:
     console:
-      enabled: true
+      enabled: ${H2_CONSOLE_ENABLE}
       path: /h2-console
-      settings:
-        web-allow-others: true
 
 logging:
   level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+    org.hibernate.orm.jdbc.bind: trace
 
 server:
   forward-headers-strategy: FRAMEWORK
@@ -44,8 +40,7 @@ springdoc:
 
 votogether:
   openapi:
-    dev-url: http://localhost:8080
-    prod-url: ${PROD_URL}
+    dev-url: ${DEV_URL}
 
 oauth:
   kakao:

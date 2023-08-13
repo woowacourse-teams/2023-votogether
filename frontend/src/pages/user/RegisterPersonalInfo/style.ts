@@ -80,10 +80,10 @@ export const Label = styled.label`
     font-weight: bold;
   }
 
-  input[type='number'] {
-    -moz-appearance: textfield; /* Firefox */
-    appearance: none;
-    -webkit-appearance: none; /* Safari and Chrome */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 `;
 
@@ -101,12 +101,6 @@ export const Input = styled.input`
   height: 20px;
   border: 1px solid #f2f2f2;
   padding: 20px;
-
-  input[type='number'] {
-    -moz-appearance: textfield; /* Firefox */
-    appearance: none;
-    -webkit-appearance: none; /* Safari and Chrome */
-  }
 `;
 
 export const Radio = styled.input`

@@ -14,8 +14,9 @@ import { POST } from '@constants/vote';
 
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
-import Toast from '../Toast';
 import photoIcon from '@assets/photo_white.svg';
+
+import Toast from '../Toast';
 
 import * as S from './style';
 
@@ -77,7 +78,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
     }
   }, [isEditError, editError]);
 
-      const checkIncludeImage = () => {
+  const checkIncludeImage = () => {
     if (imageUrl !== '') return true;
 
     return voteInfo.options.map(option => option.imageUrl).some(url => url !== '');

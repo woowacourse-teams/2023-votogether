@@ -1,10 +1,14 @@
 import { rest } from 'msw';
 
-import { MOCK_POST_INFO } from './mockData/post';
+import { MOCK_GUEST_POST_INFO, MOCK_POST_INFO } from './mockData/post';
 
 export const mockPost = [
   rest.get('/posts/:postId', (req, res, ctx) => {
     return res(ctx.delay(1000), ctx.status(200), ctx.json(MOCK_POST_INFO));
+  }),
+
+  rest.get('/posts/:postId/guest', (req, res, ctx) => {
+    return res(ctx.delay(1000), ctx.status(200), ctx.json(MOCK_GUEST_POST_INFO));
   }),
 
   rest.delete('/posts/:postId', (req, res, ctx) => {

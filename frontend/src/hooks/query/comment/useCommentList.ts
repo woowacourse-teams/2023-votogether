@@ -9,12 +9,7 @@ export const useCommentList = (postId: number) => {
     [QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS],
     () => getCommentList(postId),
     {
-      onSuccess: data => {
-        return data;
-      },
-      onError: error => {
-        window.console.log('get comment list error', error);
-      },
+      suspense: true,
     }
   );
 

@@ -7,7 +7,7 @@ import {
   rest,
 } from 'msw';
 
-import { MOCK_GUEST_POST_LIST, MOCK_POST_LIST } from '@mocks/mockData/postList';
+import { MOCK_GUEST_POST_LIST, MOCK_POST_LIST } from '@mocks/mockData/post';
 
 export const mockPostList = [
   rest.get('/posts', (req, res, ctx) => {

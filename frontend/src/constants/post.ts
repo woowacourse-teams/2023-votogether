@@ -44,7 +44,15 @@ export const SEARCH_KEYWORD = 'keyword';
 
 export const MAX_FILE_SIZE = 5000000;
 
-export const POST_TITLE_MAX_LENGTH = 100;
+export const POST_TITLE = {
+  MAX_LENGTH: 100,
+  MIN_LENGTH: 2,
+} as const;
+
+export const POST_CONTENT = {
+  MAX_LENGTH: 1000,
+  MIN_LENGTH: 2,
+} as const;
 
 export const POST_DESCRIPTION_MAX_LENGTH = 1000;
 
@@ -55,3 +63,5 @@ export const POST_LIST_MAX_LENGTH = 10;
 export const DEFAULT_CATEGORY_ID = 0;
 
 export const DEFAULT_KEYWORD = '';
+
+export const CATEGORY_COUNT_LIMIT = 3;

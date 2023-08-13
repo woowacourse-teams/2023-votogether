@@ -16,6 +16,8 @@ export const Container = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 6px;
 
+  background-color: var(--white);
+
   font: var(--text-caption);
 `;
 

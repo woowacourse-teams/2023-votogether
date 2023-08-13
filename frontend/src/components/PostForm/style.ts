@@ -39,7 +39,7 @@ export const Wrapper = styled.div`
 
   @media (min-width: ${theme.breakpoint.md}) {
     grid-template-columns: 1fr 300px;
-    padding: 30px 80px 20px 8cqb;
+    padding: 30px 80px 20px 80px;
   }
 
   @media (min-width: ${theme.breakpoint.lg}) {

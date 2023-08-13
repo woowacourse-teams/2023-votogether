@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 
+export type InputLength = Record<'MAX_LENGTH' | 'MIN_LENGTH', number>;
+
 export const useText = (originalText: string) => {
   const [text, setText] = useState(originalText);
+
   const handleTextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    limit: number
+    limit: InputLength
   ) => {
     const { value } = event.target;
     const standard = value.length;
 
-    if (standard === limit) {
-      event.target.setCustomValidity(`선택지 내용은 ${limit}자까지 입력 가능합니다.`);
+    if (standard > limit.MAX_LENGTH) {
+      event.target.setCustomValidity(`해당 입력값은 ${limit.MAX_LENGTH}자까지 입력 가능합니다.`);
       event.target.reportValidity();
       return;
     }

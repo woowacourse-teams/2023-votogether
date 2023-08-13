@@ -24,3 +24,8 @@ export interface LoggedInfo {
   id?: number;
   userInfo?: User;
 }
+
+export interface UpdateUserInfoRequest {
+  gender: 'MALE' | 'FEMALE';
+  birthYear: number;
+}

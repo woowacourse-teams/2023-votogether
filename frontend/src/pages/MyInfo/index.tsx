@@ -1,11 +1,11 @@
 import { useContext, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
 
-import { modifyNickname } from '@api/userInfo';
+import { modifyNickname, withdrawalMembership } from '@api/userInfo';
 
 import Accordion from '@components/common/Accordion';
 import UserProfile from '@components/common/Dashboard/UserProfile';
@@ -15,31 +15,38 @@ import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 
+import { PATH } from '@constants/path';
 import { NICKNAME } from '@constants/user';
+
+import { clearCookieToken } from '@utils/cookie';
 
 import * as S from './style';
 
 export default function MyInfo() {
   const navigate = useNavigate();
+
   const { isOpen, openComponent, closeComponent } = useToggle();
-
-  const { userInfo } = useContext(AuthContext).loggedInfo;
-
+  const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
   const { text: newNickname, handleTextChange: handleNicknameChange } = useText(
-    userInfo?.nickname ?? ''
+    loggedInfo.userInfo?.nickname ?? ''
   );
 
-  if (!userInfo) {
-    navigate('/');
-    return <></>;
+  if (!loggedInfo.userInfo) {
+    return <Navigate to={PATH.LOGIN} />;
   }
+
+  const logout = () => {
+    clearCookieToken('accessToken');
+    clearLoggedInfo();
+  };
 
   const handleModifyNickname = () => {
     modifyNickname(newNickname);
   };
 
   const handleWithdrawlMembership = () => {
-    handleWithdrawlMembership();
+    withdrawalMembership();
+    logout();
   };
 
   return (
@@ -56,7 +63,7 @@ export default function MyInfo() {
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.ProfileSection>
-          <UserProfile userInfo={userInfo} />
+          <UserProfile userInfo={loggedInfo.userInfo} />
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">

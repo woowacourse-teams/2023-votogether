@@ -9,7 +9,7 @@ import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetail';
 import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
-import VoteStatisticsPage from '@pages/VoteStatistics';
+import VoteStatisticsPage from '@pages/VoteStatisticsPage';
 
 import { PATH } from '@constants/path';
 
@@ -76,7 +76,14 @@ const router = createBrowserRouter([
       },
       { path: 'posts', element: <Home /> },
       { path: 'votes', element: <Home /> },
-      { path: 'register', element: <RegisterPersonalInfo /> },
+      {
+        path: 'register',
+        element: (
+          <PrivateRoute>
+            <RegisterPersonalInfo />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {

@@ -11,6 +11,8 @@ import SquareButton from '@components/common/SquareButton';
 
 import { BIRTH_YEAR } from '@constants/user';
 
+import { setCookieToken } from '@utils/cookie';
+
 import * as S from './style';
 
 interface UserInfoForm {
@@ -60,6 +62,7 @@ export default function RegisterPersonalInfo() {
 
     const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
+    setCookieToken('hasEssentialInfo', true);
 
     alert('개인 정보 등록 완료!');
     navigate('/');

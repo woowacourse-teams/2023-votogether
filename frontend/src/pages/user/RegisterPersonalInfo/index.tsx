@@ -48,12 +48,17 @@ export default function RegisterPersonalInfo() {
       return;
     }
 
+    if (isNaN(Number(birthYear))) {
+      alert('생년월일 값을 확인해주세요.');
+      return;
+    }
+
     if (!isTermsAgreed) {
       alert('개인 정보 약관에 동의해주세요.');
       return;
     }
 
-    const submittedUserInfo = { gender: gender, birthYear: Number(birthYear) };
+    const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
 
     alert('개인 정보 등록 완료!');

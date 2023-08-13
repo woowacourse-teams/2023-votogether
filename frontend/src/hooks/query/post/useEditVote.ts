@@ -7,7 +7,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 export const useEditVote = ({ isPreview, postId }: { isPreview: boolean; postId: number }) => {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isError, error } = useMutation({
     mutationFn: (optionData: OptionData) => changeVotedOption(postId, optionData),
     onSuccess: () => {
       if (isPreview) {
@@ -24,5 +24,5 @@ export const useEditVote = ({ isPreview, postId }: { isPreview: boolean; postId:
     },
   });
 
-  return { mutate };
+  return { mutate, isError, error };
 };

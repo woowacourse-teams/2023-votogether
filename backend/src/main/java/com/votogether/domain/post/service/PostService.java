@@ -27,7 +27,6 @@ import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,7 +48,6 @@ public class PostService {
     private static final int BASIC_PAGING_SIZE = 10;
     private static final int MAXIMUM_DEADLINE = 3;
 
-    private final Map<PostClosingType, Function<Pageable, Slice<Post>>> postClosingTypeMapper;
     private final Map<PostClosingType, BiFunction<Member, Pageable, Slice<Post>>> postsVotedByMemberMapper;
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;
@@ -67,18 +65,8 @@ public class PostService {
         this.categoryRepository = categoryRepository;
         this.voteRepository = voteRepository;
 
-        this.postClosingTypeMapper = new EnumMap<>(PostClosingType.class);
         this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
-        initPostClosingTypeMapper();
         initPostsVotedByMemberMapper();
-    }
-
-    private void initPostClosingTypeMapper() {
-        postClosingTypeMapper.put(PostClosingType.ALL, postRepository::findAll);
-        postClosingTypeMapper.put(PostClosingType.PROGRESS, pageable ->
-                postRepository.findByDeadlineAfter(LocalDateTime.now(), pageable));
-        postClosingTypeMapper.put(PostClosingType.CLOSED, pageable ->
-                postRepository.findByDeadlineBefore(LocalDateTime.now(), pageable));
     }
 
     private void initPostsVotedByMemberMapper() {
@@ -149,27 +137,23 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPostBySortTypeAndClosingType(
-            final Member loginMember,
+    public List<PostResponse> getAllPostBySortTypeAndClosingTypeAndCategoryId(
             final int page,
             final PostClosingType postClosingType,
-            final PostSortType postSortType
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Member loginMember
     ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getPostBaseSort());
-        final List<Post> contents = findContentsBySortTypeAndClosingType(postClosingType, pageable);
-
-        return contents.stream()
+        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                postClosingType,
+                postSortType,
+                categoryId,
+                pageable
+        );
+        return posts.stream()
                 .map(post -> PostResponse.of(post, loginMember))
                 .toList();
-    }
-
-    private List<Post> findContentsBySortTypeAndClosingType(
-            final PostClosingType postClosingType,
-            final Pageable pageable
-    ) {
-        return postClosingTypeMapper.get(postClosingType)
-                .apply(pageable)
-                .getContent();
     }
 
     @Transactional(readOnly = true)
@@ -271,11 +255,66 @@ public class PostService {
     @Transactional
     public void closePostEarlyById(final Long id, final Member loginMember) {
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
         post.validateWriter(loginMember);
         post.validateDeadLine();
         post.closeEarly();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsByWriter(
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Member member
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+                member,
+                postClosingType,
+                postSortType,
+                categoryId,
+                pageable
+        );
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, member))
+                .toList();
+    }
+
+    public List<PostResponse> searchPostsWithKeyword(
+            final String keyword,
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId,
+            final Member member
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts =
+                postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, member))
+                .toList();
+    }
+
+    public List<PostResponse> searchPostsWithKeywordForGuest(
+            final String keyword,
+            final int page,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Long categoryId
+    ) {
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
+        final List<Post> posts =
+                postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);
+
+        return posts.stream()
+                .map(post -> PostResponse.forGuest(post))
+                .toList();
     }
 
     @Transactional
@@ -302,7 +341,6 @@ public class PostService {
         post.validateDeadLine();
         post.validateDeadLineToModify(request.deadline());
 
-
         post.update(
                 toPostBody(request.title(), request.content()),
                 request.imageUrl(),
@@ -322,3 +360,4 @@ public class PostService {
     }
 
 }
+

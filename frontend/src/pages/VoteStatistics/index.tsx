@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { useFetch } from '@hooks/useFetch';
 
@@ -10,6 +10,10 @@ import Layout from '@components/common/Layout';
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import VoteStatistics from '@components/VoteStatistics';
+
+import { PATH } from '@constants/path';
+
+import { checkWriter } from '@utils/post/checkWriter';
 
 import OptionStatistics from './OptionStatistics';
 import * as S from './style';
@@ -25,6 +29,7 @@ export default function VoteStatisticsPage() {
     errorMessage: postError,
     isLoading: isPostLoading,
   } = useFetch(() => getPost(postId));
+
   const {
     data: voteResultResponse,
     errorMessage: voteResultError,
@@ -32,8 +37,10 @@ export default function VoteStatisticsPage() {
   } = useFetch(() => getPostStatistics(postId));
 
   const movePostDetailPage = () => {
-    navigate(`/posts/${postId}`);
+    navigate(`${PATH.POST}/${postId}`);
   };
+
+  if (postDetail && !checkWriter(postDetail.writer.id)) return <Navigate to={PATH.HOME} />;
 
   return (
     <Layout isSidebarVisible={true}>

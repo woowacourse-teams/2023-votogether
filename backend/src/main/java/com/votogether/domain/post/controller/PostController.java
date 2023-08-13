@@ -106,14 +106,19 @@ public class PostController {
     })
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPost(
-            final int page,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(name = "category", required = false) final Long categoryId,
             @Auth final Member member
     ) {
-        final List<PostResponse> responses =
-                postService.getAllPostBySortTypeAndClosingType(member, page, postClosingType, postSortType);
-
+        final List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(
+                page,
+                postClosingType,
+                postSortType,
+                categoryId,
+                member
+        );
         return ResponseEntity.ok(responses);
     }
 
@@ -217,6 +222,42 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "게시글 검색(회원)", description = "회원으로 키워드를 통해 게시글을 검색한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 검색 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 쿼리 파라미터값 입력"),
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<PostResponse>> searchPostsWithKeyword(
+            @RequestParam final String keyword,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId,
+            @Auth final Member member
+    ) {
+        final List<PostResponse> responses =
+                postService.searchPostsWithKeyword(keyword, page, postClosingType, postSortType, categoryId, member);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "작성한 게시글 조회", description = "회원본인이 작성한 게시글 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원본인이 작성한 게시글 조회 성공")
+    })
+    @GetMapping("/me")
+    public ResponseEntity<List<PostResponse>> getPostsByMe(
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId,
+            @Auth final Member member
+    ) {
+        final List<PostResponse> responses =
+                postService.getPostsByWriter(page, postClosingType, postSortType, categoryId, member);
+        return ResponseEntity.ok(responses);
+    }
+
     @Operation(summary = "게시글 삭제", description = "게시글을 삭제한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물이 삭제 되었습니다."),
@@ -228,5 +269,24 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "게시글 검색(비회원)", description = "비회원으로 키워드를 통해 게시글을 검색한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 검색 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 쿼리 파라미터값 입력"),
+    })
+    @GetMapping("/search/guest")
+    public ResponseEntity<List<PostResponse>> searchPostsWithKeywordForGuest(
+            @RequestParam final String keyword,
+            @RequestParam final int page,
+            @RequestParam final PostClosingType postClosingType,
+            @RequestParam final PostSortType postSortType,
+            @RequestParam(required = false, name = "category") final Long categoryId
+    ) {
+        final List<PostResponse> responses =
+                postService.searchPostsWithKeywordForGuest(keyword, page, postClosingType, postSortType, categoryId);
+        return ResponseEntity.ok(responses);
+    }
+
 }
+
 

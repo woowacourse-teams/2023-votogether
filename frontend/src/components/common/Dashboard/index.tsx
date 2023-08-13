@@ -1,44 +1,38 @@
-import React from 'react';
+import { Suspense, useContext } from 'react';
 
-import { Category } from '@type/category';
-import { User } from '@type/user';
+import { AuthContext } from '@hooks/context/auth';
 
+import ErrorBoundary from '@pages/ErrorBoundary';
+
+import { clearCookieToken } from '@utils/cookie';
+
+import Skeleton from '../Skeleton';
 import SquareButton from '../SquareButton';
 
-import CategoryToggle from './CategoryToggle';
+import CategorySection from './CategorySection';
 import GuestProfile from './GuestProfile';
 import * as S from './style';
 import UserProfile from './UserProfile';
 
-interface DashboardProps {
-  categoryList: Category[];
-  selectedState: string;
-  handleLogoutClick: () => void;
-  userInfo?: User;
-}
+export default function Dashboard() {
+  const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
+  const { userInfo } = loggedInfo;
 
-export default function Dashboard({
-  userInfo,
-  categoryList,
-  selectedState,
-  handleLogoutClick,
-}: DashboardProps) {
-  const favoriteCategory = categoryList.filter(category => category.isFavorite === true);
-  const allCategory = categoryList.filter(category => category.isFavorite === false);
+  const handleLogoutClick = () => {
+    clearCookieToken('accessToken');
+    clearLoggedInfo();
+  };
 
   return (
     <S.Container>
       {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
-      <S.SelectCategoryWrapper>
-        <S.Circle />
-        <S.SelectCategoryText>{selectedState}</S.SelectCategoryText>
-      </S.SelectCategoryWrapper>
-      <S.ContentContainer>
-        <S.CategoryToggleContainer>
-          {userInfo && <CategoryToggle title="즐겨찾기" categoryList={favoriteCategory} />}
-          <CategoryToggle title="카테고리 모아보기" categoryList={allCategory} />
-        </S.CategoryToggleContainer>
-      </S.ContentContainer>
+      <S.CategorySectionWrapper>
+        <ErrorBoundary>
+          <Suspense fallback={<Skeleton isLarge={true} />}>
+            <CategorySection />
+          </Suspense>
+        </ErrorBoundary>
+      </S.CategorySectionWrapper>
       {userInfo && (
         <S.ButtonWrapper>
           <SquareButton theme="blank" onClick={handleLogoutClick}>

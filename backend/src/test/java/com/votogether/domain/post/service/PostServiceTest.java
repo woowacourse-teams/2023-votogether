@@ -62,7 +62,6 @@ import jakarta.persistence.EntityManager;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -604,11 +603,12 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingType(
-                memberToAllPostVote,
+        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(
                 0,
                 PostClosingType.PROGRESS,
-                PostSortType.HOT
+                PostSortType.HOT,
+                null,
+                memberToAllPostVote
         );
 
         // then
@@ -639,7 +639,7 @@ class PostServiceTest {
                 .save();
 
         for (int j = 0; j < 2; j++) {
-            PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
+            PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(closedPost).save();
             for (int k = 0; k < 4; k++) {
                 voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
             }
@@ -651,7 +651,7 @@ class PostServiceTest {
                 .save();
 
         for (int j = 0; j < 2; j++) {
-            PostOption postOption = postOptionTestPersister.builder().post(notClosedPost).save();
+            PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(notClosedPost).save();
             for (int k = 0; k < 4; k++) {
                 voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
             }
@@ -948,6 +948,7 @@ class PostServiceTest {
                 .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
     }
 
+    @Test
     void delete() throws IOException {
         // given
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
@@ -1581,6 +1582,125 @@ class PostServiceTest {
         ))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(PostExceptionType.VOTING_PROGRESS_NOT_EDITABLE.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 본인이 작성한 게시글 목록을 가져온다.")
+    void getPostsByWriter() {
+        // given
+        Member writer = memberTestPersister.builder().save();
+        Post post = postTestPersister.builder().writer(writer).save();
+        PostOption postOption = postOptionTestPersister.builder().post(post).sequence(1).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(post).sequence(2).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption).save();
+        voteTestPersister.builder().postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> responses =
+                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(1),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(post.getId()),
+                () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId()),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(3L)
+        );
+    }
+
+    @Test
+    @DisplayName("회원으로 키워드를 통해 게시글 목록을 검색한다.")
+    void getPostsByKeyword() {
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+        Member member1 = memberRepository.save(MemberFixtures.MALE_30.get());
+
+        Post openPost = postTestPersister.builder()
+                .postBody(PostBody.builder().title("제목").content("키워요").build())
+                .deadline(LocalDateTime.now().plusDays(3L))
+                .save();
+        Post openPost1 = postTestPersister.builder()
+                .postBody(PostBody.builder().title("키워드").content("안녕").build())
+                .deadline(LocalDateTime.now().plusDays(3L))
+                .save();
+
+        PostOption postOption = postOptionTestPersister.builder().post(openPost).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(openPost1).save();
+        voteTestPersister.builder().member(member).postOption(postOption).save();
+        voteTestPersister.builder().member(member1).postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> responses = postService.searchPostsWithKeyword(
+                "키워",
+                0,
+                PostClosingType.ALL,
+                PostSortType.LATEST,
+                null,
+                member);
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(2),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(openPost1.getId()),
+                () -> assertThat(responses.get(1).postId()).isEqualTo(openPost.getId()),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(0), "키워")).isTrue(),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(1), "키워")).isTrue(),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(-1L),
+                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L)
+        );
+    }
+
+    private boolean hasKeywordInPostResponse(PostResponse postResponse, String keyword) {
+        return postResponse.title().contains(keyword) || postResponse.content().contains(keyword);
+    }
+
+    @Test
+    @DisplayName("비회원으로 키워드를 통해 게시글 목록을 검색한다.")
+    void getPostsByKeywordForGuest() {
+        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        Post closedPost = postTestPersister.builder()
+                .postBody(PostBody.builder().title("제목").content("키워요").build())
+                .deadline(LocalDateTime.now().minusDays(3L))
+                .save();
+        Post openPost1 = postTestPersister.builder()
+                .postBody(PostBody.builder().title("키워드").content("안녕").build())
+                .deadline(LocalDateTime.now().plusDays(3L))
+                .save();
+
+        PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
+        PostOption postOption1 = postOptionTestPersister.builder().post(openPost1).save();
+        voteTestPersister.builder().member(member).postOption(postOption).save();
+        voteTestPersister.builder().member(member).postOption(postOption1).save();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PostResponse> responses = postService.searchPostsWithKeywordForGuest(
+                "키워",
+                0,
+                PostClosingType.ALL,
+                PostSortType.LATEST,
+                null
+        );
+
+        // then
+        assertAll(
+                () -> assertThat(responses).hasSize(2),
+                () -> assertThat(responses.get(0).postId()).isEqualTo(openPost1.getId()),
+                () -> assertThat(responses.get(1).postId()).isEqualTo(closedPost.getId()),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(0), "키워")).isTrue(),
+                () -> assertThat(hasKeywordInPostResponse(responses.get(1), "키워")).isTrue(),
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(-1L),
+                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L)
+        );
     }
 
 }

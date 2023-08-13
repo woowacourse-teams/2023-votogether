@@ -8,6 +8,7 @@ import { useToggle } from '@hooks/useToggle';
 import { modifyNickname, withdrawalMembership } from '@api/userInfo';
 
 import Accordion from '@components/common/Accordion';
+import GuestProfile from '@components/common/Dashboard/GuestProfile';
 import UserProfile from '@components/common/Dashboard/UserProfile';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
@@ -63,7 +64,7 @@ export default function MyInfo() {
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.ProfileSection>
-          <UserProfile userInfo={loggedInfo.userInfo} />
+          {loggedInfo.userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">

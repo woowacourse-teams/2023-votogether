@@ -88,6 +88,10 @@ public class Member extends BaseEntity {
         this.birthYear = birthYear;
     }
 
+    public boolean hasEssentialInfo() {
+        return (this.gender != null && this.birthYear != null);
+    }
+
     public String getNickname() {
         return this.nickname.getValue();
     }

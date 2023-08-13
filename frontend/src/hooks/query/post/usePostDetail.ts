@@ -6,11 +6,11 @@ import { getPost, getPostForGuest } from '@api/post';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const usePostDetail = (isGuest: boolean, postId: number) => {
-  const fetchApi = isGuest ? getPostForGuest : getPost;
+export const usePostDetail = (isLoggedIn: boolean, postId: number) => {
+  const fetchApi = isLoggedIn ? getPost : getPostForGuest;
 
   const { data, isError, isLoading, error } = useQuery<PostInfo>(
-    [QUERY_KEY.POST_DETAIL, postId],
+    [QUERY_KEY.POST_DETAIL, postId, isLoggedIn],
     () => fetchApi(postId),
     {
       suspense: true,

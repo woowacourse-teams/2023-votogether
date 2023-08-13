@@ -2,10 +2,10 @@ import { useContext, ChangeEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
+import { useModifyUser } from '@hooks/query/user/useModifyUser';
+import { useWithdrawalMembership } from '@hooks/query/user/useWithdrawalMembership';
 import { useText } from '@hooks/useText';
 import { useToggle } from '@hooks/useToggle';
-
-import { modifyNickname, withdrawalMembership } from '@api/userInfo';
 
 import Accordion from '@components/common/Accordion';
 import GuestProfile from '@components/common/Dashboard/GuestProfile';
@@ -25,6 +25,9 @@ import * as S from './style';
 
 export default function MyInfo() {
   const navigate = useNavigate();
+
+  const { mutate: modifyNickname } = useModifyUser();
+  const { mutate: withdrawalMembership } = useWithdrawalMembership();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);

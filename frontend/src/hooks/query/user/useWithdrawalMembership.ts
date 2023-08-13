@@ -13,6 +13,7 @@ export const useWithdrawalMembership = () => {
     },
     onError: () => {
       window.console.error('회원 탈퇴에 실패했습니다.');
+      alert('회원 탈퇴에 실패했습니다.');
     },
   });
 

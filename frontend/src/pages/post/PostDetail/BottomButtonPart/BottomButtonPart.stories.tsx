@@ -18,6 +18,7 @@ const handleEvent = {
     reportPost: (reason: string) => {},
     reportNickname: (reason: string) => {},
   },
+  openToast: () => {},
 };
 
 export default meta;

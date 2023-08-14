@@ -133,7 +133,7 @@ export default function PostDetail() {
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}
-          handleEvent={{ movePage, controlPost }}
+          handleEvent={{ movePage, controlPost, openToast }}
         />
       </S.MainContainer>
       <S.BottomContainer>

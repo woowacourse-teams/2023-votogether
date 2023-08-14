@@ -4,7 +4,7 @@ import { LoggedInfo } from '@type/user';
 
 import { useUserInfo } from '@hooks/query/user/useUserInfo';
 
-import { getCookieToken, getMemberId } from '@utils/cookie';
+import { clearCookieToken, getCookieToken, getMemberId } from '@utils/cookie';
 
 interface Auth {
   loggedInfo: LoggedInfo;
@@ -24,6 +24,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data: userInfo } = useUserInfo(loggedInfo.isLoggedIn);
 
   const clearLoggedInfo = () => {
+    clearCookieToken('accessToken');
+    clearCookieToken('hasEssentialInfo');
+
     setLoggedInfo(notLoggedInfo);
   };
 

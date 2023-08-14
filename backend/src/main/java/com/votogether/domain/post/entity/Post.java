@@ -74,15 +74,14 @@ public class Post extends BaseEntity {
     private Post(
             final Member writer,
             final PostBody postBody,
-            final LocalDateTime deadline,
-            final boolean isHidden
+            final LocalDateTime deadline
     ) {
         this.writer = writer;
         this.postBody = postBody;
         this.deadline = deadline;
         this.postCategories = new PostCategories();
         this.postOptions = new PostOptions();
-        this.isHidden = isHidden;
+        this.isHidden = false;
     }
 
     public void mapCategories(final List<Category> categories) {

@@ -45,9 +45,17 @@ export default function Post({ postInfo, isPreview }: PostProps) {
 
   const isActive = !checkClosedPost(deadline);
 
+  const isStatisticsVisible =
+    writer.id === loggedInfo.id || !isActive || voteInfo.selectedOptionId !== POST.NOT_VOTE;
+
   const handleVoteClick = (newOptionId: number) => {
     if (!loggedInfo.isLoggedIn) {
       openToast('투표를 하려면 로그인 후에 이용하실 수 있습니다.');
+      return;
+    }
+
+    if (!isActive) {
+      openToast('마감된 게시글에는 투표를 할 수 없습니다.');
       return;
     }
 
@@ -130,7 +138,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         )}
       </S.DetailLink>
       <WrittenVoteOptionList
-        isWriter={writer.id === loggedInfo.id}
+        isStatisticsVisible={isStatisticsVisible}
         selectedOptionId={voteInfo.selectedOptionId}
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}

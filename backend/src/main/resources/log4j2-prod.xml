@@ -11,15 +11,15 @@
         <RollingFile
                 name="RollingFileAppender"
                 fileName="logs/${FILE_NAME}.log"
-                filePattern="logs/${FILE_NAME}.%d{yyyy-MM-dd}.log"
+                filePattern="logs/${FILE_NAME}.%d{yyyy-MM-dd-HH}.log"
         >
             <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="6"/>
             </Policies>
             <DefaultRolloverStrategy>
                 <Delete basePath="logs" maxDepth="2">
-                    <IfAccumulatedFileCount exceeds="4"/>
+                    <IfLastModified age="3d"/>
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
@@ -34,15 +34,7 @@
             <AppenderRef ref="RollingFileAppender"/>
         </Logger>
 
-        <Logger name="com.zaxxer.hikari" level="debug">
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
-        <Logger name="org.springframework.orm.jpa.JpaTransactionManager" level="debug">
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="RollingFileAppender"/>
         </Root>
     </Loggers>

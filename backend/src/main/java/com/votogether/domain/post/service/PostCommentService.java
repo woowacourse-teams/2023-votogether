@@ -1,16 +1,16 @@
 package com.votogether.domain.post.service;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.CommentRegisterRequest;
-import com.votogether.domain.post.dto.request.CommentUpdateRequest;
-import com.votogether.domain.post.dto.response.CommentResponse;
+import com.votogether.domain.post.dto.request.comment.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.comment.CommentUpdateRequest;
+import com.votogether.domain.post.dto.response.comment.CommentResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.CommentExceptionType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
-import com.votogether.exception.NotFoundException;
+import com.votogether.global.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

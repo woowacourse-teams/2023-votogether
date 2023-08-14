@@ -1,15 +1,15 @@
 package com.votogether.domain.member.service;
 
-import com.votogether.domain.member.dto.MemberDetailRequest;
-import com.votogether.domain.member.dto.MemberInfoResponse;
+import com.votogether.domain.member.dto.request.MemberDetailRequest;
+import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.Nickname;
+import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.repository.VoteRepository;
-import com.votogether.exception.BadRequestException;
-import com.votogether.exception.NotFoundException;
+import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

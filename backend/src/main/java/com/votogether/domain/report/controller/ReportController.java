@@ -1,7 +1,7 @@
 package com.votogether.domain.report.controller;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.report.dto.ReportRequest;
+import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.service.ReportService;
 import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;

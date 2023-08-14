@@ -1,7 +1,7 @@
 package com.votogether.domain.post.dto.response.vote;
 
-import com.votogether.domain.member.entity.AgeRange;
-import com.votogether.domain.member.entity.Gender;
+import com.votogether.domain.member.entity.vo.AgeRange;
+import com.votogether.domain.member.entity.vo.Gender;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

@@ -1,13 +1,13 @@
 package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
-import com.votogether.domain.post.dto.request.PostUpdateRequest;
-import com.votogether.domain.post.dto.response.PostResponse;
-import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
+import com.votogether.domain.post.dto.request.post.PostCreateRequest;
+import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
+import com.votogether.domain.post.dto.response.post.PostDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
-import com.votogether.domain.post.entity.PostClosingType;
-import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.post.entity.vo.PostClosingType;
+import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.service.PostService;
 import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;

@@ -3,15 +3,15 @@ package com.votogether.domain.report.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.report.entity.Report;
-import com.votogether.domain.report.entity.ReportType;
-import com.votogether.fixtures.MemberFixtures;
+import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.votogether.RepositoryTest;
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
+import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.test.annotation.RepositoryTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

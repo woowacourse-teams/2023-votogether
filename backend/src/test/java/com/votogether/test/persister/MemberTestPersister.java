@@ -1,8 +1,8 @@
 package com.votogether.test.persister;
 
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
+import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;

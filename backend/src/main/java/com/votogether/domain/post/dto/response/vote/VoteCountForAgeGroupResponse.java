@@ -1,6 +1,6 @@
 package com.votogether.domain.post.dto.response.vote;
 
-import com.votogether.domain.member.entity.Gender;
+import com.votogether.domain.member.entity.vo.Gender;
 import java.util.Map;
 
 public record VoteCountForAgeGroupResponse(String ageGroup, int voteCount, int maleCount, int femaleCount) {

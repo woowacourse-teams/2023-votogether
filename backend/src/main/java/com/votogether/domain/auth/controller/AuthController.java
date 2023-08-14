@@ -1,6 +1,6 @@
 package com.votogether.domain.auth.controller;
 
-import com.votogether.domain.auth.dto.LoginResponse;
+import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

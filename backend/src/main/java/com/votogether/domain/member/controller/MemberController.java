@@ -1,8 +1,8 @@
 package com.votogether.domain.member.controller;
 
-import com.votogether.domain.member.dto.MemberDetailRequest;
-import com.votogether.domain.member.dto.MemberInfoResponse;
-import com.votogether.domain.member.dto.MemberNicknameUpdateRequest;
+import com.votogether.domain.member.dto.request.MemberDetailRequest;
+import com.votogether.domain.member.dto.request.MemberNicknameUpdateRequest;
+import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.Auth;

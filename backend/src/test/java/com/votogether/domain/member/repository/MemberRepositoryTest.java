@@ -2,10 +2,10 @@ package com.votogether.domain.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.Nickname;
-import com.votogether.fixtures.MemberFixtures;
+import com.votogether.domain.member.entity.vo.Nickname;
+import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

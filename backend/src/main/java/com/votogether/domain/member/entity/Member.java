@@ -1,7 +1,10 @@
 package com.votogether.domain.member.entity;
 
-import com.votogether.domain.auth.dto.KakaoMemberResponse;
+import com.votogether.domain.auth.dto.response.KakaoMemberResponse;
 import com.votogether.domain.common.BaseEntity;
+import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.Nickname;
+import com.votogether.domain.member.entity.vo.SocialType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

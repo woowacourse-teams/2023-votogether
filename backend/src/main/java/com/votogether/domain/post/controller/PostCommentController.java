@@ -1,11 +1,11 @@
 package com.votogether.domain.post.controller;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.CommentRegisterRequest;
-import com.votogether.domain.post.dto.request.CommentUpdateRequest;
-import com.votogether.domain.post.dto.response.CommentResponse;
+import com.votogether.domain.post.dto.request.comment.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.comment.CommentUpdateRequest;
+import com.votogether.domain.post.dto.response.comment.CommentResponse;
 import com.votogether.domain.post.service.PostCommentService;
-import com.votogether.exception.ExceptionResponse;
+import com.votogether.global.exception.ExceptionResponse;
 import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -5,7 +5,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.exception.CommentExceptionType;
 import com.votogether.domain.report.exception.ReportExceptionType;
-import com.votogether.exception.BadRequestException;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

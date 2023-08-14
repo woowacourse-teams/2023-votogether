@@ -28,7 +28,7 @@ const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: R
   }
   */
 
-  if (isLoggedIn !== '' && !hasEssentialInfo) {
+  if (isLoggedIn && !hasEssentialInfo) {
     alert('개인정보를 먼저 등록해주세요.');
 
     return <Navigate to={PATH.USER_INFO_REGISTER} />;

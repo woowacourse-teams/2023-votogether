@@ -1,31 +1,4 @@
-"use strict";(self.webpackChunkvotogether=self.webpackChunkvotogether||[]).push([[141],{"./src/pages/Error/Error.stories.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.r(__webpack_exports__),__webpack_require__.d(__webpack_exports__,{Default:()=>Default,__namedExportsOrder:()=>__namedExportsOrder,default:()=>Error_stories});var dist=__webpack_require__("./node_modules/react-router/dist/index.js"),Layout=__webpack_require__("./src/components/common/Layout/index.tsx"),SquareButton=__webpack_require__("./src/components/common/SquareButton/index.tsx"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js"),theme=__webpack_require__("./src/styles/theme.ts");const Wrapper=styled_components_browser_esm.zo.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-
-  position: relative;
-`,Description=(styled_components_browser_esm.zo.div`
-  width: 100%;
-
-  position: fixed;
-
-  z-index: ${theme.r.zIndex.header};
-`,styled_components_browser_esm.zo.p`
-  width: 90%;
-  margin-top: 60px;
-
-  font: var(--text-title);
-  text-align: center;
-`),ButtonWrapper=styled_components_browser_esm.zo.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-
-  width: 280px;
-  height: 50px;
-`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function Error({message}){const navigate=(0,dist.s0)();return(0,jsx_runtime.jsx)(Layout.Z,{isSidebarVisible:!1,children:(0,jsx_runtime.jsxs)(Wrapper,{children:[(0,jsx_runtime.jsx)(Description,{children:message||"요청 중 오류가 발생했습니다."}),(0,jsx_runtime.jsxs)(ButtonWrapper,{children:[(0,jsx_runtime.jsx)(SquareButton.Z,{theme:"fill",onClick:()=>{navigate("/")},children:"홈으로 가기"}),(0,jsx_runtime.jsx)(SquareButton.Z,{theme:"gray",onClick:()=>{window.location.reload()},children:"새로 고침"})]})]})})}Error.displayName="Error";try{Error.displayName="Error",Error.__docgenInfo={description:"",displayName:"Error",props:{message:{defaultValue:null,description:"",name:"message",required:!1,type:{name:"string"}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/pages/Error/index.tsx#Error"]={docgenInfo:Error.__docgenInfo,name:"Error",path:"src/pages/Error/index.tsx#Error"})}catch(__react_docgen_typescript_loader_error){}const Error_stories={component:Error},Default={render:()=>(0,jsx_runtime.jsx)(Error,{})};Default.parameters={...Default.parameters,docs:{...Default.parameters?.docs,source:{originalSource:"{\n  render: () => <Error />\n}",...Default.parameters?.docs?.source}}};const __namedExportsOrder=["Default"]},"./src/components/common/Layout/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>Layout});var dist=__webpack_require__("./node_modules/react-router/dist/index.js"),Dashboard=__webpack_require__("./src/components/common/Dashboard/index.tsx"),WideHeader=__webpack_require__("./src/components/common/WideHeader/index.tsx"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js"),theme=__webpack_require__("./src/styles/theme.ts");const Container=styled_components_browser_esm.zo.div`
+"use strict";(self.webpackChunkvotogether=self.webpackChunkvotogether||[]).push([[141],{"./src/pages/Error/Error.stories.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.r(__webpack_exports__),__webpack_require__.d(__webpack_exports__,{Default:()=>Default,__namedExportsOrder:()=>__namedExportsOrder,default:()=>__WEBPACK_DEFAULT_EXPORT__});var ___WEBPACK_IMPORTED_MODULE_0__=__webpack_require__("./src/pages/Error/index.tsx"),react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__=__webpack_require__("./node_modules/react/jsx-runtime.js");const __WEBPACK_DEFAULT_EXPORT__={component:___WEBPACK_IMPORTED_MODULE_0__.Z},Default={render:()=>(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(___WEBPACK_IMPORTED_MODULE_0__.Z,{})};Default.parameters={...Default.parameters,docs:{...Default.parameters?.docs,source:{originalSource:"{\n  render: () => <Error />\n}",...Default.parameters?.docs?.source}}};const __namedExportsOrder=["Default"]},"./src/components/common/Layout/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>Layout});var dist=__webpack_require__("./node_modules/react-router/dist/index.js"),Dashboard=__webpack_require__("./src/components/common/Dashboard/index.tsx"),WideHeader=__webpack_require__("./src/components/common/WideHeader/index.tsx"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js"),theme=__webpack_require__("./src/styles/theme.ts");const Container=styled_components_browser_esm.zo.div`
   height: 100vh;
 `,ContentContainer=styled_components_browser_esm.zo.div`
   display: flex;
@@ -140,5 +113,39 @@
       height: 40%;
     }
   }
-`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function WideHeader({handleLogoClick}){return(0,jsx_runtime.jsxs)(Container,{children:[(0,jsx_runtime.jsx)(LogoButton.Z,{content:"full",onClick:handleLogoClick}),(0,jsx_runtime.jsx)(SearchBar.Z,{size:"sm"})]})}WideHeader.displayName="WideHeader";try{WideHeader.displayName="WideHeader",WideHeader.__docgenInfo={description:"",displayName:"WideHeader",props:{handleLogoClick:{defaultValue:null,description:"",name:"handleLogoClick",required:!0,type:{name:"() => void"}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/WideHeader/index.tsx#WideHeader"]={docgenInfo:WideHeader.__docgenInfo,name:"WideHeader",path:"src/components/common/WideHeader/index.tsx#WideHeader"})}catch(__react_docgen_typescript_loader_error){}},"./src/assets/logo.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/logo.9ee58604.svg"}}]);
-//# sourceMappingURL=pages-Error-Error-stories.f25c8b6a.iframe.bundle.js.map
+`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function WideHeader({handleLogoClick}){return(0,jsx_runtime.jsxs)(Container,{children:[(0,jsx_runtime.jsx)(LogoButton.Z,{content:"full",onClick:handleLogoClick}),(0,jsx_runtime.jsx)(SearchBar.Z,{size:"sm"})]})}WideHeader.displayName="WideHeader";try{WideHeader.displayName="WideHeader",WideHeader.__docgenInfo={description:"",displayName:"WideHeader",props:{handleLogoClick:{defaultValue:null,description:"",name:"handleLogoClick",required:!0,type:{name:"() => void"}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/components/common/WideHeader/index.tsx#WideHeader"]={docgenInfo:WideHeader.__docgenInfo,name:"WideHeader",path:"src/components/common/WideHeader/index.tsx#WideHeader"})}catch(__react_docgen_typescript_loader_error){}},"./src/pages/Error/index.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{Z:()=>Error});var dist=__webpack_require__("./node_modules/react-router/dist/index.js"),Layout=__webpack_require__("./src/components/common/Layout/index.tsx"),LogoButton=__webpack_require__("./src/components/common/LogoButton/index.tsx"),SquareButton=__webpack_require__("./src/components/common/SquareButton/index.tsx"),styled_components_browser_esm=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js"),theme=__webpack_require__("./src/styles/theme.ts");const Wrapper=styled_components_browser_esm.zo.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+
+  position: relative;
+`,Description=(styled_components_browser_esm.zo.div`
+  width: 100%;
+
+  position: fixed;
+
+  z-index: ${theme.r.zIndex.header};
+`,styled_components_browser_esm.zo.p`
+  width: 90%;
+  margin-top: 60px;
+
+  font: var(--text-title);
+  text-align: center;
+`),Text=styled_components_browser_esm.zo.p`
+  width: 90%;
+
+  color: gray;
+
+  font: var(--text-body);
+  text-align: center;
+`,ButtonWrapper=styled_components_browser_esm.zo.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 280px;
+  height: 50px;
+`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function Error({message}){const navigate=(0,dist.s0)();return(0,jsx_runtime.jsx)(Layout.Z,{isSidebarVisible:!1,children:(0,jsx_runtime.jsxs)(Wrapper,{children:[(0,jsx_runtime.jsx)(Description,{children:message||"요청 중 오류가 발생했습니다."}),(0,jsx_runtime.jsx)(LogoButton.Z,{content:"icon",style:{width:"100px",height:"100px"}}),(0,jsx_runtime.jsx)(Text,{children:"오류가 지속되는 경우 votogether@gmail.com 로 문의해주세요."}),(0,jsx_runtime.jsxs)(ButtonWrapper,{children:[(0,jsx_runtime.jsx)(SquareButton.Z,{theme:"fill",onClick:()=>{navigate("/")},children:"홈으로 가기"}),(0,jsx_runtime.jsx)(SquareButton.Z,{theme:"gray",onClick:()=>{window.location.reload()},children:"새로 고침"})]})]})})}Error.displayName="Error";try{Error.displayName="Error",Error.__docgenInfo={description:"",displayName:"Error",props:{message:{defaultValue:null,description:"",name:"message",required:!1,type:{name:"string"}}}},"undefined"!=typeof STORYBOOK_REACT_CLASSES&&(STORYBOOK_REACT_CLASSES["src/pages/Error/index.tsx#Error"]={docgenInfo:Error.__docgenInfo,name:"Error",path:"src/pages/Error/index.tsx#Error"})}catch(__react_docgen_typescript_loader_error){}},"./src/assets/logo.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/logo.9ee58604.svg"}}]);
+//# sourceMappingURL=pages-Error-Error-stories.14f558e9.iframe.bundle.js.map

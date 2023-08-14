@@ -4,7 +4,7 @@ import * as S from './style';
 interface WrittenVoteOptionProps {
   handleVoteClick: () => void;
   text: string;
-  isVoted: boolean;
+  isStatisticsVisible: boolean;
   peopleCount: number;
   percent: number;
   isSelected: boolean;
@@ -16,7 +16,7 @@ interface WrittenVoteOptionProps {
 export default function WrittenVoteOption({
   handleVoteClick,
   text,
-  isVoted,
+  isStatisticsVisible,
   peopleCount,
   percent,
   isSelected,
@@ -40,7 +40,7 @@ export default function WrittenVoteOption({
       ) : (
         <S.DetailContent aria-label="선택지 내용">{text}</S.DetailContent>
       )}
-      {isVoted && (
+      {isStatisticsVisible && (
         <>
           <S.ProgressContainer aria-label={''}>
             <ProgressBar percent={percent} isSelected={isSelected} />

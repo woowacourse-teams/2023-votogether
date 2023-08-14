@@ -26,7 +26,7 @@ export const Select: Story = {
         peopleCount={2}
         percent={70.9}
         isSelected={true}
-        isVoted={true}
+        isStatisticsVisible={true}
         imageUrl=""
       />
     </WrittenVoteWrapper>
@@ -44,7 +44,7 @@ export const NotSelectAndLongText: Story = {
         percent={80}
         peopleCount={6}
         isSelected={false}
-        isVoted={true}
+        isStatisticsVisible={true}
         imageUrl=""
       />
     </WrittenVoteWrapper>
@@ -63,7 +63,7 @@ export const ImageAndSelect: Story = {
         percent={80}
         peopleCount={6}
         isSelected={true}
-        isVoted={true}
+        isStatisticsVisible={true}
       />
     </WrittenVoteWrapper>
   ),
@@ -80,7 +80,7 @@ export const NotVote: Story = {
         percent={0}
         peopleCount={0}
         isSelected={false}
-        isVoted={false}
+        isStatisticsVisible={false}
         imageUrl=""
       />
     </WrittenVoteWrapper>
@@ -99,7 +99,7 @@ export const ImageAndNotVote: Story = {
         percent={0}
         peopleCount={0}
         isSelected={false}
-        isVoted={false}
+        isStatisticsVisible={false}
       />
     </WrittenVoteWrapper>
   ),
@@ -117,7 +117,7 @@ export const PreviewContent: Story = {
         percent={0}
         peopleCount={0}
         isSelected={false}
-        isVoted={false}
+        isStatisticsVisible={false}
       />
     </WrittenVoteWrapper>
   ),
@@ -135,7 +135,7 @@ export const DetailContent: Story = {
         percent={0}
         peopleCount={0}
         isSelected={false}
-        isVoted={false}
+        isStatisticsVisible={false}
       />
     </WrittenVoteWrapper>
   ),
@@ -152,7 +152,7 @@ export const NoImageAndDetailContent: Story = {
         percent={60}
         peopleCount={8}
         isSelected={true}
-        isVoted={true}
+        isStatisticsVisible={true}
         imageUrl=""
       />
     </WrittenVoteWrapper>
@@ -171,7 +171,7 @@ export const ImageAndSelectAndDetailContent: Story = {
         percent={60}
         peopleCount={8}
         isSelected={true}
-        isVoted={true}
+        isStatisticsVisible={true}
       />
     </WrittenVoteWrapper>
   ),

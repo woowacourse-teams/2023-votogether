@@ -89,7 +89,7 @@ export const PreviewNotVoted: Story = {
   render: () => (
     <WrittenVoteWrapper>
       <WrittenVoteOptionList
-        isWriter={true}
+        isStatisticsVisible={true}
         selectedOptionId={MOCK_NOT_VOTED_DATA.selectedOptionId}
         handleVoteClick={() => {}}
         isPreview={true}
@@ -103,7 +103,7 @@ export const PreviewVoted: Story = {
   render: () => (
     <WrittenVoteWrapper>
       <WrittenVoteOptionList
-        isWriter={true}
+        isStatisticsVisible={true}
         selectedOptionId={MOCK_VOTED_DATA.selectedOptionId}
         handleVoteClick={() => {}}
         isPreview={true}
@@ -117,7 +117,7 @@ export const DetailNotVoted: Story = {
   render: () => (
     <WrittenVoteWrapper>
       <WrittenVoteOptionList
-        isWriter={true}
+        isStatisticsVisible={true}
         selectedOptionId={MOCK_NOT_VOTED_DATA.selectedOptionId}
         handleVoteClick={() => {}}
         isPreview={false}
@@ -131,7 +131,7 @@ export const DetailVoted: Story = {
   render: () => (
     <WrittenVoteWrapper>
       <WrittenVoteOptionList
-        isWriter={true}
+        isStatisticsVisible={true}
         selectedOptionId={MOCK_VOTED_DATA.selectedOptionId}
         handleVoteClick={() => {}}
         isPreview={false}

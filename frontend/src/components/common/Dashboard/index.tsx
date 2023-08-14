@@ -20,12 +20,15 @@ export default function Dashboard() {
 
   const handleLogoutClick = () => {
     clearCookieToken('accessToken');
+    clearCookieToken('hasEssentialInfo');
     clearLoggedInfo();
   };
 
   return (
     <S.Container>
-      {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
+      <ErrorBoundary>
+        {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
+      </ErrorBoundary>
       <S.CategorySectionWrapper>
         <ErrorBoundary>
           <Suspense fallback={<Skeleton isLarge={true} />}>

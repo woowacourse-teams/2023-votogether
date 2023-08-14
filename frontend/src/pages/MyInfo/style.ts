@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
     padding-top: 20px;
   }
 
-  @media (min-width: ${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     padding-top: 20px;
   }
 `;
@@ -28,7 +28,7 @@ export const HeaderWrapper = styled.div`
 
   z-index: ${theme.zIndex.header};
 
-  @media (min-width: ${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
   }
 `;

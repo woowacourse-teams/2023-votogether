@@ -8,6 +8,7 @@ export const Badge = styled.span`
 
 export const NickName = styled.span`
   margin-bottom: 12px;
+  margin-left: 5px;
 
   font: var(--text-title);
 

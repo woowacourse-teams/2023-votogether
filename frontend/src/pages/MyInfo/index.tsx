@@ -1,5 +1,5 @@
 import { useContext, ChangeEvent } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useModifyUser } from '@hooks/query/user/useModifyUser';
@@ -16,7 +16,6 @@ import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 
-import { PATH } from '@constants/path';
 import { NICKNAME } from '@constants/user';
 
 import { clearCookieToken } from '@utils/cookie';
@@ -34,10 +33,6 @@ export default function MyInfo() {
   const { text: newNickname, handleTextChange: handleNicknameChange } = useText(
     loggedInfo.userInfo?.nickname ?? ''
   );
-
-  if (!loggedInfo.userInfo) {
-    return <Navigate to={PATH.LOGIN} />;
-  }
 
   const logout = () => {
     clearCookieToken('accessToken');

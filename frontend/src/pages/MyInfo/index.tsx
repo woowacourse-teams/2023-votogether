@@ -19,8 +19,6 @@ import Toast from '@components/common/Toast';
 
 import { NICKNAME } from '@constants/user';
 
-import { clearCookieToken } from '@utils/cookie';
-
 import DeleteMemberModal from './DeleteMemberModal';
 import * as S from './style';
 
@@ -43,12 +41,6 @@ export default function MyInfo() {
     loggedInfo.userInfo?.nickname ?? ''
   );
 
-  const logout = () => {
-    clearCookieToken('accessToken');
-    clearCookieToken('hasEssentialInfo');
-    clearLoggedInfo();
-  };
-
   const handleModifyNickname = () => {
     modifyNickname(newNickname);
   };
@@ -59,10 +51,10 @@ export default function MyInfo() {
 
   useEffect(() => {
     if (isWithdrawalMembershipSuccess) {
-      logout();
+      clearLoggedInfo();
       navigate('/');
     }
-  }, [isWithdrawalMembershipSuccess, logout, navigate]);
+  }, [isWithdrawalMembershipSuccess, clearLoggedInfo, navigate]);
 
   useEffect(() => {
     isWithdrawalMembershipError &&

@@ -1,12 +1,14 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
 import { MAX_FILE_SIZE } from '@components/PostForm/constants';
 
 export const useContentImage = (imageUrl: string = '') => {
   const [contentImage, setContentImage] = useState(imageUrl);
+  const contentInputRef = useRef<HTMLInputElement | null>(null);
 
   const removeImage = () => {
     setContentImage('');
+    if (contentInputRef.current) contentInputRef.current.value = '';
   };
 
   const handleUploadImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -34,5 +36,5 @@ export const useContentImage = (imageUrl: string = '') => {
     };
   };
 
-  return { contentImage, removeImage, handleUploadImage };
+  return { contentImage, contentInputRef, removeImage, handleUploadImage };
 };

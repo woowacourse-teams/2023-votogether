@@ -33,7 +33,7 @@ public class VoteService {
         validateAlreadyVoted(member, post);
 
         final PostOption postOption = postOptionRepository.findById(postOptionId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 선택지가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 선택지가 존재 하지 않습니다."));
 
         final Vote vote = post.makeVote(member, postOption);
         voteRepository.save(vote);

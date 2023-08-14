@@ -11,6 +11,7 @@ public record CommentResponse(
         @Schema(description = "댓글 ID", example = "1")
         Long id,
 
+        @Schema(description = "댓글 작성자 회원")
         CommentMember member,
 
         @Schema(description = "댓글 내용", example = "재밌어요!")
@@ -35,10 +36,11 @@ public record CommentResponse(
         );
     }
 
-    @Schema(description = "댓글 작성자 회원 응답")
+    @Schema(description = "댓글 작성자 회원")
     record CommentMember(
             @Schema(description = "댓글 작성자 회원 ID", example = "1")
             Long id,
+
             @Schema(description = "댓글 작성자 회원 닉네임", example = "votogether")
             String nickname
     ) {

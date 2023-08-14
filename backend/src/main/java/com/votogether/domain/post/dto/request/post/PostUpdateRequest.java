@@ -11,7 +11,7 @@ import java.util.List;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 
-@Schema(description = "게시글에 관련한 데이터들입니다.")
+@Schema(description = "게시글 수정 요청")
 @Builder
 public record PostUpdateRequest(
         @Schema(description = "카테고리의 여러 아이디", example = "[0, 2]")
@@ -28,6 +28,7 @@ public record PostUpdateRequest(
         @Length(max = 1000, message = "내용은 최대 1000자까지 입력 가능합니다.")
         String content,
 
+        @Schema(description = "이미지 URL", example = "http://asdasdsadsad.com")
         String imageUrl,
 
         @Schema(description = "게시글의 여러 선택지")

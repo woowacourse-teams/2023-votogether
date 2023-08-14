@@ -13,19 +13,33 @@ import java.util.List;
 
 @Schema(description = "게시글에 관련한 데이터들입니다.")
 public record PostResponse(
+        @Schema(description = "게시글 ID", example = "1")
         Long postId,
+
+        @Schema(description = "작성자")
         WriterResponse writer,
+
+        @Schema(description = "게시글 제목", example = "이거 한번 투표해주세요")
         String title,
+
+        @Schema(description = "게시글 내용", example = "어떤게 더 맛있나요?")
         String content,
+
+        @Schema(description = "이미지 URL", example = "http://asdasdasd.com")
         String imageUrl,
+
+        @Schema(description = "카테고리 목록", example = "[1,2]")
         List<CategoryResponse> categories,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+        @Schema(description = "게시글 생성시각", example = "2023-08-01 13:56")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+        @Schema(description = "게시글 마감기한", example = "2023-08-01 13:56")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline,
 
+        @Schema(description = "투표 통계 정보")
         VoteResponse voteInfo
 ) {
 

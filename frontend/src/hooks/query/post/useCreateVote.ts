@@ -6,6 +6,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postId: number }) => {
   const queryClient = useQueryClient();
+  const LOGGED_IN = true;
 
   const { mutate, isError, error } = useMutation({
     mutationFn: (optionId: number) => votePost(postId, optionId),
@@ -19,7 +20,7 @@ export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postI
         return;
       }
 
-      queryClient.invalidateQueries([QUERY_KEY.POST_DETAIL, postId]);
+      queryClient.invalidateQueries([QUERY_KEY.POST_DETAIL, postId, LOGGED_IN]);
     },
     onError: error => {
       window.console.log('투표 선택지 생성에 실패했습니다.', error);

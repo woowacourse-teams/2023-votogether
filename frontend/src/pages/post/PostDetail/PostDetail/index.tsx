@@ -37,7 +37,7 @@ export default function PostDetail() {
   const { loggedInfo } = useContext(AuthContext);
   const memberId = loggedInfo.id;
 
-  const { data: postData } = usePostDetail(!loggedInfo.isLoggedIn, postId);
+  const { data: postData } = usePostDetail(loggedInfo.isLoggedIn, postId);
   const {
     mutate: deletePost,
     isSuccess: isDeleteSuccess,

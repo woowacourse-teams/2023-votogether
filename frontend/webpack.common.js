@@ -1,6 +1,7 @@
 const path = require('path');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const DotenvWebpack = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -56,6 +57,9 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
     new DotenvWebpack(),
+    new CopyPlugin({
+      patterns: [{ from: 'public/icons', to: 'icons' }],
+    }),
   ],
   devtool: 'inline-source-map',
   devServer: {

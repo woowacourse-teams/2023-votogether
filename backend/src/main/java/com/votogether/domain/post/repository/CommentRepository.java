@@ -1,5 +1,6 @@
 package com.votogether.domain.post.repository;
 
+import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import java.util.List;
@@ -10,5 +11,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @EntityGraph(attributePaths = {"member"})
     List<Comment> findAllByPostOrderByCreatedAtAsc(final Post post);
+
+    List<Comment> findAllByMember(final Member member);
 
 }

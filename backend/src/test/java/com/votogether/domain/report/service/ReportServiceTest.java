@@ -129,14 +129,15 @@ class ReportServiceTest {
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .isHidden(true)
                     .build();
+            post.blind();
 
             postRepository.save(post);
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
+
             assertThatThrownBy(() -> reportService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 블라인드 처리된 글입니다.");
@@ -313,7 +314,6 @@ class ReportServiceTest {
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .isHidden(true)
                     .build();
 
             Comment comment = Comment.builder()

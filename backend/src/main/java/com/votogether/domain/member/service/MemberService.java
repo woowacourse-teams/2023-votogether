@@ -3,13 +3,23 @@ package com.votogether.domain.member.service;
 import com.votogether.domain.member.dto.MemberDetailRequest;
 import com.votogether.domain.member.dto.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.post.entity.Post;
+import com.votogether.domain.post.entity.comment.Comment;
+import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.report.entity.Report;
+import com.votogether.domain.report.entity.ReportType;
+import com.votogether.domain.report.repository.ReportRepository;
+import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.exception.NotFoundException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberCategoryRepository memberCategoryRepository;
     private final PostRepository postRepository;
     private final VoteRepository voteRepository;
+    private final ReportRepository reportRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -84,7 +97,98 @@ public class MemberService {
     public void deleteMember(final Member member) {
         final Member existentMember = memberRepository.findById(member.getId())
                 .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+
+        final List<Post> posts = deletePosts(existentMember);
+        final List<Comment> comments = deleteComments(existentMember);
+        deleteVotes(existentMember);
+        deleteMemberCategories(existentMember);
+        deleteReports(existentMember, posts, comments);
+
         memberRepository.delete(existentMember);
+    }
+
+    private List<Post> deletePosts(final Member member) {
+        final List<Post> posts = postRepository.findAllByWriter(member);
+        final List<Long> postIds = posts.stream()
+                .map(Post::getId)
+                .toList();
+        postRepository.deleteAllByIdInBatch(postIds);
+        return posts;
+    }
+
+    private List<Comment> deleteComments(final Member existentMember) {
+        final List<Comment> comments = commentRepository.findAllByMember(existentMember);
+        final List<Long> commentIds = comments
+                .stream()
+                .map(Comment::getId)
+                .toList();
+        commentRepository.deleteAllByIdInBatch(commentIds);
+        return comments;
+    }
+
+    private void deleteVotes(final Member existentMember) {
+        final List<Long> voteIds = voteRepository.findAllByMember(existentMember)
+                .stream()
+                .map(Vote::getId)
+                .toList();
+        voteRepository.deleteAllByIdInBatch(voteIds);
+    }
+
+    private void deleteMemberCategories(final Member member) {
+        final List<Long> memberCategoryIds = memberCategoryRepository.findAllByMember(member)
+                .stream()
+                .map(MemberCategory::getId)
+                .toList();
+        memberCategoryRepository.deleteAllByIdInBatch(memberCategoryIds);
+    }
+
+    private void deleteReports(
+            final Member member,
+            final List<Post> posts,
+            final List<Comment> comments
+    ) {
+        deleteReportByPost(posts);
+        deleteReportByComment(comments);
+        deleteReportByNickname(member);
+        deleteReportByMember(member);
+    }
+
+    private void deleteReportByPost(final List<Post> posts) {
+        for (final Post post : posts) {
+            final List<Long> reportIds = reportRepository.findAllByReportTypeAndTargetId(ReportType.POST, post.getId())
+                    .stream()
+                    .map(Report::getId)
+                    .toList();
+            reportRepository.deleteAllByIdInBatch(reportIds);
+        }
+    }
+
+    private void deleteReportByComment(final List<Comment> comments) {
+        for (final Comment comment : comments) {
+            final List<Long> reportIds = reportRepository.findAllByReportTypeAndTargetId(ReportType.COMMENT,
+                            comment.getId())
+                    .stream()
+                    .map(Report::getId)
+                    .toList();
+            reportRepository.deleteAllByIdInBatch(reportIds);
+        }
+    }
+
+    private void deleteReportByNickname(final Member member) {
+        final List<Long> reportIdsByTargetId = reportRepository.findAllByReportTypeAndTargetId(ReportType.NICKNAME,
+                        member.getId())
+                .stream()
+                .map(Report::getId)
+                .toList();
+        reportRepository.deleteAllByIdInBatch(reportIdsByTargetId);
+    }
+
+    private void deleteReportByMember(final Member member) {
+        final List<Long> reportIdsByMember = reportRepository.findAllByMember(member)
+                .stream()
+                .map(Report::getId)
+                .toList();
+        reportRepository.deleteAllByIdInBatch(reportIdsByMember);
     }
 
 }

@@ -60,7 +60,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryResponse> getAllCategories(final Member member) {
         final List<Category> categories = categoryRepository.findAll();
-        final List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
+        final List<MemberCategory> memberCategories = memberCategoryRepository.findAllByMember(member);
 
         final List<Category> favoriteCategories = memberCategories.stream()
                 .map(MemberCategory::getCategory)

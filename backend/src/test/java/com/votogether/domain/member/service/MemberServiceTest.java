@@ -5,14 +5,29 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.ServiceTest;
+import com.votogether.domain.category.entity.Category;
+import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.dto.MemberDetailRequest;
 import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.SocialType;
+import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.post.entity.Post;
+import com.votogether.domain.post.entity.PostBody;
+import com.votogether.domain.post.entity.comment.Comment;
+import com.votogether.domain.post.repository.CommentRepository;
+import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.report.entity.Report;
+import com.votogether.domain.report.entity.ReportType;
+import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.fixtures.MemberFixtures;
 import com.votogether.test.persister.MemberTestPersister;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,6 +43,21 @@ class MemberServiceTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    PostRepository postRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
+    MemberCategoryRepository memberCategoryRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Autowired
     MemberTestPersister memberTestPersister;
@@ -170,17 +200,248 @@ class MemberServiceTest {
 
     }
 
-    @Test
-    @DisplayName("회원 탈퇴를 성공한다.")
-    void deleteMember() {
-        // given
-        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+    @Nested
+    @DisplayName("회원 탈퇴를 할 때")
+    class DeleteMember {
 
-        // when
-        memberService.deleteMember(member);
+        @Test
+        @DisplayName("회원만 존재하는 경우 정상적으로 성공한다.")
+        void success() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        // then
-        assertThat(memberRepository.findAll()).isEmpty();
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertThat(memberRepository.findAll()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("회원과 게시글이 존재하는 경우 정상적으로 성공한다.")
+        void successWithPost() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(member)
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                    .build();
+
+            postRepository.save(post);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).isEmpty(),
+                    () -> assertThat(postRepository.findAll()).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 타인의 게시글이 존재하는 경우 회원만 탈퇴된다.")
+        void deleteOnlyMember() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member writer = memberRepository.save(MemberFixtures.FEMALE_20.get());
+
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(writer)
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                    .build();
+
+            postRepository.save(post);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).hasSize(1),
+                    () -> assertThat(memberRepository.findById(writer.getId()).get()).isEqualTo(writer),
+                    () -> assertThat(postRepository.findAll()).hasSize(1)
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 회원의 즐겨찾는 카테고리가 존재하는 경우 모두 삭제된다.")
+        void deleteWithMemberCategory() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+            Category category1 = Category.builder().name("음악").build();
+            Category category2 = Category.builder().name("개발").build();
+            Category category3 = Category.builder().name("연애").build();
+
+            categoryRepository.saveAll(List.of(category1, category2, category3));
+
+            MemberCategory memberCategory = MemberCategory.builder()
+                    .member(member)
+                    .category(category1)
+                    .build();
+
+            memberCategoryRepository.save(memberCategory);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).isEmpty(),
+                    () -> assertThat(categoryRepository.findAll()).hasSize(3),
+                    () -> assertThat(memberCategoryRepository.findAll()).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 회원의 신고가 존재하는 경우 모두 삭제된다.")
+        void deleteWithReportByOthers() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+            Report report = Report.builder()
+                    .member(member)
+                    .reportType(ReportType.POST)
+                    .targetId(1L)
+                    .reason("불건전한 게시글")
+                    .build();
+            reportRepository.save(report);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).isEmpty(),
+                    () -> assertThat(reportRepository.findAll()).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 신고당한 회원의 게시글 기록 모두 삭제된다.")
+        void deleteWithReportedPost() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member reporter = memberRepository.save(MemberFixtures.MALE_10.get());
+
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(member)
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                    .build();
+
+            postRepository.save(post);
+
+            Report report = Report.builder()
+                    .member(reporter)
+                    .reportType(ReportType.POST)
+                    .targetId(post.getId())
+                    .reason("불건전한 게시글")
+                    .build();
+            reportRepository.save(report);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).hasSize(1),
+                    () -> assertThat(postRepository.findAll()).isEmpty(),
+                    () -> assertThat(reportRepository.findAll()).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 신고당한 회원의 댓글 기록 모두 삭제된다.")
+        void deleteWithReportedComment() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member reporter = memberRepository.save(MemberFixtures.MALE_10.get());
+
+            PostBody postBody = PostBody.builder()
+                    .title("title")
+                    .content("content")
+                    .build();
+
+            Post post = Post.builder()
+                    .writer(reporter)
+                    .postBody(postBody)
+                    .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
+                    .build();
+
+            Comment comment = Comment.builder()
+                    .post(post)
+                    .member(member)
+                    .content("댓글입니다.")
+                    .build();
+
+            post.addComment(comment);
+
+            postRepository.save(post);
+
+            Report report = Report.builder()
+                    .member(reporter)
+                    .reportType(ReportType.COMMENT)
+                    .targetId(comment.getId())
+                    .reason("불건전한 댓글")
+                    .build();
+            reportRepository.save(report);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).hasSize(1),
+                    () -> assertThat(commentRepository.findAll()).isEmpty(),
+                    () -> assertThat(reportRepository.findAll()).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 신고당한 닉네임 기록 모두 삭제된다.")
+        void deleteWithReportedNickname() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member reporter = memberRepository.save(MemberFixtures.MALE_10.get());
+
+            Report report = Report.builder()
+                    .member(reporter)
+                    .reportType(ReportType.NICKNAME)
+                    .targetId(member.getId())
+                    .reason("불건전한 닉네임")
+                    .build();
+            reportRepository.save(report);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).hasSize(1),
+                    () -> assertThat(reportRepository.findAll()).isEmpty()
+            );
+        }
+
     }
 
 }

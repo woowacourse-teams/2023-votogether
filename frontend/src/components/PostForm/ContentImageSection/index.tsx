@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, MutableRefObject } from 'react';
 
 import { Size } from '@type/style';
 
@@ -10,12 +10,13 @@ interface ContentImageSectionProps {
   size: Size;
   contentImageHook: {
     contentImage: string;
+    contentInputRef: MutableRefObject<HTMLInputElement | null>;
     removeImage: () => void;
     handleUploadImage: (event: ChangeEvent<HTMLInputElement>) => void;
   };
 }
 export default function ContentImageSection({ contentImageHook, size }: ContentImageSectionProps) {
-  const { contentImage, removeImage, handleUploadImage } = contentImageHook;
+  const { contentImage, contentInputRef, removeImage, handleUploadImage } = contentImageHook;
 
   return (
     <>
@@ -39,6 +40,7 @@ export default function ContentImageSection({ contentImageHook, size }: ContentI
           </S.Label>
           <S.FileInput
             id="content-image-upload"
+            ref={contentInputRef}
             type="file"
             accept="image/*"
             onChange={handleUploadImage}

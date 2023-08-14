@@ -20,7 +20,7 @@ import { scrollToTop } from '@utils/scrollToTop';
 import * as S from './style';
 
 export default function PostListPage() {
-  const nav = useNavigate();
+  const navigate = useNavigate();
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
   return (
@@ -29,7 +29,7 @@ export default function PostListPage() {
         <NarrowMainHeader
           handleMenuOpenClick={openDrawer}
           handleLogoClick={() => {
-            nav('/');
+            navigate('/');
           }}
         />
       </S.HeaderWrapper>

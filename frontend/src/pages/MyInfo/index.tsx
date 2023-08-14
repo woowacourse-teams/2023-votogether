@@ -1,10 +1,11 @@
-import { useContext, ChangeEvent } from 'react';
+import { useContext, ChangeEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useModifyUser } from '@hooks/query/user/useModifyUser';
 import { useWithdrawalMembership } from '@hooks/query/user/useWithdrawalMembership';
 import { useText } from '@hooks/useText';
+import { useToast } from '@hooks/useToast';
 import { useToggle } from '@hooks/useToggle';
 
 import Accordion from '@components/common/Accordion';
@@ -12,21 +13,31 @@ import GuestProfile from '@components/common/Dashboard/GuestProfile';
 import UserProfile from '@components/common/Dashboard/UserProfile';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
-import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
+import Toast from '@components/common/Toast';
 
 import { NICKNAME } from '@constants/user';
 
-import { clearCookieToken } from '@utils/cookie';
+import { clearCookieToken, getCookieToken } from '@utils/cookie';
 
+import DeleteMemberModal from './DeleteMemberModal';
 import * as S from './style';
 
 export default function MyInfo() {
   const navigate = useNavigate();
 
+  const isLoggedIn = getCookieToken().accessToken !== '';
+
   const { mutate: modifyNickname } = useModifyUser();
-  const { mutate: withdrawalMembership } = useWithdrawalMembership();
+  const {
+    mutate: withdrawalMembership,
+    isSuccess: isWithdrawalMembershipSuccess,
+    isError: isWithdrawalMembershipError,
+    error: withdrawalMembershipError,
+  } = useWithdrawalMembership(isLoggedIn);
+
+  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
@@ -36,6 +47,7 @@ export default function MyInfo() {
 
   const logout = () => {
     clearCookieToken('accessToken');
+    clearCookieToken('hasEssentialInfo');
     clearLoggedInfo();
   };
 
@@ -45,8 +57,20 @@ export default function MyInfo() {
 
   const handleWithdrawlMembership = () => {
     withdrawalMembership();
-    logout();
   };
+
+  useEffect(() => {
+    if (isWithdrawalMembershipSuccess) {
+      logout();
+      navigate('/');
+    }
+  }, [isWithdrawalMembershipSuccess, navigate]);
+
+  useEffect(() => {
+    isWithdrawalMembershipError &&
+      withdrawalMembershipError instanceof Error &&
+      openToast(withdrawalMembershipError.message);
+  }, [isWithdrawalMembershipError, withdrawalMembershipError]);
 
   return (
     <Layout isSidebarVisible={true}>
@@ -84,29 +108,18 @@ export default function MyInfo() {
               </SquareButton>
             </S.ButtonWrapper>
             {isOpen && (
-              <Modal size="sm" onModalClose={closeComponent}>
-                <S.ModalBody>
-                  <S.ModalTitle>정말 탈퇴하시겠어요?</S.ModalTitle>
-                  <S.ModalDescription>
-                    탈퇴 버튼 클릭 시, <br></br>계정은 삭제되며 복구되지 않아요.
-                  </S.ModalDescription>
-                  <S.ButtonListWrapper>
-                    <SquareButton
-                      onClick={handleWithdrawlMembership}
-                      aria-label="회원 탈퇴"
-                      theme="fill"
-                    >
-                      탈퇴
-                    </SquareButton>
-                    <SquareButton onClick={closeComponent} aria-label="회원 탈퇴" theme="blank">
-                      취소
-                    </SquareButton>
-                  </S.ButtonListWrapper>
-                </S.ModalBody>
-              </Modal>
+              <DeleteMemberModal
+                handleModalClose={closeComponent}
+                handleWithdrawalMembership={handleWithdrawlMembership}
+              />
             )}
           </Accordion>
         </S.UserControlSection>
+        {isToastOpen && (
+          <Toast size="md" position="bottom">
+            {toastMessage}
+          </Toast>
+        )}
       </S.Wrapper>
     </Layout>
   );

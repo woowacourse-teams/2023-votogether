@@ -50,7 +50,7 @@ export default function OptionStatistics({
         key={voteOption.id}
         {...voteOption}
         isPreview={false}
-        isVoted={true}
+        isStatisticsVisible={true}
         isSelected={isSelectedOption}
         handleVoteClick={toggleOptionStatistics}
       />

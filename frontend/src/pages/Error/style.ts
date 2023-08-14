@@ -28,6 +28,15 @@ export const Description = styled.p`
   text-align: center;
 `;
 
+export const Text = styled.p`
+  width: 90%;
+
+  color: gray;
+
+  font: var(--text-body);
+  text-align: center;
+`;
+
 export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;

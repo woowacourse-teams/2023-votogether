@@ -5,10 +5,11 @@ import { useFetch } from '@hooks/useFetch';
 import { getPost } from '@api/post';
 import { getPostStatistics } from '@api/voteResult';
 
+import ErrorMessage from '@components/common/ErrorMessage';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
-import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
+import Skeleton from '@components/common/Skeleton';
 import VoteStatistics from '@components/VoteStatistics';
 
 import { PATH } from '@constants/path';
@@ -51,24 +52,23 @@ export default function VoteStatisticsPage() {
       </S.HeaderWrapper>
       <S.Container>
         <S.PageHeader>투표 통계</S.PageHeader>
-        {postError && <div>{postError}</div>}
+        {postError && <ErrorMessage />}
         {isPostLoading && (
           <S.LoadingWrapper>
-            <LoadingSpinner size="md" />
+            <Skeleton isLarge={true} />
           </S.LoadingWrapper>
         )}
         {postDetail && (
           <S.OptionContainer>
-            {voteResultError && <div>{voteResultError}</div>}
+            {voteResultError && <ErrorMessage />}
             {isVoteResultLoading && (
               <S.LoadingWrapper>
-                <LoadingSpinner size="sm" />
+                <Skeleton isLarge={true} />
               </S.LoadingWrapper>
             )}
             {voteResultResponse && (
               <VoteStatistics voteResultResponse={voteResultResponse} size="md" />
             )}
-
             {postDetail.voteInfo.options.map(option => {
               const { postId, voteInfo } = postDetail;
               return (

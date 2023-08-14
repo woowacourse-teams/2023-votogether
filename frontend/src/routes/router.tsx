@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
+import Error from '@pages/Error';
 import Home from '@pages/Home';
 import MyInfo from '@pages/MyInfo';
 import NotFound from '@pages/NotFound';
@@ -9,7 +10,7 @@ import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetail';
 import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
-import VoteStatisticsPage from '@pages/VoteStatistics';
+import VoteStatisticsPage from '@pages/VoteStatisticsPage';
 
 import { PATH } from '@constants/path';
 
@@ -18,19 +19,36 @@ import PrivateRoute from './PrivateRoute';
 const router = createBrowserRouter([
   {
     path: PATH.HOME,
-    element: <Home />,
-    children: [{ path: 'search', element: <Home /> }],
+    element: (
+      <PrivateRoute isGuestAllowed={true}>
+        <Home />
+      </PrivateRoute>
+    ),
+    errorElement: <Error />,
+    children: [
+      {
+        path: 'search',
+        element: (
+          <PrivateRoute isGuestAllowed={true}>
+            <Home />
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
   {
     path: PATH.LOGIN,
     element: <Login />,
+    errorElement: <Error />,
   },
   {
     path: 'auth/kakao/callback',
     element: <Redirection />,
+    errorElement: <Error />,
   },
   {
     path: PATH.POST,
+    errorElement: <Error />,
     children: [
       {
         path: 'write',
@@ -50,7 +68,11 @@ const router = createBrowserRouter([
       },
       {
         path: ':postId',
-        element: <PostDetailPage />,
+        element: (
+          <PrivateRoute isGuestAllowed={true}>
+            <PostDetailPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: 'result/:postId',
@@ -60,11 +82,19 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      { path: 'category/:categoryId', element: <Home /> },
+      {
+        path: 'category/:categoryId',
+        element: (
+          <PrivateRoute isGuestAllowed={true}>
+            <Home />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
     path: PATH.USER,
+    errorElement: <Error />,
     children: [
       {
         path: 'myPage',
@@ -74,9 +104,26 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      { path: 'posts', element: <Home /> },
-      { path: 'votes', element: <Home /> },
-      { path: 'register', element: <RegisterPersonalInfo /> },
+      {
+        path: 'posts',
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'votes',
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'register',
+        element: <RegisterPersonalInfo />,
+      },
     ],
   },
   {

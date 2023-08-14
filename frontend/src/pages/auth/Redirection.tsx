@@ -44,8 +44,9 @@ export default function Redirection() {
             return setErrorMessage('로그인 중 오류가 발생했습니다.');
           }
 
-          const { accessToken } = res;
+          const { accessToken, hasEssentialInfo } = res;
           setCookieToken('accessToken', accessToken);
+          setCookieToken('hasEssentialInfo', hasEssentialInfo);
 
           const decodedPayload = getMemberId(accessToken);
           const id = decodedPayload.memberId;

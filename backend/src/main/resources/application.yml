@@ -30,6 +30,7 @@ spring:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+  config: classpath:log4j2-${spring.profiles.active}.xml
 
 server:
   forward-headers-strategy: FRAMEWORK

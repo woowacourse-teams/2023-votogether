@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useDrawer } from '@hooks/useDrawer';
 
@@ -19,12 +20,18 @@ import { scrollToTop } from '@utils/scrollToTop';
 import * as S from './style';
 
 export default function PostListPage() {
+  const nav = useNavigate();
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
 
   return (
     <S.Container>
       <S.HeaderWrapper>
-        <NarrowMainHeader handleMenuOpenClick={openDrawer} />
+        <NarrowMainHeader
+          handleMenuOpenClick={openDrawer}
+          handleLogoClick={() => {
+            nav('/');
+          }}
+        />
       </S.HeaderWrapper>
       <S.DrawerWrapper>
         <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>

@@ -5,13 +5,17 @@ import * as S from './style';
 
 interface NarrowMainHeaderProps {
   handleMenuOpenClick: () => void;
+  handleLogoClick: () => void;
 }
 
-export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHeaderProps) {
+export default function NarrowMainHeader({
+  handleMenuOpenClick,
+  handleLogoClick,
+}: NarrowMainHeaderProps) {
   return (
     <S.Container>
       <IconButton category="category" onClick={handleMenuOpenClick} />
-      <LogoButton content="icon" />
+      <LogoButton content="icon" onClick={handleLogoClick} />
       <IconButton category="search" />
     </S.Container>
   );

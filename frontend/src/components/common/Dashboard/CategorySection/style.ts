@@ -1,11 +1,15 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
 
   width: 100%;
+  height: calc(100vh - 320px);
+
   margin-bottom: 85px;
 
   overflow-y: scroll;
@@ -15,6 +19,10 @@ export const ContentContainer = styled.div`
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    height: calc(100vh - 400px);
   }
 `;
 

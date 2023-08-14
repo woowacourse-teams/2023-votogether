@@ -26,6 +26,7 @@ import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post'
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
+import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
@@ -49,13 +50,22 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     category: categoryIds,
     createTime,
     deadline,
-    voteInfo,
-    imageUrl,
+    voteInfo: serverVoteInfo,
+    imageUrl: serverImageUrl,
     writer,
   } = data ?? {};
 
+  const imageUrl = serverImageUrl && convertImageUrlToServerUrl(serverImageUrl);
+  const writingOption =
+    data &&
+    serverVoteInfo?.options.map(option => ({
+      ...option,
+      imageUrl: option.imageUrl ? convertImageUrlToServerUrl(option.imageUrl) : '',
+    }));
+
   const navigate = useNavigate();
-  const writingOptionHook = useWritingOption(voteInfo?.options);
+  const writingOptionHook = useWritingOption(writingOption);
+
   const contentImageHook = useContentImage(imageUrl);
   const { isToastOpen, openToast, toastMessage } = useToast();
   const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정' | null>(

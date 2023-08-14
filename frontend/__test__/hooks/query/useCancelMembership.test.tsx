@@ -15,8 +15,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 
 describe('useWithdrawalMembership 훅이 회원 탈퇴를 하는지 확인한다', () => {
   test('유저가 회원 탈퇴를 한다', async () => {
-    const isLoggedIn = true;
-    const { result } = renderHook(() => useWithdrawalMembership(isLoggedIn), {
+    const { result } = renderHook(() => useWithdrawalMembership(), {
       wrapper,
     });
 

@@ -4,13 +4,14 @@ import { withdrawalMembership } from '@api/userInfo';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const useWithdrawalMembership = (isLoggedIn: boolean) => {
+export const useWithdrawalMembership = () => {
   const queryClient = useQueryClient();
 
+  const LOGGED_IN = true;
   const { mutate, isLoading, isSuccess, isError, error } = useMutation({
     mutationFn: async () => await withdrawalMembership(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO, isLoggedIn] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO, LOGGED_IN] });
     },
     onError: () => {
       window.console.error('회원 탈퇴에 실패했습니다.');

@@ -19,7 +19,7 @@ import Toast from '@components/common/Toast';
 
 import { NICKNAME } from '@constants/user';
 
-import { clearCookieToken, getCookieToken } from '@utils/cookie';
+import { clearCookieToken } from '@utils/cookie';
 
 import DeleteMemberModal from './DeleteMemberModal';
 import * as S from './style';
@@ -27,15 +27,13 @@ import * as S from './style';
 export default function MyInfo() {
   const navigate = useNavigate();
 
-  const isLoggedIn = getCookieToken().accessToken !== '';
-
   const { mutate: modifyNickname } = useModifyUser();
   const {
     mutate: withdrawalMembership,
     isSuccess: isWithdrawalMembershipSuccess,
     isError: isWithdrawalMembershipError,
     error: withdrawalMembershipError,
-  } = useWithdrawalMembership(isLoggedIn);
+  } = useWithdrawalMembership();
 
   const { isToastOpen, openToast, toastMessage } = useToast();
 
@@ -64,13 +62,13 @@ export default function MyInfo() {
       logout();
       navigate('/');
     }
-  }, [isWithdrawalMembershipSuccess, navigate]);
+  }, [isWithdrawalMembershipSuccess, logout, navigate]);
 
   useEffect(() => {
     isWithdrawalMembershipError &&
       withdrawalMembershipError instanceof Error &&
       openToast(withdrawalMembershipError.message);
-  }, [isWithdrawalMembershipError, withdrawalMembershipError]);
+  }, [isWithdrawalMembershipError, openToast, withdrawalMembershipError]);
 
   return (
     <Layout isSidebarVisible={true}>

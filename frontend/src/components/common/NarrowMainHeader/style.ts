@@ -20,3 +20,10 @@ export const Container = styled.div`
     height: 60%;
   }
 `;
+
+export const Background = styled.div`
+  width: 100%;
+  height: 100vh;
+
+  cursor: pointer;
+`;

@@ -55,18 +55,17 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     writer,
   } = data ?? {};
 
-  const imageUrl = serverImageUrl && convertImageUrlToServerUrl(serverImageUrl);
-  const writingOption =
-    data &&
+  const navigate = useNavigate();
+  const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
       imageUrl: option.imageUrl ? convertImageUrlToServerUrl(option.imageUrl) : '',
-    }));
+    }))
+  );
 
-  const navigate = useNavigate();
-  const writingOptionHook = useWritingOption(writingOption);
-
-  const contentImageHook = useContentImage(imageUrl);
+  const contentImageHook = useContentImage(
+    serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
+  );
   const { isToastOpen, openToast, toastMessage } = useToast();
   const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정' | null>(
     getSelectedTimeOption(calculateDeadlineTime(createTime, deadline))

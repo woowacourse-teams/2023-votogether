@@ -26,7 +26,7 @@ export default function NarrowMainHeader({
   return isSearchInputOpen ? (
     <S.Background onClick={closeSearchInput}>
       <S.Container onClick={(event: MouseEvent) => event.stopPropagation()}>
-        <SearchBar size="free" />
+        <SearchBar size="free" autoFocus />
       </S.Container>
     </S.Background>
   ) : (

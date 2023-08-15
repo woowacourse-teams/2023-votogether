@@ -1,4 +1,4 @@
-import { FormHTMLAttributes } from 'react';
+import { HTMLAttributes } from 'react';
 
 import { Size } from '@type/style';
 
@@ -9,14 +9,14 @@ import searchIcon from '@assets/search_black.svg';
 
 import * as S from './style';
 
-interface SearchBarProps extends FormHTMLAttributes<HTMLFormElement> {
+interface SearchBarProps extends HTMLAttributes<HTMLInputElement> {
   size: Size | 'free';
 }
 
 export default function SearchBar({ size, ...rest }: SearchBarProps) {
   return (
-    <S.Form size={size} {...rest} action={PATH.SEARCH}>
-      <S.Input type="search" name={SEARCH_KEYWORD} />
+    <S.Form size={size} action={PATH.SEARCH}>
+      <S.Input type="search" name={SEARCH_KEYWORD} {...rest} />
       <S.Button type="submit">
         <img src={searchIcon} alt="검색버튼" />
       </S.Button>

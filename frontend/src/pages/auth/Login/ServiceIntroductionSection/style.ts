@@ -46,6 +46,21 @@ export const Introduce = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 34px;
+
+  height: max-content;
+`;
+
+export const PhoneImage = styled.img`
+  height: 200px;
+  object-fit: cover;
+
+  @media (min-height: 600px) {
+    height: 400px;
+  }
+
+  @media (min-height: 900px) {
+    height: max-content;
+  }
 `;
 
 export const Text = styled.span`

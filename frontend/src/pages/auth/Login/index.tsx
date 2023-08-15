@@ -1,11 +1,11 @@
 import MobileLogin from './MobileLogin';
-import StartUsingOurService from './StartUsingOurService';
+import ServiceIntroductionSection from './ServiceIntroductionSection';
 import * as S from './style';
 
 export default function Login() {
   return (
     <S.Container>
-      <StartUsingOurService />
+      <ServiceIntroductionSection />
       <MobileLogin />
     </S.Container>
   );

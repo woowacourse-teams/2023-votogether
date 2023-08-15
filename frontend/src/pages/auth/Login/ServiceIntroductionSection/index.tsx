@@ -3,7 +3,7 @@ import write from '@assets/votogether_write.png';
 
 import * as S from './style';
 
-export default function StartUsingOurService() {
+export default function ServiceIntroductionSection() {
   return (
     <S.Container>
       <S.ContentContainer>
@@ -15,11 +15,11 @@ export default function StartUsingOurService() {
         <S.IntroduceContainer>
           <S.Introduce>
             <S.Text>투표를 해보세요!</S.Text>
-            <img src={home} alt="보투게더 이용 사진" />
+            <S.PhoneImage src={home} alt="보투게더 이용 사진" />
           </S.Introduce>
           <S.Introduce>
             <S.Text>글을 쓰며 사람들의 반응을 확인해요!</S.Text>
-            <img src={write} alt="보투게더 글 작성하는 사진" />
+            <S.PhoneImage src={write} alt="보투게더 글 작성하는 사진" />
           </S.Introduce>
         </S.IntroduceContainer>
       </S.ContentContainer>

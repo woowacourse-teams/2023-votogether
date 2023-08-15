@@ -52,6 +52,7 @@ export const Introduce = styled.div`
 
 export const PhoneImage = styled.img`
   height: 200px;
+
   object-fit: cover;
 
   @media (min-height: 600px) {
@@ -67,6 +68,7 @@ export const Text = styled.span`
   font-size: 2rem;
   font-weight: 400;
 `;
+
 export const Decorator = styled.div`
   width: 16px;
   height: 100vh;

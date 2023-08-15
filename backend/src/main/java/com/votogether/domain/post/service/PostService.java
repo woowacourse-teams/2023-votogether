@@ -313,7 +313,7 @@ public class PostService {
                 postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);
 
         return posts.stream()
-                .map(post -> PostResponse.forGuest(post))
+                .map(PostResponse::forGuest)
                 .toList();
     }
 

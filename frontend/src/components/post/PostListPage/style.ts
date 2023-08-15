@@ -40,6 +40,8 @@ export const ButtonContainer = styled.div`
   align-items: end;
   gap: 20px;
 
+  padding-right: 10px;
+
   position: sticky;
   bottom: 24px;
 `;

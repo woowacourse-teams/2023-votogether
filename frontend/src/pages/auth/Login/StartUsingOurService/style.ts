@@ -1,7 +1,13 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.section`
-  display: flex;
+  display: none;
+
+  @media (min-width: ${theme.breakpoint.lg}) {
+    display: flex;
+  }
 `;
 
 export const ContentContainer = styled.div`

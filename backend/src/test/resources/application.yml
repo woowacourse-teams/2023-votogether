@@ -30,6 +30,7 @@ spring:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+  config: classpath:log4j2-local.xml
 
 server:
   forward-headers-strategy: FRAMEWORK
@@ -54,3 +55,7 @@ jwt:
   token:
     secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
     expiration-time: 222222
+
+log4j2:
+  slack_webhook_uri: test_uri
+  slack_channel: test_channel

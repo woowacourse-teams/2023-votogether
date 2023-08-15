@@ -55,3 +55,7 @@ jwt:
   token:
     secret-key: ${SECRET_KEY}
     expiration-time: ${EXPIRATION_TIME}
+
+log4j2:
+  slack_webhook_uri: ${LOG_SLACK_WEBHOOK_URI}
+  slack_channel: ${LOG_SLACK_CHANNEL}

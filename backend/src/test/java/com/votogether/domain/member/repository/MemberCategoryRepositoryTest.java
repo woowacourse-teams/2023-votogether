@@ -90,7 +90,7 @@ class MemberCategoryRepositoryTest {
         memberCategoryRepository.save(memberCategoryB);
 
         // when
-        List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
+        List<MemberCategory> memberCategories = memberCategoryRepository.findAllByMember(member);
 
         // then
         assertAll(

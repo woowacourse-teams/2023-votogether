@@ -4,10 +4,12 @@ import { WrittenVoteOptionType } from '@type/post';
 import { Size } from '@type/style';
 
 import { useFetch } from '@hooks/useFetch';
+import { useToast } from '@hooks/useToast';
 
 import { getOptionStatistics } from '@api/voteResult';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
+import Toast from '@components/common/Toast';
 import WrittenVoteOption from '@components/optionList/WrittenVoteOptionList/WrittenVoteOption';
 import VoteStatistics from '@components/VoteStatistics';
 
@@ -27,6 +29,8 @@ export default function OptionStatistics({
   size,
 }: OptionStatisticsProps) {
   const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
+  const { isToastOpen, openToast, toastMessage } = useToast();
+
   const {
     data: voteResult,
     errorMessage,
@@ -34,6 +38,8 @@ export default function OptionStatistics({
   } = useFetch(() => getOptionStatistics({ postId, optionId: voteOption.id }));
 
   const toggleOptionStatistics = () => {
+    if (!voteResult) return openToast('투표 통계 불러오기를 실패했습니다.');
+
     setIsStatisticsOpen(!isStatisticsOpen);
   };
 
@@ -44,7 +50,7 @@ export default function OptionStatistics({
         key={voteOption.id}
         {...voteOption}
         isPreview={false}
-        isVoted={true}
+        isStatisticsVisible={true}
         isSelected={isSelectedOption}
         handleVoteClick={toggleOptionStatistics}
       />
@@ -59,6 +65,11 @@ export default function OptionStatistics({
         )}
         {isStatisticsOpen && errorMessage}
       </S.StatisticsContainer>
+      {isToastOpen && (
+        <Toast size="md" position="bottom">
+          {toastMessage}
+        </Toast>
+      )}
     </S.Container>
   );
 }

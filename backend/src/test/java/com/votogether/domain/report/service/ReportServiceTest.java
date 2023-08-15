@@ -129,14 +129,15 @@ class ReportServiceTest {
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .isHidden(true)
                     .build();
+            post.blind();
 
             postRepository.save(post);
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
+
             assertThatThrownBy(() -> reportService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 블라인드 처리된 글입니다.");
@@ -238,7 +239,6 @@ class ReportServiceTest {
                     .post(post)
                     .member(writer)
                     .content("으어어어어")
-                    .isHidden(false)
                     .build();
 
             postRepository.save(post);
@@ -285,7 +285,6 @@ class ReportServiceTest {
                     .post(post)
                     .member(writer)
                     .content("으어어어어")
-                    .isHidden(false)
                     .build();
 
             postRepository.save(post);
@@ -315,14 +314,12 @@ class ReportServiceTest {
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .isHidden(true)
                     .build();
 
             Comment comment = Comment.builder()
                     .post(post)
                     .member(writer)
                     .content("으어어어어")
-                    .isHidden(true)
                     .build();
 
             postRepository.save(post);
@@ -331,6 +328,7 @@ class ReportServiceTest {
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when, then
+            comment.blind();
             assertThatThrownBy(() -> reportService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 블라인드 처리된 댓글입니다.");
@@ -358,7 +356,6 @@ class ReportServiceTest {
                     .post(post)
                     .member(writer)
                     .content("으어어어어")
-                    .isHidden(false)
                     .build();
 
             postRepository.save(post);
@@ -401,7 +398,6 @@ class ReportServiceTest {
                     .post(post)
                     .member(writer)
                     .content("으어어어어")
-                    .isHidden(false)
                     .build();
 
             postRepository.save(post);

@@ -11,6 +11,6 @@ public interface MemberCategoryRepository extends JpaRepository<MemberCategory, 
 
     Optional<MemberCategory> findByMemberAndCategory(final Member member, final Category category);
 
-    List<MemberCategory> findByMember(final Member member);
+    List<MemberCategory> findAllByMember(final Member member);
 
 }

@@ -50,13 +50,12 @@ public class Comment extends BaseEntity {
     private Comment(
             final Post post,
             final Member member,
-            final String content,
-            final boolean isHidden
+            final String content
     ) {
         this.post = post;
         this.member = member;
         this.content = new Content(content);
-        this.isHidden = isHidden;
+        this.isHidden = false;
     }
 
     public void validateWriter(final Member member) {

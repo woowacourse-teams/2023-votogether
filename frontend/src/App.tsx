@@ -8,22 +8,26 @@ import PostOptionProvider from '@hooks/context/postOption';
 
 import router from '@routes/router';
 
+import ErrorBoundaryForTopClass from '@pages/ErrorBoundaryForTopClass';
+
 import { GlobalStyle } from '@styles/globalStyle';
 import { theme } from '@styles/theme';
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <AuthProvider>
+  <ErrorBoundaryForTopClass>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <PostOptionProvider>
-          <RouterProvider router={router} />
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
         </PostOptionProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundaryForTopClass>
 );
 
 export default App;

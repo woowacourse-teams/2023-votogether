@@ -1,7 +1,7 @@
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 
+import Error from './Error';
 import ErrorBoundary from './ErrorBoundary';
-import * as S from './ErrorBoundaryWithNarrowHeaderStyle';
 
 class ErrorBoundaryWithNarrowHeader extends ErrorBoundary {
   render() {
@@ -9,7 +9,7 @@ class ErrorBoundaryWithNarrowHeader extends ErrorBoundary {
       return (
         <>
           <NarrowTemplateHeader />
-          <S.Wrapper>{this.state.errorMessage}</S.Wrapper>
+          <Error message={this.state.errorMessage} />
         </>
       );
     }

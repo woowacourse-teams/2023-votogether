@@ -1,13 +1,11 @@
 import { WrittenVoteOptionType } from '@type/post';
 
-import { POST } from '@constants/vote';
-
 import * as S from './style';
 import WrittenVoteOption from './WrittenVoteOption';
 
 interface WrittenVoteOptionListProps {
   isPreview: boolean;
-  isWriter: boolean;
+  isStatisticsVisible: boolean;
   selectedOptionId: number;
   voteOptionList: WrittenVoteOptionType[];
   handleVoteClick: (newOptionId: number) => void;
@@ -15,7 +13,7 @@ interface WrittenVoteOptionListProps {
 
 export default function WrittenVoteOptionList({
   isPreview,
-  isWriter,
+  isStatisticsVisible,
   voteOptionList,
   selectedOptionId,
   handleVoteClick,
@@ -28,7 +26,7 @@ export default function WrittenVoteOptionList({
           key={voteOption.id}
           {...voteOption}
           isPreview={isPreview}
-          isVoted={selectedOptionId !== POST.NOT_VOTE || isWriter}
+          isStatisticsVisible={isStatisticsVisible}
           isSelected={selectedOptionId === voteOption.id}
           handleVoteClick={() => handleVoteClick(voteOption.id)}
         />

@@ -10,6 +10,10 @@ export const Container = styled.div`
   margin-top: 50px;
   margin-bottom: 20px;
 
+  & > * {
+    width: 100%;
+  }
+
   @media (min-width: ${theme.breakpoint.sm}) {
     margin-top: 30px;
   }
@@ -27,6 +31,7 @@ export const HeaderWrapper = styled.div`
 export const PageHeader = styled.div`
   margin: 15px;
 
+  text-align: center;
   font: var(--text-title);
 `;
 

@@ -30,7 +30,7 @@ export const makePostListUrl = (
   const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
 
   if (categoryId > 0 && postType === POST_TYPE.CATEGORY) {
-    return `${POST_BASE_URL}/?${OPTION_URL}&category=${categoryId}`;
+    return `${POST_BASE_URL}?${OPTION_URL}&category=${categoryId}`;
   }
 
   if (postType === POST_TYPE.SEARCH) {

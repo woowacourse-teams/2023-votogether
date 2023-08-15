@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
     padding-top: 20px;
   }
 
-  @media (min-width: ${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     padding-top: 20px;
   }
 `;
@@ -28,7 +28,7 @@ export const HeaderWrapper = styled.div`
 
   z-index: ${theme.zIndex.header};
 
-  @media (min-width: ${theme.breakpoint.md}) {
+  @media (min-width: ${theme.breakpoint.sm}) {
     display: none;
   }
 `;
@@ -57,7 +57,7 @@ export const ModalBody = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
 
   width: 90%;
   margin: 40px 20px 0px 16px;
@@ -70,7 +70,8 @@ export const ModalTitle = styled.div`
 `;
 
 export const ModalDescription = styled.div`
-  font: var(--text-body);
+  color: gray;
+  font-size: 16px;
 `;
 
 export const ButtonListWrapper = styled.div`
@@ -80,6 +81,4 @@ export const ButtonListWrapper = styled.div`
 
   width: 90%;
   height: 50px;
-
-  margin-top: 20px;
 `;

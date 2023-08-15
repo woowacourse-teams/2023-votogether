@@ -12,6 +12,7 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
+import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
 import photoIcon from '@assets/photo_white.svg';
@@ -42,11 +43,22 @@ export default function Post({ postInfo, isPreview }: PostProps) {
     error: editError,
   } = useEditVote({ isPreview, postId });
 
-  const IMAGE_BASE_URL = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
-
   const isActive = !checkClosedPost(deadline);
 
+  const isStatisticsVisible =
+    writer.id === loggedInfo.id || !isActive || voteInfo.selectedOptionId !== POST.NOT_VOTE;
+
   const handleVoteClick = (newOptionId: number) => {
+    if (!loggedInfo.isLoggedIn) {
+      openToast('투표를 하려면 로그인 후에 이용하실 수 있습니다.');
+      return;
+    }
+
+    if (!isActive) {
+      openToast('마감된 게시글에는 투표를 할 수 없습니다.');
+      return;
+    }
+
     if (writer.nickname === loggedInfo.userInfo?.nickname) return;
 
     if (voteInfo.selectedOptionId === newOptionId) return;
@@ -122,11 +134,11 @@ export default function Post({ postInfo, isPreview }: PostProps) {
           {content}
         </S.Content>
         {!isPreview && imageUrl && (
-          <S.Image src={`${IMAGE_BASE_URL}/${imageUrl}`} alt={'본문에 포함된 이미지'} />
+          <S.Image src={convertImageUrlToServerUrl(imageUrl)} alt={'본문에 포함된 이미지'} />
         )}
       </S.DetailLink>
       <WrittenVoteOptionList
-        isWriter={writer.id === loggedInfo.id}
+        isStatisticsVisible={isStatisticsVisible}
         selectedOptionId={voteInfo.selectedOptionId}
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}

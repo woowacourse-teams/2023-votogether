@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+
+import { AuthContext } from '@hooks/context/auth';
 
 import DeleteModal from '@components/common/DeleteModal';
 import SquareButton from '@components/common/SquareButton';
@@ -19,20 +21,27 @@ interface PostDetailPageChildProps {
       reportPost: (reason: string) => void;
       reportNickname: (reason: string) => void;
     };
+    openToast: (text: string) => void;
   };
 }
 
 export default function BottomButtonPart({
   isWriter,
   isClosed,
-  handleEvent: { movePage, controlPost },
+  handleEvent: { movePage, controlPost, openToast },
 }: PostDetailPageChildProps) {
+  const { loggedInfo } = useContext(AuthContext);
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
 
   const [action, setAction] = useState<string | null>(null);
 
   const handleActionButtonClick = (action: string) => {
+    if (!loggedInfo.isLoggedIn) {
+      openToast('로그인 후에 기능을 이용해주세요.');
+      return;
+    }
+
     setAction(action);
   };
 

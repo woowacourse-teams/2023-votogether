@@ -10,7 +10,6 @@ import {
 } from '@utils/fetch';
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
-const MOCK_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export const transformPostResponse = (post: PostInfoResponse): PostInfo => {
   return {
@@ -75,7 +74,7 @@ export const editPost = async (postId: number, updatedPost: FormData) => {
 };
 
 export const deletePost = async (postId: number) => {
-  return await deleteFetch(`${MOCK_URL}/posts/${postId}`);
+  return await deleteFetch(`${BASE_URL}/posts/${postId}`);
 };
 
 export const setEarlyClosePost = async (postId: number) => {

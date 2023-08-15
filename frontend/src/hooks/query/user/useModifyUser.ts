@@ -18,6 +18,7 @@ export const useModifyUser = () => {
     onError: (error, __, context) => {
       queryClient.setQueryData([QUERY_KEY.USER_INFO], context?.previousNickname);
       window.console.error('닉네임 변경에 실패했습니다.');
+      alert('닉네임 변경에 실패했습니다.');
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO] });

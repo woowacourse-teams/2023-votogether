@@ -4,8 +4,6 @@ import { AuthContext } from '@hooks/context/auth';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
-import { clearCookieToken } from '@utils/cookie';
-
 import Skeleton from '../Skeleton';
 import SquareButton from '../SquareButton';
 
@@ -19,13 +17,14 @@ export default function Dashboard() {
   const { userInfo } = loggedInfo;
 
   const handleLogoutClick = () => {
-    clearCookieToken('accessToken');
     clearLoggedInfo();
   };
 
   return (
     <S.Container>
-      {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
+      <ErrorBoundary>
+        {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
+      </ErrorBoundary>
       <S.CategorySectionWrapper>
         <ErrorBoundary>
           <Suspense fallback={<Skeleton isLarge={true} />}>

@@ -25,6 +25,7 @@ import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.exception.BadRequestException;
 import com.votogether.fixtures.MemberFixtures;
 import com.votogether.test.persister.MemberTestPersister;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -61,6 +62,9 @@ class MemberServiceTest {
 
     @Autowired
     MemberTestPersister memberTestPersister;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     @DisplayName("멤버가 존재하지 않으면 저장한다.")
@@ -405,6 +409,9 @@ class MemberServiceTest {
                     .reason("불건전한 댓글")
                     .build();
             reportRepository.save(report);
+
+            em.flush();
+            em.clear();
 
             // when
             memberService.deleteMember(member);

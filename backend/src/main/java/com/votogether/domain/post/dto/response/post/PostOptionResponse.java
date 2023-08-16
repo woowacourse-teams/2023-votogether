@@ -30,7 +30,7 @@ public record PostOptionResponse(
                 postOption.getContent(),
                 convertImageUrl(postOption.getImageUrl()),
                 post.isClosed() ? postOption.getVoteCount() : HIDDEN_COUNT,
-                post.isClosed() ? ((double) postOption.getVoteCount() / post.getTotalVoteCount()) * 100 : HIDDEN_COUNT
+                postOption.getVotePercent(post.getTotalVoteCount())
         );
     }
 

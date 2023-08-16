@@ -7,5 +7,5 @@ public class ControllerTest {
 
     @MockBean
     RequestLogInterceptor requestLogInterceptor;
-    
+
 }

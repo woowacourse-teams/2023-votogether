@@ -80,6 +80,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
     if (isError && error instanceof Error) {
       const errorResponse = JSON.parse(error.message);
       openToast(errorResponse.message);
+      return;
     }
   }, [isError, error]);
 

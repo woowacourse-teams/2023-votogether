@@ -15,10 +15,6 @@ export default function CreatePostPage() {
   const { isToastOpen, openToast, toastMessage } = useToast();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, []);
-
-  useEffect(() => {
     if (isSuccess) {
       navigate('/');
     }

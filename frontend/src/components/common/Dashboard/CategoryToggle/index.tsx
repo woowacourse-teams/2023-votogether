@@ -9,6 +9,8 @@ import Toast from '@components/common/Toast';
 
 import chevronDown from '@assets/chevron-down.svg';
 import chevronUp from '@assets/chevron-up.svg';
+import starFilled from '@assets/star-filled.svg';
+import startLined from '@assets/star-lined.svg';
 
 import * as S from './style';
 
@@ -50,11 +52,9 @@ export default function CategoryToggle({
           {categoryList.length === 0 && <S.Caption>현재 카테고리가 없습니다</S.Caption>}
           {categoryList.map(({ id, name, isFavorite }) => (
             <S.CategoryItem key={id}>
-              <S.Circle
-                title="즐겨찾기 버튼"
-                onClick={() => mutate({ id, isFavorite })}
-                $isFavorite={isFavorite}
-              />
+              <S.Circle title="즐겨찾기 버튼" onClick={() => mutate({ id, isFavorite })}>
+                <img src={isFavorite ? starFilled : startLined} alt="" />
+              </S.Circle>
               <S.CategoryNameLink to={`/posts/category/${id}`}>{name}</S.CategoryNameLink>
             </S.CategoryItem>
           ))}

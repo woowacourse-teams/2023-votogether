@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @EntityGraph(attributePaths = {"member"})
-    List<Comment> findAllByPostOrderByCreatedAtAsc(final Post post);
+    List<Comment> findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(final Post post);
 
     List<Comment> findAllByMember(final Member member);
 

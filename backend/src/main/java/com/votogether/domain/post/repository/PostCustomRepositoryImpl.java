@@ -32,6 +32,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
+                .distinct()
                 .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(
@@ -104,6 +105,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
+                .distinct()
                 .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(

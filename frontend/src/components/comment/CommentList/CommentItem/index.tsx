@@ -85,10 +85,10 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const isAllowedMenu = userType !== COMMENT_USER.GUEST && action !== COMMENT_ACTION.EDIT;
 
   return (
-    <S.Container>
+    <S.Container tabIndex={0}>
       <S.Header>
         <S.UserContainer>
-          <S.Title>{member.nickname}</S.Title>
+          <S.Title aria-label={`댓글 작성자: ${member.nickname}`}>{member.nickname}</S.Title>
           <S.SubTitleContainer>
             <S.SubTitle>{createdAt}</S.SubTitle>
             {isEdit && <S.SubTitle>(수정됨)</S.SubTitle>}

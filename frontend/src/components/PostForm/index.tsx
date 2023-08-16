@@ -59,7 +59,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
-      imageUrl: option.imageUrl ? option.imageUrl : '',
+      imageUrl: option.imageUrl ? convertImageUrlToServerUrl(option.imageUrl) : '',
     }))
   );
 

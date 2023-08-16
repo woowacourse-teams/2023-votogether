@@ -1,7 +1,5 @@
 import { ChangeEvent } from 'react';
 
-import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
-
 import OptionCancelButton from './OptionCancelButton';
 import OptionUploadImageButton from './OptionUploadImageButton';
 import * as S from './style';
@@ -54,7 +52,7 @@ export default function WritingVoteOption({
         </S.ContentContainer>
         {imageUrl && (
           <S.ImageContainer>
-            <S.Image src={convertImageUrlToServerUrl(imageUrl)} alt={text} />
+            <S.Image src={imageUrl} alt={text} />
             <S.ImageCancelWrapper>
               <OptionCancelButton onClick={handleRemoveImageClick} />
             </S.ImageCancelWrapper>

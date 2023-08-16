@@ -26,14 +26,17 @@ public class PostOptions {
             final List<String> optionImageUrls
     ) {
         final PostOptions newInstance = new PostOptions();
-        final List<PostOption> postOptions = IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
+        newInstance.postOptions.addAll(getPostOptions(post, postOptionContents, optionImageUrls));
+        return newInstance;
+    }
+
+    private static List<PostOption> getPostOptions(final Post post, final List<String> postOptionContents,
+                                            final List<String> optionImageUrls) {
+        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
                 .mapToObj(postOptionSequence ->
                         toPostOption(post, postOptionContents, optionImageUrls, postOptionSequence)
                 )
                 .toList();
-
-        newInstance.postOptions.addAll(postOptions);
-        return newInstance;
     }
 
     private static PostOption toPostOption(
@@ -62,8 +65,12 @@ public class PostOptions {
                 .orElse(0L);
     }
 
-    public void clear() {
+    public void update(
+            final Post post,
+            final List<String> postOptionContents,
+            final List<String> postOptionImageUrls
+    ) {
         this.postOptions.clear();
+        this.postOptions.addAll(getPostOptions(post, postOptionContents, postOptionImageUrls));
     }
-
 }

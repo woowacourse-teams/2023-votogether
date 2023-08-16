@@ -210,21 +210,12 @@ public class Post extends BaseEntity {
     ) {
         this.postBody.update(postBody, oldContentImageUrl, contentImageUrls);
         this.postCategories.update(this, categories);
-        updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
-        this.deadline = deadline;
-    }
-
-    private void updatePostOptions(
-            final List<String> postOptionContents,
-            final List<String> oldPostOptionImageUrls,
-            final List<String> postOptionImageUrls
-    ) {
-        this.postOptions.clear();
-        this.postOptions = new PostOptions();
-        mapPostOptionsByElements(
+        this.postOptions.update(
+                this,
                 postOptionContents,
                 getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls)
         );
+        this.deadline = deadline;
     }
 
     private List<String> getPostOptionImageUrls(

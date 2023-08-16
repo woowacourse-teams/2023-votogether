@@ -10,7 +10,7 @@
     "dev": "webpack-dev-server --config webpack.dev.js --open --hot",
     "build": "webpack --config webpack.prod.js",
     "start": "webpack --config webpack.dev.js",
-    "lint": "eslint --cache .",
+    "lint": "eslint --fix \"./src/*.{js,jsx,ts,tsx,json}\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest",

@@ -36,6 +36,7 @@ import com.votogether.domain.post.service.PostService;
 import com.votogether.global.exception.GlobalExceptionHandler;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.annotation.ControllerTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -58,10 +59,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(PostController.class)
-class PostControllerTest {
+class PostControllerTest extends ControllerTest {
 
     @Autowired
     ObjectMapper mapper;
@@ -76,13 +76,12 @@ class PostControllerTest {
     PostService postService;
 
     @BeforeEach
-    void setUp(final WebApplicationContext webApplicationContext) {
+    void setUp() {
         RestAssuredMockMvc.standaloneSetup(
                 MockMvcBuilders
                         .standaloneSetup(new PostController(postService))
                         .setControllerAdvice(GlobalExceptionHandler.class)
         );
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
     }
 
     @Test

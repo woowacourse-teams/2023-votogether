@@ -9,6 +9,7 @@ import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.service.AuthService;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.annotation.ControllerTest;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 @WebMvcTest(controllers = AuthController.class)
-class AuthControllerTest {
+class AuthControllerTest extends ControllerTest {
 
     @MockBean
     AuthService authService;

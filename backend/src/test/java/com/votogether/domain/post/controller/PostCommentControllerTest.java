@@ -20,6 +20,7 @@ import com.votogether.global.exception.GlobalExceptionHandler;
 import com.votogether.global.jwt.JwtAuthenticationFilter;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.annotation.ControllerTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -41,7 +42,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @WebMvcTest(PostCommentController.class)
-class PostCommentControllerTest {
+class PostCommentControllerTest extends ControllerTest {
 
     @MockBean
     PostCommentService postCommentService;

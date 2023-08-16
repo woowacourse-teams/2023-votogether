@@ -14,6 +14,7 @@ import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.service.ReportService;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.annotation.ControllerTest;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,10 +28,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(ReportController.class)
-class ReportControllerTest {
+class ReportControllerTest extends ControllerTest {
 
     @MockBean
     ReportService reportService;
@@ -42,9 +42,8 @@ class ReportControllerTest {
     MemberService memberService;
 
     @BeforeEach
-    void setUp(final WebApplicationContext webApplicationContext) {
+    void setUp() {
         RestAssuredMockMvc.standaloneSetup(new ReportController(reportService));
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
     }
 
     @Nested

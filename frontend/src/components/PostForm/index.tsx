@@ -26,7 +26,10 @@ import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post'
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
-import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
+import {
+  convertImageUrlToServerUrl,
+  convertServerUrlToImageUrl,
+} from '@utils/post/convertImageUrlToServerUrl';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
@@ -56,6 +59,9 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   } = data ?? {};
 
   const navigate = useNavigate();
+  const contentImageHook = useContentImage(
+    serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
+  );
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
@@ -63,9 +69,6 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     }))
   );
 
-  const contentImageHook = useContentImage(
-    serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
-  );
   const { isToastOpen, openToast, toastMessage } = useToast();
   const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정' | null>(
     getSelectedTimeOption(calculateDeadlineTime(createTime, deadline))
@@ -117,10 +120,27 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     e.preventDefault();
     const formData = new FormData();
 
+    const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
+      return { content: text, imageUrl: imageUrl };
+    });
+
     const imageUrlList = [
-      contentImageHook.contentImage,
-      ...writingOptionHook.optionList.map(option => option.imageUrl),
+      convertServerUrlToImageUrl(contentImageHook.contentImage),
+      ...writingOptionHook.optionList.map(option => convertServerUrlToImageUrl(option.imageUrl)),
     ];
+
+    //예외처리
+    const { selectedOptionList } = multiSelectHook;
+    if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
+    if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
+    if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
+    if (writingContent.trim() === '') return openToast('내용은 필수로 입력해야 합니다.');
+    if (writingOptionList.length < 2) return openToast('선택지는 최소 2개 입력해주세요.');
+    if (writingOptionList.length > 5) return openToast('선택지는 최대 5개 입력할 수 있습니다.');
+    if (writingOptionList.some(option => option.content.trim() === ''))
+      return openToast('선택지에 글을 입력해주세요.');
+    if (Object.values(time).reduce((a, b) => a + b, 0) < 1)
+      return openToast('시간은 필수로 입력해야 합니다.');
 
     if (e.target instanceof HTMLFormElement) {
       const optionImageFileInputs =
@@ -131,36 +151,22 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       fileInputList.forEach((item, index) => {
         if (!item.files) return;
 
-        if (imageUrlList[index] === '') {
-          index === 0
+        if (index === 0) {
+          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
+          !imageUrlList[index] || imageUrlList[index] === serverImageUrl
             ? contentImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
-            : optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'));
+            : contentImageFileList.push(item.files[0]);
         } else {
-          index === 0
-            ? contentImageFileList.push(item.files[0])
+          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
+          !imageUrlList[index] ||
+          imageUrlList[index] === serverVoteInfo?.options[index - 1].imageUrl
+            ? optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
             : optionImageFileList.push(item.files[0]);
         }
       });
 
       contentImageFileList.map(file => formData.append('contentImages', file));
       optionImageFileList.map(file => formData.append('optionImages', file));
-
-      const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
-        return { content: text, imageUrl: imageUrl };
-      });
-
-      //예외처리
-      const { selectedOptionList } = multiSelectHook;
-      if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
-      if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
-      if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
-      if (writingContent.trim() === '') return openToast('내용은 필수로 입력해야 합니다.');
-      if (writingOptionList.length < 2) return openToast('선택지는 최소 2개 입력해주세요.');
-      if (writingOptionList.length > 5) return openToast('선택지는 최대 5개 입력할 수 있습니다.');
-      if (writingOptionList.some(option => option.content.trim() === ''))
-        return openToast('선택지에 글을 입력해주세요.');
-      if (Object.values(time).reduce((a, b) => a + b, 0) < 1)
-        return openToast('시간은 필수로 입력해야 합니다.');
 
       const updatedPostTexts = {
         categoryIds: selectedOptionList.map(option => option.id),

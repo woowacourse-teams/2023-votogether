@@ -49,3 +49,8 @@ export const TopButtonWrapper = styled.div`
     height: 46px;
   }
 `;
+
+export const HiddenInput = styled.input`
+  position: absolute;
+  left: -1000px;
+`;

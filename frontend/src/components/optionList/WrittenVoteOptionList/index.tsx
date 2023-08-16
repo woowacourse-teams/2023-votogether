@@ -22,7 +22,7 @@ export default function WrittenVoteOptionList({
     <S.VoteOptionListContainer aria-label="투표 선택지">
       {voteOptionList.map((voteOption, index) => (
         <WrittenVoteOption
-          ariaLabel={`${index + 1}번`}
+          ariaLabel={`선택지 내용: ${voteOption.text}, 선택지 순서: ${index + 1}번`}
           key={voteOption.id}
           {...voteOption}
           isPreview={isPreview}

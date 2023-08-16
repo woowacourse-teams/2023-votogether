@@ -1,6 +1,6 @@
 package com.votogether.domain.post.entity;
 
-import static com.votogether.fixtures.MemberFixtures.MALE_30;
+import static com.votogether.test.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.votogether.domain.vote.entity.Vote;

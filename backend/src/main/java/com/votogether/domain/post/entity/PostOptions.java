@@ -6,6 +6,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,11 +15,39 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class PostOptions {
 
+    private static final Integer FIRST_OPTION_SEQUENCE = 1;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostOption> postOptions = new ArrayList<>();
 
-    public void addAllPostOptions(final List<PostOption> postOptions) {
-        this.postOptions.addAll(postOptions);
+    public static PostOptions of(
+            final Post post,
+            final List<String> postOptionContents,
+            final List<String> optionImageUrls
+    ) {
+        final PostOptions newInstance = new PostOptions();
+        final List<PostOption> postOptions = IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
+                .mapToObj(postOptionSequence ->
+                        toPostOption(post, postOptionContents, optionImageUrls, postOptionSequence)
+                )
+                .toList();
+
+        newInstance.postOptions.addAll(postOptions);
+        return newInstance;
+    }
+
+    private static PostOption toPostOption(
+            final Post post,
+            final List<String> postOptionContents,
+            final List<String> optionImageUrls,
+            final int postOptionSequence
+    ) {
+        return PostOption.of(
+                postOptionContents.get(postOptionSequence - 1),
+                post,
+                postOptionSequence,
+                optionImageUrls.get(postOptionSequence - 1)
+        );
     }
 
     public Boolean contains(final PostOption postOption) {
@@ -31,6 +60,10 @@ public class PostOptions {
                 .findAny()
                 .map(PostOption::getId)
                 .orElse(0L);
+    }
+
+    public void clear() {
+        this.postOptions.clear();
     }
 
 }

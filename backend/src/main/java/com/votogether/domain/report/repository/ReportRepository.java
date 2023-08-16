@@ -2,7 +2,7 @@ package com.votogether.domain.report.repository;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.report.entity.Report;
-import com.votogether.domain.report.entity.ReportType;
+import com.votogether.domain.report.entity.vo.ReportType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

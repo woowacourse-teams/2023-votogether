@@ -3,13 +3,13 @@ package com.votogether.domain.member.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.fixtures.CategoryFixtures;
-import com.votogether.fixtures.MemberFixtures;
+import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.fixtures.CategoryFixtures;
+import com.votogether.test.fixtures.MemberFixtures;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

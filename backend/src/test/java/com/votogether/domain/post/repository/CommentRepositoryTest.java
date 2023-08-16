@@ -2,13 +2,13 @@ package com.votogether.domain.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.votogether.RepositoryTest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
-import com.votogether.fixtures.MemberFixtures;
+import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +55,7 @@ class CommentRepositoryTest {
         );
 
         // when
-        List<Comment> result = commentRepository.findAllByPostOrderByCreatedAtAsc(post);
+        List<Comment> result = commentRepository.findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(post);
 
         // then
         assertThat(result).containsExactly(commentA, commentB);

@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.votogether.RepositoryTest;
 import com.votogether.domain.category.entity.Category;
-import com.votogether.fixtures.CategoryFixtures;
+import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.fixtures.CategoryFixtures;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

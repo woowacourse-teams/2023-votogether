@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.votogether.ServiceTest;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
-import com.votogether.domain.member.dto.MemberDetailRequest;
-import com.votogether.domain.member.entity.Gender;
+import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.domain.member.entity.SocialType;
+import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
@@ -20,11 +19,13 @@ import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.report.entity.Report;
-import com.votogether.domain.report.entity.ReportType;
+import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
-import com.votogether.exception.BadRequestException;
-import com.votogether.fixtures.MemberFixtures;
+import com.votogether.global.exception.BadRequestException;
+import com.votogether.test.annotation.ServiceTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import com.votogether.test.persister.MemberTestPersister;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -61,6 +62,9 @@ class MemberServiceTest {
 
     @Autowired
     MemberTestPersister memberTestPersister;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     @DisplayName("멤버가 존재하지 않으면 저장한다.")
@@ -405,6 +409,9 @@ class MemberServiceTest {
                     .reason("불건전한 댓글")
                     .build();
             reportRepository.save(report);
+
+            em.flush();
+            em.clear();
 
             // when
             memberService.deleteMember(member);

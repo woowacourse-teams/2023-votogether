@@ -28,4 +28,8 @@ public class PostContentImages {
                 .build();
     }
 
+    public void update(final String imageUrl) {
+        this.contentImages.get(0).updateImageUrl(imageUrl);
+    }
+
 }

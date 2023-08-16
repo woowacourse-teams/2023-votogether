@@ -1,10 +1,10 @@
 package com.votogether.domain.member.service;
 
-import com.votogether.domain.member.dto.MemberDetailRequest;
-import com.votogether.domain.member.dto.MemberInfoResponse;
+import com.votogether.domain.member.dto.request.MemberDetailRequest;
+import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.domain.member.entity.Nickname;
+import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
@@ -13,12 +13,12 @@ import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.report.entity.Report;
-import com.votogether.domain.report.entity.ReportType;
+import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
-import com.votogether.exception.BadRequestException;
-import com.votogether.exception.NotFoundException;
+import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -95,16 +95,13 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(final Member member) {
-        final Member existentMember = memberRepository.findById(member.getId())
-                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+        final List<Post> posts = deletePosts(member);
+        final List<Comment> comments = deleteComments(member);
+        deleteVotes(member);
+        deleteMemberCategories(member);
+        deleteReports(member, posts, comments);
 
-        final List<Post> posts = deletePosts(existentMember);
-        final List<Comment> comments = deleteComments(existentMember);
-        deleteVotes(existentMember);
-        deleteMemberCategories(existentMember);
-        deleteReports(existentMember, posts, comments);
-
-        memberRepository.delete(existentMember);
+        memberRepository.delete(member);
     }
 
     private List<Post> deletePosts(final Member member) {
@@ -112,26 +109,25 @@ public class MemberService {
         final List<Long> postIds = posts.stream()
                 .map(Post::getId)
                 .toList();
-        postRepository.deleteAllByIdInBatch(postIds);
+        postRepository.deleteAllById(postIds);
         return posts;
     }
 
-    private List<Comment> deleteComments(final Member existentMember) {
-        final List<Comment> comments = commentRepository.findAllByMember(existentMember);
-        final List<Long> commentIds = comments
-                .stream()
+    private List<Comment> deleteComments(final Member member) {
+        final List<Comment> comments = commentRepository.findAllByMember(member);
+        final List<Long> commentIds = comments.stream()
                 .map(Comment::getId)
                 .toList();
-        commentRepository.deleteAllByIdInBatch(commentIds);
+        commentRepository.deleteAllById(commentIds);
         return comments;
     }
 
-    private void deleteVotes(final Member existentMember) {
-        final List<Long> voteIds = voteRepository.findAllByMember(existentMember)
+    private void deleteVotes(final Member member) {
+        final List<Long> voteIds = voteRepository.findAllByMember(member)
                 .stream()
                 .map(Vote::getId)
                 .toList();
-        voteRepository.deleteAllByIdInBatch(voteIds);
+        voteRepository.deleteAllById(voteIds);
     }
 
     private void deleteMemberCategories(final Member member) {
@@ -139,7 +135,7 @@ public class MemberService {
                 .stream()
                 .map(MemberCategory::getId)
                 .toList();
-        memberCategoryRepository.deleteAllByIdInBatch(memberCategoryIds);
+        memberCategoryRepository.deleteAllById(memberCategoryIds);
     }
 
     private void deleteReports(
@@ -159,28 +155,28 @@ public class MemberService {
                     .stream()
                     .map(Report::getId)
                     .toList();
-            reportRepository.deleteAllByIdInBatch(reportIds);
+            reportRepository.deleteAllById(reportIds);
         }
     }
 
     private void deleteReportByComment(final List<Comment> comments) {
         for (final Comment comment : comments) {
-            final List<Long> reportIds = reportRepository.findAllByReportTypeAndTargetId(ReportType.COMMENT,
-                            comment.getId())
-                    .stream()
-                    .map(Report::getId)
-                    .toList();
-            reportRepository.deleteAllByIdInBatch(reportIds);
+            final List<Long> reportIds =
+                    reportRepository.findAllByReportTypeAndTargetId(ReportType.COMMENT, comment.getId())
+                            .stream()
+                            .map(Report::getId)
+                            .toList();
+            reportRepository.deleteAllById(reportIds);
         }
     }
 
     private void deleteReportByNickname(final Member member) {
-        final List<Long> reportIdsByTargetId = reportRepository.findAllByReportTypeAndTargetId(ReportType.NICKNAME,
-                        member.getId())
-                .stream()
-                .map(Report::getId)
-                .toList();
-        reportRepository.deleteAllByIdInBatch(reportIdsByTargetId);
+        final List<Long> reportIdsByTargetId =
+                reportRepository.findAllByReportTypeAndTargetId(ReportType.NICKNAME, member.getId())
+                        .stream()
+                        .map(Report::getId)
+                        .toList();
+        reportRepository.deleteAllById(reportIdsByTargetId);
     }
 
     private void deleteReportByMember(final Member member) {
@@ -188,7 +184,7 @@ public class MemberService {
                 .stream()
                 .map(Report::getId)
                 .toList();
-        reportRepository.deleteAllByIdInBatch(reportIdsByMember);
+        reportRepository.deleteAllById(reportIdsByMember);
     }
 
 }

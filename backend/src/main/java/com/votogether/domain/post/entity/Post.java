@@ -7,7 +7,7 @@ import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.vote.entity.Vote;
-import com.votogether.exception.BadRequestException;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,8 +35,6 @@ import org.hibernate.annotations.Formula;
 @Getter
 @Entity
 public class Post extends BaseEntity {
-
-    private static final Integer FIRST_OPTION_SEQUENCE = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,23 +90,7 @@ public class Post extends BaseEntity {
             final List<String> postOptionContents,
             final List<String> optionImageUrls
     ) {
-        this.postOptions.addAllPostOptions(toPostOptions(postOptionContents, optionImageUrls));
-    }
-
-    private List<PostOption> toPostOptions(
-            final List<String> postOptionContents,
-            final List<String> optionImageUrls
-    ) {
-        return IntStream.rangeClosed(FIRST_OPTION_SEQUENCE, postOptionContents.size())
-                .mapToObj(postOptionSequence ->
-                        PostOption.of(
-                                postOptionContents.get(postOptionSequence - 1),
-                                this,
-                                postOptionSequence,
-                                optionImageUrls.get(postOptionSequence - 1)
-                        )
-                )
-                .toList();
+        this.postOptions = PostOptions.of(this, postOptionContents, optionImageUrls);
     }
 
     public void validateDeadlineNotExceedByMaximumDeadline(final int maximumDeadline) {
@@ -226,35 +208,10 @@ public class Post extends BaseEntity {
             final List<String> postOptionImageUrls,
             final LocalDateTime deadline
     ) {
-        updatePostBody(postBody, oldContentImageUrl, contentImageUrls);
-        updatePostCategories(categories);
+        this.postBody.update(postBody, oldContentImageUrl, contentImageUrls);
+        this.postCategories.update(this, categories);
         updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
         this.deadline = deadline;
-    }
-
-    private void updatePostBody(
-            final PostBody postBody,
-            final String oldContentImageUrl,
-            final List<String> contentImageUrls
-    ) {
-        this.postBody = postBody;
-        this.postBody.addContentImage(this, getContentImageUrl(oldContentImageUrl, contentImageUrls));
-    }
-
-    private String getContentImageUrl(
-            final String oldContentImageUrl,
-            final List<String> contentImageUrls
-    ) {
-        if (contentImageUrls.isEmpty()) {
-            return oldContentImageUrl;
-        }
-
-        return contentImageUrls.get(0);
-    }
-
-    private void updatePostCategories(final List<Category> categories) {
-        this.postCategories = new PostCategories();
-        this.postCategories.mapPostAndCategories(this, categories);
     }
 
     private void updatePostOptions(
@@ -262,9 +219,12 @@ public class Post extends BaseEntity {
             final List<String> oldPostOptionImageUrls,
             final List<String> postOptionImageUrls
     ) {
+        this.postOptions.clear();
         this.postOptions = new PostOptions();
-        mapPostOptionsByElements(postOptionContents,
-                getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls));
+        mapPostOptionsByElements(
+                postOptionContents,
+                getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls)
+        );
     }
 
     private List<String> getPostOptionImageUrls(

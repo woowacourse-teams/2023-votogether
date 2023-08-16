@@ -1,3 +1,5 @@
+import { MouseEvent } from 'react';
+
 import { useToggle } from '@hooks/useToggle';
 
 import IconButton from '../IconButton';
@@ -23,8 +25,8 @@ export default function NarrowMainHeader({
 
   return isSearchInputOpen ? (
     <S.Background onClick={closeSearchInput}>
-      <S.Container>
-        <SearchBar size="free" />
+      <S.Container onClick={(event: MouseEvent) => event.stopPropagation()}>
+        <SearchBar size="free" autoFocus />
       </S.Container>
     </S.Background>
   ) : (

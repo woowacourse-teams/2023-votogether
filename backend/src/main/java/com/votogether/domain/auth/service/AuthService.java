@@ -1,7 +1,8 @@
 package com.votogether.domain.auth.service;
 
-import com.votogether.domain.auth.dto.KakaoMemberResponse;
-import com.votogether.domain.auth.dto.LoginResponse;
+import com.votogether.domain.auth.dto.response.KakaoMemberResponse;
+import com.votogether.domain.auth.dto.response.LoginResponse;
+import com.votogether.domain.auth.service.oauth.KakaoOAuthClient;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;

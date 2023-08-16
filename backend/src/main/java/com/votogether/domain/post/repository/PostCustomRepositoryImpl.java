@@ -8,8 +8,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostClosingType;
-import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.post.entity.vo.PostClosingType;
+import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.global.persistence.OrderByNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,11 +32,13 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
+                .distinct()
                 .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(
                         categoryIdEq(categoryId),
-                        deadlineEq(postClosingType)
+                        deadlineEq(postClosingType),
+                        post.isHidden.eq(false)
                 )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())
@@ -58,7 +60,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .where(
                         categoryIdEq(categoryId),
                         deadlineEq(postClosingType),
-                        post.writer.eq(writer)
+                        post.writer.eq(writer),
+                        post.isHidden.eq(false)
                 )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())
@@ -104,12 +107,14 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
+                .distinct()
                 .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(
                         containsKeywordInTitleOrContent(keyword),
                         categoryIdEq(categoryId),
-                        deadlineEq(postClosingType)
+                        deadlineEq(postClosingType),
+                        post.isHidden.eq(false)
                 )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())

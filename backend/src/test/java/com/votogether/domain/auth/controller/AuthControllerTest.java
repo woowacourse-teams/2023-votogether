@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.votogether.domain.auth.dto.LoginResponse;
+import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.service.AuthService;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;

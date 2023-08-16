@@ -2,30 +2,30 @@ package com.votogether.domain.post.service;
 
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
-import com.votogether.domain.member.entity.AgeRange;
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.vo.AgeRange;
+import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.exception.MemberExceptionType;
-import com.votogether.domain.post.dto.request.PostCreateRequest;
-import com.votogether.domain.post.dto.request.PostOptionCreateRequest;
-import com.votogether.domain.post.dto.request.PostOptionUpdateRequest;
-import com.votogether.domain.post.dto.request.PostUpdateRequest;
-import com.votogether.domain.post.dto.response.PostResponse;
-import com.votogether.domain.post.dto.response.detail.PostDetailResponse;
+import com.votogether.domain.post.dto.request.post.PostCreateRequest;
+import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
+import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
+import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
+import com.votogether.domain.post.dto.response.post.PostDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
-import com.votogether.domain.post.entity.PostClosingType;
 import com.votogether.domain.post.entity.PostOption;
-import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.post.entity.vo.PostClosingType;
+import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
-import com.votogether.domain.post.util.ImageUploader;
-import com.votogether.domain.vote.dto.VoteStatus;
 import com.votogether.domain.vote.repository.VoteRepository;
-import com.votogether.exception.BadRequestException;
-import com.votogether.exception.NotFoundException;
+import com.votogether.domain.vote.repository.dto.VoteStatus;
+import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
+import com.votogether.global.util.ImageUploader;
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -313,7 +313,7 @@ public class PostService {
                 postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);
 
         return posts.stream()
-                .map(post -> PostResponse.forGuest(post))
+                .map(PostResponse::forGuest)
                 .toList();
     }
 

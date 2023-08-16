@@ -2,15 +2,21 @@ package com.votogether.domain.report.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
+import com.votogether.domain.post.entity.vo.PostClosingType;
+import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.post.service.PostCommentService;
+import com.votogether.domain.post.service.PostService;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
@@ -19,6 +25,7 @@ import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,6 +48,12 @@ class ReportServiceTest {
 
     @Autowired
     CommentRepository commentRepository;
+
+    @Autowired
+    PostService postService;
+
+    @Autowired
+    PostCommentService postCommentService;
 
     @Nested
     @DisplayName("게시글 신고기능은")
@@ -208,7 +221,17 @@ class ReportServiceTest {
             reportService.report(reporter5, request);
 
             // then
-            assertThat(post.isHidden()).isTrue();
+            final List<PostResponse> responses = postService.getPostsGuest(
+                    0,
+                    PostClosingType.ALL,
+                    PostSortType.HOT,
+                    null
+            );
+
+            assertAll(
+                    () -> assertThat(post.isHidden()).isTrue(),
+                    () -> assertThat(responses).isEmpty()
+            );
         }
 
     }
@@ -413,7 +436,10 @@ class ReportServiceTest {
             reportService.report(reporter5, request);
 
             // then
-            assertThat(comment.isHidden()).isTrue();
+            assertAll(
+                    () -> assertThat(comment.isHidden()).isTrue(),
+                    () -> assertThat(postCommentService.getComments(post.getId())).isEmpty()
+            );
         }
 
     }
@@ -486,7 +512,6 @@ class ReportServiceTest {
             // then
             assertThat(reported.getNickname()).contains("Pause1");
         }
-
     }
 
 }

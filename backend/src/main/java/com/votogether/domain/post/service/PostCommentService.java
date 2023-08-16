@@ -45,7 +45,7 @@ public class PostCommentService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
 
-        return commentRepository.findAllByPostOrderByCreatedAtAsc(post)
+        return commentRepository.findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(post)
                 .stream()
                 .map(CommentResponse::from)
                 .toList();

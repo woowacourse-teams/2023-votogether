@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="debug" packages="com.votogether.global.log" monitorInterval="5">
+<Configuration status="debug" packages="com.votogether.global.log.log4j2" monitorInterval="5">
     <Properties>
         <Property name="FILE_NAME">votogether</Property>
         <Property name="ERROR_FILE_NAME">votogether-error</Property>

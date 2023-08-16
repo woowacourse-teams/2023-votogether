@@ -1,4 +1,4 @@
-package com.votogether.global.log;
+package com.votogether.global.log.log4j2;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;

@@ -1,4 +1,4 @@
-package com.votogether.global.log;
+package com.votogether.global.log.log4j2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

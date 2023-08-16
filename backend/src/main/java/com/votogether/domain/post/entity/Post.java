@@ -219,6 +219,7 @@ public class Post extends BaseEntity {
             final List<String> oldPostOptionImageUrls,
             final List<String> postOptionImageUrls
     ) {
+        this.postOptions.clear();
         this.postOptions = new PostOptions();
         mapPostOptionsByElements(
                 postOptionContents,

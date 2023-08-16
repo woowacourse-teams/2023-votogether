@@ -100,6 +100,7 @@ export const Content = styled.p<{ $isPreview: boolean }>`
   font: var(--text-caption);
   text-overflow: ellipsis;
   word-break: break-word;
+  white-space: pre-wrap;
 
   overflow: hidden;
 

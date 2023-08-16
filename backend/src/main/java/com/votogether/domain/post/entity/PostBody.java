@@ -30,7 +30,11 @@ public class PostBody {
         this.postContentImages = new PostContentImages();
     }
 
-    public void update(final PostBody postBody, final String oldContentImageUrl, final List<String> contentImageUrls) {
+    public void update(
+            final PostBody postBody,
+            final String oldContentImageUrl,
+            final List<String> contentImageUrls
+    ) {
         this.title = postBody.getTitle();
         this.content = postBody.getContent();
         this.postContentImages.update(getContentImageUrl(oldContentImageUrl, contentImageUrls));

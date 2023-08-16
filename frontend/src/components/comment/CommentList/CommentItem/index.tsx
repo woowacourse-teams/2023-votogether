@@ -77,7 +77,10 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   };
 
   useEffect(() => {
-    isError && error instanceof Error && openToast(error.message);
+    if (isError && error instanceof Error) {
+      const errorResponse = JSON.parse(error.message);
+      openToast(errorResponse.message);
+    }
   }, [isError, error]);
 
   const USER_TYPE = COMMENT_USER_MENU[userType];

@@ -2,8 +2,8 @@ package com.votogether.domain.post.repository;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostClosingType;
-import com.votogether.domain.post.entity.PostSortType;
+import com.votogether.domain.post.entity.vo.PostClosingType;
+import com.votogether.domain.post.entity.vo.PostSortType;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 

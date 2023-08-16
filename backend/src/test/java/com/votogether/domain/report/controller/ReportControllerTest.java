@@ -5,12 +5,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
-import com.votogether.domain.member.entity.Gender;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.SocialType;
+import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.service.MemberService;
-import com.votogether.domain.report.dto.ReportRequest;
-import com.votogether.domain.report.entity.ReportType;
+import com.votogether.domain.report.dto.request.ReportRequest;
+import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.service.ReportService;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;

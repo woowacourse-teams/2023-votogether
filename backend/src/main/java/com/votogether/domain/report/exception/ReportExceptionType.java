@@ -1,6 +1,6 @@
 package com.votogether.domain.report.exception;
 
-import com.votogether.exception.ExceptionType;
+import com.votogether.global.exception.ExceptionType;
 import lombok.Getter;
 
 @Getter

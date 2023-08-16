@@ -2,6 +2,7 @@ package com.votogether.domain.report.entity;
 
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.report.entity.vo.ReportType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

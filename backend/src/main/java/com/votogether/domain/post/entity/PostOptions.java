@@ -62,4 +62,8 @@ public class PostOptions {
                 .orElse(0L);
     }
 
+    public void clear() {
+        this.postOptions.clear();
+    }
+
 }

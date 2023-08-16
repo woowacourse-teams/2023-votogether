@@ -158,6 +158,7 @@ class PostTest {
                 .postBody(postBody1)
                 .deadline(LocalDateTime.now().plusDays(3))
                 .build();
+        post.addContentImage("없는사진");
 
         final PostBody postBody2 = PostBody.builder()
                 .title("title2")
@@ -174,7 +175,7 @@ class PostTest {
         post.update(
                 postBody2,
                 "oldContentUrl",
-                List.of("newContentUrl"),
+                List.of("newContentUrl2"),
                 categories,
                 List.of("option1", "option2"),
                 List.of("optionImage1", "optionImage2"),
@@ -184,12 +185,14 @@ class PostTest {
 
         // then
         final PostBody postBody = post.getPostBody();
+        final PostContentImage postContentImage = postBody.getPostContentImages().getContentImages().get(0);
         final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
         final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
         final LocalDateTime actualDeadline = post.getDeadline();
         assertAll(
                 () -> assertThat(postBody.getTitle()).isEqualTo("title2"),
                 () -> assertThat(postBody.getContent()).isEqualTo("content2"),
+                () -> assertThat(postContentImage.getImageUrl()).isEqualTo("newContentUrl2"),
                 () -> assertThat(postOptions.get(0).getContent()).isEqualTo("option1"),
                 () -> assertThat(postOptions.get(0).getImageUrl()).isEqualTo("newOptionImage1"),
                 () -> assertThat(postCategories.get(0).getCategory().getName()).isEqualTo("category1"),

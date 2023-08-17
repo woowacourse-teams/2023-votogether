@@ -75,6 +75,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
                 />
                 <S.HiddenInput
                   ref={inputRef}
+                  maxLength={0}
                   aria-label={`${index + 1}번째 댓글입니다`}
                   role="contentinfo"
                   inputMode="none"
@@ -99,6 +100,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
               inputRef.current?.focus();
             }}
             theme="fill"
+            aria-label="댓글 더보기"
           >
             더보기
           </SquareButton>

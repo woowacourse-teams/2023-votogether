@@ -141,7 +141,10 @@ export default function Post({ postInfo, isPreview }: PostProps) {
             {writer.nickname}
           </span>
           <S.Wrapper>
-            <span aria-label={`작성일시 ${convertTimeToWord(createTime)}`}>
+            <span
+              aria-label={`작성일시 ${convertTimeToWord(createTime)}`}
+              tabIndex={isPreviewTabIndex}
+            >
               {convertTimeToWord(createTime)}
             </span>
             <span

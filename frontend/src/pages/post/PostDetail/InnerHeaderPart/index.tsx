@@ -68,19 +68,25 @@ export default function InnerHeaderPart({
           </>
         ) : !isClosed ? (
           <>
-            <HeaderTextButton onClick={moveWritePostPage}>수정</HeaderTextButton>
-            <HeaderTextButton onClick={() => handleMenuClick('DELETE')}>삭제</HeaderTextButton>
+            <HeaderTextButton aria-label="게시글 수정" onClick={moveWritePostPage}>
+              수정
+            </HeaderTextButton>
+            <HeaderTextButton aria-label="게시글 삭제" onClick={() => handleMenuClick('DELETE')}>
+              삭제
+            </HeaderTextButton>
             <S.TagButtonWrapper>
-              <TagButton size="sm" onClick={setEarlyClosePost}>
+              <TagButton aria-label="게시글 조기마감" size="sm" onClick={setEarlyClosePost}>
                 조기마감
               </TagButton>
             </S.TagButtonWrapper>
           </>
         ) : (
           <>
-            <HeaderTextButton onClick={() => handleMenuClick('DELETE')}>삭제</HeaderTextButton>
+            <HeaderTextButton aria-label="게시글 삭제" onClick={() => handleMenuClick('DELETE')}>
+              삭제
+            </HeaderTextButton>
             <S.TagButtonWrapper>
-              <TagButton size="sm" onClick={moveVoteStatisticsPage}>
+              <TagButton aria-label="게시글 통계보기" size="sm" onClick={moveVoteStatisticsPage}>
                 통계보기
               </TagButton>
             </S.TagButtonWrapper>

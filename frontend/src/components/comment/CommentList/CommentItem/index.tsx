@@ -95,8 +95,19 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           </S.SubTitleContainer>
         </S.UserContainer>
         {isAllowedMenu && (
-          <S.MenuContainer aria-label="댓글 메뉴" onClick={toggleComponent}>
-            <S.Image src={ellipsis}></S.Image>
+          <S.MenuContainer
+            as={isOpen ? 'button' : 'button'}
+            role="button"
+            tabIndex={0}
+            aria-label={isOpen ? '댓글 메뉴 닫기' : '댓글 메뉴 열기'}
+            onClick={toggleComponent}
+          >
+            <S.Image
+              tabIndex={0}
+              role="button"
+              alt={isOpen ? '댓글 메뉴 닫기' : '댓글 메뉴 열기'}
+              src={ellipsis}
+            ></S.Image>
             {isOpen && (
               <S.MenuWrapper>
                 <CommentMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />

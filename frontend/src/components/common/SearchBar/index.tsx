@@ -17,7 +17,12 @@ interface SearchBarProps extends HTMLAttributes<HTMLInputElement> {
 export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
   return (
     <S.Form size={size} action={PATH.SEARCH}>
-      <S.Input type="search" name={SEARCH_KEYWORD} {...rest} />
+      <S.Input
+        aria-label="게시글 제목 및 내용 검색창"
+        type="search"
+        name={SEARCH_KEYWORD}
+        {...rest}
+      />
       <S.Button type="submit">
         <img src={searchIcon} alt="검색버튼" />
       </S.Button>

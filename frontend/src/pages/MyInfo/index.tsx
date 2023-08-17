@@ -57,9 +57,10 @@ export default function MyInfo() {
   }, [isWithdrawalMembershipSuccess, clearLoggedInfo, navigate]);
 
   useEffect(() => {
-    isWithdrawalMembershipError &&
-      withdrawalMembershipError instanceof Error &&
+    if (isWithdrawalMembershipError && withdrawalMembershipError instanceof Error) {
       openToast(withdrawalMembershipError.message);
+      return;
+    }
   }, [isWithdrawalMembershipError, openToast, withdrawalMembershipError]);
 
   return (

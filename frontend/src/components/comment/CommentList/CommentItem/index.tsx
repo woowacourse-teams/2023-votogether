@@ -52,7 +52,12 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         openToast('댓글을 신고했습니다.');
       })
       .catch(e => {
-        openToast(e instanceof Error ? e.message : '댓글 신고가 실패했습니다');
+        if (e instanceof Error) {
+          const errorResposne = JSON.parse(e.message);
+          openToast(errorResposne.message);
+          return;
+        }
+        openToast('댓글 신고가 실패했습니다.');
       });
   };
 
@@ -64,7 +69,12 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         openToast('작성자 닉네임을 신고했습니다.');
       })
       .catch(e => {
-        openToast(e instanceof Error ? e.message : '작성자 닉네임 신고가 실패했습니다.');
+        if (e instanceof Error) {
+          const errorResposne = JSON.parse(e.message);
+          openToast(errorResposne.message);
+          return;
+        }
+        openToast('작성자 닉네임 신고가 실패했습니다.');
       });
   };
 

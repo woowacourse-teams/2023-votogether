@@ -59,7 +59,10 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       return;
     }
 
-    if (writer.nickname === loggedInfo.userInfo?.nickname) return;
+    if (writer.nickname === loggedInfo.userInfo?.nickname) {
+      openToast('내가 쓴 글에는 투표를 할 수 없습니다.');
+      return;
+    }
 
     if (voteInfo.selectedOptionId === newOptionId) return;
 

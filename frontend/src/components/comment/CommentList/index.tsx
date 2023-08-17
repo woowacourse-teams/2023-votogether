@@ -6,7 +6,7 @@ import { useMoreComment } from '@hooks/useMoreComment';
 
 import SquareButton from '@components/common/SquareButton';
 
-import { scrollToTop } from '@utils/scrollToTop';
+import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import CommentItem from './CommentItem';
 import CommentLoginSection from './CommentLoginSection';
@@ -108,7 +108,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
       )}
       <S.ButtonContainer>
         <S.TopButtonWrapper>
-          <SquareButton onClick={scrollToTop} theme="blank" aria-label="최상단으로 이동">
+          <SquareButton onClick={smoothScrollToTop} theme="blank">
             TOP
           </SquareButton>
         </S.TopButtonWrapper>

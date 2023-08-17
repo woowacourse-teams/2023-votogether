@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useRef } from 'react';
 
 import SquareButton from '@components/common/SquareButton';
 
@@ -21,11 +21,25 @@ export default function TwoButtonModal({
   secondaryButton,
   children,
 }: CommentModalProps) {
+  const BackDropRef = useRef<HTMLDivElement>(null);
+
   const { text: primaryText, handleClick: primaryClick } = primaryButton;
   const { text: secondaryText, handleClick: secondaryClick } = secondaryButton;
 
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (e.target === BackDropRef.current) {
+        secondaryClick();
+      }
+    };
+
+    document.addEventListener('click', handler);
+
+    return () => document.removeEventListener('click', handler);
+  }, [BackDropRef, secondaryClick]);
+
   return (
-    <S.Container>
+    <S.Container ref={BackDropRef}>
       <S.ModalContainer>
         <S.Title>{title}</S.Title>
         {children}

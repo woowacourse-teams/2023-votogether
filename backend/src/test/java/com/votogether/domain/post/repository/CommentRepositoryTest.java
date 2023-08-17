@@ -55,7 +55,7 @@ class CommentRepositoryTest {
         );
 
         // when
-        List<Comment> result = commentRepository.findAllByPostOrderByCreatedAtAsc(post);
+        List<Comment> result = commentRepository.findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(post);
 
         // then
         assertThat(result).containsExactly(commentA, commentB);

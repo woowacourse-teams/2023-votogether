@@ -14,9 +14,9 @@ export default function OneLineGraph({ ageGroup, size }: GraphProps) {
 
         return (
           <S.OptionContainer key={ageResult.name} $size={size}>
-            <span aria-label="투표한 인원">{ageResult.total}</span>
+            <span aria-label={`${ageResult.total}명 인원,`}>{ageResult.total}</span>
             <S.OptionLength $amount={amount} />
-            <span aria-label="투표한 나이대">{ageResult.name}</span>
+            <span aria-label={`${ageResult.name}의 연령대가 투표했습니다.`}>{ageResult.name}</span>
           </S.OptionContainer>
         );
       })}

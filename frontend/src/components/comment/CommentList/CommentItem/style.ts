@@ -25,8 +25,8 @@ export const Header = styled.div`
   margin-bottom: 7px;
 `;
 
-export const Title = styled.span`
-  font-weight: 500;
+export const Nickname = styled.span`
+  font-weight: 600;
 `;
 
 export const UserContainer = styled.div`

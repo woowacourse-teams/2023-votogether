@@ -9,7 +9,7 @@ type Content = 'icon' | 'text' | 'full';
 
 const contentCategory: Record<Content, { name: string; url: string }> = {
   icon: {
-    name: '로고 아이콘',
+    name: '보투게더 로고 아이콘',
     url: logo,
   },
   text: {

@@ -25,7 +25,12 @@ import * as S from './style';
 export default function MyInfo() {
   const navigate = useNavigate();
 
-  const { mutate: modifyNickname } = useModifyUser();
+  const {
+    mutate: modifyNickname,
+    isSuccess: isModifyNicknameSuccess,
+    isError: isModifyNicknameError,
+    error: modifyNicknameError,
+  } = useModifyUser();
   const {
     mutate: withdrawalMembership,
     isSuccess: isWithdrawalMembershipSuccess,
@@ -50,6 +55,21 @@ export default function MyInfo() {
   };
 
   useEffect(() => {
+    if (isModifyNicknameSuccess) {
+      openToast('닉네임을 성공적으로 변경했습니다.');
+      return;
+    }
+  }, [isModifyNicknameSuccess, openToast]);
+
+  useEffect(() => {
+    if (isModifyNicknameError && modifyNicknameError instanceof Error) {
+      const errorResponse = JSON.parse(modifyNicknameError.message);
+      openToast(errorResponse.message);
+      return;
+    }
+  }, [isModifyNicknameError, openToast, modifyNicknameError]);
+
+  useEffect(() => {
     if (isWithdrawalMembershipSuccess) {
       clearLoggedInfo();
       navigate('/');
@@ -57,9 +77,11 @@ export default function MyInfo() {
   }, [isWithdrawalMembershipSuccess, clearLoggedInfo, navigate]);
 
   useEffect(() => {
-    isWithdrawalMembershipError &&
-      withdrawalMembershipError instanceof Error &&
-      openToast(withdrawalMembershipError.message);
+    if (isWithdrawalMembershipError && withdrawalMembershipError instanceof Error) {
+      const errorResponse = JSON.parse(withdrawalMembershipError.message);
+      openToast(errorResponse.message);
+      return;
+    }
   }, [isWithdrawalMembershipError, openToast, withdrawalMembershipError]);
 
   return (

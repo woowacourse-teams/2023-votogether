@@ -54,6 +54,8 @@ export default function PostList() {
       <S.SelectContainer>
         <S.SelectWrapper>
           <Select<PostStatus>
+            role="select"
+            aria-label={`마감 여부로 게시글 정렬 선택, 현재 옵션은 ${STATUS_OPTION[selectedStatusOption]}`}
             handleOptionChange={(value: PostStatus) => {
               setPostOption({
                 ...postOption,
@@ -67,6 +69,8 @@ export default function PostList() {
         </S.SelectWrapper>
         <S.SelectWrapper>
           <Select<PostSorting>
+            role="select"
+            aria-label={`인기순/최신순으로 게시글 정렬 선택, 현재 옵션은 ${SORTING_OPTION[selectedSortingOption]}`}
             handleOptionChange={(value: PostSorting) => {
               setPostOption({
                 ...postOption,

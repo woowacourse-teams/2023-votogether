@@ -1,5 +1,7 @@
 import { ChangeEvent } from 'react';
 
+import { POST_OPTION_POLICY } from '@constants/policyMessage';
+
 import OptionCancelButton from './OptionCancelButton';
 import OptionUploadImageButton from './OptionUploadImageButton';
 import * as S from './style';
@@ -8,6 +10,7 @@ interface WritingVoteOptionProps {
   optionId: number;
   text: string;
   isDeletable: boolean;
+  ariaLabel: string;
   handleUpdateOptionChange: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   handleDeleteOptionClick: () => void;
   handleRemoveImageClick: () => void;
@@ -21,6 +24,7 @@ export default function WritingVoteOption({
   optionId,
   text,
   isDeletable,
+  ariaLabel,
   handleUpdateOptionChange,
   handleDeleteOptionClick,
   handleRemoveImageClick,
@@ -28,7 +32,7 @@ export default function WritingVoteOption({
   imageUrl,
 }: WritingVoteOptionProps) {
   return (
-    <S.Container>
+    <S.Container aria-label={ariaLabel}>
       <S.CancelButtonWrapper>
         {isDeletable && (
           <OptionCancelButton title="선택지 삭제하기" onClick={handleDeleteOptionClick} />
@@ -40,7 +44,7 @@ export default function WritingVoteOption({
             name="optionText"
             defaultValue={text}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleUpdateOptionChange(e)}
-            placeholder="내용을 입력해주세요."
+            placeholder={POST_OPTION_POLICY.DEFAULT}
             maxLength={MAX_WRITING_LENGTH}
           />
 

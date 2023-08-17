@@ -29,10 +29,11 @@ export default function WritingVoteOptionList({ writingOptionHook }: WritingVote
   const isDeletable = optionList.length > MINIMUM_COUNT;
 
   return (
-    <S.Container>
-      {optionList.map(optionItem => (
+    <S.Container aria-label={`${optionList.length}개의 선택지가 있습니다.`} aria-live="polite">
+      {optionList.map((optionItem, index) => (
         <WritingVoteOption
           key={optionItem.id}
+          ariaLabel={`${index + 1}번 선택지`}
           optionId={optionItem.id}
           isDeletable={isDeletable}
           text={optionItem.text}
@@ -47,7 +48,7 @@ export default function WritingVoteOptionList({ writingOptionHook }: WritingVote
       ))}
       {optionList.length < MAXIMUM_COUNT && (
         <S.AddButtonWrapper>
-          <AddButton type="button" size="md" onClick={addOption} />
+          <AddButton type="button" size="md" aria-label="선택지 추가" onClick={addOption} />
         </S.AddButtonWrapper>
       )}
     </S.Container>

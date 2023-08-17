@@ -37,7 +37,7 @@ export const FileInput = styled.input`
   visibility: hidden;
 `;
 
-export const Label = styled.label<{ $isVisible: boolean }>`
+export const Button = styled.button<{ $isVisible: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,11 +48,19 @@ export const Label = styled.label<{ $isVisible: boolean }>`
   padding: 5px 0;
 
   background-color: var(--primary-color);
+
+  visibility: ${props => (props.$isVisible ? 'hidden' : '')};
+  cursor: pointer;
+`;
+
+export const Label = styled.label`
+  width: 100%;
+  height: 100%;
+
   color: var(--white);
 
   font: var(--text-body);
   text-align: center;
 
-  visibility: ${props => (props.$isVisible ? 'hidden' : '')};
   cursor: pointer;
 `;

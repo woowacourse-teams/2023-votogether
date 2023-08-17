@@ -22,6 +22,11 @@ import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { PATH } from '@constants/path';
+import {
+  CONTENT_PLACEHOLDER,
+  POST_DEADLINE_POLICY,
+  POST_TITLE_POLICY,
+} from '@constants/policyMessage';
 import { CATEGORY_COUNT_LIMIT, IMAGE_BASE_URL, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
@@ -207,7 +212,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleTitleChange(e, POST_TITLE)
               }
-              placeholder="제목을 입력해주세요"
+              placeholder={POST_TITLE_POLICY.DEFAULT}
               maxLength={POST_TITLE.MAX_LENGTH}
               minLength={POST_TITLE.MIN_LENGTH}
               required
@@ -217,7 +222,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 handleContentChange(e, POST_CONTENT)
               }
-              placeholder="내용을 입력해주세요"
+              placeholder={CONTENT_PLACEHOLDER}
               maxLength={POST_CONTENT.MAX_LENGTH}
               minLength={POST_CONTENT.MIN_LENGTH}
               required
@@ -230,18 +235,31 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             <S.OptionListWrapper>
               <WritingVoteOptionList writingOptionHook={writingOptionHook} />
             </S.OptionListWrapper>
-            <S.Deadline>
-              <S.DeadlineDescription>
+            <S.Deadline aria-label="마감시간 설정">
+              <S.DeadlineDescription
+                aria-label={getDeadlineTime({
+                  hour: time.hour,
+                  day: time.day,
+                  minute: time.minute,
+                })}
+                aria-live="polite"
+              >
                 {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
-                  <S.Description>
+                  <S.Description tabIndex={0}>
                     현재 시간으로부터 글 작성일({createTime})로부터 3일 이내 (
                     {addTimeToDate({ day: 3, hour: 0, minute: 0 }, baseTime)})까지만 선택
                     가능합니다.
                   </S.Description>
                 )}
-                {data && <S.Description>* 작성일시로부터 마감시간이 계산됩니다. </S.Description>}
-                {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
+                {data && (
+                  <S.Description tabIndex={0}>
+                    * 작성일시로부터 마감시간이 계산됩니다.{' '}
+                  </S.Description>
+                )}
+                {data && (
+                  <S.Description tabIndex={0}>* 기존 마감 시간은 {deadline}입니다. </S.Description>
+                )}
               </S.DeadlineDescription>
               <S.ButtonWrapper>
                 {DEADLINE_OPTION.map(option => (
@@ -267,24 +285,38 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               </S.ButtonWrapper>
             </S.Deadline>
             <S.SaveButtonWrapper>
-              <SquareButton theme="fill" type="submit" form="form-post">
+              <SquareButton
+                aria-label="글쓰기가 저장됩니다. 저장이 완료되면 메인화면으로 이동됩니다."
+                theme="fill"
+                type="submit"
+                form="form-post"
+              >
                 저장
               </SquareButton>
             </S.SaveButtonWrapper>
           </S.RightSide>
         </S.Wrapper>
         {isOpen && (
-          <Modal size="sm" onModalClose={closeModal}>
+          <Modal size="sm" onModalClose={closeModal} aria-label="마감시간 설정 모달">
             <>
               <S.ModalHeader>
                 <h3>마감 시간 선택</h3>
-                <S.CloseButton onClick={closeModal}>X</S.CloseButton>
+                <S.CloseButton onClick={closeModal} aria-label="마감시간 설정 모달 끄기">
+                  X
+                </S.CloseButton>
               </S.ModalHeader>
               <S.ModalBody>
-                <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
+                <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
+                  {POST_DEADLINE_POLICY.DEFAULT}
+                </S.Description>
                 <TimePickerOptionList time={time} setTime={setTime} />
                 <S.ResetButtonWrapper>
-                  <SquareButton onClick={handleResetButton} type="button" theme="blank">
+                  <SquareButton
+                    aria-label="마감시간 초기화"
+                    onClick={handleResetButton}
+                    type="button"
+                    theme="blank"
+                  >
                     초기화
                   </SquareButton>
                 </S.ResetButtonWrapper>

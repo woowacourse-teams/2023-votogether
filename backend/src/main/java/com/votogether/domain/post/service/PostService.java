@@ -16,6 +16,7 @@ import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.post.entity.PostOptions;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
@@ -54,14 +55,12 @@ public class PostService {
     private final PostOptionRepository postOptionRepository;
     private final CategoryRepository categoryRepository;
     private final VoteRepository voteRepository;
-    private final EntityManager entityManager;
 
     public PostService(
             final PostRepository postRepository,
             final PostOptionRepository postOptionRepository,
             final CategoryRepository categoryRepository,
-            final VoteRepository voteRepository,
-            final EntityManager entityManager
+            final VoteRepository voteRepository
     ) {
         this.postRepository = postRepository;
         this.postOptionRepository = postOptionRepository;
@@ -69,7 +68,6 @@ public class PostService {
         this.voteRepository = voteRepository;
         this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
         initPostsVotedByMemberMapper();
-        this.entityManager = entityManager;
     }
 
     private void initPostsVotedByMemberMapper() {
@@ -344,6 +342,7 @@ public class PostService {
         post.validateDeadLine();
         post.validateDeadLineToModify(request.deadline());
 
+        deleteAllPostOptionsByPost(post);
         post.update(
                 toPostBody(request.title(), request.content()),
                 request.imageUrl(),
@@ -352,9 +351,13 @@ public class PostService {
                 transformElements(request.postOptions(), PostOptionUpdateRequest::content),
                 transformElements(request.postOptions(), PostOptionUpdateRequest::imageUrl),
                 transformElements(optionImages, ImageUploader::upload),
-                request.deadline(),
-                entityManager
+                request.deadline()
         );
+    }
+
+    private void deleteAllPostOptionsByPost(final Post post) {
+        final PostOptions postOptions = post.getPostOptions();
+        postOptionRepository.deleteAll(postOptions.getPostOptions());
     }
 
     private <T, R> List<R> transformElements(final List<T> elements, final Function<T, R> process) {

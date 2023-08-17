@@ -207,32 +207,24 @@ public class Post extends BaseEntity {
             final List<String> postOptionContents,
             final List<String> oldPostOptionImageUrls,
             final List<String> postOptionImageUrls,
-            final LocalDateTime deadline,
-            final EntityManager entityManager
+            final LocalDateTime deadline
             ) {
         this.postBody.update(postBody, oldContentImageUrl, contentImageUrls);
         this.postCategories.update(this, categories);
-        updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls, entityManager);
+        updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
         this.deadline = deadline;
     }
 
     private void updatePostOptions(
             final List<String> postOptionContents,
             final List<String> oldPostOptionImageUrls,
-            final List<String> postOptionImageUrls,
-            final EntityManager entityManager
+            final List<String> postOptionImageUrls
     ) {
         this.postOptions.clear();
-        persistenceProgress(entityManager);
         mapPostOptionsByElements(
                 postOptionContents,
                 getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls)
         );
-    }
-
-    private void persistenceProgress(final EntityManager entityManager) {
-        entityManager.flush();
-        entityManager.clear();
     }
 
     private List<String> getPostOptionImageUrls(

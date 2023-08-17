@@ -50,7 +50,7 @@ export default function MyInfo() {
     modifyNickname(newNickname);
   };
 
-  const handleWithdrawlMembership = () => {
+  const handleWithdrawalMembership = () => {
     withdrawalMembership();
   };
 
@@ -59,7 +59,7 @@ export default function MyInfo() {
       openToast('닉네임을 성공적으로 변경했습니다.');
       return;
     }
-  }, [isModifyNicknameSuccess, openToast]);
+  }, [isModifyNicknameSuccess]);
 
   useEffect(() => {
     if (isModifyNicknameError && modifyNicknameError instanceof Error) {
@@ -67,7 +67,7 @@ export default function MyInfo() {
       openToast(errorResponse.message);
       return;
     }
-  }, [isModifyNicknameError, openToast, modifyNicknameError]);
+  }, [isModifyNicknameError, modifyNicknameError]);
 
   useEffect(() => {
     if (isWithdrawalMembershipSuccess) {
@@ -82,7 +82,7 @@ export default function MyInfo() {
       openToast(errorResponse.message);
       return;
     }
-  }, [isWithdrawalMembershipError, openToast, withdrawalMembershipError]);
+  }, [isWithdrawalMembershipError, withdrawalMembershipError]);
 
   return (
     <Layout isSidebarVisible={true}>
@@ -122,7 +122,7 @@ export default function MyInfo() {
             {isOpen && (
               <DeleteMemberModal
                 handleModalClose={closeComponent}
-                handleWithdrawalMembership={handleWithdrawlMembership}
+                handleWithdrawalMembership={handleWithdrawalMembership}
               />
             )}
           </Accordion>

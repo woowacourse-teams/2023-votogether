@@ -26,7 +26,6 @@ import com.votogether.domain.vote.repository.dto.VoteStatus;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.global.util.ImageUploader;
-import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;

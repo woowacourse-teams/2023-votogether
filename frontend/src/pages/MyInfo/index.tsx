@@ -17,6 +17,7 @@ import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import Toast from '@components/common/Toast';
 
+import { NICKNAME_POLICY } from '@constants/policyMessage';
 import { NICKNAME } from '@constants/user';
 
 import DeleteMemberModal from './DeleteMemberModal';
@@ -80,16 +81,24 @@ export default function MyInfo() {
         </S.ProfileSection>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">
-            <S.Input
-              value={newNickname}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => handleNicknameChange(e, NICKNAME)}
-              placeholder="새로운 닉네임을 입력해주세요"
-            />
-            <S.ButtonWrapper>
-              <SquareButton aria-label="닉네임 변경" theme="fill" onClick={handleModifyNickname}>
-                변경
-              </SquareButton>
-            </S.ButtonWrapper>
+            <S.DescribeUl>
+              <li>- {NICKNAME_POLICY.LETTER_AMOUNT}</li>
+              <li>- {NICKNAME_POLICY.LIMIT_LETTER_TYPE}</li>
+              <li>- {NICKNAME_POLICY.NO_DUPLICATION}</li>
+              <li>- {NICKNAME_POLICY.LIMIT_CHANGING}</li>
+            </S.DescribeUl>
+            <S.InputWrapper>
+              <S.Input
+                value={newNickname}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleNicknameChange(e, NICKNAME)}
+                placeholder="새로운 닉네임을 입력해주세요"
+              />
+              <S.ButtonWrapper>
+                <SquareButton aria-label="닉네임 변경" theme="fill" onClick={handleModifyNickname}>
+                  변경
+                </SquareButton>
+              </S.ButtonWrapper>
+            </S.InputWrapper>
           </Accordion>
           <Accordion title="회원 탈퇴">
             <S.ButtonWrapper>

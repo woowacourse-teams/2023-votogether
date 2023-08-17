@@ -22,6 +22,7 @@ import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { PATH } from '@constants/path';
+import { CONTENT_PLACEHOLDER, POST_TITLE_POLICY } from '@constants/policyMessage';
 import { CATEGORY_COUNT_LIMIT, IMAGE_BASE_URL, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
@@ -201,7 +202,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleTitleChange(e, POST_TITLE)
               }
-              placeholder="제목을 입력해주세요"
+              placeholder={POST_TITLE_POLICY.DEFAULT}
               maxLength={POST_TITLE.MAX_LENGTH}
               minLength={POST_TITLE.MIN_LENGTH}
               required
@@ -211,7 +212,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 handleContentChange(e, POST_CONTENT)
               }
-              placeholder="내용을 입력해주세요"
+              placeholder={CONTENT_PLACEHOLDER}
               maxLength={POST_CONTENT.MAX_LENGTH}
               minLength={POST_CONTENT.MIN_LENGTH}
               required

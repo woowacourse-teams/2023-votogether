@@ -1,5 +1,7 @@
 import { ChangeEvent } from 'react';
 
+import { POST_OPTION_POLICY } from '@constants/policyMessage';
+
 import OptionCancelButton from './OptionCancelButton';
 import OptionUploadImageButton from './OptionUploadImageButton';
 import * as S from './style';
@@ -40,7 +42,7 @@ export default function WritingVoteOption({
             name="optionText"
             defaultValue={text}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleUpdateOptionChange(e)}
-            placeholder="내용을 입력해주세요."
+            placeholder={POST_OPTION_POLICY.DEFAULT}
             maxLength={MAX_WRITING_LENGTH}
           />
 

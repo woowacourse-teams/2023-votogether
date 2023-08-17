@@ -23,7 +23,7 @@ export const Title = styled.div`
 `;
 
 export const Content = styled.div<{ $isOpen: boolean }>`
-  display: ${props => (props.$isOpen ? 'flex' : 'none')};
+  display: ${props => (props.$isOpen ? 'block' : 'none')};
   justify-content: space-between;
 
   border: 1px solid #f2f2f2;

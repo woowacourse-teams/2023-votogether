@@ -19,7 +19,7 @@ export const POST_CONTENT_POLICY = {
   LETTER_AMOUNT: '1000자 이내로 입력해주세요.',
   PHOTO_COUNT: '1장의 사진을 업로드 할 수 있습니다.',
   PHOTO_SHAPE: '사진은 정사각형으로 잘라져 업로드됩니다.',
-  PHOTO_CAPACITY: '용량은 5MB으로 제한됩니다.',
+  PHOTO_CAPACITY: '용량은 1.5MB으로 제한됩니다.',
 };
 
 export const POST_OPTION_POLICY = {
@@ -28,7 +28,7 @@ export const POST_OPTION_POLICY = {
   AMOUNT: '2개 ~ 5개 선택지를 작성해주세요.',
   PHOTO_COUNT: '1장의 사진을 업로드 할 수 있습니다.',
   PHOTO_SHAPE: '사진은 정사각형으로 잘라져 업로드됩니다.',
-  PHOTO_CAPACITY: '용량은 5MB으로 제한됩니다.',
+  PHOTO_CAPACITY: '용량은 1.5MB으로 제한됩니다.',
 };
 
 export const POST_DEADLINE_POLICY = {

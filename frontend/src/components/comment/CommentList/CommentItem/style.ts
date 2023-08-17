@@ -45,7 +45,7 @@ export const SubTitle = styled.span`
   font: var(--text-small);
   font-weight: 400;
 
-  color: var(--dark-gray);
+  color: var(--text-dark-gray);
 
   &:nth-child(2) {
     margin-left: 6px;

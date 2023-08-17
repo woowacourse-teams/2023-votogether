@@ -1,4 +1,4 @@
-import { ChangeEvent, MutableRefObject } from 'react';
+import { ChangeEvent, MouseEvent, MutableRefObject } from 'react';
 
 import { Size } from '@type/style';
 
@@ -18,7 +18,8 @@ interface ContentImageSectionProps {
 export default function ContentImageSection({ contentImageHook, size }: ContentImageSectionProps) {
   const { contentImage, contentInputRef, removeImage, handleUploadImage } = contentImageHook;
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     contentInputRef.current && contentInputRef.current.click();
   };
 

@@ -107,7 +107,6 @@ export default function MyInfo() {
               <li>- {NICKNAME_POLICY.LETTER_AMOUNT}</li>
               <li>- {NICKNAME_POLICY.LIMIT_LETTER_TYPE}</li>
               <li>- {NICKNAME_POLICY.NO_DUPLICATION}</li>
-              <li>- {NICKNAME_POLICY.LIMIT_CHANGING}</li>
             </S.DescribeUl>
             <S.InputWrapper>
               <S.Input

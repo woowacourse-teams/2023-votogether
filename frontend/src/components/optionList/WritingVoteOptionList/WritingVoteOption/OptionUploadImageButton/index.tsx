@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { MouseEvent, useRef } from 'react';
 
 import photoIcon from '@assets/photo_white.svg';
 
@@ -17,7 +17,8 @@ export default function OptionUploadImageButton({
   const inputRef = useRef<HTMLInputElement>(null);
   const id = optionId.toString();
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     inputRef.current && inputRef.current.click();
   };
 

@@ -13,6 +13,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -206,25 +207,32 @@ public class Post extends BaseEntity {
             final List<String> postOptionContents,
             final List<String> oldPostOptionImageUrls,
             final List<String> postOptionImageUrls,
-            final LocalDateTime deadline
-    ) {
+            final LocalDateTime deadline,
+            final EntityManager entityManager
+            ) {
         this.postBody.update(postBody, oldContentImageUrl, contentImageUrls);
         this.postCategories.update(this, categories);
-        updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
+        updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls, entityManager);
         this.deadline = deadline;
     }
 
     private void updatePostOptions(
             final List<String> postOptionContents,
             final List<String> oldPostOptionImageUrls,
-            final List<String> postOptionImageUrls
+            final List<String> postOptionImageUrls,
+            final EntityManager entityManager
     ) {
         this.postOptions.clear();
-        this.postOptions = new PostOptions();
+        persistenceProgress(entityManager);
         mapPostOptionsByElements(
                 postOptionContents,
                 getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls)
         );
+    }
+
+    private void persistenceProgress(final EntityManager entityManager) {
+        entityManager.flush();
+        entityManager.clear();
     }
 
     private List<String> getPostOptionImageUrls(

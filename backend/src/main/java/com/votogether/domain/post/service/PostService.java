@@ -26,6 +26,7 @@ import com.votogether.domain.vote.repository.dto.VoteStatus;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.global.util.ImageUploader;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -53,20 +54,22 @@ public class PostService {
     private final PostOptionRepository postOptionRepository;
     private final CategoryRepository categoryRepository;
     private final VoteRepository voteRepository;
+    private final EntityManager entityManager;
 
     public PostService(
             final PostRepository postRepository,
             final PostOptionRepository postOptionRepository,
             final CategoryRepository categoryRepository,
-            final VoteRepository voteRepository
+            final VoteRepository voteRepository,
+            final EntityManager entityManager
     ) {
         this.postRepository = postRepository;
         this.postOptionRepository = postOptionRepository;
         this.categoryRepository = categoryRepository;
         this.voteRepository = voteRepository;
-
         this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
         initPostsVotedByMemberMapper();
+        this.entityManager = entityManager;
     }
 
     private void initPostsVotedByMemberMapper() {
@@ -349,7 +352,8 @@ public class PostService {
                 transformElements(request.postOptions(), PostOptionUpdateRequest::content),
                 transformElements(request.postOptions(), PostOptionUpdateRequest::imageUrl),
                 transformElements(optionImages, ImageUploader::upload),
-                request.deadline()
+                request.deadline(),
+                entityManager
         );
     }
 

@@ -53,6 +53,11 @@ export default function Select<T extends string>({
         <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
       </S.SelectedContainer>
       {isOpen && (
+        <S.ScreenReaderDirection aria-live="polite">
+          이 요소를 닫으려면 한번 더 클릭해주세요.
+        </S.ScreenReaderDirection>
+      )}
+      {isOpen && (
         <S.OptionListParent>
           <S.OptionListContainer>
             {optionKeyList.map((optionKey: T) => (

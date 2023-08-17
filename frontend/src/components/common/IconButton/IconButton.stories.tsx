@@ -21,3 +21,7 @@ export const Back: Story = {
 export const Search: Story = {
   render: () => <IconButton category="search" />,
 };
+
+export const Retry: Story = {
+  render: () => <IconButton category="retry" />,
+};

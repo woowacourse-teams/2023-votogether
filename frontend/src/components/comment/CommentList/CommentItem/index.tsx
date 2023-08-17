@@ -88,7 +88,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
     <S.Container>
       <S.Header>
         <S.UserContainer>
-          <S.Title>{member.nickname}</S.Title>
+          <S.Nickname>{member.nickname}</S.Nickname>
           <S.SubTitleContainer>
             <S.SubTitle>{createdAt}</S.SubTitle>
             {isEdit && <S.SubTitle>(수정됨)</S.SubTitle>}

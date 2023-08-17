@@ -13,7 +13,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -208,23 +207,27 @@ public class Post extends BaseEntity {
             final List<String> oldPostOptionImageUrls,
             final List<String> postOptionImageUrls,
             final LocalDateTime deadline
-            ) {
+    ) {
         this.postBody.update(postBody, oldContentImageUrl, contentImageUrls);
         this.postCategories.update(this, categories);
-        updatePostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
+        addAllPostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
         this.deadline = deadline;
     }
 
-    private void updatePostOptions(
+    private void addAllPostOptions(
             final List<String> postOptionContents,
             final List<String> oldPostOptionImageUrls,
             final List<String> postOptionImageUrls
     ) {
-        this.postOptions.clear();
-        mapPostOptionsByElements(
+        this.postOptions.addAll(
+                this,
                 postOptionContents,
                 getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls)
         );
+    }
+
+    public void postOptionsClear() {
+        this.postOptions.clear();
     }
 
     private List<String> getPostOptionImageUrls(

@@ -16,7 +16,6 @@ import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostOption;
-import com.votogether.domain.post.entity.PostOptions;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
@@ -337,12 +336,13 @@ public class PostService {
     ) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+
         post.validateExistVote();
         post.validateWriter(member);
         post.validateDeadLine();
         post.validateDeadLineToModify(request.deadline());
 
-        deleteAllPostOptionsByPost(post);
+        postOptionsInit(post);
         post.update(
                 toPostBody(request.title(), request.content()),
                 request.imageUrl(),
@@ -355,9 +355,9 @@ public class PostService {
         );
     }
 
-    private void deleteAllPostOptionsByPost(final Post post) {
-        final PostOptions postOptions = post.getPostOptions();
-        postOptionRepository.deleteAll(postOptions.getPostOptions());
+    private void postOptionsInit(final Post post) {
+        post.postOptionsClear();
+        postRepository.flush();
     }
 
     private <T, R> List<R> transformElements(final List<T> elements, final Function<T, R> process) {

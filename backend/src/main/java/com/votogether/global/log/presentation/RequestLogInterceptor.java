@@ -39,9 +39,11 @@ public class RequestLogInterceptor implements HandlerInterceptor {
         }
         final LogContext logContext = new LogContext(LogId.from(memberIdHolder));
         logContextHolder.setLogContext(logContext);
-        final RequestLog requestLog = new RequestLog(logContext.getLogId(), request);
-        requestLog.put("Controller Method", handlerMethod((HandlerMethod) handler));
-        log.info("[Web Request START] : [\n{}]", requestLog);
+        if (handler instanceof HandlerMethod) {
+            final RequestLog requestLog = new RequestLog(logContext.getLogId(), request);
+            requestLog.put("Controller Method", handlerMethod((HandlerMethod) handler));
+            log.info("[Web Request START] : [\n{}]", requestLog);
+        }
         return true;
     }
 

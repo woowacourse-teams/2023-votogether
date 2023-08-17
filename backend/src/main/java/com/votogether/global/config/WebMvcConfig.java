@@ -3,6 +3,7 @@ package com.votogether.global.config;
 import com.votogether.global.jwt.JwtAuthenticationFilter;
 import com.votogether.global.jwt.JwtAuthorizationArgumentResolver;
 import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.global.log.context.MemberIdHolder;
 import com.votogether.global.log.presentation.RequestLogInterceptor;
 import com.votogether.global.log.presentation.RequestResponseCacheFilter;
 import java.util.List;
@@ -20,23 +21,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    private final MemberIdHolder memberIdHolder;
     private final TokenProcessor tokenProcessor;
     private final RequestLogInterceptor requestLogInterceptor;
     private final JwtAuthorizationArgumentResolver jwtAuthorizationArgumentResolver;
 
     @Bean
-    public FilterRegistrationBean<JwtAuthenticationFilter> jwtAuthenticationFilter() {
-        final FilterRegistrationBean<JwtAuthenticationFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new JwtAuthenticationFilter(tokenProcessor));
+    public FilterRegistrationBean<RequestResponseCacheFilter> requestResponseCacheFilter() {
+        final FilterRegistrationBean<RequestResponseCacheFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(new RequestResponseCacheFilter());
         filterRegistrationBean.addUrlPatterns("/*");
         filterRegistrationBean.setOrder(1);
         return filterRegistrationBean;
     }
 
     @Bean
-    public FilterRegistrationBean<RequestResponseCacheFilter> requestResponseCacheFilter() {
-        final FilterRegistrationBean<RequestResponseCacheFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new RequestResponseCacheFilter());
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtAuthenticationFilter() {
+        final FilterRegistrationBean<JwtAuthenticationFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(new JwtAuthenticationFilter(memberIdHolder, tokenProcessor));
         filterRegistrationBean.addUrlPatterns("/*");
         filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;

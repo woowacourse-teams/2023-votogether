@@ -52,6 +52,10 @@ public class RequestLog {
     public String parsePathVariables(final HttpServletRequest request) {
         final Map<String, String> pathVariables =
                 (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
+        if (pathVariables == null || pathVariables.isEmpty()) {
+            return "";
+        }
         return pathVariables.keySet()
                 .stream()
                 .map(key -> "\t\t[%s] = [%s]".formatted(key, pathVariables.get(key)))

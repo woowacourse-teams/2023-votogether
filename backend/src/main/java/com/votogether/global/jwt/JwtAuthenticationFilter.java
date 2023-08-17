@@ -1,5 +1,6 @@
 package com.votogether.global.jwt;
 
+import com.votogether.global.log.context.MemberIdHolder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             )
     );
 
+    private final MemberIdHolder memberIdHolder;
     private final TokenProcessor tokenProcessor;
 
     @Override
@@ -51,6 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenWithoutType = tokenProcessor.resolveToken(token);
         tokenProcessor.validateToken(tokenWithoutType);
+        final TokenPayload tokenPayload = tokenProcessor.parseToken(tokenWithoutType);
+        memberIdHolder.setId(tokenPayload.memberId());
         filterChain.doFilter(request, response);
     }
 

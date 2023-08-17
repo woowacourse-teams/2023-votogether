@@ -121,12 +121,12 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     const formData = new FormData();
 
     const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
-      return { content: text, imageUrl: imageUrl };
+      return { content: text, imageUrl: convertServerUrlToImageUrl(imageUrl) };
     });
 
     const imageUrlList = [
       convertServerUrlToImageUrl(contentImageHook.contentImage),
-      ...writingOptionHook.optionList.map(option => convertServerUrlToImageUrl(option.imageUrl)),
+      ...writingOptionList.map(option => option.imageUrl),
     ];
 
     //예외처리
@@ -171,7 +171,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       const updatedPostTexts = {
         categoryIds: selectedOptionList.map(option => option.id),
         title: writingTitle,
-        imageUrl: contentImageHook.contentImage,
+        imageUrl: convertServerUrlToImageUrl(contentImageHook.contentImage),
         content: writingContent,
         postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),

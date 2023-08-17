@@ -10,6 +10,7 @@ interface WritingVoteOptionProps {
   optionId: number;
   text: string;
   isDeletable: boolean;
+  ariaLabel: string;
   handleUpdateOptionChange: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   handleDeleteOptionClick: () => void;
   handleRemoveImageClick: () => void;
@@ -23,6 +24,7 @@ export default function WritingVoteOption({
   optionId,
   text,
   isDeletable,
+  ariaLabel,
   handleUpdateOptionChange,
   handleDeleteOptionClick,
   handleRemoveImageClick,
@@ -30,7 +32,7 @@ export default function WritingVoteOption({
   imageUrl,
 }: WritingVoteOptionProps) {
   return (
-    <S.Container>
+    <S.Container aria-label={ariaLabel}>
       <S.CancelButtonWrapper>
         {isDeletable && (
           <OptionCancelButton title="선택지 삭제하기" onClick={handleDeleteOptionClick} />

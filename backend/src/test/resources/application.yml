@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=MySQL
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 50
+
+    hibernate:
+      ddl-auto: create
+
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+  h2:
+    console:
+      enabled: false
+      path: /h2-console
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+
+server:
+  forward-headers-strategy: FRAMEWORK
+
+springdoc:
+  swagger-ui:
+    enabled: false
+
+votogether:
+  openapi:
+    dev-url: http://localhost:8080
+
+oauth:
+  kakao:
+    info:
+      grant_type: aaaaaaaaaaaaaaaa
+      client_id: bbbbbbbbbbbbbbbbbbbbbbbbbbbb
+      client_secret: cccccccccccccccccccccccccccccccccccccc
+      redirect_uri: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+jwt:
+  token:
+    secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
+    expiration-time: 222222

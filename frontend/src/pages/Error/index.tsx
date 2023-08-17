@@ -14,7 +14,7 @@ export default function Error({ message }: { message?: string }) {
       <S.Wrapper>
         <S.Description>{message ? message : '요청 중 오류가 발생했습니다.'}</S.Description>
         <LogoButton content="icon" style={{ width: '100px', height: '100px' }} />
-        <S.Text>오류가 지속되는 경우 votogether@gmail.com 로 문의해주세요.</S.Text>
+        <S.Text>오류가 지속되는 경우 votogether2023@gmail.com 로 문의해주세요.</S.Text>
         <S.ButtonWrapper>
           <SquareButton
             theme="fill"

@@ -86,7 +86,12 @@ export default function PostDetail() {
           openToast('게시물을 신고했습니다.');
         })
         .catch(e => {
-          openToast(e instanceof Error ? e.message : '게시물 신고가 실패했습니다');
+          if (e instanceof Error) {
+            const errorResposne = JSON.parse(e.message);
+            openToast(errorResposne.message);
+            return;
+          }
+          openToast('게시글 신고가 실패했습니다.');
         });
     },
     reportNickname: async (reason: string) => {
@@ -101,7 +106,12 @@ export default function PostDetail() {
           openToast('작성자 닉네임을 신고했습니다.');
         })
         .catch(e => {
-          openToast(e instanceof Error ? e.message : '작성자 닉네임 신고가 실패했습니다.');
+          if (e instanceof Error) {
+            const errorResposne = JSON.parse(e.message);
+            openToast(errorResposne.message);
+            return;
+          }
+          openToast('작성자 닉네임 신고가 실패했습니다.');
         });
     },
   };

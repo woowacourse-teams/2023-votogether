@@ -45,3 +45,8 @@ export const Button = styled.button`
 
   cursor: pointer;
 `;
+
+export const ScreenReaderDirection = styled.p`
+  position: absolute;
+  left: -9999px;
+`;

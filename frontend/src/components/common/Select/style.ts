@@ -84,3 +84,8 @@ export const Image = styled.img<{ $isSelected: boolean }>`
   border-left: 1px solid var(--slate);
   padding-left: 8px;
 `;
+
+export const ScreenReaderDirection = styled.p`
+  position: absolute;
+  left: -9999px;
+`;

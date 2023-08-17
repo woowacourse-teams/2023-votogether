@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const ProfileContainer = styled.div`
+export const ProfileContainer = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: space-around;

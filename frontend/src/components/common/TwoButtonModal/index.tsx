@@ -41,7 +41,7 @@ export default function TwoButtonModal({
   return (
     <S.Container ref={BackDropRef}>
       <S.ModalContainer>
-        <S.Title>{title}</S.Title>
+        <S.Title tabIndex={0}>{title}</S.Title>
         {children}
         <S.ButtonContainer>
           <S.ButtonWrapper>

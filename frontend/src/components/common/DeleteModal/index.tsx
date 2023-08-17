@@ -38,7 +38,9 @@ export default function DeleteModal({
         handleClick: handleCancelClick,
       }}
     >
-      <S.Description>{`${TARGET_FOR_DELETE[target]} 삭제하시겠습니까?\n${TARGET_FOR_DELETE[target]} 삭제하면 취소할 수 없습니다.`}</S.Description>
+      <S.Description
+        tabIndex={0}
+      >{`${TARGET_FOR_DELETE[target]} 삭제하시겠습니까?\n${TARGET_FOR_DELETE[target]} 삭제하면 취소할 수 없습니다.`}</S.Description>
     </TwoButtonModal>
   );
 }

@@ -48,7 +48,7 @@
   }
   cursor: pointer;
 `,Content=styled_components_browser_esm.ZP.div`
-  display: ${props=>props.$isOpen?"flex":"none"};
+  display: ${props=>props.$isOpen?"block":"none"};
   justify-content: space-between;
 
   border: 1px solid #f2f2f2;
@@ -143,4 +143,4 @@
       background-position-x: -200%;
     }
   `}}},"./src/assets/chevron-down.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-down.f97a5bb1.svg"},"./src/assets/chevron-up.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-up.a1eb858b.svg"}}]);
-//# sourceMappingURL=components-common-Accordion-Accordion-stories.cc752c67.iframe.bundle.js.map
+//# sourceMappingURL=components-common-Accordion-Accordion-stories.fc8f8ba7.iframe.bundle.js.map

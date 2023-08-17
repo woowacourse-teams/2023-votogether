@@ -32,11 +32,13 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
+                .distinct()
                 .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(
                         categoryIdEq(categoryId),
-                        deadlineEq(postClosingType)
+                        deadlineEq(postClosingType),
+                        post.isHidden.eq(false)
                 )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())
@@ -58,7 +60,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .where(
                         categoryIdEq(categoryId),
                         deadlineEq(postClosingType),
-                        post.writer.eq(writer)
+                        post.writer.eq(writer),
+                        post.isHidden.eq(false)
                 )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())
@@ -104,12 +107,14 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     ) {
         return jpaQueryFactory
                 .selectFrom(post)
+                .distinct()
                 .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(
                         containsKeywordInTitleOrContent(keyword),
                         categoryIdEq(categoryId),
-                        deadlineEq(postClosingType)
+                        deadlineEq(postClosingType),
+                        post.isHidden.eq(false)
                 )
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())

@@ -6,6 +6,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,19 @@ public class PostCategories {
                 .post(post)
                 .category(category)
                 .build();
+    }
+
+    public void update(final Post post, final List<Category> categories) {
+        postCategories.removeIf(Predicate.not(postCategory -> categories.contains(postCategory.getCategory())));
+
+        categories.stream()
+                .filter(this::isCategoryNotPresent)
+                .forEach(category -> this.postCategories.add(createPostCategory(post, category)));
+    }
+
+    private boolean isCategoryNotPresent(Category category) {
+        return this.postCategories.stream()
+                .noneMatch(postCategory -> postCategory.getCategory().equals(category));
     }
 
 }

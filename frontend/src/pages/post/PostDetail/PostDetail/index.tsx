@@ -55,6 +55,7 @@ export default function PostDetail() {
     moveWritePostPage: () => {
       if (postDataFallback.voteInfo.allPeopleCount) {
         openToast('투표한 사용자가 있어 글 수정이 불가합니다.');
+        return;
       }
 
       navigate(`/posts/write/${postId}`);

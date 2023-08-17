@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 @Schema(description = "게시글 작성 요청")
 @Builder
 public record PostCreateRequest(
-        @Schema(description = "카테고리의 여러 아이디", example = "[0, 2]")
+        @Schema(description = "카테고리의 여러 아이디", example = "[1, 3]")
         @Size(min = 1, message = "게시글에 해당하는 카테고리는 최소 1개 이상이어야 합니다.")
         List<Long> categoryIds,
 

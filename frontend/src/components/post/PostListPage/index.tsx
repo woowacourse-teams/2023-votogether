@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useDrawer } from '@hooks/useDrawer';
@@ -22,10 +22,6 @@ import * as S from './style';
 export default function PostListPage() {
   const navigate = useNavigate();
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
-
-  useEffect(() => {
-    window.scroll({ top: 0, behavior: 'auto' });
-  }, []);
 
   return (
     <S.Container>

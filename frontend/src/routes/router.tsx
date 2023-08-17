@@ -12,6 +12,8 @@ import PostDetailPage from '@pages/post/PostDetail';
 import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
 import VoteStatisticsPage from '@pages/VoteStatisticsPage';
 
+import ScrollToTop from '@components/common/ScrollToTop';
+
 import { PATH } from '@constants/path';
 
 import PrivateRoute from './PrivateRoute';
@@ -21,6 +23,7 @@ const router = createBrowserRouter([
     path: PATH.HOME,
     element: (
       <PrivateRoute isGuestAllowed={true}>
+        <ScrollToTop />
         <Home />
       </PrivateRoute>
     ),
@@ -30,6 +33,7 @@ const router = createBrowserRouter([
         path: 'search',
         element: (
           <PrivateRoute isGuestAllowed={true}>
+            <ScrollToTop />
             <Home />
           </PrivateRoute>
         ),
@@ -54,6 +58,7 @@ const router = createBrowserRouter([
         path: 'write',
         element: (
           <PrivateRoute>
+            <ScrollToTop />
             <CreatePostPage />
           </PrivateRoute>
         ),
@@ -62,6 +67,7 @@ const router = createBrowserRouter([
         path: 'write/:postId',
         element: (
           <PrivateRoute>
+            <ScrollToTop />
             <EditPostPage />
           </PrivateRoute>
         ),
@@ -70,6 +76,7 @@ const router = createBrowserRouter([
         path: ':postId',
         element: (
           <PrivateRoute isGuestAllowed={true}>
+            <ScrollToTop />
             <PostDetailPage />
           </PrivateRoute>
         ),
@@ -78,6 +85,7 @@ const router = createBrowserRouter([
         path: 'result/:postId',
         element: (
           <PrivateRoute>
+            <ScrollToTop />
             <VoteStatisticsPage />
           </PrivateRoute>
         ),
@@ -86,6 +94,7 @@ const router = createBrowserRouter([
         path: 'category/:categoryId',
         element: (
           <PrivateRoute isGuestAllowed={true}>
+            <ScrollToTop />
             <Home />
           </PrivateRoute>
         ),
@@ -100,6 +109,7 @@ const router = createBrowserRouter([
         path: 'myPage',
         element: (
           <PrivateRoute>
+            <ScrollToTop />
             <MyInfo />
           </PrivateRoute>
         ),
@@ -108,6 +118,7 @@ const router = createBrowserRouter([
         path: 'posts',
         element: (
           <PrivateRoute>
+            <ScrollToTop />
             <Home />
           </PrivateRoute>
         ),
@@ -116,6 +127,7 @@ const router = createBrowserRouter([
         path: 'votes',
         element: (
           <PrivateRoute>
+            <ScrollToTop />
             <Home />
           </PrivateRoute>
         ),

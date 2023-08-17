@@ -15,7 +15,7 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
-import { scrollToTop } from '@utils/scrollToTop';
+import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
 
@@ -44,7 +44,7 @@ export default function PostListPage() {
         </Suspense>
       </ErrorBoundary>
       <S.ButtonContainer>
-        <UpButton onClick={scrollToTop} />
+        <UpButton onClick={smoothScrollToTop} />
         <S.AddButtonWrapper to={PATH.POST_WRITE}>
           <AddButton size="lg" />
         </S.AddButtonWrapper>

@@ -106,7 +106,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
       )}
       <S.ButtonContainer>
         <S.TopButtonWrapper>
-          <SquareButton onClick={scrollToTop} theme="blank">
+          <SquareButton onClick={scrollToTop} theme="blank" aria-label="최상단으로 이동">
             TOP
           </SquareButton>
         </S.TopButtonWrapper>

@@ -10,13 +10,13 @@ export default meta;
 type Story = StoryObj<typeof AddButton>;
 
 export const SizeS: Story = {
-  render: () => <AddButton size="sm" />,
+  render: () => <AddButton size="sm" aria-label="글 작성하기" />,
 };
 
 export const SizeM: Story = {
-  render: () => <AddButton size="md" />,
+  render: () => <AddButton size="md" aria-label="글 작성하기" />,
 };
 
 export const SizeL: Story = {
-  render: () => <AddButton size="lg" />,
+  render: () => <AddButton size="lg" aria-label="글 작성하기" />,
 };

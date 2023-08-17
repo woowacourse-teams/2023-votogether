@@ -13,11 +13,11 @@ const contentCategory: Record<Content, { name: string; url: string }> = {
     url: logo,
   },
   text: {
-    name: 'votogether',
+    name: '보투게더 아이콘',
     url: votogether,
   },
   full: {
-    name: 'votogether',
+    name: '보투게더 아이콘',
     url: '',
   },
 };
@@ -34,14 +34,14 @@ export default function LogoButton({ content, ...rest }: LogoButtonProps) {
     return (
       <S.Button content={content} aria-label={ariaLabelText} {...rest}>
         <img src={logo} alt="로고 아이콘" />
-        <img src={votogether} alt="VoTogether" />
+        <img src={votogether} alt="보투게더 아이콘" />
       </S.Button>
     );
   }
 
   return (
     <S.Button content={content} aria-label={ariaLabelText} {...rest}>
-      <img src={src} alt="로고 아이콘" />
+      <img src={src} alt="보투게더 아이콘" />
     </S.Button>
   );
 }

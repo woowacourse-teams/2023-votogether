@@ -59,7 +59,12 @@ export default function InnerHeaderPart({
       <S.HeaderWrapper>
         {!isWriter ? (
           <>
-            <HeaderTextButton onClick={toggleComponent}>신고</HeaderTextButton>
+            <HeaderTextButton
+              aria-label={isOpen ? '게시글 신고 메뉴 닫기' : '게시글 신고 메뉴 열기'}
+              onClick={toggleComponent}
+            >
+              신고
+            </HeaderTextButton>
             {isOpen && (
               <S.MenuWrapper>
                 <PostMenu menuList={menuList} handleMenuClick={handleMenuClick} />

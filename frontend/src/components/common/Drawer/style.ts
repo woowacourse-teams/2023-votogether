@@ -2,6 +2,12 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 99999px;
+`;
+
 export const Dialog = styled.dialog<{
   $width: string;
   $placement: 'left' | 'right';

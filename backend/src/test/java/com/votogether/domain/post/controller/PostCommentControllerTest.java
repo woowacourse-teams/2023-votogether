@@ -17,7 +17,6 @@ import com.votogether.domain.post.dto.response.comment.CommentResponse;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.global.exception.GlobalExceptionHandler;
-import com.votogether.global.jwt.JwtAuthenticationFilter;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
 import com.votogether.test.annotation.ControllerTest;
@@ -59,7 +58,6 @@ class PostCommentControllerTest extends ControllerTest {
                 MockMvcBuilders
                         .standaloneSetup(new PostCommentController(postCommentService))
                         .setControllerAdvice(GlobalExceptionHandler.class)
-                        .addFilters(new JwtAuthenticationFilter(tokenProcessor))
         );
     }
 

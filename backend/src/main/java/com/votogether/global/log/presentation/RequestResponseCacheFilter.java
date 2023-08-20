@@ -1,5 +1,6 @@
 package com.votogether.global.log.presentation;
 
+import com.votogether.global.util.MultipartUtils;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,10 +18,15 @@ public class RequestResponseCacheFilter implements Filter {
             throws IOException, ServletException {
         final ContentCachingResponseWrapper contentCachingResponse =
                 new ContentCachingResponseWrapper((HttpServletResponse) response);
-        final RepeatReadableRequestWrapper repeatReadableRequest =
-                new RepeatReadableRequestWrapper((HttpServletRequest) request);
-        chain.doFilter(repeatReadableRequest, contentCachingResponse);
+        chain.doFilter(getRequest(request), contentCachingResponse);
         contentCachingResponse.copyBodyToResponse();
+    }
+
+    private ServletRequest getRequest(final ServletRequest request) {
+        if (MultipartUtils.isMultipartRequest((HttpServletRequest) request)) {
+            return request;
+        }
+        return new RepeatReadableRequestWrapper((HttpServletRequest) request);
     }
 
 }

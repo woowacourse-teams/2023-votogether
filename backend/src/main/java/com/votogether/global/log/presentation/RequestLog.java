@@ -1,5 +1,6 @@
 package com.votogether.global.log.presentation;
 
+import com.votogether.global.util.MultipartUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
@@ -72,6 +73,9 @@ public class RequestLog {
     }
 
     public String parseBody(final HttpServletRequest request) {
+        if (MultipartUtils.isMultipartRequest(request)) {
+            return "MULTIPART_FORM_DATA_VALUE";
+        }
         final String body = MessageBodyReader.readBody(request);
         final String contentType = request.getContentType();
         if (!StringUtils.hasText(contentType)) {

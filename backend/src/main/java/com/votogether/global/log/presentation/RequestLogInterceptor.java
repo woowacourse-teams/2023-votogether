@@ -5,7 +5,7 @@ import com.votogether.global.log.context.LogContextHolder;
 import com.votogether.global.log.context.LogId;
 import com.votogether.global.log.context.MemberIdHolder;
 import com.votogether.global.log.context.QueryCount;
-import com.votogether.global.util.CorsUtil;
+import com.votogether.global.util.CorsUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class RequestLogInterceptor implements HandlerInterceptor {
             final HttpServletResponse response,
             final Object handler
     ) {
-        if (CorsUtil.isPreflightRequest(request)) {
+        if (CorsUtils.isPreflightRequest(request)) {
             return true;
         }
         final LogContext logContext = new LogContext(LogId.from(memberIdHolder));
@@ -60,7 +60,7 @@ public class RequestLogInterceptor implements HandlerInterceptor {
             final Object handler,
             final Exception ex
     ) {
-        if (CorsUtil.isPreflightRequest(request)) {
+        if (CorsUtils.isPreflightRequest(request)) {
             return;
         }
         final LogContext logContext = logContextHolder.getLogContext();

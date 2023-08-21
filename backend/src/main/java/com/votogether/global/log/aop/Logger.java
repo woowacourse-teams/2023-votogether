@@ -23,15 +23,15 @@ public class Logger {
         final LogContext logContext = logContextHolder.getLogContext();
         logContextHolder.increaseCall();
         log.info("[{}]  {}",
-                formattedLogId(logContext.getLogId()),
+                logContext.getLogId(),
                 formattedClassAndMethod(logContext.depthPrefix(CALL_PREFIX), className, methodName)
         );
     }
 
     public void methodReturn(final String className, final String methodName) {
         final LogContext logContext = logContextHolder.getLogContext();
-        log.info("[{}]  {}   time={}ms  ",
-                formattedLogId(logContext.getLogId()),
+        log.info("[{}]  {}  time={}ms",
+                logContext.getLogId(),
                 formattedClassAndMethod(logContext.depthPrefix(RETURN_PREFIX), className, methodName),
                 logContext.totalTakenTime()
         );
@@ -40,8 +40,8 @@ public class Logger {
 
     public void throwException(final String className, final String methodName, final Throwable exception) {
         final LogContext logContext = logContextHolder.getLogContext();
-        log.warn("[{}]  {}   time={}ms,  throws {}  ",
-                formattedLogId(logContext.getLogId()),
+        log.warn("[{}]  {}  time={}ms,  throws {}",
+                logContext.getLogId(),
                 formattedClassAndMethod(logContext.depthPrefix(EX_PREFIX), className, methodName),
                 logContext.totalTakenTime(),
                 exception.getClass().getSimpleName()
@@ -49,12 +49,8 @@ public class Logger {
         logContextHolder.decreaseCall();
     }
 
-    private String formattedLogId(final String logId) {
-        return "%19s".formatted(logId);
-    }
-
     private String formattedClassAndMethod(final String prefix, final String className, final String methodName) {
-        return String.format("%-80s", prefix + className + DOT + methodName + PARENTHESES);
+        return prefix + className + DOT + methodName + PARENTHESES;
     }
 
 }

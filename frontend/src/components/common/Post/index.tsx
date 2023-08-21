@@ -50,7 +50,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
 
   const handleVoteClick = (newOptionId: number) => {
     if (!loggedInfo.isLoggedIn) {
-      openToast('투표를 하려면 로그인 후에 이용하실 수 있습니다.');
+      openToast('투표는 로그인 후에 이용하실 수 있습니다.');
       return;
     }
 
@@ -59,7 +59,10 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       return;
     }
 
-    if (writer.nickname === loggedInfo.userInfo?.nickname) return;
+    if (writer.nickname === loggedInfo.userInfo?.nickname) {
+      openToast('내가 쓴 글에는 투표를 할 수 없습니다.');
+      return;
+    }
 
     if (voteInfo.selectedOptionId === newOptionId) return;
 

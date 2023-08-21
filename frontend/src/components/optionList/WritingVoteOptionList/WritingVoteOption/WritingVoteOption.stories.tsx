@@ -12,6 +12,7 @@ type Story = StoryObj<typeof WritingVoteOption>;
 export const IsDeletable: Story = {
   render: () => (
     <WritingVoteOption
+      ariaLabel=""
       imageUrl=""
       handleUpdateOptionChange={() => {}}
       handleDeleteOptionClick={() => {}}
@@ -28,6 +29,7 @@ export const IsDeletable: Story = {
 export const IsNotDeletable: Story = {
   render: () => (
     <WritingVoteOption
+      ariaLabel=""
       imageUrl=""
       handleUpdateOptionChange={() => {}}
       handleDeleteOptionClick={() => {}}
@@ -44,6 +46,7 @@ export const IsNotDeletable: Story = {
 export const ShowImage: Story = {
   render: () => (
     <WritingVoteOption
+      ariaLabel=""
       handleUpdateOptionChange={() => {}}
       handleDeleteOptionClick={() => {}}
       handleRemoveImageClick={() => {}}

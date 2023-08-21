@@ -22,11 +22,19 @@ import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { PATH } from '@constants/path';
-import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
+import {
+  CONTENT_PLACEHOLDER,
+  POST_DEADLINE_POLICY,
+  POST_TITLE_POLICY,
+} from '@constants/policyMessage';
+import { CATEGORY_COUNT_LIMIT, IMAGE_BASE_URL, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
-import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
+import {
+  convertImageUrlToServerUrl,
+  convertServerUrlToImageUrl,
+} from '@utils/post/convertImageUrlToServerUrl';
 import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
@@ -56,6 +64,9 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   } = data ?? {};
 
   const navigate = useNavigate();
+  const contentImageHook = useContentImage(
+    serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
+  );
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
@@ -63,9 +74,6 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     }))
   );
 
-  const contentImageHook = useContentImage(
-    serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
-  );
   const { isToastOpen, openToast, toastMessage } = useToast();
   const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정' | null>(
     getSelectedTimeOption(calculateDeadlineTime(createTime, deadline))
@@ -117,10 +125,27 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     e.preventDefault();
     const formData = new FormData();
 
+    const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
+      return { content: text, imageUrl: convertServerUrlToImageUrl(imageUrl) };
+    });
+
     const imageUrlList = [
-      contentImageHook.contentImage,
-      ...writingOptionHook.optionList.map(option => option.imageUrl),
+      convertServerUrlToImageUrl(contentImageHook.contentImage),
+      ...writingOptionList.map(option => option.imageUrl),
     ];
+
+    //예외처리
+    const { selectedOptionList } = multiSelectHook;
+    if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
+    if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
+    if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
+    if (writingContent.trim() === '') return openToast('내용은 필수로 입력해야 합니다.');
+    if (writingOptionList.length < 2) return openToast('선택지는 최소 2개 입력해주세요.');
+    if (writingOptionList.length > 5) return openToast('선택지는 최대 5개 입력할 수 있습니다.');
+    if (writingOptionList.some(option => option.content.trim() === ''))
+      return openToast('선택지에 글을 입력해주세요.');
+    if (Object.values(time).reduce((a, b) => a + b, 0) < 1)
+      return openToast('시간은 필수로 입력해야 합니다.');
 
     if (e.target instanceof HTMLFormElement) {
       const optionImageFileInputs =
@@ -131,13 +156,16 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       fileInputList.forEach((item, index) => {
         if (!item.files) return;
 
-        if (imageUrlList[index] === '') {
-          index === 0
+        if (index === 0) {
+          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
+          !imageUrlList[index] || imageUrlList[index] === serverImageUrl
             ? contentImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
-            : optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'));
+            : contentImageFileList.push(item.files[0]);
         } else {
-          index === 0
-            ? contentImageFileList.push(item.files[0])
+          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
+          !imageUrlList[index] ||
+          imageUrlList[index] === serverVoteInfo?.options[index - 1].imageUrl
+            ? optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
             : optionImageFileList.push(item.files[0]);
         }
       });
@@ -145,27 +173,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       contentImageFileList.map(file => formData.append('contentImages', file));
       optionImageFileList.map(file => formData.append('optionImages', file));
 
-      const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
-        return { content: text, imageUrl: imageUrl };
-      });
-
-      //예외처리
-      const { selectedOptionList } = multiSelectHook;
-      if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
-      if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
-      if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
-      if (writingContent.trim() === '') return openToast('내용은 필수로 입력해야 합니다.');
-      if (writingOptionList.length < 2) return openToast('선택지는 최소 2개 입력해주세요.');
-      if (writingOptionList.length > 5) return openToast('선택지는 최대 5개 입력할 수 있습니다.');
-      if (writingOptionList.some(option => option.content.trim() === ''))
-        return openToast('선택지에 글을 입력해주세요.');
-      if (Object.values(time).reduce((a, b) => a + b, 0) < 1)
-        return openToast('시간은 필수로 입력해야 합니다.');
-
       const updatedPostTexts = {
         categoryIds: selectedOptionList.map(option => option.id),
         title: writingTitle,
-        imageUrl: contentImageHook.contentImage,
+        imageUrl: convertServerUrlToImageUrl(contentImageHook.contentImage),
         content: writingContent,
         postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),
@@ -201,7 +212,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleTitleChange(e, POST_TITLE)
               }
-              placeholder="제목을 입력해주세요"
+              placeholder={POST_TITLE_POLICY.DEFAULT}
               maxLength={POST_TITLE.MAX_LENGTH}
               minLength={POST_TITLE.MIN_LENGTH}
               required
@@ -211,7 +222,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 handleContentChange(e, POST_CONTENT)
               }
-              placeholder="내용을 입력해주세요"
+              placeholder={CONTENT_PLACEHOLDER}
               maxLength={POST_CONTENT.MAX_LENGTH}
               minLength={POST_CONTENT.MIN_LENGTH}
               required
@@ -224,18 +235,31 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             <S.OptionListWrapper>
               <WritingVoteOptionList writingOptionHook={writingOptionHook} />
             </S.OptionListWrapper>
-            <S.Deadline>
-              <S.DeadlineDescription>
+            <S.Deadline aria-label="마감시간 설정">
+              <S.DeadlineDescription
+                aria-label={getDeadlineTime({
+                  hour: time.hour,
+                  day: time.day,
+                  minute: time.minute,
+                })}
+                aria-live="polite"
+              >
                 {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
-                  <S.Description>
+                  <S.Description tabIndex={0}>
                     현재 시간으로부터 글 작성일({createTime})로부터 3일 이내 (
                     {addTimeToDate({ day: 3, hour: 0, minute: 0 }, baseTime)})까지만 선택
                     가능합니다.
                   </S.Description>
                 )}
-                {data && <S.Description>* 작성일시로부터 마감시간이 계산됩니다. </S.Description>}
-                {data && <S.Description>* 기존 마감 시간은 {deadline}입니다. </S.Description>}
+                {data && (
+                  <S.Description tabIndex={0}>
+                    * 작성일시로부터 마감시간이 계산됩니다.{' '}
+                  </S.Description>
+                )}
+                {data && (
+                  <S.Description tabIndex={0}>* 기존 마감 시간은 {deadline}입니다. </S.Description>
+                )}
               </S.DeadlineDescription>
               <S.ButtonWrapper>
                 {DEADLINE_OPTION.map(option => (
@@ -261,24 +285,38 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               </S.ButtonWrapper>
             </S.Deadline>
             <S.SaveButtonWrapper>
-              <SquareButton theme="fill" type="submit" form="form-post">
+              <SquareButton
+                aria-label="글쓰기가 저장됩니다. 저장이 완료되면 메인화면으로 이동됩니다."
+                theme="fill"
+                type="submit"
+                form="form-post"
+              >
                 저장
               </SquareButton>
             </S.SaveButtonWrapper>
           </S.RightSide>
         </S.Wrapper>
         {isOpen && (
-          <Modal size="sm" onModalClose={closeModal}>
+          <Modal size="sm" onModalClose={closeModal} aria-label="마감시간 설정 모달">
             <>
               <S.ModalHeader>
                 <h3>마감 시간 선택</h3>
-                <S.CloseButton onClick={closeModal}>X</S.CloseButton>
+                <S.CloseButton onClick={closeModal} aria-label="마감시간 설정 모달 끄기">
+                  X
+                </S.CloseButton>
               </S.ModalHeader>
               <S.ModalBody>
-                <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
+                <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
+                  {POST_DEADLINE_POLICY.DEFAULT}
+                </S.Description>
                 <TimePickerOptionList time={time} setTime={setTime} />
                 <S.ResetButtonWrapper>
-                  <SquareButton onClick={handleResetButton} type="button" theme="blank">
+                  <SquareButton
+                    aria-label="마감시간 초기화"
+                    onClick={handleResetButton}
+                    type="button"
+                    theme="blank"
+                  >
                     초기화
                   </SquareButton>
                 </S.ResetButtonWrapper>

@@ -42,7 +42,7 @@ export const REQUEST_POST_KIND_URL = {
 
 export const SEARCH_KEYWORD = 'keyword';
 
-export const MAX_FILE_SIZE = 5000000;
+export const MAX_FILE_SIZE = 1500000;
 
 export const POST_TITLE = {
   MAX_LENGTH: 100,
@@ -66,4 +66,4 @@ export const DEFAULT_KEYWORD = '';
 
 export const CATEGORY_COUNT_LIMIT = 3;
 
-export const IMAGE_BASE_URL = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
+export const IMAGE_BASE_URL = `${process.env.VOTOGETHER_BASE_URL.replace(/api\./, '')}/`;

@@ -64,7 +64,6 @@ public class PostService {
         this.postOptionRepository = postOptionRepository;
         this.categoryRepository = categoryRepository;
         this.voteRepository = voteRepository;
-
         this.postsVotedByMemberMapper = new EnumMap<>(PostClosingType.class);
         initPostsVotedByMemberMapper();
     }
@@ -336,11 +335,13 @@ public class PostService {
     ) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BadRequestException(PostExceptionType.POST_NOT_FOUND));
+
         post.validateExistVote();
         post.validateWriter(member);
         post.validateDeadLine();
         post.validateDeadLineToModify(request.deadline());
 
+        postOptionsInit(post);
         post.update(
                 toPostBody(request.title(), request.content()),
                 request.imageUrl(),
@@ -351,6 +352,11 @@ public class PostService {
                 transformElements(optionImages, ImageUploader::upload),
                 request.deadline()
         );
+    }
+
+    private void postOptionsInit(final Post post) {
+        post.postOptionsClear();
+        postRepository.flush();
     }
 
     private <T, R> List<R> transformElements(final List<T> elements, final Function<T, R> process) {

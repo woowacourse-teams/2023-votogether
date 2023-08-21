@@ -40,13 +40,10 @@ export const CategoryItem = styled.div`
   align-items: center;
 `;
 
-export const Circle = styled.button<{ $isFavorite: boolean }>`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+export const Circle = styled.button`
+  width: 17px;
+  height: 17px;
   margin-right: 12px;
-
-  background-color: ${({ $isFavorite }) => ($isFavorite ? 'var(--primary-color)' : '#CCCCCC')};
 
   cursor: pointer;
 `;

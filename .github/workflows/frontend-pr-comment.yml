@@ -1,0 +1,55 @@
+name: Pull request comment
+on:
+  issue_comment:
+    types: [created, edited, deleted]
+  # Note: This event will only trigger a workflow run if the workflow file is on the default branch.
+
+jobs:
+  pull_request_comment:
+    # This job only runs for pull request comments
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get PR Title
+        id: get-pr-title
+        run: |
+          PR_NUMBER="${{ github.event.issue.number }}"
+          PR_TITLE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                     "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" | \
+                     jq -r '.title')
+          echo "::set-output name=pr_title::$PR_TITLE"
+
+      - name: Detect PR Comment Trigger Keyword(review)
+        if: contains(github.event.comment.body, 'review-complete') # check the comment if it contains the keywords        id: slack
+        id: review
+        run: |
+          PR_LINK="${{ github.event.comment.html_url }}" # PR 링크
+          MESSAGE="PR Link: $PR_LINK\n리뷰 완료했습니다👍"
+          echo "::set-output name=message::$MESSAGE" # Slack 메시지 생성하여 출력
+
+      - name: Detect PR Comment Trigger Keyword(review-request)
+        if: contains(github.event.comment.body, 'review-request') # check the comment if it contains the keywords        id: slack
+        id: review-request
+        run: |
+          PR_TITLE="${{ steps.get-pr-title.outputs.pr_title }}"
+          PR_LINK="${{ github.event.comment.html_url }}" # PR 링크
+          MESSAGE="PR Title: $PR_TITLE\nPR Link: $PR_LINK\n리뷰 반영 최종 완료!✅ 확인 부탁드립니다😃"
+          echo "::set-output name=message::$MESSAGE" # Slack 메시지 생성하여 출력
+
+      - name: Send Slack notification
+        if: steps.review.outputs.message != '' # Only if the message is set
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: 'C05PSEEJSLQ' # Slack 채널 ID
+          payload: '{"text": "${{ steps.review.outputs.message }}"}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
+
+      - name: Send Slack notification
+        if: steps.review-request.outputs.message != '' # Only if the message is set
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: 'C05PSEEJSLQ' # Slack 채널 ID
+          payload: '{"text": "${{ steps.review-request.outputs.message }}"}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰

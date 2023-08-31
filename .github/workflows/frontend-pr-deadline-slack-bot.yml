@@ -1,0 +1,57 @@
+name: Notify Pull Request Deadline
+
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
+      - dev
+    paths:
+      - 'frontend/**'
+      - '.github/**'
+
+jobs:
+  pull_request_open:
+    runs-on: ubuntu-latest
+    name: New pr to repo
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get PR details
+        id: pr
+        run: |
+          PR_JSON=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ github.event.pull_request.url }}")
+          echo "::set-output name=pr_json::$PR_JSON"
+
+      - name: Set environment variable
+        run: echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+      - name: Convert UTC to KST
+        run: |
+          UTC_TIME=$PR_CREATED_AT_UTC
+          KST_TIME=$(date -u -d "$UTC_TIME 9 hour" "+%Y-%m-%dT%H:%M:%SZ")
+          echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENV
+
+      - name: Calculate deadline
+        id: deadline
+        run: node .github/workflows/scripts/calculateDeadline.js
+        env:
+          PR_CREATED_AT_KST: ${{ env.PR_CREATED_AT_KST }}
+
+      - name: Send GitHub trigger payload to Slack Workflow Builder
+        id: slack
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}" # PR 제목
+          PR_LINK="${{ github.event.pull_request.html_url }}" # PR 링크
+          DEADLINE="${{ steps.deadline.outputs.DEADLINE }}" # 저장한 마감 시간
+          MESSAGE="PR Title: $PR_TITLE\nPR Link: $PR_LINK\n마감 시간: $DEADLINE"
+          echo "::set-output name=message::$MESSAGE" # Slack 메시지 생성하여 출력
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID}} # Slack 채널 ID
+          payload: '{"text": "${{ steps.slack.outputs.message }}"}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰

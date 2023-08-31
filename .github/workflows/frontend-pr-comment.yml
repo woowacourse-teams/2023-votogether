@@ -40,7 +40,7 @@ jobs:
         if: steps.review.outputs.message != '' # Only if the message is set
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: 'C05PSEEJSLQ' # Slack 채널 ID
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID}} # Slack 채널 ID
           payload: '{"text": "${{ steps.review.outputs.message }}"}'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
@@ -49,7 +49,7 @@ jobs:
         if: steps.review-request.outputs.message != '' # Only if the message is set
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: 'C05PSEEJSLQ' # Slack 채널 ID
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID}} # Slack 채널 ID
           payload: '{"text": "${{ steps.review-request.outputs.message }}"}'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰

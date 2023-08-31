@@ -37,7 +37,7 @@ jobs:
           echo "::set-output name=message::$MESSAGE" # Slack 메시지 생성하여 출력
 
       - name: Send Slack notification
-        if: steps.review.outputs.message != '' # Only if the message is set
+        if: steps.review.outputs.message != ''
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID}} # Slack 채널 ID

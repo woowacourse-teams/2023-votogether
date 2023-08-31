@@ -4,9 +4,7 @@ on:
   pull_request:
     types:
       - opened
-    branches:
-      - main
-      - dev
+    branches: ['dev']
     paths:
       - 'frontend/**'
       - '.github/**'

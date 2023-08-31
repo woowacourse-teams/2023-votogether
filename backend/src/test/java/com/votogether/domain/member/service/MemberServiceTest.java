@@ -84,7 +84,7 @@ class MemberServiceTest {
     class ChangeNickname {
 
         @Test
-        @DisplayName("주어질 때 정상적으로 닉네임을 변경한다.")
+        @DisplayName("한번도 변경되지 않았다면 닉네임 변경 주기에 상관없이 닉네임을 변경한다.")
         void changeNickname() {
             // given
             String newNickname = "jeomxon";
@@ -134,6 +134,20 @@ class MemberServiceTest {
             assertThatThrownBy(() -> memberService.changeNickname(member1, member2.getNickname()))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 중복된 닉네임이 존재합니다.");
+        }
+
+        @Test
+        @DisplayName("최초 닉네임을 변경한 후 닉네임 변경 주기가 지나지 않았다면 예외가 발생한다.")
+        void changeNicknameThrowsExceptionNotPassedChangingCycle() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+            memberService.changeNickname(member, "저문");
+
+            // when, then
+            assertThatThrownBy(() -> memberService.changeNickname(member, "저라니"))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("최소 닉네임 변경주기가 지나지 않았습니다.");
         }
 
     }

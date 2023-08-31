@@ -5,6 +5,8 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.entity.vo.SocialType;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -15,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -78,7 +81,15 @@ public class Member extends BaseEntity {
     }
 
     public void changeNickname(final String nickname) {
+        if (isNotPassedChangingCycle()) {
+            throw new BadRequestException(MemberExceptionType.NOT_PASSED_NICKNAME_CHANGING_CYCLE);
+        }
         this.nickname = new Nickname(nickname);
+    }
+
+    private boolean isNotPassedChangingCycle() {
+        return (!this.getCreatedAt().equals(this.getUpdatedAt())) &&
+                (this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(14L)));
     }
 
     public void changeNicknameByReport() {

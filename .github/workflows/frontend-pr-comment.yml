@@ -10,46 +10,44 @@ jobs:
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
-      - name: Get PR Title
-        id: get-pr-title
-        run: |
-          PR_NUMBER="${{ github.event.issue.number }}"
-          PR_TITLE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                     "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}" | \
-                     jq -r '.title')
-          echo "::set-output name=pr_title::$PR_TITLE"
-
-      - name: Detect PR Comment Trigger Keyword(review)
+      - name: Send Slack notification When Review Completed
         if: contains(github.event.comment.body, 'review-complete') # check the comment if it contains the keywords        id: slack
-        id: review
-        run: |
-          PR_LINK="${{ github.event.comment.html_url }}" # PR 링크
-          MESSAGE="PR Link: $PR_LINK\n리뷰 완료했습니다👍"
-          echo "::set-output name=message::$MESSAGE" # Slack 메시지 생성하여 출력
-
-      - name: Detect PR Comment Trigger Keyword(review-request)
-        if: contains(github.event.comment.body, 'review-request') # check the comment if it contains the keywords        id: slack
-        id: review-request
-        run: |
-          PR_TITLE="${{ steps.get-pr-title.outputs.pr_title }}"
-          PR_LINK="${{ github.event.comment.html_url }}" # PR 링크
-          MESSAGE="PR Title: $PR_TITLE\nPR Link: $PR_LINK\n리뷰 반영 최종 완료!✅ 확인 부탁드립니다😃"
-          echo "::set-output name=message::$MESSAGE" # Slack 메시지 생성하여 출력
-
-      - name: Send Slack notification
-        if: steps.review.outputs.message != ''
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID}} # Slack 채널 ID
-          payload: '{"text": "${{ steps.review.outputs.message }}"}'
+          payload: |
+            {
+                "text": "",
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "리뷰 완료했습니다👍\n<${{ github.event.comment.html_url }}|리뷰어의 코멘트 확인하러 가기>"
+                        }
+                    }
+                ]
+            }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
 
-      - name: Send Slack notification
-        if: steps.review-request.outputs.message != '' # Only if the message is set
+      - name: Send Slack notification When Re-review Requested
+        if: contains(github.event.comment.body, 'review-request') # check the comment if it contains the keywords        id: slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID}} # Slack 채널 ID
-          payload: '{"text": "${{ steps.review-request.outputs.message }}"}'
+          payload: |
+            {
+                "text": "",
+                "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "리뷰 반영 최종 완료!✅ 확인 부탁드립니다😃\n<${{ github.event.comment.html_url }}|피드백 반영 확인하러 가기>"
+                      }
+                    }
+                  ]
+            }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰

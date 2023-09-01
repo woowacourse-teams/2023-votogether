@@ -1,3 +1,7 @@
+import firstRankIcon from '@assets/first-rank.svg';
+import secondRankIcon from '@assets/second-rank.svg';
+import thirdRankIcon from '@assets/third-rank.svg';
+
 import * as RS from '../RankingStyle';
 
 import * as S from './style';
@@ -10,6 +14,12 @@ interface RankerInfo {
   voteCount: number;
   score: number;
 }
+
+const rankIconUrl: Record<number, string> = {
+  1: firstRankIcon,
+  2: secondRankIcon,
+  3: thirdRankIcon,
+};
 
 const columnNameList = ['등수', '닉네임', '작성글 수', '투표 수', '점수'];
 const rankerInfo: RankerInfo = {
@@ -26,7 +36,9 @@ const userRankingInfo: RankerInfo = {
   voteCount: 3,
   score: 8,
 };
-const rankerList: RankerInfo[] = new Array(10).fill(rankerInfo);
+const rankerList: RankerInfo[] = new Array(10)
+  .fill(rankerInfo)
+  .map((ranker, index) => ({ ...ranker, ranking: index + 1 }));
 
 export default function PassionUser() {
   return (
@@ -37,15 +49,21 @@ export default function PassionUser() {
             <S.Th key={text}>{text}</S.Th>
           ))}
         </S.Tr>
-        {rankerList.map(ranker => (
-          <S.Tr key={ranker.ranking}>
-            <S.Td>{ranker.ranking}</S.Td>
-            <S.Td>{ranker.nickname}</S.Td>
-            <S.Td>{ranker.postCount}</S.Td>
-            <S.Td>{ranker.voteCount}</S.Td>
-            <S.Td>{ranker.score}</S.Td>
-          </S.Tr>
-        ))}
+        {rankerList.map(ranker => {
+          const rankIcon = rankIconUrl[ranker.ranking] && (
+            <img src={rankIconUrl[ranker.ranking]} alt={ranker.ranking.toString()} />
+          );
+
+          return (
+            <S.Tr key={ranker.ranking}>
+              <S.RankingTd>{rankIcon ?? ranker.ranking}</S.RankingTd>
+              <S.Td>{ranker.nickname}</S.Td>
+              <S.Td>{ranker.postCount}</S.Td>
+              <S.Td>{ranker.voteCount}</S.Td>
+              <S.Td>{ranker.score}</S.Td>
+            </S.Tr>
+          );
+        })}
         <S.Tr>
           <S.Td>{userRankingInfo.ranking}</S.Td>
           <S.Td>{userRankingInfo.nickname}</S.Td>

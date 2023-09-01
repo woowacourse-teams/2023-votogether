@@ -10,6 +10,7 @@ export const Table = styled.table`
 export const Tr = styled.tr`
   display: grid;
   grid-template-columns: 0.5fr 1fr 3fr 1fr;
+  align-items: center;
 `;
 
 export const Th = styled.th`
@@ -18,8 +19,15 @@ export const Th = styled.th`
   font: var(--text-body);
 `;
 
-export const Td = styled.td`
+export const RankingTd = styled.td`
   padding: 5px 0;
+  height: auto;
+
+  line-height: 0;
+`;
+
+export const Td = styled.td`
+  padding: 10px 0;
 
   > a {
     display: -webkit-box;

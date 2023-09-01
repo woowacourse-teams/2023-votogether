@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 
-import { useState } from 'react';
+import { useToggleSwitch } from '@hooks/useToggleSwitch';
 
 import ToggleSwitch from '.';
 
@@ -10,24 +10,8 @@ const meta: Meta<typeof ToggleSwitch> = {
 
 export default meta;
 
-const useToggleSwitch = () => {
-  const [selectedButton, setSelectedButton] = useState('first');
-
-  const firstButton = {
-    text: 'first',
-    event: () => setSelectedButton('first'),
-  };
-
-  const secondButton = {
-    text: 'second',
-    event: () => setSelectedButton('second'),
-  };
-
-  return { selectedButton, firstButton, secondButton };
-};
-
 export const SizeS = () => {
-  const { selectedButton, firstButton, secondButton } = useToggleSwitch();
+  const { selectedButton, firstButton, secondButton } = useToggleSwitch('first', 'second');
 
   return (
     <ToggleSwitch
@@ -40,7 +24,7 @@ export const SizeS = () => {
 };
 
 export const SizeM = () => {
-  const { selectedButton, firstButton, secondButton } = useToggleSwitch();
+  const { selectedButton, firstButton, secondButton } = useToggleSwitch('first', 'second');
 
   return (
     <ToggleSwitch
@@ -53,7 +37,7 @@ export const SizeM = () => {
 };
 
 export const SizeL = () => {
-  const { selectedButton, firstButton, secondButton } = useToggleSwitch();
+  const { selectedButton, firstButton, secondButton } = useToggleSwitch('first', 'second');
 
   return (
     <ToggleSwitch
@@ -66,7 +50,7 @@ export const SizeL = () => {
 };
 
 export const SizeFree = () => {
-  const { selectedButton, firstButton, secondButton } = useToggleSwitch();
+  const { selectedButton, firstButton, secondButton } = useToggleSwitch('first', 'second');
 
   return (
     <div style={{ height: '100px' }}>

@@ -22,8 +22,9 @@ export const Tr = styled.tr`
 `;
 
 export const Th = styled.th`
-  font: var(--text-body);
   padding: 10px 0;
+
+  font: var(--text-body);
 `;
 
 export const Td = styled.td`

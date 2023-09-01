@@ -4,7 +4,7 @@ import { theme } from '@styles/theme';
 
 export const Background = styled.div`
   height: fit-content;
-  border-radius: 6px;
+  border-radius: 4px;
 
   background-color: var(--gray);
 

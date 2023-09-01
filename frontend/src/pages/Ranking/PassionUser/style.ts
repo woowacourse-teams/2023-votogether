@@ -9,6 +9,7 @@ export const Table = styled.table`
   & > :last-child {
     margin-top: 20px;
     padding: 3px 0;
+    border-radius: 4px;
 
     background-color: var(--white);
 

@@ -2,7 +2,7 @@ import firstRankIcon from '@assets/first-rank.svg';
 import secondRankIcon from '@assets/second-rank.svg';
 import thirdRankIcon from '@assets/third-rank.svg';
 
-import * as RS from '../RankingStyle';
+import * as RS from '../RankingTableStyle';
 
 import * as S from './style';
 

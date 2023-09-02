@@ -1,4 +1,4 @@
-name: Notify Pull Request Deadline
+name: Notify Pull Request Deadline (FE)
 
 on:
   pull_request:

@@ -1,4 +1,4 @@
-name: Pull request comment
+name: Pull request comment (BE)
 on:
   issue_comment:
     types: [created, edited, deleted]

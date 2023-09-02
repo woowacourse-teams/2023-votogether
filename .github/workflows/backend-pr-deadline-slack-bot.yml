@@ -21,6 +21,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Remove "https://" from PR URL
+        id: remove_https
+        run: |
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          PR_URL="${PR_URL#https://}"
+          echo "::set-output name=pr_url::$PR_URL"
+
       - name: Set environment variable
         run: echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
       - name: Convert UTC to KST
@@ -47,7 +54,7 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "<${{  github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간:${{ steps.deadline.outputs.DEADLINE }}"
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간:${{ steps.deadline.outputs.DEADLINE }}"
                         }
                     }
                 ]

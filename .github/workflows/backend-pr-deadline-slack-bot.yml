@@ -54,7 +54,7 @@ jobs:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간:${{ steps.deadline.outputs.DEADLINE }}"
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
                         }
                     }
                 ]

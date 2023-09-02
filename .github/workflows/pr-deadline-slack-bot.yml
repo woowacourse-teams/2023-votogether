@@ -34,7 +34,7 @@ jobs:
 
       - name: Calculate deadline
         id: deadline
-        run: node .github/workflows/scripts/calculateDeadline.js
+        run: node .github/workflows/scripts/calculatePRDeadline.js
         env:
           PR_CREATED_AT_KST: ${{ env.PR_CREATED_AT_KST }}
 

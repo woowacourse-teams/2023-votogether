@@ -14,7 +14,7 @@ jobs:
         if: contains(github.event.comment.body, 'review-complete') # check the comment if it contains the keywords        id: slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+          channel-id: ${{ secrets.SLACK_BE_CHANNEL }} # Slack 채널 ID
           payload: |
             {
                 "text": "",
@@ -35,7 +35,7 @@ jobs:
         if: contains(github.event.comment.body, 'review-request') # check the comment if it contains the keywords        id: slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+          channel-id: ${{ secrets.SLACK_BE_CHANNEL }} # Slack 채널 ID
           payload: |
             {
                 "text": "",

@@ -7,7 +7,6 @@ on:
     branches: ['dev']
     paths:
       - 'frontend/**'
-      - '.github/**'
 
 jobs:
   pull_request_open:
@@ -21,7 +20,7 @@ jobs:
         id: remove_https
         run: |
           PR_URL="${{ github.event.pull_request.html_url }}"
-          PR_URL="${PR_URL#https://}"
+          PR_URL="http://${PR_URL#https://}"          
           echo "::set-output name=pr_url::$PR_URL"
 
       - name: Set environment variable

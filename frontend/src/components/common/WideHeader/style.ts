@@ -14,12 +14,13 @@ export const Container = styled.div`
   background-color: var(--header);
 
   padding: 0 80px;
+`;
 
-  & :first-child {
-    height: 70%;
+export const LogoWrapper = styled.div`
+  height: 50%;
+`;
 
-    & :last-child {
-      height: 40%;
-    }
-  }
+export const Wrapper = styled.div`
+  display: flex;
+  gap: 15px;
 `;

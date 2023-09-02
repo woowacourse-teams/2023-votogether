@@ -9,6 +9,10 @@ on:
       - 'backend/**'
       - '.github/**'
 
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
   pull_request_open:
     runs-on: ubuntu-latest

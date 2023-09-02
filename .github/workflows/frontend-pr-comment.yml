@@ -2,7 +2,10 @@ name: Pull request comment
 on:
   issue_comment:
     types: [created, edited, deleted]
-  # Note: This event will only trigger a workflow run if the workflow file is on the default branch.
+
+defaults:
+  run:
+    working-directory: frontend
 
 jobs:
   pull_request_comment:

@@ -4,4 +4,6 @@ export const QUERY_KEY = {
   COMMENTS: 'comments',
   CATEGORIES: 'categories',
   USER_INFO: 'user_info',
+  PASSION_RANKING: 'passionRanking',
+  POPULAR_RANKING: 'popularRanking',
 };

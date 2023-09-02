@@ -1,7 +1,7 @@
 describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 코드리뷰 마감시간이 올바른지 테스트한다.', () => {
   test('PR 생성시간(한국 기준)이 2023-09-05T01:30:55Z (오늘 9월 5일 화요일 새벽 1시 반) 이면 마감시간은 오늘 20시이다.', () => {
     const prCreatedAt = '2023-09-05T01:30:55Z';
-    const prReviewDeadline = '오늘(9월 5일) 20시 00분';
+    const prReviewDeadline = '9월 5일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -10,7 +10,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-05T09:30:55Z (오늘 9월 5일 화요일 오전 9시 반) 이면 마감시간은 오늘 20시이다.', () => {
     const prCreatedAt = '2023-09-05T09:30:55Z';
-    const prReviewDeadline = '오늘(9월 5일) 20시 00분';
+    const prReviewDeadline = '9월 5일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -19,16 +19,16 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-05T22:30:55Z (오늘 9월 5일 화요일 오후 10시 반) 이면 마감시간은 내일 오후 8시이다.', () => {
     const prCreatedAt = '2023-09-05T22:30:55Z';
-    const prReviewDeadline = '내일(9월 6일) 20시 00분';
+    const prReviewDeadline = '9월 6일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
     expect(result).toEqual(prReviewDeadline);
   });
 
-  test('PR 생성시간(한국 기준)이 2023-09-05T11:30:55Z (오늘 9월 5일 화요일 오전 11시 반) 이면 마감시간은 오늘 20시 30분이다.', () => {
+  test('PR 생성시간(한국 기준)이 2023-09-05T11:30:55Z (오늘 9월 5일 화요일 오전 11시 반) 이면 마감시간은 오늘 21시 30분이다.', () => {
     const prCreatedAt = '2023-09-05T11:30:55Z';
-    const prReviewDeadline = '오늘(9월 5일) 21시 30분';
+    const prReviewDeadline = '9월 5일 21시 30분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -37,7 +37,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-05T13:30:55Z (오늘 9월 5일 화요일 오후 1시 반) 이면 마감시간은 내일 오전 11시 반이다.', () => {
     const prCreatedAt = '2023-09-05T13:30:55Z';
-    const prReviewDeadline = '내일(9월 6일) 11시 30분';
+    const prReviewDeadline = '9월 6일 11시 30분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -46,7 +46,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-05T17:30:55Z (오늘 9월 5일 화요일 오후 5시 반) 이면 마감시간은 내일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-09-05T17:30:55Z';
-    const prReviewDeadline = '내일(9월 6일) 15시 30분';
+    const prReviewDeadline = '9월 6일 15시 30분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -55,7 +55,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-08-31T17:30:55Z (오늘 8월 31일 오후 5시 반) 이면 마감시간은 내일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-08-31T17:30:55Z';
-    const prReviewDeadline = '내일(9월 1일) 15시 30분';
+    const prReviewDeadline = '9월 1일 15시 30분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -64,7 +64,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-08-31T17:30:55Z (오늘 8월 31일 목요일 오후 5시 반) 이면 마감시간은 내일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-08-31T17:30:01Z';
-    const prReviewDeadline = '내일(9월 1일) 15시 30분';
+    const prReviewDeadline = '9월 1일 15시 30분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -73,7 +73,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-01T17:30:55Z (오늘 9월 1일 금요일 오후 5시 반) 이면 마감시간은 다음주 월요일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-09-01T17:30:01Z';
-    const prReviewDeadline = '다음주 월요일(9월 4일) 15시 30분';
+    const prReviewDeadline = '9월 4일 15시 30분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -82,7 +82,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-01T22:30:55Z (오늘 9월 1일 금요일 오후 10시 반) 이면 마감시간은 다음주 월요일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-09-01T22:30:01Z';
-    const prReviewDeadline = '다음주 월요일(9월 4일) 20시 00분';
+    const prReviewDeadline = '9월 4일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -91,7 +91,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-15T21:30:55Z (오늘 9월 15일 금요일 오후 9시 반) 이면 마감시간은 다음주 월요일 오후 7시 반이다.', () => {
     const prCreatedAt = '2023-09-15T21:30:01Z';
-    const prReviewDeadline = '다음주 월요일(9월 18일) 19시 30분';
+    const prReviewDeadline = '9월 18일 19시 30분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -100,7 +100,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-02T17:30:55Z (오늘 9월 2일 토요일 오후 5시 반) 이면 마감시간은 다음주 월요일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-09-02T17:30:01Z';
-    const prReviewDeadline = '다음주 월요일(9월 4일) 20시 00분';
+    const prReviewDeadline = '9월 4일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -109,7 +109,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-03T17:30:55Z (오늘 9월 3일 일요일 오후 5시 반) 이면 마감시간은 내일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-09-03T17:30:01Z';
-    const prReviewDeadline = '다음주 월요일(9월 4일) 20시 00분';
+    const prReviewDeadline = '9월 4일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -118,7 +118,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-09-30T17:30:55Z (오늘 9월 30일 토요일 오후 5시 반) 이면 마감시간은 다음주 월요일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-09-30T17:30:01Z';
-    const prReviewDeadline = '다음주 월요일(10월 2일) 20시 00분';
+    const prReviewDeadline = '10월 2일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -127,7 +127,7 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 
   test('PR 생성시간(한국 기준)이 2023-10-01T11:30:55Z (오늘 10월 1일 일요일 오전 11시 반) 이면 마감시간은 내일 오후 3시 반이다.', () => {
     const prCreatedAt = '2023-10-01T11:30:01Z';
-    const prReviewDeadline = '다음주 월요일(10월 2일) 20시 00분';
+    const prReviewDeadline = '10월 2일 20시 00분';
 
     const result = calculatePRDeadline(prCreatedAt);
 
@@ -136,7 +136,6 @@ describe('calculatePRDeadline 함수를 이용해서 PR 생성시간에 따른 �
 });
 
 function calculatePRDeadline(prCreatedAtKST: string) {
-  // const prCreatedAtKST = process.env.PR_CREATED_AT_KST;
   const prCreatedAt = new Date(String(prCreatedAtKST));
 
   const prCreatedMinute = prCreatedAt.getUTCMinutes();
@@ -149,7 +148,7 @@ function calculatePRDeadline(prCreatedAtKST: string) {
   const isWeekend = prCreatedDay === 6 || prCreatedDay === 0; // 주말인 경우
   const isMondayMorning = prCreatedDay === 1 && prCreatedHour < 10; // 월요일 오전 10시 이전 (월요일: 1, 오전 10시: 10)
 
-  // 주어진 범위 내에 있는지 여부 판별
+  // 주어진 근무시간(월요일 오전 10시~금요일 오후 10시) 내에 올린 pr인지 판별
   const isNotWorkingTime = isFridayAfternoon || isWeekend || isMondayMorning;
 
   let nextDay = new Date(prCreatedAt);
@@ -166,30 +165,20 @@ function calculatePRDeadline(prCreatedAtKST: string) {
   const nextWeekMondayDate = nextWeekMonday.getUTCDate();
   const nextWeekMondayMonth = nextWeekMonday.getUTCMonth() + 1;
 
-  if (isNotWorkingTime)
-    return `다음주 월요일(${nextWeekMondayMonth}월 ${nextWeekMondayDate}일) 20시 00분`;
+  const isFriday = prCreatedDay === 5;
+
+  if (isNotWorkingTime) return `${nextWeekMondayMonth}월 ${nextWeekMondayDate}일 20시 00분`;
 
   if (prCreatedHour < 10 && prCreatedHour > 0)
-    return `오늘(${prCreatedMonth}월 ${prCreatedDate}일) 20시 00분`;
+    return `${prCreatedMonth}월 ${prCreatedDate}일 20시 00분`;
   else if (prCreatedHour === 22 || prCreatedHour === 23)
-    return `내일(${nextDayMonth}월 ${nextDayDate}일) 20시 00분`;
-  else if (prCreatedHour >= 12) {
-    if (prCreatedDay === 5)
-      return `다음주 월요일(${nextWeekMondayMonth}월 ${nextWeekMondayDate}일) ${
-        prCreatedHour - 2
-      }시 ${prCreatedMinute}분`;
-    else
-      return `내일(${nextDayMonth}월 ${nextDayDate}일) ${prCreatedHour - 2}시 ${prCreatedMinute}분`;
-  } else {
-    // 오전 10시부터 12시 이전까지 생성된 경우
-    // 금요일인 경우
-    if (prCreatedDay === 5)
-      return `다음주 월요일(${nextWeekMondayMonth}월 ${nextWeekMondayDate}일) ${
-        prCreatedHour + 10
-      }시 ${prCreatedMinute}분`;
-    else
-      return `오늘(${prCreatedMonth}월 ${prCreatedDate}일) ${
-        prCreatedHour + 10
-      }시 ${prCreatedMinute}분`;
-  }
+    return `${nextDayMonth}월 ${nextDayDate}일 20시 00분`;
+  else if (prCreatedHour >= 12)
+    return `${isFriday ? nextWeekMondayMonth : nextDayMonth}월 ${
+      isFriday ? nextWeekMondayDate : nextDayDate
+    }일 ${prCreatedHour - 2}시 ${prCreatedMinute}분`;
+  else
+    return `${isFriday ? nextWeekMondayMonth : prCreatedMonth}월 ${
+      isFriday ? nextWeekMondayDate : prCreatedDate
+    }일 ${prCreatedHour + 10}시 ${prCreatedMinute}분`;
 }

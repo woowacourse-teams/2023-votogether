@@ -7,7 +7,6 @@ on:
     branches: ['dev']
     paths:
       - 'frontend/**'
-      - 'backend/**'
       - '.github/**'
 
 jobs:
@@ -33,31 +32,9 @@ jobs:
           PR_CREATED_AT_KST: ${{ env.PR_CREATED_AT_KST }}
 
       - name: Send Slack notification When FE PR
-        if: ${{ startsWith(github.event.pull_request.changed_files, 'frontend/') }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
-          payload: |
-            {
-                "text": "",
-                "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "<${{  github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간:${{ steps.deadline.outputs.DEADLINE }}"
-                        }
-                    }
-                ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
-
-      - name: Send Slack notification When BE PR
-        if: ${{ startsWith(github.event.pull_request.changed_files, 'backend/') }}
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          channel-id: ${{ secrets.SLACK_BE_CHANNEL }} # Slack 채널 ID
           payload: |
             {
                 "text": "",

@@ -18,12 +18,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get PR details
-        id: pr
-        run: |
-          PR_JSON=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ github.event.pull_request.url }}")
-          echo "::set-output name=pr_json::$PR_JSON"
-
       - name: Set environment variable
         run: echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
       - name: Convert UTC to KST

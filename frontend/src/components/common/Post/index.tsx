@@ -116,7 +116,6 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       >
         <S.Category
           tabIndex={isPreviewTabIndex}
-          aria-live="polite"
           aria-label={`카테고리 ${category.map(category => category.name).join('|')}`}
         >
           {category.map(category => category.name).join(' | ')}

@@ -36,7 +36,7 @@ export default function TimePickerOptionList({ time, setTime }: TimePickerOption
           ></TimePickerOption>
         ))}
       </S.Container>
-      <S.PickedTimeText>
+      <S.PickedTimeText tabIndex={0}>
         <p>{day}일</p>
         <p>{hour}시</p>
         <p>{minute}분</p> 후 마감

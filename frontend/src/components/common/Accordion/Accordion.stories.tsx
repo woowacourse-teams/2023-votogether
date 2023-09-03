@@ -26,7 +26,7 @@ export const Default: Story = {
 
 export const NicknameChange: Story = {
   render: () => (
-    <Accordion title="닉네임 변경">
+    <Accordion title="닉네임 변경" ariaLabel="닉네임 변경 메뉴">
       <Input placeholder="새로운 닉네임을 입력해주세요" />
       <ButtonWrapper>
         <SquareButton aria-label="닉네임 변경" theme="fill">

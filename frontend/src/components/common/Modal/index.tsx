@@ -27,8 +27,15 @@ export default function Modal({ onModalClose, children, size }: ModalProps) {
 
   return (
     <S.All>
+      <S.HiddenCloseButton
+        onClick={onModalClose}
+        tabIndex={0}
+        aria-label="팝업 창 닫기"
+      ></S.HiddenCloseButton>
       <S.Backdrop ref={BackDropRef}></S.Backdrop>
-      <S.Container size={size}>{children}</S.Container>
+      <S.Container tabIndex={0} size={size}>
+        {children}
+      </S.Container>
     </S.All>
   );
 }

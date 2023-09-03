@@ -59,7 +59,10 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       return;
     }
 
-    if (writer.nickname === loggedInfo.userInfo?.nickname) return;
+    if (writer.nickname === loggedInfo.userInfo?.nickname) {
+      openToast('내가 쓴 글에는 투표를 할 수 없습니다.');
+      return;
+    }
 
     if (voteInfo.selectedOptionId === newOptionId) return;
 
@@ -141,7 +144,10 @@ export default function Post({ postInfo, isPreview }: PostProps) {
             {writer.nickname}
           </span>
           <S.Wrapper>
-            <span aria-label={`작성일시 ${convertTimeToWord(createTime)}`}>
+            <span
+              aria-label={`작성일시 ${convertTimeToWord(createTime)}`}
+              tabIndex={isPreviewTabIndex}
+            >
               {convertTimeToWord(createTime)}
             </span>
             <span

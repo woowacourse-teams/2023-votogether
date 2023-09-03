@@ -17,6 +17,8 @@ export const ListContainer = styled.div`
 
   padding-top: 25px;
   border-top: 1px solid rgba(0, 0, 0, 0.2);
+
+  position: relative;
 `;
 
 export const MoreButtonWrapper = styled.div`
@@ -52,5 +54,8 @@ export const TopButtonWrapper = styled.div`
 
 export const HiddenInput = styled.input`
   position: absolute;
-  left: -1000px;
+  bottom: 0;
+
+  color: white;
+  z-index: -1;
 `;

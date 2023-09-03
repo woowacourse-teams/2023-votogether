@@ -6,7 +6,7 @@ import { useMoreComment } from '@hooks/useMoreComment';
 
 import SquareButton from '@components/common/SquareButton';
 
-import { scrollToTop } from '@utils/scrollToTop';
+import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import CommentItem from './CommentItem';
 import CommentLoginSection from './CommentLoginSection';
@@ -75,6 +75,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
                 />
                 <S.HiddenInput
                   ref={inputRef}
+                  maxLength={0}
                   aria-label={`${index + 1}번째 댓글입니다`}
                   role="contentinfo"
                   inputMode="none"
@@ -99,6 +100,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
               inputRef.current?.focus();
             }}
             theme="fill"
+            aria-label="댓글 더보기"
           >
             더보기
           </SquareButton>
@@ -106,7 +108,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
       )}
       <S.ButtonContainer>
         <S.TopButtonWrapper>
-          <SquareButton onClick={scrollToTop} theme="blank">
+          <SquareButton onClick={smoothScrollToTop} theme="blank">
             TOP
           </SquareButton>
         </S.TopButtonWrapper>

@@ -22,7 +22,7 @@ import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { PATH } from '@constants/path';
-import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
+import { CATEGORY_COUNT_LIMIT, IMAGE_BASE_URL, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
@@ -118,8 +118,8 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     const formData = new FormData();
 
     const imageUrlList = [
-      contentImageHook.contentImage,
-      ...writingOptionHook.optionList.map(option => option.imageUrl),
+      contentImageHook.contentImage.replace(IMAGE_BASE_URL, ''),
+      ...writingOptionHook.optionList.map(option => option.imageUrl.replace(IMAGE_BASE_URL, '')),
     ];
 
     if (e.target instanceof HTMLFormElement) {

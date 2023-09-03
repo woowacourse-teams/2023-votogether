@@ -28,7 +28,8 @@ export default function WrittenVoteOption({
 
   return (
     <S.Container
-      aria-label={`${ariaLabel}${isSelected ? '선택된 선택지' : ''}`}
+      aria-live={isSelected ? 'polite' : 'off'}
+      aria-label={ariaLabel}
       $isSelected={isSelected}
       onClick={handleVoteClick}
     >
@@ -36,20 +37,18 @@ export default function WrittenVoteOption({
         <S.Image src={`${IMAGE_BASE_URL}/${imageUrl}`} alt={'선택지에 포함된 이미지'} />
       )}
       {isPreview ? (
-        <S.PreviewContent aria-label="선택지 내용">{text}</S.PreviewContent>
+        <S.PreviewContent>{text}</S.PreviewContent>
       ) : (
-        <S.DetailContent aria-label="선택지 내용">{text}</S.DetailContent>
+        <S.DetailContent>{text}</S.DetailContent>
       )}
       {isStatisticsVisible && (
         <>
-          <S.ProgressContainer aria-label={''}>
+          <S.ProgressContainer>
             <ProgressBar percent={percent} isSelected={isSelected} />
           </S.ProgressContainer>
           <S.TextContainer>
-            <S.PeopleText aria-label="투표한 인원">{peopleCount}명</S.PeopleText>
-            <S.PercentText aria-label="전체 투표 중 차지 비율">
-              ({percent.toFixed(1)}%)
-            </S.PercentText>
+            <S.PeopleText aria-hidden="true">{peopleCount}명</S.PeopleText>
+            <S.PercentText aria-hidden="true">({percent.toFixed(1)}%)</S.PercentText>
           </S.TextContainer>
         </>
       )}

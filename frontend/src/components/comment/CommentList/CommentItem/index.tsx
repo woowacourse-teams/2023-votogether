@@ -100,7 +100,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
         </S.UserContainer>
         {isAllowedMenu && (
           <S.MenuContainer
-            as={isOpen ? 'button' : 'button'}
+            as={isOpen ? 'div' : 'button'}
             role="button"
             tabIndex={0}
             aria-label={isOpen ? '댓글 메뉴 닫기' : '댓글 메뉴 열기'}

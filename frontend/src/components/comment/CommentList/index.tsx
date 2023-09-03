@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext, useRef, Fragment } from 'react';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useCommentList } from '@hooks/query/comment/useCommentList';
@@ -67,12 +67,8 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
         {slicedCommentList.map((comment, index) => {
           if (index % 10 === 9) {
             return (
-              <>
-                <CommentItem
-                  key={comment.id}
-                  comment={comment}
-                  userType={getUserType(comment.member.id)}
-                />
+              <Fragment key={comment.id}>
+                <CommentItem comment={comment} userType={getUserType(comment.member.id)} />
                 <S.HiddenInput
                   ref={inputRef}
                   maxLength={0}
@@ -80,7 +76,7 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
                   role="contentinfo"
                   inputMode="none"
                 />
-              </>
+              </Fragment>
             );
           }
           return (
@@ -96,8 +92,11 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
         <S.MoreButtonWrapper>
           <SquareButton
             onClick={() => {
+              if (!inputRef.current) return;
+
               handleMoreComment();
-              inputRef.current?.focus();
+              inputRef.current.focus();
+              inputRef.current.ariaLabel = '더보기 버튼을 눌러 댓글이 추가되었습니다';
             }}
             theme="fill"
             aria-label="댓글 더보기"

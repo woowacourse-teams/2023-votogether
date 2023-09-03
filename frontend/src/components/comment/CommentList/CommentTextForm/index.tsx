@@ -68,7 +68,7 @@ export default function CommentTextForm({
 
   useEffect(() => {
     isEditError && editError instanceof Error && openToast(editError.message);
-  }, [isEditError, editError, openToast]);
+  }, [isEditError, editError]);
 
   return (
     <S.Container>

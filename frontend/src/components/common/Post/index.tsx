@@ -50,7 +50,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
 
   const handleVoteClick = (newOptionId: number) => {
     if (!loggedInfo.isLoggedIn) {
-      openToast('투표를 하려면 로그인 후에 이용하실 수 있습니다.');
+      openToast('투표는 로그인 후에 이용하실 수 있습니다.');
       return;
     }
 

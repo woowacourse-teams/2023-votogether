@@ -88,7 +88,7 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     event.target.setCustomValidity('');
 
     if (file.size > MAX_FILE_SIZE) {
-      event.target.setCustomValidity('사진의 용량은 5MB 이하만 가능합니다.');
+      event.target.setCustomValidity('사진의 용량은 1.5MB 이하만 가능합니다.');
       event.target.reportValidity();
 
       return;

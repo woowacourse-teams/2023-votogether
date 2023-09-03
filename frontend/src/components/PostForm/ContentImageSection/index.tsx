@@ -1,4 +1,4 @@
-import { ChangeEvent, MutableRefObject } from 'react';
+import { ChangeEvent, MouseEvent, MutableRefObject } from 'react';
 
 import { Size } from '@type/style';
 
@@ -18,6 +18,11 @@ interface ContentImageSectionProps {
 export default function ContentImageSection({ contentImageHook, size }: ContentImageSectionProps) {
   const { contentImage, contentInputRef, removeImage, handleUploadImage } = contentImageHook;
 
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    contentInputRef.current && contentInputRef.current.click();
+  };
+
   return (
     <>
       {contentImage && (
@@ -30,20 +35,21 @@ export default function ContentImageSection({ contentImageHook, size }: ContentI
       )}
       {
         <S.FileInputContainer>
-          <S.Label
-            htmlFor="content-image-upload"
-            aria-label="본문 이미지 업로드 버튼"
-            title="이미지 업로드"
+          <S.Button
+            type="button"
             $isVisible={!!contentImage}
+            aria-label="본문 이미지 업로드"
+            onClick={handleButtonClick}
           >
-            본문에 사진 넣기
-          </S.Label>
+            <S.Label htmlFor="content-image-upload">본문에 사진 넣기</S.Label>
+          </S.Button>
           <S.FileInput
             id="content-image-upload"
             ref={contentInputRef}
             type="file"
             accept="image/*"
             onChange={handleUploadImage}
+            tabIndex={-1}
           />
         </S.FileInputContainer>
       }

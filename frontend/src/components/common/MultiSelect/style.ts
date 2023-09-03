@@ -37,11 +37,11 @@ export const SelectedOptionListContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-export const SelectIcon = styled.span`
+export const SelectIcon = styled.button`
   width: 20px;
 `;
 
-export const DropDown = styled.ul<{
+export const DropDown = styled.div<{
   $isOpened: boolean;
 }>`
   width: 100%;
@@ -56,10 +56,15 @@ export const DropDown = styled.ul<{
 
   transition: all 0.2s linear 0.1s;
 
-  & > li {
+  & > button {
+    display: block;
+
+    width: 100%;
     list-style: none;
     padding: 10px 0px 10px 15px;
     border-bottom: 1px solid #e4e5e7;
+
+    text-align: left;
 
     &:hover {
       background-color: #ffefd5;

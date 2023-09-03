@@ -1,3 +1,5 @@
+import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
+
 import ProgressBar from './ProgressBar';
 import * as S from './style';
 
@@ -24,8 +26,6 @@ export default function WrittenVoteOption({
   imageUrl,
   ariaLabel,
 }: WrittenVoteOptionProps) {
-  const IMAGE_BASE_URL = process.env.VOTOGETHER_BASE_URL.replace(/api\./, '');
-
   return (
     <S.Container
       aria-live={isSelected ? 'polite' : 'off'}
@@ -34,7 +34,7 @@ export default function WrittenVoteOption({
       onClick={handleVoteClick}
     >
       {!isPreview && imageUrl && (
-        <S.Image src={`${IMAGE_BASE_URL}/${imageUrl}`} alt={'선택지에 포함된 이미지'} />
+        <S.Image src={convertImageUrlToServerUrl(imageUrl)} alt={'선택지에 포함된 이미지'} />
       )}
       {isPreview ? (
         <S.PreviewContent>{text}</S.PreviewContent>

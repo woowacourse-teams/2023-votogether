@@ -20,6 +20,13 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRep
 
     List<Post> findAllByWriter(final Member member);
 
+    @Query("SELECT COUNT(p)" +
+            "FROM Member m " +
+            "LEFT JOIN Post p ON m.id = p.writer.id AND p.writer IN :members " +
+            "WHERE m IN :members " +
+            "GROUP BY m.id")
+    List<Integer> findCountsByMembers(@Param("members") final List<Member> members);
+
     @Query("SELECT v.postOption.post FROM Vote v WHERE v.member = :member "
             + "AND v.postOption.post.deadline < CURRENT_TIMESTAMP")
     Slice<Post> findClosedPostsVotedByMember(@Param("member") final Member member, final Pageable pageable);

@@ -16,18 +16,26 @@ export default function TwoLineGraph({ ageGroup, size }: GraphProps) {
           <S.OptionContainer key={ageResult.name} $size={size}>
             <S.DataWrapper>
               <S.OptionLengthWrapper $gender="FEMALE">
-                <span aria-label={`${ageResult.female}명의 여성,`}>{ageResult.female}</span>
+                <span
+                  aria-label={`${ageResult.name}연령대에서 ${ageResult.female}명의 여성이 투표`}
+                >
+                  {ageResult.female}
+                </span>
                 <S.OptionLength
                   $amount={(ageResult.female / maxVoteAmount) * 100}
                   $gender="FEMALE"
                 />
               </S.OptionLengthWrapper>
               <S.OptionLengthWrapper $gender="MALE">
-                <span aria-label={`${ageResult.male}명의 남성,`}>{ageResult.male}</span>
+                <span aria-label={`${ageResult.name}연령대에서 ${ageResult.male}명의 남성이 투표`}>
+                  {ageResult.male}
+                </span>
                 <S.OptionLength $amount={(ageResult.male / maxVoteAmount) * 100} $gender="MALE" />
               </S.OptionLengthWrapper>
             </S.DataWrapper>
-            <span aria-label={`${ageResult.name}의 연령대가 투표했습니다.`}>{ageResult.name}</span>
+            <span aria-label="" role="contentinfo">
+              {ageResult.name}
+            </span>
           </S.OptionContainer>
         );
       })}

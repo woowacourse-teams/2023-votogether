@@ -5,6 +5,7 @@ import { mockVoteResult } from './getVoteDetail';
 import { mockPost } from './post';
 import { mockPostList } from './postList';
 import { mockReport } from './report';
+import { mockToken } from './token';
 import { mockUserInfo } from './userInfo';
 import { mockVote } from './vote';
 
@@ -18,4 +19,5 @@ export const handlers = [
   ...mockUserInfo,
   ...mockComment,
   ...mockReport,
+  ...mockToken,
 ];

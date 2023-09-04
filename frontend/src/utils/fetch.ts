@@ -1,3 +1,5 @@
+import { postTokens } from '@api/token';
+
 import { getCookieToken, setCookieToken } from './cookie';
 import { isExpiredAccessToken } from './isExpiredAccessToken';
 
@@ -23,11 +25,6 @@ const makeFetchMultiHeaders = () => {
   };
 };
 
-interface SilentLoginToken {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export const silentLogin = async () => {
   const refreshToken = getCookieToken().refreshToken;
 
@@ -36,15 +33,7 @@ export const silentLogin = async () => {
   }
 
   try {
-    const response = await postFetch('/auth/silent-login', {
-      refreshToken,
-    });
-
-    if (!response) {
-      throw new Error('error');
-    }
-
-    const tokenData = (await response.json()) as SilentLoginToken;
+    const tokenData = await postTokens(refreshToken);
 
     const updatedAccessToken = tokenData.accessToken;
     const updatedRefreshToken = tokenData.refreshToken;

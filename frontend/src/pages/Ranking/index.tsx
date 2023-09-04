@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { PassionUser } from '@type/ranking';
+import { PassionUser, RankingPost } from '@type/ranking';
 
 import { useToggleSwitch } from '@hooks/useToggleSwitch';
 
@@ -33,6 +33,19 @@ const rankerList: PassionUser[] = new Array(10)
   .fill(rankerInfo)
   .map((ranker, index) => ({ ...ranker, rank: index + 1 }));
 
+const rankingPostInfo: RankingPost = {
+  rank: 1,
+  post: {
+    id: 29,
+    nickname: 'writer',
+    title: '이것은 엄청나게 많은 투표가 이루어진 대단한 글이지요',
+    voteCount: 10,
+  },
+};
+const rankingPostList: RankingPost[] = new Array(10)
+  .fill(rankingPostInfo)
+  .map((post, index) => ({ ...post, ranking: index + 1 }));
+
 export default function Ranking() {
   const navigate = useNavigate();
   const { selectedButton, firstButton, secondButton } = useToggleSwitch('열정 유저', '인기글 유저');
@@ -61,7 +74,7 @@ export default function Ranking() {
           {selectedButton === '열정 유저' && (
             <PassionUserRanking rankerList={rankerList} userRanking={userRankingInfo} />
           )}
-          {selectedButton === '인기글 유저' && <PopularPost />}
+          {selectedButton === '인기글 유저' && <PopularPost rankingPostList={rankingPostList} />}
         </S.ContentContainer>
       </S.Container>
     </Layout>

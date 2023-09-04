@@ -1,8 +1,8 @@
 import { getCookieToken, getMemberId } from '@utils/cookie';
 
-export function checkWriter(writedId: number) {
+export function checkWriter(writerId: number) {
   const accessToken = getCookieToken().accessToken;
   const memberId = getMemberId(accessToken).memberId;
 
-  return writedId === memberId;
+  return writerId === memberId;
 }

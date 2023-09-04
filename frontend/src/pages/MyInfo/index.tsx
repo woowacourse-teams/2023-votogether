@@ -73,9 +73,10 @@ export default function MyInfo() {
   useEffect(() => {
     if (isWithdrawalMembershipSuccess) {
       clearLoggedInfo();
+
       navigate('/');
     }
-  }, [isWithdrawalMembershipSuccess, clearLoggedInfo, navigate]);
+  }, [isWithdrawalMembershipSuccess]);
 
   useEffect(() => {
     if (isWithdrawalMembershipError && withdrawalMembershipError instanceof Error) {

@@ -36,7 +36,7 @@ export default function Redirection() {
         const { accessToken, hasEssentialInfo, refreshToken } = await getAuthInfo(REGISTER_API_URL);
         setCookieToken('accessToken', accessToken);
         setCookieToken('refreshToken', refreshToken ?? '');
-        setCookieToken('hasEssentialInfo', String(hasEssentialInfo));
+        localStorage.setItem('hasEssentialInfo', String(hasEssentialInfo));
 
         const decodedPayload = decodeToken(accessToken);
         const id = decodedPayload.memberId;

@@ -1,5 +1,5 @@
 import { getCookieToken, setCookieToken } from '@utils/cookie';
-import { silentLogin } from '@utils/fetch';
+import { silentLogin } from '@utils/silentLogin';
 
 import { MOCK_TOKEN } from '@mocks/mockData/token';
 

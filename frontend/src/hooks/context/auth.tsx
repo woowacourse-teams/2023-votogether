@@ -25,6 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const clearLoggedInfo = () => {
     clearCookieToken('accessToken');
+    clearCookieToken('refreshToken');
     clearCookieToken('hasEssentialInfo');
 
     setLoggedInfo(notLoggedInfo);

@@ -3,6 +3,7 @@ package com.votogether.domain.member.controller;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.request.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
+import com.votogether.domain.member.dto.response.RankingResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.Auth;
@@ -35,6 +36,11 @@ public class MemberController implements MemberControllerDocs {
     ) {
         memberService.changeNickname(member, request.nickname());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me/ranking")
+    public ResponseEntity<RankingResponse> getRanking(@Auth final Member member) {
+        return ResponseEntity.ok(memberService.getRanking(member));
     }
 
     @PatchMapping("/me/detail")

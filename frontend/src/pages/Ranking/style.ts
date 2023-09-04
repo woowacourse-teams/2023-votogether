@@ -44,4 +44,5 @@ export const ContentContainer = styled.div`
   gap: 10px;
 
   margin-top: 20px;
+  padding: 0 15px;
 `;

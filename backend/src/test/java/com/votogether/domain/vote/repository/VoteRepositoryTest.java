@@ -298,7 +298,7 @@ class VoteRepositoryTest {
     @Test
     @DisplayName("모든 멤버의 투표 개수를 가져온다.")
     void findCountsByMembers() {
-        //given
+        // given
         Member member = memberTestPersister.builder().save();
         Member member1 = memberTestPersister.builder().save();
         Member member2 = memberTestPersister.builder().save();
@@ -307,10 +307,10 @@ class VoteRepositoryTest {
         voteTestPersister.builder().member(member1).save();
         voteTestPersister.builder().member(member1).save();
 
-        //when
+        // when
         List<Integer> voteCounts = voteRepository.findCountsByMembers(List.of(member, member1, member2));
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(voteCounts).hasSize(3),
                 () -> assertThat(voteCounts.get(0)).isEqualTo(1),

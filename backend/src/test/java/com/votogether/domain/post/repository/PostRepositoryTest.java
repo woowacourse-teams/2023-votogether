@@ -842,7 +842,7 @@ class PostRepositoryTest {
     @Test
     @DisplayName("모든 유저의 작성한 게시글 수를 가져온다.")
     void findCountsByMembers() {
-        //given
+        // given
         Member member = memberTestPersister.builder().save();
         Member member1 = memberTestPersister.builder().save();
         Member member2 = memberTestPersister.builder().save();
@@ -851,10 +851,10 @@ class PostRepositoryTest {
         postTestPersister.builder().writer(member1).save();
         postTestPersister.builder().writer(member1).save();
 
-        //when
+        // when
         List<Integer> postCounts = postRepository.findCountsByMembers(List.of(member, member1, member2));
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(postCounts).hasSize(3),
                 () -> assertThat(postCounts.get(0)).isEqualTo(1),

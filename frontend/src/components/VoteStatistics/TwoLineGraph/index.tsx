@@ -16,9 +16,7 @@ export default function TwoLineGraph({ ageGroup, size }: GraphProps) {
           <S.OptionContainer key={ageResult.name} $size={size}>
             <S.DataWrapper>
               <S.OptionLengthWrapper $gender="FEMALE">
-                <span
-                  aria-label={`${ageResult.name}연령대에서 ${ageResult.female}명의 여성이 투표`}
-                >
+                <span aria-label={`${ageResult.name}에서 ${ageResult.female}명의 여성이 투표`}>
                   {ageResult.female}
                 </span>
                 <S.OptionLength
@@ -27,15 +25,13 @@ export default function TwoLineGraph({ ageGroup, size }: GraphProps) {
                 />
               </S.OptionLengthWrapper>
               <S.OptionLengthWrapper $gender="MALE">
-                <span aria-label={`${ageResult.name}연령대에서 ${ageResult.male}명의 남성이 투표`}>
+                <span aria-label={`${ageResult.name}에서 ${ageResult.male}명의 남성이 투표`}>
                   {ageResult.male}
                 </span>
                 <S.OptionLength $amount={(ageResult.male / maxVoteAmount) * 100} $gender="MALE" />
               </S.OptionLengthWrapper>
             </S.DataWrapper>
-            <span aria-label="" role="contentinfo">
-              {ageResult.name}
-            </span>
+            <span aria-hidden="true">{ageResult.name}</span>
           </S.OptionContainer>
         );
       })}

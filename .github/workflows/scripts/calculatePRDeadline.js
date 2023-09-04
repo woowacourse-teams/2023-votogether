@@ -1,11 +1,11 @@
-function calculatePRDeadline(prCreatedAtKST: string) {
+function calculatePRDeadline(prCreatedAtKST) {
   const prCreatedAt = new Date(String(prCreatedAtKST));
 
   const prCreatedMinute = prCreatedAt.getUTCMinutes();
   const prCreatedHour = prCreatedAt.getUTCHours();
   const prCreatedDate = prCreatedAt.getUTCDate();
   const prCreatedDay = prCreatedAt.getUTCDay();
-  const prCreatedMonth = prCreatedAt.getUTCMonth() + 1; // getUTCMonth()는 0부터 시작하므로 1을 더해줍니다.
+  const prCreatedMonth = prCreatedAt.getUTCMonth() + 1; // getUTCMonth()는 0부터 시작하므로 1을 더함
 
   const isFridayAfterTenPM = prCreatedDay === 5 && prCreatedHour >= 22; // 금요일 오후 10시 이후 (금요일: 5, 오후 12시: 12)
   const isWeekend = prCreatedDay === 6 || prCreatedDay === 0; // 주말인 경우
@@ -14,7 +14,7 @@ function calculatePRDeadline(prCreatedAtKST: string) {
   const isNotWorkingTime = isFridayAfterTenPM || isWeekend;
 
   let nextDay = new Date(prCreatedAt);
-  nextDay.setUTCDate(prCreatedDate + 1); // 다음 날의 날짜를 설정합니다.
+  nextDay.setUTCDate(prCreatedDate + 1); // 다음 날의 날짜를 설정
 
   const nextDayDate = nextDay.getUTCDate();
   const nextDayMonth = nextDay.getUTCMonth() + 1;
@@ -46,3 +46,9 @@ function calculatePRDeadline(prCreatedAtKST: string) {
       prCreatedHour + 10
     }시 ${prCreatedMinute}분`;
 }
+
+console.log(
+  `::set-output name=DEADLINE::${calculatePRDeadline(
+    process.env.PR_CREATED_AT_KST
+  )}`
+);

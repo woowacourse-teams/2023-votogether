@@ -15,10 +15,9 @@ export const Wrapper = styled.div<{ $size: Size | 'free' }>`
   align-items: center;
   justify-items: center;
 
+  height: ${props => SIZE[props.$size].height};
   border: 1.5px solid var(--primary-color);
   border-radius: 4px;
-
-  height: ${props => SIZE[props.$size].height};
 `;
 
 export const Content = styled.button<{ $isSelected: boolean }>`

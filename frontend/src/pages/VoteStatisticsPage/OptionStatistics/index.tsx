@@ -46,7 +46,7 @@ export default function OptionStatistics({
   return (
     <S.Container>
       <WrittenVoteOption
-        ariaLabel=""
+        ariaLabel="투표 통계"
         key={voteOption.id}
         {...voteOption}
         isPreview={false}
@@ -55,8 +55,18 @@ export default function OptionStatistics({
         handleVoteClick={toggleOptionStatistics}
       />
       <S.StatisticsContainer>
+        {!isStatisticsOpen && (
+          <S.ScreenReaderDirection>
+            투표 선택지를 클릭하여 투표 통계를 열어 확인할 수 있습니다.
+          </S.ScreenReaderDirection>
+        )}
         {isStatisticsOpen && voteResult && (
-          <VoteStatistics voteResultResponse={voteResult} size={size} />
+          <>
+            <S.ScreenReaderDirection>
+              투표 선택지를 클릭하여 투표 통계를 닫을 수 있습니다.
+            </S.ScreenReaderDirection>
+            <VoteStatistics voteResultResponse={voteResult} size={size} />
+          </>
         )}
         {isStatisticsOpen && isLoading && (
           <S.LoadingWrapper>

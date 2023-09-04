@@ -1,4 +1,4 @@
-function calculatePRDeadline(prCreatedAtKST) {
+function calculatePRDeadline(prCreatedAtKST: string) {
   const prCreatedAt = new Date(String(prCreatedAtKST));
 
   const prCreatedMinute = prCreatedAt.getUTCMinutes();
@@ -7,12 +7,11 @@ function calculatePRDeadline(prCreatedAtKST) {
   const prCreatedDay = prCreatedAt.getUTCDay();
   const prCreatedMonth = prCreatedAt.getUTCMonth() + 1; // getUTCMonth()는 0부터 시작하므로 1을 더해줍니다.
 
-  const isFridayAfternoon = prCreatedDay === 5 && prCreatedHour >= 22; // 금요일 오후 10시 이후 (금요일: 5, 오후 12시: 12)
+  const isFridayAfterTenPM = prCreatedDay === 5 && prCreatedHour >= 22; // 금요일 오후 10시 이후 (금요일: 5, 오후 12시: 12)
   const isWeekend = prCreatedDay === 6 || prCreatedDay === 0; // 주말인 경우
-  const isMondayMorning = prCreatedDay === 1 && prCreatedHour < 10; // 월요일 오전 10시 이전 (월요일: 1, 오전 10시: 10)
 
   // 주어진 근무시간(월요일 오전 10시~금요일 오후 10시) 내에 올린 pr인지 판별
-  const isNotWorkingTime = isFridayAfternoon || isWeekend || isMondayMorning;
+  const isNotWorkingTime = isFridayAfterTenPM || isWeekend;
 
   let nextDay = new Date(prCreatedAt);
   nextDay.setUTCDate(prCreatedDate + 1); // 다음 날의 날짜를 설정합니다.
@@ -30,8 +29,9 @@ function calculatePRDeadline(prCreatedAtKST) {
 
   const isFriday = prCreatedDay === 5;
 
-  if (isNotWorkingTime)
+  if (isNotWorkingTime) {
     return `${nextWeekMondayMonth}월 ${nextWeekMondayDate}일 20시 00분`;
+  }
 
   if (prCreatedHour < 10 && prCreatedHour > 0)
     return `${prCreatedMonth}월 ${prCreatedDate}일 20시 00분`;
@@ -42,13 +42,7 @@ function calculatePRDeadline(prCreatedAtKST) {
       isFriday ? nextWeekMondayDate : nextDayDate
     }일 ${prCreatedHour - 2}시 ${prCreatedMinute}분`;
   else
-    return `${isFriday ? nextWeekMondayMonth : prCreatedMonth}월 ${
-      isFriday ? nextWeekMondayDate : prCreatedDate
-    }일 ${prCreatedHour + 10}시 ${prCreatedMinute}분`;
+    return `${prCreatedMonth}월 ${prCreatedDate}일 ${
+      prCreatedHour + 10
+    }시 ${prCreatedMinute}분`;
 }
-
-console.log(
-  `::set-output name=DEADLINE::${calculatePRDeadline(
-    process.env.PR_CREATED_AT_KST
-  )}`
-);

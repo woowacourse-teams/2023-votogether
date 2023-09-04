@@ -9,7 +9,7 @@ import Error from '@pages/Error';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 
-import { getCookieToken, getMemberId, setCookieToken } from '@utils/cookie';
+import { getCookieToken, decodeToken, setCookieToken } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
 
 const getAuthInfo = async (url: string): Promise<AuthResponse> => {
@@ -44,11 +44,12 @@ export default function Redirection() {
             return setErrorMessage('로그인 중 오류가 발생했습니다.');
           }
 
-          const { accessToken, hasEssentialInfo } = res;
+          const { accessToken, hasEssentialInfo, refreshToken } = res;
           setCookieToken('accessToken', accessToken);
+          setCookieToken('refreshToken', refreshToken);
           setCookieToken('hasEssentialInfo', hasEssentialInfo);
 
-          const decodedPayload = getMemberId(accessToken);
+          const decodedPayload = decodeToken(accessToken);
           const id = decodedPayload.memberId;
 
           setLoggedInfo({

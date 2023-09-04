@@ -55,6 +55,11 @@ export default function OptionStatistics({
         handleVoteClick={toggleOptionStatistics}
       />
       <S.StatisticsContainer>
+        {!isStatisticsOpen && (
+          <S.ScreenReaderDirection>
+            투표 선택지를 클릭하여 투표 통계를 열어 확인할 수 있습니다.
+          </S.ScreenReaderDirection>
+        )}
         {isStatisticsOpen && voteResult && (
           <>
             <S.ScreenReaderDirection>

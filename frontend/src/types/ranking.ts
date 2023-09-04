@@ -5,3 +5,13 @@ export interface PassionUser {
   voteCount: number;
   score: number;
 }
+
+export interface RankingPost {
+  rank: number;
+  post: {
+    id: number;
+    nickname: string;
+    title: string;
+    voteCount: number;
+  };
+}

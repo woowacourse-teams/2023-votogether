@@ -3,6 +3,10 @@ on:
   issue_comment:
     types: [created, edited, deleted]
 
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
   pull_request_comment:
     # This job only runs for pull request comments

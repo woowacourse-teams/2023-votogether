@@ -1,8 +1,8 @@
-import { getCookieToken, getMemberId } from '@utils/cookie';
+import { getCookieToken, decodeToken } from '@utils/cookie';
 
 export function checkWriter(writerId: number) {
   const accessToken = getCookieToken().accessToken;
-  const memberId = getMemberId(accessToken).memberId;
+  const memberId = decodeToken(accessToken).memberId;
 
   return writerId === memberId;
 }

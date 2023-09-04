@@ -4,7 +4,7 @@ import { LoggedInfo } from '@type/user';
 
 import { useUserInfo } from '@hooks/query/user/useUserInfo';
 
-import { clearCookieToken, getCookieToken, getMemberId } from '@utils/cookie';
+import { clearCookieToken, getCookieToken, decodeToken } from '@utils/cookie';
 
 interface Auth {
   loggedInfo: LoggedInfo;
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const accessToken = getCookieToken().accessToken;
     if (accessToken) {
-      const decodedPayload = getMemberId(accessToken);
+      const decodedPayload = decodeToken(accessToken);
       const id = decodedPayload.memberId;
       setLoggedInfo(origin => ({ ...origin, accessToken, id, isLoggedIn: true }));
     }

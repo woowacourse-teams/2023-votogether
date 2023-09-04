@@ -10,7 +10,7 @@ export interface RankingPost {
   rank: number;
   post: {
     id: number;
-    nickname: string;
+    writer: string;
     title: string;
     voteCount: number;
   };

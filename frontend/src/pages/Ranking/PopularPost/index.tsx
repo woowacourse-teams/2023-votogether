@@ -41,7 +41,7 @@ export default function PopularPost({ rankingPostList }: PopularPostProps) {
           return (
             <S.Tr key={rankingPost.rank}>
               <S.RankingTd>{rankIcon ?? rankingPost.rank}</S.RankingTd>
-              <S.Td>{rankingPost.post.nickname}</S.Td>
+              <S.Td>{rankingPost.post.writer}</S.Td>
               <S.Td>
                 <Link to={`${PATH.POST}/${rankingPost.post.id}`}>{rankingPost.post.title}</Link>
               </S.Td>

@@ -37,7 +37,7 @@ const rankingPostInfo: RankingPost = {
   rank: 1,
   post: {
     id: 29,
-    nickname: 'writer',
+    writer: 'writer',
     title: '이것은 엄청나게 많은 투표가 이루어진 대단한 글이지요',
     voteCount: 10,
   },

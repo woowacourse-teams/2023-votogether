@@ -6,7 +6,7 @@ export const Table = styled.table`
   font: var(--text-caption);
   text-align: center;
 
-  & > :last-child {
+  & > :nth-child(12) {
     margin-top: 20px;
     padding: 3px 0;
     border-radius: 4px;

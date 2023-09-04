@@ -25,43 +25,38 @@ export default function Redirection() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
+    const authInfoFetch = async () => {
       setIsLoading(true);
       setErrorMessage('');
 
       const code = params.get('code');
       const REGISTER_API_URL = `${process.env.VOTOGETHER_BASE_URL}/auth/kakao/callback?code=${code}`;
 
-      await getAuthInfo(REGISTER_API_URL)
-        .finally(() => {
-          setIsLoading(false);
-        })
-        .catch(error => {
-          setErrorMessage(error.message);
-        })
-        .then(res => {
-          if (!res) {
-            return setErrorMessage('로그인 중 오류가 발생했습니다.');
-          }
+      try {
+        const { accessToken, hasEssentialInfo, refreshToken } = await getAuthInfo(REGISTER_API_URL);
+        setCookieToken('accessToken', accessToken);
+        setCookieToken('refreshToken', refreshToken ?? '');
+        setCookieToken('hasEssentialInfo', String(hasEssentialInfo));
 
-          const { accessToken, hasEssentialInfo, refreshToken } = res;
-          setCookieToken('accessToken', accessToken);
-          setCookieToken('refreshToken', refreshToken);
-          setCookieToken('hasEssentialInfo', hasEssentialInfo);
+        const decodedPayload = decodeToken(accessToken);
+        const id = decodedPayload.memberId;
 
-          const decodedPayload = decodeToken(accessToken);
-          const id = decodedPayload.memberId;
-
-          setLoggedInfo({
-            ...loggedInfo,
-            id,
-            accessToken: getCookieToken().accessToken,
-            isLoggedIn: true,
-          });
-
-          navigate('/');
+        setLoggedInfo({
+          ...loggedInfo,
+          id,
+          accessToken: getCookieToken().accessToken,
+          isLoggedIn: true,
         });
-    })();
+
+        navigate('/');
+      } catch (error) {
+        setErrorMessage('로그인 중 오류가 발생했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    authInfoFetch();
   }, [navigate, loggedInfo, setLoggedInfo, params]);
 
   if (isLoading)

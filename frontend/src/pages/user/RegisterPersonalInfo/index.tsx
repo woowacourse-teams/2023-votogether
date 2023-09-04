@@ -62,7 +62,7 @@ export default function RegisterPersonalInfo() {
 
     const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
-    setCookieToken('hasEssentialInfo', true);
+    setCookieToken('hasEssentialInfo', 'true');
 
     alert('개인 정보 등록 완료!');
     navigate('/');

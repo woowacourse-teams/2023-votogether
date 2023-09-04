@@ -6,7 +6,7 @@ export const setCookieToken = (key: CookieKey, token: string | boolean) => {
 };
 
 // token형식 = "key=value; key=value; key=value"
-export function getCookieToken() {
+export const getCookieToken = () => {
   const cookie = document.cookie;
   const cookieContent = {} as { [key: string]: any };
   cookie.split('; ').forEach(pair => {
@@ -15,7 +15,7 @@ export function getCookieToken() {
   });
 
   return cookieContent as Record<CookieKey, any>;
-}
+};
 
 interface MemberPayload {
   memberId: number;
@@ -23,13 +23,13 @@ interface MemberPayload {
   exp: number;
 }
 
-export function decodeToken(token: string): MemberPayload {
+export const decodeToken = (token: string): MemberPayload => {
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const decodedData = JSON.parse(atob(base64));
 
   return decodedData;
-}
+};
 
 export const clearCookieToken = (key: CookieKey) => {
   const expirationTime = new Date(Date.now() - 1);

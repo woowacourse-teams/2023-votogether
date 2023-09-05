@@ -40,5 +40,5 @@ export const Content = styled.div<{ $size: Size | 'free' }>`
 
   animation: ${fadeInOutAnimation} ${TOAST_TIME}s linear infinite;
 
-  z-index: ${theme.zIndex.select};
+  z-index: ${theme.zIndex.modal};
 `;

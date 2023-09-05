@@ -27,6 +27,11 @@ spring:
       enabled: ${H2_CONSOLE_ENABLE}
       path: /h2-console
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace

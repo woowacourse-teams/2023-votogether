@@ -27,3 +27,8 @@ export const LoadingWrapper = styled.div`
 
   height: 100px;
 `;
+
+export const ScreenReaderDirection = styled.p`
+  position: absolute;
+  left: -9999px;
+`;

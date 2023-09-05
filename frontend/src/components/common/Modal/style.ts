@@ -43,3 +43,9 @@ export const Container = styled.div<{ size: Size }>`
 
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 `;
+
+export const HiddenCloseButton = styled.button`
+  position: absolute;
+  left: -10000px;
+  top: -10000px;
+`;

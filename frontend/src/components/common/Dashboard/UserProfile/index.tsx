@@ -14,7 +14,7 @@ export default function UserProfile({ userInfo }: UserProfileProps) {
   const { nickname, postCount, voteCount } = userInfo;
 
   return (
-    <PS.ProfileContainer>
+    <PS.ProfileContainer role="region" aria-label="회원 프로필">
       <S.NickName>{nickname}</S.NickName>
       <S.UserInfoContainer>
         <S.TextCardLink to={PATH.USER_POST}>

@@ -8,12 +8,18 @@ import PostOptionProvider from '@hooks/context/postOption';
 
 import router from '@routes/router';
 
+import ChannelTalk from '@pages/ChannelTalk';
 import ErrorBoundaryForTopClass from '@pages/ErrorBoundaryForTopClass';
 
 import { GlobalStyle } from '@styles/globalStyle';
 import { theme } from '@styles/theme';
 
 const queryClient = new QueryClient();
+
+ChannelTalk.loadScript();
+ChannelTalk.boot({
+  pluginKey: process.env.VOTOGETHER_CHANNEL_TALK_KEY,
+});
 
 const App = () => (
   <ErrorBoundaryForTopClass>

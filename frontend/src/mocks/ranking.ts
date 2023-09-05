@@ -20,7 +20,7 @@ const rankerInfo: PassionUser = {
 
 const rankerList: PassionUser[] = new Array(10)
   .fill(rankerInfo)
-  .map((ranker, index) => ({ ...ranker, rank: index + 1 }));
+  .map((ranker, index) => ({ ...ranker, ranking: index + 1 }));
 
 const rankingPostInfo: RankingPost = {
   ranking: 1,
@@ -37,14 +37,14 @@ const rankingPostList: RankingPost[] = new Array(10)
 
 export const mockRanking = [
   rest.get('/members/me/ranking', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(userRankingInfo));
+    return res(ctx.status(200), ctx.delay(500), ctx.json(userRankingInfo));
   }),
 
   rest.get('/members/ranking/passion/guest', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(rankerList));
+    return res(ctx.status(200), ctx.delay(1000), ctx.json(rankerList));
   }),
 
   rest.get('/posts/ranking/popular/guest', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(rankingPostList));
+    return res(ctx.status(200), ctx.delay(500), ctx.json(rankingPostList));
   }),
 ];

@@ -31,7 +31,7 @@ const userRankingInfo: PassionUser = {
 
 const rankerList: PassionUser[] = new Array(10)
   .fill(rankerInfo)
-  .map((ranker, index) => ({ ...ranker, rank: index + 1 }));
+  .map((ranker, index) => ({ ...ranker, ranking: index + 1 }));
 
 const rankingPostInfo: RankingPost = {
   ranking: 1,

@@ -37,17 +37,13 @@ export default function VoteStatisticsPage() {
     isLoading: isVoteResultLoading,
   } = useFetch(() => getPostStatistics(postId));
 
-  const movePostDetailPage = () => {
-    navigate(`${PATH.POST}/${postId}`);
-  };
-
   if (postDetail && !checkWriter(postDetail.writer.id)) return <Navigate to={PATH.HOME} />;
 
   return (
     <Layout isSidebarVisible={true}>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
-          <IconButton category="back" onClick={movePostDetailPage} />
+          <IconButton category="back" onClick={() => navigate(-1)} />
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
       <S.Container>

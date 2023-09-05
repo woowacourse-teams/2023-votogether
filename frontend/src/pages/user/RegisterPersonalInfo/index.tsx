@@ -5,8 +5,8 @@ import { useUpdateUserInfo } from '@hooks/query/user/useUpdateUserInfo';
 import { useToast } from '@hooks/useToast';
 
 import Accordion from '@components/common/Accordion';
-import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
+import LogoButton from '@components/common/LogoButton';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import Toast from '@components/common/Toast';
@@ -95,7 +95,11 @@ export default function RegisterPersonalInfo() {
       <S.Wrapper>
         <S.HeaderWrapper>
           <NarrowTemplateHeader>
-            <IconButton category="back" />
+            <LogoButton
+              content="icon"
+              style={{ width: '33px', height: '33px' }}
+              onClick={() => navigate('/')}
+            />
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.Title>개인 정보 등록</S.Title>

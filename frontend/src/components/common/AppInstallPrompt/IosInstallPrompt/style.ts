@@ -82,19 +82,9 @@ export const IconImage = styled.img`
   height: 24px;
 `;
 
-export const InstallButton = styled.button`
+export const IosContainer = styled.div`
+  display: flex;
+  align-items: center;
   align-self: end;
-
-  border-radius: 6px;
-
-  width: 190px;
-  height: 40px;
-
-  font-size: 1.6rem;
-  font-weight: 500;
-
-  color: white;
-  background-color: #5383ed;
-
-  cursor: pointer;
+  gap: 8px;
 `;

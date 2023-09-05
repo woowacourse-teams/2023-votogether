@@ -4,20 +4,14 @@ import { getCookieToken, setCookie } from '@utils/cookie';
 
 import { BeforeInstallPromptEvent } from '../../../../window';
 
+import IosInstallPrompt from './IosInstallPrompt';
 import MobileInstallPrompt from './MobileInstallPrompt';
-
-const defaultBeforeInstallPromptEvent: BeforeInstallPromptEvent = {
-  platforms: [],
-  userChoice: Promise.resolve({ outcome: 'dismissed', platform: '' }),
-  prompt: () => Promise.resolve(),
-  preventDefault: () => {},
-};
 
 const isIOSPromptActive = () => {
   const isActive = JSON.parse(getCookieToken().isAppInstallVisible || 'true');
 
   if (isActive) {
-    return defaultBeforeInstallPromptEvent;
+    return true;
   }
 
   return null;
@@ -25,9 +19,10 @@ const isIOSPromptActive = () => {
 
 export default function AppInstallPrompt() {
   const isDeviceIOS = /iPad|iPhone|iPod/.test(window.navigator.userAgent);
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
+  const [iosPrompt, setIosPrompt] = useState<boolean | null>(
     isDeviceIOS ? isIOSPromptActive() : null
   );
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   const handleInstallClick = () => {
     if (deferredPrompt) {
@@ -41,6 +36,7 @@ export default function AppInstallPrompt() {
 
   const handleCancelClick = () => {
     setCookie({ key: 'isAppInstallVisible', value: 'false', maxAge: 7 * 24 * 60 * 60 });
+    setIosPrompt(null);
     setDeferredPrompt(null);
   };
 
@@ -67,9 +63,9 @@ export default function AppInstallPrompt() {
         <MobileInstallPrompt
           handleInstallClick={handleInstallClick}
           handleCancelClick={handleCancelClick}
-          platform={isDeviceIOS ? 'ios' : 'android'}
         />
       )}
+      {iosPrompt && <IosInstallPrompt handleCancelClick={handleCancelClick} />}
     </Fragment>
   );
 }

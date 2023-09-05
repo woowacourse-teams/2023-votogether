@@ -39,3 +39,12 @@ export const RankingTd = styled.td`
 export const Td = styled.td`
   padding: 10px 0;
 `;
+
+export const LoadingSpinnerWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 50px;
+  padding: 0;
+`;

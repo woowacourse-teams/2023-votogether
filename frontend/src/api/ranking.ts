@@ -11,9 +11,9 @@ export const getUserRanking = async (isLoggedIn: boolean) => {
 };
 
 export const getPassionUserRanking = async () => {
-  return await getFetch<PassionUser>(`${BASE_URL}/members/ranking/passion/guest`);
+  return await getFetch<PassionUser[]>(`${BASE_URL}/members/ranking/passion/guest`);
 };
 
 export const getPopularPostRanking = async () => {
-  return await getFetch<RankingPost>(`${BASE_URL}/posts/ranking/popular/guest`);
+  return await getFetch<RankingPost[]>(`${BASE_URL}/posts/ranking/popular/guest`);
 };

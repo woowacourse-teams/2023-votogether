@@ -8,6 +8,7 @@ export const Container = styled.div`
   align-items: center;
 
   width: 100vw;
+  height: 240px;
   border-top: 1px solid rgba(0, 0, 0, 0.3);
 
   position: fixed;

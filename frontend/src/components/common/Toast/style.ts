@@ -18,18 +18,9 @@ export const fadeInOutAnimation = keyframes`
 `;
 
 export const Wrapper = styled.div<{ $position: 'top' | 'bottom' }>`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: ${props => POSITION[props.$position]};
-  align-items: end;
-  justify-items: center;
-
-  width: 100vw;
-  height: 100vh;
-
   position: fixed;
-  top: 0;
-  left: 0;
+
+  top: ${props => POSITION[props.$position]};
 `;
 
 export const Content = styled.div<{ $size: Size | 'free' }>`
@@ -49,5 +40,5 @@ export const Content = styled.div<{ $size: Size | 'free' }>`
 
   animation: ${fadeInOutAnimation} ${TOAST_TIME}s linear infinite;
 
-  z-index: ${theme.zIndex.modal};
+  z-index: ${theme.zIndex.select};
 `;

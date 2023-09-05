@@ -6,7 +6,7 @@ import { getUserRanking } from '@api/ranking';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const usePassionUserRanking = (isLoggedIn: boolean) => {
+export const useUserRanking = (isLoggedIn: boolean) => {
   const { data, error, isLoading, isError } = useQuery<PassionUser | null>(
     [QUERY_KEY.USER_INFO, isLoggedIn, QUERY_KEY.PASSION_RANKING],
     () => getUserRanking(isLoggedIn),

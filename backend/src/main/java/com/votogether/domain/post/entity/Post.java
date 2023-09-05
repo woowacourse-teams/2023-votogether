@@ -7,6 +7,7 @@ import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.vote.entity.Vote;
+import com.votogether.domain.vote.exception.VoteExceptionType;
 import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -27,13 +28,15 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
     @Id
@@ -102,7 +105,7 @@ public class Post extends BaseEntity {
 
     public void validateWriter(final Member member) {
         if (!Objects.equals(this.writer, member)) {
-            throw new BadRequestException(PostExceptionType.NOT_WRITER);
+            throw new BadRequestException(PostExceptionType.POST_NOT_WRITER);
         }
     }
 
@@ -135,7 +138,7 @@ public class Post extends BaseEntity {
 
     private void validateVoter(final Member voter) {
         if (Objects.equals(this.writer.getId(), voter.getId())) {
-            throw new BadRequestException(PostExceptionType.NOT_VOTER);
+            throw new BadRequestException(VoteExceptionType.WRITER_NOT_VOTE);
         }
     }
 
@@ -194,7 +197,7 @@ public class Post extends BaseEntity {
 
     public void validatePossibleToDelete() {
         if (this.totalVoteCount >= 20) {
-            throw new BadRequestException(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES);
+            throw new BadRequestException(PostExceptionType.FAIL_DELETE_EXCEED_TWENTY_VOTE_COUNT);
         }
     }
 
@@ -266,7 +269,7 @@ public class Post extends BaseEntity {
 
     public void validateExistVote() {
         if (totalVoteCount > 0) {
-            throw new BadRequestException(PostExceptionType.VOTING_PROGRESS_NOT_EDITABLE);
+            throw new BadRequestException(PostExceptionType.FAIL_UPDATE_VOTED_POST);
         }
     }
 

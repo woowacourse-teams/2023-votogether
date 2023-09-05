@@ -276,7 +276,7 @@ class MemberServiceTest {
             // then
             assertAll(
                     () -> assertThat(memberRepository.findAll()).hasSize(1),
-                    () -> assertThat(memberRepository.findById(writer.getId()).get()).isEqualTo(writer),
+                    () -> assertThat(memberRepository.findById(writer.getId())).contains(writer),
                     () -> assertThat(postRepository.findAll()).hasSize(1)
             );
         }
@@ -394,7 +394,7 @@ class MemberServiceTest {
 
             Comment comment = Comment.builder()
                     .post(post)
-                    .member(member)
+                    .writer(member)
                     .content("댓글입니다.")
                     .build();
 

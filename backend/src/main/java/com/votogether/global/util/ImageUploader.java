@@ -21,7 +21,6 @@ public class ImageUploader {
         }
 
         final long milli = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
-
         final String rootPath = new File("").getAbsolutePath() + File.separator;
         final String imageDirPath = "static" + File.separator + "images" + File.separator;
         final String imageFileName = milli + "_" + image.getOriginalFilename();
@@ -31,15 +30,10 @@ public class ImageUploader {
             if (!imageFolder.exists()) {
                 imageFolder.mkdirs(); // Creates the directory if it does not exist
             }
-
             Files.write(Paths.get(rootPath + imageDirPath + imageFileName), image.getBytes());
         } catch (IOException ignore) {
-            System.out.println("ImageUploader.upload");
-            System.out.println("imageUrl = " + imageDirPath + imageFileName);
-            ignore.printStackTrace();
             throw new BadRequestException(PostExceptionType.WRONG_IMAGE);
         }
-
         return imageDirPath + imageFileName;
     }
 

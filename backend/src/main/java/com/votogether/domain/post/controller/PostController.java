@@ -159,18 +159,6 @@ public class PostController implements PostControllerDocs {
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member member
     ) {
-        System.out.println("PostController.save");
-
-        System.out.println("contentImages = " + contentImages);
-        if (contentImages != null && !contentImages.isEmpty()) {
-            System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
-        }
-
-        System.out.println("optionImages = " + optionImages);
-        if (optionImages != null && !optionImages.isEmpty()) {
-            System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
-            System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
-        }
         final Long postId = postService.save(request, member, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
@@ -183,19 +171,6 @@ public class PostController implements PostControllerDocs {
             @RequestPart final List<MultipartFile> optionImages,
             @Auth final Member member
     ) {
-        System.out.println("PostController.update");
-
-        System.out.println("contentImages = " + contentImages);
-        if (contentImages != null && !contentImages.isEmpty()) {
-            System.out.println("contentImages = " + contentImages.get(0).getOriginalFilename());
-        }
-
-        System.out.println("optionImages = " + optionImages);
-        if (optionImages != null && !optionImages.isEmpty()) {
-            System.out.println("optionImages1 = " + optionImages.get(0).getOriginalFilename());
-            System.out.println("optionImages2 = " + optionImages.get(1).getOriginalFilename());
-        }
-
         postService.update(postId, request, member, contentImages, optionImages);
         return ResponseEntity.ok().build();
     }

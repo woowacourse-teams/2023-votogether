@@ -113,8 +113,12 @@ public class ReportService {
             final ReportRequest request,
             final Comment reportedComment
     ) {
-        reportedComment.validateMine(reporter);
-        reportedComment.validateHidden();
+        if (reportedComment.isAuthor(reporter)) {
+            throw new BadRequestException(ReportExceptionType.REPORT_MY_COMMENT);
+        }
+        if (reportedComment.isHidden()) {
+            throw new BadRequestException(ReportExceptionType.ALREADY_HIDDEN_COMMENT);
+        }
         validateDuplicatedReport(reporter, request, ReportExceptionType.DUPLICATE_COMMENT_REPORT);
     }
 

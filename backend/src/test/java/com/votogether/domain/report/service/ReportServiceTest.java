@@ -96,7 +96,7 @@ class ReportServiceTest {
             // when, then
             assertThatThrownBy(() -> reportService.report(writer, request))
                     .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+                    .hasMessage("게시글이 존재하지 않습니다.");
         }
 
         @Test
@@ -260,7 +260,7 @@ class ReportServiceTest {
 
             Comment comment = Comment.builder()
                     .post(post)
-                    .member(writer)
+                    .writer(writer)
                     .content("으어어어어")
                     .build();
 
@@ -284,7 +284,7 @@ class ReportServiceTest {
             // when, then
             assertThatThrownBy(() -> reportService.report(writer, request))
                     .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 댓글이 존재하지 않습니다.");
+                    .hasMessage("댓글이 존재하지 않습니다.");
         }
 
         @Test
@@ -306,7 +306,7 @@ class ReportServiceTest {
 
             Comment comment = Comment.builder()
                     .post(post)
-                    .member(writer)
+                    .writer(writer)
                     .content("으어어어어")
                     .build();
 
@@ -341,7 +341,7 @@ class ReportServiceTest {
 
             Comment comment = Comment.builder()
                     .post(post)
-                    .member(writer)
+                    .writer(writer)
                     .content("으어어어어")
                     .build();
 
@@ -377,7 +377,7 @@ class ReportServiceTest {
 
             Comment comment = Comment.builder()
                     .post(post)
-                    .member(writer)
+                    .writer(writer)
                     .content("으어어어어")
                     .build();
 
@@ -419,7 +419,7 @@ class ReportServiceTest {
 
             Comment comment = Comment.builder()
                     .post(post)
-                    .member(writer)
+                    .writer(writer)
                     .content("으어어어어")
                     .build();
 

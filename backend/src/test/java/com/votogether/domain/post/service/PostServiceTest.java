@@ -19,7 +19,7 @@ import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.comment.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
@@ -186,7 +186,7 @@ class PostServiceTest {
             // given, when, then
             assertThatThrownBy(() -> postService.getVoteStatistics(-1L, MemberFixtures.MALE_20.get()))
                     .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+                    .hasMessage("게시글이 존재하지 않습니다.");
         }
 
         @Test
@@ -206,7 +206,7 @@ class PostServiceTest {
             // when, then
             assertThatThrownBy(() -> postService.getVoteStatistics(post.getId(), reader))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("해당 게시글 작성자가 아닙니다.");
+                    .hasMessage("게시글 작성자가 아닙니다.");
         }
 
         @Test
@@ -276,7 +276,7 @@ class PostServiceTest {
             // given, when, then
             assertThatThrownBy(() -> postService.getVoteOptionStatistics(-1L, 1L, MemberFixtures.MALE_20.get()))
                     .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+                    .hasMessage("게시글이 존재하지 않습니다.");
         }
 
         @Test
@@ -296,7 +296,7 @@ class PostServiceTest {
             // when, then
             assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), -1L, writer))
                     .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글 투표 옵션이 존재하지 않습니다.");
+                    .hasMessage("게시글 투표 옵션이 존재하지 않습니다.");
         }
 
         @Test
@@ -330,7 +330,7 @@ class PostServiceTest {
             // when, then
             assertThatThrownBy(() -> postService.getVoteOptionStatistics(post1.getId(), postOption.getId(), writer))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("게시글 투표 옵션이 게시글과 연관되어 있지 않습니다.");
+                    .hasMessage("게시글의 투표 옵션이 아닙니다.");
         }
 
         @Test
@@ -357,7 +357,7 @@ class PostServiceTest {
             // when, then
             assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), postOption.getId(), reader))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("해당 게시글 작성자가 아닙니다.");
+                    .hasMessage("게시글 작성자가 아닙니다.");
         }
 
         @Test
@@ -456,7 +456,7 @@ class PostServiceTest {
         // when, then
         assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), MemberFixtures.MALE_30.get()))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage("해당 게시글 작성자가 아닙니다.");
+                .hasMessage("게시글 작성자가 아닙니다.");
     }
 
     @Test
@@ -478,7 +478,7 @@ class PostServiceTest {
         // when, then
         assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage("게시글이 이미 마감되었습니다.");
+                .hasMessage("게시글이 마감되었습니다.");
     }
 
     @Test
@@ -999,8 +999,8 @@ class PostServiceTest {
         PostOption perPostOption = postOptions.get(0);
         voteService.vote(voter, savedPostId, perPostOption.getId());
 
-        CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest("hello");
-        postCommentService.createComment(voter, post.getId(), commentRegisterRequest);
+        CommentCreateRequest commentCreateRequest = new CommentCreateRequest("hello");
+        postCommentService.createComment(post.getId(), commentCreateRequest, voter);
         entityManager.flush();
         entityManager.clear();
 
@@ -1091,7 +1091,7 @@ class PostServiceTest {
         // when, then
         assertThatThrownBy(() -> postService.delete(savedPostId))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES.getMessage());
+                .hasMessage(PostExceptionType.FAIL_DELETE_EXCEED_TWENTY_VOTE_COUNT.getMessage());
     }
 
     @Test
@@ -1289,7 +1289,7 @@ class PostServiceTest {
                 List.of(file5, file6)
         ))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage(PostExceptionType.NOT_WRITER.getMessage());
+                .hasMessage(PostExceptionType.POST_NOT_WRITER.getMessage());
     }
 
     @Test
@@ -1581,7 +1581,7 @@ class PostServiceTest {
                 List.of(file5, file6)
         ))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage(PostExceptionType.VOTING_PROGRESS_NOT_EDITABLE.getMessage());
+                .hasMessage(PostExceptionType.FAIL_UPDATE_VOTED_POST.getMessage());
     }
 
     @Test

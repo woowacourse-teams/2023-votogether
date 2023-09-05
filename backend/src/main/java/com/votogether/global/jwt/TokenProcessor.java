@@ -69,9 +69,6 @@ public class TokenProcessor {
 
     public void validateToken(final String token) {
         try {
-            System.out.println("================================");
-            System.out.println("token = " + token);
-            System.out.println("================================");
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
@@ -80,9 +77,6 @@ public class TokenProcessor {
             log.info("지원하지 않는 JWT입니다.");
             throw new IllegalArgumentException("지원하지 않는 JWT입니다.");
         } catch (final MalformedJwtException e) {
-            System.out.println("============================");
-            System.out.println("e.getMessage() = " + e.getMessage());
-            e.printStackTrace();
             log.info("잘못된 JWT 서명입니다.");
             throw new IllegalArgumentException("잘못된 JWT 서명입니다.");
         } catch (final SignatureException e) {

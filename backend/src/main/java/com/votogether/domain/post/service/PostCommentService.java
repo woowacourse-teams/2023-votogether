@@ -1,7 +1,7 @@
 package com.votogether.domain.post.service;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.request.comment.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.dto.request.comment.CommentUpdateRequest;
 import com.votogether.domain.post.dto.response.comment.CommentResponse;
 import com.votogether.domain.post.entity.Post;
@@ -10,6 +10,7 @@ import com.votogether.domain.post.exception.CommentExceptionType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,23 +24,6 @@ public class PostCommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    @Transactional
-    public void createComment(
-            final Member member,
-            final Long postId,
-            final CommentRegisterRequest commentRegisterRequest
-    ) {
-        final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
-
-        final Comment comment = Comment.builder()
-                .member(member)
-                .content(commentRegisterRequest.content())
-                .build();
-
-        post.addComment(comment);
-    }
-
     @Transactional(readOnly = true)
     public List<CommentResponse> getComments(final Long postId) {
         final Post post = postRepository.findById(postId)
@@ -49,6 +33,22 @@ public class PostCommentService {
                 .stream()
                 .map(CommentResponse::from)
                 .toList();
+    }
+
+    @Transactional
+    public void createComment(
+            final Long postId,
+            final CommentCreateRequest commentCreateRequest,
+            final Member member
+    ) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+
+        final Comment comment = Comment.builder()
+                .writer(member)
+                .content(commentCreateRequest.content())
+                .build();
+        post.addComment(comment);
     }
 
     @Transactional
@@ -63,8 +63,8 @@ public class PostCommentService {
         final Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
 
-        comment.validateBelong(post);
-        comment.validateWriter(member);
+        validateBelongsToPost(comment, post);
+        validateAuthor(comment, member);
 
         comment.updateContent(commentUpdateRequest.content());
     }
@@ -76,10 +76,22 @@ public class PostCommentService {
         final Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
 
-        comment.validateBelong(post);
-        comment.validateWriter(member);
+        validateBelongsToPost(comment, post);
+        validateAuthor(comment, member);
 
         commentRepository.delete(comment);
+    }
+
+    private void validateBelongsToPost(final Comment comment, final Post post) {
+        if (!comment.belongsTo(post)) {
+            throw new BadRequestException(CommentExceptionType.COMMENT_NOT_BELONG_POST);
+        }
+    }
+
+    private void validateAuthor(final Comment comment, final Member member) {
+        if (!comment.isAuthor(member)) {
+            throw new BadRequestException(CommentExceptionType.COMMENT_NOT_WRITER);
+        }
     }
 
 }

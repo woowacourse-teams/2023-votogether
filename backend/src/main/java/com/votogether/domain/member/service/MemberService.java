@@ -114,7 +114,7 @@ public class MemberService {
     }
 
     private List<Comment> deleteComments(final Member member) {
-        final List<Comment> comments = commentRepository.findAllByMember(member);
+        final List<Comment> comments = commentRepository.findAllByWriter(member);
         final List<Long> commentIds = comments.stream()
                 .map(Comment::getId)
                 .toList();

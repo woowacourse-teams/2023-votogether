@@ -1,12 +1,17 @@
-import { PassionUser } from '@type/ranking';
+import { Suspense } from 'react';
+
+import { usePassionUserRanking } from '@hooks/query/ranking/usePassionUserRanking';
+
+import ErrorBoundary from '@pages/ErrorBoundary';
+
+import LoadingSpinner from '@components/common/LoadingSpinner';
 
 import firstRankIcon from '@assets/first-rank.svg';
 import secondRankIcon from '@assets/second-rank.svg';
 import thirdRankIcon from '@assets/third-rank.svg';
 
-import * as RS from '../RankingTableStyle';
-
 import * as S from './style';
+import UserRanking from './UserRanking';
 
 const columnNameList = ['등수', '닉네임', '작성글 수', '투표 수', '점수'];
 
@@ -16,21 +21,18 @@ const rankIconUrl: Record<number, string> = {
   3: thirdRankIcon,
 };
 
-interface PassionUserRankingProps {
-  rankerList: PassionUser[];
-  userRanking?: PassionUser;
-}
+export default function PassionUserRanking() {
+  const { data: rankerList } = usePassionUserRanking();
 
-export default function PassionUserRanking({ rankerList, userRanking }: PassionUserRankingProps) {
   return (
-    <RS.Background>
-      <S.Table>
-        <S.Tr>
-          {columnNameList.map(text => (
-            <S.Th key={text}>{text}</S.Th>
-          ))}
-        </S.Tr>
-        {rankerList.map(ranker => {
+    <S.Table>
+      <S.Tr>
+        {columnNameList.map(text => (
+          <S.Th key={text}>{text}</S.Th>
+        ))}
+      </S.Tr>
+      {rankerList &&
+        rankerList.map(ranker => {
           const rankIcon = rankIconUrl[ranker.ranking] && (
             <img src={rankIconUrl[ranker.ranking]} alt={ranker.ranking.toString()} />
           );
@@ -45,16 +47,17 @@ export default function PassionUserRanking({ rankerList, userRanking }: PassionU
             </S.Tr>
           );
         })}
-        {userRanking && (
-          <S.Tr>
-            <S.Td>{userRanking.ranking}</S.Td>
-            <S.Td>{userRanking.nickname}</S.Td>
-            <S.Td>{userRanking.postCount}</S.Td>
-            <S.Td>{userRanking.voteCount}</S.Td>
-            <S.Td>{userRanking.score}</S.Td>
-          </S.Tr>
-        )}
-      </S.Table>
-    </RS.Background>
+      <ErrorBoundary>
+        <Suspense
+          fallback={
+            <S.LoadingSpinnerWrapper>
+              <LoadingSpinner size="sm" />
+            </S.LoadingSpinnerWrapper>
+          }
+        >
+          <UserRanking />
+        </Suspense>
+      </ErrorBoundary>
+    </S.Table>
   );
 }

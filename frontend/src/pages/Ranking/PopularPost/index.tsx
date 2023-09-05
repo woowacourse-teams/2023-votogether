@@ -34,13 +34,13 @@ export default function PopularPost({ rankingPostList }: PopularPostProps) {
           ))}
         </S.Tr>
         {rankingPostList.map(rankingPost => {
-          const rankIcon = rankIconUrl[rankingPost.rank] && (
-            <img src={rankIconUrl[rankingPost.rank]} alt={rankingPost.rank.toString()} />
+          const rankIcon = rankIconUrl[rankingPost.ranking] && (
+            <img src={rankIconUrl[rankingPost.ranking]} alt={rankingPost.ranking.toString()} />
           );
 
           return (
-            <S.Tr key={rankingPost.rank}>
-              <S.RankingTd>{rankIcon ?? rankingPost.rank}</S.RankingTd>
+            <S.Tr key={rankingPost.ranking}>
+              <S.RankingTd>{rankIcon ?? rankingPost.ranking}</S.RankingTd>
               <S.Td>{rankingPost.post.writer}</S.Td>
               <S.Td>
                 <Link to={`${PATH.POST}/${rankingPost.post.id}`}>{rankingPost.post.title}</Link>

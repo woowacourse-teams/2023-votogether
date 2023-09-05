@@ -12,7 +12,7 @@ export default meta;
 type Story = StoryObj<typeof PassionUserRanking>;
 
 const rankerInfo: PassionUser = {
-  rank: 1,
+  ranking: 1,
   nickname: 'gil-dong',
   postCount: 11,
   voteCount: 79,
@@ -20,7 +20,7 @@ const rankerInfo: PassionUser = {
 };
 
 const userRankingInfo: PassionUser = {
-  rank: 1111,
+  ranking: 1111,
   nickname: 'wow',
   postCount: 1,
   voteCount: 3,

@@ -12,7 +12,7 @@ export default meta;
 type Story = StoryObj<typeof PopularPost>;
 
 const rankingPostInfo: RankingPost = {
-  rank: 1,
+  ranking: 1,
   post: {
     id: 29,
     writer: 'writer',

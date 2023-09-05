@@ -14,7 +14,7 @@ import PopularPost from './PopularPost';
 import * as S from './style';
 
 const rankerInfo: PassionUser = {
-  rank: 1,
+  ranking: 1,
   nickname: 'gil-dong',
   postCount: 11,
   voteCount: 79,
@@ -22,7 +22,7 @@ const rankerInfo: PassionUser = {
 };
 
 const userRankingInfo: PassionUser = {
-  rank: 1111,
+  ranking: 1111,
   nickname: 'wow',
   postCount: 1,
   voteCount: 3,
@@ -34,7 +34,7 @@ const rankerList: PassionUser[] = new Array(10)
   .map((ranker, index) => ({ ...ranker, rank: index + 1 }));
 
 const rankingPostInfo: RankingPost = {
-  rank: 1,
+  ranking: 1,
   post: {
     id: 29,
     writer: 'writer',

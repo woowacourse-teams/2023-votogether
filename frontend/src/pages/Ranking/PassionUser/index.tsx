@@ -31,13 +31,13 @@ export default function PassionUserRanking({ rankerList, userRanking }: PassionU
           ))}
         </S.Tr>
         {rankerList.map(ranker => {
-          const rankIcon = rankIconUrl[ranker.rank] && (
-            <img src={rankIconUrl[ranker.rank]} alt={ranker.rank.toString()} />
+          const rankIcon = rankIconUrl[ranker.ranking] && (
+            <img src={rankIconUrl[ranker.ranking]} alt={ranker.ranking.toString()} />
           );
 
           return (
-            <S.Tr key={ranker.rank}>
-              <S.RankingTd>{rankIcon ?? ranker.rank}</S.RankingTd>
+            <S.Tr key={ranker.ranking}>
+              <S.RankingTd>{rankIcon ?? ranker.ranking}</S.RankingTd>
               <S.Td>{ranker.nickname}</S.Td>
               <S.Td>{ranker.postCount}</S.Td>
               <S.Td>{ranker.voteCount}</S.Td>
@@ -47,7 +47,7 @@ export default function PassionUserRanking({ rankerList, userRanking }: PassionU
         })}
         {userRanking && (
           <S.Tr>
-            <S.Td>{userRanking.rank}</S.Td>
+            <S.Td>{userRanking.ranking}</S.Td>
             <S.Td>{userRanking.nickname}</S.Td>
             <S.Td>{userRanking.postCount}</S.Td>
             <S.Td>{userRanking.voteCount}</S.Td>

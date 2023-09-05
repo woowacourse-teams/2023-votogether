@@ -7,7 +7,7 @@ import { getPassionUserRanking } from '@api/ranking';
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const usePassionUserRanking = () => {
-  const { data, error, isLoading, isError } = useQuery<PassionUser>(
+  const { data, error, isLoading, isError } = useQuery<PassionUser[]>(
     [QUERY_KEY.PASSION_RANKING],
     getPassionUserRanking,
     {

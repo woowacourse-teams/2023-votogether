@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification When Review Completed
-        if: contains(github.event.comment.body, 'review-complete') # check the comment if it contains the keywords
+        if: contains(github.event.comment.body, 'fe-리뷰완') # check the comment if it contains the keywords
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
@@ -35,7 +35,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
 
       - name: Send Slack notification When Re-review Requested
-        if: contains(github.event.comment.body, 'review-request') # check the comment if it contains the keywords
+        if: contains(github.event.comment.body, 'fe-리뷰요청') # check the comment if it contains the keywords
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID

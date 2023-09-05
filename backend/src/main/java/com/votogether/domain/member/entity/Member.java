@@ -88,8 +88,6 @@ public class Member extends BaseEntity {
     }
 
     private boolean isNotPassedChangingCycle(final Long days) {
-        System.out.println("this.getCreatedAt() = " + this.getCreatedAt());
-        System.out.println("this.getUpdatedAt() = " + this.getUpdatedAt());
         return (!this.getCreatedAt().equals(this.getUpdatedAt())) &&
                 (this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(days)));
     }

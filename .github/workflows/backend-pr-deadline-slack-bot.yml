@@ -8,10 +8,6 @@ on:
     paths:
       - 'backend/**'
 
-defaults:
-  run:
-    working-directory: backend
-
 jobs:
   pull_request_open:
     runs-on: ubuntu-latest

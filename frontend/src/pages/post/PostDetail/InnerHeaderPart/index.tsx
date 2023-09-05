@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PostAction, PostMenuItem } from '@type/menu';
 
@@ -39,7 +40,9 @@ export default function InnerHeaderPart({
   isClosed,
   handleEvent: { movePage, controlPost },
 }: PostDetailPageChildProps) {
-  const { moveWritePostPage, moveVoteStatisticsPage, movePostListPage } = movePage;
+  const navigate = useNavigate();
+
+  const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
   const { isOpen, toggleComponent, closeComponent } = useToggle();
   const [action, setAction] = useState<PostAction | null>(null);
@@ -55,7 +58,12 @@ export default function InnerHeaderPart({
 
   return (
     <>
-      <IconButton category="back" onClick={movePostListPage} />
+      <IconButton
+        category="back"
+        onClick={() => {
+          navigate(-1);
+        }}
+      />
       <S.HeaderWrapper>
         {!isWriter ? (
           <>

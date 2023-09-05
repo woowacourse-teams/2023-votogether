@@ -8,8 +8,9 @@ import PostOptionProvider from '@hooks/context/postOption';
 
 import router from '@routes/router';
 
-import ChannelTalk from '@pages/ChannelTalk';
 import ErrorBoundaryForTopClass from '@pages/ErrorBoundaryForTopClass';
+
+import ChannelTalk from '@components/ChannelTalk';
 
 import { GlobalStyle } from '@styles/globalStyle';
 import { theme } from '@styles/theme';

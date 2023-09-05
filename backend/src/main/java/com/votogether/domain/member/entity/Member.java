@@ -80,16 +80,18 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public void changeNickname(final String nickname) {
-        if (isNotPassedChangingCycle()) {
+    public void changeNicknameByCycle(final String nickname, final Long days) {
+        if (isNotPassedChangingCycle(days)) {
             throw new BadRequestException(MemberExceptionType.NOT_PASSED_NICKNAME_CHANGING_CYCLE);
         }
         this.nickname = new Nickname(nickname);
     }
 
-    private boolean isNotPassedChangingCycle() {
+    private boolean isNotPassedChangingCycle(final Long days) {
+        System.out.println("this.getCreatedAt() = " + this.getCreatedAt());
+        System.out.println("this.getUpdatedAt() = " + this.getUpdatedAt());
         return (!this.getCreatedAt().equals(this.getUpdatedAt())) &&
-                (this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(14L)));
+                (this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(days)));
     }
 
     public void changeNicknameByReport() {

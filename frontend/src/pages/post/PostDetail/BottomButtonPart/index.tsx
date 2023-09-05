@@ -62,23 +62,31 @@ export default function BottomButtonPart({
         </>
       ) : !isClosed ? (
         <>
-          <SquareButton theme="fill" onClick={setEarlyClosePost}>
+          <SquareButton aria-label="게시글 조기마감" theme="fill" onClick={setEarlyClosePost}>
             조기마감
           </SquareButton>
-          <SquareButton theme="blank" onClick={moveWritePostPage}>
+          <SquareButton aria-label="게시글 수정" theme="blank" onClick={moveWritePostPage}>
             수 정
           </SquareButton>
 
-          <SquareButton theme="fill" onClick={() => handleActionButtonClick('DELETE')}>
+          <SquareButton
+            aria-label="게시글 삭제"
+            theme="fill"
+            onClick={() => handleActionButtonClick('DELETE')}
+          >
             삭 제
           </SquareButton>
         </>
       ) : (
         <>
-          <SquareButton theme="fill" onClick={moveVoteStatisticsPage}>
+          <SquareButton aria-label="게시글 통계보기" theme="fill" onClick={moveVoteStatisticsPage}>
             통계보기
           </SquareButton>
-          <SquareButton theme="fill" onClick={() => handleActionButtonClick('DELETE')}>
+          <SquareButton
+            aria-label="게시글 삭제"
+            theme="fill"
+            onClick={() => handleActionButtonClick('DELETE')}
+          >
             삭 제
           </SquareButton>
         </>

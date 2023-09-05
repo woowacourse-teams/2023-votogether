@@ -24,7 +24,7 @@ export const Title = styled.span`
   }
 `;
 
-export const SubTitle = styled.span`
+export const SubTitle = styled.p`
   margin-top: 10px;
 
   font: var(--text-caption);

@@ -9,10 +9,6 @@ on:
       - 'frontend/**'
       - '.github/**'
 
-defaults:
-  run:
-    working-directory: frontend
-
 jobs:
   pull_request_open:
     runs-on: ubuntu-latest

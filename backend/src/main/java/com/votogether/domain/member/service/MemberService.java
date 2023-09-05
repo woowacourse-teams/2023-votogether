@@ -70,7 +70,7 @@ public class MemberService {
     }
 
     public RankingResponse getRanking(final Member member) {
-        RankingBoard rankingBoard = rankingBoard();
+        final RankingBoard rankingBoard = rankingBoard();
         return new RankingResponse(
                 rankingBoard.ranking(member),
                 member.getNickname(),
@@ -203,11 +203,11 @@ public class MemberService {
     }
 
     private RankingBoard rankingBoard() {
-        List<Member> members = memberRepository.findAll();
-        List<Integer> postCounts = postRepository.findCountsByMembers(members);
-        List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
+        final List<Member> members = memberRepository.findAll();
+        final List<Integer> postCounts = postRepository.findCountsByMembers(members);
+        final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
 
-        Map<Member, EngagementRecord> passionBoard = new HashMap<>();
+        final Map<Member, EngagementRecord> passionBoard = new HashMap<>();
 
         for (int i = 0; i < members.size(); i++) {
             passionBoard.put(members.get(i), new EngagementRecord(postCounts.get(i), voteCounts.get(i)));

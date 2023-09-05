@@ -17,7 +17,7 @@ public class RankingBoard {
     }
 
     private void calculateRank() {
-        List<Member> members = passionBoard.entrySet().stream()
+        final List<Member> members = passionBoard.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().score() - e1.getValue().score())
                 .map(s -> s.getKey())
                 .toList();

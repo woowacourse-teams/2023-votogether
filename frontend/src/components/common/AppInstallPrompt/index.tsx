@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 
+import { getCookieToken, setCookie } from '@utils/cookie';
+
 import { BeforeInstallPromptEvent } from '../../../../window';
 
 import MobileInstallPrompt from './MobileInstallPrompt';
@@ -12,7 +14,7 @@ const defaultBeforeInstallPromptEvent: BeforeInstallPromptEvent = {
 };
 
 const isIOSPromptActive = () => {
-  const isActive = JSON.parse(localStorage.getItem('iosInstalled') || 'true');
+  const isActive = JSON.parse(getCookieToken().isAppInstallVisible || 'true');
 
   if (isActive) {
     return defaultBeforeInstallPromptEvent;
@@ -38,12 +40,16 @@ export default function AppInstallPrompt() {
   };
 
   const handleCancelClick = () => {
-    localStorage.setItem('iosInstalled', 'false');
+    setCookie({ key: 'isAppInstallVisible', value: 'false', maxAge: 7 * 24 * 60 * 60 });
     setDeferredPrompt(null);
   };
 
   const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
     event.preventDefault();
+    const isVisible = JSON.parse(getCookieToken().isAppInstallVisible || 'true');
+
+    if (!isVisible) return;
+
     setDeferredPrompt(event);
   };
 

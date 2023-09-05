@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom';
 
-import { RankingPost } from '@type/ranking';
+import { usePopularPostRanking } from '@hooks/query/ranking/usePopularPostRanking';
 
 import { PATH } from '@constants/path';
 
 import firstRankIcon from '@assets/first-rank.svg';
 import secondRankIcon from '@assets/second-rank.svg';
 import thirdRankIcon from '@assets/third-rank.svg';
-
-import * as RS from '../RankingTableStyle';
 
 import * as S from './style';
 
@@ -20,20 +18,18 @@ const rankIconUrl: Record<number, string> = {
 
 const columnNameList = ['등수', '닉네임', '글 제목', '투표 수'];
 
-interface PopularPostProps {
-  rankingPostList: RankingPost[];
-}
+export default function PopularPost() {
+  const { data: rankingPostList } = usePopularPostRanking();
 
-export default function PopularPost({ rankingPostList }: PopularPostProps) {
   return (
-    <RS.Background>
-      <S.Table>
-        <S.Tr>
-          {columnNameList.map(text => (
-            <S.Th key={text}>{text}</S.Th>
-          ))}
-        </S.Tr>
-        {rankingPostList.map(rankingPost => {
+    <S.Table>
+      <S.Tr>
+        {columnNameList.map(text => (
+          <S.Th key={text}>{text}</S.Th>
+        ))}
+      </S.Tr>
+      {rankingPostList &&
+        rankingPostList.map(rankingPost => {
           const rankIcon = rankIconUrl[rankingPost.ranking] && (
             <img src={rankIconUrl[rankingPost.ranking]} alt={rankingPost.ranking.toString()} />
           );
@@ -49,7 +45,6 @@ export default function PopularPost({ rankingPostList }: PopularPostProps) {
             </S.Tr>
           );
         })}
-      </S.Table>
-    </RS.Background>
+    </S.Table>
   );
 }

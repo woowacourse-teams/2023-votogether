@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { PassionUser } from '@type/ranking';
-
 import PassionUserRanking from '.';
 
 const meta: Meta<typeof PassionUserRanking> = {
@@ -11,30 +9,10 @@ const meta: Meta<typeof PassionUserRanking> = {
 export default meta;
 type Story = StoryObj<typeof PassionUserRanking>;
 
-const rankerInfo: PassionUser = {
-  ranking: 1,
-  nickname: 'gil-dong',
-  postCount: 11,
-  voteCount: 79,
-  score: 134,
-};
-
-const userRankingInfo: PassionUser = {
-  ranking: 1111,
-  nickname: 'wow',
-  postCount: 1,
-  voteCount: 3,
-  score: 8,
-};
-
-const rankerList: PassionUser[] = new Array(10)
-  .fill(rankerInfo)
-  .map((ranker, index) => ({ ...ranker, ranking: index + 1 }));
-
 export const User: Story = {
-  render: () => <PassionUserRanking rankerList={rankerList} userRanking={userRankingInfo} />,
+  render: () => <PassionUserRanking />,
 };
 
 export const Guest: Story = {
-  render: () => <PassionUserRanking rankerList={rankerList} />,
+  render: () => <PassionUserRanking />,
 };

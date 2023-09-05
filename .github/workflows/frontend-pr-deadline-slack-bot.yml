@@ -7,6 +7,7 @@ on:
     branches: ['dev']
     paths:
       - 'frontend/**'
+      - '.github/**'
 
 defaults:
   run:

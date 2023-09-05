@@ -24,18 +24,9 @@
     opacity: 1;
   }
 `,Wrapper=styled_components_browser_esm.zo.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: ${props=>ToastNSnackBarStyle.V[props.$position]};
-  align-items: end;
-  justify-items: center;
-
-  width: 100vw;
-  height: 100vh;
-
   position: fixed;
-  top: 0;
-  left: 0;
+
+  top: ${props=>ToastNSnackBarStyle.V[props.$position]};
 `,Content=styled_components_browser_esm.zo.div`
   display: flex;
   align-items: center;
@@ -71,4 +62,4 @@
       background-position-x: -200%;
     }
   `}}},"./src/assets/chevron-down.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-down.f97a5bb1.svg"},"./src/assets/chevron-up.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-up.a1eb858b.svg"}}]);
-//# sourceMappingURL=components-comment-CommentList-CommentItem-CommentItem-stories.51c25287.iframe.bundle.js.map
+//# sourceMappingURL=components-comment-CommentList-CommentItem-CommentItem-stories.7950dbc6.iframe.bundle.js.map

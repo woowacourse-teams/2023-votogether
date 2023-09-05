@@ -101,18 +101,9 @@
     opacity: 1;
   }
 `,Wrapper=styled_components_browser_esm.zo.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: ${props=>ToastNSnackBarStyle.V[props.$position]};
-  align-items: end;
-  justify-items: center;
-
-  width: 100vw;
-  height: 100vh;
-
   position: fixed;
-  top: 0;
-  left: 0;
+
+  top: ${props=>ToastNSnackBarStyle.V[props.$position]};
 `,Content=styled_components_browser_esm.zo.div`
   display: flex;
   align-items: center;
@@ -148,4 +139,4 @@
       background-position-x: -200%;
     }
   `}}},"./src/utils/scrollToTop.ts":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{n:()=>smoothScrollToTop});const smoothScrollToTop=()=>{window.scroll({top:0,behavior:"smooth"})}},"./src/assets/chevron-down.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-down.f97a5bb1.svg"},"./src/assets/chevron-up.svg":(module,__unused_webpack_exports,__webpack_require__)=>{module.exports=__webpack_require__.p+"static/media/chevron-up.a1eb858b.svg"}}]);
-//# sourceMappingURL=components-comment-CommentList-CommentList-stories.c9453d76.iframe.bundle.js.map
+//# sourceMappingURL=components-comment-CommentList-CommentList-stories.82c34063.iframe.bundle.js.map

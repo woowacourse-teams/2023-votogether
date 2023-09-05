@@ -160,18 +160,9 @@ to {
     opacity: 1;
   }
 `,Wrapper=styled_components_browser_esm.zo.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: ${props=>ToastNSnackBarStyle.V[props.$position]};
-  align-items: end;
-  justify-items: center;
-
-  width: 100vw;
-  height: 100vh;
-
   position: fixed;
-  top: 0;
-  left: 0;
+
+  top: ${props=>ToastNSnackBarStyle.V[props.$position]};
 `,Content=styled_components_browser_esm.zo.div`
   display: flex;
   align-items: center;
@@ -331,4 +322,4 @@ to {
       background-position-x: -200%;
     }
   `}}},"./src/utils/post/convertImageUrlToServerUrl.ts":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{B:()=>convertImageUrlToServerUrl,X:()=>convertServerUrlToImageUrl});var _constants_post__WEBPACK_IMPORTED_MODULE_0__=__webpack_require__("./src/constants/post.ts");const convertImageUrlToServerUrl=imageUrl=>`${_constants_post__WEBPACK_IMPORTED_MODULE_0__.f_}${imageUrl}`,convertServerUrlToImageUrl=imageUrl=>imageUrl.replace(_constants_post__WEBPACK_IMPORTED_MODULE_0__.f_,"")}}]);
-//# sourceMappingURL=pages-VoteStatisticsPage-OptionStatistics-OptionStatistics-stories.2386bddd.iframe.bundle.js.map
+//# sourceMappingURL=pages-VoteStatisticsPage-OptionStatistics-OptionStatistics-stories.8063a29b.iframe.bundle.js.map

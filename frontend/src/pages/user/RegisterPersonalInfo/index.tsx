@@ -9,7 +9,10 @@ import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 
+import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
 import { BIRTH_YEAR } from '@constants/user';
+
+import { setCookieToken } from '@utils/cookie';
 
 import * as S from './style';
 
@@ -60,7 +63,7 @@ export default function RegisterPersonalInfo() {
 
     const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
-    localStorage.setItem('hasEssentialInfo', 'true');
+    setCookieToken({ key: 'hasEssentialInfo', token: 'true', maxAge: ESSENTIAL_MAX_AGE });
 
     alert('개인 정보 등록 완료!');
     navigate('/');

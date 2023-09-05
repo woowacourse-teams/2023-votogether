@@ -15,7 +15,7 @@ interface Route extends PropsWithChildren {
 const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: Route) => {
   const authInfo = useContext(AuthContext);
   const isLoggedIn = getCookieToken().accessToken;
-  const hasEssentialInfo = localStorage.getItem('hasEssentialInfo');
+  const hasEssentialInfo = getCookieToken().hasEssentialInfo;
 
   // const isAuthenticated = true;
   if (!isGuestAllowed && !isLoggedIn) {
@@ -38,7 +38,7 @@ const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: R
     return <Navigate to={PATH.USER_INFO_REGISTER} />;
   }
 
-  if (isLoggedIn && hasEssentialInfo === null) {
+  if (isLoggedIn && hasEssentialInfo === undefined) {
     authInfo.clearLoggedInfo();
 
     return <Navigate to="/" />;

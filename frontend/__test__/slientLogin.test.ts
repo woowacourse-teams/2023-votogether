@@ -1,3 +1,5 @@
+import { TOKEN_MAX_AGE } from '@constants/cookie';
+
 import { getCookieToken, setCookieToken } from '@utils/cookie';
 import { silentLogin } from '@utils/silentLogin';
 
@@ -29,8 +31,8 @@ describe('리프레시 토큰을 이용하여 액세스 토큰과 리프레시 �
       'eyJtZW1iZXJJZCI6NiwiaWF0IjoxNjkzODM2NTgzLCJleHAiOjE2OTM5MjI5ODMsImFsZyI6IkhTMjU2In0.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNjkzODM3MDgzLCJleHAiOjE2OTM5MjkwODN9.SYzSL7N8Eo40HW9iJN1YVSWK3H-jkODbP5zX9Dvaji4';
     const REFRESH_TOKEN = 'refresh!!!';
 
-    setCookieToken('accessToken', ACCESS_TOKEN);
-    setCookieToken('refreshToken', REFRESH_TOKEN);
+    setCookieToken({ key: 'accessToken', token: ACCESS_TOKEN, maxAge: TOKEN_MAX_AGE });
+    setCookieToken({ key: 'refreshToken', token: REFRESH_TOKEN, maxAge: TOKEN_MAX_AGE });
 
     await silentLogin();
 
@@ -56,8 +58,8 @@ describe('리프레시 토큰을 이용하여 액세스 토큰과 리프레시 �
       'eyJtZW1iZXJJZCI6NiwiaWF0IjoxNjkzODM2NTgzLCJleHAiOjE2OTM5MjI5ODMsImFsZyI6IkhTMjU2In0.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNjkzODM3MDgzLCJleHAiOjE2OTM5MjkwODN9.SYzSL7N8Eo40HW9iJN1YVSWK3H-jkODbP5zX9Dvaji4';
     const REFRESH_TOKEN = 'refresh!!!';
 
-    setCookieToken('accessToken', ACCESS_TOKEN);
-    setCookieToken('refreshToken', REFRESH_TOKEN);
+    setCookieToken({ key: 'accessToken', token: ACCESS_TOKEN, maxAge: TOKEN_MAX_AGE });
+    setCookieToken({ key: 'refreshToken', token: REFRESH_TOKEN, maxAge: TOKEN_MAX_AGE });
 
     await silentLogin();
 

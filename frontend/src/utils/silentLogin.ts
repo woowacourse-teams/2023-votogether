@@ -1,5 +1,7 @@
 import { postTokens } from '@api/token';
 
+import { TOKEN_MAX_AGE } from '@constants/cookie';
+
 import { clearCookieToken, getCookieToken, setCookieToken } from './cookie';
 import { isExpiredAccessToken } from './isExpiredAccessToken';
 
@@ -16,8 +18,8 @@ export const silentLogin = async () => {
     const updatedAccessToken = tokenData.accessToken;
     const updatedRefreshToken = tokenData.refreshToken;
 
-    setCookieToken('accessToken', updatedAccessToken);
-    setCookieToken('refreshToken', updatedRefreshToken);
+    setCookieToken({ key: 'accessToken', token: updatedAccessToken, maxAge: TOKEN_MAX_AGE });
+    setCookieToken({ key: 'refreshToken', token: updatedRefreshToken, maxAge: TOKEN_MAX_AGE });
   } catch (error) {
     clearCookieToken('accessToken');
     clearCookieToken('refreshToken');

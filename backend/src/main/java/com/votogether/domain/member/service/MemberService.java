@@ -69,6 +69,7 @@ public class MemberService {
         );
     }
 
+    @Transactional(readOnly = true)
     public RankingResponse getRanking(final Member member) {
         final RankingBoard rankingBoard = getRankingBoard();
         return new RankingResponse(

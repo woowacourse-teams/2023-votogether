@@ -5,7 +5,7 @@ import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.dto.response.RankingResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.domain.member.entity.vo.EngagementRecord;
+import com.votogether.domain.member.entity.vo.ActivityRecord;
 import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
@@ -85,10 +85,10 @@ public class MemberService {
         final List<Integer> postCounts = postRepository.findCountsByMembers(members);
         final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
 
-        final Map<Member, EngagementRecord> passionBoard = new HashMap<>();
+        final Map<Member, ActivityRecord> passionBoard = new HashMap<>();
 
         for (int i = 0; i < members.size(); i++) {
-            passionBoard.put(members.get(i), new EngagementRecord(postCounts.get(i), voteCounts.get(i)));
+            passionBoard.put(members.get(i), new ActivityRecord(postCounts.get(i), voteCounts.get(i)));
         }
 
         return new RankingBoard(passionBoard);

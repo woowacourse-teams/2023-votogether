@@ -3,7 +3,7 @@ package com.votogether.domain.member.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.votogether.domain.member.entity.vo.EngagementRecord;
+import com.votogether.domain.member.entity.vo.ActivityRecord;
 import com.votogether.domain.member.service.RankingBoard;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +29,10 @@ class RankingBoardTest {
             ReflectionTestUtils.setField(member1, "id", 2L);
             ReflectionTestUtils.setField(member2, "id", 3L);
 
-            Map<Member, EngagementRecord> board = new HashMap<>();
-            board.put(member, new EngagementRecord(1, 1));
-            board.put(member1, new EngagementRecord(1, 2));
-            board.put(member2, new EngagementRecord(1, 3));
+            Map<Member, ActivityRecord> board = new HashMap<>();
+            board.put(member, new ActivityRecord(1, 1));
+            board.put(member1, new ActivityRecord(1, 2));
+            board.put(member2, new ActivityRecord(1, 3));
 
             RankingBoard rankingBoard = new RankingBoard(board);
 
@@ -60,11 +60,11 @@ class RankingBoardTest {
             ReflectionTestUtils.setField(member2, "id", 3L);
             ReflectionTestUtils.setField(member3, "id", 4L);
 
-            Map<Member, EngagementRecord> board = new HashMap<>();
-            board.put(member, new EngagementRecord(1, 1));
-            board.put(member1, new EngagementRecord(1, 3));
-            board.put(member2, new EngagementRecord(1, 3));
-            board.put(member3, new EngagementRecord(1, 3));
+            Map<Member, ActivityRecord> board = new HashMap<>();
+            board.put(member, new ActivityRecord(1, 1));
+            board.put(member1, new ActivityRecord(1, 3));
+            board.put(member2, new ActivityRecord(1, 3));
+            board.put(member3, new ActivityRecord(1, 3));
 
             RankingBoard rankingBoard = new RankingBoard(board);
 

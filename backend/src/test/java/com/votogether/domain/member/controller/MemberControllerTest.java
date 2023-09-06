@@ -263,12 +263,16 @@ class MemberControllerTest {
         given(memberService.getRanking(member)).willReturn(response);
 
         // when, then
-        RestAssuredMockMvc
+        RankingResponse result = RestAssuredMockMvc
                 .given().log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .when().get("/members/me/ranking")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(RankingResponse.class);
+
+        assertThat(result).isEqualTo(response);
     }
 
 }

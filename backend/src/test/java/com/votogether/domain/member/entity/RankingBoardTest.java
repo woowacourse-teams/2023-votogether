@@ -22,28 +22,28 @@ class RankingBoardTest {
         @DisplayName("랭킹 순위와 점수를 계산한다.")
         void calculateRank() {
             //given
-            Member member = Member.builder().nickname("00").build();
-            Member member1 = Member.builder().nickname("11").build();
-            Member member2 = Member.builder().nickname("22").build();
-            ReflectionTestUtils.setField(member, "id", 1L);
-            ReflectionTestUtils.setField(member1, "id", 2L);
-            ReflectionTestUtils.setField(member2, "id", 3L);
+            Member memberA = Member.builder().nickname("00").build();
+            Member memberB = Member.builder().nickname("11").build();
+            Member memberC = Member.builder().nickname("22").build();
+            ReflectionTestUtils.setField(memberA, "id", 1L);
+            ReflectionTestUtils.setField(memberB, "id", 2L);
+            ReflectionTestUtils.setField(memberC, "id", 3L);
 
             Map<Member, ActivityRecord> board = new HashMap<>();
-            board.put(member, new ActivityRecord(1, 1));
-            board.put(member1, new ActivityRecord(1, 2));
-            board.put(member2, new ActivityRecord(1, 3));
+            board.put(memberA, new ActivityRecord(1, 1));
+            board.put(memberB, new ActivityRecord(1, 2));
+            board.put(memberC, new ActivityRecord(1, 3));
 
             RankingBoard rankingBoard = new RankingBoard(board);
 
             //when, then
             assertAll(
-                    () -> assertThat(rankingBoard.score(member)).isEqualTo(6),
-                    () -> assertThat(rankingBoard.score(member1)).isEqualTo(7),
-                    () -> assertThat(rankingBoard.score(member2)).isEqualTo(8),
-                    () -> assertThat(rankingBoard.ranking(member)).isEqualTo(3),
-                    () -> assertThat(rankingBoard.ranking(member1)).isEqualTo(2),
-                    () -> assertThat(rankingBoard.ranking(member2)).isEqualTo(1)
+                    () -> assertThat(rankingBoard.score(memberA)).isEqualTo(6),
+                    () -> assertThat(rankingBoard.score(memberB)).isEqualTo(7),
+                    () -> assertThat(rankingBoard.score(memberC)).isEqualTo(8),
+                    () -> assertThat(rankingBoard.ranking(memberA)).isEqualTo(3),
+                    () -> assertThat(rankingBoard.ranking(memberB)).isEqualTo(2),
+                    () -> assertThat(rankingBoard.ranking(memberC)).isEqualTo(1)
             );
         }
 
@@ -51,32 +51,32 @@ class RankingBoardTest {
         @DisplayName("동순위가 존재하는 랭킹 순위와 점수를 계산한다.")
         void calculateRank1() {
             //given
-            Member member = Member.builder().nickname("00").build();
-            Member member1 = Member.builder().nickname("11").build();
-            Member member2 = Member.builder().nickname("22").build();
-            Member member3 = Member.builder().nickname("33").build();
-            ReflectionTestUtils.setField(member, "id", 1L);
-            ReflectionTestUtils.setField(member1, "id", 2L);
-            ReflectionTestUtils.setField(member2, "id", 3L);
-            ReflectionTestUtils.setField(member3, "id", 4L);
+            Member memberA = Member.builder().nickname("00").build();
+            Member memberB = Member.builder().nickname("11").build();
+            Member memberC = Member.builder().nickname("22").build();
+            Member memberD = Member.builder().nickname("33").build();
+            ReflectionTestUtils.setField(memberA, "id", 1L);
+            ReflectionTestUtils.setField(memberB, "id", 2L);
+            ReflectionTestUtils.setField(memberC, "id", 3L);
+            ReflectionTestUtils.setField(memberD, "id", 4L);
 
             Map<Member, ActivityRecord> board = new HashMap<>();
-            board.put(member, new ActivityRecord(1, 1));
-            board.put(member1, new ActivityRecord(1, 3));
-            board.put(member2, new ActivityRecord(1, 3));
-            board.put(member3, new ActivityRecord(1, 3));
+            board.put(memberA, new ActivityRecord(1, 1));
+            board.put(memberB, new ActivityRecord(1, 3));
+            board.put(memberC, new ActivityRecord(1, 3));
+            board.put(memberD, new ActivityRecord(1, 3));
 
             RankingBoard rankingBoard = new RankingBoard(board);
 
             //when, then
             assertAll(
-                    () -> assertThat(rankingBoard.score(member)).isEqualTo(6),
-                    () -> assertThat(rankingBoard.score(member1)).isEqualTo(8),
-                    () -> assertThat(rankingBoard.score(member2)).isEqualTo(8),
-                    () -> assertThat(rankingBoard.ranking(member)).isEqualTo(4),
-                    () -> assertThat(rankingBoard.ranking(member1)).isEqualTo(1),
-                    () -> assertThat(rankingBoard.ranking(member2)).isEqualTo(1),
-                    () -> assertThat(rankingBoard.ranking(member3)).isEqualTo(1)
+                    () -> assertThat(rankingBoard.score(memberA)).isEqualTo(6),
+                    () -> assertThat(rankingBoard.score(memberB)).isEqualTo(8),
+                    () -> assertThat(rankingBoard.score(memberC)).isEqualTo(8),
+                    () -> assertThat(rankingBoard.ranking(memberA)).isEqualTo(4),
+                    () -> assertThat(rankingBoard.ranking(memberB)).isEqualTo(1),
+                    () -> assertThat(rankingBoard.ranking(memberC)).isEqualTo(1),
+                    () -> assertThat(rankingBoard.ranking(memberD)).isEqualTo(1)
             );
         }
 

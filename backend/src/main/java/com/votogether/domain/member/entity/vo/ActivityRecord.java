@@ -16,7 +16,7 @@ public class ActivityRecord {
         this.voteCount = voteCount;
     }
 
-    public int calculateScore() {
+    public long calculateScore() {
         return postCount * POST_WEIGHT + voteCount * VOTE_WEIGHT;
     }
 

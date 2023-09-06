@@ -17,7 +17,7 @@ public record RankingResponse(
         int voteCount,
 
         @Schema(description = "점수", example = "31")
-        int score
+        long score
 ) {
 }
 

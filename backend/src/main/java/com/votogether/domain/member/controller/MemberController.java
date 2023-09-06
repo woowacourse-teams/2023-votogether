@@ -40,7 +40,8 @@ public class MemberController implements MemberControllerDocs {
 
     @GetMapping("/me/ranking")
     public ResponseEntity<RankingResponse> getRanking(@Auth final Member member) {
-        return ResponseEntity.ok(memberService.getRanking(member));
+        final RankingResponse response = memberService.getRanking(member);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/me/detail")

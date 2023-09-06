@@ -70,7 +70,7 @@ public class MemberService {
     }
 
     public RankingResponse getRanking(final Member member) {
-        final RankingBoard rankingBoard = rankingBoard();
+        final RankingBoard rankingBoard = getRankingBoard();
         return new RankingResponse(
                 rankingBoard.ranking(member),
                 member.getNickname(),
@@ -78,6 +78,20 @@ public class MemberService {
                 rankingBoard.engagementRecord(member).getVoteCount(),
                 rankingBoard.score(member)
         );
+    }
+
+    private RankingBoard getRankingBoard() {
+        final List<Member> members = memberRepository.findAll();
+        final List<Integer> postCounts = postRepository.findCountsByMembers(members);
+        final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
+
+        final Map<Member, EngagementRecord> passionBoard = new HashMap<>();
+
+        for (int i = 0; i < members.size(); i++) {
+            passionBoard.put(members.get(i), new EngagementRecord(postCounts.get(i), voteCounts.get(i)));
+        }
+
+        return new RankingBoard(passionBoard);
     }
 
     @Transactional
@@ -200,19 +214,5 @@ public class MemberService {
                 .map(Report::getId)
                 .toList();
         reportRepository.deleteAllById(reportIdsByMember);
-    }
-
-    private RankingBoard rankingBoard() {
-        final List<Member> members = memberRepository.findAll();
-        final List<Integer> postCounts = postRepository.findCountsByMembers(members);
-        final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
-
-        final Map<Member, EngagementRecord> passionBoard = new HashMap<>();
-
-        for (int i = 0; i < members.size(); i++) {
-            passionBoard.put(members.get(i), new EngagementRecord(postCounts.get(i), voteCounts.get(i)));
-        }
-
-        return new RankingBoard(passionBoard);
     }
 }

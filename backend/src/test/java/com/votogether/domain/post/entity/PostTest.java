@@ -34,7 +34,7 @@ class PostTest {
         List<Category> categories = List.of(categoryA, categoryB);
 
         // when
-        post.mapCategories(categories);
+        post.addCategories(categories);
 
         // then
         PostCategories actualPostCategories = post.getPostCategories();
@@ -149,21 +149,15 @@ class PostTest {
     void update() {
         // given
         final Member writer = MemberFixtures.MALE_30.get();
-        final PostBody postBody1 = PostBody.builder()
-                .title("title1")
-                .content("content1")
-                .build();
         final Post post = Post.builder()
                 .writer(writer)
-                .postBody(postBody1)
+                .title("title1")
+                .content("content1")
                 .deadline(LocalDateTime.now().plusDays(3))
                 .build();
         post.addContentImage("없는사진");
 
-        final PostBody postBody2 = PostBody.builder()
-                .title("title2")
-                .content("content2")
-                .build();
+        final PostBody postBody2 = new PostBody("title2", "content2");
 
         Category categoryA = Category.builder().name("category1").build();
         Category categoryB = Category.builder().name("category2").build();

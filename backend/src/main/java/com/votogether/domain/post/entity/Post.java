@@ -68,24 +68,22 @@ public class Post extends BaseEntity {
             + ")")
     private long totalVoteCount;
 
+    @Formula("(select count(*) from comment c where c.post_id = id)")
+    private int commentCount;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostCategory> postCategoriesA = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostContentImage> postContentImagesA = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostOption> postOptionsA = new ArrayList<>();
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @Builder
-    private Post(
-            final Member writer,
-            final PostBody postBody,
-            final LocalDateTime deadline
-    ) {
-        this.writer = writer;
-        this.postBody = postBody;
-        this.deadline = deadline;
-        this.postCategories = new PostCategories();
-        this.postOptions = new PostOptions();
-        this.isHidden = false;
-    }
-
-    public void mapCategories(final List<Category> categories) {
+    public void addCategories(final List<Category> categories) {
         this.postCategories.mapPostAndCategories(this, categories);
     }
 
@@ -271,6 +269,43 @@ public class Post extends BaseEntity {
         if (totalVoteCount > 0) {
             throw new BadRequestException(PostExceptionType.FAIL_UPDATE_VOTED_POST);
         }
+    }
+
+    // ---
+
+    public void addPostOption(final PostOption postOption) {
+        postOption.setPost(this);
+        this.postOptionsA.add(postOption);
+    }
+
+    public PostContentImage getFirstContentImage() {
+        if (postContentImagesA.isEmpty()) {
+            return null;
+        }
+        return postContentImagesA.get(0);
+    }
+
+    public String getTitle() {
+        return this.postBody.getTitle();
+    }
+
+    public String getContent() {
+        return this.postBody.getContent();
+    }
+
+    @Builder
+    private Post(
+            final Member writer,
+            final String title,
+            final String content,
+            final LocalDateTime deadline
+    ) {
+        this.writer = writer;
+        this.postBody = new PostBody(title, content);
+        this.deadline = deadline;
+        this.postCategories = new PostCategories();
+        this.postOptions = new PostOptions();
+        this.isHidden = false;
     }
 
 }

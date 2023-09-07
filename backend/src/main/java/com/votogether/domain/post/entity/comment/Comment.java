@@ -61,7 +61,7 @@ public class Comment extends BaseEntity {
         return Objects.equals(this.post, post);
     }
 
-    public boolean isAuthor(final Member member) {
+    public boolean isWriter(final Member member) {
         return Objects.equals(this.writer, member);
     }
 

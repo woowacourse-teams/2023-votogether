@@ -5,13 +5,12 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostBody {
 
     @Column(length = 100, nullable = false)
@@ -23,8 +22,7 @@ public class PostBody {
     @Embedded
     private PostContentImages postContentImages;
 
-    @Builder
-    private PostBody(final String title, final String content) {
+    public PostBody(final String title, final String content) {
         this.title = title;
         this.content = content;
         this.postContentImages = new PostContentImages();

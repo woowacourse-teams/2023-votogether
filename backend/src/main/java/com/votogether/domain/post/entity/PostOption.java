@@ -20,31 +20,39 @@ import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "sequence"})})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "sequence"})})
 public class PostOption extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @Column(nullable = false)
-    private int sequence;
+    private Integer sequence;
 
     @Column(length = 50, nullable = false)
     private String content;
 
     @Column
     private String imageUrl;
+
+    @Formula("(select count(*) from vote v where v.post_option_id = id)")
+    private int voteCount;
 
     @OneToMany(mappedBy = "postOption", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Vote> votes = new ArrayList<>();

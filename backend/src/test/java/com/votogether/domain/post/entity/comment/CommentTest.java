@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
@@ -17,13 +16,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 class CommentTest {
 
     private Post generatePost() {
-        PostBody body = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
         return Post.builder()
                 .writer(MemberFixtures.FEMALE_20.get())
-                .postBody(body)
+                .title("title")
+                .content("content")
                 .deadline(LocalDateTime.now())
                 .build();
     }
@@ -103,7 +99,7 @@ class CommentTest {
             ReflectionTestUtils.setField(male20Member, "id", 1L);
 
             // when, then
-            assertThat(comment.isAuthor(male20Member)).isTrue();
+            assertThat(comment.isWriter(male20Member)).isTrue();
         }
 
         @Test
@@ -121,7 +117,7 @@ class CommentTest {
             ReflectionTestUtils.setField(male20Member, "id", 1L);
 
             // when, then
-            assertThat(comment.isAuthor(female20Member)).isFalse();
+            assertThat(comment.isWriter(female20Member)).isFalse();
         }
 
     }

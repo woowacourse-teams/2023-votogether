@@ -52,7 +52,6 @@ export default function Redirection() {
         setLoggedInfo({
           ...loggedInfo,
           id,
-          accessToken,
           isLoggedIn: true,
         });
 

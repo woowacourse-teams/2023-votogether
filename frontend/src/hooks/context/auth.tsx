@@ -20,7 +20,6 @@ interface Auth {
 
 const notLoggedInfo: LoggedInfo = {
   isLoggedIn: false,
-  accessToken: '',
 };
 
 export const AuthContext = createContext({} as Auth);
@@ -49,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (accessToken) {
       const decodedPayload = decodeToken(accessToken);
       const id = decodedPayload.memberId;
-      setLoggedInfo(origin => ({ ...origin, accessToken, id, isLoggedIn: true }));
+      setLoggedInfo(origin => ({ ...origin, id, isLoggedIn: true }));
     }
   }, []);
 

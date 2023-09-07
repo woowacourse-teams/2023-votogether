@@ -4,6 +4,8 @@ import { LoggedInfo } from '@type/user';
 
 import { useUserInfo } from '@hooks/query/user/useUserInfo';
 
+import { logoutUser } from '@api/userInfo';
+
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { clearCookie } from '@utils/cookie';
@@ -30,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const clearLoggedInfo = () => {
     removeLocalStorage(ACCESS_TOKEN_KEY);
     clearCookie('hasEssentialInfo');
+    logoutUser();
 
     setLoggedInfo(notLoggedInfo);
   };

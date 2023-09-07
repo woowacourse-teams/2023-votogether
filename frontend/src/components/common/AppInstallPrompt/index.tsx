@@ -4,10 +4,10 @@ import { getCookieToken, setCookie } from '@utils/cookie';
 
 import { BeforeInstallPromptEvent } from '../../../../window';
 
-import IosInstallPrompt from './IosInstallPrompt';
-import MobileInstallPrompt from './MobileInstallPrompt';
+import BookMarkPrompt from './BookMarkPrompt';
+import InstallPrompt from './InstallPrompt';
 
-const isIOSPromptActive = () => {
+const isBookMarkPromptActive = () => {
   const isActive = JSON.parse(getCookieToken().isAppInstallVisible || 'true');
 
   if (isActive) {
@@ -19,8 +19,8 @@ const isIOSPromptActive = () => {
 
 export default function AppInstallPrompt() {
   const isDeviceIOS = /iPad|iPhone|iPod/.test(window.navigator.userAgent);
-  const [iosPrompt, setIosPrompt] = useState<boolean | null>(
-    isDeviceIOS ? isIOSPromptActive() : null
+  const [bookMarkPrompt, setBookMarkPrompt] = useState<boolean | null>(
+    isDeviceIOS ? isBookMarkPromptActive() : null
   );
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
@@ -36,7 +36,7 @@ export default function AppInstallPrompt() {
 
   const handleCancelClick = () => {
     setCookie({ key: 'isAppInstallVisible', value: 'false', maxAge: 7 * 24 * 60 * 60 });
-    setIosPrompt(null);
+    setBookMarkPrompt(null);
     setDeferredPrompt(null);
   };
 
@@ -60,12 +60,12 @@ export default function AppInstallPrompt() {
   return (
     <Fragment>
       {deferredPrompt && (
-        <MobileInstallPrompt
+        <InstallPrompt
           handleInstallClick={handleInstallClick}
           handleCancelClick={handleCancelClick}
         />
       )}
-      {iosPrompt && <IosInstallPrompt handleCancelClick={handleCancelClick} />}
+      {bookMarkPrompt && <BookMarkPrompt handleCancelClick={handleCancelClick} />}
     </Fragment>
   );
 }

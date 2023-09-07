@@ -83,7 +83,7 @@ export const IconImage = styled.img`
   height: 24px;
 `;
 
-export const IosContainer = styled.div`
+export const DescriptionWrapper = styled.div`
   display: flex;
   align-items: center;
   align-self: end;

@@ -1,17 +1,14 @@
+import arrowUp from '@assets/arrow-up-on-square.svg';
 import logo from '@assets/logo.svg';
 import cancel from '@assets/x_mark_black.svg';
 
 import * as S from './style';
 
-interface MobileInstallPromptProps {
-  handleInstallClick: () => void;
+interface BookMarkPromptProps {
   handleCancelClick: () => void;
 }
 
-export default function MobileInstallPrompt({
-  handleInstallClick,
-  handleCancelClick,
-}: MobileInstallPromptProps) {
+export default function BookMarkPrompt({ handleCancelClick }: BookMarkPromptProps) {
   return (
     <S.Container>
       <S.Content>
@@ -29,10 +26,12 @@ export default function MobileInstallPrompt({
             </S.Description>
           </S.HeaderContent>
         </S.Header>
-        <S.ButtonContainer>
-          <S.UserButton onClick={handleCancelClick}>웹으로 볼게요</S.UserButton>
-          <S.UserButton onClick={handleInstallClick}>홈 화면에 추가</S.UserButton>
-        </S.ButtonContainer>
+        <S.DescriptionWrapper>
+          <S.Description>
+            브라우저 메뉴바에서 <S.IconImage src={arrowUp} alt="추가하기 아이콘" /> 모양 버튼을 눌러
+            "홈 화면에 추가하기"를 통해 설치를 할 수 있습니다.
+          </S.Description>
+        </S.DescriptionWrapper>
       </S.Content>
     </S.Container>
   );

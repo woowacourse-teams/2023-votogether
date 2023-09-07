@@ -1,9 +1,10 @@
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
+import { REFRESH_EXPIRATION_TIME } from '@constants/token';
 
 import { decodeToken } from './cookie';
 import { getLocalStorage } from './localStorage';
 
-export const isExpiredAccessToken = () => {
+export const isExpiredRefreshToken = () => {
   const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);
 
   if (!accessToken) return true;
@@ -11,7 +12,9 @@ export const isExpiredAccessToken = () => {
   const decodedToken = decodeToken(accessToken);
 
   const currentTime = new Date().getTime();
-  const accessTokenExpirationPeriod = decodedToken.exp;
+  const issuedTime = decodedToken.iat;
 
-  return currentTime >= accessTokenExpirationPeriod;
+  const refreshTokenExpirationPeriod = issuedTime + REFRESH_EXPIRATION_TIME;
+
+  return currentTime > refreshTokenExpirationPeriod;
 };

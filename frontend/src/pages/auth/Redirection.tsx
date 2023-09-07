@@ -9,6 +9,8 @@ import Error from '@pages/Error';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 
+import { ESSENTIAL_MAX_AGE, TOKEN_MAX_AGE } from '@constants/cookie';
+
 import { getCookieToken, decodeToken, setCookieToken } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
 
@@ -31,12 +33,19 @@ export default function Redirection() {
 
       const code = params.get('code');
       const REGISTER_API_URL = `${process.env.VOTOGETHER_BASE_URL}/auth/kakao/callback?code=${code}`;
-
       try {
         const { accessToken, hasEssentialInfo, refreshToken } = await getAuthInfo(REGISTER_API_URL);
-        setCookieToken('accessToken', accessToken);
-        setCookieToken('refreshToken', refreshToken ?? '');
-        localStorage.setItem('hasEssentialInfo', String(hasEssentialInfo));
+        setCookieToken({ key: 'accessToken', token: accessToken, maxAge: TOKEN_MAX_AGE });
+        setCookieToken({
+          key: 'refreshToken',
+          token: refreshToken ?? '',
+          maxAge: TOKEN_MAX_AGE,
+        });
+        setCookieToken({
+          key: 'hasEssentialInfo',
+          token: String(hasEssentialInfo),
+          maxAge: ESSENTIAL_MAX_AGE,
+        });
 
         const decodedPayload = decodeToken(accessToken);
         const id = decodedPayload.memberId;

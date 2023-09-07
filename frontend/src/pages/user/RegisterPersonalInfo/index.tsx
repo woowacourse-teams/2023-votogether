@@ -11,6 +11,7 @@ import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import Toast from '@components/common/Toast';
 
+import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
 import { BIRTH_YEAR } from '@constants/user';
 
 import { getCookieToken, setCookieToken } from '@utils/cookie';
@@ -68,7 +69,7 @@ export default function RegisterPersonalInfo() {
 
     const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
-    setCookieToken('hasEssentialInfo', 'true');
+    setCookieToken({ key: 'hasEssentialInfo', token: 'true', maxAge: ESSENTIAL_MAX_AGE });
 
     alert('개인 정보 등록 완료!');
     navigate('/');
@@ -76,7 +77,7 @@ export default function RegisterPersonalInfo() {
 
   useEffect(() => {
     if (isSuccess) {
-      setCookieToken('hasEssentialInfo', 'true');
+      setCookieToken({ key: 'hasEssentialInfo', token: 'true', maxAge: ESSENTIAL_MAX_AGE });
       alert('개인 정보가 등록 완료되었습니다.');
       navigate('/');
     }

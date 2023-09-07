@@ -12,7 +12,10 @@ import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.test.annotation.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;
+import com.votogether.test.persister.PostTestPersister;
+import com.votogether.test.persister.ReportTestPersister;
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,34 +32,37 @@ class ReportRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    PostTestPersister postTestPersister;
+
+    @Autowired
+    ReportTestPersister reportTestPersister;
+
+
     @Test
     @DisplayName("회원, 신고타입, 대상ID를 통해서 신고 횟수를 반환한다.")
     void countByMemberAndReportTypeAndTargetId() {
         // given
         Member member = MemberFixtures.MALE_20.get();
         ReportType reportType = ReportType.POST;
-
         PostBody postBody = PostBody.builder()
                 .title("title")
                 .content("content")
                 .build();
 
-        Post post = Post.builder()
+        memberRepository.save(member);
+        Post post = postTestPersister.builder()
                 .writer(member)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                .build();
+                .save();
 
-        memberRepository.save(member);
-        postRepository.save(post);
-
-        Report report = Report.builder()
+        reportTestPersister.builder()
                 .member(member)
                 .reportType(reportType)
                 .targetId(post.getId())
                 .reason("불건전한 게시글")
-                .build();
-        reportRepository.save(report);
+                .save();
 
         // when
         int reportCount = reportRepository.countByReportTypeAndTargetId(reportType, post.getId());
@@ -76,22 +82,19 @@ class ReportRepositoryTest {
                 .content("content")
                 .build();
 
-        Post post = Post.builder()
+        memberRepository.save(member);
+        Post post = postTestPersister.builder()
                 .writer(member)
                 .postBody(postBody)
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                .build();
+                .save();
 
-        memberRepository.save(member);
-        postRepository.save(post);
-
-        Report report = Report.builder()
-                .targetId(post.getId())
-                .reportType(ReportType.POST)
+        reportTestPersister.builder()
                 .member(member)
+                .reportType(ReportType.POST)
+                .targetId(post.getId())
                 .reason("불건전한 게시글")
-                .build();
-        reportRepository.save(report);
+                .save();
 
         // when
         Report actualReport = reportRepository.findByMemberAndReportTypeAndTargetId(

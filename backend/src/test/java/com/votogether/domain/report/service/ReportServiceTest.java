@@ -11,6 +11,7 @@ import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
+import com.votogether.domain.post.entity.comment.Content;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.repository.CommentRepository;
@@ -24,6 +25,8 @@ import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
+import com.votogether.test.persister.CommentTestPersister;
+import com.votogether.test.persister.PostTestPersister;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -55,6 +58,12 @@ class ReportServiceTest {
     @Autowired
     PostCommentService postCommentService;
 
+    @Autowired
+    PostTestPersister postTestPersister;
+
+    @Autowired
+    CommentTestPersister commentTestPersister;
+
     @Nested
     @DisplayName("게시글 신고기능은")
     class ReportPost {
@@ -71,13 +80,11 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
@@ -110,13 +117,11 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
@@ -138,14 +143,12 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-            post.blind();
-
-            postRepository.save(post);
+                    .blind()
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
@@ -168,13 +171,11 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
@@ -203,13 +204,11 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
@@ -252,20 +251,17 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 게시글");
 
@@ -298,20 +294,17 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
@@ -333,20 +326,17 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
@@ -369,20 +359,17 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
@@ -411,20 +398,17 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 

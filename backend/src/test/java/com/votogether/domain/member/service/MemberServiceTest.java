@@ -24,7 +24,6 @@ import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
-import com.votogether.test.persister.MemberTestPersister;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -59,9 +58,6 @@ class MemberServiceTest {
 
     @Autowired
     CommentRepository commentRepository;
-
-    @Autowired
-    MemberTestPersister memberTestPersister;
 
     @Autowired
     EntityManager em;

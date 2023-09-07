@@ -79,7 +79,8 @@ class ReportControllerTest {
                     .body(request)
                     .when().post("/report")
                     .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .assertThat()
+                    .status(HttpStatus.OK);
         }
 
         @Test
@@ -110,7 +111,8 @@ class ReportControllerTest {
                     .body(request)
                     .when().post("/report")
                     .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .assertThat()
+                    .status(HttpStatus.OK);
         }
 
         @Test
@@ -141,7 +143,8 @@ class ReportControllerTest {
                     .body(request)
                     .when().post("/report")
                     .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .assertThat()
+                    .status(HttpStatus.OK);
         }
 
     }
@@ -175,7 +178,8 @@ class ReportControllerTest {
                 .body(request)
                 .when().post("/report")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .assertThat()
+                .status(HttpStatus.BAD_REQUEST);
     }
 
     @ParameterizedTest
@@ -207,7 +211,8 @@ class ReportControllerTest {
                 .body(request)
                 .when().post("/report")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .assertThat()
+                .status(HttpStatus.BAD_REQUEST);
     }
 
 }

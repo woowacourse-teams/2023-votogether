@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
-import { decodeToken } from '@utils/cookie';
 import { getLocalStorage } from '@utils/localStorage';
+import { decodeToken } from '@utils/token/decodeToken';
 
 export function checkWriter(writerId: number) {
   const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);

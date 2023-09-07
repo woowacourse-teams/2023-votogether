@@ -25,20 +25,6 @@ export const getCookie = (): Record<CookieKey, string> => {
   return cookieContent;
 };
 
-interface MemberPayload {
-  memberId: number;
-  iat: number;
-  exp: number;
-}
-
-export const decodeToken = (token: string): MemberPayload => {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const decodedData = JSON.parse(atob(base64));
-
-  return decodedData;
-};
-
 export const clearCookie = (key: string) => {
   const expirationTime = new Date(Date.now() - 1);
   document.cookie = `${encodeURIComponent(key)}=; expires=${expirationTime.toUTCString()}; path=/;`;

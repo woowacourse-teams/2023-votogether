@@ -2,8 +2,9 @@ import { postTokens } from '@api/token';
 
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
+import { getLocalStorage, removeLocalStorage, setLocalStorage } from '../localStorage';
+
 import { isRefreshTokenRequested } from './isRefreshTokenRequested';
-import { getLocalStorage, removeLocalStorage, setLocalStorage } from './localStorage';
 
 export const silentLogin = async () => {
   if (!isRefreshTokenRequested()) {

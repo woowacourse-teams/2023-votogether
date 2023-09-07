@@ -12,9 +12,10 @@ import LoadingSpinner from '@components/common/LoadingSpinner';
 import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
-import { decodeToken, setCookie } from '@utils/cookie';
+import { setCookie } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
 import { setLocalStorage } from '@utils/localStorage';
+import { decodeToken } from '@utils/token/decodeToken';
 
 const getAuthInfo = async (url: string): Promise<AuthResponse> => {
   return await getFetch<AuthResponse>(url);

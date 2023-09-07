@@ -6,8 +6,9 @@ import { useUserInfo } from '@hooks/query/user/useUserInfo';
 
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
-import { clearCookie, decodeToken } from '@utils/cookie';
+import { clearCookie } from '@utils/cookie';
 import { getLocalStorage, removeLocalStorage } from '@utils/localStorage';
+import { decodeToken } from '@utils/token/decodeToken';
 
 interface Auth {
   loggedInfo: LoggedInfo;

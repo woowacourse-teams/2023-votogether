@@ -2,22 +2,24 @@ package com.votogether.domain.post.dto.response.post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.response.vote.VoteResponse;
+import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostContentImage;
+import com.votogether.domain.post.entity.PostOption;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
-@Schema(description = "게시글에 관련한 데이터들입니다.")
+@Schema(description = "게시글 응답")
 public record PostResponse(
         @Schema(description = "게시글 ID", example = "1")
         Long postId,
 
-        @Schema(description = "작성자")
-        WriterResponse writer,
+        @Schema(description = "게시글 작성자")
+        PostWriterResponse writer,
 
         @Schema(description = "게시글 제목", example = "이거 한번 투표해주세요")
         String title,
@@ -25,22 +27,28 @@ public record PostResponse(
         @Schema(description = "게시글 내용", example = "어떤게 더 맛있나요?")
         String content,
 
-        @Schema(description = "이미지 URL", example = "http://asdasdasd.com")
+        @Schema(description = "게시글 이미지 URL", example = "http://asdasdasd.com")
         String imageUrl,
 
-        @Schema(description = "카테고리 목록", example = "[1,2]")
+        @Schema(description = "카테고리 목록")
         List<CategoryResponse> categories,
 
-        @Schema(description = "게시글 생성시각", example = "2023-08-01 13:56")
+        @Schema(description = "게시글 생성시간", example = "2023-08-01 13:56")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
 
-        @Schema(description = "게시글 마감기한", example = "2023-08-01 13:56")
+        @Schema(description = "게시글 마감시한", example = "2023-08-01 13:56")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline,
 
-        @Schema(description = "투표 통계 정보")
-        VoteResponse voteInfo
+        @Schema(description = "게시글 이미지 수", example = "3")
+        int imageCount,
+
+        @Schema(description = "게시글 댓글 수", example = "23")
+        int commentCount,
+
+        @Schema(description = "게시글 투표 결과")
+        PostVoteResultResponse voteInfo
 ) {
 
     public static PostResponse of(final Post post, final Member loginMember) {
@@ -55,14 +63,16 @@ public record PostResponse(
 
         return new PostResponse(
                 post.getId(),
-                WriterResponse.of(writer.getId(), writer.getNickname()),
+                PostWriterResponse.of(writer.getId(), writer.getNickname()),
                 postBody.getTitle(),
                 postBody.getContent(),
                 convertImageUrl(contentImageUrl.toString()),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                VoteResponse.of(
+                -1,
+                -1,
+                PostVoteResultResponse.of(
                         post.getSelectedOptionId(loginMember),
                         post.getFinalTotalVoteCount(loginMember),
                         getOptions(post, loginMember)
@@ -79,11 +89,11 @@ public record PostResponse(
                 .getPostCategories()
                 .stream()
                 .map(PostCategory::getCategory)
-                .map(CategoryResponse::of)
+                .map(CategoryResponse::from)
                 .toList();
     }
 
-    private static List<PostOptionResponse> getOptions(
+    private static List<PostOptionVoteResultResponse> getOptions(
             final Post post,
             final Member loginMember
     ) {
@@ -91,7 +101,7 @@ public record PostResponse(
                 .getPostOptions()
                 .stream()
                 .map(postOption ->
-                        PostOptionResponse.of(
+                        PostOptionVoteResultResponse.of(
                                 postOption,
                                 post.isVisibleVoteResult(loginMember),
                                 post.getFinalTotalVoteCount(loginMember)
@@ -111,15 +121,61 @@ public record PostResponse(
 
         return new PostResponse(
                 post.getId(),
-                WriterResponse.from(post.getWriter()),
+                PostWriterResponse.from(post.getWriter()),
                 post.getPostBody().getTitle(),
                 post.getPostBody().getContent(),
                 convertImageUrl(contentImageUrl.toString()),
                 getCategories(post),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                VoteResponse.forGuest(post)
+                -1,
+                -1,
+                PostVoteResultResponse.ofGuest(post)
         );
+    }
+
+    public static PostResponse ofGuest(
+            final Post post,
+            final List<PostCategory> postCategories,
+            final PostContentImage postContentImage,
+            final List<PostOption> postOptions
+    ) {
+        postOptions.sort(Comparator.comparingInt(PostOption::getSequence));
+        return new PostResponse(
+                post.getId(),
+                PostWriterResponse.from(post.getWriter()),
+                post.getTitle(),
+                post.getContent(),
+                handleEmptyImageUrl(postContentImage),
+                convertToResponses(postCategories),
+                post.getCreatedAt(),
+                post.getDeadline(),
+                calculateImageCount(post, postOptions),
+                post.getCommentCount(),
+                PostVoteResultResponse.ofGuest(post, postOptions)
+        );
+    }
+
+    private static String handleEmptyImageUrl(final PostContentImage postContentImage) {
+        if (postContentImage == null) {
+            return "";
+        }
+        return postContentImage.getImageUrl();
+    }
+
+    private static List<CategoryResponse> convertToResponses(final List<PostCategory> postCategories) {
+        return postCategories.stream()
+                .map(PostCategory::getCategory)
+                .map(CategoryResponse::from)
+                .toList();
+    }
+
+    private static int calculateImageCount(final Post post, final List<PostOption> postOptions) {
+        int count = post.getFirstContentImage() == null ? 0 : 1;
+        count += (int) postOptions.stream()
+                .filter(postOption -> postOption.getImageUrl() != null)
+                .count();
+        return count;
     }
 
 }

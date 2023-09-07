@@ -13,7 +13,7 @@ describe('액세스 토큰의 정보를 통해 검증하여 리프레시 토큰 
 
   test('액세스 토큰 발급 시간 기준 14일이 지났다면 리프레시 토큰 재발급 요청을 하지 않고, 액세스 토큰을 삭제한다.', () => {
     jest.useFakeTimers();
-    jest.setSystemTime(new Date(1693929083 + REFRESH_EXPIRATION_TIME + 10000));
+    jest.setSystemTime(new Date(1693837083000 + REFRESH_EXPIRATION_TIME * 1000 + 10000));
 
     /**
      * {
@@ -37,7 +37,7 @@ describe('액세스 토큰의 정보를 통해 검증하여 리프레시 토큰 
 
   test('액세스 토큰 발급 시간 기준 14일이 지나지 않았고, 액세스 토큰이 만료되었다면 리프레시 토큰 재발급 요청을 한다.', () => {
     jest.useFakeTimers();
-    jest.setSystemTime(new Date(1693929083 + 10000));
+    jest.setSystemTime(new Date(1693929083000 + 10000));
 
     /**
      * {
@@ -58,7 +58,7 @@ describe('액세스 토큰의 정보를 통해 검증하여 리프레시 토큰 
 
   test('액세스 토큰 발급 시간 기준 14일이 지나지 않았고, 액세스 토큰이 만료되지 않았다면 리프레시 토큰 재발급 요청을 하지 않는다.', () => {
     jest.useFakeTimers();
-    jest.setSystemTime(new Date(1693929083 - 10000));
+    jest.setSystemTime(new Date(1693929083000 - 10000));
 
     /**
      * {

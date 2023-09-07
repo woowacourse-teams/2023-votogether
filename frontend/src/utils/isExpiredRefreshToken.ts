@@ -11,7 +11,7 @@ export const isExpiredRefreshToken = () => {
 
   const decodedToken = decodeToken(accessToken);
 
-  const currentTime = new Date().getTime();
+  const currentTime = Math.floor(new Date().getTime() / 1000);
   const issuedTime = decodedToken.iat;
 
   const refreshTokenExpirationPeriod = issuedTime + REFRESH_EXPIRATION_TIME;

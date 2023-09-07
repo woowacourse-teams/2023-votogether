@@ -8,9 +8,7 @@ import BookMarkPrompt from './BookMarkPrompt';
 import InstallPrompt from './InstallPrompt';
 
 const isBookMarkPromptActive = () => {
-  const isActive = JSON.parse(
-    getCookie<{ isAppInstallVisible: boolean }>().isAppInstallVisible || 'true'
-  );
+  const isActive = JSON.parse(getCookie().isAppInstallVisible || 'true');
 
   if (isActive) {
     return true;
@@ -44,7 +42,7 @@ export default function AppInstallPrompt() {
 
   const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
     event.preventDefault();
-    const isVisible = JSON.parse(getCookie<{}>().isAppInstallVisible || 'true');
+    const isVisible = JSON.parse(getCookie().isAppInstallVisible || 'true');
 
     if (!isVisible) return;
 

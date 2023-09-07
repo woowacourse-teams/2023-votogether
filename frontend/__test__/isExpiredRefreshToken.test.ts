@@ -7,7 +7,7 @@ import { setLocalStorage } from '@utils/localStorage';
 describe('리프레시 토큰이 지났는 지 여부를 검증하여 true/false 값을 반환한다.', () => {
   test('액세스 토큰 발급 시간 기준 14일이 지났다면 리프레시 토큰이 만료되었다고 판단하여 true를 반환한다.', () => {
     jest.useFakeTimers();
-    jest.setSystemTime(new Date(1693929083 + REFRESH_EXPIRATION_TIME + 10000));
+    jest.setSystemTime(new Date(1693837083000 + REFRESH_EXPIRATION_TIME * 1000 + 10000));
 
     /**
      * {
@@ -28,7 +28,7 @@ describe('리프레시 토큰이 지났는 지 여부를 검증하여 true/false
 
   test('액세스 토큰 발급 시간 기준 14일이 지나지 않았다면 리프레시 토큰이 만료되지 않았다고 판단하여 false를 반환한다.', () => {
     jest.useFakeTimers();
-    jest.setSystemTime(new Date(1693929083 - 10000));
+    jest.setSystemTime(new Date(1693837083000 - 10000));
 
     /**
      * {

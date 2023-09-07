@@ -10,7 +10,7 @@ export const isExpiredAccessToken = () => {
 
   const decodedToken = decodeToken(accessToken);
 
-  const currentTime = new Date().getTime();
+  const currentTime = Math.floor(new Date().getTime() / 1000);
   const accessTokenExpirationPeriod = decodedToken.exp;
 
   return currentTime >= accessTokenExpirationPeriod;

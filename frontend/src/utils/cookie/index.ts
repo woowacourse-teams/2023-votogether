@@ -14,6 +14,7 @@ export const setCookie = ({
   )}; max-age=${maxAge}; path=/`;
 };
 
+// token형식 = "key=value; key=value; key=value"
 export const getCookie = (): Record<CookieKey, string> => {
   const cookie = document.cookie;
   const cookieContent = cookie.split('; ').reduce((acc, pair) => {

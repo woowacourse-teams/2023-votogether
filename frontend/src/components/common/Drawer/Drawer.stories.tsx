@@ -18,7 +18,7 @@ export const LeftSideBar = () => {
 
   return (
     <div>
-      <NarrowMainHeader handleMenuOpenClick={openDrawer} handleLogoClick={() => {}} />
+      <NarrowMainHeader handleMenuOpenClick={openDrawer} />
       <Drawer width="225px" handleDrawerClose={closeDrawer} placement="left" ref={drawerRef}>
         <Dashboard />
       </Drawer>
@@ -31,7 +31,7 @@ export const RightSideBar = () => {
 
   return (
     <div>
-      <NarrowMainHeader handleMenuOpenClick={openDrawer} handleLogoClick={() => {}} />
+      <NarrowMainHeader handleMenuOpenClick={openDrawer} />
       <Drawer width="225px" handleDrawerClose={closeDrawer} placement="right" ref={drawerRef}>
         <Dashboard />
       </Drawer>

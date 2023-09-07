@@ -1,4 +1,4 @@
-type CookieKey = 'accessToken' | 'refreshToken' | 'hasEssentialInfo';
+type CookieKey = 'accessToken' | 'refreshToken' | 'hasEssentialInfo' | 'isAppInstallVisible';
 
 export const setCookieToken = (key: CookieKey, token: string) => {
   //secure 속성은 현재 dev에서는 http로 진행중이기 때문에 사용할 수 없음
@@ -6,6 +6,20 @@ export const setCookieToken = (key: CookieKey, token: string) => {
   document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(
     token
   )}; max-age=${twoWeekTime}; path=/`;
+};
+
+export const setCookie = ({
+  key,
+  value,
+  maxAge,
+}: {
+  key: string;
+  value: string;
+  maxAge: number;
+}) => {
+  document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(
+    value
+  )}; max-age=${maxAge}; path=/`;
 };
 
 // token형식 = "key=value; key=value; key=value"

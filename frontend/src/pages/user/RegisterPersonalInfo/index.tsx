@@ -1,15 +1,19 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
-import { updateUserInfo } from '@api/userInfo';
+import { useUpdateUserInfo } from '@hooks/query/user/useUpdateUserInfo';
+import { useToast } from '@hooks/useToast';
 
 import Accordion from '@components/common/Accordion';
-import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
+import LogoButton from '@components/common/LogoButton';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
+import Toast from '@components/common/Toast';
 
 import { BIRTH_YEAR } from '@constants/user';
+
+import { getCookieToken, setCookieToken } from '@utils/cookie';
 
 import * as S from './style';
 
@@ -21,6 +25,10 @@ interface UserInfoForm {
 
 export default function RegisterPersonalInfo() {
   const navigate = useNavigate();
+  const hasEssentialInfo = getCookieToken().hasEssentialInfo === 'true';
+
+  const { mutate: updateUserInfo, isSuccess, isError, error } = useUpdateUserInfo();
+  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const [userInfoForm, setUserInfoForm] = useState<UserInfoForm>({
     gender: '',
@@ -60,18 +68,42 @@ export default function RegisterPersonalInfo() {
 
     const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
-    localStorage.setItem('hasEssentialInfo', 'true');
+    setCookieToken('hasEssentialInfo', 'true');
 
     alert('개인 정보 등록 완료!');
     navigate('/');
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCookieToken('hasEssentialInfo', 'true');
+      alert('개인 정보가 등록 완료되었습니다.');
+      navigate('/');
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError && error instanceof Error) {
+      openToast('개인 정보를 이미 등록 완료하셨습니다.');
+      return;
+    }
+  }, [isError, error]);
+
+  if (hasEssentialInfo) {
+    alert('개인 정보를 이미 등록 완료하셨습니다.');
+    return <Navigate to={'/'} />;
+  }
 
   return (
     <Layout isSidebarVisible={true}>
       <S.Wrapper>
         <S.HeaderWrapper>
           <NarrowTemplateHeader>
-            <IconButton category="back" />
+            <LogoButton
+              content="icon"
+              style={{ width: '33px', height: '33px' }}
+              onClick={() => navigate('/')}
+            />
           </NarrowTemplateHeader>
         </S.HeaderWrapper>
         <S.Title>개인 정보 등록</S.Title>
@@ -145,6 +177,11 @@ export default function RegisterPersonalInfo() {
             </S.ButtonWrapper>
           </S.InfoForm>
         </S.MainWrapper>
+        {isToastOpen && (
+          <Toast size="md" position="bottom">
+            {toastMessage}
+          </Toast>
+        )}
       </S.Wrapper>
     </Layout>
   );

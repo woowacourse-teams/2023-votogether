@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef, Fragment } from 'react';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useCommentList } from '@hooks/query/comment/useCommentList';
@@ -31,6 +31,7 @@ const initialComment = {
 };
 
 export default function CommentList({ postId, postWriterName }: CommentListProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const { data: commentList } = useCommentList(postId);
   const { loggedInfo } = useContext(AuthContext);
   const { isLoggedIn, id: memberId } = loggedInfo;
@@ -63,17 +64,43 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
         )}
       </S.TextOrLoginWrapper>
       <S.ListContainer>
-        {slicedCommentList.map(comment => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            userType={getUserType(comment.member.id)}
-          />
-        ))}
+        {slicedCommentList.map((comment, index) => {
+          if (index % 10 === 9) {
+            return (
+              <Fragment key={comment.id}>
+                <CommentItem comment={comment} userType={getUserType(comment.member.id)} />
+                <S.HiddenInput
+                  ref={inputRef}
+                  maxLength={0}
+                  aria-label={`${index + 1}번째 댓글입니다`}
+                  role="contentinfo"
+                  inputMode="none"
+                />
+              </Fragment>
+            );
+          }
+          return (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              userType={getUserType(comment.member.id)}
+            />
+          );
+        })}
       </S.ListContainer>
       {hasMoreComment && (
         <S.MoreButtonWrapper>
-          <SquareButton onClick={handleMoreComment} theme="fill">
+          <SquareButton
+            onClick={() => {
+              if (!inputRef.current) return;
+
+              handleMoreComment();
+              inputRef.current.focus();
+              inputRef.current.ariaLabel = '더보기 버튼을 눌러 댓글이 추가되었습니다';
+            }}
+            theme="fill"
+            aria-label="댓글 더보기"
+          >
             더보기
           </SquareButton>
         </S.MoreButtonWrapper>

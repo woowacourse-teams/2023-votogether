@@ -4,24 +4,43 @@ import IconButton from '.';
 
 const meta: Meta<typeof IconButton> = {
   component: IconButton,
-  decorators: [storyFn => <div style={{ backgroundColor: 'black' }}>{storyFn()}</div>],
 };
 
 export default meta;
 type Story = StoryObj<typeof IconButton>;
 
 export const Category: Story = {
-  render: () => <IconButton category="category" />,
+  render: () => (
+    <div style={{ backgroundColor: 'black' }}>
+      <IconButton category="category" />
+    </div>
+  ),
 };
 
 export const Back: Story = {
-  render: () => <IconButton category="back" />,
+  render: () => (
+    <div style={{ backgroundColor: 'black' }}>
+      <IconButton category="back" />
+    </div>
+  ),
 };
 
 export const Search: Story = {
-  render: () => <IconButton category="search" />,
+  render: () => (
+    <div style={{ backgroundColor: 'black' }}>
+      <IconButton category="search" />
+    </div>
+  ),
 };
 
 export const Retry: Story = {
   render: () => <IconButton category="retry" />,
+};
+
+export const UserInfo: Story = {
+  render: () => <IconButton category="userInfo" />,
+};
+
+export const Ranking: Story = {
+  render: () => <IconButton category="ranking" />,
 };

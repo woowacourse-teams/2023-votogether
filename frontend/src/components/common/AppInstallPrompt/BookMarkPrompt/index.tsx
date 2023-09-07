@@ -4,17 +4,11 @@ import cancel from '@assets/x_mark_black.svg';
 
 import * as S from './style';
 
-interface MobileInstallPromptProps {
-  platform: 'ios' | 'android';
-  handleInstallClick: () => void;
+interface BookMarkPromptProps {
   handleCancelClick: () => void;
 }
 
-export default function MobileInstallPrompt({
-  platform,
-  handleInstallClick,
-  handleCancelClick,
-}: MobileInstallPromptProps) {
+export default function BookMarkPrompt({ handleCancelClick }: BookMarkPromptProps) {
   return (
     <S.Container>
       <S.Content>
@@ -32,17 +26,12 @@ export default function MobileInstallPrompt({
             </S.Description>
           </S.HeaderContent>
         </S.Header>
-        {platform === 'ios' && (
-          <S.IosContainer>
-            <S.Description>
-              브라우저 메뉴바에서 <S.IconImage src={arrowUp} alt="추가하기 아이콘" /> 모양 버튼을
-              눌러 "홈 화면에 추가하기"를 통해 설치를 할 수 있습니다.
-            </S.Description>
-          </S.IosContainer>
-        )}
-        {platform === 'android' && (
-          <S.InstallButton onClick={handleInstallClick}>홈 화면에 추가</S.InstallButton>
-        )}
+        <S.DescriptionWrapper>
+          <S.Description>
+            브라우저 메뉴바에서 <S.IconImage src={arrowUp} alt="추가하기 아이콘" /> 모양 버튼을 눌러
+            "홈 화면에 추가하기"를 통해 설치를 할 수 있습니다.
+          </S.Description>
+        </S.DescriptionWrapper>
       </S.Content>
     </S.Container>
   );

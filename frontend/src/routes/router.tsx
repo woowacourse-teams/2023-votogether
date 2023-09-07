@@ -9,6 +9,7 @@ import NotFound from '@pages/NotFound';
 import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetail';
+import Ranking from '@pages/Ranking';
 import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
 import VoteStatisticsPage from '@pages/VoteStatisticsPage';
 
@@ -137,6 +138,11 @@ const router = createBrowserRouter([
         element: <RegisterPersonalInfo />,
       },
     ],
+  },
+  {
+    path: PATH.RANKING,
+    element: <Ranking />,
+    errorElement: <Error />,
   },
   {
     path: '*',

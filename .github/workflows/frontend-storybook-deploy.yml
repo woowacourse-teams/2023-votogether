@@ -1,4 +1,4 @@
-name: Storybook-Deploy
+name: Deploy
 
 on:
   pull_request:

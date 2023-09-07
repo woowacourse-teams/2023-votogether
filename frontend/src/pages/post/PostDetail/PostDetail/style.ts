@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.header`
   position: fixed;
   width: 100%;
   top: 0;
@@ -14,7 +14,7 @@ export const HeaderContainer = styled.div`
   }
 `;
 
-export const MainContainer = styled.div`
+export const MainContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;

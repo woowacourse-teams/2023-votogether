@@ -1,5 +1,4 @@
 import { PropsWithChildren } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import Dashboard from '@components/common/Dashboard';
 import WideHeader from '@components/common/WideHeader';
@@ -11,16 +10,10 @@ interface LayoutProps extends PropsWithChildren {
 }
 
 export default function Layout({ children, isSidebarVisible }: LayoutProps) {
-  const navigate = useNavigate();
-
-  const movePostListPage = () => {
-    navigate('/');
-  };
-
   return (
     <S.Container>
       <S.WideHeaderWrapper>
-        <WideHeader handleLogoClick={movePostListPage} />
+        <WideHeader />
       </S.WideHeaderWrapper>
       <S.ContentContainer>
         {isSidebarVisible && (

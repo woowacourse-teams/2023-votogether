@@ -1,6 +1,9 @@
 import { MouseEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useToggle } from '@hooks/useToggle';
+
+import { PATH } from '@constants/path';
 
 import IconButton from '../IconButton';
 import LogoButton from '../LogoButton';
@@ -10,18 +13,28 @@ import * as S from './style';
 
 interface NarrowMainHeaderProps {
   handleMenuOpenClick: () => void;
-  handleLogoClick: () => void;
 }
 
-export default function NarrowMainHeader({
-  handleMenuOpenClick,
-  handleLogoClick,
-}: NarrowMainHeaderProps) {
+export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHeaderProps) {
   const {
     isOpen: isSearchInputOpen,
     openComponent: openSearchInput,
     closeComponent: closeSearchInput,
   } = useToggle();
+
+  const navigate = useNavigate();
+
+  const movePostListPage = () => {
+    navigate('/');
+  };
+
+  const moveUserInfoPage = () => {
+    navigate(PATH.USER_INFO);
+  };
+
+  const moveRankingPage = () => {
+    navigate(PATH.RANKING);
+  };
 
   return isSearchInputOpen ? (
     <S.Background onClick={closeSearchInput}>
@@ -32,8 +45,10 @@ export default function NarrowMainHeader({
   ) : (
     <S.Container>
       <IconButton category="category" onClick={handleMenuOpenClick} />
-      <LogoButton content="icon" onClick={handleLogoClick} />
+      <LogoButton content="icon" onClick={movePostListPage} />
       <IconButton category="search" onClick={openSearchInput} />
+      <IconButton category="userInfo" onClick={moveUserInfoPage} />
+      <IconButton category="ranking" onClick={moveRankingPage} />
     </S.Container>
   );
 }

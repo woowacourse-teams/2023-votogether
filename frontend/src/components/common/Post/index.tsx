@@ -99,9 +99,12 @@ export default function Post({ postInfo, isPreview }: PostProps) {
     return voteInfo.options.map(option => option.imageUrl).some(url => url !== '');
   };
 
+  const isPreviewTabIndex = isPreview ? undefined : 0;
+
   return (
-    <S.Container>
+    <S.Container as={isPreview ? 'li' : 'div'}>
       <S.DetailLink
+        as={isPreview ? '' : 'main'}
         to={isPreview ? `${PATH.POST}/${postId}` : '#'}
         $isPreview={isPreview}
         onClick={handleLinkClick}
@@ -110,9 +113,11 @@ export default function Post({ postInfo, isPreview }: PostProps) {
             ? '해당 게시물의 상세페이지로 이동하기'
             : '현재 상세페이지이므로 사용할 수 없습니다.'
         }
-        aria-disabled={isPreview ? false : true}
       >
-        <S.Category aria-label="카테고리">
+        <S.Category
+          tabIndex={isPreviewTabIndex}
+          aria-label={`카테고리 ${category.map(category => category.name).join('|')}`}
+        >
           {category.map(category => category.name).join(' | ')}
         </S.Category>
         {isPreview && checkIncludeImage() && (
@@ -120,20 +125,43 @@ export default function Post({ postInfo, isPreview }: PostProps) {
             <S.ImageIcon src={photoIcon} alt="해당 게시물은 사진을 포함하고 있습니다." />
           </S.ImageIconWrapper>
         )}
-        <S.ActivateState aria-label="마감 상태" $isActive={isActive} />
-        <S.Title aria-label="제목" $isPreview={isPreview}>
+        <S.ActivateState
+          tabIndex={isPreviewTabIndex}
+          role="status"
+          aria-label={`게시글 ${isActive ? '진행중' : '마감완료'}`}
+          $isActive={isActive}
+        />
+        <S.Title
+          tabIndex={isPreviewTabIndex}
+          aria-label={`게시글 제목: ${title}`}
+          $isPreview={isPreview}
+        >
           {title}
         </S.Title>
         <S.Wrapper>
-          <span aria-label="작성자">{writer.nickname}</span>
+          <span aria-label={`작성자 ${writer.nickname}`} tabIndex={isPreviewTabIndex}>
+            {writer.nickname}
+          </span>
           <S.Wrapper>
-            <span aria-label="작성일시">{convertTimeToWord(createTime)}</span>
-            <span aria-label="투표 마감일시">
+            <span
+              aria-label={`작성일시 ${convertTimeToWord(createTime)}`}
+              tabIndex={isPreviewTabIndex}
+            >
+              {convertTimeToWord(createTime)}
+            </span>
+            <span
+              aria-label={`투표 마감일시 ${isActive ? convertTimeToWord(deadline) : '마감 완료'}`}
+              tabIndex={isPreviewTabIndex}
+            >
               {isActive ? convertTimeToWord(deadline) : '마감 완료'}
             </span>
           </S.Wrapper>
         </S.Wrapper>
-        <S.Content aria-label="내용" $isPreview={isPreview}>
+        <S.Content
+          tabIndex={isPreviewTabIndex}
+          aria-label={`내용: ${content}`}
+          $isPreview={isPreview}
+        >
           {content}
         </S.Content>
         {!isPreview && imageUrl && (

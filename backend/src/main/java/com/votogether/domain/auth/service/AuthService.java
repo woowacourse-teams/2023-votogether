@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.auth.RefreshToken;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
 import com.votogether.domain.auth.dto.response.KakaoMemberResponse;
-import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.exception.TokenExceptionType;
 import com.votogether.domain.auth.repository.RefreshTokenRepository;
+import com.votogether.domain.auth.service.dto.LoginTokenResponse;
 import com.votogether.domain.auth.service.dto.TokenResponse;
 import com.votogether.domain.auth.service.oauth.KakaoOAuthClient;
 import com.votogether.domain.member.entity.Member;
@@ -28,14 +28,16 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public LoginResponse register(final String code) {
-        final String accessToken = kakaoOAuthClient.getAccessToken(code);
-        final KakaoMemberResponse response = kakaoOAuthClient.getMemberInfo(accessToken);
+    public LoginTokenResponse register(final String code) {
+        final String kakaoAccessToken = kakaoOAuthClient.getAccessToken(code);
+        final KakaoMemberResponse response = kakaoOAuthClient.getMemberInfo(kakaoAccessToken);
 
         final Member member = Member.from(response);
         final Member registeredMember = memberService.register(member);
-        final String token = tokenProcessor.generateAccessToken(registeredMember.getId());
-        return new LoginResponse(token, registeredMember.hasEssentialInfo());
+        final String accessToken = tokenProcessor.generateAccessToken(registeredMember.getId());
+        final String refreshToken = tokenProcessor.generateRefreshToken(registeredMember.getId());
+        refreshTokenRepository.save(new RefreshToken(refreshToken, registeredMember.getId()));
+        return new LoginTokenResponse(accessToken, refreshToken, registeredMember.hasEssentialInfo());
     }
 
     @Transactional(noRollbackFor = {BadRequestException.class})
@@ -43,10 +45,11 @@ public class AuthService {
             final AccessTokenRequest request,
             final String refreshTokenByRequest
     ) throws JsonProcessingException {
+        tokenProcessor.validateToken(refreshTokenByRequest);
+
         final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
                 .orElseThrow(() -> new BadRequestException(TokenExceptionType.INVALID_REFRESH_TOKEN));
         final TokenPayload accessTokenPayload = tokenProcessor.parseToken(request.accessToken());
-
         validateTokenInfo(accessTokenPayload, refreshToken);
 
         final String accessToken = tokenProcessor.generateAccessToken(refreshToken.getMemberId());
@@ -56,8 +59,8 @@ public class AuthService {
     }
 
     private void validateTokenInfo(final TokenPayload accessTokenPayload, final RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
         if (!accessTokenPayload.memberId().equals(refreshToken.getMemberId())) {
-            refreshTokenRepository.delete(refreshToken);
             throw new BadRequestException(TokenExceptionType.UNMATCHED_INFORMATION);
         }
     }

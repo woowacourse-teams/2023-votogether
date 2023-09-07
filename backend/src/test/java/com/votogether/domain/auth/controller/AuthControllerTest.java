@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.service.AuthService;
+import com.votogether.domain.auth.service.dto.LoginTokenResponse;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -39,7 +39,8 @@ class AuthControllerTest {
     void loginByKakao() {
         // given
         String accessToken = "abcdefg";
-        LoginResponse response = new LoginResponse(accessToken, false);
+        String refreshToken = "adfdsfdsa";
+        LoginTokenResponse response = new LoginTokenResponse(accessToken, refreshToken, false);
 
         given(authService.register(any())).willReturn(response);
 
@@ -56,7 +57,9 @@ class AuthControllerTest {
         // then
         assertAll(
                 () -> assertThat(responseBody).contains("accessToken"),
-                () -> assertThat(responseBody).contains(accessToken)
+                () -> assertThat(responseBody).contains(accessToken),
+                () -> assertThat(responseBody).contains("hasEssentialInfo"),
+                () -> assertThat(responseBody).contains("false")
         );
     }
 

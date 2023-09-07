@@ -1,28 +1,27 @@
 import { postTokens } from '@api/token';
 
-import { TOKEN_MAX_AGE } from '@constants/cookie';
+import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
-import { clearCookieToken, getCookieToken, setCookieToken } from './cookie';
-import { isExpiredAccessToken } from './isExpiredAccessToken';
+import { isRefreshTokenRequested } from './isRefreshTokenRequested';
+import { getLocalStorage, removeLocalStorage, setLocalStorage } from './localStorage';
 
 export const silentLogin = async () => {
-  const refreshToken = getCookieToken().refreshToken;
-
-  if (!refreshToken || !isExpiredAccessToken()) {
+  if (!isRefreshTokenRequested()) {
     return;
   }
 
   try {
-    const tokenData = await postTokens(refreshToken);
+    const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);
+
+    if (!accessToken) return;
+
+    const tokenData = await postTokens(accessToken);
 
     const updatedAccessToken = tokenData.accessToken;
-    const updatedRefreshToken = tokenData.refreshToken;
 
-    setCookieToken({ key: 'accessToken', token: updatedAccessToken, maxAge: TOKEN_MAX_AGE });
-    setCookieToken({ key: 'refreshToken', token: updatedRefreshToken, maxAge: TOKEN_MAX_AGE });
+    setLocalStorage(ACCESS_TOKEN_KEY, updatedAccessToken);
   } catch (error) {
-    clearCookieToken('accessToken');
-    clearCookieToken('refreshToken');
+    removeLocalStorage(ACCESS_TOKEN_KEY);
     window.location.href = '/login';
 
     throw new Error('로그인에 실패했습니다. 다시 로그인 해주세요.');

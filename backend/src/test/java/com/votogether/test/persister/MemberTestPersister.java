@@ -56,7 +56,7 @@ public class MemberTestPersister {
                     .gender(gender == null ? Gender.MALE : gender)
                     .birthYear(birthYear == null ? 1995 : birthYear)
                     .socialType(socialType == null ? SocialType.KAKAO : socialType)
-                    .socialId(socialId == null ? "id" : socialId)
+                    .socialId(socialId == null ? RandomStringUtils.random(10, true, true) : socialId)
                     .build();
             return memberRepository.save(member);
         }

@@ -41,7 +41,7 @@ public class CommentTestPersister {
 
         public Comment save() {
             Comment comment = Comment.builder()
-                    .post(post == null ? postTestPersister.builder().save() : post)
+                    .post(post == null ? postTestPersister.postBuilder().save() : post)
                     .writer(writer == null ? memberTestPersister.builder().save() : writer)
                     .content(content == null ? "hello" : content)
                     .build();

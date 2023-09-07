@@ -1,8 +1,9 @@
 export const NICKNAME_POLICY = {
   LETTER_AMOUNT: '2자에서 15자 이내로 입력해주세요.',
   NO_DUPLICATION: '중복된 닉네임은 사용할 수 없습니다.',
-  LIMIT_CHANGING: '닉네임 변경은 1개월간 1번으로 제한됩니다.',
+  LIMIT_CHANGING: '닉네임 변경은 14일간 1회로 제한됩니다.',
   LIMIT_LETTER_TYPE: '한글/영어/숫자를 사용해 닉네임을 지어주세요.',
+  LIMIT_KOREAN: '한글은 완전한 단어만 가능합니다.',
 };
 
 export const POST_CATEGORY_POLICY = {

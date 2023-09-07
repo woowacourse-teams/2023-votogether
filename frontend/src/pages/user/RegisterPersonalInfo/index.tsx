@@ -14,7 +14,7 @@ import Toast from '@components/common/Toast';
 import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
 import { BIRTH_YEAR } from '@constants/user';
 
-import { getCookieToken, setCookieToken } from '@utils/cookie';
+import { getCookie, setCookie } from '@utils/cookie';
 
 import * as S from './style';
 
@@ -26,7 +26,7 @@ interface UserInfoForm {
 
 export default function RegisterPersonalInfo() {
   const navigate = useNavigate();
-  const hasEssentialInfo = getCookieToken().hasEssentialInfo === 'true';
+  const hasEssentialInfo = getCookie().hasEssentialInfo === 'true';
 
   const { mutate: updateUserInfo, isSuccess, isError, error } = useUpdateUserInfo();
   const { isToastOpen, openToast, toastMessage } = useToast();
@@ -69,7 +69,7 @@ export default function RegisterPersonalInfo() {
 
     const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
-    setCookieToken({ key: 'hasEssentialInfo', token: 'true', maxAge: ESSENTIAL_MAX_AGE });
+    setCookie({ key: 'hasEssentialInfo', value: 'true', maxAge: ESSENTIAL_MAX_AGE });
 
     alert('개인 정보 등록 완료!');
     navigate('/');
@@ -77,7 +77,7 @@ export default function RegisterPersonalInfo() {
 
   useEffect(() => {
     if (isSuccess) {
-      setCookieToken({ key: 'hasEssentialInfo', token: 'true', maxAge: ESSENTIAL_MAX_AGE });
+      setCookie({ key: 'hasEssentialInfo', value: 'true', maxAge: ESSENTIAL_MAX_AGE });
       alert('개인 정보가 등록 완료되었습니다.');
       navigate('/');
     }

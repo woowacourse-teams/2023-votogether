@@ -4,7 +4,10 @@ import { LoggedInfo } from '@type/user';
 
 import { useUserInfo } from '@hooks/query/user/useUserInfo';
 
-import { clearCookieToken, getCookieToken, decodeToken } from '@utils/cookie';
+import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
+
+import { clearCookie, decodeToken } from '@utils/cookie';
+import { getLocalStorage, removeLocalStorage } from '@utils/localStorage';
 
 interface Auth {
   loggedInfo: LoggedInfo;
@@ -24,9 +27,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data: userInfo } = useUserInfo(loggedInfo.isLoggedIn);
 
   const clearLoggedInfo = () => {
-    clearCookieToken('accessToken');
-    clearCookieToken('refreshToken');
-    clearCookieToken('hasEssentialInfo');
+    removeLocalStorage(ACCESS_TOKEN_KEY);
+    clearCookie('hasEssentialInfo');
 
     setLoggedInfo(notLoggedInfo);
   };
@@ -38,7 +40,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [loggedInfo.isLoggedIn, userInfo]);
 
   useEffect(() => {
-    const accessToken = getCookieToken().accessToken;
+    const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);
+
     if (accessToken) {
       const decodedPayload = decodeToken(accessToken);
       const id = decodedPayload.memberId;

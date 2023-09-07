@@ -9,10 +9,12 @@ import Error from '@pages/Error';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 
-import { ESSENTIAL_MAX_AGE, TOKEN_MAX_AGE } from '@constants/cookie';
+import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
+import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
-import { getCookieToken, decodeToken, setCookieToken } from '@utils/cookie';
+import { decodeToken, setCookie } from '@utils/cookie';
 import { getFetch } from '@utils/fetch';
+import { setLocalStorage } from '@utils/localStorage';
 
 const getAuthInfo = async (url: string): Promise<AuthResponse> => {
   return await getFetch<AuthResponse>(url);
@@ -34,16 +36,12 @@ export default function Redirection() {
       const code = params.get('code');
       const REGISTER_API_URL = `${process.env.VOTOGETHER_BASE_URL}/auth/kakao/callback?code=${code}`;
       try {
-        const { accessToken, hasEssentialInfo, refreshToken } = await getAuthInfo(REGISTER_API_URL);
-        setCookieToken({ key: 'accessToken', token: accessToken, maxAge: TOKEN_MAX_AGE });
-        setCookieToken({
-          key: 'refreshToken',
-          token: refreshToken ?? '',
-          maxAge: TOKEN_MAX_AGE,
-        });
-        setCookieToken({
+        const { accessToken, hasEssentialInfo } = await getAuthInfo(REGISTER_API_URL);
+        setLocalStorage(ACCESS_TOKEN_KEY, accessToken);
+
+        setCookie({
           key: 'hasEssentialInfo',
-          token: String(hasEssentialInfo),
+          value: String(hasEssentialInfo),
           maxAge: ESSENTIAL_MAX_AGE,
         });
 
@@ -53,7 +51,7 @@ export default function Redirection() {
         setLoggedInfo({
           ...loggedInfo,
           id,
-          accessToken: getCookieToken().accessToken,
+          accessToken,
           isLoggedIn: true,
         });
 

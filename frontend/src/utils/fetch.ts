@@ -1,25 +1,30 @@
-import { getCookieToken } from './cookie';
+import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
+
+import { getLocalStorage } from './localStorage';
 import { silentLogin } from './silentLogin';
 
 const headers = {
-  Authorization: `Bearer `,
   'Content-Type': 'application/json',
 };
 
 const makeFetchHeaders = () => {
-  const cookie = getCookieToken();
+  const accessToken = getLocalStorage(ACCESS_TOKEN_KEY);
+
+  if (!accessToken) {
+    return headers;
+  }
 
   return {
     ...headers,
-    Authorization: `Bearer ${cookie.accessToken}`,
+    Authorization: `Bearer ${accessToken}`,
   };
 };
 
 const makeFetchMultiHeaders = () => {
-  const cookie = getCookieToken();
+  const accessToken = getLocalStorage(ACCESS_TOKEN_KEY);
 
   return {
-    Authorization: `Bearer ${cookie.accessToken}`,
+    Authorization: `Bearer ${accessToken}`,
   };
 };
 

@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 
-import { getCookieToken, setCookie } from '@utils/cookie';
+import { getCookie, setCookie } from '@utils/cookie';
 
 import { BeforeInstallPromptEvent } from '../../../../window';
 
@@ -8,7 +8,9 @@ import BookMarkPrompt from './BookMarkPrompt';
 import InstallPrompt from './InstallPrompt';
 
 const isBookMarkPromptActive = () => {
-  const isActive = JSON.parse(getCookieToken().isAppInstallVisible || 'true');
+  const isActive = JSON.parse(
+    getCookie<{ isAppInstallVisible: boolean }>().isAppInstallVisible || 'true'
+  );
 
   if (isActive) {
     return true;
@@ -42,7 +44,7 @@ export default function AppInstallPrompt() {
 
   const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
     event.preventDefault();
-    const isVisible = JSON.parse(getCookieToken().isAppInstallVisible || 'true');
+    const isVisible = JSON.parse(getCookie<{}>().isAppInstallVisible || 'true');
 
     if (!isVisible) return;
 

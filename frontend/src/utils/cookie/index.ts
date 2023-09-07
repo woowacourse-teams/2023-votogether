@@ -1,22 +1,11 @@
-type CookieKey = 'accessToken' | 'refreshToken' | 'hasEssentialInfo' | 'isAppInstallVisible';
-
-interface setCookieInfo {
-  key: CookieKey;
-  token: string;
-  maxAge: number;
-}
-export const setCookieToken = ({ key, token, maxAge }: setCookieInfo) => {
-  document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(
-    token
-  )}; max-age=${maxAge}; path=/`;
-};
+type CookieKey = 'hasEssentialInfo' | 'isAppInstallVisible';
 
 export const setCookie = ({
   key,
   value,
   maxAge,
 }: {
-  key: string;
+  key: CookieKey;
   value: string;
   maxAge: number;
 }) => {
@@ -25,16 +14,14 @@ export const setCookie = ({
   )}; max-age=${maxAge}; path=/`;
 };
 
-// token형식 = "key=value; key=value; key=value"
-export const getCookieToken = () => {
+export const getCookie = (): Record<CookieKey, string> => {
   const cookie = document.cookie;
-  const cookieContent = {} as { [key: string]: any };
-  cookie.split('; ').forEach(pair => {
+  const cookieContent = cookie.split('; ').reduce((acc, pair) => {
     const [key, value] = pair.split('=');
-    cookieContent[key] = value;
-  });
+    return { ...acc, [key]: value };
+  }, {}) as Record<CookieKey, string>;
 
-  return cookieContent as Record<CookieKey, any>;
+  return cookieContent;
 };
 
 interface MemberPayload {
@@ -51,7 +38,7 @@ export const decodeToken = (token: string): MemberPayload => {
   return decodedData;
 };
 
-export const clearCookieToken = (key: CookieKey) => {
+export const clearCookie = (key: string) => {
   const expirationTime = new Date(Date.now() - 1);
   document.cookie = `${encodeURIComponent(key)}=; expires=${expirationTime.toUTCString()}; path=/;`;
 };

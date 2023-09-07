@@ -3,9 +3,11 @@ import { Navigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 
+import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 import { PATH } from '@constants/path';
 
-import { getCookieToken } from '@utils/cookie';
+import { getCookie } from '@utils/cookie';
+import { getLocalStorage } from '@utils/localStorage';
 
 interface Route extends PropsWithChildren {
   isGuestAllowed?: boolean;
@@ -14,8 +16,8 @@ interface Route extends PropsWithChildren {
 
 const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: Route) => {
   const authInfo = useContext(AuthContext);
-  const isLoggedIn = getCookieToken().accessToken;
-  const hasEssentialInfo = getCookieToken().hasEssentialInfo;
+  const isLoggedIn = getLocalStorage(ACCESS_TOKEN_KEY);
+  const hasEssentialInfo = getCookie().hasEssentialInfo;
 
   // const isAuthenticated = true;
   if (!isGuestAllowed && !isLoggedIn) {

@@ -12,6 +12,7 @@ import com.votogether.domain.auth.service.oauth.KakaoOAuthClient;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
 import lombok.RequiredArgsConstructor;
@@ -40,16 +41,16 @@ public class AuthService {
         return new LoginTokenResponse(accessToken, refreshToken, registeredMember.hasEssentialInfo());
     }
 
-    @Transactional(noRollbackFor = {BadRequestException.class})
+    @Transactional
     public TokenResponse reissueAuthToken(
             final AccessTokenRequest request,
             final String refreshTokenByRequest
     ) throws JsonProcessingException {
         tokenProcessor.validateToken(refreshTokenByRequest);
 
-        final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
-                .orElseThrow(() -> new BadRequestException(TokenExceptionType.INVALID_REFRESH_TOKEN));
         final TokenPayload accessTokenPayload = tokenProcessor.parseToken(request.accessToken());
+        final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
+                .orElseThrow(() -> new NotFoundException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
         validateTokenInfo(accessTokenPayload, refreshToken);
 
         final String accessToken = tokenProcessor.generateAccessToken(refreshToken.getMemberId());
@@ -61,14 +62,14 @@ public class AuthService {
     private void validateTokenInfo(final TokenPayload accessTokenPayload, final RefreshToken refreshToken) {
         refreshTokenRepository.delete(refreshToken);
         if (!accessTokenPayload.memberId().equals(refreshToken.getMemberId())) {
-            throw new BadRequestException(TokenExceptionType.UNMATCHED_INFORMATION);
+            throw new BadRequestException(TokenExceptionType.UNMATCHED_INFORMATION_BETWEEN_TOKEN);
         }
     }
 
     @Transactional
     public void deleteRefreshToken(final String refreshTokenByRequest) {
         final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
-                .orElseThrow(() -> new BadRequestException(TokenExceptionType.INVALID_REFRESH_TOKEN));
+                .orElseThrow(() -> new NotFoundException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
         refreshTokenRepository.delete(refreshToken);
     }
 

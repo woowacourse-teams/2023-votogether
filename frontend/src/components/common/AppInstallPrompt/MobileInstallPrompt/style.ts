@@ -83,19 +83,32 @@ export const IconImage = styled.img`
   height: 24px;
 `;
 
-export const InstallButton = styled.button`
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+export const UserButton = styled.button`
   align-self: end;
 
   border-radius: 6px;
 
-  width: 190px;
+  width: 100%;
   height: 40px;
 
   font-size: 1.6rem;
   font-weight: 500;
 
   color: white;
-  background-color: #5383ed;
 
   cursor: pointer;
+
+  &:nth-child(1) {
+    background-color: #888888;
+  }
+
+  &:nth-child(2) {
+    background-color: #5383ed;
+  }
 `;

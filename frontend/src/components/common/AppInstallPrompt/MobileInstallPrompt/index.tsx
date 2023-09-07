@@ -29,7 +29,10 @@ export default function MobileInstallPrompt({
             </S.Description>
           </S.HeaderContent>
         </S.Header>
-        <S.InstallButton onClick={handleInstallClick}>홈 화면에 추가</S.InstallButton>
+        <S.ButtonContainer>
+          <S.UserButton onClick={handleCancelClick}>웹으로 볼게요</S.UserButton>
+          <S.UserButton onClick={handleInstallClick}>홈 화면에 추가</S.UserButton>
+        </S.ButtonContainer>
       </S.Content>
     </S.Container>
   );

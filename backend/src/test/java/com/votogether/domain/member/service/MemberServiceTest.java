@@ -485,10 +485,12 @@ class MemberServiceTest {
         RankingResponse response = memberService.getRanking(member);
 
         // then (score: 6,5,7,6,1)
-        assertThat(response.ranking()).isEqualTo(2);
-        assertThat(response.postCount()).isEqualTo(1);
-        assertThat(response.voteCount()).isEqualTo(1);
-        assertThat(response.score()).isEqualTo(6);
+        assertAll(
+                () -> assertThat(response.ranking()).isEqualTo(2),
+                () -> assertThat(response.postCount()).isEqualTo(1),
+                () -> assertThat(response.voteCount()).isEqualTo(1),
+                () -> assertThat(response.score()).isEqualTo(6)
+        );
     }
 
 }

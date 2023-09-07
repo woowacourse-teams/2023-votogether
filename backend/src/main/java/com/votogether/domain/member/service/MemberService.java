@@ -73,11 +73,11 @@ public class MemberService {
     public RankingResponse getRanking(final Member member) {
         final RankingBoard rankingBoard = getRankingBoard();
         return new RankingResponse(
-                rankingBoard.ranking(member),
+                rankingBoard.getRanking(member),
                 member.getNickname(),
-                rankingBoard.engagementRecord(member).getPostCount(),
-                rankingBoard.engagementRecord(member).getVoteCount(),
-                rankingBoard.score(member)
+                rankingBoard.getActivityRecord(member).getPostCount(),
+                rankingBoard.getActivityRecord(member).getVoteCount(),
+                rankingBoard.getScore(member)
         );
     }
 

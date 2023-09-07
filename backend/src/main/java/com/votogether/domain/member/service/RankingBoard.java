@@ -38,15 +38,15 @@ public class RankingBoard {
         }
     }
 
-    public long score(Member member) {
+    public long getScore(Member member) {
         return passionBoard.get(member).calculateScore();
     }
 
-    public int ranking(Member member) {
+    public int getRanking(Member member) {
         return ranking.get(member);
     }
 
-    public ActivityRecord engagementRecord(Member member) {
+    public ActivityRecord getActivityRecord(Member member) {
         return passionBoard.get(member);
     }
 

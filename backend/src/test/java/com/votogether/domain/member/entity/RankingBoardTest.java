@@ -38,12 +38,12 @@ class RankingBoardTest {
 
             //when, then
             assertAll(
-                    () -> assertThat(rankingBoard.score(memberA)).isEqualTo(6),
-                    () -> assertThat(rankingBoard.score(memberB)).isEqualTo(7),
-                    () -> assertThat(rankingBoard.score(memberC)).isEqualTo(8),
-                    () -> assertThat(rankingBoard.ranking(memberA)).isEqualTo(3),
-                    () -> assertThat(rankingBoard.ranking(memberB)).isEqualTo(2),
-                    () -> assertThat(rankingBoard.ranking(memberC)).isEqualTo(1)
+                    () -> assertThat(rankingBoard.getScore(memberA)).isEqualTo(6),
+                    () -> assertThat(rankingBoard.getScore(memberB)).isEqualTo(7),
+                    () -> assertThat(rankingBoard.getScore(memberC)).isEqualTo(8),
+                    () -> assertThat(rankingBoard.getRanking(memberA)).isEqualTo(3),
+                    () -> assertThat(rankingBoard.getRanking(memberB)).isEqualTo(2),
+                    () -> assertThat(rankingBoard.getRanking(memberC)).isEqualTo(1)
             );
         }
 
@@ -70,13 +70,13 @@ class RankingBoardTest {
 
             //when, then
             assertAll(
-                    () -> assertThat(rankingBoard.score(memberA)).isEqualTo(6),
-                    () -> assertThat(rankingBoard.score(memberB)).isEqualTo(8),
-                    () -> assertThat(rankingBoard.score(memberC)).isEqualTo(8),
-                    () -> assertThat(rankingBoard.ranking(memberA)).isEqualTo(4),
-                    () -> assertThat(rankingBoard.ranking(memberB)).isEqualTo(1),
-                    () -> assertThat(rankingBoard.ranking(memberC)).isEqualTo(1),
-                    () -> assertThat(rankingBoard.ranking(memberD)).isEqualTo(1)
+                    () -> assertThat(rankingBoard.getScore(memberA)).isEqualTo(6),
+                    () -> assertThat(rankingBoard.getScore(memberB)).isEqualTo(8),
+                    () -> assertThat(rankingBoard.getScore(memberC)).isEqualTo(8),
+                    () -> assertThat(rankingBoard.getRanking(memberA)).isEqualTo(4),
+                    () -> assertThat(rankingBoard.getRanking(memberB)).isEqualTo(1),
+                    () -> assertThat(rankingBoard.getRanking(memberC)).isEqualTo(1),
+                    () -> assertThat(rankingBoard.getRanking(memberD)).isEqualTo(1)
             );
         }
 

@@ -42,24 +42,10 @@ public class PostController implements PostControllerDocs {
             @RequestParam final int page,
             @RequestParam final PostClosingType postClosingType,
             @RequestParam final PostSortType postSortType,
-            @RequestParam(required = false, name = "category") final Long categoryId,
             @Auth final Member member
     ) {
         final List<PostResponse> responses =
-                postService.searchPostsWithKeyword(keyword, page, postClosingType, postSortType, categoryId, member);
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/search/guest")
-    public ResponseEntity<List<PostResponse>> searchPostsWithKeywordForGuest(
-            @RequestParam final String keyword,
-            @RequestParam final int page,
-            @RequestParam final PostClosingType postClosingType,
-            @RequestParam final PostSortType postSortType,
-            @RequestParam(required = false, name = "category") final Long categoryId
-    ) {
-        final List<PostResponse> responses =
-                postService.searchPostsWithKeywordForGuest(keyword, page, postClosingType, postSortType, categoryId);
+                postService.searchPostsWithKeyword(keyword, page, postClosingType, postSortType, member);
         return ResponseEntity.ok(responses);
     }
 
@@ -68,11 +54,10 @@ public class PostController implements PostControllerDocs {
             @RequestParam final int page,
             @RequestParam final PostClosingType postClosingType,
             @RequestParam final PostSortType postSortType,
-            @RequestParam(required = false, name = "category") final Long categoryId,
             @Auth final Member member
     ) {
         final List<PostResponse> responses =
-                postService.getPostsByWriter(page, postClosingType, postSortType, categoryId, member);
+                postService.getPostsByWriter(page, postClosingType, postSortType, member);
         return ResponseEntity.ok(responses);
     }
 
@@ -94,31 +79,12 @@ public class PostController implements PostControllerDocs {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/guest")
-    public ResponseEntity<List<PostResponse>> getPostsGuest(
-            @RequestParam final int page,
-            @RequestParam final PostClosingType postClosingType,
-            @RequestParam final PostSortType postSortType,
-            @RequestParam(required = false, name = "category") final Long categoryId
-    ) {
-        final List<PostResponse> response = postService.getPostsGuest(page, postClosingType, postSortType, categoryId);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("{postId}")
     public ResponseEntity<PostDetailResponse> getPost(
             @PathVariable final Long postId,
             @Auth final Member member
     ) {
         final PostDetailResponse response = postService.getPostById(postId, member);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("{postId}/guest")
-    public ResponseEntity<PostDetailResponse> getPostByGuest(
-            @PathVariable final Long postId
-    ) {
-        final PostDetailResponse response = postService.getPostById(postId, null);
         return ResponseEntity.ok(response);
     }
 
@@ -191,5 +157,3 @@ public class PostController implements PostControllerDocs {
     }
 
 }
-
-

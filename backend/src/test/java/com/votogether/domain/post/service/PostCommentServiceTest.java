@@ -33,7 +33,7 @@ class PostCommentServiceTest extends ServiceTest {
         void getComments() {
             // given
             Member writer = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(writer).save();
+            Post post = postTestPersister.postBuilder().writer(writer).save();
             Comment commentA = commentTestPersister.builder().post(post).writer(writer).save();
             Comment commentB = commentTestPersister.builder().post(post).writer(writer).save();
 
@@ -65,7 +65,7 @@ class PostCommentServiceTest extends ServiceTest {
         void createComment() {
             // given
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(member).save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
             CommentCreateRequest commentCreateRequest = new CommentCreateRequest("hello");
 
             // when
@@ -99,7 +99,7 @@ class PostCommentServiceTest extends ServiceTest {
         void deleteComment() {
             // given
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(member).save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
             Comment comment = commentTestPersister.builder().post(post).writer(member).save();
             CommentUpdateRequest request = new CommentUpdateRequest("hello");
 
@@ -128,7 +128,7 @@ class PostCommentServiceTest extends ServiceTest {
         void emptyComment() {
             // given
             Member member = MemberFixtures.MALE_20.get();
-            Post post = postTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().save();
             CommentUpdateRequest request = new CommentUpdateRequest("hello");
 
             // when, then
@@ -142,7 +142,7 @@ class PostCommentServiceTest extends ServiceTest {
         void invalidBelongPost() {
             // given
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(member).save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
             Comment comment = commentTestPersister.builder().writer(member).save();
             CommentUpdateRequest request = new CommentUpdateRequest("hello");
 
@@ -157,7 +157,7 @@ class PostCommentServiceTest extends ServiceTest {
         void invalidWriter() {
             // given
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(member).save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
             Comment comment = commentTestPersister.builder().post(post).save();
             CommentUpdateRequest request = new CommentUpdateRequest("hello");
 
@@ -178,7 +178,7 @@ class PostCommentServiceTest extends ServiceTest {
         void deleteComment() {
             // given
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(member).save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
             Comment comment = commentTestPersister.builder().post(post).writer(member).save();
 
             // when
@@ -205,7 +205,7 @@ class PostCommentServiceTest extends ServiceTest {
         void emptyComment() {
             // given
             Member member = MemberFixtures.MALE_20.get();
-            Post post = postTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().save();
 
             // when, then
             assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), -1L, member))
@@ -218,7 +218,7 @@ class PostCommentServiceTest extends ServiceTest {
         void invalidBelongPost() {
             // given
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(member).save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
             Comment comment = commentTestPersister.builder().writer(member).save();
 
             // when, then
@@ -232,7 +232,7 @@ class PostCommentServiceTest extends ServiceTest {
         void invalidWriter() {
             // given
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.builder().writer(member).save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
             Comment comment = commentTestPersister.builder().post(post).save();
 
             // when, then

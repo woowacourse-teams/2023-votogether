@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -101,7 +102,7 @@ public class PostService {
                 transformElements(postCreateRequest.postOptions(), PostOptionCreateRequest::content),
                 transformElements(optionImages, ImageUploader::upload)
         );
-        post.mapCategories(categories);
+        post.addCategories(categories);
         addContentImageIfPresent(post, contentImages);
 
         return post;
@@ -113,16 +114,14 @@ public class PostService {
     ) {
         return Post.builder()
                 .writer(loginMember)
-                .postBody(toPostBody(postCreateRequest.title(), postCreateRequest.content()))
+                .title(postCreateRequest.title())
+                .content(postCreateRequest.content())
                 .deadline(postCreateRequest.deadline())
                 .build();
     }
 
     private PostBody toPostBody(final String title, final String content) {
-        return PostBody.builder()
-                .title(title)
-                .content(content)
-                .build();
+        return new PostBody(title, content);
     }
 
     private void addContentImageIfPresent(final Post post, final List<MultipartFile> contentImages) {
@@ -143,8 +142,8 @@ public class PostService {
             final Long categoryId,
             final Member loginMember
     ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getPostBaseSort());
-        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, Sort.by("created_at").descending());
+        final List<Post> posts = postRepository.findPostsWithFilteringAndPaging(
                 postClosingType,
                 postSortType,
                 categoryId,
@@ -153,24 +152,6 @@ public class PostService {
         return posts.stream()
                 .map(post -> PostResponse.of(post, loginMember))
                 .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<PostResponse> getPostsGuest(
-            final int page,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType,
-            final Long categoryId
-    ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
-        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
-                postClosingType,
-                postSortType,
-                categoryId,
-                pageable
-        );
-
-        return transformElements(posts, PostResponse::forGuest);
     }
 
     @Transactional(readOnly = true)
@@ -242,7 +223,7 @@ public class PostService {
             final PostSortType postSortType,
             final Member member
     ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, postSortType.getVoteBaseSort());
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE, Sort.by("created_at").descending());
 
         Slice<Post> posts = postsVotedByMemberMapper.get(postClosingType).apply(member, pageable);
 
@@ -266,15 +247,13 @@ public class PostService {
             final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
-            final Long categoryId,
             final Member member
     ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
-        final List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+        final List<Post> posts = postRepository.findPostsByWriterWithFilteringAndPaging(
                 member,
                 postClosingType,
                 postSortType,
-                categoryId,
                 pageable
         );
 
@@ -288,31 +267,14 @@ public class PostService {
             final int page,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
-            final Long categoryId,
             final Member member
     ) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
         final List<Post> posts =
-                postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);
+                postRepository.findSearchPostsWithFilteringAndPaging(keyword, postClosingType, postSortType, pageable);
 
         return posts.stream()
                 .map(post -> PostResponse.of(post, member))
-                .toList();
-    }
-
-    public List<PostResponse> searchPostsWithKeywordForGuest(
-            final String keyword,
-            final int page,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType,
-            final Long categoryId
-    ) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGING_SIZE);
-        final List<Post> posts =
-                postRepository.findAllWithKeyword(keyword, postClosingType, postSortType, categoryId, pageable);
-
-        return posts.stream()
-                .map(PostResponse::forGuest)
                 .toList();
     }
 
@@ -366,4 +328,3 @@ public class PostService {
     }
 
 }
-

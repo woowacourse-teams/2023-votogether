@@ -12,7 +12,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.dto.request.comment.CommentUpdateRequest;
 import com.votogether.domain.post.dto.response.comment.CommentResponse;
-import com.votogether.domain.post.dto.response.comment.CommentResponse.CommentWriter;
+import com.votogether.domain.post.dto.response.comment.CommentWriterResponse;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.global.exception.GlobalExceptionHandler;
 import com.votogether.test.ControllerTest;
@@ -59,17 +59,17 @@ class PostCommentControllerTest extends ControllerTest {
         @DisplayName("정상적인 요청이라면 게시글 댓글 목록과 200 응답을 반환한다.")
         void getComments() {
             // given
-            final List<CommentResponse> response = List.of(
+            List<CommentResponse> response = List.of(
                     new CommentResponse(
                             1L,
-                            new CommentWriter(1L, "votogetherA"),
+                            new CommentWriterResponse(1L, "votogetherA"),
                             "helloA",
                             LocalDateTime.now(),
                             LocalDateTime.now()
                     ),
                     new CommentResponse(
                             2L,
-                            new CommentWriter(2L, "votogetherB"),
+                            new CommentWriterResponse(2L, "votogetherB"),
                             "helloB",
                             LocalDateTime.now(),
                             LocalDateTime.now()

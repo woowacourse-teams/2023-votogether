@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,12 +23,11 @@ import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
-import com.votogether.domain.post.dto.response.post.WriterResponse;
+import com.votogether.domain.post.dto.response.post.PostWriterResponse;
+import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
-import com.votogether.domain.post.dto.response.vote.VoteDetailResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.service.PostService;
@@ -284,14 +282,10 @@ class PostControllerTest {
         @DisplayName("정렬 유형, 마감 유형, 카테고리로 모든 게시물 조회한다")
         void getAllPostBySortTypeAndClosingTypeAndCategoryId() throws Exception {
             // given
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(MALE_30.get())
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L))
                     .build();
 
@@ -334,94 +328,6 @@ class PostControllerTest {
 
     }
 
-
-    @Nested
-    @DisplayName("비회원 게시글 목록 조회")
-    class GetPostsGuest {
-
-        @Test
-        @DisplayName("마감 시간 타입으로 변환할 수 없으면 400 상태를 응답한다.")
-        void invalidPostClosingType() {
-            RestAssuredMockMvc.given().log().all()
-                    .param("page", 0)
-                    .param("postClosingType", "hello")
-                    .param("postSortType", PostSortType.LATEST)
-                    .when().get("/posts/guest")
-                    .then().log().all()
-                    .contentType(ContentType.JSON)
-                    .status(HttpStatus.BAD_REQUEST);
-        }
-
-        @Test
-        @DisplayName("정렬 타입으로 변환할 수 없으면 400 상태를 반환한다.")
-        void invalidPostSortType() {
-            RestAssuredMockMvc.given().log().all()
-                    .param("page", 0)
-                    .param("postClosingType", PostClosingType.ALL)
-                    .param("postSortType", "hello")
-                    .when().get("/posts/guest")
-                    .then().log().all()
-                    .contentType(ContentType.JSON)
-                    .status(HttpStatus.BAD_REQUEST);
-        }
-
-        @Test
-        @DisplayName("카테고리가 없는 올바른 조회 요청이라면 게시글 목록 응답과 200 상태를 반환한다.")
-        void getPostsGuestWithoutCategory() {
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
-            Post post = Post.builder()
-                    .writer(MALE_30.get())
-                    .postBody(postBody)
-                    .deadline(LocalDateTime.now().plusDays(3L))
-                    .build();
-
-            given(postService.getPostsGuest(anyInt(), any(PostClosingType.class), any(PostSortType.class), isNull()))
-                    .willReturn(List.of(PostResponse.forGuest(post)));
-
-            RestAssuredMockMvc.given().log().all()
-                    .param("page", 0)
-                    .param("postClosingType", PostClosingType.ALL)
-                    .param("postSortType", PostSortType.LATEST)
-                    .when().get("/posts/guest")
-                    .then().log().all()
-                    .contentType(ContentType.JSON)
-                    .status(HttpStatus.OK);
-        }
-
-        @Test
-        @DisplayName("카테고리가 있는 올바른 조회 요청이라면 게시글 목록 응답과 200 상태를 반환한다.")
-        void getPostsGuestWithCategory() {
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
-            Post post = Post.builder()
-                    .writer(MALE_30.get())
-                    .postBody(postBody)
-                    .deadline(LocalDateTime.now().plusDays(3L))
-                    .build();
-
-            given(postService.getPostsGuest(anyInt(), any(PostClosingType.class), any(PostSortType.class), anyLong()))
-                    .willReturn(List.of(PostResponse.forGuest(post)));
-
-            RestAssuredMockMvc.given().log().all()
-                    .param("page", 0)
-                    .param("postClosingType", PostClosingType.ALL)
-                    .param("postSortType", PostSortType.LATEST)
-                    .param("category", 1L)
-                    .when().get("/posts/guest")
-                    .then().log().all()
-                    .contentType(ContentType.JSON)
-                    .status(HttpStatus.OK);
-        }
-
-    }
-
     @Test
     @DisplayName("한 게시글의 상세를 조회한다.")
     void getPost() throws JsonProcessingException {
@@ -430,14 +336,10 @@ class PostControllerTest {
         Member writer = MALE_30.get();
         LocalDateTime deadline = LocalDateTime.now().plusDays(3L);
 
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
         Post post = Post.builder()
                 .writer(writer)
-                .postBody(postBody)
+                .title("title")
+                .content("content")
                 .deadline(deadline)
                 .build();
 
@@ -462,59 +364,16 @@ class PostControllerTest {
         });
 
         // then
-        WriterResponse writerResponse = response.writer();
-        VoteDetailResponse voteDetailResponse = response.voteInfo();
+        PostWriterResponse postWriterResponse = response.writer();
+        PostVoteResultResponse postVoteResultResponse = response.voteInfo();
 
         assertAll(
                 () -> assertThat(response.title()).isEqualTo("title"),
                 () -> assertThat(response.content()).isEqualTo("content"),
                 () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
-                () -> assertThat(writerResponse.id()).isEqualTo(member.getId()),
-                () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero()
-        );
-    }
-
-    @Test
-    @DisplayName("비회원이 한 게시글을 상세 조회한다.")
-    void getPostByGuest() {
-        // given
-        long postId = 0L;
-        Member writer = MALE_30.get();
-        LocalDateTime deadline = LocalDateTime.now().plusDays(3L);
-
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
-        Post post = Post.builder()
-                .writer(writer)
-                .postBody(postBody)
-                .deadline(deadline)
-                .build();
-
-        given(postService.getPostById(postId, null)).willReturn(PostDetailResponse.of(post, null));
-
-        // when
-        PostDetailResponse response = RestAssuredMockMvc.given().log().all()
-                .when().get("/posts/{postId}/guest", postId)
-                .then().log().all()
-                .contentType(ContentType.JSON)
-                .status(HttpStatus.OK)
-                .extract()
-                .as(PostDetailResponse.class);
-
-        // then
-        WriterResponse writerResponse = response.writer();
-        VoteDetailResponse voteDetailResponse = response.voteInfo();
-
-        assertAll(
-                () -> assertThat(response.title()).isEqualTo("title"),
-                () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(response.deadline()).isEqualTo(deadline.truncatedTo(ChronoUnit.MINUTES)),
-                () -> assertThat(writerResponse.nickname()).isEqualTo("user9"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isEqualTo(-1)
+                () -> assertThat(postWriterResponse.id()).isEqualTo(member.getId()),
+                () -> assertThat(postWriterResponse.nickname()).isEqualTo("user9"),
+                () -> assertThat(postVoteResultResponse.totalVoteCount()).isZero()
         );
     }
 
@@ -598,14 +457,10 @@ class PostControllerTest {
     @DisplayName("회원본인이 투표한 게시글 목록을 조회한다.")
     void getPostsVotedByMember() throws Exception {
         // given
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
         Post post = Post.builder()
                 .writer(MALE_30.get())
-                .postBody(postBody)
+                .title("title")
+                .content("content")
                 .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
@@ -661,7 +516,6 @@ class PostControllerTest {
     @DisplayName("회원본인이 작성한 게시글 목록을 조회한다.")
     void getPostsByWriter() throws JsonProcessingException {
         // given
-        long postId = 1L;
         Member member = MemberFixtures.FEMALE_20.get();
 
         TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
@@ -669,14 +523,10 @@ class PostControllerTest {
         given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
         given(memberService.findById(anyLong())).willReturn(member);
 
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
         Post post = Post.builder()
                 .writer(member)
-                .postBody(postBody)
+                .title("title")
+                .content("content")
                 .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
@@ -686,7 +536,6 @@ class PostControllerTest {
                 anyInt(),
                 any(PostClosingType.class),
                 any(PostSortType.class),
-                anyLong(),
                 any(Member.class))
         ).willReturn(List.of(postResponse));
 
@@ -724,20 +573,16 @@ class PostControllerTest {
         given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
         given(memberService.findById(anyLong())).willReturn(member);
 
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
         Post post = Post.builder()
                 .writer(MALE_30.get())
-                .postBody(postBody)
+                .title("title")
+                .content("content")
                 .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
         PostResponse postResponse = PostResponse.of(post, member);
 
-        given(postService.searchPostsWithKeyword(anyString(), anyInt(), any(), any(), anyLong(), any(Member.class)))
+        given(postService.searchPostsWithKeyword(anyString(), anyInt(), any(), any(), any(Member.class)))
                 .willReturn(List.of(postResponse));
 
         // when
@@ -758,50 +603,6 @@ class PostControllerTest {
         // then
         assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
     }
-
-    @Test
-    @DisplayName("(비회원) 키워드를 통해 게시글 목록을 조회한다.")
-    void searchPostsWithKeywordForGuest() {
-        // given
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
-        Post post = Post.builder()
-                .writer(MALE_30.get())
-                .postBody(postBody)
-                .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
-                .build();
-
-        PostResponse postResponse = PostResponse.forGuest(post);
-
-        given(postService.searchPostsWithKeywordForGuest(
-                anyString(),
-                anyInt(),
-                any(PostClosingType.class),
-                any(PostSortType.class),
-                anyLong())
-        ).willReturn(List.of(postResponse));
-
-        // when
-        List<PostResponse> result = RestAssuredMockMvc.given().log().all()
-                .param("keyword", "하이")
-                .param("page", 0)
-                .param("postClosingType", PostClosingType.PROGRESS)
-                .param("postSortType", PostSortType.LATEST)
-                .param("category", 1L)
-                .when().get("/posts/search/guest")
-                .then().log().all()
-                .status(HttpStatus.OK)
-                .extract()
-                .as(new ParameterizedTypeReference<List<PostResponse>>() {
-                }.getType());
-
-        // then
-        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
-    }
-
 
     @DisplayName("게시글을 삭제한다.")
     void delete() {

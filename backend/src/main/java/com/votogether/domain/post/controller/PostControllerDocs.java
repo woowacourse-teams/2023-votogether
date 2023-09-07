@@ -40,22 +40,6 @@ public interface PostControllerDocs {
             final Member member
     );
 
-    @Operation(summary = "[비회원] 전체 게시글 목록 조회", description = "[비회원] 전체 게시글 목록을 조회한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "전체 게시글 목록 조회 성공"),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "잘못된 입력",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            )
-    })
-    ResponseEntity<List<PostResponse>> getPostsGuest(
-            @Parameter(description = "현재 페이지 위치", example = "0") final int page,
-            @Parameter(description = "게시글 마감 여부", example = "ALL") final PostClosingType postClosingType,
-            @Parameter(description = "게시글 정렬 기준", example = "HOT") final PostSortType postSortType,
-            @Parameter(description = "카테고리 ID", example = "1") final Long categoryId
-    );
-
     @Operation(summary = "[회원] 게시글 상세 조회", description = "[회원] 게시글을 상세 조회 한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 상세 조회 성공"),
@@ -68,19 +52,6 @@ public interface PostControllerDocs {
     ResponseEntity<PostDetailResponse> getPost(
             @Parameter(description = "게시글 ID", example = "1") final Long postId,
             final Member member
-    );
-
-    @Operation(summary = "[비회원] 게시글 상세 조회", description = "[비회원] 게시글을 상세 조회 한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "게시글 상세 조회 성공"),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "존재하지 않는 게시글",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            )
-    })
-    ResponseEntity<PostDetailResponse> getPostByGuest(
-            @Parameter(description = "게시글 ID", example = "1") final Long postId
     );
 
     @Operation(summary = "게시글 투표 통계 조회", description = "게시글 투표에 대한 전체 통계를 조회한다.")
@@ -148,25 +119,7 @@ public interface PostControllerDocs {
             @Parameter(description = "현재 페이지 위치", example = "0") final int page,
             @Parameter(description = "게시글 마감 여부", example = "ALL") final PostClosingType postClosingType,
             @Parameter(description = "게시글 정렬 기준", example = "HOT") final PostSortType postSortType,
-            @Parameter(description = "카테고리 ID", example = "1") final Long categoryId,
             final Member member
-    );
-
-    @Operation(summary = "[비회원] 게시글 검색", description = "[비회원] 키워드를 통해 게시글을 검색한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "게시글 검색 성공"),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "잘못된 입력",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            )
-    })
-    ResponseEntity<List<PostResponse>> searchPostsWithKeywordForGuest(
-            @Parameter(description = "검색 키워드", example = "취업") final String keyword,
-            @Parameter(description = "현재 페이지 위치", example = "0") final int page,
-            @Parameter(description = "게시글 마감 여부", example = "ALL") final PostClosingType postClosingType,
-            @Parameter(description = "게시글 정렬 기준", example = "HOT") final PostSortType postSortType,
-            @Parameter(description = "카테고리 ID", example = "1") final Long categoryId
     );
 
     @Operation(summary = "작성한 게시글 목록 조회", description = "작성한 게시글 목록을 조회한다.")
@@ -182,7 +135,6 @@ public interface PostControllerDocs {
             @Parameter(description = "현재 페이지 위치", example = "0") final int page,
             @Parameter(description = "게시글 마감 여부", example = "ALL") final PostClosingType postClosingType,
             @Parameter(description = "게시글 정렬 기준", example = "HOT") final PostSortType postSortType,
-            @Parameter(description = "카테고리 ID", example = "1") final Long categoryId,
             final Member member
     );
 

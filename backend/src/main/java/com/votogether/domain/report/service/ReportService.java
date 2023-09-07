@@ -113,7 +113,7 @@ public class ReportService {
             final ReportRequest request,
             final Comment reportedComment
     ) {
-        if (reportedComment.isAuthor(reporter)) {
+        if (reportedComment.isWriter(reporter)) {
             throw new BadRequestException(ReportExceptionType.REPORT_MY_COMMENT);
         }
         if (reportedComment.isHidden()) {

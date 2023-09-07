@@ -26,10 +26,10 @@ import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.post.CategoryResponse;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
-import com.votogether.domain.post.dto.response.post.PostOptionDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostOptionVoteResultResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
-import com.votogether.domain.post.dto.response.post.WriterResponse;
-import com.votogether.domain.post.dto.response.vote.VoteDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostWriterResponse;
+import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -55,7 +55,6 @@ import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.CategoryFixtures;
 import com.votogether.test.fixtures.MemberFixtures;
 import com.votogether.test.persister.MemberTestPersister;
-import com.votogether.test.persister.PostOptionTestPersister;
 import com.votogether.test.persister.PostTestPersister;
 import com.votogether.test.persister.VoteTestPersister;
 import jakarta.persistence.EntityManager;
@@ -107,9 +106,6 @@ class PostServiceTest {
 
     @Autowired
     PostTestPersister postTestPersister;
-
-    @Autowired
-    PostOptionTestPersister postOptionTestPersister;
 
     @Autowired
     VoteTestPersister voteTestPersister;
@@ -198,7 +194,8 @@ class PostServiceTest {
             Post post = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
@@ -223,7 +220,8 @@ class PostServiceTest {
             Post post = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
@@ -288,7 +286,8 @@ class PostServiceTest {
             Post post = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
@@ -308,14 +307,16 @@ class PostServiceTest {
             Post post1 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
             Post post2 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
@@ -342,7 +343,8 @@ class PostServiceTest {
             Post post = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
@@ -374,7 +376,8 @@ class PostServiceTest {
             Post post = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                             .build()
             );
@@ -420,7 +423,8 @@ class PostServiceTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(oldDeadline)
                         .build()
         );
@@ -446,7 +450,8 @@ class PostServiceTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(oldDeadline)
                         .build()
         );
@@ -468,7 +473,8 @@ class PostServiceTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(oldDeadline)
                         .build()
         );
@@ -623,59 +629,6 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("비회원 게시글 목록 조회 시 마감된 게시글은 결과를 확인할 수 있고, 진행중인 게시글은 결과를 확인할 수 없다.")
-    void getPostsGuest() {
-        // given
-        List<Member> voters = new ArrayList<>();
-        Member writer = memberTestPersister.builder().save();
-
-        for (int i = 0; i < 5; i++) {
-            voters.add(memberTestPersister.builder().save());
-        }
-
-        Post closedPost = postTestPersister.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.of(2022, 12, 25, 0, 0))
-                .save();
-
-        for (int j = 0; j < 2; j++) {
-            PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(closedPost).save();
-            for (int k = 0; k < 4; k++) {
-                voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
-            }
-        }
-
-        Post notClosedPost = postTestPersister.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.of(3022, 12, 25, 0, 0))
-                .save();
-
-        for (int j = 0; j < 2; j++) {
-            PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(notClosedPost).save();
-            for (int k = 0; k < 4; k++) {
-                voteTestPersister.builder().member(voters.get(k)).postOption(postOption).save();
-            }
-        }
-
-        entityManager.flush();
-        entityManager.clear();
-
-        // when
-        List<PostResponse> result = postService.getPostsGuest(0, PostClosingType.ALL, PostSortType.LATEST, null);
-
-        // then
-        assertAll(
-                () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0).voteInfo().totalVoteCount()).isEqualTo(-1),
-                () -> assertThat(result.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(-1),
-                () -> assertThat(result.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(-1),
-                () -> assertThat(result.get(1).voteInfo().totalVoteCount()).isEqualTo(8),
-                () -> assertThat(result.get(1).voteInfo().options().get(0).voteCount()).isEqualTo(4),
-                () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4)
-        );
-    }
-
-    @Test
     @DisplayName("한 게시글의 상세를 조회할 시, 작성자면 투표 결과를 알 수 있다.")
     void getPostByWriter() throws IOException {
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
@@ -720,9 +673,9 @@ class PostServiceTest {
 
         // then
         List<CategoryResponse> categories = response.categories();
-        WriterResponse writerResponse = response.writer();
-        VoteDetailResponse voteDetailResponse = response.voteInfo();
-        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+        PostWriterResponse postWriterResponse = response.writer();
+        PostVoteResultResponse postVoteResultResponse = response.voteInfo();
+        List<PostOptionVoteResultResponse> options = postVoteResultResponse.options();
 
         assertAll(
                 () -> assertThat(response.postId()).isEqualTo(savedPostId),
@@ -730,9 +683,9 @@ class PostServiceTest {
                 () -> assertThat(response.content()).isEqualTo("content"),
                 () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
-                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
-                () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(),
+                () -> assertThat(postWriterResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(postWriterResponse.nickname()).isEqualTo("user7"),
+                () -> assertThat(postVoteResultResponse.totalVoteCount()).isZero(),
                 () -> assertThat(options).hasSize(2),
                 () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
         );
@@ -790,9 +743,9 @@ class PostServiceTest {
 
         // then
         List<CategoryResponse> categories = response.categories();
-        WriterResponse writerResponse = response.writer();
-        VoteDetailResponse voteDetailResponse = response.voteInfo();
-        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+        PostWriterResponse postWriterResponse = response.writer();
+        PostVoteResultResponse postVoteResultResponse = response.voteInfo();
+        List<PostOptionVoteResultResponse> options = postVoteResultResponse.options();
 
         assertAll(
                 () -> assertThat(response.postId()).isEqualTo(savedPostId),
@@ -800,9 +753,9 @@ class PostServiceTest {
                 () -> assertThat(response.content()).isEqualTo("content"),
                 () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
-                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
-                () -> assertThat(writerResponse.nickname()).isEqualTo("user10"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isOne(),
+                () -> assertThat(postWriterResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(postWriterResponse.nickname()).isEqualTo("user10"),
+                () -> assertThat(postVoteResultResponse.totalVoteCount()).isOne(),
                 () -> assertThat(options).hasSize(2),
                 () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
         );
@@ -854,9 +807,9 @@ class PostServiceTest {
 
         // then
         List<CategoryResponse> categories = response.categories();
-        WriterResponse writerResponse = response.writer();
-        VoteDetailResponse voteDetailResponse = response.voteInfo();
-        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+        PostWriterResponse postWriterResponse = response.writer();
+        PostVoteResultResponse postVoteResultResponse = response.voteInfo();
+        List<PostOptionVoteResultResponse> options = postVoteResultResponse.options();
 
         assertAll(
                 () -> assertThat(response.postId()).isEqualTo(savedPostId),
@@ -864,9 +817,9 @@ class PostServiceTest {
                 () -> assertThat(response.content()).isEqualTo("content"),
                 () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
-                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
-                () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(),
+                () -> assertThat(postWriterResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(postWriterResponse.nickname()).isEqualTo("user7"),
+                () -> assertThat(postVoteResultResponse.totalVoteCount()).isZero(),
                 () -> assertThat(options).hasSize(2),
                 () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
         );
@@ -918,9 +871,9 @@ class PostServiceTest {
 
         // then
         List<CategoryResponse> categories = response.categories();
-        WriterResponse writerResponse = response.writer();
-        VoteDetailResponse voteDetailResponse = response.voteInfo();
-        List<PostOptionDetailResponse> options = voteDetailResponse.options();
+        PostWriterResponse postWriterResponse = response.writer();
+        PostVoteResultResponse postVoteResultResponse = response.voteInfo();
+        List<PostOptionVoteResultResponse> options = postVoteResultResponse.options();
 
         assertAll(
                 () -> assertThat(response.postId()).isEqualTo(savedPostId),
@@ -928,9 +881,9 @@ class PostServiceTest {
                 () -> assertThat(response.content()).isEqualTo("content"),
                 () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
-                () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
-                () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isEqualTo(-1),
+                () -> assertThat(postWriterResponse.id()).isEqualTo(writer.getId()),
+                () -> assertThat(postWriterResponse.nickname()).isEqualTo("user7"),
+                () -> assertThat(postVoteResultResponse.totalVoteCount()).isEqualTo(-1),
                 () -> assertThat(options).hasSize(2),
                 () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
         );
@@ -1185,7 +1138,7 @@ class PostServiceTest {
 
         // then
         final PostDetailResponse postDetailResponse = postService.getPostById(savedPostId, writer);
-        final List<PostOptionDetailResponse> options = postDetailResponse.voteInfo().options();
+        final List<PostOptionVoteResultResponse> options = postDetailResponse.voteInfo().options();
         final List<CategoryResponse> categories = postDetailResponse.categories();
         assertAll(
                 () -> assertThat(postDetailResponse.title()).isEqualTo("title2"),
@@ -1589,9 +1542,9 @@ class PostServiceTest {
     void getPostsByWriter() {
         // given
         Member writer = memberTestPersister.builder().save();
-        Post post = postTestPersister.builder().writer(writer).save();
-        PostOption postOption = postOptionTestPersister.builder().post(post).sequence(1).save();
-        PostOption postOption1 = postOptionTestPersister.builder().post(post).sequence(2).save();
+        Post post = postTestPersister.postBuilder().writer(writer).save();
+        PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+        PostOption postOption1 = postTestPersister.postOptionBuilder().post(post).sequence(2).save();
         voteTestPersister.builder().postOption(postOption).save();
         voteTestPersister.builder().postOption(postOption).save();
         voteTestPersister.builder().postOption(postOption1).save();
@@ -1601,7 +1554,7 @@ class PostServiceTest {
 
         // when
         List<PostResponse> responses =
-                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
+                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, writer);
 
         // then
         assertAll(
@@ -1618,17 +1571,19 @@ class PostServiceTest {
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
         Member member1 = memberRepository.save(MemberFixtures.MALE_30.get());
 
-        Post openPost = postTestPersister.builder()
-                .postBody(PostBody.builder().title("제목").content("키워요").build())
+        Post openPost = postTestPersister.postBuilder()
+                .title("제목")
+                .content("키워요")
                 .deadline(LocalDateTime.now().plusDays(3L))
                 .save();
-        Post openPost1 = postTestPersister.builder()
-                .postBody(PostBody.builder().title("키워드").content("안녕").build())
+        Post openPost1 = postTestPersister.postBuilder()
+                .title("키워드")
+                .content("안녕")
                 .deadline(LocalDateTime.now().plusDays(3L))
                 .save();
 
-        PostOption postOption = postOptionTestPersister.builder().post(openPost).save();
-        PostOption postOption1 = postOptionTestPersister.builder().post(openPost1).save();
+        PostOption postOption = postTestPersister.postOptionBuilder().post(openPost).save();
+        PostOption postOption1 = postTestPersister.postOptionBuilder().post(openPost1).save();
         voteTestPersister.builder().member(member).postOption(postOption).save();
         voteTestPersister.builder().member(member1).postOption(postOption1).save();
 
@@ -1641,7 +1596,6 @@ class PostServiceTest {
                 0,
                 PostClosingType.ALL,
                 PostSortType.LATEST,
-                null,
                 member);
 
         // then
@@ -1659,48 +1613,4 @@ class PostServiceTest {
     private boolean hasKeywordInPostResponse(PostResponse postResponse, String keyword) {
         return postResponse.title().contains(keyword) || postResponse.content().contains(keyword);
     }
-
-    @Test
-    @DisplayName("비회원으로 키워드를 통해 게시글 목록을 검색한다.")
-    void getPostsByKeywordForGuest() {
-        Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-
-        Post closedPost = postTestPersister.builder()
-                .postBody(PostBody.builder().title("제목").content("키워요").build())
-                .deadline(LocalDateTime.now().minusDays(3L))
-                .save();
-        Post openPost1 = postTestPersister.builder()
-                .postBody(PostBody.builder().title("키워드").content("안녕").build())
-                .deadline(LocalDateTime.now().plusDays(3L))
-                .save();
-
-        PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
-        PostOption postOption1 = postOptionTestPersister.builder().post(openPost1).save();
-        voteTestPersister.builder().member(member).postOption(postOption).save();
-        voteTestPersister.builder().member(member).postOption(postOption1).save();
-
-        entityManager.flush();
-        entityManager.clear();
-
-        // when
-        List<PostResponse> responses = postService.searchPostsWithKeywordForGuest(
-                "키워",
-                0,
-                PostClosingType.ALL,
-                PostSortType.LATEST,
-                null
-        );
-
-        // then
-        assertAll(
-                () -> assertThat(responses).hasSize(2),
-                () -> assertThat(responses.get(0).postId()).isEqualTo(openPost1.getId()),
-                () -> assertThat(responses.get(1).postId()).isEqualTo(closedPost.getId()),
-                () -> assertThat(hasKeywordInPostResponse(responses.get(0), "키워")).isTrue(),
-                () -> assertThat(hasKeywordInPostResponse(responses.get(1), "키워")).isTrue(),
-                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(-1L),
-                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L)
-        );
-    }
-
 }

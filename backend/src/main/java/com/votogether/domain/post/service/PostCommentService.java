@@ -89,7 +89,7 @@ public class PostCommentService {
     }
 
     private void validateAuthor(final Comment comment, final Member member) {
-        if (!comment.isAuthor(member)) {
+        if (!comment.isWriter(member)) {
             throw new BadRequestException(CommentExceptionType.COMMENT_NOT_WRITER);
         }
     }

@@ -7,12 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
-import com.votogether.domain.post.entity.vo.PostClosingType;
-import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.post.service.PostCommentService;
@@ -25,7 +21,6 @@ import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,14 +61,10 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 
@@ -105,14 +96,10 @@ class ReportServiceTest {
             // given
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 
@@ -133,14 +120,10 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
             post.blind();
@@ -163,14 +146,10 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_20.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 
@@ -187,53 +166,6 @@ class ReportServiceTest {
                     .hasMessage("하나의 글에 대해서 중복하여 신고할 수 없습니다.");
         }
 
-        @Test
-        @DisplayName("투표글 신고가 5회가 되면 블라인드 처리가 된다.")
-        void reportAndBlind() {
-            // given
-            Member reporter1 = memberRepository.save(MemberFixtures.FEMALE_20.get());
-            Member reporter2 = memberRepository.save(MemberFixtures.FEMALE_30.get());
-            Member reporter3 = memberRepository.save(MemberFixtures.FEMALE_40.get());
-            Member reporter4 = memberRepository.save(MemberFixtures.FEMALE_50.get());
-            Member reporter5 = memberRepository.save(MemberFixtures.FEMALE_60.get());
-            Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
-
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
-            Post post = Post.builder()
-                    .writer(writer)
-                    .postBody(postBody)
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
-
-            ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
-
-            // when
-            reportService.report(reporter1, request);
-            reportService.report(reporter2, request);
-            reportService.report(reporter3, request);
-            reportService.report(reporter4, request);
-            reportService.report(reporter5, request);
-
-            // then
-            final List<PostResponse> responses = postService.getPostsGuest(
-                    0,
-                    PostClosingType.ALL,
-                    PostSortType.HOT,
-                    null
-            );
-
-            assertAll(
-                    () -> assertThat(post.isHidden()).isTrue(),
-                    () -> assertThat(responses).isEmpty()
-            );
-        }
-
     }
 
     @Nested
@@ -247,14 +179,10 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 
@@ -293,14 +221,10 @@ class ReportServiceTest {
             // given
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 
@@ -328,14 +252,10 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_60.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 
@@ -364,14 +284,10 @@ class ReportServiceTest {
             Member reporter = memberRepository.save(MemberFixtures.FEMALE_20.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 
@@ -406,14 +322,10 @@ class ReportServiceTest {
             Member reporter5 = memberRepository.save(MemberFixtures.FEMALE_60.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_10.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                     .build();
 

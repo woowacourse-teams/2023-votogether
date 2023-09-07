@@ -14,7 +14,6 @@ import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
@@ -227,14 +226,10 @@ class MemberServiceTest {
             // given
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(member)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 
@@ -257,14 +252,10 @@ class MemberServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_20.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 
@@ -342,14 +333,10 @@ class MemberServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Member reporter = memberRepository.save(MemberFixtures.MALE_10.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(member)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 
@@ -381,14 +368,10 @@ class MemberServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Member reporter = memberRepository.save(MemberFixtures.MALE_10.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(reporter)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 

@@ -65,4 +65,11 @@ public class AuthService {
         }
     }
 
+    @Transactional
+    public void deleteRefreshToken(final String refreshTokenByRequest) {
+        final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
+                .orElseThrow(() -> new BadRequestException(TokenExceptionType.INVALID_REFRESH_TOKEN));
+        refreshTokenRepository.delete(refreshToken);
+    }
+
 }

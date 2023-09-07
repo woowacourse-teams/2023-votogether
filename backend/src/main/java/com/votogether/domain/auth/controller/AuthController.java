@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,6 +57,18 @@ public class AuthController implements AuthControllerDocs {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout(
+            final HttpServletRequest httpServletRequest,
+            final HttpServletResponse httpServletResponse
+    ) {
+        final String refreshToken = getRefreshTokenFromCookie(httpServletRequest);
+        authService.deleteRefreshToken(refreshToken);
+
+        expireCookie(httpServletResponse, refreshToken);
+        return ResponseEntity.noContent().build();
+    }
+
     private void addRefreshTokenToCookie(final HttpServletResponse httpServletResponse, final String refreshToken) {
         final Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
@@ -70,6 +83,12 @@ public class AuthController implements AuthControllerDocs {
                 .map(Cookie::getValue)
                 .findAny()
                 .orElseThrow(() -> new BadRequestException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
+    }
+
+    private void expireCookie(final HttpServletResponse httpServletResponse, final String refreshToken) {
+        final Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setMaxAge(0);
+        httpServletResponse.addCookie(cookie);
     }
 
 }

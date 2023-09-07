@@ -6,7 +6,6 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
@@ -44,7 +43,8 @@ class VoteRepositoryTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(member)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );
@@ -77,7 +77,8 @@ class VoteRepositoryTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(member)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );
@@ -110,7 +111,8 @@ class VoteRepositoryTest {
         Post postA = postRepository.save(
                 Post.builder()
                         .writer(member)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );
@@ -124,7 +126,8 @@ class VoteRepositoryTest {
         Post postB = postRepository.save(
                 Post.builder()
                         .writer(member)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );
@@ -168,7 +171,8 @@ class VoteRepositoryTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );
@@ -220,7 +224,8 @@ class VoteRepositoryTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );
@@ -261,7 +266,8 @@ class VoteRepositoryTest {
         Post post = postRepository.save(
                 Post.builder()
                         .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
+                        .title("title")
+                        .content("content")
                         .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                         .build()
         );

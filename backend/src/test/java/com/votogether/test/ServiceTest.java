@@ -1,8 +1,10 @@
 package com.votogether.test;
 
+import com.votogether.test.persister.CategoryTestPersister;
 import com.votogether.test.persister.CommentTestPersister;
 import com.votogether.test.persister.MemberTestPersister;
 import com.votogether.test.persister.PostTestPersister;
+import com.votogether.test.persister.VoteTestPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +17,15 @@ public class ServiceTest {
     protected MemberTestPersister memberTestPersister;
 
     @Autowired
+    protected CategoryTestPersister categoryTestPersister;
+
+    @Autowired
     protected PostTestPersister postTestPersister;
 
     @Autowired
     protected CommentTestPersister commentTestPersister;
+
+    @Autowired
+    protected VoteTestPersister voteTestPersister;
 
 }

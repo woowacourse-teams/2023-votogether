@@ -10,7 +10,6 @@ import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.vo.PostClosingType;
@@ -20,7 +19,6 @@ import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.test.annotation.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import com.votogether.test.persister.MemberTestPersister;
-import com.votogether.test.persister.PostOptionTestPersister;
 import com.votogether.test.persister.PostTestPersister;
 import com.votogether.test.persister.VoteTestPersister;
 import java.time.LocalDateTime;
@@ -34,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 @RepositoryTest
 class PostRepositoryTest {
@@ -63,20 +63,12 @@ class PostRepositoryTest {
     PostTestPersister postTestPersister;
 
     @Autowired
-    PostOptionTestPersister postOptionTestPersister;
-
-    @Autowired
     VoteTestPersister voteTestPersister;
 
     @Test
     @DisplayName("Post를 저장한다")
     void save() {
         // given
-        final PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
         final Member member = Member.builder()
                 .gender(Gender.MALE)
                 .socialType(SocialType.KAKAO)
@@ -87,7 +79,8 @@ class PostRepositoryTest {
 
         final Post post = Post.builder()
                 .writer(member)
-                .postBody(postBody)
+                .title("title")
+                .content("content")
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
@@ -112,25 +105,17 @@ class PostRepositoryTest {
                 .socialId("kakao@gmail.com")
                 .build();
 
-        PostBody postBody1 = PostBody.builder()
-                .title("title1")
-                .content("content1")
-                .build();
-
-        PostBody postBody2 = PostBody.builder()
-                .title("title2")
-                .content("content2")
-                .build();
-
         Post post1 = Post.builder()
                 .writer(member)
-                .postBody(postBody1)
+                .title("title1")
+                .content("content1")
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
         Post post2 = Post.builder()
                 .writer(member)
-                .postBody(postBody2)
+                .title("title2")
+                .content("content2")
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
@@ -175,11 +160,11 @@ class PostRepositoryTest {
             categories.add(categoryRepository.save(categoryB));
 
             for (int i = 2; i > 0; i--) {
-                Post closedPost = postTestPersister.builder()
+                Post closedPost = postTestPersister.postBuilder()
                         .writer(members.get(members.size() - 1))
                         .deadline(LocalDateTime.of(2022, 12, 25, 0, 0))
                         .save();
-                Post notClosedPost = postTestPersister.builder()
+                Post notClosedPost = postTestPersister.postBuilder()
                         .writer(members.get(members.size() - 1))
                         .deadline(LocalDateTime.of(3022, 12, 25, 0, 0))
                         .save();
@@ -205,7 +190,7 @@ class PostRepositoryTest {
 
         private void generatePostOptionAndVote(Post post, int voteCount) {
             for (int j = 0; j < 5; j++) {
-                PostOption postOption = postOptionTestPersister.builder().sequence(j + 1).post(post).save();
+                PostOption postOption = postTestPersister.postOptionBuilder().sequence(j + 1).post(post).save();
                 for (int k = 0; k < voteCount; k++) {
                     voteTestPersister.builder().member(members.get(k)).postOption(postOption).save();
                 }
@@ -219,7 +204,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+            List<Post> result = postRepository.findPostsWithFilteringAndPaging(
                     PostClosingType.ALL,
                     PostSortType.LATEST,
                     null,
@@ -237,7 +222,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+            List<Post> result = postRepository.findPostsWithFilteringAndPaging(
                     PostClosingType.ALL,
                     PostSortType.HOT,
                     null,
@@ -255,7 +240,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+            List<Post> result = postRepository.findPostsWithFilteringAndPaging(
                     PostClosingType.PROGRESS,
                     PostSortType.LATEST,
                     null,
@@ -273,7 +258,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+            List<Post> result = postRepository.findPostsWithFilteringAndPaging(
                     PostClosingType.PROGRESS,
                     PostSortType.HOT,
                     null,
@@ -291,7 +276,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+            List<Post> result = postRepository.findPostsWithFilteringAndPaging(
                     PostClosingType.CLOSED,
                     PostSortType.LATEST,
                     null,
@@ -309,7 +294,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 2);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+            List<Post> result = postRepository.findPostsWithFilteringAndPaging(
                     PostClosingType.CLOSED,
                     PostSortType.HOT,
                     null,
@@ -327,7 +312,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(0, 5);
 
             // when
-            List<Post> result = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+            List<Post> result = postRepository.findPostsWithFilteringAndPaging(
                     PostClosingType.PROGRESS,
                     PostSortType.HOT,
                     categories.get(0).getId(),
@@ -354,7 +339,8 @@ class PostRepositoryTest {
             Post openPost = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                             .build()
             );
@@ -369,7 +355,8 @@ class PostRepositoryTest {
             Post closedPost = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
                             .build());
 
@@ -384,7 +371,8 @@ class PostRepositoryTest {
             Post closedPost1 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(1001, 7, 12, 0, 0))
                             .build()
             );
@@ -401,7 +389,7 @@ class PostRepositoryTest {
             voteRepository.save(Vote.builder().member(member).postOption(postOption2).build());
 
             // when
-            PageRequest pageRequest = PageRequest.of(0, 10, PostSortType.LATEST.getVoteBaseSort());
+            PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Direction.DESC, "postOption.post.createdAt"));
             Slice<Post> posts = postRepository.findClosedPostsVotedByMember(member, pageRequest);
 
             // then
@@ -422,7 +410,8 @@ class PostRepositoryTest {
             Post openPost = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                             .build()
             );
@@ -437,7 +426,8 @@ class PostRepositoryTest {
             Post openPost1 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(3001, 7, 12, 0, 0))
                             .build()
             );
@@ -452,7 +442,8 @@ class PostRepositoryTest {
             Post closedPost = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
                             .build()
             );
@@ -470,7 +461,7 @@ class PostRepositoryTest {
             voteRepository.save(Vote.builder().member(member).postOption(postOption2).build());
 
             // when
-            PageRequest pageRequest = PageRequest.of(0, 10, PostSortType.HOT.getVoteBaseSort());
+            PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Direction.DESC, "postOption.post.createdAt"));
             Slice<Post> posts = postRepository.findOpenPostsVotedByMember(member, pageRequest);
 
             // then
@@ -490,7 +481,8 @@ class PostRepositoryTest {
             Post openPost = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                             .build()
             );
@@ -505,7 +497,8 @@ class PostRepositoryTest {
             Post closedPost = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
                             .build()
             );
@@ -547,26 +540,30 @@ class PostRepositoryTest {
             development = categoryRepository.save(Category.builder().name("개발").build());
             love = categoryRepository.save(Category.builder().name("연애").build());
 
-            devClosedPost = postTestPersister.builder()
-                    .postBody(PostBody.builder().title("자바제목").content("자바내용").build())
+            devClosedPost = postTestPersister.postBuilder()
+                    .title("자바제목")
+                    .content("자바내용")
                     .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
                     .save();
             postCategoryRepository.save(PostCategory.builder().post(devClosedPost).category(development).build());
 
-            devOpenPost = postTestPersister.builder()
-                    .postBody(PostBody.builder().title("자바제목1").content("자바내용1").build())
+            devOpenPost = postTestPersister.postBuilder()
+                    .title("자바제목1")
+                    .content("자바내용1")
                     .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                     .save();
             postCategoryRepository.save(PostCategory.builder().post(devOpenPost).category(development).build());
 
-            loveClosedPost = postTestPersister.builder()
-                    .postBody(PostBody.builder().title("커플제목").content("커플내용").build())
+            loveClosedPost = postTestPersister.postBuilder()
+                    .title("커플제목")
+                    .content("커플내용")
                     .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
                     .save();
             postCategoryRepository.save(PostCategory.builder().post(loveClosedPost).category(love).build());
 
-            loveOpenPost = postTestPersister.builder()
-                    .postBody(PostBody.builder().title("커플제목1").content("커플내용1").build())
+            loveOpenPost = postTestPersister.postBuilder()
+                    .title("커플제목1")
+                    .content("커플내용1")
                     .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                     .save();
             postCategoryRepository.save(PostCategory.builder().post(loveOpenPost).category(love).build());
@@ -577,11 +574,10 @@ class PostRepositoryTest {
         @DisplayName("특정 카테고리에 속한 게시글 목록을 키워드를 통해 검색한다.")
         void searchPostsWithCategory() {
             // when
-            List<Post> posts = postRepository.findAllWithKeyword(
+            List<Post> posts = postRepository.findSearchPostsWithFilteringAndPaging(
                     "자바",
                     PostClosingType.ALL,
                     PostSortType.LATEST,
-                    development.getId(),
                     PageRequest.of(0, 10)
             );
 
@@ -597,11 +593,10 @@ class PostRepositoryTest {
         @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목)")
         void searchPostsWithKeywordInTitle() {
             // when
-            List<Post> posts = postRepository.findAllWithKeyword(
+            List<Post> posts = postRepository.findSearchPostsWithFilteringAndPaging(
                     "제목1",
                     PostClosingType.ALL,
                     PostSortType.LATEST,
-                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -617,11 +612,10 @@ class PostRepositoryTest {
         @DisplayName("게시글 목록을 키워드를 통해 검색한다.(내용)")
         void searchPostsWithKeywordInContent() {
             // when
-            List<Post> posts = postRepository.findAllWithKeyword(
+            List<Post> posts = postRepository.findSearchPostsWithFilteringAndPaging(
                     "내용",
                     PostClosingType.ALL,
                     PostSortType.LATEST,
-                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -633,11 +627,10 @@ class PostRepositoryTest {
         @DisplayName("게시글 목록을 키워드를 통해 검색한다.(제목 + 내용)")
         void searchPostsWithKeywordInTitleAndContent() {
             // when
-            List<Post> posts = postRepository.findAllWithKeyword(
+            List<Post> posts = postRepository.findSearchPostsWithFilteringAndPaging(
                     "1",
                     PostClosingType.ALL,
                     PostSortType.LATEST,
-                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -673,7 +666,8 @@ class PostRepositoryTest {
             openPost_V2 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                             .build()
             );
@@ -691,7 +685,8 @@ class PostRepositoryTest {
             openPost1_V1 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(3000, 7, 12, 0, 0))
                             .build()
             );
@@ -708,7 +703,8 @@ class PostRepositoryTest {
             closedPost_V1 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(1000, 7, 12, 0, 0))
                             .build());
 
@@ -724,7 +720,8 @@ class PostRepositoryTest {
             closedPost1_V0 = postRepository.save(
                     Post.builder()
                             .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
+                            .title("title")
+                            .content("content")
                             .deadline(LocalDateTime.of(1001, 7, 12, 0, 0))
                             .build()
             );
@@ -741,11 +738,10 @@ class PostRepositoryTest {
         @DisplayName("마감된 게시글을 최신순으로 가져온다.")
         void findClosedPostsWithLatest() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+            List<Post> posts = postRepository.findPostsByWriterWithFilteringAndPaging(
                     writer,
                     PostClosingType.CLOSED,
                     PostSortType.LATEST,
-                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -761,11 +757,10 @@ class PostRepositoryTest {
         @DisplayName("마감된 게시글을 투표순으로 가져온다.")
         void findClosedPostsWithHot() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+            List<Post> posts = postRepository.findPostsByWriterWithFilteringAndPaging(
                     writer,
                     PostClosingType.CLOSED,
                     PostSortType.HOT,
-                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -781,11 +776,10 @@ class PostRepositoryTest {
         @DisplayName("마감안된 게시글을 최신순으로 가져온다.")
         void findOpenPostsWithLatest() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+            List<Post> posts = postRepository.findPostsByWriterWithFilteringAndPaging(
                     writer,
                     PostClosingType.PROGRESS,
                     PostSortType.LATEST,
-                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -801,11 +795,10 @@ class PostRepositoryTest {
         @DisplayName("마감안된 게시글을 인기순으로 가져온다.")
         void findOpenPostsWithHot() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+            List<Post> posts = postRepository.findPostsByWriterWithFilteringAndPaging(
                     writer,
                     PostClosingType.PROGRESS,
                     PostSortType.HOT,
-                    null,
                     PageRequest.of(0, 10)
             );
 
@@ -821,11 +814,10 @@ class PostRepositoryTest {
         @DisplayName("마감여부와 관계없이 게시글을 인기순으로 조회한다.")
         void findPostsByHot() {
             // when
-            List<Post> posts = postRepository.findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+            List<Post> posts = postRepository.findPostsByWriterWithFilteringAndPaging(
                     writer,
                     PostClosingType.ALL,
                     PostSortType.HOT,
-                    null,
                     PageRequest.of(0, 10)
             );
 

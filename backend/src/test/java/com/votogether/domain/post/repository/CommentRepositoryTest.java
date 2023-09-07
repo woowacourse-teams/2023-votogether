@@ -21,7 +21,7 @@ class CommentRepositoryTest extends RepositoryTest {
     void findAllByPost() {
         // given
         Member writer = memberTestPersister.builder().save();
-        Post post = postTestPersister.builder().writer(writer).save();
+        Post post = postTestPersister.postBuilder().writer(writer).save();
         Comment commentA = commentTestPersister.builder().post(post).writer(writer).save();
         Comment commentB = commentTestPersister.builder().post(post).writer(writer).save();
 

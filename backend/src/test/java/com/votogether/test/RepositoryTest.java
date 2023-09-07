@@ -2,10 +2,12 @@ package com.votogether.test;
 
 import com.votogether.global.config.JpaConfig;
 import com.votogether.global.config.QuerydslConfig;
+import com.votogether.test.persister.CategoryTestPersister;
 import com.votogether.test.persister.CommentTestPersister;
 import com.votogether.test.persister.MemberTestPersister;
 import com.votogether.test.persister.Persister;
 import com.votogether.test.persister.PostTestPersister;
+import com.votogether.test.persister.VoteTestPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,9 +24,15 @@ public class RepositoryTest {
     protected MemberTestPersister memberTestPersister;
 
     @Autowired
+    protected CategoryTestPersister categoryTestPersister;
+
+    @Autowired
     protected PostTestPersister postTestPersister;
 
     @Autowired
     protected CommentTestPersister commentTestPersister;
+
+    @Autowired
+    protected VoteTestPersister voteTestPersister;
 
 }

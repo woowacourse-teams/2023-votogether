@@ -1,0 +1,30 @@
+package com.votogether.domain.post.repository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.votogether.domain.post.entity.Post;
+import com.votogether.domain.post.entity.PostCategory;
+import com.votogether.test.RepositoryTest;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+class PostCategoryRepositoryTest extends RepositoryTest {
+
+    @Autowired
+    PostCategoryRepository postCategoryRepository;
+
+    @Test
+    @DisplayName("게시글의 모든 게시글 카테고리 목록을 조회한다.")
+    void findAllPostCategoriesInPost() {
+        Post post = postTestPersister.postBuilder().save();
+        PostCategory postCategoryA = postTestPersister.postCategoryBuilder().post(post).save();
+        PostCategory postCategoryB = postTestPersister.postCategoryBuilder().post(post).save();
+
+        List<PostCategory> result = postCategoryRepository.findAllByPost(post);
+
+        assertThat(result).containsExactly(postCategoryA, postCategoryB);
+    }
+
+}

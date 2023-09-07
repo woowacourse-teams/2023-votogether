@@ -2,9 +2,13 @@ package com.votogether.domain.post.repository;
 
 import static com.votogether.domain.post.entity.QPost.post;
 import static com.votogether.domain.post.entity.QPostCategory.postCategory;
+import static com.votogether.domain.post.entity.QPostOption.postOption;
+import static com.votogether.domain.vote.entity.QVote.vote;
 
+import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
@@ -24,15 +28,15 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Post> findAllByClosingTypeAndSortTypeAndCategoryId(
+    public List<Post> findPostsWithFilteringAndPaging(
             final PostClosingType postClosingType,
             final PostSortType postSortType,
             final Long categoryId,
             final Pageable pageable
     ) {
         return jpaQueryFactory
-                .selectFrom(post)
-                .distinct()
+                .selectDistinct(post)
+                .from(post)
                 .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(
@@ -47,20 +51,19 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public List<Post> findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+    public List<Post> findPostsByWriterWithFilteringAndPaging(
             final Member writer,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
-            final Long categoryId,
             final Pageable pageable
     ) {
         return jpaQueryFactory
-                .selectFrom(post)
+                .select(post)
+                .from(post)
                 .join(post.writer).fetchJoin()
                 .where(
-                        categoryIdEq(categoryId),
-                        deadlineEq(postClosingType),
                         post.writer.eq(writer),
+                        deadlineEq(postClosingType),
                         post.isHidden.eq(false)
                 )
                 .orderBy(orderBy(postSortType))
@@ -75,44 +78,43 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     private BooleanExpression deadlineEq(final PostClosingType postClosingType) {
         final LocalDateTime now = LocalDateTime.now();
-        switch (postClosingType) {
-            case PROGRESS:
-                return post.deadline.after(now);
-            case CLOSED:
-                return post.deadline.before(now);
-            case ALL:
-            default:
-                return null;
-        }
+        return switch (postClosingType) {
+            case PROGRESS -> post.deadline.after(now);
+            case CLOSED -> post.deadline.before(now);
+            default -> null;
+        };
     }
 
     private OrderSpecifier orderBy(final PostSortType postSortType) {
-        switch (postSortType) {
-            case LATEST:
-                return post.createdAt.desc();
-            case HOT:
-                return post.totalVoteCount.desc();
-            default:
-                return OrderByNull.DEFAULT;
-        }
+        return switch (postSortType) {
+            case LATEST -> post.createdAt.desc();
+            case HOT -> new OrderSpecifier<>(
+                    Order.DESC,
+                    JPAExpressions.select(vote.id.count())
+                            .from(vote)
+                            .where(vote.postOption.id.in(
+                                    JPAExpressions.select(postOption.id)
+                                            .from(postOption)
+                                            .where(postOption.post.id.eq(post.id))
+                            ))
+            );
+            default -> OrderByNull.DEFAULT;
+        };
     }
 
     @Override
-    public List<Post> findAllWithKeyword(
+    public List<Post> findSearchPostsWithFilteringAndPaging(
             final String keyword,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
-            final Long categoryId,
             final Pageable pageable
     ) {
         return jpaQueryFactory
-                .selectFrom(post)
-                .distinct()
+                .select(post)
+                .from(post)
                 .join(post.writer).fetchJoin()
-                .leftJoin(post.postCategories.postCategories, postCategory)
                 .where(
                         containsKeywordInTitleOrContent(keyword),
-                        categoryIdEq(categoryId),
                         deadlineEq(postClosingType),
                         post.isHidden.eq(false)
                 )

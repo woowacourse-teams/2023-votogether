@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
@@ -36,14 +35,10 @@ class ReportRepositoryTest {
         Member member = MemberFixtures.MALE_20.get();
         ReportType reportType = ReportType.POST;
 
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
         Post post = Post.builder()
                 .writer(member)
-                .postBody(postBody)
+                .title("title")
+                .content("content")
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 
@@ -71,14 +66,10 @@ class ReportRepositoryTest {
         // given
         Member member = MemberFixtures.FEMALE_30.get();
 
-        PostBody postBody = PostBody.builder()
-                .title("title")
-                .content("content")
-                .build();
-
         Post post = Post.builder()
                 .writer(member)
-                .postBody(postBody)
+                .title("title")
+                .content("content")
                 .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
                 .build();
 

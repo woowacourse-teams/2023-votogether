@@ -1,5 +1,8 @@
 package com.votogether.domain.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.votogether.domain.auth.dto.request.AccessTokenRequest;
+import com.votogether.domain.auth.dto.response.AccessTokenResponse;
 import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.global.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,8 +12,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "인증", description = "인증 API")
 public interface AuthControllerDocs {
@@ -33,5 +38,25 @@ public interface AuthControllerDocs {
             @Parameter(description = "카카오 인가코드", example = "abcdegf") final String code,
             final HttpServletResponse httpServletResponse
     );
+
+    @Operation(summary = "액세스 토큰 재발급 하기", description = "액세스 토큰을 재발급 받는다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "액세스 토큰 재발급 성공"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "올바르지 않은 갱신 토큰",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "요청으로부터 찾을 수 없는 갱신 토큰",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            )
+    })
+    ResponseEntity<AccessTokenResponse> reissueAccessToken(
+            @RequestBody final AccessTokenRequest request,
+            final HttpServletRequest httpServletRequest,
+            final HttpServletResponse httpServletResponse
+    ) throws JsonProcessingException;
 
 }

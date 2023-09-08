@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const DotenvWebpack = require('dotenv-webpack');
 const { EsbuildPlugin } = require('esbuild-loader');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -41,7 +42,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'esbuild-loader',
         options: {
-          target: 'es2015',
+          target: 'es2021',
         },
       },
       {
@@ -76,7 +77,10 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: 'public/icons', to: 'icons' }],
     }),
-    new BundleAnalyzerPlugin({}),
+    new ForkTsCheckerWebpackPlugin(),
+    new BundleAnalyzerPlugin({
+      openAnalyzer: false,
+    }),
   ],
   devtool: 'inline-source-map',
   devServer: {
@@ -87,7 +91,7 @@ module.exports = {
   optimization: {
     minimizer: [
       new EsbuildPlugin({
-        target: 'es2015',
+        target: 'es2021',
       }),
     ],
   },

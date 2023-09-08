@@ -60,6 +60,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'io.rest-assured:spring-mock-mvc'
+    testImplementation "org.testcontainers:testcontainers:1.19.0"
 }
 
 tasks.named('test') {

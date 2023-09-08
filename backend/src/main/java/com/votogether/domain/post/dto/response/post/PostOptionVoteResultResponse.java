@@ -1,5 +1,6 @@
 package com.votogether.domain.post.dto.response.post;
 
+import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,68 +24,71 @@ public record PostOptionVoteResultResponse(
 ) {
 
     private static final int HIDDEN_COUNT = -1;
+    private static final String EMPTY_IMAGE_URL = "";
 
-    public static PostOptionVoteResultResponse of(final Post post, final PostOption postOption) {
-        return new PostOptionVoteResultResponse(
-                postOption.getId(),
-                postOption.getContent(),
-                convertImageUrl(postOption.getImageUrl()),
-                post.isClosed() ? postOption.getVoteCount() : HIDDEN_COUNT,
-                postOption.getVotePercent(post.getTotalVoteCount())
-        );
-    }
-
-    private static String convertImageUrl(final String imageUrl) {
-        return imageUrl == null ? "" : imageUrl;
-    }
-
-    public static PostOptionVoteResultResponse of(
-            final PostOption postOption,
-            final boolean isVisibleVoteResult,
-            final Long totalVoteCount
-    ) {
-        return new PostOptionVoteResultResponse(
-                postOption.getId(),
-                postOption.getContent(),
-                convertImageUrl(postOption.getImageUrl()),
-                postOption.getVoteCount(isVisibleVoteResult),
-                postOption.getVotePercent(totalVoteCount)
-        );
-    }
-
-    public static PostOptionVoteResultResponse of(
+    public static PostOptionVoteResultResponse ofUser(
+            final Member user,
             final Post post,
             final PostOption postOption,
+            final boolean isVoted,
             final int totalVoteCount
     ) {
+        final int voteCount = countVotesForUser(user, post, postOption, isVoted);
         return new PostOptionVoteResultResponse(
                 postOption.getId(),
                 postOption.getContent(),
                 handleEmptyImageUrl(postOption.getImageUrl()),
-                countVotesIfPostIsOpen(post, postOption),
-                calculateVotePercentIfTotalNotZero(totalVoteCount, postOption)
+                voteCount,
+                calculateVotePercent(totalVoteCount, voteCount)
         );
     }
 
-    private static String handleEmptyImageUrl(final String imageUrl) {
-        if (imageUrl == null) {
-            return "";
-        }
-        return imageUrl;
-    }
-
-    private static int countVotesIfPostIsOpen(final Post post, final PostOption postOption) {
-        if (post.isClosed()) {
+    private static int countVotesForUser(
+            final Member user,
+            final Post post,
+            final PostOption postOption,
+            final boolean isVoted
+    ) {
+        if (post.isClosed() || post.isWriter(user) || isVoted) {
             return postOption.getVoteCount();
         }
         return HIDDEN_COUNT;
     }
 
-    private static double calculateVotePercentIfTotalNotZero(final int totalCount, final PostOption postOption) {
-        if (totalCount == 0) {
+    private static String handleEmptyImageUrl(final String imageUrl) {
+        if (imageUrl == null) {
+            return EMPTY_IMAGE_URL;
+        }
+        return imageUrl;
+    }
+
+    private static double calculateVotePercent(final int totalCount, final int voteCount) {
+        if (voteCount == HIDDEN_COUNT || totalCount == 0) {
             return 0.0;
         }
-        return ((double) postOption.getVoteCount() / totalCount);
+        return ((double) voteCount / totalCount);
+    }
+
+    public static PostOptionVoteResultResponse ofGuest(
+            final Post post,
+            final PostOption postOption,
+            final int totalVoteCount
+    ) {
+        final int voteCount = countVotesForGuest(post, postOption);
+        return new PostOptionVoteResultResponse(
+                postOption.getId(),
+                postOption.getContent(),
+                handleEmptyImageUrl(postOption.getImageUrl()),
+                voteCount,
+                calculateVotePercent(totalVoteCount, voteCount)
+        );
+    }
+
+    private static int countVotesForGuest(final Post post, final PostOption postOption) {
+        if (post.isClosed()) {
+            return postOption.getVoteCount();
+        }
+        return HIDDEN_COUNT;
     }
 
 }

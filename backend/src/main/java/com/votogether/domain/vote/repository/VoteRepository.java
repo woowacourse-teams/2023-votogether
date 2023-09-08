@@ -1,9 +1,10 @@
 package com.votogether.domain.vote.repository;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.vote.entity.Vote;
-import com.votogether.domain.vote.repository.dto.VoteStatus;
+import com.votogether.domain.vote.repository.dto.VoteCountByAgeGroupAndGenderInterface;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,33 +13,63 @@ import org.springframework.data.repository.query.Param;
 
 public interface VoteRepository extends JpaRepository<Vote, Long> {
 
-    @Query("SELECT new com.votogether.domain.vote.repository.dto.VoteStatus(m.birthYear, m.gender, COUNT(v))" +
-            " FROM Vote v" +
-            " JOIN v.member m" +
-            " JOIN v.postOption p" +
-            " WHERE p.post.id = :postId" +
-            " GROUP BY m.birthYear, m.gender" +
-            " ORDER BY m.birthYear DESC"
+    @Query(value = "select" +
+            " case" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 10 then 0" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 20 then 1" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 30 then 2" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 40 then 3" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 50 then 4" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 60 then 5" +
+            " else 6 end as ageGroup," +
+            " m.gender as gender," +
+            " count(m.id) as voteCount" +
+            " from vote as v" +
+            " left join member as m on v.member_id = m.id" +
+            " left join post_option as p on v.post_option_id = p.id" +
+            " where p.post_id = :post_id" +
+            " group by" +
+            " ageGroup, m.gender" +
+            " order by" +
+            " ageGroup, m.gender desc",
+            nativeQuery = true
     )
-    List<VoteStatus> findVoteCountByPostIdGroupByAgeRangeAndGender(@Param("postId") final Long postId);
-
-    @Query("SELECT new com.votogether.domain.vote.repository.dto.VoteStatus(m.birthYear, m.gender, COUNT(v))" +
-            " FROM Vote v" +
-            " JOIN v.member m" +
-            " WHERE v.postOption.id = :postOptionId" +
-            " GROUP BY m.birthYear, m.gender" +
-            " ORDER BY m.birthYear DESC"
-    )
-    List<VoteStatus> findVoteCountByPostOptionIdGroupByAgeRangeAndGender(
-            @Param("postOptionId") final Long postOptionId
+    List<VoteCountByAgeGroupAndGenderInterface> findPostVoteCountByAgeGroupAndGender(
+            @Param("post_id") final Long postId
     );
+
+    @Query(value = "select" +
+            " case" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 10 then 0" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 20 then 1" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 30 then 2" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 40 then 3" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 50 then 4" +
+            " when YEAR(CURRENT_DATE) - m.birth_year < 60 then 5" +
+            " else 6 end as ageGroup," +
+            " m.gender as gender," +
+            " count(m.id) as voteCount" +
+            " from vote as v" +
+            " left join member as m on v.member_id = m.id" +
+            " where v.post_option_id = :post_option_id" +
+            " group by" +
+            " ageGroup, m.gender" +
+            " order by" +
+            " ageGroup, m.gender desc",
+            nativeQuery = true
+    )
+    List<VoteCountByAgeGroupAndGenderInterface> findPostOptionVoteCountByAgeGroupAndGender(
+            @Param("post_option_id") final Long postOptionId
+    );
+
+    Optional<Vote> findByMemberAndPostOptionPost(final Member member, final Post post);
 
     Optional<Vote> findByMemberAndPostOption(final Member member, final PostOption postOption);
 
     List<Vote> findAllByMemberAndPostOptionIn(final Member member, final List<PostOption> postOptions);
 
-    int countByMember(final Member member);
-
     List<Vote> findAllByMember(final Member member);
+
+    int countByMember(final Member member);
 
 }

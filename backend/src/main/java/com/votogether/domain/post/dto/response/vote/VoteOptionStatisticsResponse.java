@@ -2,12 +2,14 @@ package com.votogether.domain.post.dto.response.vote;
 
 import com.votogether.domain.member.entity.vo.AgeRange;
 import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.vote.repository.dto.VoteCountByAgeGroupAndGenderDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 @Schema(description = "투표 선택지 통계 응답")
 public record VoteOptionStatisticsResponse(
@@ -24,13 +26,13 @@ public record VoteOptionStatisticsResponse(
         List<VoteCountForAgeGroupResponse> ageGroup
 ) {
 
-    public static VoteOptionStatisticsResponse from(final Map<String, Map<Gender, Long>> voteStatusGroup) {
+    public static VoteOptionStatisticsResponse from(final List<VoteCountByAgeGroupAndGenderDto> voteCounts) {
+        final Map<AgeRange, Map<Gender, Long>> ageRangeGroup = formAgeRangeGroup(voteCounts);
         final List<VoteCountForAgeGroupResponse> ageGroupStatistics = Arrays.stream(AgeRange.values())
-                .map(AgeRange::getName)
-                .map(ageName ->
+                .map(ageRange ->
                         VoteCountForAgeGroupResponse.of(
-                                ageName,
-                                voteStatusGroup.computeIfAbsent(ageName, ignore -> new HashMap<>())
+                                ageRange,
+                                ageRangeGroup.computeIfAbsent(ageRange, ignore -> new EnumMap<>(Gender.class))
                         )
                 )
                 .toList();
@@ -41,6 +43,22 @@ public record VoteOptionStatisticsResponse(
                 ageGroupStatistics.stream().mapToInt(VoteCountForAgeGroupResponse::femaleCount).sum();
 
         return new VoteOptionStatisticsResponse(totalVoteCount, totalMaleCount, totalFemaleCount, ageGroupStatistics);
+    }
+
+    private static Map<AgeRange, Map<Gender, Long>> formAgeRangeGroup(
+            final List<VoteCountByAgeGroupAndGenderDto> voteCounts
+    ) {
+        return voteCounts.stream()
+                .collect(Collectors.groupingBy(
+                        voteCount -> AgeRange.from(voteCount.ageGroup()),
+                        LinkedHashMap::new,
+                        Collectors.toMap(
+                                VoteCountByAgeGroupAndGenderDto::gender,
+                                VoteCountByAgeGroupAndGenderDto::voteCount,
+                                (exist, replace) -> replace,
+                                () -> new EnumMap<>(Gender.class)
+                        )
+                ));
     }
 
 }

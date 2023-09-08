@@ -35,8 +35,8 @@ public class MemberTestPersister {
             return this;
         }
 
-        public MemberBuilder birthday(Integer birthday) {
-            this.birthYear = birthday;
+        public MemberBuilder birthYear(Integer birthYear) {
+            this.birthYear = birthYear;
             return this;
         }
 

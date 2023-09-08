@@ -83,11 +83,11 @@ class CommentTest {
 
     @Nested
     @DisplayName("댓글 작성자 확인")
-    class AuthorCheck {
+    class WriterCheck {
 
         @Test
         @DisplayName("작성자라면 true 반환한다.")
-        void isAuthor() {
+        void isWriter() {
             // given
             Member male20Member = MemberFixtures.MALE_20.get();
             Post post = generatePost();
@@ -104,7 +104,7 @@ class CommentTest {
 
         @Test
         @DisplayName("작성자가 아니라면 false 반환한다.")
-        void isNotAuthor() {
+        void isNotWriter() {
             // given
             Member male20Member = MemberFixtures.MALE_20.get();
             Member female20Member = MemberFixtures.FEMALE_20.get();

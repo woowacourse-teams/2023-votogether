@@ -107,33 +107,8 @@ public class PostOption extends BaseEntity {
                 .anyMatch(vote -> vote.isVoteByMember(member));
     }
 
-    public boolean isBelongsTo(final Post post) {
+    public boolean belongsTo(final Post post) {
         return Objects.equals(this.post.getId(), post.getId());
-    }
-
-    public int getVoteCount(final boolean isPostVoteByMember) {
-        final int votesCount = votes.size();
-        if (isPostVoteByMember) {
-            return votesCount;
-        }
-
-        return -1;
-    }
-
-    public double getVotePercent(final long totalVoteCount) {
-        if (isPostVoteByMember(totalVoteCount)) {
-            return calculateVotePercent(totalVoteCount);
-        }
-
-        return totalVoteCount;
-    }
-
-    private boolean isPostVoteByMember(final long totalVoteCount) {
-        return totalVoteCount > 0;
-    }
-
-    private double calculateVotePercent(final Long totalVoteCount) {
-        return ((double) this.votes.size() / totalVoteCount) * 100;
     }
 
     public int getVoteCount() {

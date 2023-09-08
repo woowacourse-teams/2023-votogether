@@ -277,6 +277,10 @@ public class Post extends BaseEntity {
         postOption.setPost(this);
         this.postOptionsA.add(postOption);
     }
+    
+    public boolean isWriter(final Member member) {
+        return Objects.equals(this.writer, member);
+    }
 
     public PostContentImage getFirstContentImage() {
         if (postContentImagesA.isEmpty()) {

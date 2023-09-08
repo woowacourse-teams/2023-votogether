@@ -4,14 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostContentImage;
 import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.vote.entity.Vote;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Schema(description = "게시글 응답")
 public record PostResponse(
@@ -51,87 +52,64 @@ public record PostResponse(
         PostVoteResultResponse voteInfo
 ) {
 
-    public static PostResponse of(final Post post, final Member loginMember) {
-        final Member writer = post.getWriter();
-        final PostBody postBody = post.getPostBody();
-        final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
-        final StringBuilder contentImageUrl = new StringBuilder();
+    private static final String EMPTY_IMAGE_URL = "";
+    private static final int EMPTY_POST_CONTENT_IMAGE_COUNT = 0;
+    private static final int EXIST_POST_CONTENT_IMAGE_COUNT = 1;
 
-        if (!contentImages.isEmpty()) {
-            contentImageUrl.append(contentImages.get(0).getImageUrl());
-        }
-
+    public static PostResponse ofUser(
+            final Member user,
+            final Post post,
+            final List<PostCategory> postCategories,
+            final PostContentImage postContentImage,
+            final List<PostOption> postOptions,
+            final Optional<Vote> vote
+    ) {
+        postOptions.sort(Comparator.comparingInt(PostOption::getSequence));
         return new PostResponse(
                 post.getId(),
-                PostWriterResponse.of(writer.getId(), writer.getNickname()),
-                postBody.getTitle(),
-                postBody.getContent(),
-                convertImageUrl(contentImageUrl.toString()),
-                getCategories(post),
+                PostWriterResponse.from(post.getWriter()),
+                post.getTitle(),
+                post.getContent(),
+                handleEmptyImageUrl(postContentImage),
+                convertToResponses(postCategories),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                -1,
-                -1,
-                PostVoteResultResponse.of(
-                        post.getSelectedOptionId(loginMember),
-                        post.getFinalTotalVoteCount(loginMember),
-                        getOptions(post, loginMember)
-                )
+                calculateImageCount(postContentImage, postOptions),
+                post.getCommentCount(),
+                PostVoteResultResponse.ofUser(user, post, postOptions, vote)
         );
     }
 
-    private static String convertImageUrl(final String imageUrl) {
-        return imageUrl == null ? "" : imageUrl;
+    private static String handleEmptyImageUrl(final PostContentImage postContentImage) {
+        if (postContentImage == null) {
+            return EMPTY_IMAGE_URL;
+        }
+        return postContentImage.getImageUrl();
     }
 
-    private static List<CategoryResponse> getCategories(final Post post) {
-        return post.getPostCategories()
-                .getPostCategories()
-                .stream()
+    private static List<CategoryResponse> convertToResponses(final List<PostCategory> postCategories) {
+        return postCategories.stream()
                 .map(PostCategory::getCategory)
                 .map(CategoryResponse::from)
                 .toList();
     }
 
-    private static List<PostOptionVoteResultResponse> getOptions(
-            final Post post,
-            final Member loginMember
+    private static int calculateImageCount(
+            final PostContentImage postContentImage,
+            final List<PostOption> postOptions
     ) {
-        return post.getPostOptions()
-                .getPostOptions()
-                .stream()
-                .map(postOption ->
-                        PostOptionVoteResultResponse.of(
-                                postOption,
-                                post.isVisibleVoteResult(loginMember),
-                                post.getFinalTotalVoteCount(loginMember)
-                        )
-                )
-                .toList();
+        int count = countEmptyPostContentImage(postContentImage);
+        count += (int) postOptions.stream()
+                .filter(postOption -> postOption.getImageUrl() != null)
+                .count();
+        return count;
     }
 
-    public static PostResponse forGuest(final Post post) {
-        final PostBody postBody = post.getPostBody();
-        final List<PostContentImage> contentImages = postBody.getPostContentImages().getContentImages();
-        final StringBuilder contentImageUrl = new StringBuilder();
-
-        if (!contentImages.isEmpty()) {
-            contentImageUrl.append(contentImages.get(0).getImageUrl());
+    private static int countEmptyPostContentImage(final PostContentImage postContentImage) {
+        if (postContentImage == null) {
+            return EMPTY_POST_CONTENT_IMAGE_COUNT;
         }
-
-        return new PostResponse(
-                post.getId(),
-                PostWriterResponse.from(post.getWriter()),
-                post.getPostBody().getTitle(),
-                post.getPostBody().getContent(),
-                convertImageUrl(contentImageUrl.toString()),
-                getCategories(post),
-                post.getCreatedAt(),
-                post.getDeadline(),
-                -1,
-                -1,
-                PostVoteResultResponse.ofGuest(post)
-        );
+        return EXIST_POST_CONTENT_IMAGE_COUNT;
     }
 
     public static PostResponse ofGuest(
@@ -150,32 +128,10 @@ public record PostResponse(
                 convertToResponses(postCategories),
                 post.getCreatedAt(),
                 post.getDeadline(),
-                calculateImageCount(post, postOptions),
+                calculateImageCount(postContentImage, postOptions),
                 post.getCommentCount(),
                 PostVoteResultResponse.ofGuest(post, postOptions)
         );
-    }
-
-    private static String handleEmptyImageUrl(final PostContentImage postContentImage) {
-        if (postContentImage == null) {
-            return "";
-        }
-        return postContentImage.getImageUrl();
-    }
-
-    private static List<CategoryResponse> convertToResponses(final List<PostCategory> postCategories) {
-        return postCategories.stream()
-                .map(PostCategory::getCategory)
-                .map(CategoryResponse::from)
-                .toList();
-    }
-
-    private static int calculateImageCount(final Post post, final List<PostOption> postOptions) {
-        int count = post.getFirstContentImage() == null ? 0 : 1;
-        count += (int) postOptions.stream()
-                .filter(postOption -> postOption.getImageUrl() != null)
-                .count();
-        return count;
     }
 
 }

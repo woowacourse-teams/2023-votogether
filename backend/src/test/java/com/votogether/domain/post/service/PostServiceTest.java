@@ -27,6 +27,7 @@ import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.post.CategoryResponse;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
 import com.votogether.domain.post.dto.response.post.PostOptionDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.dto.response.post.WriterResponse;
 import com.votogether.domain.post.dto.response.vote.VoteDetailResponse;
@@ -134,40 +135,19 @@ class PostServiceTest {
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(2))
-                .build();
+                .categoryIds(List.of(category1.getId(), category2.getId())).title("title").content("content")
+                .postOptions(List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                        PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now().plusDays(2)).build();
 
         // when
         Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
@@ -184,9 +164,8 @@ class PostServiceTest {
         @DisplayName("게시글이 존재하지 않으면 예외를 던진다.")
         void throwExceptionNonExistPost() {
             // given, when, then
-            assertThatThrownBy(() -> postService.getVoteStatistics(-1L, MemberFixtures.MALE_20.get()))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+            assertThatThrownBy(() -> postService.getVoteStatistics(-1L, MemberFixtures.MALE_20.get())).isInstanceOf(
+                    NotFoundException.class).hasMessage("해당 게시글이 존재하지 않습니다.");
         }
 
         @Test
@@ -196,17 +175,12 @@ class PostServiceTest {
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
             Member reader = memberRepository.save(MemberFixtures.FEMALE_20.get());
             Post post = postRepository.save(
-                    Post.builder()
-                            .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+                    Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0)).build());
 
             // when, then
-            assertThatThrownBy(() -> postService.getVoteStatistics(post.getId(), reader))
-                    .isInstanceOf(BadRequestException.class)
-                    .hasMessage("해당 게시글 작성자가 아닙니다.");
+            assertThatThrownBy(() -> postService.getVoteStatistics(post.getId(), reader)).isInstanceOf(
+                    BadRequestException.class).hasMessage("해당 게시글 작성자가 아닙니다.");
         }
 
         @Test
@@ -221,26 +195,12 @@ class PostServiceTest {
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
             Post post = postRepository.save(
-                    Post.builder()
-                            .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+                    Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0)).build());
             PostOption postOptionA = postOptionRepository.save(
-                    PostOption.builder()
-                            .post(post)
-                            .sequence(1)
-                            .content("치킨")
-                            .build()
-            );
+                    PostOption.builder().post(post).sequence(1).content("치킨").build());
             PostOption postOptionB = postOptionRepository.save(
-                    PostOption.builder()
-                            .post(post)
-                            .sequence(2)
-                            .content("피자")
-                            .build()
-            );
+                    PostOption.builder().post(post).sequence(2).content("피자").build());
 
             voteRepository.save(Vote.builder().member(femaleEarly10).postOption(postOptionA).build());
             voteRepository.save(Vote.builder().member(male10).postOption(postOptionB).build());
@@ -252,16 +212,14 @@ class PostServiceTest {
             VoteOptionStatisticsResponse response = postService.getVoteStatistics(post.getId(), writer);
 
             // then
-            assertAll(
-                    () -> assertThat(response.totalVoteCount()).isEqualTo(5),
+            assertAll(() -> assertThat(response.totalVoteCount()).isEqualTo(5),
                     () -> assertThat(response.totalMaleCount()).isEqualTo(2),
                     () -> assertThat(response.totalFemaleCount()).isEqualTo(3),
                     () -> assertThat(response.ageGroup()).hasSize(7),
                     () -> assertThat(response.ageGroup().get(1).ageGroup()).isEqualTo("10대"),
                     () -> assertThat(response.ageGroup().get(1).voteCount()).isEqualTo(2),
                     () -> assertThat(response.ageGroup().get(1).maleCount()).isEqualTo(1),
-                    () -> assertThat(response.ageGroup().get(1).femaleCount()).isEqualTo(1)
-            );
+                    () -> assertThat(response.ageGroup().get(1).femaleCount()).isEqualTo(1));
         }
 
     }
@@ -274,9 +232,9 @@ class PostServiceTest {
         @DisplayName("게시글이 존재하지 않으면 예외를 던진다.")
         void throwExceptionNonExistPost() {
             // given, when, then
-            assertThatThrownBy(() -> postService.getVoteOptionStatistics(-1L, 1L, MemberFixtures.MALE_20.get()))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+            assertThatThrownBy(
+                    () -> postService.getVoteOptionStatistics(-1L, 1L, MemberFixtures.MALE_20.get())).isInstanceOf(
+                    NotFoundException.class).hasMessage("해당 게시글이 존재하지 않습니다.");
         }
 
         @Test
@@ -286,17 +244,12 @@ class PostServiceTest {
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
             Post post = postRepository.save(
-                    Post.builder()
-                            .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+                    Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0)).build());
 
             // when, then
-            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), -1L, writer))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글 투표 옵션이 존재하지 않습니다.");
+            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), -1L, writer)).isInstanceOf(
+                    NotFoundException.class).hasMessage("해당 게시글 투표 옵션이 존재하지 않습니다.");
         }
 
         @Test
@@ -306,31 +259,18 @@ class PostServiceTest {
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
             Post post1 = postRepository.save(
-                    Post.builder()
-                            .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+                    Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0)).build());
             Post post2 = postRepository.save(
-                    Post.builder()
-                            .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+                    Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0)).build());
             PostOption postOption = postOptionRepository.save(
-                    PostOption.builder()
-                            .post(post2)
-                            .sequence(1)
-                            .content("치킨")
-                            .build()
-            );
+                    PostOption.builder().post(post2).sequence(1).content("치킨").build());
 
             // when, then
-            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post1.getId(), postOption.getId(), writer))
-                    .isInstanceOf(BadRequestException.class)
-                    .hasMessage("게시글 투표 옵션이 게시글과 연관되어 있지 않습니다.");
+            assertThatThrownBy(
+                    () -> postService.getVoteOptionStatistics(post1.getId(), postOption.getId(), writer)).isInstanceOf(
+                    BadRequestException.class).hasMessage("게시글 투표 옵션이 게시글과 연관되어 있지 않습니다.");
         }
 
         @Test
@@ -340,24 +280,15 @@ class PostServiceTest {
             Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
             Member reader = memberRepository.save(MemberFixtures.FEMALE_20.get());
             Post post = postRepository.save(
-                    Post.builder()
-                            .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+                    Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0)).build());
             PostOption postOption = postOptionRepository.save(
-                    PostOption.builder()
-                            .post(post)
-                            .sequence(1)
-                            .content("치킨")
-                            .build()
-            );
+                    PostOption.builder().post(post).sequence(1).content("치킨").build());
 
             // when, then
-            assertThatThrownBy(() -> postService.getVoteOptionStatistics(post.getId(), postOption.getId(), reader))
-                    .isInstanceOf(BadRequestException.class)
-                    .hasMessage("해당 게시글 작성자가 아닙니다.");
+            assertThatThrownBy(
+                    () -> postService.getVoteOptionStatistics(post.getId(), postOption.getId(), reader)).isInstanceOf(
+                    BadRequestException.class).hasMessage("해당 게시글 작성자가 아닙니다.");
         }
 
         @Test
@@ -372,19 +303,10 @@ class PostServiceTest {
             Member writer = memberRepository.save(MALE_20.get());
 
             Post post = postRepository.save(
-                    Post.builder()
-                            .writer(writer)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+                    Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0)).build());
             PostOption postOption = postOptionRepository.save(
-                    PostOption.builder()
-                            .post(post)
-                            .sequence(1)
-                            .content("치킨")
-                            .build()
-            );
+                    PostOption.builder().post(post).sequence(1).content("치킨").build());
 
             voteRepository.save(Vote.builder().member(female10).postOption(postOption).build());
             voteRepository.save(Vote.builder().member(male10).postOption(postOption).build());
@@ -393,20 +315,18 @@ class PostServiceTest {
             voteRepository.save(Vote.builder().member(female80).postOption(postOption).build());
 
             // when
-            VoteOptionStatisticsResponse response =
-                    postService.getVoteOptionStatistics(post.getId(), postOption.getId(), writer);
+            VoteOptionStatisticsResponse response = postService.getVoteOptionStatistics(post.getId(),
+                    postOption.getId(), writer);
 
             // then
-            assertAll(
-                    () -> assertThat(response.totalVoteCount()).isEqualTo(5),
+            assertAll(() -> assertThat(response.totalVoteCount()).isEqualTo(5),
                     () -> assertThat(response.totalMaleCount()).isEqualTo(2),
                     () -> assertThat(response.totalFemaleCount()).isEqualTo(3),
                     () -> assertThat(response.ageGroup()).hasSize(7),
                     () -> assertThat(response.ageGroup().get(1).ageGroup()).isEqualTo("10대"),
                     () -> assertThat(response.ageGroup().get(1).voteCount()).isEqualTo(2),
                     () -> assertThat(response.ageGroup().get(1).maleCount()).isEqualTo(1),
-                    () -> assertThat(response.ageGroup().get(1).femaleCount()).isEqualTo(1)
-            );
+                    () -> assertThat(response.ageGroup().get(1).femaleCount()).isEqualTo(1));
         }
 
     }
@@ -418,12 +338,8 @@ class PostServiceTest {
         Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
         LocalDateTime oldDeadline = LocalDateTime.now().plusDays(2);
         Post post = postRepository.save(
-                Post.builder()
-                        .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
-                        .deadline(oldDeadline)
-                        .build()
-        );
+                Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline).build());
 
         Post foundPost = postRepository.findById(post.getId()).get();
 
@@ -431,10 +347,8 @@ class PostServiceTest {
         postService.closePostEarlyById(post.getId(), writer);
 
         // then
-        assertAll(
-                () -> assertThat(foundPost.getId()).isEqualTo(post.getId()),
-                () -> assertThat(foundPost.getDeadline()).isBefore(oldDeadline)
-        );
+        assertAll(() -> assertThat(foundPost.getId()).isEqualTo(post.getId()),
+                () -> assertThat(foundPost.getDeadline()).isBefore(oldDeadline));
     }
 
     @Test
@@ -444,19 +358,15 @@ class PostServiceTest {
         Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
         LocalDateTime oldDeadline = LocalDateTime.of(2100, 7, 12, 0, 0);
         Post post = postRepository.save(
-                Post.builder()
-                        .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
-                        .deadline(oldDeadline)
-                        .build()
-        );
+                Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline).build());
 
         Post foundPost = postRepository.findById(post.getId()).get();
 
         // when, then
-        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), MemberFixtures.MALE_30.get()))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("해당 게시글 작성자가 아닙니다.");
+        assertThatThrownBy(
+                () -> postService.closePostEarlyById(foundPost.getId(), MemberFixtures.MALE_30.get())).isInstanceOf(
+                BadRequestException.class).hasMessage("해당 게시글 작성자가 아닙니다.");
     }
 
     @Test
@@ -466,19 +376,14 @@ class PostServiceTest {
         Member writer = memberRepository.save(MemberFixtures.MALE_30.get());
         LocalDateTime oldDeadline = LocalDateTime.of(2000, 7, 12, 0, 0);
         Post post = postRepository.save(
-                Post.builder()
-                        .writer(writer)
-                        .postBody(PostBody.builder().title("title").content("content").build())
-                        .deadline(oldDeadline)
-                        .build()
-        );
+                Post.builder().writer(writer).postBody(PostBody.builder().title("title").content("content").build())
+                        .deadline(oldDeadline).build());
 
         Post foundPost = postRepository.findById(post.getId()).get();
 
         // when, then
-        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage("게시글이 이미 마감되었습니다.");
+        assertThatThrownBy(() -> postService.closePostEarlyById(foundPost.getId(), writer)).isInstanceOf(
+                BadRequestException.class).hasMessage("게시글이 이미 마감되었습니다.");
     }
 
     @Test
@@ -491,52 +396,26 @@ class PostServiceTest {
         Member memberToAllPostVote = MALE_20.get();
         memberRepository.save(memberToAllPostVote);
 
-        Category ca1 = Category.builder()
-                .name("ca1")
-                .build();
-        Category ca2 = Category.builder()
-                .name("ca2")
-                .build();
-        Category ca3 = Category.builder()
-                .name("ca3")
-                .build();
+        Category ca1 = Category.builder().name("ca1").build();
+        Category ca2 = Category.builder().name("ca2").build();
+        Category ca3 = Category.builder().name("ca3").build();
 
         categoryRepository.saveAll(List.of(ca1, ca2, ca3));
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "file1",
-                "hello1.txt",
-                "text/plain",
-                "Hello, World!11".getBytes()
-        );
+        MockMultipartFile file1 = new MockMultipartFile("file1", "hello1.txt", "text/plain",
+                "Hello, World!11".getBytes());
 
-        MockMultipartFile file2 = new MockMultipartFile(
-                "file2",
-                "hello2.txt",
-                "text/plain",
-                "Hello, World!22".getBytes()
-        );
+        MockMultipartFile file2 = new MockMultipartFile("file2", "hello2.txt", "text/plain",
+                "Hello, World!22".getBytes());
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "file3",
-                "hello3.txt",
-                "text/plain",
-                "Hello, World!33".getBytes()
-        );
+        MockMultipartFile file3 = new MockMultipartFile("file3", "hello3.txt", "text/plain",
+                "Hello, World!33".getBytes());
 
         for (int postSequence = 30; postSequence > 0; postSequence--) {
             List<PostOptionCreateRequest> options = new ArrayList<>() {
                 {
-                    add(
-                            PostOptionCreateRequest.builder()
-                                    .content("option1")
-                                    .build()
-                    );
-                    add(
-                            PostOptionCreateRequest.builder()
-                                    .content("option2")
-                                    .build()
-                    );
+                    add(PostOptionCreateRequest.builder().content("option1").build());
+                    add(PostOptionCreateRequest.builder().content("option2").build());
                 }
             };
 
@@ -554,28 +433,16 @@ class PostServiceTest {
             };
 
             if (postSequence % 2 == 0) {
-                MockMultipartFile file4 = new MockMultipartFile(
-                        "file4",
-                        "hello4.txt",
-                        "text/plain",
-                        "Hello, World!44".getBytes()
-                );
+                MockMultipartFile file4 = new MockMultipartFile("file4", "hello4.txt", "text/plain",
+                        "Hello, World!44".getBytes());
 
                 optionImages.add(file4);
-                options.add(
-                        PostOptionCreateRequest.builder()
-                                .content("option3")
-                                .build()
-                );
+                options.add(PostOptionCreateRequest.builder().content("option3").build());
             }
 
-            PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                    .categoryIds(List.of(0L, 2L))
-                    .title("title" + postSequence)
-                    .content("content" + postSequence)
-                    .postOptions(options)
-                    .deadline(LocalDateTime.now().plusDays(2))
-                    .build();
+            PostCreateRequest postCreateRequest = PostCreateRequest.builder().categoryIds(List.of(0L, 2L))
+                    .title("title" + postSequence).content("content" + postSequence).postOptions(options)
+                    .deadline(LocalDateTime.now().plusDays(2)).build();
 
             Long savedPostId = postService.save(postCreateRequest, writer, contentImages, optionImages);
             Post post = postRepository.findById(savedPostId).get();
@@ -585,12 +452,8 @@ class PostServiceTest {
             voteService.vote(memberToAllPostVote, post.getId(), postOptionId);
 
             for (int voteCount = 0; voteCount <= postSequence; voteCount++) {
-                Member memberToVote = Member.builder()
-                        .nickname("Abel" + postSequence + voteCount)
-                        .gender(Gender.MALE)
-                        .birthYear(2000)
-                        .socialType(SocialType.KAKAO)
-                        .socialId("Abel" + postSequence + voteCount)
+                Member memberToVote = Member.builder().nickname("Abel" + postSequence + voteCount).gender(Gender.MALE)
+                        .birthYear(2000).socialType(SocialType.KAKAO).socialId("Abel" + postSequence + voteCount)
                         .build();
 
                 memberRepository.save(memberToVote);
@@ -603,23 +466,16 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(
-                0,
-                PostClosingType.PROGRESS,
-                PostSortType.HOT,
-                null,
-                memberToAllPostVote
-        );
+        List<PostResponse> responses = postService.getAllPostBySortTypeAndClosingTypeAndCategoryId(0,
+                PostClosingType.PROGRESS, PostSortType.HOT, null, memberToAllPostVote);
 
         // then
         PostResponse firstResponse = responses.get(0);
         PostResponse secondResponse = responses.get(1);
-        assertAll(
-                () -> assertThat(firstResponse.voteInfo().options()).hasSize(3),
+        assertAll(() -> assertThat(firstResponse.voteInfo().options()).hasSize(3),
                 () -> assertThat(firstResponse.voteInfo().totalVoteCount()).isEqualTo(32),
                 () -> assertThat(secondResponse.voteInfo().options()).hasSize(2),
-                () -> assertThat(secondResponse.voteInfo().totalVoteCount()).isEqualTo(31)
-        );
+                () -> assertThat(secondResponse.voteInfo().totalVoteCount()).isEqualTo(31));
     }
 
     @Test
@@ -633,9 +489,7 @@ class PostServiceTest {
             voters.add(memberTestPersister.builder().save());
         }
 
-        Post closedPost = postTestPersister.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.of(2022, 12, 25, 0, 0))
+        Post closedPost = postTestPersister.builder().writer(writer).deadline(LocalDateTime.of(2022, 12, 25, 0, 0))
                 .save();
 
         for (int j = 0; j < 2; j++) {
@@ -645,9 +499,7 @@ class PostServiceTest {
             }
         }
 
-        Post notClosedPost = postTestPersister.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.of(3022, 12, 25, 0, 0))
+        Post notClosedPost = postTestPersister.builder().writer(writer).deadline(LocalDateTime.of(3022, 12, 25, 0, 0))
                 .save();
 
         for (int j = 0; j < 2; j++) {
@@ -664,15 +516,13 @@ class PostServiceTest {
         List<PostResponse> result = postService.getPostsGuest(0, PostClosingType.ALL, PostSortType.LATEST, null);
 
         // then
-        assertAll(
-                () -> assertThat(result).hasSize(2),
+        assertAll(() -> assertThat(result).hasSize(2),
                 () -> assertThat(result.get(0).voteInfo().totalVoteCount()).isEqualTo(-1),
                 () -> assertThat(result.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(-1),
                 () -> assertThat(result.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(-1),
                 () -> assertThat(result.get(1).voteInfo().totalVoteCount()).isEqualTo(8),
                 () -> assertThat(result.get(1).voteInfo().options().get(0).voteCount()).isEqualTo(4),
-                () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4)
-        );
+                () -> assertThat(result.get(1).voteInfo().options().get(1).voteCount()).isEqualTo(4));
     }
 
     @Test
@@ -682,36 +532,20 @@ class PostServiceTest {
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image1",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image1", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
         LocalDateTime deadline = LocalDateTime.now().plusDays(3);
 
-        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
-                .content("option1")
-                .build();
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder().content("option1").build();
 
-        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
-                .content("option2")
-                .build();
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder().content("option2").build();
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(option1, option2))
-                .deadline(deadline)
-                .build();
+                .categoryIds(List.of(category1.getId(), category2.getId())).title("title").content("content")
+                .postOptions(List.of(option1, option2)).deadline(deadline).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
 
@@ -724,18 +558,14 @@ class PostServiceTest {
         VoteDetailResponse voteDetailResponse = response.voteInfo();
         List<PostOptionDetailResponse> options = voteDetailResponse.options();
 
-        assertAll(
-                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+        assertAll(() -> assertThat(response.postId()).isEqualTo(savedPostId),
                 () -> assertThat(response.title()).isEqualTo("title"),
-                () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(response.content()).isEqualTo("content"), () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
                 () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
                 () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(),
-                () -> assertThat(options).hasSize(2),
-                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
-        );
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(), () -> assertThat(options).hasSize(2),
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png"));
     }
 
     @Test
@@ -746,36 +576,20 @@ class PostServiceTest {
         Member voter = memberRepository.save(MemberFixtures.MALE_20.get());
         Member writer = memberRepository.save(MemberFixtures.FEMALE_30.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image1",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image1", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
         LocalDateTime deadline = LocalDateTime.now().plusDays(3);
 
-        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
-                .content("option1")
-                .build();
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder().content("option1").build();
 
-        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
-                .content("option2")
-                .build();
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder().content("option2").build();
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(option1, option2))
-                .deadline(deadline)
-                .build();
+                .categoryIds(List.of(category1.getId(), category2.getId())).title("title").content("content")
+                .postOptions(List.of(option1, option2)).deadline(deadline).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
         Post post = postRepository.findById(savedPostId).get();
@@ -794,18 +608,14 @@ class PostServiceTest {
         VoteDetailResponse voteDetailResponse = response.voteInfo();
         List<PostOptionDetailResponse> options = voteDetailResponse.options();
 
-        assertAll(
-                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+        assertAll(() -> assertThat(response.postId()).isEqualTo(savedPostId),
                 () -> assertThat(response.title()).isEqualTo("title"),
-                () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(response.content()).isEqualTo("content"), () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
                 () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
                 () -> assertThat(writerResponse.nickname()).isEqualTo("user10"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isOne(),
-                () -> assertThat(options).hasSize(2),
-                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
-        );
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isOne(), () -> assertThat(options).hasSize(2),
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png"));
     }
 
     @Test
@@ -816,36 +626,20 @@ class PostServiceTest {
         Member member = memberRepository.save(MemberFixtures.FEMALE_10.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image1",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image1", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
         LocalDateTime deadline = LocalDateTime.now();
 
-        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
-                .content("option1")
-                .build();
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder().content("option1").build();
 
-        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
-                .content("option2")
-                .build();
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder().content("option2").build();
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(option1, option2))
-                .deadline(deadline)
-                .build();
+                .categoryIds(List.of(category1.getId(), category2.getId())).title("title").content("content")
+                .postOptions(List.of(option1, option2)).deadline(deadline).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
 
@@ -858,18 +652,14 @@ class PostServiceTest {
         VoteDetailResponse voteDetailResponse = response.voteInfo();
         List<PostOptionDetailResponse> options = voteDetailResponse.options();
 
-        assertAll(
-                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+        assertAll(() -> assertThat(response.postId()).isEqualTo(savedPostId),
                 () -> assertThat(response.title()).isEqualTo("title"),
-                () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(response.content()).isEqualTo("content"), () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
                 () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
                 () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
-                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(),
-                () -> assertThat(options).hasSize(2),
-                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
-        );
+                () -> assertThat(voteDetailResponse.totalVoteCount()).isZero(), () -> assertThat(options).hasSize(2),
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png"));
     }
 
     @Test
@@ -880,36 +670,20 @@ class PostServiceTest {
         Member member = memberRepository.save(MemberFixtures.FEMALE_10.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image1",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image1", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
         LocalDateTime deadline = LocalDateTime.now().plusDays(3);
 
-        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder()
-                .content("option1")
-                .build();
+        PostOptionCreateRequest option1 = PostOptionCreateRequest.builder().content("option1").build();
 
-        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder()
-                .content("option2")
-                .build();
+        PostOptionCreateRequest option2 = PostOptionCreateRequest.builder().content("option2").build();
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(option1, option2))
-                .deadline(deadline)
-                .build();
+                .categoryIds(List.of(category1.getId(), category2.getId())).title("title").content("content")
+                .postOptions(List.of(option1, option2)).deadline(deadline).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(), List.of(file1, file2));
 
@@ -922,18 +696,15 @@ class PostServiceTest {
         VoteDetailResponse voteDetailResponse = response.voteInfo();
         List<PostOptionDetailResponse> options = voteDetailResponse.options();
 
-        assertAll(
-                () -> assertThat(response.postId()).isEqualTo(savedPostId),
+        assertAll(() -> assertThat(response.postId()).isEqualTo(savedPostId),
                 () -> assertThat(response.title()).isEqualTo("title"),
-                () -> assertThat(response.content()).isEqualTo("content"),
-                () -> assertThat(categories).hasSize(2),
+                () -> assertThat(response.content()).isEqualTo("content"), () -> assertThat(categories).hasSize(2),
                 () -> assertThat(categories.get(0).name()).isEqualTo("개발"),
                 () -> assertThat(writerResponse.id()).isEqualTo(writer.getId()),
                 () -> assertThat(writerResponse.nickname()).isEqualTo("user7"),
                 () -> assertThat(voteDetailResponse.totalVoteCount()).isEqualTo(-1),
                 () -> assertThat(options).hasSize(2),
-                () -> assertThat(options.get(0).imageUrl()).contains("test1.png")
-        );
+                () -> assertThat(options.get(0).imageUrl()).contains("test1.png"));
     }
 
     @Test
@@ -943,8 +714,7 @@ class PostServiceTest {
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
         // when, then
-        assertThatThrownBy(() -> postService.getPostById(1L, member))
-                .isInstanceOf(NotFoundException.class)
+        assertThatThrownBy(() -> postService.getPostById(1L, member)).isInstanceOf(NotFoundException.class)
                 .hasMessage(PostExceptionType.POST_NOT_FOUND.getMessage());
     }
 
@@ -955,40 +725,19 @@ class PostServiceTest {
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(2))
-                .build();
+                .categoryIds(List.of(category1.getId(), category2.getId())).title("title").content("content")
+                .postOptions(List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                        PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now().plusDays(2)).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
         final Post post = postRepository.findById(savedPostId).get();
@@ -1007,21 +756,16 @@ class PostServiceTest {
         final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
         final PostBody postBody = post.getPostBody();
         final PostContentImage postContentImage = postBody.getPostContentImages().getContentImages().get(0);
-        final List<Vote> votes = postOptions.stream()
-                .map(PostOption::getVotes)
-                .flatMap(Collection::stream)
-                .toList();
+        final List<Vote> votes = postOptions.stream().map(PostOption::getVotes).flatMap(Collection::stream).toList();
         final List<Comment> comments = post.getComments();
 
         // when, then
-        assertAll(
-                () -> assertThatNoException().isThrownBy(() -> postService.delete(savedPostId)),
+        assertAll(() -> assertThatNoException().isThrownBy(() -> postService.delete(savedPostId)),
                 () -> assertThat(postCategoryRepository.findById(postCategories.get(0).getId())).isNotPresent(),
                 () -> assertThat(postContentImageRepository.findById(postContentImage.getId())).isNotPresent(),
                 () -> assertThat(postOptionRepository.findById(postOptions.get(0).getId())).isNotPresent(),
                 () -> assertThat(voteRepository.findById(votes.get(0).getId())).isNotPresent(),
-                () -> assertThat(commentRepository.findById(comments.get(0).getId())).isNotPresent()
-        );
+                () -> assertThat(commentRepository.findById(comments.get(0).getId())).isNotPresent());
     }
 
     @Test
@@ -1032,52 +776,26 @@ class PostServiceTest {
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId(), category2.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(2))
-                .build();
+                .categoryIds(List.of(category1.getId(), category2.getId())).title("title").content("content")
+                .postOptions(List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                        PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now().plusDays(2)).build();
 
         Long savedPostId = postService.save(postCreateRequest, member, List.of(file3), List.of(file1, file2));
         final Post post = postRepository.findById(savedPostId).get();
 
         for (int voteCount = 0; voteCount < 20; voteCount++) {
-            Member memberToVote = Member.builder()
-                    .nickname("Abel" + voteCount)
-                    .gender(Gender.MALE)
-                    .birthYear(2000)
-                    .socialType(SocialType.KAKAO)
-                    .socialId("Abel" + voteCount)
-                    .build();
+            Member memberToVote = Member.builder().nickname("Abel" + voteCount).gender(Gender.MALE).birthYear(2000)
+                    .socialType(SocialType.KAKAO).socialId("Abel" + voteCount).build();
 
             memberRepository.save(memberToVote);
 
@@ -1089,8 +807,7 @@ class PostServiceTest {
         entityManager.clear();
 
         // when, then
-        assertThatThrownBy(() -> postService.delete(savedPostId))
-                .isInstanceOf(BadRequestException.class)
+        assertThatThrownBy(() -> postService.delete(savedPostId)).isInstanceOf(BadRequestException.class)
                 .hasMessage(PostExceptionType.CANNOT_DELETE_BECAUSE_MORE_THAN_TWENTY_VOTES.getMessage());
     }
 
@@ -1101,102 +818,52 @@ class PostServiceTest {
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(2))
-                .build();
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder().categoryIds(List.of(category1.getId()))
+                .title("title").content("content").postOptions(
+                        List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                                PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now().plusDays(2)).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
 
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        MockMultipartFile file4 = new MockMultipartFile(
-                "image4",
-                "test4.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file5 = new MockMultipartFile(
-                "image5",
-                "test5.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file4 = new MockMultipartFile("image4", "test4.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file5 = new MockMultipartFile("image5", "test5.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file6 = new MockMultipartFile(
-                "image6",
-                "test6.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file6 = new MockMultipartFile("image6", "test6.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
-                .categoryIds(List.of(category2.getId()))
-                .title("title2")
-                .content("content2")
-                .postOptions(List.of(
-                        PostOptionUpdateRequest.builder()
-                                .content("option3")
-                                .build(),
-                        PostOptionUpdateRequest.builder()
-                                .content("option4")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(1))
-                .build();
+        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder().categoryIds(List.of(category2.getId()))
+                .title("title2").content("content2").postOptions(
+                        List.of(PostOptionUpdateRequest.builder().content("option3").build(),
+                                PostOptionUpdateRequest.builder().content("option4").build()))
+                .deadline(LocalDateTime.now().plusDays(1)).build();
 
         // when
-        postService.update(
-                savedPostId,
-                postUpdateRequest,
-                writer,
-                List.of(file4),
-                List.of(file5, file6)
-        );
+        postService.update(savedPostId, postUpdateRequest, writer, List.of(file4), List.of(file5, file6));
 
         // then
         final PostDetailResponse postDetailResponse = postService.getPostById(savedPostId, writer);
         final List<PostOptionDetailResponse> options = postDetailResponse.voteInfo().options();
         final List<CategoryResponse> categories = postDetailResponse.categories();
-        assertAll(
-                () -> assertThat(postDetailResponse.title()).isEqualTo("title2"),
+        assertAll(() -> assertThat(postDetailResponse.title()).isEqualTo("title2"),
                 () -> assertThat(postDetailResponse.content()).isEqualTo("content2"),
                 () -> assertThat(postDetailResponse.imageUrl()).contains("test4.png"),
                 () -> assertThat(options.get(0).content()).isEqualTo("option3"),
                 () -> assertThat(options.get(1).content()).isEqualTo("option4"),
                 () -> assertThat(options.get(0).imageUrl()).contains("test5.png"),
                 () -> assertThat(options.get(1).imageUrl()).contains("test6.png"),
-                () -> assertThat(categories.get(0).name()).isEqualTo("음식")
-        );
+                () -> assertThat(categories.get(0).name()).isEqualTo("음식"));
     }
 
     @Test
@@ -1207,88 +874,40 @@ class PostServiceTest {
         Member member = memberRepository.save(MemberFixtures.MALE_30.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(2))
-                .build();
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder().categoryIds(List.of(category1.getId()))
+                .title("title").content("content").postOptions(
+                        List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                                PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now().plusDays(2)).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
 
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        MockMultipartFile file4 = new MockMultipartFile(
-                "image4",
-                "test4.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file5 = new MockMultipartFile(
-                "image5",
-                "test5.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file4 = new MockMultipartFile("image4", "test4.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file5 = new MockMultipartFile("image5", "test5.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file6 = new MockMultipartFile(
-                "image6",
-                "test6.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file6 = new MockMultipartFile("image6", "test6.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
-                .categoryIds(List.of(category2.getId()))
-                .title("title2")
-                .content("content2")
-                .postOptions(List.of(
-                        PostOptionUpdateRequest.builder()
-                                .content("option3")
-                                .build(),
-                        PostOptionUpdateRequest.builder()
-                                .content("option4")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(1))
-                .build();
+        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder().categoryIds(List.of(category2.getId()))
+                .title("title2").content("content2").postOptions(
+                        List.of(PostOptionUpdateRequest.builder().content("option3").build(),
+                                PostOptionUpdateRequest.builder().content("option4").build()))
+                .deadline(LocalDateTime.now().plusDays(1)).build();
 
         // when, then
-        assertThatThrownBy(() -> postService.update(
-                savedPostId,
-                postUpdateRequest,
-                member,
-                List.of(file4),
-                List.of(file5, file6)
-        ))
-                .isInstanceOf(BadRequestException.class)
+        assertThatThrownBy(() -> postService.update(savedPostId, postUpdateRequest, member, List.of(file4),
+                List.of(file5, file6))).isInstanceOf(BadRequestException.class)
                 .hasMessage(PostExceptionType.NOT_WRITER.getMessage());
     }
 
@@ -1299,88 +918,40 @@ class PostServiceTest {
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now())
-                .build();
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder().categoryIds(List.of(category1.getId()))
+                .title("title").content("content").postOptions(
+                        List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                                PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now()).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
 
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        MockMultipartFile file4 = new MockMultipartFile(
-                "image4",
-                "test4.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file5 = new MockMultipartFile(
-                "image5",
-                "test5.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file4 = new MockMultipartFile("image4", "test4.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file5 = new MockMultipartFile("image5", "test5.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file6 = new MockMultipartFile(
-                "image6",
-                "test6.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file6 = new MockMultipartFile("image6", "test6.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
-                .categoryIds(List.of(category2.getId()))
-                .title("title2")
-                .content("content2")
-                .postOptions(List.of(
-                        PostOptionUpdateRequest.builder()
-                                .content("option3")
-                                .build(),
-                        PostOptionUpdateRequest.builder()
-                                .content("option4")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(1))
-                .build();
+        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder().categoryIds(List.of(category2.getId()))
+                .title("title2").content("content2").postOptions(
+                        List.of(PostOptionUpdateRequest.builder().content("option3").build(),
+                                PostOptionUpdateRequest.builder().content("option4").build()))
+                .deadline(LocalDateTime.now().plusDays(1)).build();
 
         // when, then
-        assertThatThrownBy(() -> postService.update(
-                savedPostId,
-                postUpdateRequest,
-                writer,
-                List.of(file4),
-                List.of(file5, file6)
-        ))
-                .isInstanceOf(BadRequestException.class)
+        assertThatThrownBy(() -> postService.update(savedPostId, postUpdateRequest, writer, List.of(file4),
+                List.of(file5, file6))).isInstanceOf(BadRequestException.class)
                 .hasMessage(PostExceptionType.POST_CLOSED.getMessage());
     }
 
@@ -1391,88 +962,40 @@ class PostServiceTest {
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(3))
-                .build();
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder().categoryIds(List.of(category1.getId()))
+                .title("title").content("content").postOptions(
+                        List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                                PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now().plusDays(3)).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
 
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        MockMultipartFile file4 = new MockMultipartFile(
-                "image4",
-                "test4.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file5 = new MockMultipartFile(
-                "image5",
-                "test5.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file4 = new MockMultipartFile("image4", "test4.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file5 = new MockMultipartFile("image5", "test5.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file6 = new MockMultipartFile(
-                "image6",
-                "test6.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file6 = new MockMultipartFile("image6", "test6.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
-                .categoryIds(List.of(category2.getId()))
-                .title("title2")
-                .content("content2")
-                .postOptions(List.of(
-                        PostOptionUpdateRequest.builder()
-                                .content("option3")
-                                .build(),
-                        PostOptionUpdateRequest.builder()
-                                .content("option4")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(4))
-                .build();
+        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder().categoryIds(List.of(category2.getId()))
+                .title("title2").content("content2").postOptions(
+                        List.of(PostOptionUpdateRequest.builder().content("option3").build(),
+                                PostOptionUpdateRequest.builder().content("option4").build()))
+                .deadline(LocalDateTime.now().plusDays(4)).build();
 
         // when, then
-        assertThatThrownBy(() -> postService.update(
-                savedPostId,
-                postUpdateRequest,
-                writer,
-                List.of(file4),
-                List.of(file5, file6)
-        ))
-                .isInstanceOf(BadRequestException.class)
+        assertThatThrownBy(() -> postService.update(savedPostId, postUpdateRequest, writer, List.of(file4),
+                List.of(file5, file6))).isInstanceOf(BadRequestException.class)
                 .hasMessage(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS.getMessage());
     }
 
@@ -1483,50 +1006,24 @@ class PostServiceTest {
         Category category1 = categoryRepository.save(CategoryFixtures.DEVELOP.get());
         Member writer = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        MockMultipartFile file1 = new MockMultipartFile(
-                "image1",
-                "test1.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file2 = new MockMultipartFile(
-                "image2",
-                "test2.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file1 = new MockMultipartFile("image1", "test1.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file2 = new MockMultipartFile("image2", "test2.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file3 = new MockMultipartFile(
-                "image3",
-                "test3.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file3 = new MockMultipartFile("image3", "test3.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
-                .categoryIds(List.of(category1.getId()))
-                .title("title")
-                .content("content")
-                .postOptions(List.of(
-                        PostOptionCreateRequest.builder()
-                                .content("option1")
-                                .build(),
-                        PostOptionCreateRequest.builder()
-                                .content("option2")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(2))
-                .build();
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder().categoryIds(List.of(category1.getId()))
+                .title("title").content("content").postOptions(
+                        List.of(PostOptionCreateRequest.builder().content("option1").build(),
+                                PostOptionCreateRequest.builder().content("option2").build()))
+                .deadline(LocalDateTime.now().plusDays(2)).build();
 
         Long savedPostId = postService.save(postCreateRequest, writer, List.of(file3), List.of(file1, file2));
 
-        Member memberToVote = Member.builder()
-                .nickname("Abel")
-                .gender(Gender.MALE)
-                .birthYear(2000)
-                .socialType(SocialType.KAKAO)
-                .socialId("Abel")
-                .build();
+        Member memberToVote = Member.builder().nickname("Abel").gender(Gender.MALE).birthYear(2000)
+                .socialType(SocialType.KAKAO).socialId("Abel").build();
 
         memberRepository.save(memberToVote);
 
@@ -1537,50 +1034,23 @@ class PostServiceTest {
         entityManager.clear();
 
         Category category2 = categoryRepository.save(CategoryFixtures.FOOD.get());
-        MockMultipartFile file4 = new MockMultipartFile(
-                "image4",
-                "test4.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage1.PNG")
-        );
-        MockMultipartFile file5 = new MockMultipartFile(
-                "image5",
-                "test5.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage2.PNG")
-        );
+        MockMultipartFile file4 = new MockMultipartFile("image4", "test4.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage1.PNG"));
+        MockMultipartFile file5 = new MockMultipartFile("image5", "test5.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage2.PNG"));
 
-        MockMultipartFile file6 = new MockMultipartFile(
-                "image6",
-                "test6.png",
-                "image/png",
-                new FileInputStream("src/test/resources/images/testImage3.PNG")
-        );
+        MockMultipartFile file6 = new MockMultipartFile("image6", "test6.png", "image/png",
+                new FileInputStream("src/test/resources/images/testImage3.PNG"));
 
-        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder()
-                .categoryIds(List.of(category2.getId()))
-                .title("title2")
-                .content("content2")
-                .postOptions(List.of(
-                        PostOptionUpdateRequest.builder()
-                                .content("option3")
-                                .build(),
-                        PostOptionUpdateRequest.builder()
-                                .content("option4")
-                                .build()
-                ))
-                .deadline(LocalDateTime.now().plusDays(1))
-                .build();
+        PostUpdateRequest postUpdateRequest = PostUpdateRequest.builder().categoryIds(List.of(category2.getId()))
+                .title("title2").content("content2").postOptions(
+                        List.of(PostOptionUpdateRequest.builder().content("option3").build(),
+                                PostOptionUpdateRequest.builder().content("option4").build()))
+                .deadline(LocalDateTime.now().plusDays(1)).build();
 
         // when, then
-        assertThatThrownBy(() -> postService.update(
-                savedPostId,
-                postUpdateRequest,
-                writer,
-                List.of(file4),
-                List.of(file5, file6)
-        ))
-                .isInstanceOf(BadRequestException.class)
+        assertThatThrownBy(() -> postService.update(savedPostId, postUpdateRequest, writer, List.of(file4),
+                List.of(file5, file6))).isInstanceOf(BadRequestException.class)
                 .hasMessage(PostExceptionType.VOTING_PROGRESS_NOT_EDITABLE.getMessage());
     }
 
@@ -1600,16 +1070,14 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> responses =
-                postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null, writer);
+        List<PostResponse> responses = postService.getPostsByWriter(0, PostClosingType.ALL, PostSortType.LATEST, null,
+                writer);
 
         // then
-        assertAll(
-                () -> assertThat(responses).hasSize(1),
+        assertAll(() -> assertThat(responses).hasSize(1),
                 () -> assertThat(responses.get(0).postId()).isEqualTo(post.getId()),
                 () -> assertThat(responses.get(0).writer().id()).isEqualTo(writer.getId()),
-                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(3L)
-        );
+                () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(3L));
     }
 
     @Test
@@ -1618,14 +1086,10 @@ class PostServiceTest {
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
         Member member1 = memberRepository.save(MemberFixtures.MALE_30.get());
 
-        Post openPost = postTestPersister.builder()
-                .postBody(PostBody.builder().title("제목").content("키워요").build())
-                .deadline(LocalDateTime.now().plusDays(3L))
-                .save();
-        Post openPost1 = postTestPersister.builder()
-                .postBody(PostBody.builder().title("키워드").content("안녕").build())
-                .deadline(LocalDateTime.now().plusDays(3L))
-                .save();
+        Post openPost = postTestPersister.builder().postBody(PostBody.builder().title("제목").content("키워요").build())
+                .deadline(LocalDateTime.now().plusDays(3L)).save();
+        Post openPost1 = postTestPersister.builder().postBody(PostBody.builder().title("키워드").content("안녕").build())
+                .deadline(LocalDateTime.now().plusDays(3L)).save();
 
         PostOption postOption = postOptionTestPersister.builder().post(openPost).save();
         PostOption postOption1 = postOptionTestPersister.builder().post(openPost1).save();
@@ -1636,24 +1100,17 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> responses = postService.searchPostsWithKeyword(
-                "키워",
-                0,
-                PostClosingType.ALL,
-                PostSortType.LATEST,
-                null,
-                member);
+        List<PostResponse> responses = postService.searchPostsWithKeyword("키워", 0, PostClosingType.ALL,
+                PostSortType.LATEST, null, member);
 
         // then
-        assertAll(
-                () -> assertThat(responses).hasSize(2),
+        assertAll(() -> assertThat(responses).hasSize(2),
                 () -> assertThat(responses.get(0).postId()).isEqualTo(openPost1.getId()),
                 () -> assertThat(responses.get(1).postId()).isEqualTo(openPost.getId()),
                 () -> assertThat(hasKeywordInPostResponse(responses.get(0), "키워")).isTrue(),
                 () -> assertThat(hasKeywordInPostResponse(responses.get(1), "키워")).isTrue(),
                 () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(-1L),
-                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L)
-        );
+                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L));
     }
 
     private boolean hasKeywordInPostResponse(PostResponse postResponse, String keyword) {
@@ -1665,14 +1122,10 @@ class PostServiceTest {
     void getPostsByKeywordForGuest() {
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        Post closedPost = postTestPersister.builder()
-                .postBody(PostBody.builder().title("제목").content("키워요").build())
-                .deadline(LocalDateTime.now().minusDays(3L))
-                .save();
-        Post openPost1 = postTestPersister.builder()
-                .postBody(PostBody.builder().title("키워드").content("안녕").build())
-                .deadline(LocalDateTime.now().plusDays(3L))
-                .save();
+        Post closedPost = postTestPersister.builder().postBody(PostBody.builder().title("제목").content("키워요").build())
+                .deadline(LocalDateTime.now().minusDays(3L)).save();
+        Post openPost1 = postTestPersister.builder().postBody(PostBody.builder().title("키워드").content("안녕").build())
+                .deadline(LocalDateTime.now().plusDays(3L)).save();
 
         PostOption postOption = postOptionTestPersister.builder().post(closedPost).save();
         PostOption postOption1 = postOptionTestPersister.builder().post(openPost1).save();
@@ -1683,23 +1136,80 @@ class PostServiceTest {
         entityManager.clear();
 
         // when
-        List<PostResponse> responses = postService.searchPostsWithKeywordForGuest(
-                "키워",
-                0,
-                PostClosingType.ALL,
-                PostSortType.LATEST,
-                null
-        );
+        List<PostResponse> responses = postService.searchPostsWithKeywordForGuest("키워", 0, PostClosingType.ALL,
+                PostSortType.LATEST, null);
 
         // then
-        assertAll(
-                () -> assertThat(responses).hasSize(2),
+        assertAll(() -> assertThat(responses).hasSize(2),
                 () -> assertThat(responses.get(0).postId()).isEqualTo(openPost1.getId()),
                 () -> assertThat(responses.get(1).postId()).isEqualTo(closedPost.getId()),
                 () -> assertThat(hasKeywordInPostResponse(responses.get(0), "키워")).isTrue(),
                 () -> assertThat(hasKeywordInPostResponse(responses.get(1), "키워")).isTrue(),
                 () -> assertThat(responses.get(0).voteInfo().totalVoteCount()).isEqualTo(-1L),
-                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L)
+                () -> assertThat(responses.get(1).voteInfo().totalVoteCount()).isEqualTo(1L));
+    }
+
+    @Test
+    @DisplayName("상위 10개의 인기 게시물을 조회한다.")
+    void getRanking() {
+        // given
+        List<Post> posts = new ArrayList<>();
+        List<PostOption> postOptions = new ArrayList<>();
+
+        for (int i = 0; i < 11; i++) {
+            Post post = postTestPersister.builder().save();
+            PostOption postOption = postOptionTestPersister.builder().post(post).save();
+            posts.add(post);
+            postOptions.add(postOption);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                voteTestPersister.builder().postOption(postOptions.get(i)).save();
+            }
+        }
+
+        voteTestPersister.builder().postOption(postOptions.get(10)).save();
+        voteTestPersister.builder().postOption(postOptions.get(10)).save();
+        voteTestPersister.builder().postOption(postOptions.get(10)).save();
+
+        /*
+        index       |0| |1| |2| |3| |4| |5| |6| |7| |8| |9| |10|
+        voteCount   |1| |2| |3| |4| |5| |6| |7| |8| |9| |10| |3|
+        ranking     |11| |10| |8| |7| |6| |5| |4| |3| |2| |1| |8|
+        */
+
+        entityManager.clear();
+        entityManager.flush();
+
+        // when
+        List<PostRankingResponse> rankings = postService.getRanking();
+
+        // then
+        assertAll(
+                () -> assertThat(rankings).hasSize(10),
+                () -> assertThat(rankings.get(0).ranking()).isEqualTo(1),
+                () -> assertThat(rankings.get(1).ranking()).isEqualTo(2),
+                () -> assertThat(rankings.get(2).ranking()).isEqualTo(3),
+                () -> assertThat(rankings.get(3).ranking()).isEqualTo(4),
+                () -> assertThat(rankings.get(4).ranking()).isEqualTo(5),
+                () -> assertThat(rankings.get(5).ranking()).isEqualTo(6),
+                () -> assertThat(rankings.get(6).ranking()).isEqualTo(7),
+                () -> assertThat(rankings.get(7).ranking()).isEqualTo(8),
+                () -> assertThat(rankings.get(8).ranking()).isEqualTo(8),
+                () -> assertThat(rankings.get(9).ranking()).isEqualTo(10),
+
+                () -> assertThat(rankings.get(0).postCompactResponse().id()).isEqualTo(posts.get(9).getId()),
+                () -> assertThat(rankings.get(1).postCompactResponse().id()).isEqualTo(posts.get(8).getId()),
+                () -> assertThat(rankings.get(2).postCompactResponse().id()).isEqualTo(posts.get(7).getId()),
+                () -> assertThat(rankings.get(3).postCompactResponse().id()).isEqualTo(posts.get(6).getId()),
+                () -> assertThat(rankings.get(4).postCompactResponse().id()).isEqualTo(posts.get(5).getId()),
+                () -> assertThat(rankings.get(5).postCompactResponse().id()).isEqualTo(posts.get(4).getId()),
+                () -> assertThat(rankings.get(6).postCompactResponse().id()).isEqualTo(posts.get(3).getId()),
+                () -> assertThat(rankings.get(9).postCompactResponse().id()).isEqualTo(posts.get(1).getId()),
+                () -> assertThat(
+                        List.of(rankings.get(7).postCompactResponse().id(), rankings.get(8).postCompactResponse().id())
+                                .containsAll(List.of(posts.get(10).getId(), posts.get(2).getId())))
         );
     }
 

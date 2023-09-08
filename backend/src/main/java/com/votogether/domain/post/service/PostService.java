@@ -10,7 +10,9 @@ import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
+import com.votogether.domain.post.dto.response.post.PostCompactResponse;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -27,7 +29,9 @@ import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.global.util.ImageUploader;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -365,5 +369,50 @@ public class PostService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<PostRankingResponse> getRanking() {
+        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                PostClosingType.ALL,
+                PostSortType.HOT,
+                null,
+                PageRequest.of(0, BASIC_PAGING_SIZE)
+        );
+
+        final Map<Post, Integer> rankings = calculateRanking(posts);
+
+        return rankings.entrySet().stream()
+                .sorted(Comparator.comparingInt(entry -> entry.getValue()))
+                .map(entry ->
+                        new PostRankingResponse(
+                                PostCompactResponse.of(entry.getKey()),
+                                entry.getValue()
+                        )
+                )
+                .toList();
+    }
+
+    private Map<Post, Integer> calculateRanking(final List<Post> posts) {
+        final List<Post> sortedPosts = posts.stream()
+                .sorted(Comparator.comparingLong(post -> -post.getTotalVoteCount()))
+                .toList();
+
+        final Map<Post, Integer> rankings = new HashMap<>();
+
+        int currentRanking = 1;
+        int previousRanking = -1;
+        long previousVoteCount = -1;
+        for (Post post : sortedPosts) {
+            final long currentVoteCount = post.getTotalVoteCount();
+            final int ranking = (currentVoteCount == previousVoteCount) ? previousRanking : currentRanking;
+
+            rankings.put(post, ranking);
+
+            previousRanking = ranking;
+            previousVoteCount = currentVoteCount;
+            currentRanking++;
+        }
+
+        return rankings;
+    }
 }
 

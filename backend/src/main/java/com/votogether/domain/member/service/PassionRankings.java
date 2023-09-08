@@ -9,15 +9,15 @@ import java.util.Map;
 
 public class PassionRankings {
 
-    private final Map<Member, Integer> ranking = new HashMap<>();
+    private final Map<Member, Integer> rankings = new HashMap<>();
     private final Map<Member, PassionRecord> passionBoard;
 
     public PassionRankings(final Map<Member, PassionRecord> passionBoard) {
         this.passionBoard = passionBoard;
-        calculateRank();
+        calculateRanking();
     }
 
-    private void calculateRank() {
+    private void calculateRanking() {
         final List<Member> members = passionBoard.entrySet().stream()
                 .sorted(Comparator.comparingLong(entry -> -entry.getValue().calculateScore()))
                 .map(s -> s.getKey())
@@ -30,7 +30,7 @@ public class PassionRankings {
             long currentScore = passionBoard.get(member).calculateScore();
             int ranking = (currentScore == previousScore) ? previousRanking : currentRanking;
 
-            this.ranking.put(member, ranking);
+            this.rankings.put(member, ranking);
 
             previousRanking = ranking;
             previousScore = currentScore;
@@ -43,7 +43,7 @@ public class PassionRankings {
     }
 
     public int getRanking(Member member) {
-        return ranking.get(member);
+        return rankings.get(member);
     }
 
     public PassionRecord getActivityRecord(Member member) {

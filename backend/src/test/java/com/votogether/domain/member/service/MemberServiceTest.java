@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
-import com.votogether.domain.member.dto.response.RankingResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.vo.Gender;
@@ -458,39 +457,6 @@ class MemberServiceTest {
             );
         }
 
-    }
-
-    @Test
-    @DisplayName("회원의 랭킹을 조회한다.")
-    void getRanking() {
-        // given
-        Member member = memberTestPersister.builder().save();
-        Member member1 = memberTestPersister.builder().save();
-        Member member2 = memberTestPersister.builder().save();
-        Member member3 = memberTestPersister.builder().save();
-        Member member4 = memberTestPersister.builder().save();
-
-        postTestPersister.builder().writer(member).save();
-        postTestPersister.builder().writer(member1).save();
-        postTestPersister.builder().writer(member2).save();
-        postTestPersister.builder().writer(member3).save();
-
-        voteTestPersister.builder().member(member).save();
-        voteTestPersister.builder().member(member2).save();
-        voteTestPersister.builder().member(member3).save();
-        voteTestPersister.builder().member(member3).save();
-        voteTestPersister.builder().member(member4).save();
-
-        // when
-        RankingResponse response = memberService.getRanking(member);
-
-        // then (score: 6,5,7,6,1)
-        assertAll(
-                () -> assertThat(response.ranking()).isEqualTo(2),
-                () -> assertThat(response.postCount()).isEqualTo(1),
-                () -> assertThat(response.voteCount()).isEqualTo(1),
-                () -> assertThat(response.score()).isEqualTo(6)
-        );
     }
 
 }

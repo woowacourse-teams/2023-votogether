@@ -1,4 +1,4 @@
-package com.votogether.domain.member.entity.vo;
+package com.votogether.domain.ranking.domain;
 
 import lombok.Getter;
 

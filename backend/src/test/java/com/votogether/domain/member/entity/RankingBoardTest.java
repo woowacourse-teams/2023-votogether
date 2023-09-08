@@ -3,8 +3,8 @@ package com.votogether.domain.member.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.votogether.domain.member.entity.vo.ActivityRecord;
 import com.votogether.domain.member.service.RankingBoard;
+import com.votogether.domain.ranking.domain.ActivityRecord;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;

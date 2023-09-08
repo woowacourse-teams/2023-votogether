@@ -3,7 +3,6 @@ package com.votogether.domain.member.controller;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.request.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
-import com.votogether.domain.member.dto.response.RankingResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,10 +33,6 @@ public interface MemberControllerDocs {
             final MemberNicknameUpdateRequest request,
             final Member member
     );
-
-    @Operation(summary = "랭킹 조회", description = "회원 랭킹 정보를 조회한다.")
-    @ApiResponse(responseCode = "200", description = "회원 랭킹 정보 조회 성공")
-    ResponseEntity<RankingResponse> getRanking(final Member member);
 
     @Operation(summary = "회원 상세 정보 변경", description = "회원의 상세 정보를 변경한다.")
     @ApiResponses({

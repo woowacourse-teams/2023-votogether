@@ -1,4 +1,4 @@
-package com.votogether.domain.member.dto.response;
+package com.votogether.domain.ranking.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

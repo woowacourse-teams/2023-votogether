@@ -2,10 +2,8 @@ package com.votogether.domain.member.service;
 
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
-import com.votogether.domain.member.dto.response.RankingResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.domain.member.entity.vo.ActivityRecord;
 import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
@@ -21,9 +19,7 @@ import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,32 +63,6 @@ public class MemberService {
                 numberOfPosts,
                 numberOfVotes
         );
-    }
-
-    @Transactional(readOnly = true)
-    public RankingResponse getRanking(final Member member) {
-        final RankingBoard rankingBoard = getRankingBoard();
-        return new RankingResponse(
-                rankingBoard.getRanking(member),
-                member.getNickname(),
-                rankingBoard.getActivityRecord(member).getPostCount(),
-                rankingBoard.getActivityRecord(member).getVoteCount(),
-                rankingBoard.getScore(member)
-        );
-    }
-
-    private RankingBoard getRankingBoard() {
-        final List<Member> members = memberRepository.findAll();
-        final List<Integer> postCounts = postRepository.findCountsByMembers(members);
-        final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
-
-        final Map<Member, ActivityRecord> passionBoard = new HashMap<>();
-
-        for (int i = 0; i < members.size(); i++) {
-            passionBoard.put(members.get(i), new ActivityRecord(postCounts.get(i), voteCounts.get(i)));
-        }
-
-        return new RankingBoard(passionBoard);
     }
 
     @Transactional

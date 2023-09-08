@@ -11,7 +11,6 @@ import static org.mockito.BDDMockito.willDoNothing;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.request.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
-import com.votogether.domain.member.dto.response.RankingResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
@@ -246,33 +245,6 @@ class MemberControllerTest {
                 .when().delete("/members/me/delete")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @Test
-    @DisplayName("회원의 랭킹 순위를 가져온다.")
-    void getRanking() throws Exception {
-        // given
-        Member member = MemberFixtures.MALE_20.get();
-        RankingResponse response = new RankingResponse(3, "익명의손님1", 1, 1, 6);
-
-        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
-        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
-        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
-        given(memberService.findById(anyLong())).willReturn(member);
-
-        given(memberService.getRanking(member)).willReturn(response);
-
-        // when, then
-        RankingResponse result = RestAssuredMockMvc
-                .given().log().all()
-                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
-                .when().get("/members/me/ranking")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(RankingResponse.class);
-
-        assertThat(result).isEqualTo(response);
     }
 
 }

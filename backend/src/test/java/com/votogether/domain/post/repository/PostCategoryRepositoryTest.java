@@ -18,12 +18,15 @@ class PostCategoryRepositoryTest extends RepositoryTest {
     @Test
     @DisplayName("게시글의 모든 게시글 카테고리 목록을 조회한다.")
     void findAllPostCategoriesInPost() {
+        // given
         Post post = postTestPersister.postBuilder().save();
         PostCategory postCategoryA = postTestPersister.postCategoryBuilder().post(post).save();
         PostCategory postCategoryB = postTestPersister.postCategoryBuilder().post(post).save();
 
+        // when
         List<PostCategory> result = postCategoryRepository.findAllByPost(post);
 
+        // then
         assertThat(result).containsExactly(postCategoryA, postCategoryB);
     }
 

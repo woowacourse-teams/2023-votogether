@@ -102,17 +102,11 @@ class PostCustomRepositoryImplTest extends RepositoryTest {
         void getPostsByHot() {
             // post
             Post postA = postTestPersister.postBuilder().save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .post(postA)
-                    .sequence(1)
-                    .save();
+            PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
             voteTestPersister.builder().postOption(postOptionA).save();
             voteTestPersister.builder().postOption(postOptionA).save();
             Post postB = postTestPersister.postBuilder().save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .post(postB)
-                    .sequence(1)
-                    .save();
+            PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
             voteTestPersister.builder().postOption(postOptionB).save();
 
             // when
@@ -263,17 +257,11 @@ class PostCustomRepositoryImplTest extends RepositoryTest {
             // post
             Member member = memberTestPersister.builder().save();
             Post postA = postTestPersister.postBuilder().writer(member).save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .post(postA)
-                    .sequence(1)
-                    .save();
+            PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
             voteTestPersister.builder().postOption(postOptionA).save();
             voteTestPersister.builder().postOption(postOptionA).save();
             Post postB = postTestPersister.postBuilder().writer(member).save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .post(postB)
-                    .sequence(1)
-                    .save();
+            PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
             voteTestPersister.builder().postOption(postOptionB).save();
 
             // when
@@ -388,30 +376,133 @@ class PostCustomRepositoryImplTest extends RepositoryTest {
         void getPostsByHot() {
             // post
             Member member = memberTestPersister.builder().save();
-            Post postA = postTestPersister.postBuilder()
-                    .writer(member)
-                    .title("votogether1")
-                    .save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .post(postA)
-                    .sequence(1)
-                    .save();
+            Post postA = postTestPersister.postBuilder().writer(member).title("votogether1").save();
+            PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
             voteTestPersister.builder().postOption(postOptionA).save();
             voteTestPersister.builder().postOption(postOptionA).save();
-            Post postB = postTestPersister.postBuilder()
-                    .writer(member)
-                    .content("votogether2")
-                    .save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .post(postB)
-                    .sequence(1)
-                    .save();
+            Post postB = postTestPersister.postBuilder().writer(member).content("votogether2").save();
+            PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
             voteTestPersister.builder().postOption(postOptionB).save();
 
             // when
             Pageable pageable = PageRequest.of(0, 10);
             List<Post> result = postCustomRepository.findSearchPostsWithFilteringAndPaging(
                     "votogether",
+                    PostClosingType.ALL,
+                    PostSortType.HOT,
+                    pageable
+            );
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result).hasSize(2);
+                softly.assertThat(result).containsExactly(postA, postB);
+            });
+        }
+
+    }
+
+    @Nested
+    @DisplayName("투표자, 마감시간, 정렬기준으로 필터링하여 게시글 페이징 조회")
+    class FindPostsByVotedWithFilteringAndPaging {
+
+        @Test
+        @DisplayName("마감되지 않은 게시글을 조회한다.")
+        void getPostsOpen() {
+            // given
+            LocalDateTime deadline = LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.MINUTES);
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            voteTestPersister.builder().postOption(postOption).member(member).save();
+
+            // when
+            Pageable pageable = PageRequest.of(0, 10);
+            List<Post> result = postCustomRepository.findPostsByVotedWithFilteringAndPaging(
+                    member,
+                    PostClosingType.PROGRESS,
+                    PostSortType.LATEST,
+                    pageable
+            );
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result).hasSize(1);
+                softly.assertThat(result).containsExactly(post);
+            });
+        }
+
+        @Test
+        @DisplayName("마감된 게시글을 조회한다.")
+        void getPostsClosed() {
+            // given
+            LocalDateTime deadline = LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.MINUTES);
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            voteTestPersister.builder().postOption(postOption).member(member).save();
+
+            // when
+            Pageable pageable = PageRequest.of(0, 10);
+            List<Post> result = postCustomRepository.findPostsByVotedWithFilteringAndPaging(
+                    member,
+                    PostClosingType.CLOSED,
+                    PostSortType.LATEST,
+                    pageable
+            );
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result).hasSize(1);
+                softly.assertThat(result).containsExactly(post);
+            });
+        }
+
+        @Test
+        @DisplayName("게시글을 최신순으로 조회한다.")
+        void getPostsByLatest() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post postA = postTestPersister.postBuilder().writer(member).save();
+            Post postB = postTestPersister.postBuilder().writer(member).save();
+            PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
+            PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
+            voteTestPersister.builder().postOption(postOptionA).member(member).save();
+            voteTestPersister.builder().postOption(postOptionB).member(member).save();
+
+            // when
+            Pageable pageable = PageRequest.of(0, 10);
+            List<Post> result = postCustomRepository.findPostsByVotedWithFilteringAndPaging(
+                    member,
+                    PostClosingType.ALL,
+                    PostSortType.LATEST,
+                    pageable
+            );
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result).hasSize(2);
+                softly.assertThat(result).containsExactly(postB, postA);
+            });
+        }
+
+        @Test
+        @DisplayName("게시글을 인기순으로 조회한다.")
+        void getPostsByHot() {
+            // post
+            Member member = memberTestPersister.builder().save();
+            Post postA = postTestPersister.postBuilder().save();
+            PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
+            voteTestPersister.builder().postOption(postOptionA).member(member).save();
+            voteTestPersister.builder().postOption(postOptionA).save();
+            Post postB = postTestPersister.postBuilder().writer(member).save();
+            PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
+            voteTestPersister.builder().postOption(postOptionB).member(member).save();
+
+            // when
+            Pageable pageable = PageRequest.of(0, 10);
+            List<Post> result = postCustomRepository.findPostsByVotedWithFilteringAndPaging(
+                    member,
                     PostClosingType.ALL,
                     PostSortType.HOT,
                     pageable

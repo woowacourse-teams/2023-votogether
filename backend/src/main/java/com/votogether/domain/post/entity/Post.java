@@ -107,10 +107,6 @@ public class Post extends BaseEntity {
         }
     }
 
-    public long getSelectedOptionId(final Member member) {
-        return this.postOptions.getSelectedOptionId(member);
-    }
-
     public Vote makeVote(final Member voter, final PostOption postOption) {
         validateDeadLine();
         validateVoter(voter);
@@ -189,8 +185,8 @@ public class Post extends BaseEntity {
     }
 
     public void addComment(final Comment comment) {
-        comments.add(comment);
         comment.setPost(this);
+        this.comments.add(comment);
     }
 
     public void validatePossibleToDelete() {
@@ -277,7 +273,7 @@ public class Post extends BaseEntity {
         postOption.setPost(this);
         this.postOptionsA.add(postOption);
     }
-    
+
     public boolean isWriter(final Member member) {
         return Objects.equals(this.writer, member);
     }

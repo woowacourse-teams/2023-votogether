@@ -30,4 +30,11 @@ public interface PostCustomRepository {
             final Pageable pageable
     );
 
+    List<Post> findPostsByVotedWithFilteringAndPaging(
+            final Member voter,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Pageable pageable
+    );
+
 }

@@ -1,18 +1,22 @@
 package com.votogether.domain.post.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.votogether.domain.category.entity.Category;
+import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.post.dto.response.post.PostOptionVoteResultResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostWriterResponse;
+import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
+import com.votogether.domain.vote.entity.Vote;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,100 +36,40 @@ class PostGuestServiceTest extends ServiceTest {
         @DisplayName("마감된 게시글은 결과를 확인할 수 있다.")
         void canCheckResultsClosedPosts() {
             // given
-            LocalDateTime deadline = LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.MINUTES);
-            Post post = postTestPersister.postBuilder().deadline(deadline).save();
-            Category category = categoryTestPersister.builder().save();
-            postTestPersister.postCategoryBuilder().post(post).category(category).save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .sequence(2)
-                    .content("postOptionA")
-                    .save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .sequence(1)
-                    .content("postOptionB")
-                    .imageUrl("https:://votogether.com/static/images/image.png")
-                    .save();
-            post.addPostOption(postOptionA);
-            post.addPostOption(postOptionB);
+            LocalDateTime deadline = LocalDateTime.now().minusDays(1);
+            Member writer = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Vote vote = voteTestPersister.builder().postOption(postOption).save();
+            postOption.addVote(vote);
+            post.addPostOption(postOption);
 
             // when
-            List<PostResponse> response =
-                    postGuestService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, category.getId());
+            List<PostResponse> result = postGuestService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null);
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(response).hasSize(1);
-                softly.assertThat(response.get(0).postId()).isEqualTo(post.getId());
-                softly.assertThat(response.get(0).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).categories()).hasSize(1);
-                softly.assertThat(response.get(0).createdAt()).isEqualTo(post.getCreatedAt());
-                softly.assertThat(response.get(0).deadline()).isEqualTo(post.getDeadline());
-                softly.assertThat(response.get(0).imageCount()).isEqualTo(1);
-                softly.assertThat(response.get(0).voteInfo().selectedOptionId()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().totalVoteCount()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options()).hasSize(2);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).optionId())
-                        .isEqualTo(postOptionB.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(0).imageUrl())
-                        .isEqualTo("https:://votogether.com/static/images/image.png");
-                softly.assertThat(response.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).votePercent()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).optionId())
-                        .isEqualTo(postOptionA.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(1).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).votePercent()).isEqualTo(0);
-            });
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
         @Test
         @DisplayName("진행중인 게시글은 결과를 확인할 수 없다.")
         void cannotCheckResultsOpenPosts() {
             // given
-            LocalDateTime deadline = LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.MINUTES);
-            Post post = postTestPersister.postBuilder().deadline(deadline).save();
-            Category category = categoryTestPersister.builder().save();
-            postTestPersister.postCategoryBuilder().post(post).category(category).save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .sequence(2)
-                    .content("postOptionA")
-                    .save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .sequence(1)
-                    .content("postOptionB")
-                    .imageUrl("https:://votogether.com/static/images/image.png")
-                    .save();
-            post.addPostOption(postOptionA);
-            post.addPostOption(postOptionB);
+            LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+            Member writer = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Vote vote = voteTestPersister.builder().postOption(postOption).save();
+            postOption.addVote(vote);
+            post.addPostOption(postOption);
 
             // when
-            List<PostResponse> response =
-                    postGuestService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, category.getId());
+            List<PostResponse> result = postGuestService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null);
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(response).hasSize(1);
-                softly.assertThat(response.get(0).postId()).isEqualTo(post.getId());
-                softly.assertThat(response.get(0).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).categories()).hasSize(1);
-                softly.assertThat(response.get(0).createdAt()).isEqualTo(post.getCreatedAt());
-                softly.assertThat(response.get(0).deadline()).isEqualTo(post.getDeadline());
-                softly.assertThat(response.get(0).imageCount()).isEqualTo(1);
-                softly.assertThat(response.get(0).voteInfo().selectedOptionId()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().totalVoteCount()).isEqualTo(-1);
-                softly.assertThat(response.get(0).voteInfo().options()).hasSize(2);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).optionId())
-                        .isEqualTo(postOptionB.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(0).imageUrl())
-                        .isEqualTo("https:://votogether.com/static/images/image.png");
-                softly.assertThat(response.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(-1);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).votePercent()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).optionId())
-                        .isEqualTo(postOptionA.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(1).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(-1);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).votePercent()).isEqualTo(0);
-            });
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, -1, -1, 0.0);
+            assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
     }
@@ -138,92 +82,40 @@ class PostGuestServiceTest extends ServiceTest {
         @DisplayName("마감된 게시글은 결과를 확인할 수 있다.")
         void canCheckResultsClosedPost() {
             // given
-            LocalDateTime deadline = LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.MINUTES);
-            Post post = postTestPersister.postBuilder().deadline(deadline).save();
-            Category category = categoryTestPersister.builder().save();
-            postTestPersister.postCategoryBuilder().post(post).category(category).save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .sequence(2)
-                    .content("postOptionA")
-                    .save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .sequence(1)
-                    .content("postOptionB")
-                    .imageUrl("https:://votogether.com/static/images/image.png")
-                    .save();
-            post.addPostOption(postOptionA);
-            post.addPostOption(postOptionB);
+            LocalDateTime deadline = LocalDateTime.now().minusDays(1);
+            Member writer = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Vote vote = voteTestPersister.builder().postOption(postOption).save();
+            postOption.addVote(vote);
+            post.addPostOption(postOption);
 
             // when
-            PostResponse response = postGuestService.getPost(post.getId());
+            PostResponse result = postGuestService.getPost(post.getId());
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(response.postId()).isEqualTo(post.getId());
-                softly.assertThat(response.imageUrl()).isEqualTo("");
-                softly.assertThat(response.categories()).hasSize(1);
-                softly.assertThat(response.createdAt()).isEqualTo(post.getCreatedAt());
-                softly.assertThat(response.deadline()).isEqualTo(post.getDeadline());
-                softly.assertThat(response.imageCount()).isEqualTo(1);
-                softly.assertThat(response.voteInfo().selectedOptionId()).isEqualTo(0);
-                softly.assertThat(response.voteInfo().totalVoteCount()).isEqualTo(0);
-                softly.assertThat(response.voteInfo().options()).hasSize(2);
-                softly.assertThat(response.voteInfo().options().get(0).optionId()).isEqualTo(postOptionB.getId());
-                softly.assertThat(response.voteInfo().options().get(0).imageUrl())
-                        .isEqualTo("https:://votogether.com/static/images/image.png");
-                softly.assertThat(response.voteInfo().options().get(0).voteCount()).isEqualTo(0);
-                softly.assertThat(response.voteInfo().options().get(0).votePercent()).isEqualTo(0);
-                softly.assertThat(response.voteInfo().options().get(1).optionId()).isEqualTo(postOptionA.getId());
-                softly.assertThat(response.voteInfo().options().get(1).imageUrl()).isEqualTo("");
-                softly.assertThat(response.voteInfo().options().get(1).voteCount()).isEqualTo(0);
-                softly.assertThat(response.voteInfo().options().get(1).votePercent()).isEqualTo(0);
-            });
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
 
         @Test
         @DisplayName("진행중인 게시글은 결과를 확인할 수 없다.")
         void cannotCheckResultsOpenPosts() {
             // given
-            LocalDateTime deadline = LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.MINUTES);
-            Post post = postTestPersister.postBuilder().deadline(deadline).save();
-            Category category = categoryTestPersister.builder().save();
-            postTestPersister.postCategoryBuilder().post(post).category(category).save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .sequence(2)
-                    .content("postOptionA")
-                    .save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .sequence(1)
-                    .content("postOptionB")
-                    .imageUrl("https:://votogether.com/static/images/image.png")
-                    .save();
-            post.addPostOption(postOptionA);
-            post.addPostOption(postOptionB);
+            LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+            Member writer = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Vote vote = voteTestPersister.builder().postOption(postOption).save();
+            postOption.addVote(vote);
+            post.addPostOption(postOption);
 
             // when
-            PostResponse response = postGuestService.getPost(post.getId());
+            PostResponse result = postGuestService.getPost(post.getId());
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(response.postId()).isEqualTo(post.getId());
-                softly.assertThat(response.imageUrl()).isEqualTo("");
-                softly.assertThat(response.categories()).hasSize(1);
-                softly.assertThat(response.createdAt()).isEqualTo(post.getCreatedAt());
-                softly.assertThat(response.deadline()).isEqualTo(post.getDeadline());
-                softly.assertThat(response.imageCount()).isEqualTo(1);
-                softly.assertThat(response.voteInfo().selectedOptionId()).isEqualTo(0);
-                softly.assertThat(response.voteInfo().totalVoteCount()).isEqualTo(-1);
-                softly.assertThat(response.voteInfo().options()).hasSize(2);
-                softly.assertThat(response.voteInfo().options().get(0).optionId()).isEqualTo(postOptionB.getId());
-                softly.assertThat(response.voteInfo().options().get(0).imageUrl())
-                        .isEqualTo("https:://votogether.com/static/images/image.png");
-                softly.assertThat(response.voteInfo().options().get(0).voteCount()).isEqualTo(-1);
-                softly.assertThat(response.voteInfo().options().get(0).votePercent()).isEqualTo(0);
-                softly.assertThat(response.voteInfo().options().get(1).optionId()).isEqualTo(postOptionA.getId());
-                softly.assertThat(response.voteInfo().options().get(1).imageUrl()).isEqualTo("");
-                softly.assertThat(response.voteInfo().options().get(1).voteCount()).isEqualTo(-1);
-                softly.assertThat(response.voteInfo().options().get(1).votePercent()).isEqualTo(0);
-            });
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, -1, -1, 0.0);
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
 
         @Test
@@ -248,102 +140,80 @@ class PostGuestServiceTest extends ServiceTest {
         @DisplayName("마감된 게시글은 결과를 확인할 수 있다.")
         void canCheckResultsClosedPosts() {
             // given
-            LocalDateTime deadline = LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.MINUTES);
-            Post post = postTestPersister.postBuilder().title("votogether").deadline(deadline).save();
-            Category category = categoryTestPersister.builder().save();
-            postTestPersister.postCategoryBuilder().post(post).category(category).save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .sequence(2)
-                    .content("postOptionA")
-                    .save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .sequence(1)
-                    .content("postOptionB")
-                    .imageUrl("https:://votogether.com/static/images/image.png")
-                    .save();
-            post.addPostOption(postOptionA);
-            post.addPostOption(postOptionB);
+            LocalDateTime deadline = LocalDateTime.now().minusDays(1);
+            Member writer = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Vote vote = voteTestPersister.builder().postOption(postOption).save();
+            postOption.addVote(vote);
+            post.addPostOption(postOption);
 
             // when
-            List<PostResponse> response =
-                    postGuestService.searchPosts("votogether", 0, PostClosingType.ALL, PostSortType.LATEST);
+            List<PostResponse> result =
+                    postGuestService.searchPosts(post.getTitle(), 0, PostClosingType.ALL, PostSortType.LATEST);
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(response).hasSize(1);
-                softly.assertThat(response.get(0).postId()).isEqualTo(post.getId());
-                softly.assertThat(response.get(0).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).categories()).hasSize(1);
-                softly.assertThat(response.get(0).createdAt()).isEqualTo(post.getCreatedAt());
-                softly.assertThat(response.get(0).deadline()).isEqualTo(post.getDeadline());
-                softly.assertThat(response.get(0).imageCount()).isEqualTo(1);
-                softly.assertThat(response.get(0).voteInfo().selectedOptionId()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().totalVoteCount()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options()).hasSize(2);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).optionId())
-                        .isEqualTo(postOptionB.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(0).imageUrl())
-                        .isEqualTo("https:://votogether.com/static/images/image.png");
-                softly.assertThat(response.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).votePercent()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).optionId())
-                        .isEqualTo(postOptionA.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(1).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).votePercent()).isEqualTo(0);
-            });
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
         @Test
         @DisplayName("진행중인 게시글은 결과를 확인할 수 없다.")
         void cannotCheckResultsOpenPosts() {
             // given
-            LocalDateTime deadline = LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.MINUTES);
-            Post post = postTestPersister.postBuilder().title("votogether").deadline(deadline).save();
-            Category category = categoryTestPersister.builder().save();
-            postTestPersister.postCategoryBuilder().post(post).category(category).save();
-            PostOption postOptionA = postTestPersister.postOptionBuilder()
-                    .sequence(2)
-                    .content("postOptionA")
-                    .save();
-            PostOption postOptionB = postTestPersister.postOptionBuilder()
-                    .sequence(1)
-                    .content("postOptionB")
-                    .imageUrl("https:://votogether.com/static/images/image.png")
-                    .save();
-            post.addPostOption(postOptionA);
-            post.addPostOption(postOptionB);
+            LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+            Member writer = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Vote vote = voteTestPersister.builder().postOption(postOption).save();
+            postOption.addVote(vote);
+            post.addPostOption(postOption);
 
             // when
-            List<PostResponse> response =
-                    postGuestService.searchPosts("votogether", 0, PostClosingType.ALL, PostSortType.LATEST);
+            List<PostResponse> result =
+                    postGuestService.searchPosts(post.getTitle(), 0, PostClosingType.ALL, PostSortType.LATEST);
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(response).hasSize(1);
-                softly.assertThat(response.get(0).postId()).isEqualTo(post.getId());
-                softly.assertThat(response.get(0).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).categories()).hasSize(1);
-                softly.assertThat(response.get(0).createdAt()).isEqualTo(post.getCreatedAt());
-                softly.assertThat(response.get(0).deadline()).isEqualTo(post.getDeadline());
-                softly.assertThat(response.get(0).imageCount()).isEqualTo(1);
-                softly.assertThat(response.get(0).voteInfo().selectedOptionId()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().totalVoteCount()).isEqualTo(-1);
-                softly.assertThat(response.get(0).voteInfo().options()).hasSize(2);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).optionId())
-                        .isEqualTo(postOptionB.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(0).imageUrl())
-                        .isEqualTo("https:://votogether.com/static/images/image.png");
-                softly.assertThat(response.get(0).voteInfo().options().get(0).voteCount()).isEqualTo(-1);
-                softly.assertThat(response.get(0).voteInfo().options().get(0).votePercent()).isEqualTo(0);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).optionId())
-                        .isEqualTo(postOptionA.getId());
-                softly.assertThat(response.get(0).voteInfo().options().get(1).imageUrl()).isEqualTo("");
-                softly.assertThat(response.get(0).voteInfo().options().get(1).voteCount()).isEqualTo(-1);
-                softly.assertThat(response.get(0).voteInfo().options().get(1).votePercent()).isEqualTo(0);
-            });
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, -1, -1, 0.0);
+            assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
+    }
+
+    private PostResponse expectedResponse(
+            final Post post,
+            final Member writer,
+            final PostOption postOption,
+            final long selectedOptionId,
+            final int totalVoteCount,
+            final int postOptionVoteCount,
+            final double votePercent
+    ) {
+        return new PostResponse(
+                post.getId(),
+                new PostWriterResponse(writer.getId(), writer.getNickname()),
+                post.getTitle(),
+                post.getContent(),
+                "",
+                Collections.emptyList(),
+                post.getCreatedAt(),
+                post.getDeadline(),
+                0,
+                0,
+                new PostVoteResultResponse(
+                        selectedOptionId,
+                        totalVoteCount,
+                        List.of(
+                                new PostOptionVoteResultResponse(
+                                        postOption.getId(),
+                                        postOption.getContent(),
+                                        "",
+                                        postOptionVoteCount,
+                                        votePercent
+                                )
+                        )
+                )
+        );
     }
 
 }

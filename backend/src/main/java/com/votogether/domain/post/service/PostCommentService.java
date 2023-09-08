@@ -64,7 +64,7 @@ public class PostCommentService {
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
 
         validateBelongsToPost(comment, post);
-        validateAuthor(comment, member);
+        validateWriter(comment, member);
 
         comment.updateContent(commentUpdateRequest.content());
     }
@@ -77,7 +77,7 @@ public class PostCommentService {
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
 
         validateBelongsToPost(comment, post);
-        validateAuthor(comment, member);
+        validateWriter(comment, member);
 
         commentRepository.delete(comment);
     }
@@ -88,7 +88,7 @@ public class PostCommentService {
         }
     }
 
-    private void validateAuthor(final Comment comment, final Member member) {
+    private void validateWriter(final Comment comment, final Member member) {
         if (!comment.isWriter(member)) {
             throw new BadRequestException(CommentExceptionType.COMMENT_NOT_WRITER);
         }

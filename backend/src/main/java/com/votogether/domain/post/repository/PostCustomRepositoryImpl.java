@@ -38,7 +38,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .selectDistinct(post)
                 .from(post)
                 .join(post.writer).fetchJoin()
-                .leftJoin(post.postCategories.postCategories, postCategory)
+                .leftJoin(post.postCategoriesA, postCategory)
                 .where(
                         categoryIdEq(categoryId),
                         deadlineEq(postClosingType),
@@ -127,6 +127,30 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private BooleanExpression containsKeywordInTitleOrContent(final String keyword) {
         return post.postBody.title.contains(keyword)
                 .or(post.postBody.content.contains(keyword));
+    }
+
+    @Override
+    public List<Post> findPostsByVotedWithFilteringAndPaging(
+            final Member voter,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Pageable pageable
+    ) {
+        return jpaQueryFactory
+                .selectDistinct(post)
+                .from(post)
+                .join(post.writer).fetchJoin()
+                .leftJoin(post.postOptionsA, postOption)
+                .leftJoin(postOption.votes, vote)
+                .where(
+                        vote.member.eq(voter),
+                        deadlineEq(postClosingType),
+                        post.isHidden.eq(false)
+                )
+                .orderBy(orderBy(postSortType))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
 }

@@ -52,7 +52,7 @@ class RankingControllerTest {
         given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
         given(memberService.findById(anyLong())).willReturn(member);
 
-        given(rankingService.getRanking(member)).willReturn(response);
+        given(rankingService.getPassionRanking(member)).willReturn(response);
 
         // when, then
         RankingResponse result = RestAssuredMockMvc

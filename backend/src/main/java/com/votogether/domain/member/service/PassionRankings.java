@@ -1,18 +1,18 @@
 package com.votogether.domain.member.service;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.ranking.domain.ActivityRecord;
+import com.votogether.domain.ranking.domain.PassionRecord;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RankingBoard {
+public class PassionRankings {
 
     private final Map<Member, Integer> ranking = new HashMap<>();
-    private final Map<Member, ActivityRecord> passionBoard;
+    private final Map<Member, PassionRecord> passionBoard;
 
-    public RankingBoard(final Map<Member, ActivityRecord> passionBoard) {
+    public PassionRankings(final Map<Member, PassionRecord> passionBoard) {
         this.passionBoard = passionBoard;
         calculateRank();
     }
@@ -46,7 +46,7 @@ public class RankingBoard {
         return ranking.get(member);
     }
 
-    public ActivityRecord getActivityRecord(Member member) {
+    public PassionRecord getActivityRecord(Member member) {
         return passionBoard.get(member);
     }
 

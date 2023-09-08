@@ -2,9 +2,9 @@ package com.votogether.domain.ranking.service;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.member.service.RankingBoard;
+import com.votogether.domain.member.service.PassionRankings;
 import com.votogether.domain.post.repository.PostRepository;
-import com.votogether.domain.ranking.domain.ActivityRecord;
+import com.votogether.domain.ranking.domain.PassionRecord;
 import com.votogether.domain.ranking.dto.response.RankingResponse;
 import com.votogether.domain.vote.repository.VoteRepository;
 import java.util.HashMap;
@@ -23,29 +23,29 @@ public class RankingService {
     private final VoteRepository voteRepository;
 
     @Transactional(readOnly = true)
-    public RankingResponse getRanking(final Member member) {
-        final RankingBoard rankingBoard = getRankingBoard();
+    public RankingResponse getPassionRanking(final Member member) {
+        final PassionRankings passionRankings = getPassionRankings();
         return new RankingResponse(
-                rankingBoard.getRanking(member),
+                passionRankings.getRanking(member),
                 member.getNickname(),
-                rankingBoard.getActivityRecord(member).getPostCount(),
-                rankingBoard.getActivityRecord(member).getVoteCount(),
-                rankingBoard.getScore(member)
+                passionRankings.getActivityRecord(member).getPostCount(),
+                passionRankings.getActivityRecord(member).getVoteCount(),
+                passionRankings.getScore(member)
         );
     }
 
-    private RankingBoard getRankingBoard() {
+    private PassionRankings getPassionRankings() {
         final List<Member> members = memberRepository.findAll();
         final List<Integer> postCounts = postRepository.findCountsByMembers(members);
         final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
 
-        final Map<Member, ActivityRecord> passionBoard = new HashMap<>();
+        final Map<Member, PassionRecord> passionBoard = new HashMap<>();
 
         for (int i = 0; i < members.size(); i++) {
-            passionBoard.put(members.get(i), new ActivityRecord(postCounts.get(i), voteCounts.get(i)));
+            passionBoard.put(members.get(i), new PassionRecord(postCounts.get(i), voteCounts.get(i)));
         }
 
-        return new RankingBoard(passionBoard);
+        return new PassionRankings(passionBoard);
     }
 
 }

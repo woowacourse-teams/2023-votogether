@@ -17,7 +17,7 @@ public class RankingController implements RankingControllerDocs {
 
     @GetMapping("members/me/ranking")
     public ResponseEntity<RankingResponse> getRanking(@Auth final Member member) {
-        final RankingResponse response = rankingService.getRanking(member);
+        final RankingResponse response = rankingService.getPassionRanking(member);
         return ResponseEntity.ok(response);
     }
 

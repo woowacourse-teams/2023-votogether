@@ -50,7 +50,7 @@ class RankingServiceTest {
         voteTestPersister.builder().member(member4).save();
 
         // when
-        RankingResponse response = rankingService.getRanking(member);
+        RankingResponse response = rankingService.getPassionRanking(member);
 
         // then (score: 6,5,7,6,1)
         assertAll(

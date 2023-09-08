@@ -26,6 +26,10 @@ export const useSearch = (initialKeyword = '') => {
       return;
     }
 
+    if (keyword !== trimmedKeyword) {
+      setKeyword(trimmedKeyword);
+    }
+
     navigate(`/search?keyword=${trimmedKeyword}`);
   };
 

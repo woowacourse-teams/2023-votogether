@@ -147,7 +147,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
               aria-label={`작성일시 ${convertTimeToWord(createTime)}`}
               tabIndex={isPreviewTabIndex}
             >
-              {convertTimeToWord(createTime)}
+              {`${convertTimeToWord(createTime)}  |`}
             </span>
             <span
               aria-label={`투표 마감일시 ${isActive ? convertTimeToWord(deadline) : '마감 완료'}`}

@@ -87,14 +87,21 @@ class MemberServiceTest {
         @DisplayName("한번도 변경되지 않았다면 닉네임 변경 주기에 상관없이 닉네임을 변경한다.")
         void changeNickname() {
             // given
+            Member member = Member.builder()
+                    .nickname("익명의손님fFp4vAgX2d")
+                    .gender(Gender.MALE)
+                    .birthYear(1966)
+                    .socialId("abc123")
+                    .socialType(SocialType.KAKAO)
+                    .build();
             String newNickname = "jeomxon";
-            Member member = memberRepository.save(MemberFixtures.FEMALE_30.get());
+            Member savedMember = memberRepository.save(member);
 
             // when
-            memberService.changeNickname(member, newNickname);
+            memberService.changeNickname(savedMember, newNickname);
 
             // then
-            assertThat(member.getNickname()).isEqualTo(newNickname);
+            assertThat(savedMember.getNickname()).isEqualTo(newNickname);
         }
 
         @ParameterizedTest
@@ -140,12 +147,19 @@ class MemberServiceTest {
         @DisplayName("최초 닉네임을 변경한 후 닉네임 변경 주기가 지나지 않았다면 예외가 발생한다.")
         void changeNicknameThrowsExceptionNotPassedChangingCycle() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member member = Member.builder()
+                    .nickname("익명의손님fFp4vAgX2d")
+                    .gender(Gender.MALE)
+                    .birthYear(1966)
+                    .socialId("abc123")
+                    .socialType(SocialType.KAKAO)
+                    .build();
+            Member savedMember = memberRepository.save(member);
 
-            memberService.changeNickname(member, "저문");
+            memberService.changeNickname(savedMember, "저문");
 
             // when, then
-            assertThatThrownBy(() -> memberService.changeNickname(member, "저라니"))
+            assertThatThrownBy(() -> memberService.changeNickname(savedMember, "저라니"))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("최소 닉네임 변경주기가 지나지 않았습니다.");
         }

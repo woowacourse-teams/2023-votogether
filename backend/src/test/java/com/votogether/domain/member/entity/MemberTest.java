@@ -32,7 +32,7 @@ class MemberTest {
 
             LocalDateTime now = LocalDateTime.now().minusDays(15L);
             ReflectionTestUtils.setField(member, "createdAt", now);
-            ReflectionTestUtils.setField(member, "updatedAt", now);
+            ReflectionTestUtils.setField(member, "updatedAt", now.plusHours(1L));
 
             // when
             member.changeNicknameByCycle("저라니", 14L);
@@ -46,7 +46,7 @@ class MemberTest {
         void successFirstChange() {
             // given
             Member member = Member.builder()
-                    .nickname("저문")
+                    .nickname("익명의손님fFp4vAgX2d")
                     .gender(Gender.MALE)
                     .birthYear(1966)
                     .socialId("abc123")
@@ -55,7 +55,7 @@ class MemberTest {
 
             LocalDateTime now = LocalDateTime.now().minusDays(13L);
             ReflectionTestUtils.setField(member, "createdAt", now);
-            ReflectionTestUtils.setField(member, "updatedAt", now);
+            ReflectionTestUtils.setField(member, "updatedAt", now.plusHours(1L));
 
             // when
             member.changeNicknameByCycle("저라니", 14L);

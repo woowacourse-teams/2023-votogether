@@ -1,0 +1,86 @@
+name: Run lighthouse CI When Push
+on: [push]
+jobs:
+  lhci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+
+      - name: Install packages
+        run: |
+          npm ci
+
+      - name: Build
+        run: |
+          npm run build
+
+      - name: Run Lighthouse CI
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun || echo "Fail to Run Lighthouse CI!"
+
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+
+            const fs = require('fs');
+            # 본인의 환경에 맞게 설정해주세요
+            const results = JSON.parse(fs.readFileSync("/{Github Actions runner directory}/lhci_reports/manifest.json"));
+            # comment를 담을 변수 입니다.
+            let comments = "";
+
+            results.forEach((result) => {
+            const { summary, jsonPath } = result;
+            const { audits } = details;
+
+            const details = JSON.parse(fs.readFileSync(jsonPath));
+            const formatResult = (res) => Math.round(res * 100);
+
+            Object.keys(summary).forEach(
+                (key) => (summary[key] = formatResult(summary[key]))
+            );
+
+            # 점수가 색상으로 구분되는 방식 (https://web.dev/performance-scoring/#color-coding)
+            const score = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
+
+            const comment = [
+                `⚡️ Lighthouse report!`,
+                `| Category | Score |`,
+                `| --- | --- |`,
+                `| ${score(summary.performance)} Performance | ${summary.performance} |`,
+                { ... }
+            ].join("\n");
+
+            const detail = [
+                `| Category | Score |`,
+                `| --- | --- |`,
+                `| ${score(
+                audits["first-contentful-paint"].score * 100
+                )} First Contentful Paint | ${
+                audits["first-contentful-paint"].displayValue
+                } |`,
+                { ... }
+            ].join("\n");
+            comments += comment + "\n" + detail + "\n";
+            });
+            # comments 변수의 값을 다음 job으로 넘겨줍니다.
+            core.setOutput('comments', comments)
+
+      - name: Comment PR
+        uses: unsplash/comment-on-pr@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.format_lighthouse_score.outputs.comments}}

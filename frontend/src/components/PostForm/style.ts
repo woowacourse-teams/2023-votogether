@@ -26,9 +26,15 @@ export const HeaderButton = styled.button`
 export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
+  justify-items: center;
+  justify-content: center;
   gap: 20px;
 
   padding: 70px 10px 20px 10px;
+
+  & > * {
+    width: 100%;
+  }
 
   @media (min-width: ${theme.breakpoint.sm}) {
     grid-template-columns: 2fr 1fr;

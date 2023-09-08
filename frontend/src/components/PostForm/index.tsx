@@ -14,6 +14,7 @@ import { useWritingOption } from '@hooks/useWritingOption';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
+import HeaderTextButton from '@components/common/HeaderTextButton';
 import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
@@ -195,10 +196,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     <>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
-          <S.HeaderButton onClick={() => navigate('/')}>취소</S.HeaderButton>
-          <S.HeaderButton type="submit" form="form-post">
+          <HeaderTextButton onClick={() => navigate('/')}>취소</HeaderTextButton>
+          <HeaderTextButton type="submit" form="form-post">
             저장
-          </S.HeaderButton>
+          </HeaderTextButton>
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
       <form id="form-post" onSubmit={handlePostFormSubmit}>

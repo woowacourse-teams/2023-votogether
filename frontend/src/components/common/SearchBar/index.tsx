@@ -28,6 +28,7 @@ export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
         type="search"
         value={keyword}
         onChange={onKeywordChange}
+        autoComplete="off"
         name={SEARCH_KEYWORD}
         {...rest}
       />

@@ -3,15 +3,14 @@ package com.votogether.domain.member.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.global.exception.BadRequestException;
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class MemberTest {
 
@@ -21,7 +20,7 @@ class MemberTest {
 
         @Test
         @DisplayName("15일전에 변경된 닉네임은 14일 주기로 변경할 때 성공적으로 변경된다.")
-        void success() throws Exception {
+        void success() {
             // given
             Member member = Member.builder()
                     .nickname("저문")
@@ -31,14 +30,9 @@ class MemberTest {
                     .socialType(SocialType.KAKAO)
                     .build();
 
-            Field createdAtField = BaseEntity.class.getDeclaredField("createdAt");
-            Field updatedAtField = BaseEntity.class.getDeclaredField("updatedAt");
-            createdAtField.setAccessible(true);
-            updatedAtField.setAccessible(true);
-
             LocalDateTime now = LocalDateTime.now().minusDays(15L);
-            createdAtField.set(member, now);
-            updatedAtField.set(member, now);
+            ReflectionTestUtils.setField(member, "createdAt", now);
+            ReflectionTestUtils.setField(member, "updatedAt", now);
 
             // when
             member.changeNicknameByCycle("저라니", 14L);
@@ -49,7 +43,7 @@ class MemberTest {
 
         @Test
         @DisplayName("13일 전에 변경된 닉네임은 14일 주기로 변경하더라도 한번도 닉네임을 변경하지 않았다면 성공적으로 변경된다.")
-        void successFirstChange() throws Exception {
+        void successFirstChange() {
             // given
             Member member = Member.builder()
                     .nickname("저문")
@@ -59,14 +53,9 @@ class MemberTest {
                     .socialType(SocialType.KAKAO)
                     .build();
 
-            Field createdAtField = BaseEntity.class.getDeclaredField("createdAt");
-            Field updatedAtField = BaseEntity.class.getDeclaredField("updatedAt");
-            createdAtField.setAccessible(true);
-            updatedAtField.setAccessible(true);
-
             LocalDateTime now = LocalDateTime.now().minusDays(13L);
-            createdAtField.set(member, now);
-            updatedAtField.set(member, now);
+            ReflectionTestUtils.setField(member, "createdAt", now);
+            ReflectionTestUtils.setField(member, "updatedAt", now);
 
             // when
             member.changeNicknameByCycle("저라니", 14L);
@@ -77,7 +66,7 @@ class MemberTest {
 
         @Test
         @DisplayName("13일 전에 변경된 닉네임은 14일 주기로 변경할 때 변경에 실패한다.")
-        void fail() throws Exception {
+        void fail() {
             // given
             Member member = Member.builder()
                     .nickname("저문")
@@ -87,15 +76,10 @@ class MemberTest {
                     .socialType(SocialType.KAKAO)
                     .build();
 
-            Field createdAtField = BaseEntity.class.getDeclaredField("createdAt");
-            Field updatedAtField = BaseEntity.class.getDeclaredField("updatedAt");
-            createdAtField.setAccessible(true);
-            updatedAtField.setAccessible(true);
-
             LocalDateTime createdTime = LocalDateTime.now().minusDays(20L);
             LocalDateTime updatedTime = LocalDateTime.now().minusDays(13L);
-            createdAtField.set(member, createdTime);
-            updatedAtField.set(member, updatedTime);
+            ReflectionTestUtils.setField(member, "createdAt", createdTime);
+            ReflectionTestUtils.setField(member, "updatedAt", updatedTime);
 
             // when, then
             assertThatThrownBy(() -> member.changeNicknameByCycle("저라니", 14L))

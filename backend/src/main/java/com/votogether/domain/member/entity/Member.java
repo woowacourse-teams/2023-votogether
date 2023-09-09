@@ -82,17 +82,20 @@ public class Member extends BaseEntity {
 
     public void changeNicknameByCycle(final String nickname, final Long days) {
         if (nickname.startsWith(INITIAL_NICKNAME_PREFIX)) {
-            throw new BadRequestException(MemberExceptionType.INVALID_NICKNAME_LETTER);
+            throw new BadRequestException(MemberExceptionType.NOT_ALLOWED_INITIAL_NICKNAME_PREFIX);
         }
-        if (isNotPassedChangingCycle(days)) {
+        if (isNotPassedChangingCycle(days) && isNotInitialNickname()) {
             throw new BadRequestException(MemberExceptionType.NOT_PASSED_NICKNAME_CHANGING_CYCLE);
         }
         this.nickname = new Nickname(nickname);
     }
 
     private boolean isNotPassedChangingCycle(final Long days) {
-        return (this.nickname.nonStartsWith(INITIAL_NICKNAME_PREFIX)) &&
-                (this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(days)));
+        return this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(days));
+    }
+
+    private boolean isNotInitialNickname() {
+        return this.nickname.nonStartsWith(INITIAL_NICKNAME_PREFIX);
     }
 
     public void changeNicknameByReport() {

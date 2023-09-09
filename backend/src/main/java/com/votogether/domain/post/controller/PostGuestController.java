@@ -29,7 +29,7 @@ public class PostGuestController implements PostGuestControllerDocs {
             @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
             @RequestParam final PostClosingType postClosingType,
             @RequestParam final PostSortType postSortType,
-            @RequestParam(required = false, name = "category") @Positive(message = "카테고리 ID는 양의 정수만 가능합니다.") final Long categoryId
+            @RequestParam(name = "category", required = false) final Long categoryId
     ) {
         final List<PostResponse> response = postGuestService.getPosts(page, postClosingType, postSortType, categoryId);
         return ResponseEntity.ok(response);

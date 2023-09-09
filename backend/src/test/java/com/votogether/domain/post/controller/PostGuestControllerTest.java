@@ -60,35 +60,7 @@ class PostGuestControllerTest extends ControllerTest {
         @DisplayName("게시글 목록 조회에 성공하면 200 응답을 반환한다.")
         void return200success() {
             // given
-            List<PostResponse> response = List.of(
-                    new PostResponse(
-                            1L,
-                            new PostWriterResponse(1L, "votogether"),
-                            "title",
-                            "content",
-                            "https://votogether.com/static/images/image.png",
-                            List.of(
-                                    new CategoryResponse(1L, "develop")
-                            ),
-                            LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
-                            LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
-                            3,
-                            15,
-                            new PostVoteResultResponse(
-                                    0L,
-                                    -1,
-                                    List.of(
-                                            new PostOptionVoteResultResponse(
-                                                    1L,
-                                                    "content",
-                                                    "image.png",
-                                                    -1,
-                                                    0
-                                            )
-                                    )
-                            )
-                    )
-            );
+            List<PostResponse> response = List.of(mockingPostResponse());
             given(postGuestService.getPosts(anyInt(), any(PostClosingType.class), any(PostSortType.class), any()))
                     .willReturn(response);
 
@@ -123,23 +95,6 @@ class PostGuestControllerTest extends ControllerTest {
                     .body("message", containsString("페이지는 0이상 정수만 가능합니다."));
         }
 
-        @ParameterizedTest
-        @ValueSource(longs = {-1, 0})
-        @DisplayName("카테고리 ID가 양의 정수가 아니라면 400 응답을 반환한다.")
-        void return400categoryIdIsNegativeOrZero(Long categoryId) {
-            // given, when, then
-            RestAssuredMockMvc.given().log().all()
-                    .param("page", 0)
-                    .param("postClosingType", PostClosingType.ALL)
-                    .param("postSortType", PostSortType.LATEST)
-                    .param("category", categoryId)
-                    .when().get("/posts/guest")
-                    .then().log().all()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("code", equalTo(201))
-                    .body("message", containsString("카테고리 ID는 양의 정수만 가능합니다."));
-        }
-
     }
 
     @Nested
@@ -150,33 +105,7 @@ class PostGuestControllerTest extends ControllerTest {
         @DisplayName("게시글 상세 조회에 성공하면 200 응답을 반환한다.")
         void return200success() {
             // given
-            PostResponse response = new PostResponse(
-                    1L,
-                    new PostWriterResponse(1L, "votogether"),
-                    "title",
-                    "content",
-                    "https://votogether.com/static/images/image.png",
-                    List.of(
-                            new CategoryResponse(1L, "develop")
-                    ),
-                    LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
-                    LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
-                    3,
-                    15,
-                    new PostVoteResultResponse(
-                            0L,
-                            -1,
-                            List.of(
-                                    new PostOptionVoteResultResponse(
-                                            1L,
-                                            "content",
-                                            "image.png",
-                                            -1,
-                                            0
-                                    )
-                            )
-                    )
-            );
+            PostResponse response = mockingPostResponse();
             given(postGuestService.getPost(anyLong())).willReturn(response);
 
             // when
@@ -215,35 +144,7 @@ class PostGuestControllerTest extends ControllerTest {
         @DisplayName("게시글 목록 검색에 성공하면 200 응답을 반환한다.")
         void return200success() {
             // given
-            List<PostResponse> response = List.of(
-                    new PostResponse(
-                            1L,
-                            new PostWriterResponse(1L, "votogether"),
-                            "title",
-                            "content",
-                            "https://votogether.com/static/images/image.png",
-                            List.of(
-                                    new CategoryResponse(1L, "develop")
-                            ),
-                            LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
-                            LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
-                            3,
-                            15,
-                            new PostVoteResultResponse(
-                                    0L,
-                                    -1,
-                                    List.of(
-                                            new PostOptionVoteResultResponse(
-                                                    1L,
-                                                    "content",
-                                                    "image.png",
-                                                    -1,
-                                                    0
-                                            )
-                                    )
-                            )
-                    )
-            );
+            List<PostResponse> response = List.of(mockingPostResponse());
             given(postGuestService.searchPosts(
                     anyString(),
                     anyInt(),
@@ -284,6 +185,36 @@ class PostGuestControllerTest extends ControllerTest {
                     .body("message", containsString("페이지는 0이상 정수만 가능합니다."));
         }
 
+    }
+
+    private PostResponse mockingPostResponse() {
+        return new PostResponse(
+                1L,
+                new PostWriterResponse(1L, "votogether"),
+                "title",
+                "content",
+                "https://votogether.com/static/images/image.png",
+                List.of(
+                        new CategoryResponse(1L, "develop")
+                ),
+                LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
+                3,
+                15,
+                new PostVoteResultResponse(
+                        0L,
+                        -1,
+                        List.of(
+                                new PostOptionVoteResultResponse(
+                                        1L,
+                                        "content",
+                                        "image.png",
+                                        -1,
+                                        0
+                                )
+                        )
+                )
+        );
     }
 
 }

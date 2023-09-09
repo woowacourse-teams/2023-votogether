@@ -27,11 +27,7 @@ public interface PostGuestControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = """
-                            1.0 이상의 정수가 아닌 페이지
-                                                        
-                            2.양의 정수가 아닌 카테고리 ID
-                            """,
+                    description = "0 이상의 정수가 아닌 페이지",
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
@@ -40,8 +36,7 @@ public interface PostGuestControllerDocs {
             @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
             @Parameter(description = "게시글 마감 여부", example = "ALL") final PostClosingType postClosingType,
             @Parameter(description = "게시글 정렬 기준", example = "HOT") final PostSortType postSortType,
-            @Parameter(description = "카테고리 ID", example = "1")
-            @Positive(message = "카테고리 ID는 양의 정수만 가능합니다.") final Long categoryId
+            @Parameter(description = "카테고리 ID", example = "1") final Long categoryId
     );
 
     @Operation(summary = "비회원 게시글 상세 조회", description = "비회원이 게시글을 상세 조회한다.")

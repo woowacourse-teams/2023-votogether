@@ -87,6 +87,29 @@ class MemberTest {
                     .hasMessage("최소 닉네임 변경주기가 지나지 않았습니다.");
         }
 
+        @Test
+        @DisplayName("초기 닉네임의 접두사가 포함되어 있으면 예외가 발생한다.")
+        void notAllowedChangeToInitialNicknamePrefix() {
+            // given
+            Member member = Member.builder()
+                    .nickname("저문")
+                    .gender(Gender.MALE)
+                    .birthYear(1966)
+                    .socialId("abc123")
+                    .socialType(SocialType.KAKAO)
+                    .build();
+
+            LocalDateTime createdTime = LocalDateTime.now().minusDays(20L);
+            LocalDateTime updatedTime = LocalDateTime.now().minusDays(7L);
+            ReflectionTestUtils.setField(member, "createdAt", createdTime);
+            ReflectionTestUtils.setField(member, "updatedAt", updatedTime);
+
+            // when, then
+            assertThatThrownBy(() -> member.changeNicknameByCycle("익명의손님저라니", 14L))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("초기 닉네임에 포함된 접두어로 닉네임을 변경할 수 없습니다.");
+        }
+
     }
 
 }

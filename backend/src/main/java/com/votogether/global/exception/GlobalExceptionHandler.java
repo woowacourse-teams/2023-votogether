@@ -84,6 +84,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleImageException(final ImageException e) {
+        log.warn("[" + e.getClass() + "] : " + e.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ExceptionResponse.from(e));
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleNotFoundException(final NotFoundException e) {
         log.warn("[" + e.getClass() + "] : " + e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)

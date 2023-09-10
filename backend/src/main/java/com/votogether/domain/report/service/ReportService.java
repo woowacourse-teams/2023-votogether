@@ -60,9 +60,21 @@ public class ReportService {
             final Post reportedPost,
             final ReportRequest request
     ) {
-        reportedPost.validateMine(reporter);
-        reportedPost.validateHidden();
+        validateMyPost(reportedPost, reporter);
+        validateHiddenPost(reportedPost);
         validateDuplicatedReport(reporter, request, ReportExceptionType.DUPLICATE_POST_REPORT);
+    }
+
+    private void validateMyPost(final Post post, final Member member) {
+        if (post.isWriter(member)) {
+            throw new BadRequestException(ReportExceptionType.REPORT_MY_POST);
+        }
+    }
+
+    private void validateHiddenPost(final Post post) {
+        if (post.isHidden()) {
+            throw new BadRequestException(ReportExceptionType.ALREADY_HIDDEN_POST);
+        }
     }
 
     private void validateDuplicatedReport(

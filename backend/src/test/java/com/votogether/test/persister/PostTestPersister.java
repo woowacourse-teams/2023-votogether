@@ -65,7 +65,7 @@ public class PostTestPersister {
                     .writer(writer == null ? memberTestPersister.builder().save() : writer)
                     .title(title == null ? "title" : title)
                     .content(content == null ? "content" : content)
-                    .deadline(deadline == null ? LocalDateTime.of(2100, 12, 25, 0, 0) : deadline)
+                    .deadline(deadline == null ? LocalDateTime.now().plusDays(14) : deadline)
                     .build();
             return postRepository.save(post);
         }

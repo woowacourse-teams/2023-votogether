@@ -12,7 +12,6 @@ import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.post.service.PostCommentService;
-import com.votogether.domain.post.service.PostService;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
@@ -45,9 +44,6 @@ class ReportServiceTest {
     CommentRepository commentRepository;
 
     @Autowired
-    PostService postService;
-
-    @Autowired
     PostCommentService postCommentService;
 
     @Nested
@@ -65,7 +61,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             postRepository.save(post);
@@ -100,7 +96,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             postRepository.save(post);
@@ -124,7 +120,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
             post.blind();
 
@@ -150,7 +146,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             postRepository.save(post);
@@ -183,7 +179,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             Comment comment = Comment.builder()
@@ -225,7 +221,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             Comment comment = Comment.builder()
@@ -256,7 +252,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             Comment comment = Comment.builder()
@@ -288,7 +284,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             Comment comment = Comment.builder()
@@ -326,7 +322,7 @@ class ReportServiceTest {
                     .writer(writer)
                     .title("title")
                     .content("content")
-                    .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                    .deadline(LocalDateTime.now().plusDays(14))
                     .build();
 
             Comment comment = Comment.builder()

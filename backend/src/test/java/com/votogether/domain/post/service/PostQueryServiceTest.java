@@ -8,8 +8,8 @@ import com.votogether.domain.member.entity.vo.AgeRange;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.post.dto.response.post.PostOptionVoteResultResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostVoteResultResponse;
 import com.votogether.domain.post.dto.response.post.PostWriterResponse;
-import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
@@ -27,6 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class PostQueryServiceTest extends ServiceTest {
 
@@ -69,6 +70,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -90,6 +92,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -112,6 +115,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).member(member).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -171,6 +175,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postQueryService.getPost(post.getId(), member);
@@ -191,6 +196,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postQueryService.getPost(post.getId(), member);
@@ -212,6 +218,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).member(member).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postQueryService.getPost(post.getId(), member);
@@ -259,6 +266,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -280,6 +288,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -302,6 +311,7 @@ class PostQueryServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).member(member).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -331,6 +341,8 @@ class PostQueryServiceTest extends ServiceTest {
         postOptionB.addVote(voteB);
         postA.addPostOption(postOptionA);
         postB.addPostOption(postOptionB);
+        ReflectionTestUtils.setField(postOptionA, "voteCount", 1);
+        ReflectionTestUtils.setField(postOptionB, "voteCount", 1);
 
         // when
         List<PostResponse> result =
@@ -360,6 +372,8 @@ class PostQueryServiceTest extends ServiceTest {
         postOptionB.addVote(voteB);
         postA.addPostOption(postOptionA);
         postB.addPostOption(postOptionB);
+        ReflectionTestUtils.setField(postOptionA, "voteCount", 1);
+        ReflectionTestUtils.setField(postOptionB, "voteCount", 1);
 
         // when
         List<PostResponse> result =

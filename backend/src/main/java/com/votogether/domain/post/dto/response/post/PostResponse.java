@@ -2,7 +2,6 @@ package com.votogether.domain.post.dto.response.post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostContentImage;

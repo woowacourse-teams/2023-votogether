@@ -67,7 +67,7 @@ public interface PostCommentControllerDocs {
             @Parameter(description = "댓글 작성 게시글 ID", example = "1")
             @Positive(message = "게시글 ID는 양의 정수만 가능합니다.") final Long postId,
             @Valid final CommentCreateRequest commentCreateRequest,
-            final Member member
+            final Member loginMember
     );
 
     @Operation(summary = "게시글 댓글 수정", description = "게시글 댓글을 수정한다.")
@@ -107,7 +107,7 @@ public interface PostCommentControllerDocs {
             @Parameter(description = "댓글 ID", example = "1")
             @Positive(message = "댓글 ID는 양의 정수만 가능합니다.") final Long commentId,
             @Valid final CommentUpdateRequest commentUpdateRequest,
-            final Member member
+            final Member loginMember
     );
 
     @Operation(summary = "게시글 댓글 삭제", description = "게시글 댓글을 삭제한다.")
@@ -144,7 +144,7 @@ public interface PostCommentControllerDocs {
             @Positive(message = "게시글 ID는 양의 정수만 가능합니다.") final Long postId,
             @Parameter(description = "댓글 ID", example = "1")
             @Positive(message = "댓글 ID는 양의 정수만 가능합니다.") final Long commentId,
-            final Member member
+            final Member loginMember
     );
 
 }

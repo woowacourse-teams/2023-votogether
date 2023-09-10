@@ -39,7 +39,7 @@ class ReportRepositoryTest {
                 .writer(member)
                 .title("title")
                 .content("content")
-                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .deadline(LocalDateTime.now().plusDays(14))
                 .build();
 
         memberRepository.save(member);
@@ -70,7 +70,7 @@ class ReportRepositoryTest {
                 .writer(member)
                 .title("title")
                 .content("content")
-                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .deadline(LocalDateTime.now().plusDays(14))
                 .build();
 
         memberRepository.save(member);

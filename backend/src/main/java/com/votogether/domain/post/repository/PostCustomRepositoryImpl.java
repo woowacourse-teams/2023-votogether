@@ -38,7 +38,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .selectDistinct(post)
                 .from(post)
                 .join(post.writer).fetchJoin()
-                .leftJoin(post.postCategoriesA, postCategory)
+                .leftJoin(post.postCategories, postCategory)
                 .where(
                         categoryIdEq(categoryId),
                         deadlineEq(postClosingType),
@@ -79,8 +79,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private BooleanExpression deadlineEq(final PostClosingType postClosingType) {
         final LocalDateTime now = LocalDateTime.now();
         return switch (postClosingType) {
-            case PROGRESS -> post.deadline.after(now);
-            case CLOSED -> post.deadline.before(now);
+            case PROGRESS -> post.postDeadline.deadline.after(now);
+            case CLOSED -> post.postDeadline.deadline.before(now);
             default -> null;
         };
     }
@@ -140,7 +140,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .selectDistinct(post)
                 .from(post)
                 .join(post.writer).fetchJoin()
-                .leftJoin(post.postOptionsA, postOption)
+                .leftJoin(post.postOptions, postOption)
                 .leftJoin(postOption.votes, vote)
                 .where(
                         vote.member.eq(voter),

@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.response.post.PostOptionVoteResultResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostVoteResultResponse;
 import com.votogether.domain.post.dto.response.post.PostWriterResponse;
-import com.votogether.domain.post.dto.response.vote.PostVoteResultResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.vo.PostClosingType;
@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class PostGuestServiceTest extends ServiceTest {
 
@@ -43,6 +44,7 @@ class PostGuestServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result = postGuestService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null);
@@ -89,6 +91,7 @@ class PostGuestServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postGuestService.getPost(post.getId());
@@ -147,6 +150,7 @@ class PostGuestServiceTest extends ServiceTest {
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
+            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =

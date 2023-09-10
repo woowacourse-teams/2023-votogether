@@ -42,9 +42,9 @@ public class PostCommentController implements PostCommentControllerDocs {
     public ResponseEntity<Void> createComment(
             @PathVariable @Positive(message = "게시글 ID는 양의 정수만 가능합니다.") final Long postId,
             @RequestBody @Valid CommentCreateRequest commentCreateRequest,
-            @Auth final Member member
+            @Auth final Member loginMember
     ) {
-        postCommentService.createComment(postId, commentCreateRequest, member);
+        postCommentService.createComment(postId, commentCreateRequest, loginMember);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -53,9 +53,9 @@ public class PostCommentController implements PostCommentControllerDocs {
             @PathVariable @Positive(message = "게시글 ID는 양의 정수만 가능합니다.") final Long postId,
             @PathVariable @Positive(message = "댓글 ID는 양의 정수만 가능합니다.") final Long commentId,
             @RequestBody @Valid final CommentUpdateRequest commentUpdateRequest,
-            @Auth final Member member
+            @Auth final Member loginMember
     ) {
-        postCommentService.updateComment(postId, commentId, commentUpdateRequest, member);
+        postCommentService.updateComment(postId, commentId, commentUpdateRequest, loginMember);
         return ResponseEntity.ok().build();
     }
 
@@ -63,9 +63,9 @@ public class PostCommentController implements PostCommentControllerDocs {
     public ResponseEntity<Void> deleteComment(
             @PathVariable @Positive(message = "게시글 ID는 양의 정수만 가능합니다.") final Long postId,
             @PathVariable @Positive(message = "댓글 ID는 양의 정수만 가능합니다.") final Long commentId,
-            @Auth final Member member
+            @Auth final Member loginMember
     ) {
-        postCommentService.deleteComment(postId, commentId, member);
+        postCommentService.deleteComment(postId, commentId, loginMember);
         return ResponseEntity.noContent().build();
     }
 

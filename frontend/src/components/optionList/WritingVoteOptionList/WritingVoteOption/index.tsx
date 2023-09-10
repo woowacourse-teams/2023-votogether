@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, MutableRefObject } from 'react';
 
 import { POST_OPTION_POLICY } from '@constants/policyMessage';
 
@@ -16,6 +16,8 @@ interface WritingVoteOptionProps {
   handleRemoveImageClick: () => void;
   handleUploadImage: (event: ChangeEvent<HTMLInputElement>) => void;
   imageUrl: string;
+  contentInputRefList: MutableRefObject<HTMLInputElement[] | null>;
+  index: number;
 }
 
 const MAX_WRITING_LENGTH = 50;
@@ -30,6 +32,8 @@ export default function WritingVoteOption({
   handleRemoveImageClick,
   handleUploadImage,
   imageUrl,
+  contentInputRefList,
+  index,
 }: WritingVoteOptionProps) {
   return (
     <S.Container aria-label={ariaLabel}>
@@ -52,6 +56,8 @@ export default function WritingVoteOption({
             isImageVisible={imageUrl.length > 0}
             optionId={optionId}
             onChange={handleUploadImage}
+            contentInputRefList={contentInputRefList}
+            index={index}
           />
         </S.ContentContainer>
         {imageUrl && (

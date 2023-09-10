@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 
 import { MAX_FILE_SIZE } from '@components/PostForm/constants';
 
@@ -20,6 +20,7 @@ const INIT_OPTION_LIST = [
 
 export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = INIT_OPTION_LIST) => {
   const [optionList, setOptionList] = useState(initialOptionList);
+  const contentInputRefList = useRef<HTMLInputElement[] | null>([]);
 
   const addOption = () => {
     if (optionList.length >= MAX_COUNT) return;
@@ -76,6 +77,10 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     });
 
     setOptionList(updatedOptionList);
+    contentInputRefList.current &&
+      contentInputRefList.current.forEach(inputElement => {
+        if (inputElement?.id === optionId.toString()) inputElement.value = '';
+      });
   };
 
   const handleUploadImage = (event: React.ChangeEvent<HTMLInputElement>, optionId: number) => {
@@ -112,5 +117,13 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     };
   };
 
-  return { optionList, addOption, writingOption, deleteOption, removeImage, handleUploadImage };
+  return {
+    optionList,
+    addOption,
+    writingOption,
+    deleteOption,
+    removeImage,
+    handleUploadImage,
+    contentInputRefList,
+  };
 };

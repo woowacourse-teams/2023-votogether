@@ -14,7 +14,7 @@ public interface PostCategoryRepository extends JpaRepository<PostCategory, Long
     @EntityGraph(attributePaths = {"category"})
     List<PostCategory> findAllByPost(final Post post);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from PostCategory p where p.post.id = :postId")
     void deleteAllWithPostIdInBatch(@Param("postId") final Long postId);
 

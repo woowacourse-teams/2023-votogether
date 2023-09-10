@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostOptionRepository extends JpaRepository<PostOption, Long> {
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from PostOption p where p.post.id = :postId")
     void deleteAllWithPostIdInBatch(@Param("postId") final Long postId);
 

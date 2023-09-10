@@ -42,4 +42,8 @@ public class PostCategory extends BaseEntity {
         this.category = category;
     }
 
+    public void updateCategory(final Category category) {
+        this.category = category;
+    }
+
 }

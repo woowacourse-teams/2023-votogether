@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostContentImageRepository extends JpaRepository<PostContentImage, Long> {
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("delete from PostContentImage p where p.post.id = :postId")
     void deleteAllWithPostIdInBatch(@Param("postId") final Long postId);
 

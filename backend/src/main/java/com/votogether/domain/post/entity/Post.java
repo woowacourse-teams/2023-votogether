@@ -109,6 +109,14 @@ public class Post extends BaseEntity {
         this.comments.add(comment);
     }
 
+    public void removePostCategory(final PostCategory postCategory) {
+        this.postCategories.remove(postCategory);
+    }
+
+    public void removePostContentImage(final PostContentImage postContentImage) {
+        this.postContentImages.remove(postContentImage);
+    }
+
     public void removePostOption(final PostOption deletedOption) {
         this.postOptions.remove(deletedOption);
     }

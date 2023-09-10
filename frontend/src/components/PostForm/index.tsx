@@ -46,6 +46,7 @@ import CategoryWrapper from './CategoryWrapper';
 import { DEADLINE_OPTION, DeadlineOptionInfo, DeadlineOptionName } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
+import { checkValidationPost } from './validation';
 
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
@@ -131,61 +132,42 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       return { content: text, imageUrl: convertServerUrlToImageUrl(imageUrl) };
     });
 
-    const imageUrlList = [
-      convertServerUrlToImageUrl(contentImageHook.contentImage),
-      ...writingOptionList.map(option => option.imageUrl),
-    ];
-
     //예외처리
     const { selectedOptionList } = multiSelectHook;
-    if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
-    if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
-    if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
-    if (writingContent.trim() === '') return openToast('내용은 필수로 입력해야 합니다.');
-    if (writingOptionList.length < 2) return openToast('선택지는 최소 2개 입력해주세요.');
-    if (writingOptionList.length > 5) return openToast('선택지는 최대 5개 입력할 수 있습니다.');
-    if (writingOptionList.some(option => option.content.trim() === ''))
-      return openToast('선택지에 글을 입력해주세요.');
-    if (Object.values(time).reduce((a, b) => a + b, 0) < 1)
-      return openToast('시간은 필수로 입력해야 합니다.');
+    const errorMessage = checkValidationPost(
+      selectedOptionList,
+      writingTitle,
+      writingContent,
+      writingOptionList,
+      time
+    );
+    if (errorMessage) return openToast(errorMessage);
 
     if (e.target instanceof HTMLFormElement) {
-      const optionImageFileInputs =
-        e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
-      const fileInputList: HTMLInputElement[] = [...optionImageFileInputs];
-      const contentImageFileList: File[] = [];
-      const optionImageFileList: File[] = [];
-      fileInputList.forEach((item, index) => {
+      const imageFileInputs = e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
+      const fileInputList = [...imageFileInputs];
+
+      selectedOptionList.forEach(categoryId =>
+        formData.append('categoryIds', categoryId.id.toString())
+      );
+      formData.append('title', writingTitle);
+      formData.append('content', deleteOverlappingNewLine(writingContent));
+      formData.append('imageUrl', convertServerUrlToImageUrl(contentImageHook.contentImage));
+      writingOptionList.forEach((option, index) => {
+        formData.append(`postOptions[${index}].content`, option.content);
+        formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
+      });
+      formData.append('deadline', addTimeToDate(time, baseTime));
+
+      fileInputList.forEach((item: HTMLInputElement, index: number) => {
         if (!item.files) return;
 
         if (index === 0) {
-          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
-          !imageUrlList[index] || imageUrlList[index] === serverImageUrl
-            ? contentImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
-            : contentImageFileList.push(item.files[0]);
+          formData.append('imageFile', item.files[0]);
         } else {
-          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
-          !imageUrlList[index] ||
-          imageUrlList[index] === serverVoteInfo?.options[index - 1].imageUrl
-            ? optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
-            : optionImageFileList.push(item.files[0]);
+          formData.append(`postOptions[${index - 1}].imageFile`, item.files[0]);
         }
       });
-
-      contentImageFileList.map(file => formData.append('contentImages', file));
-      optionImageFileList.map(file => formData.append('optionImages', file));
-
-      const updatedPostTexts = {
-        categoryIds: selectedOptionList.map(option => option.id),
-        title: writingTitle,
-        imageUrl: convertServerUrlToImageUrl(contentImageHook.contentImage),
-        content: deleteOverlappingNewLine(writingContent),
-        postOptions: writingOptionList,
-        deadline: addTimeToDate(time, baseTime),
-        // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
-        // 마감시간 옵션을 선택 안했다면 기존의 마감 시간을 유지한다.
-      };
-      formData.append('request', JSON.stringify(updatedPostTexts));
 
       mutate(formData);
     }

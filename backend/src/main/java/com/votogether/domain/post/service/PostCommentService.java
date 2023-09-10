@@ -28,6 +28,7 @@ public class PostCommentService {
     public List<CommentResponse> getComments(final Long postId) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+        validateHiddenPost(post);
 
         return commentRepository.findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(post)
                 .stream()
@@ -39,13 +40,14 @@ public class PostCommentService {
     public void createComment(
             final Long postId,
             final CommentCreateRequest commentCreateRequest,
-            final Member member
+            final Member loginMember
     ) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+        validateHiddenPost(post);
 
         final Comment comment = Comment.builder()
-                .writer(member)
+                .writer(loginMember)
                 .content(commentCreateRequest.content())
                 .build();
         post.addComment(comment);
@@ -56,30 +58,46 @@ public class PostCommentService {
             final Long postId,
             final Long commentId,
             final CommentUpdateRequest commentUpdateRequest,
-            final Member member
+            final Member loginMember
     ) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
         final Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
 
+        validateHiddenPost(post);
+        validateHiddenComment(comment);
         validateBelongsToPost(comment, post);
-        validateWriter(comment, member);
+        validateWriter(comment, loginMember);
 
         comment.updateContent(commentUpdateRequest.content());
     }
 
     @Transactional
-    public void deleteComment(final Long postId, final Long commentId, final Member member) {
+    public void deleteComment(final Long postId, final Long commentId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
         final Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
 
+        validateHiddenPost(post);
+        validateHiddenComment(comment);
         validateBelongsToPost(comment, post);
-        validateWriter(comment, member);
+        validateWriter(comment, loginMember);
 
         commentRepository.delete(comment);
+    }
+
+    private void validateHiddenPost(final Post post) {
+        if (post.isHidden()) {
+            throw new BadRequestException(PostExceptionType.POST_IS_HIDDEN);
+        }
+    }
+
+    private void validateHiddenComment(final Comment comment) {
+        if (comment.isHidden()) {
+            throw new BadRequestException(CommentExceptionType.COMMENT_IS_HIDDEN);
+        }
     }
 
     private void validateBelongsToPost(final Comment comment, final Post post) {

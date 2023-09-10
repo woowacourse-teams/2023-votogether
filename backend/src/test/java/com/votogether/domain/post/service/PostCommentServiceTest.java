@@ -54,6 +54,19 @@ class PostCommentServiceTest extends ServiceTest {
                     .hasMessage("게시글이 존재하지 않습니다.");
         }
 
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Post post = postTestPersister.postBuilder().save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.getComments(post.getId()))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
     }
 
     @Nested
@@ -86,6 +99,21 @@ class PostCommentServiceTest extends ServiceTest {
             assertThatThrownBy(() -> postCommentService.createComment(-1L, commentCreateRequest, member))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            CommentCreateRequest commentCreateRequest = new CommentCreateRequest("hello");
+            Post post = postTestPersister.postBuilder().save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.createComment(post.getId(), commentCreateRequest, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
         }
 
     }
@@ -135,6 +163,38 @@ class PostCommentServiceTest extends ServiceTest {
             assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), -1L, request, member))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("댓글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), comment.getId(), request, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 댓글이라면 예외를 던진다.")
+        void blindComment() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+            comment.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), comment.getId(), request, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 댓글은 접근할 수 없습니다.");
         }
 
         @Test
@@ -211,6 +271,36 @@ class PostCommentServiceTest extends ServiceTest {
             assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), -1L, member))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("댓글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 댓글이라면 예외를 던진다.")
+        void blindComment() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            comment.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 댓글은 접근할 수 없습니다.");
         }
 
         @Test

@@ -50,7 +50,11 @@ public interface PostQueryControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "양의 정수가 아닌 게시글 ID",
+                    description = """
+                            1.양의 정수가 아닌 게시글 ID
+                                                        
+                            2.게시글이 블라인드 처리된 경우
+                            """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),
             @ApiResponse(
@@ -137,7 +141,9 @@ public interface PostQueryControllerDocs {
                     description = """
                             1.양의 정수가 아닌 게시글 ID
                                                         
-                            2.게시글 작성자가 아닌 경우
+                            2.게시글이 블라인드 처리된 경우
+                                              
+                            3.게시글 작성자가 아닌 경우
                             """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),
@@ -166,9 +172,11 @@ public interface PostQueryControllerDocs {
                                                         
                             2.양의 정수가 아닌 게시글 투표 옵션 ID
                                                         
-                            3.게시글 작성자가 아닌 경우
+                            3.게시글이 블라인드 처리된 경우
                                                         
-                            4.옵션이 해당 게시글에 속하지 않는 경우
+                            4.게시글 작성자가 아닌 경우
+                                                        
+                            5.옵션이 해당 게시글에 속하지 않는 경우
                             """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),

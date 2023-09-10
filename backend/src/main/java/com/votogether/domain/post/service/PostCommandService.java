@@ -46,14 +46,14 @@ public class PostCommandService {
     public Long createPost(final PostCreateRequest postCreate, final Member loginMember) {
         final Post post = Post.builder()
                 .writer(loginMember)
-                .title(postCreate.title())
-                .content(postCreate.content())
-                .deadline(postCreate.deadline())
+                .title(postCreate.getTitle())
+                .content(postCreate.getContent())
+                .deadline(postCreate.getDeadline())
                 .build();
 
-        addCategories(post, postCreate.categoryIds());
-        addImage(post, postCreate.contentImage());
-        addPostOptions(post, postCreate.postOptions());
+        addCategories(post, postCreate.getCategoryIds());
+        addImage(post, postCreate.getContentImage());
+        addPostOptions(post, postCreate.getPostOptions());
 
         return postRepository.save(post).getId();
     }
@@ -76,10 +76,10 @@ public class PostCommandService {
     }
 
     private PostOption createPostOptionFromRequest(int index, final PostOptionCreateRequest postOptionCreate) {
-        final String imageUrl = imageUploader.upload(postOptionCreate.optionImage());
+        final String imageUrl = imageUploader.upload(postOptionCreate.getOptionImage());
         return PostOption.builder()
                 .sequence(index + 1)
-                .content(postOptionCreate.content())
+                .content(postOptionCreate.getContent())
                 .imageUrl(imageUrl)
                 .build();
     }
@@ -95,7 +95,7 @@ public class PostCommandService {
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
 
-        updatePostOptions(post, postUpdate.postOptions());
+        updatePostOptions(post, postUpdate.getPostOptions());
         updatePost(post, postUpdate);
     }
 
@@ -145,10 +145,10 @@ public class PostCommandService {
     private void updatePostOption(final PostOption postOption, final PostOptionUpdateRequest postOptionUpdate) {
         final String imageUrl = updateImage(
                 postOption.getImageUrl(),
-                postOptionUpdate.imageUrl(),
-                postOptionUpdate.optionImage()
+                postOptionUpdate.getImageUrl(),
+                postOptionUpdate.getOptionImage()
         );
-        postOption.update(postOptionUpdate.content(), imageUrl);
+        postOption.update(postOptionUpdate.getContent(), imageUrl);
     }
 
     private void removeOriginPostOptions(final Post post, final List<PostOption> postOptions) {
@@ -173,18 +173,18 @@ public class PostCommandService {
             final PostOptionUpdateRequest postOptionUpdate,
             final int prevPostOptionSize
     ) {
-        final String imageUrl = imageUploader.upload(postOptionUpdate.optionImage());
+        final String imageUrl = imageUploader.upload(postOptionUpdate.getOptionImage());
         return PostOption.builder()
                 .sequence(index + 1 + prevPostOptionSize)
-                .content(postOptionUpdate.content())
+                .content(postOptionUpdate.getContent())
                 .imageUrl(imageUrl)
                 .build();
     }
 
     private void updatePost(final Post post, final PostUpdateRequest postUpdate) {
-        updatePostCategories(post, postUpdate.categoryIds());
-        updatePostContentImage(post, postUpdate.imageUrl(), postUpdate.contentImage());
-        post.update(postUpdate.title(), postUpdate.content(), postUpdate.deadline());
+        updatePostCategories(post, postUpdate.getCategoryIds());
+        updatePostContentImage(post, postUpdate.getImageUrl(), postUpdate.getContentImage());
+        post.update(postUpdate.getTitle(), postUpdate.getContent(), postUpdate.getDeadline());
     }
 
     private void updatePostCategories(final Post post, final List<Long> categoryIds) {

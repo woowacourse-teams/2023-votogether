@@ -47,7 +47,11 @@ public interface PostGuestControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "양의 정수가 아닌 게시글 ID",
+                    description = """
+                            1.양의 정수가 아닌 게시글 ID
+                                                        
+                            2.게시글이 블라인드 처리된 경우
+                            """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),
             @ApiResponse(

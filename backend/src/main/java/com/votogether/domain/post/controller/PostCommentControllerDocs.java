@@ -28,7 +28,11 @@ public interface PostCommentControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "양의 정수가 아닌 게시글 ID",
+                    description = """
+                            1.양의 정수가 아닌 게시글 ID
+                                                        
+                            2.게시글이 블라인드 처리된 경우
+                            """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),
             @ApiResponse(
@@ -54,6 +58,8 @@ public interface PostCommentControllerDocs {
                             1.양의 정수가 아닌 게시글 ID
                                                         
                             2.존재하지 않는 댓글 내용
+                                                        
+                            3.게시글이 블라인드 처리된 경우
                             """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),
@@ -85,9 +91,13 @@ public interface PostCommentControllerDocs {
                                                         
                             3.존재하지 않는 댓글 내용
                                                         
-                            4.게시글의 댓글이 아닌 경우
+                            4.게시글이 블라인드 처리된 경우
                                                         
-                            5.댓글 작성자가 아닌 경우
+                            5.댓글이 블라인드 처리된 경우
+                                                        
+                            6.게시글의 댓글이 아닌 경우
+                                                        
+                            7.댓글 작성자가 아닌 경우
                             """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),
@@ -123,9 +133,13 @@ public interface PostCommentControllerDocs {
                                                         
                             2.양의 정수가 아닌 댓글 ID
                                                         
-                            3.게시글의 댓글이 아닌 경우
+                            3.게시글이 블라인드 처리된 경우
                                                         
-                            4.댓글 작성자가 아닌 경우
+                            4.댓글이 블라인드 처리된 경우
+                                                        
+                            5.게시글의 댓글이 아닌 경우
+                                                        
+                            6.댓글 작성자가 아닌 경우
                             """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),

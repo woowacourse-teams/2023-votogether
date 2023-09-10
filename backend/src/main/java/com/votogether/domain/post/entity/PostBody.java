@@ -1,56 +1,51 @@
 package com.votogether.domain.post.entity;
 
+import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostBody {
 
-    @Column(length = 100, nullable = false)
+    private static final int MAXIMUM_TITLE_LENGTH = 100;
+    private static final int MAXIMUM_CONTENT_LENGTH = 1000;
+
+    @Column(length = MAXIMUM_TITLE_LENGTH, nullable = false)
     private String title;
 
-    @Column(length = 1000, nullable = false)
+    @Column(length = MAXIMUM_CONTENT_LENGTH, nullable = false)
     private String content;
 
-    @Embedded
-    private PostContentImages postContentImages;
-
     public PostBody(final String title, final String content) {
+        validateTitle(title);
+        validateContent(content);
         this.title = title;
         this.content = content;
-        this.postContentImages = new PostContentImages();
     }
 
-    public void update(
-            final PostBody postBody,
-            final String oldContentImageUrl,
-            final List<String> contentImageUrls
-    ) {
-        this.title = postBody.getTitle();
-        this.content = postBody.getContent();
-        this.postContentImages.update(getContentImageUrl(oldContentImageUrl, contentImageUrls));
-    }
-
-    private String getContentImageUrl(
-            final String oldContentImageUrl,
-            final List<String> contentImageUrls
-    ) {
-        if (contentImageUrls.isEmpty()) {
-            return oldContentImageUrl;
+    private void validateTitle(final String title) {
+        if (!StringUtils.hasText(title)) {
+            throw new BadRequestException(PostExceptionType.POST_TITLE_EMPTY);
         }
-
-        return contentImageUrls.get(0);
+        if (title.length() > MAXIMUM_TITLE_LENGTH) {
+            throw new BadRequestException(PostExceptionType.POST_TITLE_INVALID_LENGTH);
+        }
     }
 
-    public void addContentImage(final Post post, final String contentImageUrl) {
-        this.postContentImages.addContentImage(post, contentImageUrl);
+    private void validateContent(final String content) {
+        if (!StringUtils.hasText(content)) {
+            throw new BadRequestException(PostExceptionType.POST_CONTENT_EMPTY);
+        }
+        if (content.length() > MAXIMUM_CONTENT_LENGTH) {
+            throw new BadRequestException(PostExceptionType.POST_CONTENT_INVALID_LENGTH);
+        }
     }
 
 }

@@ -5,11 +5,9 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
-import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.exception.VoteExceptionType;
 import com.votogether.global.exception.BadRequestException;
-import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -25,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -39,6 +36,8 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
+    private static final int DELETE_VOTE_LIMIT = 20;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,60 +50,76 @@ public class Post extends BaseEntity {
     private PostBody postBody;
 
     @Embedded
-    private PostCategories postCategories;
-
-    @Embedded
-    private PostOptions postOptions;
-
-    @Column(columnDefinition = "datetime(6)", nullable = false)
-    private LocalDateTime deadline;
+    private PostDeadline postDeadline;
 
     @Column(nullable = false)
     private boolean isHidden;
-
-    @Basic(fetch = FetchType.LAZY)
-    @Formula("(select count(v.id) from Vote v where v.post_option_id in "
-            + "(select po.id from Post_Option po where po.post_id = id)"
-            + ")")
-    private long totalVoteCount;
 
     @Formula("(select count(*) from comment c where c.post_id = id)")
     private int commentCount;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PostCategory> postCategoriesA = new ArrayList<>();
+    private List<PostCategory> postCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PostContentImage> postContentImagesA = new ArrayList<>();
+    private List<PostContentImage> postContentImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PostOption> postOptionsA = new ArrayList<>();
+    private List<PostOption> postOptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    public void addCategories(final List<Category> categories) {
-        this.postCategories.mapPostAndCategories(this, categories);
-    }
-
-    public void mapPostOptionsByElements(
-            final List<String> postOptionContents,
-            final List<String> optionImageUrls
+    @Builder
+    private Post(
+            final Member writer,
+            final String title,
+            final String content,
+            final LocalDateTime deadline
     ) {
-        this.postOptions = PostOptions.of(this, postOptionContents, optionImageUrls);
+        this.writer = writer;
+        this.postBody = new PostBody(title, content);
+        this.postDeadline = new PostDeadline(deadline);
+        this.isHidden = false;
     }
 
-    public void validateDeadlineNotExceedByMaximumDeadline(final int maximumDeadline) {
-        LocalDateTime maximumDeadlineFromNow = LocalDateTime.now().plusDays(maximumDeadline);
-        if (this.deadline.isAfter(maximumDeadlineFromNow)) {
-            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
-        }
+    public void addCategory(final Category category) {
+        final PostCategory postCategory = PostCategory.builder()
+                .post(this)
+                .category(category)
+                .build();
+        this.postCategories.add(postCategory);
     }
 
-    public void validateWriter(final Member member) {
-        if (!Objects.equals(this.writer, member)) {
-            throw new BadRequestException(PostExceptionType.POST_NOT_WRITER);
-        }
+    public void addContentImage(final String path) {
+        final PostContentImage postContentImage = PostContentImage.builder()
+                .post(this)
+                .imageUrl(path)
+                .build();
+        this.postContentImages.add(postContentImage);
+    }
+
+    public void addPostOption(final PostOption postOption) {
+        postOption.setPost(this);
+        this.postOptions.add(postOption);
+    }
+
+    public void addComment(final Comment comment) {
+        comment.setPost(this);
+        this.comments.add(comment);
+    }
+
+    public void removePostOption(final PostOption deletedOption) {
+        this.postOptions.remove(deletedOption);
+    }
+
+    public void update(final String title, final String content, final LocalDateTime deadline) {
+        this.postBody = new PostBody(title, content);
+        this.postDeadline = new PostDeadline(deadline);
+    }
+
+    public void closeEarly() {
+        this.postDeadline.close();
     }
 
     public Vote makeVote(final Member voter, final PostOption postOption) {
@@ -126,10 +141,6 @@ public class Post extends BaseEntity {
         }
     }
 
-    public boolean isClosed() {
-        return deadline.isBefore(LocalDateTime.now());
-    }
-
     private void validateVoter(final Member voter) {
         if (Objects.equals(this.writer.getId(), voter.getId())) {
             throw new BadRequestException(VoteExceptionType.WRITER_NOT_VOTE);
@@ -143,146 +154,26 @@ public class Post extends BaseEntity {
     }
 
     private boolean hasPostOption(final PostOption postOption) {
-        return postOptions.contains(postOption);
+        return this.postOptions.contains(postOption);
     }
 
-    public void closeEarly() {
-        this.deadline = LocalDateTime.now();
-    }
-
-    public void addContentImage(final String contentImageUrl) {
-        this.postBody.addContentImage(this, contentImageUrl);
-    }
-
-    public long getFinalTotalVoteCount(final Member loginMember) {
-        if (isVisibleVoteResult(loginMember)) {
-            return this.totalVoteCount;
-        }
-
-        return -1L;
-    }
-
-    public boolean isVisibleVoteResult(final Member member) {
-        return this.postOptions.getSelectedOptionId(member) != 0
-                || this.writer.equals(member)
-                || isClosed();
-    }
-
-    public void blind() {
-        this.isHidden = true;
-    }
-
-    public void validateMine(final Member member) {
-        if (this.writer.equals(member)) {
-            throw new BadRequestException(ReportExceptionType.REPORT_MY_POST);
-        }
-    }
-
-    public void validateHidden() {
-        if (this.isHidden) {
-            throw new BadRequestException(ReportExceptionType.ALREADY_HIDDEN_POST);
-        }
-    }
-
-    public void addComment(final Comment comment) {
-        comment.setPost(this);
-        this.comments.add(comment);
-    }
-
-    public void validatePossibleToDelete() {
-        if (this.totalVoteCount >= 20) {
-            throw new BadRequestException(PostExceptionType.FAIL_DELETE_EXCEED_TWENTY_VOTE_COUNT);
-        }
-    }
-
-    public void update(
-            final PostBody postBody,
-            final String oldContentImageUrl,
-            final List<String> contentImageUrls,
-            final List<Category> categories,
-            final List<String> postOptionContents,
-            final List<String> oldPostOptionImageUrls,
-            final List<String> postOptionImageUrls,
-            final LocalDateTime deadline
-    ) {
-        this.postBody.update(postBody, oldContentImageUrl, contentImageUrls);
-        this.postCategories.update(this, categories);
-        addAllPostOptions(postOptionContents, oldPostOptionImageUrls, postOptionImageUrls);
-        this.deadline = deadline;
-    }
-
-    private void addAllPostOptions(
-            final List<String> postOptionContents,
-            final List<String> oldPostOptionImageUrls,
-            final List<String> postOptionImageUrls
-    ) {
-        this.postOptions.addAll(
-                this,
-                postOptionContents,
-                getPostOptionImageUrls(oldPostOptionImageUrls, postOptionImageUrls)
-        );
-    }
-
-    public void postOptionsClear() {
-        this.postOptions.clear();
-    }
-
-    private List<String> getPostOptionImageUrls(
-            final List<String> oldPostOptionImageUrls,
-            final List<String> postOptionImageUrls
-    ) {
-        return IntStream.range(0, postOptionImageUrls.size())
-                .mapToObj(postOptionIndex ->
-                        getPostOptionImageUrl(
-                                postOptionIndex,
-                                oldPostOptionImageUrls,
-                                postOptionImageUrls
-                        )
-                )
-                .toList();
-    }
-
-    private String getPostOptionImageUrl(
-            final int postOptionIndex,
-            final List<String> oldPostOptionImageUrls,
-            final List<String> postOptionImageUrls
-    ) {
-        final String postOptionImageUrl = postOptionImageUrls.get(postOptionIndex);
-        if (postOptionImageUrl.isEmpty()) {
-            return oldPostOptionImageUrls.get(postOptionIndex);
-        }
-
-        return postOptionImageUrls.get(postOptionIndex);
-    }
-
-    public void validateDeadLineToModify(final LocalDateTime deadlineToModify) {
-        if (getCreatedAt().plusDays(3).isBefore(deadlineToModify)) {
-            throw new BadRequestException(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS);
-        }
-    }
-
-    public void validateExistVote() {
-        if (totalVoteCount > 0) {
-            throw new BadRequestException(PostExceptionType.FAIL_UPDATE_VOTED_POST);
-        }
-    }
-
-    // ---
-
-    public void addPostOption(final PostOption postOption) {
-        postOption.setPost(this);
-        this.postOptionsA.add(postOption);
+    public boolean canDelete() {
+        final int totalVoteCount = this.postOptions.stream()
+                .mapToInt(PostOption::getVoteCount)
+                .sum();
+        return totalVoteCount < DELETE_VOTE_LIMIT;
     }
 
     public boolean isWriter(final Member member) {
         return Objects.equals(this.writer, member);
     }
 
-    public PostContentImage getFirstContentImage() {
-        if (postContentImagesA.isEmpty()) {
-            return null;
-        }
-        return postContentImagesA.get(0);
+    public boolean isClosed() {
+        return this.postDeadline.isClosed();
+    }
+
+    public void blind() {
+        this.isHidden = true;
     }
 
     public String getTitle() {
@@ -293,19 +184,15 @@ public class Post extends BaseEntity {
         return this.postBody.getContent();
     }
 
-    @Builder
-    private Post(
-            final Member writer,
-            final String title,
-            final String content,
-            final LocalDateTime deadline
-    ) {
-        this.writer = writer;
-        this.postBody = new PostBody(title, content);
-        this.deadline = deadline;
-        this.postCategories = new PostCategories();
-        this.postOptions = new PostOptions();
-        this.isHidden = false;
+    public LocalDateTime getDeadline() {
+        return this.postDeadline.getDeadline();
+    }
+
+    public PostContentImage getFirstContentImage() {
+        if (this.postContentImages.isEmpty()) {
+            return null;
+        }
+        return postContentImages.get(0);
     }
 
 }

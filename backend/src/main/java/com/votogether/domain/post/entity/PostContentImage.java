@@ -14,9 +14,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostContentImage extends BaseEntity {
 
     @Id
@@ -31,12 +31,8 @@ public class PostContentImage extends BaseEntity {
     private String imageUrl;
 
     @Builder
-    public PostContentImage(final Post post, final String imageUrl) {
+    private PostContentImage(final Post post, final String imageUrl) {
         this.post = post;
-        this.imageUrl = imageUrl;
-    }
-
-    public void updateImageUrl(final String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

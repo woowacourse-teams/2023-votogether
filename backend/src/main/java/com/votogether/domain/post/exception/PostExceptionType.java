@@ -17,9 +17,11 @@ public enum PostExceptionType implements ExceptionType {
     FAIL_UPDATE_VOTED_POST(508, "투표된 게시글은 수정할 수 없습니다."),
     POST_TITLE_EMPTY(509, "게시글 제목은 비어있거나 공백일 수 없습니다."),
     POST_CONTENT_EMPTY(510, "게시글 내용은 비어있거나 공백일 수 없습니다."),
-    POST_TITLE_INVALID_LENGTH(511, "게시글 제목 길이가 유효하지 않습니다."),
-    POST_CONTENT_INVALID_LENGTH(512, "게시글 내용 길이가 유효하지 않습니다."),
-    POST_IS_HIDDEN(513, "신고에 의해 숨겨진 게시글은 접근할 수 없습니다."),
+    POST_OPTION_CONTENT_EMPTY(511, "게시글 옵션 내용은 비어있거나 공백일 수 없습니다."),
+    POST_TITLE_INVALID_LENGTH(512, "게시글 제목 길이가 유효하지 않습니다."),
+    POST_CONTENT_INVALID_LENGTH(513, "게시글 내용 길이가 유효하지 않습니다."),
+    POST_OPTION_CONTENT_INVALID_LENGTH(514, "게시글 옵션 내용 길이가 유효하지 않습니다."),
+    POST_IS_HIDDEN(515, "신고에 의해 숨겨진 게시글은 접근할 수 없습니다."),
     ;
 
     private final int code;

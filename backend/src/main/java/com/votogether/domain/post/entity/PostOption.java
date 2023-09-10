@@ -1,10 +1,10 @@
 package com.votogether.domain.post.entity;
 
 import com.votogether.domain.common.BaseEntity;
-import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.vote.entity.Vote;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -45,8 +45,8 @@ public class PostOption extends BaseEntity {
     @Column(nullable = false)
     private Integer sequence;
 
-    @Column(length = 50, nullable = false)
-    private String content;
+    @Embedded
+    private PostOptionBody postOptionBody;
 
     @Column
     private String imageUrl;
@@ -66,35 +66,8 @@ public class PostOption extends BaseEntity {
     ) {
         this.post = post;
         this.sequence = sequence;
-        this.content = content;
+        this.postOptionBody = new PostOptionBody(content);
         this.imageUrl = imageUrl;
-    }
-
-    public static PostOption of(
-            final String postOptionContent,
-            final Post post,
-            final int postOptionSequence,
-            final String optionImageUrl
-    ) {
-        if (!optionImageUrl.isEmpty()) {
-            return toPostOptionEntity(post, postOptionSequence, postOptionContent, optionImageUrl);
-        }
-
-        return toPostOptionEntity(post, postOptionSequence, postOptionContent, "");
-    }
-
-    private static PostOption toPostOptionEntity(
-            final Post post,
-            final Integer postOptionSequence,
-            final String postOptionContent,
-            final String optionImageUrl
-    ) {
-        return PostOption.builder()
-                .post(post)
-                .sequence(postOptionSequence)
-                .content(postOptionContent)
-                .imageUrl(optionImageUrl)
-                .build();
     }
 
     public void addVote(final Vote vote) {
@@ -102,17 +75,17 @@ public class PostOption extends BaseEntity {
         this.votes.add(vote);
     }
 
-    public boolean hasMemberVote(final Member member) {
-        return votes.stream()
-                .anyMatch(vote -> vote.isVoteByMember(member));
+    public void update(final String content, final String imageUrl) {
+        this.postOptionBody = new PostOptionBody(content);
+        this.imageUrl = imageUrl;
     }
 
     public boolean belongsTo(final Post post) {
         return Objects.equals(this.post.getId(), post.getId());
     }
 
-    public int getVoteCount() {
-        return this.votes.size();
+    public String getContent() {
+        return this.postOptionBody.getContent();
     }
 
 }

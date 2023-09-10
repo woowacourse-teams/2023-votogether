@@ -18,5 +18,5 @@ public record VoteCountByAgeGroupAndGenderDto(int ageGroup, Gender gender, long 
                 voteCountByAgeGroupAndGenderInterface.getVoteCount()
         );
     }
-    
+
 }

@@ -140,7 +140,7 @@ class PostGuestServiceTest extends ServiceTest {
             // given
             Post post = postTestPersister.postBuilder().save();
             post.blind();
-            
+
             // when, then
             assertThatThrownBy(() -> postGuestService.getPost(post.getId()))
                     .isInstanceOf(BadRequestException.class)

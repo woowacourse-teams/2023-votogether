@@ -2,6 +2,8 @@ import React, { Dispatch } from 'react';
 
 import { Time } from '@type/post';
 
+import { MAX_DEADLINE } from '@constants/post';
+
 import * as S from './style';
 import TimePickerOption from './TimePickerOption';
 
@@ -11,7 +13,8 @@ interface TimePickerOptionListProps {
 }
 
 export default function TimePickerOptionList({ time, setTime }: TimePickerOptionListProps) {
-  const { day, hour, minute } = time;
+  const changedTime =
+    time.day === MAX_DEADLINE ? { day: MAX_DEADLINE - 1, hour: 23, minute: 59 } : time;
 
   const updateTime = (option: string, updatedTime: number) => {
     setTime(prev => ({
@@ -23,7 +26,7 @@ export default function TimePickerOptionList({ time, setTime }: TimePickerOption
   return (
     <S.Wrapper>
       <S.Container>
-        {Object.entries(time).map(([key, value]) => (
+        {Object.entries(changedTime).map(([key, value]) => (
           <TimePickerOption
             key={key}
             currentTime={value}
@@ -33,9 +36,9 @@ export default function TimePickerOptionList({ time, setTime }: TimePickerOption
         ))}
       </S.Container>
       <S.PickedTimeText tabIndex={0}>
-        <p>{day}일</p>
-        <p>{hour}시</p>
-        <p>{minute}분</p> 후 마감
+        <p>{changedTime.day}일</p>
+        <p>{changedTime.hour}시</p>
+        <p>{changedTime.minute}분</p> 후 마감
       </S.PickedTimeText>
     </S.Wrapper>
   );

@@ -1,7 +1,6 @@
-package com.votogether.domain.post.dto.response.vote;
+package com.votogether.domain.post.dto.response.post;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.response.post.PostOptionVoteResultResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.vote.entity.Vote;
@@ -71,7 +70,8 @@ public record PostVoteResultResponse(
             final int totalVoteCount
     ) {
         return postOptions.stream()
-                .map(postOption -> PostOptionVoteResultResponse.ofUser(user, post, postOption, isVoted, totalVoteCount))
+                .map(postOption -> PostOptionVoteResultResponse.ofUser(user, post, postOption, isVoted,
+                        totalVoteCount))
                 .toList();
     }
 

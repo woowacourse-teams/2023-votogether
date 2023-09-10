@@ -2,42 +2,38 @@ package com.votogether.domain.post.dto.request.post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.Builder;
-import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 @Schema(description = "게시글 작성 요청")
-@Builder
 public record PostCreateRequest(
-        @Schema(description = "카테고리의 여러 아이디", example = "[1, 3]")
-        @Size(min = 1, message = "게시글에 해당하는 카테고리는 최소 1개 이상이어야 합니다.")
+        @Schema(description = "카테고리 ID 목록", example = "[1, 2]")
+        @Size(min = 1, message = "게시글 카테고리는 최소 1개 이상 등록이 필요합니다.")
         List<Long> categoryIds,
 
-        @Schema(description = "게시글 제목", example = "title")
-        @NotBlank(message = "제목을 입력해주세요.")
-        @Length(max = 100, message = "제목은 최대 100자까지 입력 가능합니다.")
+        @Schema(description = "게시글 제목", example = "보투게더에 대하여")
+        @NotBlank(message = "게시글 제목이 존재하지 않거나 공백만 존재합니다.")
         String title,
 
-        @Schema(description = "게시글 내용", example = "content")
-        @NotBlank(message = "내용을 입력해주세요.")
-        @Length(max = 1000, message = "내용은 최대 1000자까지 입력 가능합니다.")
+        @Schema(description = "게시글 내용", example = "보투게더 정말 재밌어요!")
+        @NotBlank(message = "게시글 내용이 존재하지 않거나 공백만 존재합니다.")
         String content,
 
-        @Schema(description = "이미지 URL", example = "http://asdasdsadsad.com")
+        @Schema(description = "게시글 이미지 URL", example = "https://votogether.com/static/images/image.png")
         String imageUrl,
 
-        @Schema(description = "게시글의 여러 선택지")
-        @Valid
-        @NotNull(message = "선택지는 최소 2개 이상 등록해야 합니다.")
-        @Size(min = 2, max = 5, message = "선택지는 최소 2개, 최대 5개까지 등록 가능합니다.")
+        @Schema(description = "게시글 이미지 파일", example = "votogether.png")
+        MultipartFile contentImage,
+
+        @Schema(description = "게시글 옵션 작성 목록")
         List<PostOptionCreateRequest> postOptions,
 
-        @Schema(description = "마감 기한", example = "2023-08-01 15:30")
+        @Schema(description = "게시글 마감시간", example = "2023-08-01 12:25")
+        @NotNull(message = "게시글 마감시간을 등록하지 않았습니다.")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline
 ) {

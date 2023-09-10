@@ -121,9 +121,11 @@ export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
 `;
 
 export const Image = styled.img`
-  width: 100%;
+  width: 80%;
   border-radius: 4px;
   margin-bottom: 10px;
+  border: 1px solid var(--gray);
+  align-self: center;
 
   aspect-ratio: 1/1;
   object-fit: cover;

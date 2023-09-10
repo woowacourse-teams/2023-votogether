@@ -25,12 +25,14 @@ export const Container = styled.button<{ $isSelected: boolean }>`
 
 export const Image = styled.img`
   border-radius: 4px;
+  border: 1px solid var(--gray);
   margin-bottom: 10px;
 
-  width: 100%;
+  width: 80%;
 
   aspect-ratio: 1/1;
   object-fit: cover;
+  align-self: center;
 
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;

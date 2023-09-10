@@ -8,6 +8,7 @@ import com.votogether.domain.vote.repository.dto.VoteCountByAgeGroupAndGenderInt
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -71,5 +72,9 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> findAllByMember(final Member member);
 
     int countByMember(final Member member);
+
+    @Modifying
+    @Query("delete from Vote v where v.postOption.id in :postOptionIds")
+    void deleteAllWithPostOptionIdsInBatch(@Param("postOptionIds") final List<Long> postOptionIds);
 
 }

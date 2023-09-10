@@ -264,4 +264,23 @@ class VoteRepositoryTest extends RepositoryTest {
         assertThat(result).isEqualTo(2);
     }
 
+    @Test
+    @DisplayName("게시글의 모든 투표를 삭제한다.")
+    void deleteAllWithPostIdInBatch() {
+        // given
+        Post post = postTestPersister.postBuilder().save();
+        PostOption postOptionA = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+        PostOption postOptionB = postTestPersister.postOptionBuilder().post(post).sequence(2).save();
+        voteTestPersister.builder().postOption(postOptionA).save();
+        voteTestPersister.builder().postOption(postOptionA).save();
+        voteTestPersister.builder().postOption(postOptionB).save();
+        voteTestPersister.builder().postOption(postOptionB).save();
+
+        // when
+        voteRepository.deleteAllWithPostOptionIdsInBatch(List.of(postOptionA.getId(), postOptionB.getId()));
+
+        // then
+        assertThat(voteRepository.findAll()).isEmpty();
+    }
+
 }

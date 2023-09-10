@@ -4,8 +4,10 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostCategory;
+import com.votogether.domain.post.entity.PostContentImage;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.repository.PostCategoryRepository;
+import com.votogether.domain.post.repository.PostContentImageRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import java.time.LocalDateTime;
@@ -17,6 +19,7 @@ public class PostTestPersister {
 
     private final PostRepository postRepository;
     private final PostCategoryRepository postCategoryRepository;
+    private final PostContentImageRepository postContentImageRepository;
     private final PostOptionRepository postOptionRepository;
     private final MemberTestPersister memberTestPersister;
     private final CategoryTestPersister categoryTestPersister;
@@ -27,6 +30,10 @@ public class PostTestPersister {
 
     public PostCategoryBuilder postCategoryBuilder() {
         return new PostCategoryBuilder();
+    }
+
+    public PostContentImageBuilder postContentImageBuilder() {
+        return new PostContentImageBuilder();
     }
 
     public PostOptionBuilder postOptionBuilder() {
@@ -93,6 +100,31 @@ public class PostTestPersister {
                     .category(category == null ? categoryTestPersister.builder().save() : category)
                     .build();
             return postCategoryRepository.save(postCategory);
+        }
+
+    }
+
+    public final class PostContentImageBuilder {
+
+        private Post post;
+        private String imageUrl;
+
+        public PostContentImageBuilder post(Post post) {
+            this.post = post;
+            return this;
+        }
+
+        public PostContentImageBuilder imageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+            return this;
+        }
+
+        public PostContentImage save() {
+            PostContentImage postContentImage = PostContentImage.builder()
+                    .post(post == null ? postBuilder().save() : post)
+                    .imageUrl(imageUrl == null ? "image.png" : imageUrl)
+                    .build();
+            return postContentImageRepository.save(postContentImage);
         }
 
     }

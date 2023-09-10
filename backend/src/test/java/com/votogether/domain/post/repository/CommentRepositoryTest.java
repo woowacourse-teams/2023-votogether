@@ -47,4 +47,21 @@ class CommentRepositoryTest extends RepositoryTest {
         assertThat(comments).containsExactly(commentA, commentB);
     }
 
+    @Test
+    @DisplayName("게시글의 모든 댓글을 삭제한다.")
+    void deleteAllWithPostIdInBatch() {
+        // given
+        Member writer = memberTestPersister.builder().save();
+        Post post = postTestPersister.postBuilder().save();
+        commentTestPersister.builder().writer(writer).post(post).save();
+        commentTestPersister.builder().writer(writer).post(post).save();
+        commentTestPersister.builder().writer(writer).post(post).save();
+
+        // when
+        commentRepository.deleteAllWithPostIdInBatch(post.getId());
+
+        // then
+        assertThat(commentRepository.findAll()).isEmpty();
+    }
+
 }

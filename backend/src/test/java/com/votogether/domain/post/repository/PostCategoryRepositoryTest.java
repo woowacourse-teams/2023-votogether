@@ -30,4 +30,19 @@ class PostCategoryRepositoryTest extends RepositoryTest {
         assertThat(result).containsExactly(postCategoryA, postCategoryB);
     }
 
+    @Test
+    @DisplayName("게시글의 모든 게시글 카테고리를 삭제한다.")
+    void deleteAllWithPostIdInBatch() {
+        // given
+        Post post = postTestPersister.postBuilder().save();
+        postTestPersister.postCategoryBuilder().post(post).save();
+        postTestPersister.postCategoryBuilder().post(post).save();
+
+        // when
+        postCategoryRepository.deleteAllWithPostIdInBatch(post.getId());
+
+        // then
+        assertThat(postCategoryRepository.findAll()).isEmpty();
+    }
+
 }

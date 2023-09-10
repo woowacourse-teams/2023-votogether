@@ -13,6 +13,7 @@ import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.vote.entity.Vote;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
 import java.time.LocalDateTime;
@@ -131,6 +132,19 @@ class PostGuestServiceTest extends ServiceTest {
             assertThatThrownBy(() -> postGuestService.getPost(postId))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void throwExceptionBlindPost() {
+            // given
+            Post post = postTestPersister.postBuilder().save();
+            post.blind();
+            
+            // when, then
+            assertThatThrownBy(() -> postGuestService.getPost(post.getId()))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
         }
 
     }

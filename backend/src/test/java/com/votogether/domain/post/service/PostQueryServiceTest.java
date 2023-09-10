@@ -145,6 +145,20 @@ class PostQueryServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("블라인드된 게시글이면 예외를 던진다.")
+        void throwExceptionBlindPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postQueryService.getPost(post.getId(), member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+        @Test
         @DisplayName("내가 쓴 게시글도 아니고 투표한 게시글도 아닐 때 진행중인 게시글은 결과를 확인할 수 없다.")
         void findPostsOpen() {
             // given
@@ -402,6 +416,20 @@ class PostQueryServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void throwExceptionBlindPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postQueryService.getVoteStatistics(post.getId(), member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+        @Test
         @DisplayName("게시글 작성자가 아니라면 예외를 던진다.")
         void throwExceptionNotWriter() {
             // given
@@ -500,6 +528,21 @@ class PostQueryServiceTest extends ServiceTest {
             assertThatThrownBy(() -> postQueryService.getVoteOptionStatistics(-1L, 1L, member))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void throwExceptionBlindPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postQueryService.getVoteOptionStatistics(post.getId(), postOption.getId(), member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
         }
 
         @Test

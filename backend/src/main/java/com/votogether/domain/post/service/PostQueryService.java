@@ -51,13 +51,14 @@ public class PostQueryService {
     public PostResponse getPost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+        validateHiddenPost(post);
 
         return PostResponse.ofUser(
                 loginMember,
                 post,
                 postCategoryRepository.findAllByPost(post),
                 post.getFirstContentImage(),
-                post.getPostOptionsA(),
+                post.getPostOptions(),
                 voteRepository.findByMemberAndPostOptionPost(loginMember, post)
         );
     }
@@ -114,6 +115,7 @@ public class PostQueryService {
     public VoteOptionStatisticsResponse getVoteStatistics(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+        validateHiddenPost(post);
         validatePostWriter(post, loginMember);
 
         final List<VoteCountByAgeGroupAndGenderDto> result =
@@ -134,6 +136,7 @@ public class PostQueryService {
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
         final PostOption postOption = postOptionRepository.findById(optionId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_OPTION_NOT_FOUND));
+        validateHiddenPost(post);
         validatePostWriter(post, loginMember);
         validatePostOptionBelongPost(post, postOption);
 
@@ -143,6 +146,12 @@ public class PostQueryService {
                         .map(VoteCountByAgeGroupAndGenderDto::from)
                         .toList();
         return VoteOptionStatisticsResponse.from(result);
+    }
+
+    private void validateHiddenPost(final Post post) {
+        if (post.isHidden()) {
+            throw new BadRequestException(PostExceptionType.POST_IS_HIDDEN);
+        }
     }
 
     private void validatePostWriter(final Post post, final Member member) {
@@ -157,16 +166,16 @@ public class PostQueryService {
         }
     }
 
-    private List<PostResponse> convertToResponses(final List<Post> posts, final Member loginMember) {
+    private List<PostResponse> convertToResponses(final List<Post> posts, final Member member) {
         return posts.stream()
                 .map(post ->
                         PostResponse.ofUser(
-                                loginMember,
+                                member,
                                 post,
                                 postCategoryRepository.findAllByPost(post),
                                 post.getFirstContentImage(),
-                                post.getPostOptionsA(),
-                                voteRepository.findByMemberAndPostOptionPost(loginMember, post)
+                                post.getPostOptions(),
+                                voteRepository.findByMemberAndPostOptionPost(member, post)
                         )
                 )
                 .toList();

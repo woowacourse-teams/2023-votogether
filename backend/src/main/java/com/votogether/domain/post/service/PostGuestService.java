@@ -7,6 +7,7 @@ import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,13 @@ public class PostGuestService {
     public PostResponse getPost(final Long postId) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+        validateHiddenPost(post);
 
         return PostResponse.ofGuest(
                 post,
                 postCategoryRepository.findAllByPost(post),
                 post.getFirstContentImage(),
-                post.getPostOptionsA()
+                post.getPostOptions()
         );
     }
 
@@ -63,6 +65,12 @@ public class PostGuestService {
         return convertToResponses(posts);
     }
 
+    private void validateHiddenPost(final Post post) {
+        if (post.isHidden()) {
+            throw new BadRequestException(PostExceptionType.POST_IS_HIDDEN);
+        }
+    }
+
     private List<PostResponse> convertToResponses(final List<Post> posts) {
         return posts.stream()
                 .map(post ->
@@ -70,7 +78,7 @@ public class PostGuestService {
                                 post,
                                 postCategoryRepository.findAllByPost(post),
                                 post.getFirstContentImage(),
-                                post.getPostOptionsA()
+                                post.getPostOptions()
                         )
                 )
                 .toList();

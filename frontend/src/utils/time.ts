@@ -34,8 +34,9 @@ type TimeType = 'day' | 'hour' | 'minute';
 export const checkIrreplaceableTime = (addTime: Record<TimeType, number>, createTime: string) => {
   const transCreateTime = createTime.split('-').join('/');
   const changedDeadline = addTimeToDate(addTime, new Date(transCreateTime));
-  // changedDeadline가 undefined인 경우는 작성일시에서 시간이 더해지지 않았을 경우라 거절
-  if (!changedDeadline) return true;
+
+  //마감시한이 0시간 0분 0초 추가된다면 거절
+  if (Object.values(addTime).every(time => time === 0)) return true;
 
   const limitDeadline = addTimeToDate(
     { day: MAX_DEADLINE, hour: 0, minute: 0 },
@@ -45,7 +46,7 @@ export const checkIrreplaceableTime = (addTime: Record<TimeType, number>, create
   const limitDeadlineNumber = convertTimeFromStringToNumber(limitDeadline);
 
   //작성일시로부터 마감시간 최대일시보다 지정하고자 하는 일시가 크다면 거절
-  if (changedDeadlineNumber >= limitDeadlineNumber) return true;
+  if (changedDeadlineNumber > limitDeadlineNumber) return true;
 
   //지금 일시보다 지정하고자 하는 일시가 작다면 거절
   return changedDeadlineNumber <= convertNowTimeToNumber();

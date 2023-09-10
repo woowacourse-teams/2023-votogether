@@ -54,3 +54,7 @@ jwt:
   token:
     secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
     expiration-time: 222222
+
+image:
+  upload_url: ${user.dir}
+  upload_directory: static/images

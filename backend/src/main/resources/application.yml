@@ -55,3 +55,7 @@ jwt:
   token:
     secret-key: ${SECRET_KEY}
     expiration-time: ${EXPIRATION_TIME}
+
+image:
+  upload_url: ${IMAGE_UPLOAD_URL}
+  upload_directory: ${IMAGE_UPLOAD_DIRECTORY}

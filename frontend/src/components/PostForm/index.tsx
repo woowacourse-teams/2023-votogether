@@ -36,6 +36,7 @@ import {
   convertImageUrlToServerUrl,
   convertServerUrlToImageUrl,
 } from '@utils/post/convertImageUrlToServerUrl';
+import { deleteOverlappingNewLine } from '@utils/post/deleteOverlappingNewLine';
 import { addTimeToDate } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
@@ -178,7 +179,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
         categoryIds: selectedOptionList.map(option => option.id),
         title: writingTitle,
         imageUrl: convertServerUrlToImageUrl(contentImageHook.contentImage),
-        content: writingContent,
+        content: deleteOverlappingNewLine(writingContent),
         postOptions: writingOptionList,
         deadline: addTimeToDate(time, baseTime),
         // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.

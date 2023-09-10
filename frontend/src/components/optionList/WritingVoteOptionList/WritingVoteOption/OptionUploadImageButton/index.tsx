@@ -1,4 +1,4 @@
-import React, { MouseEvent, useRef } from 'react';
+import React, { MouseEvent, MutableRefObject } from 'react';
 
 import photoIcon from '@assets/photo_white.svg';
 
@@ -7,19 +7,22 @@ import * as S from './style';
 interface OptionUploadImageButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
   optionId: number;
   isImageVisible: boolean;
+  contentInputRefList: MutableRefObject<HTMLInputElement[] | null>;
+  index: number;
 }
 
 export default function OptionUploadImageButton({
   optionId,
   isImageVisible,
+  contentInputRefList,
+  index,
   ...rest
 }: OptionUploadImageButtonProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
   const id = optionId.toString();
 
   const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    inputRef.current && inputRef.current.click();
+    contentInputRefList.current && contentInputRefList.current[index].click();
   };
 
   return (
@@ -29,7 +32,18 @@ export default function OptionUploadImageButton({
           <S.Image src={photoIcon} alt="" />
         </S.Label>
       </button>
-      <S.FileInput id={id} type="file" accept="image/*" tabIndex={-1} ref={inputRef} {...rest} />
+      <S.FileInput
+        id={id}
+        type="file"
+        accept="image/*"
+        tabIndex={-1}
+        ref={(ele: HTMLInputElement) => {
+          if (contentInputRefList.current) {
+            contentInputRefList.current[index] = ele;
+          }
+        }}
+        {...rest}
+      />
     </S.Container>
   );
 }

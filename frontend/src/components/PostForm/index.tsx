@@ -28,7 +28,7 @@ import {
   POST_DEADLINE_POLICY,
   POST_TITLE_POLICY,
 } from '@constants/policyMessage';
-import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
+import { CATEGORY_COUNT_LIMIT, MAX_DEADLINE, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
@@ -36,13 +36,13 @@ import {
   convertImageUrlToServerUrl,
   convertServerUrlToImageUrl,
 } from '@utils/post/convertImageUrlToServerUrl';
-import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
+import { addTimeToDate } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
 import { checkIrreplaceableTime } from '@utils/time';
 
 import CategoryWrapper from './CategoryWrapper';
-import { DEADLINE_OPTION, DeadlineOption } from './constants';
+import { DEADLINE_OPTION, DeadlineOptionInfo, DeadlineOptionName } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
 
@@ -76,9 +76,9 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   );
 
   const { isToastOpen, openToast, toastMessage } = useToast();
-  const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정' | null>(
-    getSelectedTimeOption(calculateDeadlineTime(createTime, deadline))
-  );
+  const [selectTimeOption, setSelectTimeOption] = useState<
+    DeadlineOptionName | '사용자지정' | null
+  >(getSelectedTimeOption(calculateDeadlineTime(createTime, deadline)));
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState(calculateDeadlineTime(createTime, deadline));
   const baseTime = createTime ? new Date(createTime) : new Date();
@@ -102,12 +102,12 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
   const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
 
-  const handleDeadlineButtonClick = (option: DeadlineOption) => {
-    const targetTime = formatTimeWithOption(option);
+  const handleDeadlineButtonClick = (option: DeadlineOptionInfo) => {
+    const targetTime = option.time;
 
     if (data && checkIrreplaceableTime(targetTime, data.createTime))
       return openToast('마감시간 지정 조건을 다시 확인해주세요.');
-    setSelectTimeOption(option);
+    setSelectTimeOption(option.name);
     setTime(targetTime);
   };
 
@@ -248,14 +248,14 @@ export default function PostForm({ data, mutate }: PostFormProps) {
                 {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
                   <S.Description tabIndex={0}>
-                    현재 시간으로부터 글 작성일({createTime})로부터 3일 이내 (
-                    {addTimeToDate({ day: 3, hour: 0, minute: 0 }, baseTime)})까지만 선택
+                    현재 시간으로부터 글 작성일({createTime})로부터 {MAX_DEADLINE}일 이내 (
+                    {addTimeToDate({ day: MAX_DEADLINE, hour: 0, minute: 0 }, baseTime)})까지만 선택
                     가능합니다.
                   </S.Description>
                 )}
                 {data && (
                   <S.Description tabIndex={0}>
-                    * 작성일시로부터 마감시간이 계산됩니다.{' '}
+                    * 작성일시로부터 마감시간이 계산됩니다.
                   </S.Description>
                 )}
                 {data && (
@@ -265,13 +265,13 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               <S.ButtonWrapper>
                 {DEADLINE_OPTION.map(option => (
                   <SquareButton
-                    aria-label={option}
-                    key={option}
+                    aria-label={option.name}
+                    key={option.name}
                     type="button"
                     onClick={() => handleDeadlineButtonClick(option)}
-                    theme={selectTimeOption === option ? 'fill' : 'blank'}
+                    theme={selectTimeOption === option.name ? 'fill' : 'blank'}
                   >
-                    {option}
+                    {option.name}
                   </SquareButton>
                 ))}
                 {

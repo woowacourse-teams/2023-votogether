@@ -1,3 +1,5 @@
+import { MAX_DEADLINE } from '@constants/post';
+
 import { addTimeToDate } from './post/formatTime';
 
 const convertNowTimeToNumber = () => {
@@ -35,11 +37,14 @@ export const checkIrreplaceableTime = (addTime: Record<TimeType, number>, create
   // changedDeadline가 undefined인 경우는 작성일시에서 시간이 더해지지 않았을 경우라 거절
   if (!changedDeadline) return true;
 
-  const limitDeadline = addTimeToDate({ day: 3, hour: 0, minute: 0 }, new Date(transCreateTime))!;
+  const limitDeadline = addTimeToDate(
+    { day: MAX_DEADLINE, hour: 0, minute: 0 },
+    new Date(transCreateTime)
+  )!;
   const changedDeadlineNumber = convertTimeFromStringToNumber(changedDeadline);
   const limitDeadlineNumber = convertTimeFromStringToNumber(limitDeadline);
 
-  //작성일시로부터 3일된 일시보다 지정하고자 하는 일시가 크다면 거절
+  //작성일시로부터 마감시간 최대일시보다 지정하고자 하는 일시가 크다면 거절
   if (changedDeadlineNumber >= limitDeadlineNumber) return true;
 
   //지금 일시보다 지정하고자 하는 일시가 작다면 거절
@@ -47,7 +52,6 @@ export const checkIrreplaceableTime = (addTime: Record<TimeType, number>, create
 };
 
 const time = {
-  day: 3,
   hour: 24,
   minute: 60,
 };

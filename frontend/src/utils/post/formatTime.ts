@@ -1,8 +1,4 @@
-interface Time {
-  day: number;
-  hour: number;
-  minute: number;
-}
+import { Time } from '@type/post';
 
 export function addTimeToDate(addTime: Time, baseTime: Date) {
   const { day, hour, minute } = addTime;

@@ -1,13 +1,9 @@
 import React, { Dispatch } from 'react';
 
+import { Time } from '@type/post';
+
 import * as S from './style';
 import TimePickerOption from './TimePickerOption';
-
-interface Time {
-  day: number;
-  hour: number;
-  minute: number;
-}
 
 interface TimePickerOptionListProps {
   time: Time;
@@ -33,7 +29,7 @@ export default function TimePickerOptionList({ time, setTime }: TimePickerOption
             currentTime={value}
             option={key}
             handlePickTime={updateTime}
-          ></TimePickerOption>
+          />
         ))}
       </S.Container>
       <S.PickedTimeText tabIndex={0}>

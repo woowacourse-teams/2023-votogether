@@ -65,3 +65,9 @@ export interface PostListByOptionalOption {
   categoryId: number;
   keyword: string;
 }
+
+export interface Time {
+  day: number;
+  hour: number;
+  minute: number;
+}

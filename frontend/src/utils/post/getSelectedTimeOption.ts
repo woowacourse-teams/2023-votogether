@@ -1,20 +1,9 @@
-import { DeadlineOption } from '@components/PostForm/constants';
+import { Time } from '@type/post';
 
-export const getSelectedTimeOption = ({
-  day,
-  hour,
-  minute,
-}: {
-  day: number;
-  hour: number;
-  minute: number;
-}): DeadlineOption | '사용자지정' | null => {
-  if (day === 0 && hour === 0 && minute === 0) return null;
-  if (day === 0 && hour === 0 && minute === 10) return '10분';
-  if (day === 0 && hour === 0 && minute === 30) return '30분';
-  if (day === 0 && hour === 1 && minute === 0) return '1시간';
-  if (day === 0 && hour === 6 && minute === 0) return '6시간';
-  if (day === 1 && hour === 0 && minute === 0) return '1일';
+import { DEADLINE_OPTION, DeadlineOptionName } from '@components/PostForm/constants';
 
-  return '사용자지정';
+export const getSelectedTimeOption = (time: Time): DeadlineOptionName | '사용자지정' | null => {
+  if (time.day === 0 && time.hour === 0 && time.minute === 0) return null;
+
+  return DEADLINE_OPTION.find(option => option.time === time)?.name ?? '사용자지정';
 };

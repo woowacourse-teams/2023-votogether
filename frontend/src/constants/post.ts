@@ -67,3 +67,6 @@ export const DEFAULT_KEYWORD = '';
 export const CATEGORY_COUNT_LIMIT = 3;
 
 export const IMAGE_BASE_URL = `${process.env.VOTOGETHER_BASE_URL.replace(/api\./, '')}/`;
+
+//단위는 0일
+export const MAX_DEADLINE = 14;

@@ -1155,7 +1155,7 @@ class PostServiceTest {
     class Ranking {
 
         @Test
-        @DisplayName("중복순위가 있는 경우")
+        @DisplayName("중복 순위가 있는 경우")
         void getRanking() {
             // given
             List<Post> posts = new ArrayList<>();
@@ -1177,11 +1177,12 @@ class PostServiceTest {
             voteTestPersister.builder().postOption(postOptions.get(10)).save();
             voteTestPersister.builder().postOption(postOptions.get(10)).save();
             voteTestPersister.builder().postOption(postOptions.get(10)).save();
+            voteTestPersister.builder().postOption(postOptions.get(7)).save();
 
             /*
             index       |0| |1| |2| |3| |4| |5| |6| |7| |8| |9| |10|
-            voteCount   |1| |2| |3| |4| |5| |6| |7| |8| |9| |10| |3|
-            ranking     |11| |10| |8| |7| |6| |5| |4| |3| |2| |1| |8|
+            voteCount   |1| |2| |3| |4| |5| |6| |7| |9| |9| |10| |3|
+            ranking     |11| |10| |8| |7| |6| |5| |4| |2| |2| |1| |8|
             */
 
             entityManager.clear();
@@ -1195,7 +1196,7 @@ class PostServiceTest {
                     () -> assertThat(rankings).hasSize(10),
                     () -> assertThat(rankings.get(0).ranking()).isEqualTo(1),
                     () -> assertThat(rankings.get(1).ranking()).isEqualTo(2),
-                    () -> assertThat(rankings.get(2).ranking()).isEqualTo(3),
+                    () -> assertThat(rankings.get(2).ranking()).isEqualTo(2),
                     () -> assertThat(rankings.get(3).ranking()).isEqualTo(4),
                     () -> assertThat(rankings.get(4).ranking()).isEqualTo(5),
                     () -> assertThat(rankings.get(5).ranking()).isEqualTo(6),
@@ -1205,8 +1206,6 @@ class PostServiceTest {
                     () -> assertThat(rankings.get(9).ranking()).isEqualTo(10),
 
                     () -> assertThat(rankings.get(0).postCompactResponse().id()).isEqualTo(posts.get(9).getId()),
-                    () -> assertThat(rankings.get(1).postCompactResponse().id()).isEqualTo(posts.get(8).getId()),
-                    () -> assertThat(rankings.get(2).postCompactResponse().id()).isEqualTo(posts.get(7).getId()),
                     () -> assertThat(rankings.get(3).postCompactResponse().id()).isEqualTo(posts.get(6).getId()),
                     () -> assertThat(rankings.get(4).postCompactResponse().id()).isEqualTo(posts.get(5).getId()),
                     () -> assertThat(rankings.get(5).postCompactResponse().id()).isEqualTo(posts.get(4).getId()),
@@ -1215,7 +1214,12 @@ class PostServiceTest {
                     () -> assertThat(
                             List.of(rankings.get(7).postCompactResponse().id(),
                                             rankings.get(8).postCompactResponse().id())
-                                    .containsAll(List.of(posts.get(10).getId(), posts.get(2).getId())))
+                                    .containsAll(List.of(posts.get(10).getId(), posts.get(2).getId()))),
+                    () -> assertThat(
+                            List.of(rankings.get(1).postCompactResponse().id(),
+                                            rankings.get(2).postCompactResponse().id())
+                                    .containsAll(List.of(posts.get(7).getId(),
+                                            posts.get(8).getId())))
             );
         }
 

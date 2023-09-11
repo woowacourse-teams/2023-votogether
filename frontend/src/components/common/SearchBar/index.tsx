@@ -26,7 +26,7 @@ export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
     <S.Form size={size} action={PATH.SEARCH} onSubmit={handleSearchSubmit}>
       <S.Input
         ref={searchInputRef}
-        maxLength={SEARCH_KEYWORD_MAX_LENGTH}
+        maxLength={SEARCH_KEYWORD_MAX_LENGTH + 1}
         aria-label="게시글 제목 및 내용 검색창"
         type="search"
         value={keyword}

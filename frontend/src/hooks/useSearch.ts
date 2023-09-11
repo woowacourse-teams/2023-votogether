@@ -1,29 +1,21 @@
-import { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SEARCH_KEYWORD_MAX_LENGTH } from '@constants/post';
 
 import { getTrimmedWord } from '@utils/getTrimmedWord';
 
+import { useText } from './useText';
+
 export const useSearch = (initialKeyword = '') => {
   const navigate = useNavigate();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [keyword, setKeyword] = useState(initialKeyword);
+  const { text: keyword, setText: setKeyword, handleTextChange } = useText(initialKeyword);
 
   const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!searchInputRef.current) return;
 
-    if (event.currentTarget.value.length > SEARCH_KEYWORD_MAX_LENGTH) {
-      searchInputRef.current.setCustomValidity(
-        `검색어는 ${SEARCH_KEYWORD_MAX_LENGTH}자까지 입력 가능합니다.`
-      );
-      searchInputRef.current.reportValidity();
-
-      return;
-    }
-
-    setKeyword(event.currentTarget.value);
-    searchInputRef.current.setCustomValidity('');
+    handleTextChange(event, { MAX_LENGTH: SEARCH_KEYWORD_MAX_LENGTH, MIN_LENGTH: 0 });
   };
 
   const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {

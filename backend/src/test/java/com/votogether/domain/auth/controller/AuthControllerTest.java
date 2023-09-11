@@ -77,14 +77,14 @@ class AuthControllerTest {
         // given
         String accessToken = "abcdefg";
         String refreshToken = "adfdsfdsa";
-        final AccessTokenRequest request = new AccessTokenRequest(accessToken);
-        final TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
-        final Cookie cookie = new Cookie.Builder("refreshToken", refreshToken).build();
+        AccessTokenRequest request = new AccessTokenRequest(accessToken);
+        TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
+        Cookie cookie = new Cookie.Builder("refreshToken", refreshToken).build();
 
         given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(tokenResponse);
 
         // when
-        final AccessTokenResponse response = RestAssuredMockMvc
+        AccessTokenResponse response = RestAssuredMockMvc
                 .given().log().all()
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)

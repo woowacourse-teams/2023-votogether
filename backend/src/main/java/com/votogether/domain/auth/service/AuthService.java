@@ -53,10 +53,10 @@ public class AuthService {
                 .orElseThrow(() -> new NotFoundException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
         validateTokenInfo(accessTokenPayload, refreshToken);
 
-        final String accessToken = tokenProcessor.generateAccessToken(refreshToken.getMemberId());
+        final String newAccessToken = tokenProcessor.generateAccessToken(refreshToken.getMemberId());
         final String newRefreshToken = tokenProcessor.generateRefreshToken(refreshToken.getMemberId());
         refreshTokenRepository.save(new RefreshToken(newRefreshToken, refreshToken.getMemberId()));
-        return new TokenResponse(accessToken, newRefreshToken);
+        return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
     private void validateTokenInfo(final TokenPayload accessTokenPayload, final RefreshToken refreshToken) {

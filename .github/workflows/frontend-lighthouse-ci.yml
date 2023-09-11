@@ -1,5 +1,15 @@
-name: Run lighthouse CI When Push
-on: [push]
+name: Run Lighthouse CI When Push
+
+on:
+  push:
+    branches: ['dev']
+    paths:
+      - 'frontend/**'
+
+defaults:
+  run:
+    working-directory: frontend
+
 jobs:
   lhci:
     name: Lighthouse CI

@@ -897,7 +897,7 @@ class PostControllerTest {
                 .as(new ParameterizedTypeReference<List<PostRankingResponse>>() {
                 }.getType());
 
-        assertThat(result.get(0)).isEqualTo(postRankingResponse);
+        assertThat(result).isEqualTo(List.of(postRankingResponse));
     }
 
 }

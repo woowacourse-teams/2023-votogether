@@ -65,7 +65,6 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const navigate = useNavigate();
   const contentImageHook = useContentImage(serverImageUrl);
   const { handlePasteImage } = contentImageHook;
-
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,

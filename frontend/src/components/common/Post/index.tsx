@@ -12,7 +12,6 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
-import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
 import { linkifyText } from '@utils/post/formatContentLink';
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 

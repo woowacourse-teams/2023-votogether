@@ -20,17 +20,29 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 18
 
+      - name: Cache modules
+        uses: actions/cache@v3
+        id: cache-npm
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: Install packages
-        run: |
-          npm install
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        run: npm ci
 
       - name: Build
-        run: |
-          npm run build
+        run: npm run build
 
       - name: Run Lighthouse CI
         env:

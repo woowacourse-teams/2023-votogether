@@ -13,7 +13,7 @@ export const useSearch = (initialKeyword = '') => {
     searchInputRef.current.setCustomValidity('');
   };
 
-  const onSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!searchInputRef.current) return;
@@ -33,5 +33,5 @@ export const useSearch = (initialKeyword = '') => {
     navigate(`/search?keyword=${trimmedKeyword}`);
   };
 
-  return { keyword, handleKeywordChange, onSearchSubmit, searchInputRef };
+  return { keyword, handleKeywordChange, handleSearchSubmit, searchInputRef };
 };

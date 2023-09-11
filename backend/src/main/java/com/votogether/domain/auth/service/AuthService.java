@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.auth.RefreshToken;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
 import com.votogether.domain.auth.dto.response.KakaoMemberResponse;
-import com.votogether.domain.auth.exception.TokenExceptionType;
+import com.votogether.domain.auth.exception.AuthExceptionType;
 import com.votogether.domain.auth.repository.RefreshTokenRepository;
 import com.votogether.domain.auth.service.dto.LoginTokenResponse;
 import com.votogether.domain.auth.service.dto.TokenResponse;
@@ -50,7 +50,7 @@ public class AuthService {
 
         final TokenPayload accessTokenPayload = tokenProcessor.parseToken(request.accessToken());
         final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
-                .orElseThrow(() -> new NotFoundException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
+                .orElseThrow(() -> new NotFoundException(AuthExceptionType.NONEXISTENT_REFRESH_TOKEN));
         refreshTokenRepository.delete(refreshToken);
         validateTokenInfo(accessTokenPayload, refreshToken);
 
@@ -62,14 +62,14 @@ public class AuthService {
 
     private void validateTokenInfo(final TokenPayload accessTokenPayload, final RefreshToken refreshToken) {
         if (!accessTokenPayload.memberId().equals(refreshToken.memberId())) {
-            throw new BadRequestException(TokenExceptionType.UNMATCHED_INFORMATION_BETWEEN_TOKEN);
+            throw new BadRequestException(AuthExceptionType.UNMATCHED_INFORMATION_BETWEEN_TOKEN);
         }
     }
 
     @Transactional
     public void deleteRefreshToken(final String refreshTokenByRequest) {
         final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
-                .orElseThrow(() -> new NotFoundException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
+                .orElseThrow(() -> new NotFoundException(AuthExceptionType.NONEXISTENT_REFRESH_TOKEN));
         refreshTokenRepository.delete(refreshToken);
     }
 

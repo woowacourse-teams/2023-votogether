@@ -9,7 +9,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
-import com.votogether.domain.auth.dto.response.AccessTokenResponse;
+import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
 import com.votogether.domain.auth.service.AuthService;
 import com.votogether.domain.auth.service.dto.LoginTokenResponse;
 import com.votogether.domain.auth.service.dto.TokenResponse;
@@ -84,7 +84,7 @@ class AuthControllerTest {
         given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(tokenResponse);
 
         // when
-        AccessTokenResponse response = RestAssuredMockMvc
+        ReissuedAccessTokenResponse response = RestAssuredMockMvc
                 .given().log().all()
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +94,7 @@ class AuthControllerTest {
                 .status(HttpStatus.OK)
                 .cookie("refreshToken", tokenResponse.refreshToken())
                 .extract()
-                .as(AccessTokenResponse.class);
+                .as(ReissuedAccessTokenResponse.class);
 
         // then
         assertThat(response.accessToken()).isEqualTo(tokenResponse.accessToken());

@@ -2,9 +2,9 @@ package com.votogether.domain.auth.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
-import com.votogether.domain.auth.dto.response.AccessTokenResponse;
 import com.votogether.domain.auth.dto.response.LoginResponse;
-import com.votogether.domain.auth.exception.TokenExceptionType;
+import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
+import com.votogether.domain.auth.exception.AuthExceptionType;
 import com.votogether.domain.auth.service.AuthService;
 import com.votogether.domain.auth.service.dto.LoginTokenResponse;
 import com.votogether.domain.auth.service.dto.TokenResponse;
@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/auth")
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 @RestController
 public class AuthController implements AuthControllerDocs {
 
@@ -44,7 +44,7 @@ public class AuthController implements AuthControllerDocs {
     }
 
     @PostMapping("/silent-login")
-    public ResponseEntity<AccessTokenResponse> reissueAccessToken(
+    public ResponseEntity<ReissuedAccessTokenResponse> reissueAccessToken(
             @RequestBody final AccessTokenRequest request,
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse
@@ -53,7 +53,7 @@ public class AuthController implements AuthControllerDocs {
         final TokenResponse tokenResponse = authService.reissueAuthToken(request, refreshToken);
 
         addRefreshTokenToCookie(httpServletResponse, tokenResponse.refreshToken());
-        final AccessTokenResponse response = new AccessTokenResponse(tokenResponse.accessToken());
+        final ReissuedAccessTokenResponse response = new ReissuedAccessTokenResponse(tokenResponse.accessToken());
         return ResponseEntity.ok(response);
     }
 
@@ -73,7 +73,7 @@ public class AuthController implements AuthControllerDocs {
         final Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
-        cookie.setPath("/");
+        cookie.setPath("/auth");
         httpServletResponse.addCookie(cookie);
     }
 
@@ -82,7 +82,7 @@ public class AuthController implements AuthControllerDocs {
                 .filter(cookie -> cookie.getName().equals("refreshToken"))
                 .findAny()
                 .map(Cookie::getValue)
-                .orElseThrow(() -> new BadRequestException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
+                .orElseThrow(() -> new BadRequestException(AuthExceptionType.NONEXISTENT_REFRESH_TOKEN));
     }
 
     private void expireCookie(final HttpServletResponse httpServletResponse, final String refreshToken) {
@@ -92,3 +92,4 @@ public class AuthController implements AuthControllerDocs {
     }
 
 }
+

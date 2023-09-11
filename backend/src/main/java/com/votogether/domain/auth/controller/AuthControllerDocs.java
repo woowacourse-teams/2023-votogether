@@ -2,8 +2,8 @@ package com.votogether.domain.auth.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
-import com.votogether.domain.auth.dto.response.AccessTokenResponse;
 import com.votogether.domain.auth.dto.response.LoginResponse;
+import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
 import com.votogether.global.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,7 +53,7 @@ public interface AuthControllerDocs {
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
-    ResponseEntity<AccessTokenResponse> reissueAccessToken(
+    ResponseEntity<ReissuedAccessTokenResponse> reissueAccessToken(
             @RequestBody final AccessTokenRequest request,
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse

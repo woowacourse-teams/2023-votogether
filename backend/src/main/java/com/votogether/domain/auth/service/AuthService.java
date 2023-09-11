@@ -41,7 +41,7 @@ public class AuthService {
         return new LoginTokenResponse(accessToken, refreshToken, registeredMember.hasEssentialInfo());
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = {BadRequestException.class})
     public TokenResponse reissueAuthToken(
             final AccessTokenRequest request,
             final String refreshTokenByRequest
@@ -51,6 +51,7 @@ public class AuthService {
         final TokenPayload accessTokenPayload = tokenProcessor.parseToken(request.accessToken());
         final RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenByRequest)
                 .orElseThrow(() -> new NotFoundException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
+        refreshTokenRepository.delete(refreshToken);
         validateTokenInfo(accessTokenPayload, refreshToken);
 
         final String newAccessToken = tokenProcessor.generateAccessToken(refreshToken.getMemberId());
@@ -60,7 +61,6 @@ public class AuthService {
     }
 
     private void validateTokenInfo(final TokenPayload accessTokenPayload, final RefreshToken refreshToken) {
-        refreshTokenRepository.delete(refreshToken);
         if (!accessTokenPayload.memberId().equals(refreshToken.getMemberId())) {
             throw new BadRequestException(TokenExceptionType.UNMATCHED_INFORMATION_BETWEEN_TOKEN);
         }

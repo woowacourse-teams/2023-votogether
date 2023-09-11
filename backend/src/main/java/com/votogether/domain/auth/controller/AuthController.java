@@ -80,8 +80,8 @@ public class AuthController implements AuthControllerDocs {
     private String getRefreshTokenFromCookie(final HttpServletRequest httpServletRequest) {
         return Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> cookie.getName().equals("refreshToken"))
-                .map(Cookie::getValue)
                 .findAny()
+                .map(Cookie::getValue)
                 .orElseThrow(() -> new BadRequestException(TokenExceptionType.NONEXISTENT_REFRESH_TOKEN));
     }
 

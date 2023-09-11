@@ -122,8 +122,8 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     e.preventDefault();
     const formData = new FormData();
 
-    const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
-      return { content: text, imageUrl };
+    const writingOptionList = writingOptionHook.optionList.map(({ id, text, imageUrl }, index) => {
+      return { id, content: text, imageUrl };
     });
 
     //예외처리
@@ -148,6 +148,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       formData.append('content', deleteOverlappingNewLine(writingContent));
       formData.append('imageUrl', contentImageHook.contentImage);
       writingOptionList.forEach((option, index) => {
+        serverVoteInfo && formData.append(`postOptions[${index}].id`, option.id.toString());
         formData.append(`postOptions[${index}].content`, option.content);
         formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
       });

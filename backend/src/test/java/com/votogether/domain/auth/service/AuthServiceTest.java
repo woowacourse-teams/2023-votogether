@@ -125,7 +125,7 @@ class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("올바르지 않은 갱신 토큰이 주어지면 예외가 발생한다.")
+        @DisplayName("갱신 토큰이 존재하지 않으면 예외가 발생한다.")
         void failRefresh() {
             // given
             Long memberId = 5L;

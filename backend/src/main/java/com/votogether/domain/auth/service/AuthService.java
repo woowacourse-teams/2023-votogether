@@ -15,6 +15,7 @@ import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +62,7 @@ public class AuthService {
     }
 
     private void validateTokenInfo(final TokenPayload accessTokenPayload, final RefreshToken refreshToken) {
-        if (!accessTokenPayload.memberId().equals(refreshToken.memberId())) {
+        if (!Objects.equals(accessTokenPayload.memberId(), refreshToken.memberId())) {
             throw new BadRequestException(AuthExceptionType.UNMATCHED_INFORMATION_BETWEEN_TOKEN);
         }
     }

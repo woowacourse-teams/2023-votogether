@@ -12,6 +12,7 @@ import com.votogether.global.exception.BadRequestException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class AuthController implements AuthControllerDocs {
 
     @PostMapping("/silent-login")
     public ResponseEntity<ReissuedAccessTokenResponse> reissueAccessToken(
-            @RequestBody final AccessTokenRequest request,
+            @RequestBody @Valid final AccessTokenRequest request,
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse
     ) throws JsonProcessingException {

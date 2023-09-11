@@ -19,7 +19,10 @@ import io.restassured.http.Cookie;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -71,33 +74,61 @@ class AuthControllerTest {
         );
     }
 
-    @Test
-    @DisplayName("인증 토큰을 재발급한다.")
-    void reissueAccessToken() throws Exception {
-        // given
-        String accessToken = "abcdefg";
-        String refreshToken = "adfdsfdsa";
-        AccessTokenRequest request = new AccessTokenRequest(accessToken);
-        TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
-        Cookie cookie = new Cookie.Builder("refreshToken", refreshToken).build();
+    @Nested
+    class ReissueAccessToken {
 
-        given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(tokenResponse);
+        @Test
+        @DisplayName("인증 토큰을 재발급한다.")
+        void reissueAccessToken() throws Exception {
+            // given
+            String accessToken = "abcdefg";
+            String refreshToken = "adfdsfdsa";
+            AccessTokenRequest request = new AccessTokenRequest(accessToken);
+            TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
+            Cookie cookie = new Cookie.Builder("refreshToken", refreshToken).build();
 
-        // when
-        ReissuedAccessTokenResponse response = RestAssuredMockMvc
-                .given().log().all()
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(request)
-                .when().post("/auth/silent-login")
-                .then().log().all()
-                .status(HttpStatus.OK)
-                .cookie("refreshToken", tokenResponse.refreshToken())
-                .extract()
-                .as(ReissuedAccessTokenResponse.class);
+            given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(tokenResponse);
 
-        // then
-        assertThat(response.accessToken()).isEqualTo(tokenResponse.accessToken());
+            // when
+            ReissuedAccessTokenResponse response = RestAssuredMockMvc
+                    .given().log().all()
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .when().post("/auth/silent-login")
+                    .then().log().all()
+                    .status(HttpStatus.OK)
+                    .cookie("refreshToken", tokenResponse.refreshToken())
+                    .extract()
+                    .as(ReissuedAccessTokenResponse.class);
+
+            // then
+            assertThat(response.accessToken()).isEqualTo(tokenResponse.accessToken());
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @DisplayName("인증 토큰이 null 혹은 빈 값이면 400을 반환한다.")
+        void reissueAccessTokenWhenNotBlank(String accessToken) throws Exception {
+            // given
+            String refreshToken = "adfdsfdsa";
+            AccessTokenRequest request = new AccessTokenRequest(accessToken);
+            TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
+            Cookie cookie = new Cookie.Builder("refreshToken", refreshToken).build();
+
+            given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(tokenResponse);
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
+                    .when().post("/auth/silent-login")
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @Test

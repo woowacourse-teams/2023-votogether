@@ -10,10 +10,10 @@ import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
-import com.votogether.domain.post.dto.response.post.PostCompactResponse;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
 import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostSummaryResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -382,7 +382,7 @@ public class PostService {
                 .map(entry ->
                         new PostRankingResponse(
                                 entry.getValue(),
-                                PostCompactResponse.from(entry.getKey())
+                                PostSummaryResponse.from(entry.getKey())
                         )
                 )
                 .toList();

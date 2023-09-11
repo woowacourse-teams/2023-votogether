@@ -1205,19 +1205,19 @@ class PostServiceTest {
                     () -> assertThat(rankings.get(8).ranking()).isEqualTo(8),
                     () -> assertThat(rankings.get(9).ranking()).isEqualTo(10),
 
-                    () -> assertThat(rankings.get(0).postCompactResponse().id()).isEqualTo(posts.get(9).getId()),
-                    () -> assertThat(rankings.get(3).postCompactResponse().id()).isEqualTo(posts.get(6).getId()),
-                    () -> assertThat(rankings.get(4).postCompactResponse().id()).isEqualTo(posts.get(5).getId()),
-                    () -> assertThat(rankings.get(5).postCompactResponse().id()).isEqualTo(posts.get(4).getId()),
-                    () -> assertThat(rankings.get(6).postCompactResponse().id()).isEqualTo(posts.get(3).getId()),
-                    () -> assertThat(rankings.get(9).postCompactResponse().id()).isEqualTo(posts.get(1).getId()),
+                    () -> assertThat(rankings.get(0).postSummaryResponse().id()).isEqualTo(posts.get(9).getId()),
+                    () -> assertThat(rankings.get(3).postSummaryResponse().id()).isEqualTo(posts.get(6).getId()),
+                    () -> assertThat(rankings.get(4).postSummaryResponse().id()).isEqualTo(posts.get(5).getId()),
+                    () -> assertThat(rankings.get(5).postSummaryResponse().id()).isEqualTo(posts.get(4).getId()),
+                    () -> assertThat(rankings.get(6).postSummaryResponse().id()).isEqualTo(posts.get(3).getId()),
+                    () -> assertThat(rankings.get(9).postSummaryResponse().id()).isEqualTo(posts.get(1).getId()),
                     () -> assertThat(
-                            List.of(rankings.get(7).postCompactResponse().id(),
-                                            rankings.get(8).postCompactResponse().id())
+                            List.of(rankings.get(7).postSummaryResponse().id(),
+                                            rankings.get(8).postSummaryResponse().id())
                                     .containsAll(List.of(posts.get(10).getId(), posts.get(2).getId()))),
                     () -> assertThat(
-                            List.of(rankings.get(1).postCompactResponse().id(),
-                                            rankings.get(2).postCompactResponse().id())
+                            List.of(rankings.get(1).postSummaryResponse().id(),
+                                            rankings.get(2).postSummaryResponse().id())
                                     .containsAll(List.of(posts.get(7).getId(),
                                             posts.get(8).getId())))
             );
@@ -1269,16 +1269,16 @@ class PostServiceTest {
                     () -> assertThat(rankings.get(8).ranking()).isEqualTo(9),
                     () -> assertThat(rankings.get(9).ranking()).isEqualTo(10),
 
-                    () -> assertThat(rankings.get(0).postCompactResponse().id()).isEqualTo(posts.get(9).getId()),
-                    () -> assertThat(rankings.get(1).postCompactResponse().id()).isEqualTo(posts.get(8).getId()),
-                    () -> assertThat(rankings.get(2).postCompactResponse().id()).isEqualTo(posts.get(7).getId()),
-                    () -> assertThat(rankings.get(3).postCompactResponse().id()).isEqualTo(posts.get(6).getId()),
-                    () -> assertThat(rankings.get(4).postCompactResponse().id()).isEqualTo(posts.get(5).getId()),
-                    () -> assertThat(rankings.get(5).postCompactResponse().id()).isEqualTo(posts.get(4).getId()),
-                    () -> assertThat(rankings.get(6).postCompactResponse().id()).isEqualTo(posts.get(3).getId()),
-                    () -> assertThat(rankings.get(7).postCompactResponse().id()).isEqualTo(posts.get(2).getId()),
-                    () -> assertThat(rankings.get(8).postCompactResponse().id()).isEqualTo(posts.get(1).getId()),
-                    () -> assertThat(rankings.get(9).postCompactResponse().id()).isEqualTo(posts.get(0).getId())
+                    () -> assertThat(rankings.get(0).postSummaryResponse().id()).isEqualTo(posts.get(9).getId()),
+                    () -> assertThat(rankings.get(1).postSummaryResponse().id()).isEqualTo(posts.get(8).getId()),
+                    () -> assertThat(rankings.get(2).postSummaryResponse().id()).isEqualTo(posts.get(7).getId()),
+                    () -> assertThat(rankings.get(3).postSummaryResponse().id()).isEqualTo(posts.get(6).getId()),
+                    () -> assertThat(rankings.get(4).postSummaryResponse().id()).isEqualTo(posts.get(5).getId()),
+                    () -> assertThat(rankings.get(5).postSummaryResponse().id()).isEqualTo(posts.get(4).getId()),
+                    () -> assertThat(rankings.get(6).postSummaryResponse().id()).isEqualTo(posts.get(3).getId()),
+                    () -> assertThat(rankings.get(7).postSummaryResponse().id()).isEqualTo(posts.get(2).getId()),
+                    () -> assertThat(rankings.get(8).postSummaryResponse().id()).isEqualTo(posts.get(1).getId()),
+                    () -> assertThat(rankings.get(9).postSummaryResponse().id()).isEqualTo(posts.get(0).getId())
             );
         }
 

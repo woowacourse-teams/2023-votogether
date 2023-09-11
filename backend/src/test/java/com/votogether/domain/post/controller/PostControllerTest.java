@@ -22,10 +22,10 @@ import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
-import com.votogether.domain.post.dto.response.post.PostCompactResponse;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
 import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostSummaryResponse;
 import com.votogether.domain.post.dto.response.post.WriterResponse;
 import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.vote.VoteDetailResponse;
@@ -885,7 +885,7 @@ class PostControllerTest {
                 .build();
         ReflectionTestUtils.setField(post, "id", 1L);
 
-        PostRankingResponse postRankingResponse = new PostRankingResponse(1, PostCompactResponse.from(post));
+        PostRankingResponse postRankingResponse = new PostRankingResponse(1, PostSummaryResponse.from(post));
         given(postService.getRanking()).willReturn(List.of(postRankingResponse));
 
         // when, then

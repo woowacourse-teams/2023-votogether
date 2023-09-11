@@ -4,7 +4,7 @@ import com.votogether.domain.post.entity.Post;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "게시글 정보 응답")
-public record PostCompactResponse(
+public record PostSummaryResponse(
         @Schema(description = "게시글 ID", example = "1")
         Long id,
 
@@ -18,8 +18,8 @@ public record PostCompactResponse(
         long voteCount
 ) {
 
-    public static PostCompactResponse from(final Post post) {
-        return new PostCompactResponse(
+    public static PostSummaryResponse from(final Post post) {
+        return new PostSummaryResponse(
                 post.getId(),
                 post.getWriter().getNickname(),
                 post.getPostBody().getTitle(),

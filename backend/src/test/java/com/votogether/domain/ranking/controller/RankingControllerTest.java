@@ -58,7 +58,7 @@ class RankingControllerTest {
         RankingResponse result = RestAssuredMockMvc
                 .given().log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
-                .when().get("/members/me/ranking")
+                .when().get("/members/me/ranking/passion")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract()

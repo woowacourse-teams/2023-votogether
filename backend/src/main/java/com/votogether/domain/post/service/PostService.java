@@ -397,7 +397,6 @@ public class PostService {
         for (Post post : posts) {
             final long currentVoteCount = post.getTotalVoteCount();
             final int ranking = (currentVoteCount == previousVoteCount) ? previousRanking : currentRanking;
-
             rankings.put(post, ranking);
 
             previousRanking = ranking;

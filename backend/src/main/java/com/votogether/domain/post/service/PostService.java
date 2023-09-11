@@ -393,7 +393,7 @@ public class PostService {
 
     private Map<Post, Integer> calculateRanking(final List<Post> posts) {
         final List<Post> sortedPosts = posts.stream()
-                .sorted(Comparator.comparingLong(post -> -post.getTotalVoteCount()))
+                .sorted(Comparator.comparingLong(Post::getTotalVoteCount).reversed())
                 .toList();
 
         final Map<Post, Integer> rankings = new HashMap<>();

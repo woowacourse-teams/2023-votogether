@@ -54,14 +54,14 @@ public class AuthService {
         refreshTokenRepository.delete(refreshToken);
         validateTokenInfo(accessTokenPayload, refreshToken);
 
-        final String newAccessToken = tokenProcessor.generateAccessToken(refreshToken.getMemberId());
-        final String newRefreshToken = tokenProcessor.generateRefreshToken(refreshToken.getMemberId());
-        refreshTokenRepository.save(new RefreshToken(newRefreshToken, refreshToken.getMemberId()));
+        final String newAccessToken = tokenProcessor.generateAccessToken(refreshToken.memberId());
+        final String newRefreshToken = tokenProcessor.generateRefreshToken(refreshToken.memberId());
+        refreshTokenRepository.save(new RefreshToken(newRefreshToken, refreshToken.memberId()));
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
     private void validateTokenInfo(final TokenPayload accessTokenPayload, final RefreshToken refreshToken) {
-        if (!accessTokenPayload.memberId().equals(refreshToken.getMemberId())) {
+        if (!accessTokenPayload.memberId().equals(refreshToken.memberId())) {
             throw new BadRequestException(TokenExceptionType.UNMATCHED_INFORMATION_BETWEEN_TOKEN);
         }
     }

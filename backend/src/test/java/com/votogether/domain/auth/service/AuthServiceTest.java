@@ -66,7 +66,7 @@ class AuthServiceTest {
 
             // then
             RefreshToken savedRefreshToken = refreshTokenRepository.findById(tokenResponse.refreshToken()).get();
-            assertThat(tokenResponse.refreshToken()).isEqualTo(savedRefreshToken.getRefreshToken());
+            assertThat(tokenResponse.refreshToken()).isEqualTo(savedRefreshToken.refreshToken());
         }
 
         @Test

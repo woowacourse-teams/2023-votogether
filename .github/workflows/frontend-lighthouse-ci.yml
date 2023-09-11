@@ -1,10 +1,10 @@
-name: Run Lighthouse CI When Push
+name: Run Lighthouse CI When PR
 
 on:
   pull_request:
-    branches:
-      - main
-      - dev
+    types:
+      - opened
+    branches: ['dev']
     paths:
       - 'frontend/**'
 

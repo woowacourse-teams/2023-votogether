@@ -29,9 +29,7 @@ import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.global.util.ImageUploader;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -381,7 +379,6 @@ public class PostService {
         final Map<Post, Integer> rankings = calculateRanking(posts);
 
         return rankings.entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> entry.getValue()))
                 .map(entry ->
                         new PostRankingResponse(
                                 entry.getValue(),
@@ -392,16 +389,12 @@ public class PostService {
     }
 
     private Map<Post, Integer> calculateRanking(final List<Post> posts) {
-        final List<Post> sortedPosts = posts.stream()
-                .sorted(Comparator.comparingLong(Post::getTotalVoteCount).reversed())
-                .toList();
-
-        final Map<Post, Integer> rankings = new HashMap<>();
+        final Map<Post, Integer> rankings = new LinkedHashMap<>();
 
         int currentRanking = 1;
         int previousRanking = -1;
         long previousVoteCount = -1;
-        for (Post post : sortedPosts) {
+        for (Post post : posts) {
             final long currentVoteCount = post.getTotalVoteCount();
             final int ranking = (currentVoteCount == previousVoteCount) ? previousRanking : currentRanking;
 

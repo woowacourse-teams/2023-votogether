@@ -2,10 +2,10 @@ package com.votogether.domain.ranking.service;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.member.service.PassionRankings;
 import com.votogether.domain.post.repository.PostRepository;
-import com.votogether.domain.ranking.domain.PassionRecord;
 import com.votogether.domain.ranking.dto.response.RankingResponse;
+import com.votogether.domain.ranking.entity.PassionRankings;
+import com.votogether.domain.ranking.entity.vo.PassionRecord;
 import com.votogether.domain.vote.repository.VoteRepository;
 import java.util.HashMap;
 import java.util.List;

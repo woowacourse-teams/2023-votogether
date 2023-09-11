@@ -1,7 +1,7 @@
-package com.votogether.domain.member.service;
+package com.votogether.domain.ranking.entity;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.ranking.domain.PassionRecord;
+import com.votogether.domain.ranking.entity.vo.PassionRecord;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;

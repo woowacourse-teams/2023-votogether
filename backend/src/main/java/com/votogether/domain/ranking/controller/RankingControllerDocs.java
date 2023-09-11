@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "랭킹", description = "랭킹 API")
 public interface RankingControllerDocs {
 
-    @Operation(summary = "랭킹 조회", description = "회원 랭킹 정보를 조회한다.")
-    @ApiResponse(responseCode = "200", description = "회원 랭킹 정보 조회 성공")
+    @Operation(summary = "나의 열정 랭킹 조회", description = "나의 열정 랭킹 정보를 조회한다.")
+    @ApiResponse(responseCode = "200", description = "나의 열정 랭킹 정보 조회 성공")
     ResponseEntity<RankingResponse> getRanking(final Member member);
 
 }

@@ -6,7 +6,7 @@ export const useSearch = (initialKeyword = '') => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [keyword, setKeyword] = useState(initialKeyword);
 
-  const onKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!searchInputRef.current) return;
 
     setKeyword(event.currentTarget.value);
@@ -33,5 +33,5 @@ export const useSearch = (initialKeyword = '') => {
     navigate(`/search?keyword=${trimmedKeyword}`);
   };
 
-  return { keyword, onKeywordChange, onSearchSubmit, searchInputRef };
+  return { keyword, handleKeywordChange, onSearchSubmit, searchInputRef };
 };

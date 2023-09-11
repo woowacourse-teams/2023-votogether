@@ -28,9 +28,9 @@ describe('useSearch 훅이 검색을 하는지 확인한다.', () => {
     const KEYWORD = '갤럭시';
 
     const { result } = renderHook(() => useSearch(KEYWORD), { wrapper: MemoryRouter });
-    const { keyword, onKeywordChange } = result.current;
+    const { keyword, handleKeywordChange } = result.current;
 
-    render(<input value={keyword} aria-label="search-input" onChange={onKeywordChange} />);
+    render(<input value={keyword} aria-label="search-input" onChange={handleKeywordChange} />);
 
     const input = screen.getByLabelText('search-input');
 

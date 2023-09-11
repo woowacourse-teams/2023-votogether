@@ -19,7 +19,8 @@ interface SearchBarProps extends HTMLAttributes<HTMLInputElement> {
 
 export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
   const { currentKeyword } = useCurrentKeyword();
-  const { keyword, onKeywordChange, onSearchSubmit, searchInputRef } = useSearch(currentKeyword);
+  const { keyword, handleKeywordChange, onSearchSubmit, searchInputRef } =
+    useSearch(currentKeyword);
   return (
     <S.Form size={size} action={PATH.SEARCH} onSubmit={onSearchSubmit}>
       <S.Input
@@ -27,7 +28,7 @@ export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
         aria-label="게시글 제목 및 내용 검색창"
         type="search"
         value={keyword}
-        onChange={onKeywordChange}
+        onChange={handleKeywordChange}
         autoComplete="off"
         name={SEARCH_KEYWORD}
         {...rest}

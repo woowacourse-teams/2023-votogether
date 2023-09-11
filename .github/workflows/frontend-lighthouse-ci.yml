@@ -1,8 +1,10 @@
 name: Run Lighthouse CI When Push
 
 on:
-  push:
-    branches: ['dev']
+  pull_request:
+    branches:
+      - main
+      - dev
     paths:
       - 'frontend/**'
 

@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { SEARCH_KEYWORD_MAX_LENGTH } from '@constants/post';
+
 import { getTrimmedWord } from '@utils/getTrimmedWord';
 
 export const useSearch = (initialKeyword = '') => {
@@ -10,6 +12,15 @@ export const useSearch = (initialKeyword = '') => {
 
   const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!searchInputRef.current) return;
+
+    if (event.currentTarget.value.length > SEARCH_KEYWORD_MAX_LENGTH) {
+      searchInputRef.current.setCustomValidity(
+        `검색어는 ${SEARCH_KEYWORD_MAX_LENGTH}자까지 입력 가능합니다.`
+      );
+      searchInputRef.current.reportValidity();
+
+      return;
+    }
 
     setKeyword(event.currentTarget.value);
     searchInputRef.current.setCustomValidity('');

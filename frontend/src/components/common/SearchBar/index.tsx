@@ -6,7 +6,7 @@ import { useCurrentKeyword } from '@hooks/useCurrentKeyword';
 import { useSearch } from '@hooks/useSearch';
 
 import { PATH } from '@constants/path';
-import { SEARCH_KEYWORD } from '@constants/post';
+import { SEARCH_KEYWORD, SEARCH_KEYWORD_MAX_LENGTH } from '@constants/post';
 
 import searchIcon from '@assets/search_black.svg';
 
@@ -26,6 +26,7 @@ export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
     <S.Form size={size} action={PATH.SEARCH} onSubmit={handleSearchSubmit}>
       <S.Input
         ref={searchInputRef}
+        maxLength={SEARCH_KEYWORD_MAX_LENGTH}
         aria-label="게시글 제목 및 내용 검색창"
         type="search"
         value={keyword}

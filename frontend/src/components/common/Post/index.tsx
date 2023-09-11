@@ -12,7 +12,6 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
-import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
 import photoIcon from '@assets/photo_white.svg';
@@ -164,9 +163,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         >
           {content}
         </S.Content>
-        {!isPreview && imageUrl && (
-          <S.Image src={convertImageUrlToServerUrl(imageUrl)} alt={'본문에 포함된 이미지'} />
-        )}
+        {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
       </S.DetailLink>
       <WrittenVoteOptionList
         isStatisticsVisible={isStatisticsVisible}

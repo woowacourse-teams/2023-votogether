@@ -32,10 +32,6 @@ import { CATEGORY_COUNT_LIMIT, MAX_DEADLINE, POST_CONTENT, POST_TITLE } from '@c
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
-import {
-  convertImageUrlToServerUrl,
-  convertServerUrlToImageUrl,
-} from '@utils/post/convertImageUrlToServerUrl';
 import { deleteOverlappingNewLine } from '@utils/post/deleteOverlappingNewLine';
 import { addTimeToDate } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
@@ -67,13 +63,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   } = data ?? {};
 
   const navigate = useNavigate();
-  const contentImageHook = useContentImage(
-    serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
-  );
+  const contentImageHook = useContentImage(serverImageUrl);
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
-      imageUrl: option.imageUrl ? convertImageUrlToServerUrl(option.imageUrl) : '',
+      imageUrl: option.imageUrl ?? '',
     }))
   );
 
@@ -129,7 +123,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     const formData = new FormData();
 
     const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
-      return { content: text, imageUrl: convertServerUrlToImageUrl(imageUrl) };
+      return { content: text, imageUrl };
     });
 
     //예외처리
@@ -152,7 +146,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       );
       formData.append('title', writingTitle);
       formData.append('content', deleteOverlappingNewLine(writingContent));
-      formData.append('imageUrl', convertServerUrlToImageUrl(contentImageHook.contentImage));
+      formData.append('imageUrl', contentImageHook.contentImage);
       writingOptionList.forEach((option, index) => {
         formData.append(`postOptions[${index}].content`, option.content);
         formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
@@ -163,9 +157,9 @@ export default function PostForm({ data, mutate }: PostFormProps) {
         if (!item.files) return;
 
         if (index === 0) {
-          formData.append('imageFile', item.files[0]);
+          item.files[0] && formData.append('imageFile', item.files[0]);
         } else {
-          formData.append(`postOptions[${index - 1}].imageFile`, item.files[0]);
+          item.files[0] && formData.append(`postOptions[${index - 1}].imageFile`, item.files[0]);
         }
       });
 

@@ -21,6 +21,7 @@ export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
   const { currentKeyword } = useCurrentKeyword();
   const { keyword, handleKeywordChange, handleSearchSubmit, searchInputRef } =
     useSearch(currentKeyword);
+
   return (
     <S.Form size={size} action={PATH.SEARCH} onSubmit={handleSearchSubmit}>
       <S.Input

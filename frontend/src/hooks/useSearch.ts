@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { getTrimmedWord } from '@utils/getTrimmedWord';
+
 export const useSearch = (initialKeyword = '') => {
   const navigate = useNavigate();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -18,16 +20,16 @@ export const useSearch = (initialKeyword = '') => {
 
     if (!searchInputRef.current) return;
 
-    const trimmedKeyword = keyword.trim();
+    const trimmedKeyword = getTrimmedWord(keyword);
+
+    if (keyword !== trimmedKeyword) {
+      setKeyword(trimmedKeyword);
+    }
 
     if (trimmedKeyword === '') {
       searchInputRef.current.setCustomValidity('검색어를 입력해주세요');
       searchInputRef.current.reportValidity();
       return;
-    }
-
-    if (keyword !== trimmedKeyword) {
-      setKeyword(trimmedKeyword);
     }
 
     navigate(`/search?keyword=${trimmedKeyword}`);

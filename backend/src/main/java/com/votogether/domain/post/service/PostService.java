@@ -384,8 +384,8 @@ public class PostService {
                 .sorted(Comparator.comparingInt(entry -> entry.getValue()))
                 .map(entry ->
                         new PostRankingResponse(
-                                PostCompactResponse.of(entry.getKey()),
-                                entry.getValue()
+                                entry.getValue(),
+                                PostCompactResponse.from(entry.getKey())
                         )
                 )
                 .toList();

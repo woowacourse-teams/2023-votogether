@@ -18,7 +18,7 @@ public record PostCompactResponse(
         long voteCount
 ) {
 
-    public static PostCompactResponse of(final Post post) {
+    public static PostCompactResponse from(final Post post) {
         return new PostCompactResponse(
                 post.getId(),
                 post.getWriter().getNickname(),

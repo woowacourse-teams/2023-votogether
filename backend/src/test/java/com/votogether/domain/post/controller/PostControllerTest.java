@@ -885,7 +885,7 @@ class PostControllerTest {
                 .build();
         ReflectionTestUtils.setField(post, "id", 1L);
 
-        PostRankingResponse postRankingResponse = new PostRankingResponse(PostCompactResponse.of(post), 1);
+        PostRankingResponse postRankingResponse = new PostRankingResponse(1, PostCompactResponse.from(post));
         given(postService.getRanking()).willReturn(List.of(postRankingResponse));
 
         // when, then

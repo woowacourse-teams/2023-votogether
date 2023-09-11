@@ -8,6 +8,7 @@ export const postTokens = async (accessToken: string): Promise<SilentLoginToken>
   const response = await fetch(`${BASE_URL}/auth/silent-login`, {
     method: 'POST',
     body: accessToken,
+    credentials: 'include',
   });
 
   if (!response.ok) {

@@ -3,7 +3,7 @@ package com.votogether.domain.post.dto.response.post;
 import com.votogether.domain.post.entity.Post;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "게시글 정보 응답")
+@Schema(description = "게시글 간략 정보 응답")
 public record PostSummaryResponse(
         @Schema(description = "게시글 ID", example = "1")
         Long id,

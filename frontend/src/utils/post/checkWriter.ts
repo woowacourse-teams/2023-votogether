@@ -1,8 +1,16 @@
-import { getCookieToken, getMemberId } from '@utils/cookie';
+import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
-export function checkWriter(writedId: number) {
-  const accessToken = getCookieToken().accessToken;
-  const memberId = getMemberId(accessToken).memberId;
+import { getLocalStorage } from '@utils/localStorage';
+import { decodeToken } from '@utils/token/decodeToken';
 
-  return writedId === memberId;
+export function checkWriter(writerId: number) {
+  const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);
+
+  if (!accessToken) {
+    return false;
+  }
+
+  const memberId = decodeToken(accessToken).memberId;
+
+  return writerId === memberId;
 }

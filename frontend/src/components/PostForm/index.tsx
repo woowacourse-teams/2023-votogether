@@ -122,20 +122,20 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     e.preventDefault();
     const formData = new FormData();
 
-    const writingOptionList = writingOptionHook.optionList.map(({ id, text, imageUrl }, index) => {
-      return { id, content: text, imageUrl };
-    });
-
     //예외처리
     const { selectedOptionList } = multiSelectHook;
     const errorMessage = checkValidationPost(
       selectedOptionList,
       writingTitle,
       writingContent,
-      writingOptionList,
+      writingOptionHook.optionList,
       time
     );
     if (errorMessage) return openToast(errorMessage);
+
+    const writingOptionList = writingOptionHook.optionList.map(({ id, text, imageUrl }, index) => {
+      return { id, content: text, imageUrl };
+    });
 
     if (e.target instanceof HTMLFormElement) {
       const imageFileInputs = e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');

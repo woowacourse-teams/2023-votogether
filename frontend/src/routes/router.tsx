@@ -1,23 +1,25 @@
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
 import Error from '@pages/Error';
-import Home from '@pages/Home';
-import MyInfo from '@pages/MyInfo';
 import NotFound from '@pages/NotFound';
-import CreatePostPage from '@pages/post/CreatePostPage';
-import EditPostPage from '@pages/post/EditPostPage';
-import PostDetailPage from '@pages/post/PostDetail';
-import Ranking from '@pages/Ranking';
-import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
-import VoteStatisticsPage from '@pages/VoteStatisticsPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 
 import { PATH } from '@constants/path';
 
 import PrivateRoute from './PrivateRoute';
+
+const Login = lazy(() => import('@pages/auth/Login'));
+const Home = lazy(() => import('@pages/Home'));
+const MyInfo = lazy(() => import('@pages/MyInfo'));
+const CreatePostPage = lazy(() => import('@pages/post/CreatePostPage'));
+const EditPostPage = lazy(() => import('@pages/post/EditPostPage'));
+const PostDetailPage = lazy(() => import('@pages/post/PostDetail'));
+const Ranking = lazy(() => import('@pages/Ranking'));
+const RegisterPersonalInfo = lazy(() => import('@pages/user/RegisterPersonalInfo'));
+const VoteStatisticsPage = lazy(() => import('@pages/VoteStatisticsPage'));
 
 const router = createBrowserRouter([
   {

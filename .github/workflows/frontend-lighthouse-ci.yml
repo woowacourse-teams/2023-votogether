@@ -22,24 +22,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-
-      - name: Cache modules and Check package-lock.json
-        uses: actions/cache@v3
-        id: cache-npm
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          node-version: 16
 
       - name: Install packages
-        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        run: npm ci
+        run: npm install
 
       - name: Set environment variable
         run: |

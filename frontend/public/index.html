@@ -49,13 +49,12 @@
   <body>
     <div id="root"></div>
   </body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript
-    ><iframe
-      src="https://www.googletagmanager.com/ns.html?id=%VOTOGETHER_GOOGLE_TAG_ID%"
-      height="0"
-      width="0"
-      style="display: none; visibility: hidden"
-    ></iframe
-  ></noscript>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=%GOOGLE_TAG_ID%"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', process.env.GOOGLE_TAG_ID);
+  </script>
 </html>

@@ -1,6 +1,7 @@
 package com.votogether.domain.vote.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
@@ -14,6 +15,8 @@ import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.dto.VoteStatus;
 import com.votogether.test.annotation.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;
+import com.votogether.test.persister.MemberTestPersister;
+import com.votogether.test.persister.VoteTestPersister;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +37,12 @@ class VoteRepositoryTest {
 
     @Autowired
     PostOptionRepository postOptionRepository;
+
+    @Autowired
+    VoteTestPersister voteTestPersister;
+
+    @Autowired
+    MemberTestPersister memberTestPersister;
 
     @Test
     @DisplayName("투표를 저장한다.")
@@ -284,6 +293,30 @@ class VoteRepositoryTest {
 
         // then
         assertThat(numberOfVote).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("모든 멤버의 투표 개수를 가져온다.")
+    void findCountsByMembers() {
+        // given
+        Member member = memberTestPersister.builder().save();
+        Member member1 = memberTestPersister.builder().save();
+        Member member2 = memberTestPersister.builder().save();
+
+        voteTestPersister.builder().member(member).save();
+        voteTestPersister.builder().member(member1).save();
+        voteTestPersister.builder().member(member1).save();
+
+        // when
+        List<Integer> voteCounts = voteRepository.findCountsByMembers(List.of(member, member1, member2));
+
+        // then
+        assertAll(
+                () -> assertThat(voteCounts).hasSize(3),
+                () -> assertThat(voteCounts.get(0)).isEqualTo(1),
+                () -> assertThat(voteCounts.get(1)).isEqualTo(2),
+                () -> assertThat(voteCounts.get(2)).isEqualTo(0)
+        );
     }
 
 }

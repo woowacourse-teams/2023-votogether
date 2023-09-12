@@ -1,5 +1,5 @@
 export interface PassionUser {
-  rank: number;
+  ranking: number;
   nickname: string;
   postCount: number;
   voteCount: number;
@@ -7,7 +7,7 @@ export interface PassionUser {
 }
 
 export interface RankingPost {
-  rank: number;
+  ranking: number;
   post: {
     id: number;
     writer: string;

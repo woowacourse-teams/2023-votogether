@@ -4,6 +4,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.vo.PostClosingType;
@@ -185,6 +186,10 @@ public interface PostControllerDocs {
             @Parameter(description = "카테고리 ID", example = "1") final Long categoryId,
             final Member member
     );
+
+    @Operation(summary = "인기 게시글 랭킹 조회", description = "인기 게시글 랭킹을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "인기 게시글 랭킹 조회 성공")
+    ResponseEntity<List<PostRankingResponse>> getRanking();
 
     @Operation(summary = "게시글 작성", description = "게시글을 작성한다.")
     @ApiResponses({

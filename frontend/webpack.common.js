@@ -3,6 +3,8 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const DotenvWebpack = require('dotenv-webpack');
+const { EsbuildPlugin } = require('esbuild-loader');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -35,15 +37,25 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts|tsx)$/i,
+        test: /\.(js|jsx|ts|tsx)$/i,
         exclude: /node_modules/,
-        use: {
-          loader: 'ts-loader',
+        loader: 'esbuild-loader',
+        options: {
+          target: 'es2021',
         },
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'esbuild-loader',
+            options: {
+              minify: true,
+            },
+          },
+        ],
       },
       {
         test: /\.svg/,
@@ -64,11 +76,19 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: 'public/icons', to: 'icons' }],
     }),
+    new ForkTsCheckerWebpackPlugin(),
   ],
   devtool: 'inline-source-map',
   devServer: {
     static: 'public',
     hot: true,
     open: true,
+  },
+  optimization: {
+    minimizer: [
+      new EsbuildPlugin({
+        target: 'es2021',
+      }),
+    ],
   },
 };

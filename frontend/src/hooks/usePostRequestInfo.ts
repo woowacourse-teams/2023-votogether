@@ -1,17 +1,13 @@
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { PostRequestKind } from '@components/post/PostListPage/types';
 
 import { PATH } from '@constants/path';
-import {
-  DEFAULT_CATEGORY_ID,
-  DEFAULT_KEYWORD,
-  POST_TYPE,
-  SEARCH_KEYWORD,
-  SEARCH_KEYWORD_MAX_LENGTH,
-} from '@constants/post';
+import { DEFAULT_CATEGORY_ID, POST_TYPE } from '@constants/post';
 
 import { getPathFragment } from '@utils/getPathFragment';
+
+import { useCurrentKeyword } from './useCurrentKeyword';
 
 const REQUEST_URL: Record<string, PostRequestKind> = {
   [PATH.HOME]: POST_TYPE.ALL,
@@ -23,19 +19,17 @@ const REQUEST_URL: Record<string, PostRequestKind> = {
 
 export const usePostRequestInfo = () => {
   const params = useParams<{ categoryId?: string }>();
-  const [searchParams] = useSearchParams();
+  const { currentKeyword } = useCurrentKeyword();
   const { pathname } = useLocation();
 
   const categoryId = Number(params.categoryId ?? DEFAULT_CATEGORY_ID);
-  const keyword =
-    searchParams.get(SEARCH_KEYWORD)?.toString().slice(0, SEARCH_KEYWORD_MAX_LENGTH) ??
-    DEFAULT_KEYWORD;
+
   const convertedPathname = getPathFragment(pathname);
   const postType = REQUEST_URL[convertedPathname];
 
   const postOptionalOption = {
     categoryId,
-    keyword,
+    keyword: currentKeyword,
   };
 
   if (!postType) {

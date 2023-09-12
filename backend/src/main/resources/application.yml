@@ -19,8 +19,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 30MB
-      max-request-size: 30MB
+      max-file-size: 5MB
+      max-request-size: 35MB
 
   h2:
     console:
@@ -39,6 +39,8 @@ logging:
 
 server:
   forward-headers-strategy: FRAMEWORK
+  tomcat:
+    max-http-form-post-size: 35MB
 
 springdoc:
   swagger-ui:

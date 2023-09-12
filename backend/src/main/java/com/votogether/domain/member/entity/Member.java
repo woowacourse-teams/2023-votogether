@@ -5,6 +5,8 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.entity.vo.SocialType;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -15,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -77,8 +80,22 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public void changeNickname(final String nickname) {
+    public void changeNicknameByCycle(final String nickname, final Long days) {
+        if (nickname.startsWith(INITIAL_NICKNAME_PREFIX)) {
+            throw new BadRequestException(MemberExceptionType.NOT_ALLOWED_INITIAL_NICKNAME_PREFIX);
+        }
+        if (isNotPassedChangingCycle(days) && isNotInitialNickname()) {
+            throw new BadRequestException(MemberExceptionType.NOT_PASSED_NICKNAME_CHANGING_CYCLE);
+        }
         this.nickname = new Nickname(nickname);
+    }
+
+    private boolean isNotPassedChangingCycle(final Long days) {
+        return this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(days));
+    }
+
+    private boolean isNotInitialNickname() {
+        return this.nickname.nonStartsWith(INITIAL_NICKNAME_PREFIX);
     }
 
     public void changeNicknameByReport() {

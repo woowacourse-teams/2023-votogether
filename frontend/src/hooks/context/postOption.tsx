@@ -21,7 +21,7 @@ interface PostOptionContextProps {
 export default function PostOptionProvider({ children }: PropsWithChildren) {
   const [postOption, setPostOption] = useState<PostOption>({
     sorting: SORTING.LATEST,
-    status: STATUS.PROGRESS,
+    status: STATUS.ALL,
   });
 
   return (

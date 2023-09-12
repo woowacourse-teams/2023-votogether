@@ -13,12 +13,17 @@ export const Wrapper = styled.div`
 
   width: 100%;
   height: 60px;
-  padding-left: 10px;
+  border-radius: 7px;
 
   background-color: #f1eae7;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     grid-template-columns: 1fr 6fr 3fr;
+    margin: 0 8px;
+  }
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    border-radius: 0px;
   }
 `;
 

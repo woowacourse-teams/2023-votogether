@@ -53,7 +53,7 @@ public class PassionRankings {
         return rankings.get(member);
     }
 
-    public PassionRecord getActivityRecord(final Member member) {
+    public PassionRecord getPassionRecord(final Member member) {
         return passionBoard.get(member);
     }
 }

@@ -17,6 +17,6 @@ public interface RankingControllerDocs {
 
     @Operation(summary = "상위 10명의 열정 랭킹 조회", description = "상위 10명의 열정 랭킹 정보를 조회한다.")
     @ApiResponse(responseCode = "200", description = "상위 10명의 열정 랭킹 조회 성공")
-    public ResponseEntity<List<RankingResponse>> getPassionRanking();
+    ResponseEntity<List<RankingResponse>> getPassionRankings();
 
 }

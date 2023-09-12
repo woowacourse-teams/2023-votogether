@@ -10,7 +10,6 @@ import com.votogether.domain.vote.repository.VoteRepository;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +25,7 @@ public class RankingService {
     @Transactional(readOnly = true)
     public RankingResponse getPassionRanking(final Member member) {
         final PassionRankings passionRankings = getPassionRankings();
-        return new RankingResponse(
-                passionRankings.getRanking(member),
-                member.getNickname(),
-                passionRankings.getActivityRecord(member).getPostCount(),
-                passionRankings.getActivityRecord(member).getVoteCount(),
-                passionRankings.getScore(member)
-        );
+        return RankingResponse.of(passionRankings, member);
     }
 
     @Transactional(readOnly = true)
@@ -40,13 +33,8 @@ public class RankingService {
         final PassionRankings passionRankings = getPassionRankings();
         return passionRankings.getTop10Members()
                 .stream()
-                .map(member -> new RankingResponse(
-                        passionRankings.getRanking(member),
-                        member.getNickname(),
-                        passionRankings.getActivityRecord(member).getPostCount(),
-                        passionRankings.getActivityRecord(member).getVoteCount(),
-                        passionRankings.getScore(member)
-                )).collect(Collectors.toList());
+                .map(member -> RankingResponse.of(passionRankings, member)
+                ).toList();
     }
 
     private PassionRankings getPassionRankings() {

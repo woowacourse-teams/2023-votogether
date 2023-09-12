@@ -86,8 +86,10 @@ class RankingControllerTest {
         Member memberI = MemberFixtures.FEMALE_30.get();
         Member memberJ = MemberFixtures.FEMALE_30.get();
 
-        List<Member> members = List.of(memberA, memberB, memberC, memberD, memberE, memberF, memberG, memberH, memberI,
-                memberJ);
+        List<Member> members = List.of(
+                memberA, memberB, memberC, memberD, memberE,
+                memberF, memberG, memberH, memberI, memberJ
+        );
         List<RankingResponse> response = new ArrayList<>();
         for (final Member member : members) {
             response.add(new RankingResponse(1, member.getNickname(), 0, 0, 0));
@@ -96,7 +98,7 @@ class RankingControllerTest {
         given(rankingService.getPassionRanking()).willReturn(response);
 
         // when
-        final List<RankingResponse> responses = RestAssuredMockMvc
+        List<RankingResponse> responses = RestAssuredMockMvc
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON)
                 .when().get("/members/ranking/passion/guest")

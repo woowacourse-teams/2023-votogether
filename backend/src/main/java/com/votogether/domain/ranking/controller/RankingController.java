@@ -23,7 +23,7 @@ public class RankingController implements RankingControllerDocs {
     }
 
     @GetMapping("/members/ranking/passion/guest")
-    public ResponseEntity<List<RankingResponse>> getPassionRanking() {
+    public ResponseEntity<List<RankingResponse>> getPassionRankings() {
         final List<RankingResponse> response = rankingService.getPassionRanking();
         return ResponseEntity.ok(response);
     }

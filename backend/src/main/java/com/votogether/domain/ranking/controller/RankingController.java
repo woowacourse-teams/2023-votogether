@@ -4,6 +4,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.ranking.dto.response.RankingResponse;
 import com.votogether.domain.ranking.service.RankingService;
 import com.votogether.global.jwt.Auth;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,12 @@ public class RankingController implements RankingControllerDocs {
     @GetMapping("/members/me/ranking/passion")
     public ResponseEntity<RankingResponse> getRanking(@Auth final Member member) {
         final RankingResponse response = rankingService.getPassionRanking(member);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/members/ranking/passion/guest")
+    public ResponseEntity<List<RankingResponse>> getPassionRanking() {
+        final List<RankingResponse> response = rankingService.getPassionRanking();
         return ResponseEntity.ok(response);
     }
 

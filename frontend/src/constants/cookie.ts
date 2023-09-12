@@ -1,1 +1,3 @@
-export const ESSENTIAL_MAX_AGE = 365 * 24 * 60 * 60;
+import { convertDayToSecond } from '@utils/time';
+
+export const ESSENTIAL_MAX_AGE = convertDayToSecond(365);

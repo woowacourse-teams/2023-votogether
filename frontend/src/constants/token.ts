@@ -1,1 +1,3 @@
-export const REFRESH_EXPIRATION_TIME = 14 * 24 * 60 * 60;
+import { convertDayToSecond } from '@utils/time';
+
+export const REFRESH_EXPIRATION_TIME = convertDayToSecond(14);

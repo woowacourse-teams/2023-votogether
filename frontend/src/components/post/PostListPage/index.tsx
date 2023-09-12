@@ -39,7 +39,7 @@ export default function PostListPage() {
       <S.ButtonContainer>
         <UpButton onClick={smoothScrollToTop} />
         <S.AddButtonWrapper to={PATH.POST_WRITE}>
-          <AddButton size="lg" />
+          <AddButton size="lg" aria-label="게시글 작성 페이지로 이동" />
         </S.AddButtonWrapper>
       </S.ButtonContainer>
     </S.Container>

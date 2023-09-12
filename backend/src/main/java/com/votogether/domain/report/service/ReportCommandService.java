@@ -12,6 +12,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ReportCommandService {
 
@@ -28,7 +29,6 @@ public class ReportCommandService {
         this.reportActions.put(ReportType.NICKNAME, reportNicknameStrategy);
     }
 
-    @Transactional
     public void report(final Member reporter, final ReportRequest request) {
         final ReportStrategy reportStrategy = reportActions.get(request.type());
         reportStrategy.report(reporter, request);

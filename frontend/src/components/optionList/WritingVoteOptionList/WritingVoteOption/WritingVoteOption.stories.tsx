@@ -11,7 +11,7 @@ const meta: Meta<typeof WritingVoteOption> = {
 export default meta;
 
 export const IsDeletable = () => {
-  const ref = useRef(null);
+  const ref = useRef([]);
 
   return (
     <WritingVoteOption
@@ -32,7 +32,7 @@ export const IsDeletable = () => {
 };
 
 export const IsNotDeletable = () => {
-  const ref = useRef(null);
+  const ref = useRef([]);
 
   return (
     <WritingVoteOption
@@ -53,7 +53,7 @@ export const IsNotDeletable = () => {
 };
 
 export const ShowImage = () => {
-  const ref = useRef(null);
+  const ref = useRef([]);
 
   return (
     <WritingVoteOption

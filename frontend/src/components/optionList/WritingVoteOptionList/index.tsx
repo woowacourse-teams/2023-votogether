@@ -20,7 +20,7 @@ interface WritingVoteOptionListProps {
     deleteOption: (optionId: number) => void;
     removeImage: (optionId: number) => void;
     handleUploadImage: (event: ChangeEvent<HTMLInputElement>, optionId: number) => void;
-    contentInputRefList: MutableRefObject<HTMLInputElement[] | null>;
+    contentInputRefList: MutableRefObject<HTMLInputElement[]>;
   };
 }
 

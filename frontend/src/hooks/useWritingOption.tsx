@@ -20,7 +20,7 @@ const INIT_OPTION_LIST = [
 
 export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = INIT_OPTION_LIST) => {
   const [optionList, setOptionList] = useState(initialOptionList);
-  const contentInputRefList = useRef<HTMLInputElement[] | null>([]);
+  const contentInputRefList = useRef<HTMLInputElement[]>([]);
 
   const addOption = () => {
     if (optionList.length >= MAX_COUNT) return;

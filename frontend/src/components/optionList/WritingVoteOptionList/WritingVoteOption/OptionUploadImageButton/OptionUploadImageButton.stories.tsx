@@ -11,7 +11,7 @@ const meta: Meta<typeof OptionUploadImageButton> = {
 export default meta;
 
 export const Default = () => {
-  const ref = useRef(null);
+  const ref = useRef([]);
 
   return (
     <OptionUploadImageButton

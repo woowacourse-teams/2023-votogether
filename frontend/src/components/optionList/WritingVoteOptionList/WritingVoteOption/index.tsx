@@ -16,7 +16,7 @@ interface WritingVoteOptionProps {
   handleRemoveImageClick: () => void;
   handleUploadImage: (event: ChangeEvent<HTMLInputElement>) => void;
   imageUrl: string;
-  contentInputRefList: MutableRefObject<HTMLInputElement[] | null>;
+  contentInputRefList: MutableRefObject<HTMLInputElement[]>;
   index: number;
 }
 

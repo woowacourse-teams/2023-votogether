@@ -7,7 +7,7 @@ import * as S from './style';
 interface OptionUploadImageButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
   optionId: number;
   isImageVisible: boolean;
-  contentInputRefList: MutableRefObject<HTMLInputElement[] | null>;
+  contentInputRefList: MutableRefObject<HTMLInputElement[]>;
   index: number;
 }
 
@@ -22,7 +22,7 @@ export default function OptionUploadImageButton({
 
   const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    contentInputRefList.current && contentInputRefList.current[index].click();
+    contentInputRefList.current[index].click();
   };
 
   return (
@@ -38,9 +38,7 @@ export default function OptionUploadImageButton({
         accept="image/*"
         tabIndex={-1}
         ref={(ele: HTMLInputElement) => {
-          if (contentInputRefList.current) {
-            contentInputRefList.current[index] = ele;
-          }
+          contentInputRefList.current[index] = ele;
         }}
         {...rest}
       />

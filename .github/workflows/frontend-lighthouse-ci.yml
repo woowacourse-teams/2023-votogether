@@ -43,6 +43,13 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VOTOGETHER_BASE_URL: ${{ secrets.VOTOGETHER_BASE_URL }}
+          VOTOGETHER_MOCKING_URL: ${{ secrets.VOTOGETHER_MOCKING_URL }}
+          VOTOGETHER_REST_API_KEY: ${{ secrets.VOTOGETHER_REST_API_KEY }}
+          VOTOGETHER_SERVER_REDIRECT_URL: ${{ secrets.VOTOGETHER_SERVER_REDIRECT_URL}}
+          VOTOGETHER_CHANNEL_TALK_KEY: ${{ secrets.VOTOGETHER_CHANNEL_TALK_KEY }}
+          VOTOGETHER_GOOGLE_TAG_ID: ${{ secrets.VOTOGETHER_GOOGLE_TAG_ID }}
 
       - name: Run Lighthouse CI
         env:

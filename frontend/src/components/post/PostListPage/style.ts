@@ -46,6 +46,14 @@ export const ButtonContainer = styled.div`
   position: fixed;
   left: 90%;
   bottom: 24px;
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    left: 83%;
+  }
+
+  @media (max-width: 281px) {
+    left: 78%;
+  }
 `;
 
 export const AddButtonWrapper = styled(Link)`

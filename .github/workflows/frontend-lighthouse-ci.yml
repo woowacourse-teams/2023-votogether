@@ -41,15 +41,26 @@ jobs:
         if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm ci
 
+      - name: Set environment variable
+        run: |
+          touch .env
+          echo VOTOGETHER_BASE_URL=${{ secrets.VOTOGETHER_BASE_URL }} >> .env
+          echo VOTOGETHER_MOCKING_URL=${{ secrets.VOTOGETHER_MOCKING_URL }} >> .env
+          echo VOTOGETHER_REST_API_KEY=${{ secrets.VOTOGETHER_REST_API_KEY }} >> .env
+          echo VOTOGETHER_SERVER_REDIRECT_URL=${{ secrets.VOTOGETHER_SERVER_REDIRECT_URL }} >> .env
+          echo VOTOGETHER_CHANNEL_TALK_KEY=${{ secrets.VOTOGETHER_CHANNEL_TALK_KEY }} >> .env
+          echo VOTOGETHER_GOOGLE_TAG_ID=${{ secrets.VOTOGETHER_GOOGLE_TAG_ID }} >> .env
+          cat .env
+
       - name: Build
         run: npm run build
         env:
-          VOTOGETHER_BASE_URL: ${{ secrets.VOTOGETHER_BASE_URL }}
-          VOTOGETHER_MOCKING_URL: ${{ secrets.VOTOGETHER_MOCKING_URL }}
-          VOTOGETHER_REST_API_KEY: ${{ secrets.VOTOGETHER_REST_API_KEY }}
-          VOTOGETHER_SERVER_REDIRECT_URL: ${{ secrets.VOTOGETHER_SERVER_REDIRECT_URL}}
-          VOTOGETHER_CHANNEL_TALK_KEY: ${{ secrets.VOTOGETHER_CHANNEL_TALK_KEY }}
-          VOTOGETHER_GOOGLE_TAG_ID: ${{ secrets.VOTOGETHER_GOOGLE_TAG_ID }}
+          VOTOGETHER_BASE_URL: ${{ env.VOTOGETHER_BASE_URL }}
+          VOTOGETHER_MOCKING_URL: ${{ env.VOTOGETHER_MOCKING_URL }}
+          VOTOGETHER_REST_API_KEY: ${{ env.VOTOGETHER_REST_API_KEY }}
+          VOTOGETHER_SERVER_REDIRECT_URL: ${{ env.VOTOGETHER_SERVER_REDIRECT_URL}}
+          VOTOGETHER_CHANNEL_TALK_KEY: ${{ env.VOTOGETHER_CHANNEL_TALK_KEY }}
+          VOTOGETHER_GOOGLE_TAG_ID: ${{ env.VOTOGETHER_GOOGLE_TAG_ID }}
 
       - name: Run Lighthouse CI
         env:

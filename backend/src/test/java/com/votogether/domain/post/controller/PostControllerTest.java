@@ -23,7 +23,9 @@ import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostSummaryResponse;
 import com.votogether.domain.post.dto.response.post.WriterResponse;
 import com.votogether.domain.post.dto.response.vote.VoteCountForAgeGroupResponse;
 import com.votogether.domain.post.dto.response.vote.VoteDetailResponse;
@@ -57,6 +59,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -658,6 +661,7 @@ class PostControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @Test
     @DisplayName("회원본인이 작성한 게시글 목록을 조회한다.")
     void getPostsByWriter() throws JsonProcessingException {
         // given
@@ -802,7 +806,7 @@ class PostControllerTest {
         assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(postResponse);
     }
 
-
+    @Test
     @DisplayName("게시글을 삭제한다.")
     void delete() {
         // given
@@ -869,6 +873,31 @@ class PostControllerTest {
                 .when().put("/posts/1", 1)
                 .then().log().all()
                 .status(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("인기 게시물 랭킹을 불러온다.")
+    void getRanking() {
+        // given
+        Post post = Post.builder()
+                .postBody(PostBody.builder().title("제목").build())
+                .writer(MemberFixtures.MALE_10.get())
+                .build();
+        ReflectionTestUtils.setField(post, "id", 1L);
+
+        PostRankingResponse postRankingResponse = new PostRankingResponse(1, PostSummaryResponse.from(post));
+        given(postService.getRanking()).willReturn(List.of(postRankingResponse));
+
+        // when, then
+        List<PostRankingResponse> result = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/ranking/popular/guest")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new ParameterizedTypeReference<List<PostRankingResponse>>() {
+                }.getType());
+
+        assertThat(result).isEqualTo(List.of(postRankingResponse));
     }
 
 }

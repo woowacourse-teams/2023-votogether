@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberService {
 
+    private static final Long NICKNAME_CHANGING_CYCLE = 14L;
+
     private final MemberRepository memberRepository;
     private final MemberCategoryRepository memberCategoryRepository;
     private final PostRepository postRepository;
@@ -68,7 +70,7 @@ public class MemberService {
     @Transactional
     public void changeNickname(final Member member, final String nickname) {
         validateExistentNickname(nickname);
-        member.changeNickname(nickname);
+        member.changeNicknameByCycle(nickname, NICKNAME_CHANGING_CYCLE);
     }
 
     private void validateExistentNickname(final String nickname) {
@@ -186,5 +188,4 @@ public class MemberService {
                 .toList();
         reportRepository.deleteAllById(reportIdsByMember);
     }
-
 }

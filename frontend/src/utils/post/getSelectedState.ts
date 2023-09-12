@@ -5,28 +5,14 @@ import { PostRequestKind } from '@components/post/PostListPage/types';
 export interface SelectedState {
   postType: PostRequestKind;
   categoryId: number;
-  keyword: string;
   categoryList: Category[];
 }
 
-const SLICED_LENGTH_NUMBER = 10;
-
-export const getSelectedState = ({
-  postType,
-  categoryId,
-  keyword,
-  categoryList,
-}: SelectedState) => {
+export const getSelectedState = ({ postType, categoryId, categoryList }: SelectedState) => {
   if (postType === 'category') {
     const selectedCategory = categoryList.find(category => category.id === categoryId);
 
     return selectedCategory?.name ?? '전체';
-  }
-
-  if (postType === 'search') {
-    return keyword.length > SLICED_LENGTH_NUMBER
-      ? `${keyword.slice(0, SLICED_LENGTH_NUMBER)}...`
-      : keyword;
   }
 
   if (postType === 'myPost') {

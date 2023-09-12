@@ -2,8 +2,11 @@ import { HTMLAttributes } from 'react';
 
 import { Size } from '@type/style';
 
+import { useCurrentKeyword } from '@hooks/useCurrentKeyword';
+import { useSearch } from '@hooks/useSearch';
+
 import { PATH } from '@constants/path';
-import { SEARCH_KEYWORD } from '@constants/post';
+import { SEARCH_KEYWORD, SEARCH_KEYWORD_MAX_LENGTH } from '@constants/post';
 
 import searchIcon from '@assets/search_black.svg';
 
@@ -15,11 +18,20 @@ interface SearchBarProps extends HTMLAttributes<HTMLInputElement> {
 }
 
 export default function SearchBar({ size, isOpen, ...rest }: SearchBarProps) {
+  const { currentKeyword } = useCurrentKeyword();
+  const { keyword, handleKeywordChange, handleSearchSubmit, searchInputRef } =
+    useSearch(currentKeyword);
+
   return (
-    <S.Form size={size} action={PATH.SEARCH}>
+    <S.Form size={size} action={PATH.SEARCH} onSubmit={handleSearchSubmit}>
       <S.Input
+        ref={searchInputRef}
+        maxLength={SEARCH_KEYWORD_MAX_LENGTH + 1}
         aria-label="게시글 제목 및 내용 검색창"
         type="search"
+        value={keyword}
+        onChange={handleKeywordChange}
+        autoComplete="off"
         name={SEARCH_KEYWORD}
         {...rest}
       />

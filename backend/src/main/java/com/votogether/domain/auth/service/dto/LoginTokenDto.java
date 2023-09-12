@@ -1,6 +1,6 @@
 package com.votogether.domain.auth.service.dto;
 
-public record LoginTokenResponse(
+public record LoginTokenDto(
         String accessToken,
         String refreshToken,
         boolean hasEssentialInfo

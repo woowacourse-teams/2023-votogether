@@ -1,13 +1,12 @@
 package com.votogether.domain.auth.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
 import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
 import com.votogether.domain.auth.exception.AuthExceptionType;
 import com.votogether.domain.auth.service.AuthService;
-import com.votogether.domain.auth.service.dto.LoginTokenResponse;
-import com.votogether.domain.auth.service.dto.TokenResponse;
+import com.votogether.domain.auth.service.dto.LoginTokenDto;
+import com.votogether.domain.auth.service.dto.ReissuedTokenDto;
 import com.votogether.global.exception.BadRequestException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,11 +35,11 @@ public class AuthController implements AuthControllerDocs {
             @RequestParam final String code,
             final HttpServletResponse httpServletResponse
     ) {
-        final LoginTokenResponse loginTokenResponse = authService.register(code);
+        final LoginTokenDto loginTokenDto = authService.register(code);
 
-        addRefreshTokenToCookie(httpServletResponse, loginTokenResponse.refreshToken());
+        addRefreshTokenToCookie(httpServletResponse, loginTokenDto.refreshToken());
         final LoginResponse response =
-                new LoginResponse(loginTokenResponse.accessToken(), loginTokenResponse.hasEssentialInfo());
+                new LoginResponse(loginTokenDto.accessToken(), loginTokenDto.hasEssentialInfo());
         return ResponseEntity.ok(response);
     }
 
@@ -49,12 +48,12 @@ public class AuthController implements AuthControllerDocs {
             @RequestBody @Valid final AccessTokenRequest request,
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse
-    ) throws JsonProcessingException {
+    ) {
         final String refreshToken = getRefreshTokenFromCookie(httpServletRequest);
-        final TokenResponse tokenResponse = authService.reissueAuthToken(request, refreshToken);
+        final ReissuedTokenDto reissuedTokenDto = authService.reissueAuthToken(request, refreshToken);
 
-        addRefreshTokenToCookie(httpServletResponse, tokenResponse.refreshToken());
-        final ReissuedAccessTokenResponse response = new ReissuedAccessTokenResponse(tokenResponse.accessToken());
+        addRefreshTokenToCookie(httpServletResponse, reissuedTokenDto.refreshToken());
+        final ReissuedAccessTokenResponse response = new ReissuedAccessTokenResponse(reissuedTokenDto.accessToken());
         return ResponseEntity.ok(response);
     }
 

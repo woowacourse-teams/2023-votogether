@@ -11,8 +11,8 @@ import static org.mockito.BDDMockito.willDoNothing;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
 import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
 import com.votogether.domain.auth.service.AuthService;
-import com.votogether.domain.auth.service.dto.LoginTokenResponse;
-import com.votogether.domain.auth.service.dto.TokenResponse;
+import com.votogether.domain.auth.service.dto.LoginTokenDto;
+import com.votogether.domain.auth.service.dto.ReissuedTokenDto;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.Cookie;
@@ -51,7 +51,7 @@ class AuthControllerTest {
         // given
         String accessToken = "abcdefg";
         String refreshToken = "adfdsfdsa";
-        LoginTokenResponse response = new LoginTokenResponse(accessToken, refreshToken, false);
+        LoginTokenDto response = new LoginTokenDto(accessToken, refreshToken, false);
 
         given(authService.register(any())).willReturn(response);
 
@@ -79,15 +79,16 @@ class AuthControllerTest {
 
         @Test
         @DisplayName("인증 토큰을 재발급한다.")
-        void reissueAccessToken() throws Exception {
+        void reissueAccessToken() {
             // given
             String accessToken = "abcdefg";
             String refreshToken = "adfdsfdsa";
             AccessTokenRequest request = new AccessTokenRequest(accessToken);
-            TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
+            ReissuedTokenDto reissuedTokenDto = new ReissuedTokenDto(accessToken, refreshToken);
             Cookie cookie = new Cookie.Builder("refreshToken", refreshToken).build();
 
-            given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(tokenResponse);
+            given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(
+                    reissuedTokenDto);
 
             // when
             ReissuedAccessTokenResponse response = RestAssuredMockMvc
@@ -98,25 +99,26 @@ class AuthControllerTest {
                     .when().post("/auth/silent-login")
                     .then().log().all()
                     .status(HttpStatus.OK)
-                    .cookie("refreshToken", tokenResponse.refreshToken())
+                    .cookie("refreshToken", reissuedTokenDto.refreshToken())
                     .extract()
                     .as(ReissuedAccessTokenResponse.class);
 
             // then
-            assertThat(response.accessToken()).isEqualTo(tokenResponse.accessToken());
+            assertThat(response.accessToken()).isEqualTo(reissuedTokenDto.accessToken());
         }
 
         @ParameterizedTest
         @NullAndEmptySource
         @DisplayName("인증 토큰이 null 혹은 빈 값이면 400을 반환한다.")
-        void reissueAccessTokenWhenNotBlank(String accessToken) throws Exception {
+        void reissueAccessTokenWhenNotBlank(String accessToken) {
             // given
             String refreshToken = "adfdsfdsa";
             AccessTokenRequest request = new AccessTokenRequest(accessToken);
-            TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
+            ReissuedTokenDto reissuedTokenDto = new ReissuedTokenDto(accessToken, refreshToken);
             Cookie cookie = new Cookie.Builder("refreshToken", refreshToken).build();
 
-            given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(tokenResponse);
+            given(authService.reissueAuthToken(any(AccessTokenRequest.class), anyString())).willReturn(
+                    reissuedTokenDto);
 
             // when, then
             RestAssuredMockMvc

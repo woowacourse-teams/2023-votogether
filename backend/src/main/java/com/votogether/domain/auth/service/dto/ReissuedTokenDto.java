@@ -1,6 +1,6 @@
 package com.votogether.domain.auth.service.dto;
 
-public record TokenResponse(
+public record ReissuedTokenDto(
         String accessToken,
         String refreshToken
 ) {

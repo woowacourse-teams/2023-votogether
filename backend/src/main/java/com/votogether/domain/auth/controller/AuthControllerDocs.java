@@ -1,6 +1,5 @@
 package com.votogether.domain.auth.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
 import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
@@ -57,6 +56,6 @@ public interface AuthControllerDocs {
             @RequestBody final AccessTokenRequest request,
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse
-    ) throws JsonProcessingException;
+    );
 
 }

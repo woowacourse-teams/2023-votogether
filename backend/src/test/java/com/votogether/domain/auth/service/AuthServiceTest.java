@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
-import com.votogether.domain.auth.service.dto.TokenResponse;
+import com.votogether.domain.auth.service.dto.ReissuedTokenDto;
 import com.votogether.domain.auth.service.oauth.KakaoOAuthClient;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.exception.BadRequestException;
@@ -50,7 +50,7 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("정상적으로 인증 토큰을 재발급한다.")
-        void success() throws Exception {
+        void success() {
             // given
             Long memberId = 1L;
             String accessToken = tokenProcessor.generateAccessToken(memberId);
@@ -60,11 +60,11 @@ class AuthServiceTest {
             redisTemplate.opsForValue().set(refreshToken, memberId);
 
             // when
-            TokenResponse tokenResponse = authService.reissueAuthToken(request, refreshToken);
+            ReissuedTokenDto reissuedTokenDto = authService.reissueAuthToken(request, refreshToken);
 
             // then
-            redisTemplate.opsForValue().get(tokenResponse.refreshToken());
-            assertThat(tokenResponse.refreshToken()).isEqualTo(refreshToken);
+            redisTemplate.opsForValue().get(reissuedTokenDto.refreshToken());
+            assertThat(reissuedTokenDto.refreshToken()).isEqualTo(refreshToken);
         }
 
         @Test

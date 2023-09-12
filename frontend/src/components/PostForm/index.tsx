@@ -149,7 +149,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       formData.append('imageUrl', contentImageHook.contentImage);
       writingOptionList.forEach((option, index) => {
         serverVoteInfo && formData.append(`postOptions[${index}].id`, option.id.toString());
-        formData.append(`postOptions[${index}].content`, option.content);
+        formData.append(`postOptions[${index}].content`, deleteOverlappingNewLine(option.content));
         formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
       });
       formData.append('deadline', addTimeToDate(time, baseTime));

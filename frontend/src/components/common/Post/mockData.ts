@@ -27,6 +27,8 @@ export const MOCK_NOT_VOTE_POST: PostInfo = {
   ],
   createTime: '2023-07-12 12:40',
   deadline: '2023-07-20 18:40',
+  imageCount: 2,
+  commentCount: 8,
   voteInfo: {
     selectedOptionId: 0,
     allPeopleCount: 100,
@@ -90,6 +92,8 @@ export const MOCK_VOTE_POST: PostInfo = {
   ],
   createTime: '2023-07-12 12:40',
   deadline: '2023-07-21 18:40',
+  imageCount: 0,
+  commentCount: 1,
   voteInfo: {
     selectedOptionId: 12312,
     allPeopleCount: 123,

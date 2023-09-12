@@ -47,6 +47,12 @@ export default function PostList() {
     postOptionalOption
   );
 
+  const focusTopContent = () => {
+    if (!topButtonRef.current) return;
+
+    topButtonRef.current.focus();
+  };
+
   useEffect(() => {
     if (isIntersecting && hasNextPage) {
       fetchNextPage();
@@ -103,6 +109,7 @@ export default function PostList() {
               }
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
+            <button onClick={focusTopContent} aria-label="스크롤 맨 위로가기"></button>
             <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
           </React.Fragment>
         ))}

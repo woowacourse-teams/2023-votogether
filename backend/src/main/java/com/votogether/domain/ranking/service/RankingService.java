@@ -7,7 +7,7 @@ import com.votogether.domain.ranking.dto.response.RankingResponse;
 import com.votogether.domain.ranking.entity.PassionRankings;
 import com.votogether.domain.ranking.entity.vo.PassionRecord;
 import com.votogether.domain.vote.repository.VoteRepository;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,16 @@ public class RankingService {
     @Transactional(readOnly = true)
     public RankingResponse getPassionRanking(final Member member) {
         final PassionRankings passionRankings = getPassionRankings();
-        return new RankingResponse(
-                passionRankings.getRanking(member),
-                member.getNickname(),
-                passionRankings.getActivityRecord(member).getPostCount(),
-                passionRankings.getActivityRecord(member).getVoteCount(),
-                passionRankings.getScore(member)
-        );
+        return RankingResponse.of(passionRankings, member);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RankingResponse> getPassionRanking() {
+        final PassionRankings passionRankings = getPassionRankings();
+        return passionRankings.getTop10Members()
+                .stream()
+                .map(member -> RankingResponse.of(passionRankings, member)
+                ).toList();
     }
 
     private PassionRankings getPassionRankings() {
@@ -39,7 +42,7 @@ public class RankingService {
         final List<Integer> postCounts = postRepository.findCountsByMembers(members);
         final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
 
-        final Map<Member, PassionRecord> passionBoard = new HashMap<>();
+        final Map<Member, PassionRecord> passionBoard = new LinkedHashMap<>();
 
         for (int i = 0; i < members.size(); i++) {
             passionBoard.put(members.get(i), new PassionRecord(postCounts.get(i), voteCounts.get(i)));

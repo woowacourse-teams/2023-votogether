@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    driver-class-name: ${DATASOURCE_DRIVER_CLASS_NAME}
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 50
+
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO}
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 35MB
+
+  h2:
+    console:
+      enabled: ${H2_CONSOLE_ENABLE}
+      path: /h2-console
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+  config: classpath:log4j2-${spring.profiles.active}.xml
+
+server:
+  forward-headers-strategy: FRAMEWORK
+  tomcat:
+    max-http-form-post-size: 35MB
+
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLE}
+
+votogether:
+  openapi:
+    dev-url: ${DEV_URL}
+
+oauth:
+  kakao:
+    info:
+      grant_type: ${GRANT_TYPE}
+      client_id: ${CLIENT_ID}
+      client_secret: ${CLIENT_SECRET}
+      redirect_uri: ${REDIRECT_URI}
+
+jwt:
+  token:
+    secret-key: ${SECRET_KEY}
+    access-expiration-time: ${ACCESS_EXPIRATION_TIME}
+    refresh-expiration-time: ${REFRESH_EXPIRATION_TIME}

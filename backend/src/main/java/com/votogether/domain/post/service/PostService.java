@@ -11,7 +11,9 @@ import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostSummaryResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
@@ -365,5 +367,44 @@ public class PostService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<PostRankingResponse> getRanking() {
+        final List<Post> posts = postRepository.findAllByClosingTypeAndSortTypeAndCategoryId(
+                PostClosingType.ALL,
+                PostSortType.HOT,
+                null,
+                PageRequest.of(0, BASIC_PAGING_SIZE)
+        );
+
+        final Map<Post, Integer> rankings = calculateRanking(posts);
+
+        return rankings.entrySet().stream()
+                .map(entry ->
+                        new PostRankingResponse(
+                                entry.getValue(),
+                                PostSummaryResponse.from(entry.getKey())
+                        )
+                )
+                .toList();
+    }
+
+    private Map<Post, Integer> calculateRanking(final List<Post> posts) {
+        final Map<Post, Integer> rankings = new LinkedHashMap<>();
+
+        int currentRanking = 1;
+        int previousRanking = -1;
+        long previousVoteCount = -1;
+        for (Post post : posts) {
+            final long currentVoteCount = post.getTotalVoteCount();
+            final int ranking = (currentVoteCount == previousVoteCount) ? previousRanking : currentRanking;
+            rankings.put(post, ranking);
+
+            previousRanking = ranking;
+            previousVoteCount = currentVoteCount;
+            currentRanking++;
+        }
+
+        return rankings;
+    }
 }
 

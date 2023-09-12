@@ -4,6 +4,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.dto.response.post.PostDetailResponse;
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse;
 import com.votogether.domain.post.entity.vo.PostClosingType;
@@ -173,6 +174,12 @@ public class PostController implements PostControllerDocs {
         }
         final Long postId = postService.save(request, member, contentImages, optionImages);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
+    }
+
+    @GetMapping("ranking/popular/guest")
+    public ResponseEntity<List<PostRankingResponse>> getRanking() {
+        final List<PostRankingResponse> responses = postService.getRanking();
+        return ResponseEntity.ok(responses);
     }
 
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

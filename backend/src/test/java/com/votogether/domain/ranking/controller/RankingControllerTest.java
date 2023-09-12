@@ -91,7 +91,7 @@ class RankingControllerTest {
                 memberF, memberG, memberH, memberI, memberJ
         );
         List<RankingResponse> response = new ArrayList<>();
-        for (final Member member : members) {
+        for (Member member : members) {
             response.add(new RankingResponse(1, member.getNickname(), 0, 0, 0));
         }
 

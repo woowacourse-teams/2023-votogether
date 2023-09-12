@@ -19,11 +19,10 @@ export default function CategorySection() {
   const categoryListFallback = categoryList ?? [];
 
   const { postOptionalOption, postType } = usePostRequestInfo();
-  const { categoryId, keyword } = postOptionalOption;
+  const { categoryId } = postOptionalOption;
 
   const selectedState = getSelectedState({
     categoryId,
-    keyword,
     categoryList: categoryListFallback,
     postType,
   });

@@ -15,7 +15,8 @@ import { POST } from '@constants/vote';
 import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
-import photoIcon from '@assets/photo_white.svg';
+import commentIcon from '@assets/comment.svg';
+import photoIcon from '@assets/photo_black.svg';
 
 import Toast from '../Toast';
 
@@ -27,8 +28,19 @@ interface PostProps {
 }
 
 export default function Post({ postInfo, isPreview }: PostProps) {
-  const { postId, category, imageUrl, title, writer, createTime, deadline, content, voteInfo } =
-    postInfo;
+  const {
+    postId,
+    category,
+    imageUrl,
+    title,
+    writer,
+    createTime,
+    deadline,
+    content,
+    voteInfo,
+    imageCount,
+    commentCount,
+  } = postInfo;
   const { loggedInfo } = useContext(AuthContext);
   const { isToastOpen, openToast, toastMessage } = useToast();
 
@@ -93,12 +105,6 @@ export default function Post({ postInfo, isPreview }: PostProps) {
     }
   }, [isEditError, editError]);
 
-  const checkIncludeImage = () => {
-    if (imageUrl !== '') return true;
-
-    return voteInfo.options.map(option => option.imageUrl).some(url => url !== '');
-  };
-
   const isPreviewTabIndex = isPreview ? undefined : 0;
 
   return (
@@ -120,11 +126,6 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         >
           {category.map(category => category.name).join(' | ')}
         </S.Category>
-        {isPreview && checkIncludeImage() && (
-          <S.ImageIconWrapper>
-            <S.ImageIcon src={photoIcon} alt="해당 게시물은 사진을 포함하고 있습니다." />
-          </S.ImageIconWrapper>
-        )}
         <S.ActivateState
           tabIndex={isPreviewTabIndex}
           role="status"
@@ -175,6 +176,18 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         isPreview={isPreview}
         voteOptionList={voteInfo.options}
       />
+      {isPreview && (
+        <S.PreviewBottom>
+          <S.IconUint>
+            <S.Icon src={photoIcon} alt="사진 갯수" />
+            <span>{imageCount}</span>
+          </S.IconUint>
+          <S.IconUint>
+            <S.Icon src={commentIcon} alt="댓글 갯수" />
+            <span>{commentCount}</span>
+          </S.IconUint>
+        </S.PreviewBottom>
+      )}
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

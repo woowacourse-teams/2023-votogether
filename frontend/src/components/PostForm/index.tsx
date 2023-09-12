@@ -133,9 +133,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     );
     if (errorMessage) return openToast(errorMessage);
 
-    const writingOptionList = writingOptionHook.optionList.map(({ id, text, imageUrl }, index) => {
-      return { id, content: text, imageUrl };
-    });
+    const writingOptionList = writingOptionHook.optionList.map(
+      ({ id, isServerId, text, imageUrl }, index) => {
+        return { id, isServerId, content: text, imageUrl };
+      }
+    );
 
     if (e.target instanceof HTMLFormElement) {
       const imageFileInputs = e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
@@ -148,7 +150,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       formData.append('content', deleteOverlappingNewLine(writingContent));
       formData.append('imageUrl', contentImageHook.contentImage);
       writingOptionList.forEach((option, index) => {
-        serverVoteInfo && formData.append(`postOptions[${index}].id`, option.id.toString());
+        option.isServerId && formData.append(`postOptions[${index}].id`, option.id.toString());
         formData.append(`postOptions[${index}].content`, deleteOverlappingNewLine(option.content));
         formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
       });

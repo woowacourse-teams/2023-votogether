@@ -14,12 +14,14 @@ const MIN_COUNT = 2;
 const MAX_COUNT = 5;
 
 const INIT_OPTION_LIST = [
-  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
-  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
+  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
+  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
 ];
 
 export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = INIT_OPTION_LIST) => {
-  const [optionList, setOptionList] = useState(initialOptionList);
+  const [optionList, setOptionList] = useState(
+    initialOptionList.map(option => ({ ...option, isServerId: true }))
+  );
   const contentInputRefList = useRef<HTMLInputElement[]>([]);
 
   const addOption = () => {
@@ -27,7 +29,7 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
 
     const updatedOptionList = [
       ...optionList,
-      { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
+      { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
     ];
 
     setOptionList(updatedOptionList);

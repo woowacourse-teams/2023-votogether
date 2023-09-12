@@ -1,4 +1,5 @@
 import { Suspense, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 
@@ -13,11 +14,14 @@ import * as S from './style';
 import UserProfile from './UserProfile';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
   const { userInfo } = loggedInfo;
 
   const handleLogoutClick = () => {
     clearLoggedInfo();
+
+    navigate('/');
   };
 
   return (

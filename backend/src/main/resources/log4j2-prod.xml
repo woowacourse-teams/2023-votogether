@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" monitorInterval="5">
+    <Properties>
+        <Property name="FILE_NAME">votogether</Property>
+        <Property name="FILE_LOG_PATTERN">
+            [%d{yyyy-MM-dd 'T' HH:mm:ss.SSS}] %-5p %pid --- [%t] %c : %m%n
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile
+                name="RollingFileAppender"
+                fileName="logs/${FILE_NAME}.log"
+                filePattern="logs/${FILE_NAME}.%d{yyyy-MM-dd-HH}.log"
+        >
+            <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="6"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs" maxDepth="2">
+                    <IfLastModified age="3d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.hibernate.SQL" level="debug">
+            <AppenderRef ref="RollingFileAppender"/>
+        </Logger>
+
+        <Logger name="org.hibernate.orm.jdbc.bind" level="trace">
+            <AppenderRef ref="RollingFileAppender"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="RollingFileAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>

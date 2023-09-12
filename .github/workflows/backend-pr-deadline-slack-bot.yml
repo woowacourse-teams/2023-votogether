@@ -1,0 +1,58 @@
+name: Notify Pull Request Deadline (BE)
+
+on:
+  pull_request:
+    types:
+      - opened
+    branches: ['dev']
+    paths:
+      - 'backend/**'
+
+jobs:
+  pull_request_open:
+    runs-on: ubuntu-latest
+    name: New pr to repo
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Remove "https://" from PR URL
+        id: remove_https
+        run: |
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          PR_URL="http://${PR_URL#https://}"          
+          echo "::set-output name=pr_url::$PR_URL"
+
+      - name: Set environment variable
+        run: echo "PR_CREATED_AT_UTC=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+      - name: Convert UTC to KST
+        run: |
+          UTC_TIME=$PR_CREATED_AT_UTC
+          KST_TIME=$(date -u -d "$UTC_TIME 9 hour" "+%Y-%m-%dT%H:%M:%SZ")
+          echo "PR_CREATED_AT_KST=$KST_TIME" >> $GITHUB_ENV
+
+      - name: Calculate deadline
+        id: deadline
+        run: node .github/workflows/scripts/calculatePRDeadline.js
+        env:
+          PR_CREATED_AT_KST: ${{ env.PR_CREATED_AT_KST }}
+
+      - name: Send Slack notification When BE PR
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_BE_CHANNEL }} # Slack 채널 ID
+          payload: |
+            {
+                "text": "",
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "<${{ steps.remove_https.outputs.pr_url }}|${{ github.event.pull_request.title }}>\n코드리뷰 마감시간: ${{ steps.deadline.outputs.DEADLINE }}"
+                        }
+                    }
+                ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰

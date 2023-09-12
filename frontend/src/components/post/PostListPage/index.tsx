@@ -1,6 +1,7 @@
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 
 import { useDrawer } from '@hooks/useDrawer';
+import { useToggle } from '@hooks/useToggle';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
@@ -23,11 +24,8 @@ import * as S from './style';
 export default function PostListPage() {
   const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
   const { TITLE, CONTENT } = APP_LAUNCH_EVENT;
-  const [isBannerOpen, setBannerOpen] = useState(true);
 
-  const handleBannerClose = () => {
-    setBannerOpen(false);
-  };
+  const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(true);
 
   return (
     <S.Container>
@@ -39,7 +37,7 @@ export default function PostListPage() {
           <Banner
             title={TITLE}
             content={CONTENT}
-            handleClose={handleBannerClose}
+            handleClose={closeBanner}
             path={PATH.ANNOUNCEMENT}
           />
         </S.BannerWrapper>

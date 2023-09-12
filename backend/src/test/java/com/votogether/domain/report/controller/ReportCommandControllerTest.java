@@ -11,7 +11,7 @@ import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
-import com.votogether.domain.report.service.ReportService;
+import com.votogether.domain.report.service.ReportCommandService;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
 import io.restassured.http.ContentType;
@@ -29,11 +29,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.WebApplicationContext;
 
-@WebMvcTest(ReportController.class)
-class ReportControllerTest {
+@WebMvcTest(ReportCommandCommandController.class)
+class ReportCommandControllerTest {
 
     @MockBean
-    ReportService reportService;
+    ReportCommandService reportCommandService;
 
     @MockBean
     TokenProcessor tokenProcessor;
@@ -43,7 +43,7 @@ class ReportControllerTest {
 
     @BeforeEach
     void setUp(final WebApplicationContext webApplicationContext) {
-        RestAssuredMockMvc.standaloneSetup(new ReportController(reportService));
+        RestAssuredMockMvc.standaloneSetup(new ReportCommandCommandController(reportCommandService));
         RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
     }
 
@@ -69,7 +69,7 @@ class ReportControllerTest {
             given(memberService.findById(anyLong())).willReturn(member);
 
             ReportRequest request = new ReportRequest(ReportType.POST, 1L, "불건전한 게시글");
-            willDoNothing().given(reportService).report(member, request);
+            willDoNothing().given(reportCommandService).report(member, request);
 
             // when, then
             RestAssuredMockMvc
@@ -101,7 +101,7 @@ class ReportControllerTest {
             given(memberService.findById(anyLong())).willReturn(member);
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, 1L, "불건전한 댓글");
-            willDoNothing().given(reportService).report(member, request);
+            willDoNothing().given(reportCommandService).report(member, request);
 
             // when, then
             RestAssuredMockMvc
@@ -133,7 +133,7 @@ class ReportControllerTest {
             given(memberService.findById(anyLong())).willReturn(member);
 
             ReportRequest request = new ReportRequest(ReportType.NICKNAME, 1L, "불건전한 닉네임");
-            willDoNothing().given(reportService).report(member, request);
+            willDoNothing().given(reportCommandService).report(member, request);
 
             // when, then
             RestAssuredMockMvc
@@ -168,7 +168,7 @@ class ReportControllerTest {
         given(memberService.findById(anyLong())).willReturn(member);
 
         ReportRequest request = new ReportRequest(ReportType.COMMENT, id, "불건전한 게시글");
-        willDoNothing().given(reportService).report(member, request);
+        willDoNothing().given(reportCommandService).report(member, request);
 
         // when, then
         RestAssuredMockMvc
@@ -201,7 +201,7 @@ class ReportControllerTest {
         given(memberService.findById(anyLong())).willReturn(member);
 
         ReportRequest request = new ReportRequest(ReportType.POST, 1L, reason);
-        willDoNothing().given(reportService).report(member, request);
+        willDoNothing().given(reportCommandService).report(member, request);
 
         // when, then
         RestAssuredMockMvc

@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ReportService {
+public class ReportCommandService {
 
     private final Map<ReportType, ReportStrategy> reportActions;
 
-    public ReportService(
+    public ReportCommandService(
             final ReportPostStrategy reportPostStrategy,
             final ReportCommentStrategy reportCommentStrategy,
             final ReportNicknameStrategy reportNicknameStrategy
@@ -30,7 +30,8 @@ public class ReportService {
 
     @Transactional
     public void report(final Member reporter, final ReportRequest request) {
-        reportActions.get(request.type()).report(reporter, request);
+        final ReportStrategy reportStrategy = reportActions.get(request.type());
+        reportStrategy.report(reporter, request);
     }
 
 }

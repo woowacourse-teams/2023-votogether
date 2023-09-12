@@ -18,9 +18,11 @@ const INIT_OPTION_LIST = [
   { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
 ];
 
-export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = INIT_OPTION_LIST) => {
+export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) => {
   const [optionList, setOptionList] = useState(
-    initialOptionList.map(option => ({ ...option, isServerId: true }))
+    initialOptionList
+      ? initialOptionList.map(option => ({ ...option, isServerId: true }))
+      : INIT_OPTION_LIST
   );
   const contentInputRefList = useRef<HTMLInputElement[]>([]);
 

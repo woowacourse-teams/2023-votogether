@@ -48,7 +48,7 @@ public interface MemberControllerDocs {
             final Member member
     );
 
-    @Operation(summary = "회원 탈퇴", description = "회원 ㄷ탈퇴한다.")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴한다.")
     @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공")
     ResponseEntity<Void> deleteMember(final Member member);
 

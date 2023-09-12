@@ -188,5 +188,4 @@ public class MemberService {
                 .toList();
         reportRepository.deleteAllById(reportIdsByMember);
     }
-
 }

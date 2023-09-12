@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Cache modules
+      - name: Cache modules and Check package-lock.json
         uses: actions/cache@v3
         id: cache-npm
         env:

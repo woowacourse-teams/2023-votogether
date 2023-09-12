@@ -20,5 +20,6 @@ export const checkValidationPost = (
   if (optionList.length > 5) return '선택지는 최대 5개 입력할 수 있습니다.';
   if (optionList.some(option => option.content.trim() === '')) return '선택지에 글을 입력해주세요.';
 
-  if (Object.values(time).reduce((a, b) => a + b, 0) < 1) return '시간은 필수로 입력해야 합니다.';
+  const isTimeOptionZero = Object.values(time).reduce((a, b) => a + b, 0) < 1;
+  if (isTimeOptionZero) return '시간은 필수로 입력해야 합니다.';
 };

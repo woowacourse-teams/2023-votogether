@@ -8,6 +8,6 @@ public record PostRankingResponse(
         int ranking,
 
         @Schema(description = "게시글 정보")
-        PostSummaryResponse postSummaryResponse
+        PostSummaryResponse post
 ) {
 }

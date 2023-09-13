@@ -375,6 +375,9 @@ class PostCommandServiceTest extends ServiceTest {
             Member member = memberTestPersister.builder().save();
             Long postId = postCommandService.createPost(postCreateRequest, member);
 
+            em.flush();
+            em.clear();
+            
             // when
             postCommandService.deletePost(postId, member);
 

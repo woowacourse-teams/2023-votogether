@@ -1,6 +1,5 @@
 package com.votogether.domain.post.service;
 
-import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.post.PostCreateRequest;
@@ -8,7 +7,6 @@ import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
 import com.votogether.domain.post.dto.request.post.PostUpdateRequest;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostCategory;
 import com.votogether.domain.post.entity.PostContentImage;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.exception.PostExceptionType;
@@ -21,8 +19,13 @@ import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.infra.image.ImageUploader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -94,51 +97,90 @@ public class PostCommandService {
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
+        validatePostOptionUpdateCount(post, postUpdate);
 
         updatePostOptions(post, postUpdate.getPostOptions());
         updatePost(post, postUpdate);
     }
 
     private void updatePostOptions(final Post post, final List<PostOptionUpdateRequest> postOptionUpdates) {
-        final List<PostOption> postOptions = post.getPostOptions();
-        final int postOptionSize = postOptions.size();
-        final int updateSize = postOptionUpdates.size();
+        final List<PostOption> postOptions = new ArrayList<>(post.getPostOptions());
+        final Set<Long> postOptionIds = postOptions.stream()
+                .map(PostOption::getId)
+                .collect(Collectors.toSet());
+        final List<PostOption> removePostOptions = extractPostOptionRemoves(postOptions, postOptionUpdates);
+        final Map<Long, PostOptionUpdateRequest> updateOptionGroup =
+                extractPostOptionUpdates(postOptionIds, postOptionUpdates);
+        final List<PostOptionUpdateRequest> addPostOptions =
+                extractPostOptionAdds(postOptionIds, postOptionUpdates);
 
-        if (postOptionSize > updateSize) {
-            handlePostOptionMoreOriginsThanUpdates(post, postOptions, postOptionUpdates, updateSize);
-        } else if (postOptionSize < updateSize) {
-            handleMoreUpdatesThanOrigins(post, postOptions, postOptionUpdates, postOptionSize);
-        } else {
-            updateOriginPostOptions(postOptions, postOptionUpdates);
-        }
+        removeOriginPostOptions(post, removePostOptions);
+        updateOriginPostOptions(post, updateOptionGroup);
+        addNewPostOptions(post, addPostOptions, post.getPostOptions().size());
     }
 
-    private void handlePostOptionMoreOriginsThanUpdates(
-            final Post post,
-            final List<PostOption> postOptions,
-            final List<PostOptionUpdateRequest> updates,
-            final int updateSize
-    ) {
-        updateOriginPostOptions(postOptions.subList(0, updateSize), updates);
-        removeOriginPostOptions(post, postOptions.subList(updateSize, postOptions.size()));
-    }
-
-    private void handleMoreUpdatesThanOrigins(
-            final Post post,
-            final List<PostOption> postOptions,
-            final List<PostOptionUpdateRequest> updates,
-            final int originSize
-    ) {
-        updateOriginPostOptions(postOptions, updates.subList(0, originSize));
-        addNewPostOptions(post, updates.subList(originSize, updates.size()), originSize);
-    }
-
-    private void updateOriginPostOptions(
+    private List<PostOption> extractPostOptionRemoves(
             final List<PostOption> postOptions,
             final List<PostOptionUpdateRequest> postOptionUpdates
     ) {
-        for (int index = 0; index < postOptions.size(); index++) {
-            updatePostOption(postOptions.get(index), postOptionUpdates.get(index));
+        final Set<Long> updateOptionIds = postOptionUpdates.stream()
+                .map(PostOptionUpdateRequest::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        return postOptions.stream()
+                .filter(postOption -> !updateOptionIds.contains(postOption.getId()))
+                .toList();
+    }
+
+    private Map<Long, PostOptionUpdateRequest> extractPostOptionUpdates(
+            final Set<Long> postOptionIds,
+            final List<PostOptionUpdateRequest> postOptionUpdates
+    ) {
+        final List<PostOptionUpdateRequest> updatePostOptions = postOptionUpdates.stream()
+                .filter(postOptionUpdate ->
+                        Objects.nonNull(postOptionUpdate.getId()) && postOptionIds.contains(postOptionUpdate.getId()))
+                .toList();
+        final int uniqueUpdateOptionIdCount = updatePostOptions.stream()
+                .map(PostOptionUpdateRequest::getId)
+                .collect(Collectors.toSet())
+                .size();
+        if (updatePostOptions.size() != uniqueUpdateOptionIdCount) {
+            throw new BadRequestException(PostExceptionType.DUPLICATE_UPDATE_POST_OPTION);
+        }
+        return postOptionUpdates.stream()
+                .collect(Collectors.toMap(
+                        PostOptionUpdateRequest::getId,
+                        postOptionUpdate -> postOptionUpdate,
+                        (exist, replace) -> replace,
+                        HashMap::new
+                ));
+    }
+
+    private List<PostOptionUpdateRequest> extractPostOptionAdds(
+            final Set<Long> postOptionIds,
+            final List<PostOptionUpdateRequest> postOptionUpdates
+    ) {
+        return postOptionUpdates.stream()
+                .filter(postOptionUpdate ->
+                        Objects.isNull(postOptionUpdate.getId()) || !postOptionIds.contains(postOptionUpdate.getId()))
+                .toList();
+    }
+
+    private void removeOriginPostOptions(final Post post, final List<PostOption> removePostOptions) {
+        for (final PostOption postOption : removePostOptions) {
+            imageUploader.delete(postOption.getImageUrl());
+            post.removePostOption(postOption);
+        }
+        postOptionRepository.flush();
+    }
+
+    private void updateOriginPostOptions(final Post post, final Map<Long, PostOptionUpdateRequest> updateOptionGroup) {
+        final List<PostOption> postOptions = post.getPostOptions();
+        for (final PostOption postOption : postOptions) {
+            updatePostOption(postOption, updateOptionGroup.get(postOption.getId()));
+        }
+        for (int i = 0; i < postOptions.size(); i++) {
+            postOptions.get(i).setSequence(i + 1);
         }
     }
 
@@ -151,11 +193,25 @@ public class PostCommandService {
         postOption.update(postOptionUpdate.getContent(), imageUrl);
     }
 
-    private void removeOriginPostOptions(final Post post, final List<PostOption> postOptions) {
-        for (final PostOption postOption : postOptions) {
-            imageUploader.delete(postOption.getImageUrl());
-            post.removePostOption(postOption);
+    private String updateImage(
+            final String originImageUrl,
+            final String clientUrl,
+            final MultipartFile multipartFile
+    ) {
+        final boolean hasOriginImage = Objects.nonNull(originImageUrl);
+        final boolean hasClientUrl = Objects.nonNull(clientUrl) && !clientUrl.isBlank();
+        final boolean hasNewImage = multipartFile != null && !multipartFile.isEmpty();
+
+        if (hasOriginImage && (!hasClientUrl || hasNewImage)) {
+            imageUploader.delete(originImageUrl);
         }
+        if (hasNewImage) {
+            return imageUploader.upload(multipartFile);
+        }
+        if (hasOriginImage && hasClientUrl) {
+            return originImageUrl;
+        }
+        return null;
     }
 
     private void addNewPostOptions(
@@ -188,49 +244,9 @@ public class PostCommandService {
     }
 
     private void updatePostCategories(final Post post, final List<Long> categoryIds) {
-        final List<PostCategory> postCategories = post.getPostCategories();
-        final int postCategorySize = postCategories.size();
-        final int updateSize = categoryIds.size();
-
-        if (postCategorySize > updateSize) {
-            handlePostCategoryMoreOriginsThanUpdates(post, postCategories, categoryIds, updateSize);
-        } else if (postCategorySize < updateSize) {
-            handlePostCategoryMoreUpdatesThanOrigins(post, postCategories, categoryIds, postCategorySize);
-        } else {
-            updateOriginPostCategories(postCategories, categoryIds);
-        }
-    }
-
-    private void handlePostCategoryMoreOriginsThanUpdates(
-            final Post post,
-            final List<PostCategory> postCategories,
-            final List<Long> categoryIds,
-            final int updateSize
-    ) {
-        updateOriginPostCategories(postCategories.subList(0, updateSize), categoryIds);
-        removeOriginPostCategories(post, postCategories.subList(updateSize, postCategories.size()));
-    }
-
-    private void handlePostCategoryMoreUpdatesThanOrigins(
-            final Post post,
-            final List<PostCategory> postCategories,
-            final List<Long> categoryIds,
-            final int originSize
-    ) {
-        updateOriginPostCategories(postCategories, categoryIds.subList(0, originSize));
-        addCategories(post, categoryIds.subList(originSize, categoryIds.size()));
-    }
-
-    private void updateOriginPostCategories(final List<PostCategory> postCategories, final List<Long> categoryIds) {
-        final List<Category> categories = categoryRepository.findAllById(categoryIds);
-        IntStream.range(0, categories.size())
-                .forEach(index -> postCategories.get(index).updateCategory(categories.get(index)));
-    }
-
-    private void removeOriginPostCategories(final Post post, final List<PostCategory> postCategories) {
-        for (final PostCategory postCategory : postCategories) {
-            post.removePostCategory(postCategory);
-        }
+        post.getPostCategories().clear();
+        postCategoryRepository.flush();
+        addCategories(post, categoryIds);
     }
 
     private void updatePostContentImage(
@@ -261,27 +277,6 @@ public class PostCommandService {
         }
     }
 
-    private String updateImage(
-            final String originImageUrl,
-            final String clientUrl,
-            final MultipartFile multipartFile
-    ) {
-        final boolean hasOriginImage = Objects.nonNull(originImageUrl);
-        final boolean hasClientUrl = Objects.nonNull(clientUrl);
-        final boolean hasNewImage = multipartFile != null && !multipartFile.isEmpty();
-
-        if (hasOriginImage && (!hasClientUrl || hasNewImage)) {
-            imageUploader.delete(originImageUrl);
-        }
-        if (hasNewImage) {
-            return imageUploader.upload(multipartFile);
-        }
-        if (hasOriginImage && hasClientUrl && !hasNewImage) {
-            return originImageUrl;
-        }
-        return null;
-    }
-
     @Transactional
     public void closePostEarly(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
@@ -299,10 +294,16 @@ public class PostCommandService {
         validatePostWriter(post, loginMember);
         validatePostDeletePossible(post);
 
-        deleteVotes(post.getPostOptions());
-        deletePostOptions(postId, post.getPostOptions());
+        final List<PostOption> postOptions = post.getPostOptions();
+        final List<String> postContentImagePaths = post.getPostContentImages()
+                .stream()
+                .map(PostContentImage::getImageUrl)
+                .toList();
+
+        deleteVotes(postOptions);
+        deletePostOptions(postId, postOptions);
         deleteComments(postId);
-        deletePost(postId, post.getPostContentImages());
+        deletePost(postId, postContentImagePaths);
     }
 
     private void deleteVotes(final List<PostOption> postOptions) {
@@ -323,11 +324,9 @@ public class PostCommandService {
         commentRepository.deleteAllWithPostIdInBatch(postId);
     }
 
-    private void deletePost(final Long postId, final List<PostContentImage> postContentImages) {
+    private void deletePost(final Long postId, final List<String> postContentImagePaths) {
         postCategoryRepository.deleteAllWithPostIdInBatch(postId);
-        postContentImages.stream()
-                .map(PostContentImage::getImageUrl)
-                .forEach(imageUploader::delete);
+        postContentImagePaths.forEach(imageUploader::delete);
         postContentImageRepository.deleteAllWithPostIdInBatch(postId);
         postRepository.deleteById(postId);
     }
@@ -341,6 +340,12 @@ public class PostCommandService {
     private void validatePostWriter(final Post post, final Member member) {
         if (!post.isWriter(member)) {
             throw new BadRequestException(PostExceptionType.POST_NOT_WRITER);
+        }
+    }
+
+    private void validatePostOptionUpdateCount(final Post post, final PostUpdateRequest postUpdate) {
+        if (!post.isLimitOptionSize(postUpdate.getPostOptions().size())) {
+            throw new BadRequestException(PostExceptionType.POST_OPTION_SIZE_EXCEED);
         }
     }
 

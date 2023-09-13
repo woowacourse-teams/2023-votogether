@@ -1,0 +1,56 @@
+name: Pull request comment (FE)
+on:
+  issue_comment:
+    types: [created, edited, deleted]
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  pull_request_comment:
+    # This job only runs for pull request comments
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification When Review Completed
+        if: contains(github.event.comment.body, 'fe-리뷰완') # check the comment if it contains the keywords
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+          payload: |
+            {
+                "text": "",
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "리뷰 완료했습니다👍\n<${{ github.event.comment.html_url }}|리뷰어의 코멘트 확인하러 가기>"
+                        }
+                    }
+                ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰
+
+      - name: Send Slack notification When Re-review Requested
+        if: contains(github.event.comment.body, 'fe-리뷰요청') # check the comment if it contains the keywords
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_FE_CHANNEL }} # Slack 채널 ID
+          payload: |
+            {
+                "text": "",
+                "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "리뷰 반영 최종 완료!✅ 확인 부탁드립니다😃\n<${{ github.event.comment.html_url }}|피드백 반영 확인하러 가기>"
+                      }
+                    }
+                  ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }} # Slack 토큰

@@ -42,7 +42,7 @@ class TokenProcessorTest {
         memberRepository.save(member);
 
         // when
-        String token = tokenProcessor.generateToken(member);
+        String token = tokenProcessor.generateAccessToken(member.getId());
 
         // then
         TokenPayload tokenPayload = tokenProcessor.parseToken(token);
@@ -66,7 +66,7 @@ class TokenProcessorTest {
                     .build();
             memberRepository.save(member);
 
-            String token = tokenProcessor.generateToken(member);
+            String token = tokenProcessor.generateAccessToken(member.getId());
             token = "Bearer " + token;
 
             // when
@@ -91,7 +91,7 @@ class TokenProcessorTest {
                     .build();
             memberRepository.save(member);
 
-            String token = prefix + tokenProcessor.generateToken(member);
+            String token = prefix + tokenProcessor.generateAccessToken(member.getId());
 
             // when, then
             assertThatThrownBy(() -> tokenProcessor.resolveToken(token))

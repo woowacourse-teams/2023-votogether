@@ -32,7 +32,15 @@ export default function PassionUserRanking() {
         ))}
       </S.Tr>
       {rankerList &&
-        rankerList.map(ranker => {
+        new Array(10).fill(0).map((_, index) => {
+          const ranker = rankerList[index] ?? {
+            ranking: '',
+            nickname: '',
+            postCount: '',
+            voteCount: '',
+            score: '',
+          };
+
           const rankIcon = rankIconUrl[ranker.ranking] && (
             <img src={rankIconUrl[ranker.ranking]} alt={ranker.ranking.toString()} />
           );

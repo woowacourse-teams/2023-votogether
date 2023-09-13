@@ -6,7 +6,6 @@ const DotenvWebpack = require('dotenv-webpack');
 const { EsbuildPlugin } = require('esbuild-loader');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   mode: 'development',
@@ -75,12 +74,12 @@ module.exports = {
     new CleanWebpackPlugin(),
     new DotenvWebpack(),
     new CopyPlugin({
-      patterns: [{ from: 'public/icons', to: 'icons' }],
+      patterns: [
+        { from: 'public/icons', to: 'icons' },
+        { from: 'public/seo', to: './' },
+      ],
     }),
     new ForkTsCheckerWebpackPlugin(),
-    new BundleAnalyzerPlugin({
-      openAnalyzer: false,
-    }),
   ],
   devtool: 'inline-source-map',
   devServer: {

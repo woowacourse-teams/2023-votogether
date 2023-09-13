@@ -41,4 +41,11 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> findAllByMember(final Member member);
 
+    @Query("SELECT COUNT(v)" +
+            "FROM Member m " +
+            "LEFT JOIN Vote v ON m.id = v.member.id AND v.member IN :members " +
+            "WHERE m IN :members " +
+            "GROUP BY m.id")
+    List<Integer> findCountsByMembers(@Param("members") final List<Member> members);
+
 }

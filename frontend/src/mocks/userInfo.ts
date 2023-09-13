@@ -22,4 +22,15 @@ export const mockUserInfo = [
 
     return res(ctx.status(204));
   }),
+
+  rest.delete('/auth/logout', (req, res, ctx) => {
+    const expirationTime = new Date(Date.now() - 1);
+
+    return res(
+      ctx.status(204),
+      ctx.cookie('hasEssentialInfo', 'expired', {
+        expires: expirationTime,
+      })
+    );
+  }),
 ];

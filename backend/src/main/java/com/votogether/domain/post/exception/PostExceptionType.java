@@ -22,6 +22,8 @@ public enum PostExceptionType implements ExceptionType {
     POST_CONTENT_INVALID_LENGTH(513, "게시글 내용 길이가 유효하지 않습니다."),
     POST_OPTION_CONTENT_INVALID_LENGTH(514, "게시글 옵션 내용 길이가 유효하지 않습니다."),
     POST_IS_HIDDEN(515, "신고에 의해 숨겨진 게시글은 접근할 수 없습니다."),
+    POST_OPTION_SIZE_EXCEED(516, "최대 게시글 옵션 개수를 초과하였습니다."),
+    DUPLICATE_UPDATE_POST_OPTION(517, "게시글 옵션을 중복해서 수정할 수 없습니다."),
     ;
 
     private final int code;

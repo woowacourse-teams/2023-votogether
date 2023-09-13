@@ -42,6 +42,7 @@ public class PostOption extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+    @Setter
     @Column(nullable = false)
     private Integer sequence;
 

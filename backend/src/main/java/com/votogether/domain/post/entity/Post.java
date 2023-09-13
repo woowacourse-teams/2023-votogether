@@ -36,6 +36,7 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
+    private static final int MAXIMUM_POST_OPTION_SIZE = 5;
     private static final int DELETE_VOTE_LIMIT = 20;
 
     @Id
@@ -182,6 +183,10 @@ public class Post extends BaseEntity {
 
     public void blind() {
         this.isHidden = true;
+    }
+
+    public boolean isLimitOptionSize(final int size) {
+        return size <= MAXIMUM_POST_OPTION_SIZE;
     }
 
     public String getTitle() {

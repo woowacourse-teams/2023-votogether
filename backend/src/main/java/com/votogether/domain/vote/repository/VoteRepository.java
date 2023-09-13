@@ -73,7 +73,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     int countByMember(final Member member);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from Vote v where v.postOption.id in :postOptionIds")
     void deleteAllWithPostOptionIdsInBatch(@Param("postOptionIds") final List<Long> postOptionIds);
 

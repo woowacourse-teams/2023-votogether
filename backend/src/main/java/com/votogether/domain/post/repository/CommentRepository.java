@@ -17,7 +17,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByWriter(final Member writer);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from Comment c where c.post.id = :postId")
     void deleteAllWithPostIdInBatch(@Param("postId") final Long postId);
 

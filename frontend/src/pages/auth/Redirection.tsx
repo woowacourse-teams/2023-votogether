@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { AuthResponse } from '@type/auth';
-
 import { AuthContext } from '@hooks/context/auth';
+
+import { getAuthInfo } from '@api/auth';
 
 import Error from '@pages/Error';
 
@@ -13,13 +13,8 @@ import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { setCookie } from '@utils/cookie';
-import { getFetch } from '@utils/fetch';
 import { setLocalStorage } from '@utils/localStorage';
 import { decodeToken } from '@utils/token/decodeToken';
-
-const getAuthInfo = async (url: string): Promise<AuthResponse> => {
-  return await getFetch<AuthResponse>(url);
-};
 
 export default function Redirection() {
   const { loggedInfo, setLoggedInfo } = useContext(AuthContext);

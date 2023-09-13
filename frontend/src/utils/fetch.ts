@@ -7,7 +7,7 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-const makeFetchHeaders = () => {
+export const makeFetchHeaders = () => {
   const accessToken = getLocalStorage(ACCESS_TOKEN_KEY);
 
   if (!accessToken) {

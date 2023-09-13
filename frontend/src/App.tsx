@@ -11,6 +11,7 @@ import router from '@routes/router';
 import ErrorBoundaryForTopClass from '@pages/ErrorBoundaryForTopClass';
 
 import ChannelTalk from '@components/ChannelTalk';
+import GoogleTagManager from '@components/GoogleTagManager';
 
 import { GlobalStyle } from '@styles/globalStyle';
 import { theme } from '@styles/theme';
@@ -23,18 +24,21 @@ ChannelTalk.boot({
 });
 
 const App = () => (
-  <ErrorBoundaryForTopClass>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <PostOptionProvider>
-          <AuthProvider>
-            <RouterProvider router={router} />
-          </AuthProvider>
-        </PostOptionProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </ErrorBoundaryForTopClass>
+  <>
+    <ErrorBoundaryForTopClass>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <PostOptionProvider>
+            <AuthProvider>
+              <RouterProvider router={router} />
+            </AuthProvider>
+          </PostOptionProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundaryForTopClass>
+    <GoogleTagManager gtmId={process.env.VOTOGETHER_GOOGLE_TAG_ID} />
+  </>
 );
 
 export default App;

@@ -7,6 +7,7 @@ export const BASE_PATH = {
   ADMIN: '/admin',
   SEARCH: '/search',
   RANKING: '/ranking',
+  ANNOUNCEMENT: '/announcements',
 };
 
 export const PATH = {

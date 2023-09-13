@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import Announcement from '@pages/Announcement';
 import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
 import Error from '@pages/Error';
@@ -142,6 +143,11 @@ const router = createBrowserRouter([
   {
     path: PATH.RANKING,
     element: <Ranking />,
+    errorElement: <Error />,
+  },
+  {
+    path: PATH.ANNOUNCEMENT,
+    element: <Announcement />,
     errorElement: <Error />,
   },
   {

@@ -5,11 +5,11 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const Container = styled.div`
-  padding-top: 55px;
+  padding-top: 40px;
   position: relative;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    padding-top: 0px;
+    padding-top: 10px;
   }
 `;
 
@@ -25,6 +25,12 @@ export const HeaderWrapper = styled.div`
     display: none;
     visibility: hidden;
   }
+`;
+
+export const BannerWrapper = styled.div`
+  width: 100%;
+
+  margin-bottom: 10px;
 `;
 
 export const DrawerWrapper = styled.div`

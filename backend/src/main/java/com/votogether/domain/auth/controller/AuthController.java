@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.server.Cookie.SameSite;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,11 +72,14 @@ public class AuthController implements AuthControllerDocs {
     }
 
     private void addRefreshTokenToCookie(final HttpServletResponse httpServletResponse, final String refreshToken) {
-        final Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/auth");
-        httpServletResponse.addCookie(cookie);
+        final ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/auth")
+                .maxAge(1209600)
+                .sameSite(SameSite.NONE.attributeValue())
+                .build();
+        httpServletResponse.setHeader("Set-Cookie", responseCookie.toString());
     }
 
     private String getRefreshTokenFromCookie(final HttpServletRequest httpServletRequest) {
@@ -86,9 +91,14 @@ public class AuthController implements AuthControllerDocs {
     }
 
     private void expireCookie(final HttpServletResponse httpServletResponse, final String refreshToken) {
-        final Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setMaxAge(0);
-        httpServletResponse.addCookie(cookie);
+        final ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/auth")
+                .maxAge(0)
+                .sameSite(SameSite.NONE.attributeValue())
+                .build();
+        httpServletResponse.setHeader("Set-Cookie", responseCookie.toString());
     }
 
 }

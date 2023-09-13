@@ -131,11 +131,13 @@ class PostCommandServiceTest extends ServiceTest {
                     mockingMultipartFile("votogether.jpg"),
                     List.of(
                             new PostOptionUpdateRequest(
+                                    1L,
                                     "option1",
                                     "votogether.png",
                                     null
                             ),
                             new PostOptionUpdateRequest(
+                                    2L,
                                     "option2",
                                     null,
                                     mockingMultipartFile("votogether.png")
@@ -179,6 +181,7 @@ class PostCommandServiceTest extends ServiceTest {
                     mockingMultipartFile("votogether.jpg"),
                     List.of(
                             new PostOptionUpdateRequest(
+                                    1L,
                                     "option1",
                                     null,
                                     null
@@ -221,16 +224,19 @@ class PostCommandServiceTest extends ServiceTest {
                     null,
                     List.of(
                             new PostOptionUpdateRequest(
+                                    1L,
                                     "option1",
                                     "vogother.png",
                                     null
                             ),
                             new PostOptionUpdateRequest(
+                                    2L,
                                     "option2",
                                     "votogether.png",
                                     mockingMultipartFile("votogether.jpg")
                             ),
                             new PostOptionUpdateRequest(
+                                    3L,
                                     "option3",
                                     null,
                                     null
@@ -443,17 +449,14 @@ class PostCommandServiceTest extends ServiceTest {
                 categoryIds,
                 "title",
                 "content",
-                null,
                 mockingMultipartFile("votogether.png"),
                 List.of(
                         new PostOptionCreateRequest(
                                 "option1",
-                                null,
                                 mockingMultipartFile("votogether.png")
                         ),
                         new PostOptionCreateRequest(
                                 "option2",
-                                null,
                                 null
                         )
                 ),
@@ -470,11 +473,13 @@ class PostCommandServiceTest extends ServiceTest {
                 mockingMultipartFile("votogether.jpg"),
                 List.of(
                         new PostOptionUpdateRequest(
+                                1L,
                                 "option1",
                                 "votogether.png",
                                 null
                         ),
                         new PostOptionUpdateRequest(
+                                2L,
                                 "option2",
                                 null,
                                 mockingMultipartFile("votogether.png")

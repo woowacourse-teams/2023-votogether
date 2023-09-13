@@ -52,7 +52,7 @@ public class PostCommandService {
                 .build();
 
         addCategories(post, postCreate.getCategoryIds());
-        addImage(post, postCreate.getContentImage());
+        addImage(post, postCreate.getImageFile());
         addPostOptions(post, postCreate.getPostOptions());
 
         return postRepository.save(post).getId();
@@ -146,7 +146,7 @@ public class PostCommandService {
         final String imageUrl = updateImage(
                 postOption.getImageUrl(),
                 postOptionUpdate.getImageUrl(),
-                postOptionUpdate.getOptionImage()
+                postOptionUpdate.getImageFile()
         );
         postOption.update(postOptionUpdate.getContent(), imageUrl);
     }
@@ -173,7 +173,7 @@ public class PostCommandService {
             final PostOptionUpdateRequest postOptionUpdate,
             final int prevPostOptionSize
     ) {
-        final String imageUrl = imageUploader.upload(postOptionUpdate.getOptionImage());
+        final String imageUrl = imageUploader.upload(postOptionUpdate.getImageFile());
         return PostOption.builder()
                 .sequence(index + 1 + prevPostOptionSize)
                 .content(postOptionUpdate.getContent())
@@ -183,7 +183,7 @@ public class PostCommandService {
 
     private void updatePost(final Post post, final PostUpdateRequest postUpdate) {
         updatePostCategories(post, postUpdate.getCategoryIds());
-        updatePostContentImage(post, postUpdate.getImageUrl(), postUpdate.getContentImage());
+        updatePostContentImage(post, postUpdate.getImageUrl(), postUpdate.getImageFile());
         post.update(postUpdate.getTitle(), postUpdate.getContent(), postUpdate.getDeadline());
     }
 

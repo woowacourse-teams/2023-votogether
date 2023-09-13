@@ -20,9 +20,6 @@ public class PostOptionCreateRequest {
     @NotBlank(message = "게시글 옵션 내용이 존재하지 않거나 공백만 존재합니다.")
     private String content;
 
-    @Schema(description = "게시글 옵션 이미지 URL", example = "https://votogether.com/static/images/image.png")
-    private String imageUrl;
-
     @Schema(description = "게시글 옵션 이미지 파일", example = "votogether.png")
     private MultipartFile optionImage;
 

@@ -1,6 +1,5 @@
 package com.votogether.domain.post.dto.request.post;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -35,11 +35,8 @@ public class PostCreateRequest {
     @NotBlank(message = "게시글 내용이 존재하지 않거나 공백만 존재합니다.")
     private String content;
 
-    @Schema(description = "게시글 이미지 URL", example = "https://votogether.com/static/images/image.png")
-    private String imageUrl;
-
     @Schema(description = "게시글 이미지 파일", example = "votogether.png")
-    private MultipartFile contentImage;
+    private MultipartFile imageFile;
 
     @Schema(description = "게시글 옵션 작성 목록")
     @Valid
@@ -47,7 +44,7 @@ public class PostCreateRequest {
 
     @Schema(description = "게시글 마감시간", example = "2023-08-01 12:25")
     @NotNull(message = "게시글 마감시간을 등록하지 않았습니다.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime deadline;
 
 }

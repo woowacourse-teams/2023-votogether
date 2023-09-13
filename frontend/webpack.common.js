@@ -74,7 +74,10 @@ module.exports = {
     new CleanWebpackPlugin(),
     new DotenvWebpack(),
     new CopyPlugin({
-      patterns: [{ from: 'public/icons', to: 'icons' }],
+      patterns: [
+        { from: 'public/icons', to: 'icons' },
+        { from: 'public/seo', to: './' },
+      ],
     }),
     new ForkTsCheckerWebpackPlugin(),
   ],

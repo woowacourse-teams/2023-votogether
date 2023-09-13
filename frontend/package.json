@@ -8,6 +8,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "webpack-dev-server --config webpack.dev.js --open --hot",
+    "prebuild": "cd src/utils && node generateSiteMap.js",
     "build": "webpack --config webpack.prod.js",
     "start": "webpack --config webpack.dev.js",
     "lint": "eslint --cache .",

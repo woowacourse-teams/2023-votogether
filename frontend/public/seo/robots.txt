@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Disallow: /404
+
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://votogether.com/
+
+# Sitemaps
+Sitemap: https://votogether.com/sitemap.xml

@@ -2,6 +2,8 @@ import { ChangeEvent, useRef, useState } from 'react';
 
 import { MAX_FILE_SIZE } from '@components/PostForm/constants';
 
+import { convertImageToWebP } from '@utils/resizeImage';
+
 export const useContentImage = (imageUrl: string = '') => {
   const [contentImage, setContentImage] = useState(imageUrl);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
@@ -11,12 +13,22 @@ export const useContentImage = (imageUrl: string = '') => {
     if (contentInputRef.current) contentInputRef.current.value = '';
   };
 
-  const handleUploadImage = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
 
     if (!files) return;
 
     const file = files[0];
+
+    const webpFileList = await convertImageToWebP(file);
+
+    event.target.files = webpFileList;
+
+    const reader = new FileReader();
+
+    const webpFile = webpFileList[0];
+
+    reader.readAsDataURL(webpFile);
 
     event.target.setCustomValidity('');
 
@@ -26,10 +38,6 @@ export const useContentImage = (imageUrl: string = '') => {
 
       return;
     }
-
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
 
     reader.onloadend = () => {
       setContentImage(reader.result?.toString() ?? '');

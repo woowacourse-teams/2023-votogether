@@ -45,10 +45,7 @@ public class ReportPostStrategy implements ReportStrategy {
         );
     }
 
-    private void blindPost(
-            final ReportRequest request,
-            final Post reportedPost
-    ) {
+    private void blindPost(final ReportRequest request, final Post reportedPost) {
         final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
         if (reportCount >= NUMBER_OF_POST_BLIND_BASED_REPORTS) {
             reportedPost.blind();

@@ -32,10 +32,7 @@ public class ReportNicknameStrategy implements ReportStrategy {
         changeNicknameByReport(reportedMember, request);
     }
 
-    private void validateNickname(
-            final Member reporter,
-            final ReportRequest request
-    ) {
+    private void validateNickname(final Member reporter, final ReportRequest request) {
         validateMyNickname(reporter, request);
         validateDuplicatedReport(
                 reporter,

@@ -45,10 +45,7 @@ public class ReportCommentStrategy implements ReportStrategy {
         );
     }
 
-    private void blindComment(
-            final ReportRequest request,
-            final Comment reportedComment
-    ) {
+    private void blindComment(final ReportRequest request, final Comment reportedComment) {
         final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
         if (reportCount >= NUMBER_OF_COMMENT_BLIND_BASED_REPORTS) {
             reportedComment.blind();

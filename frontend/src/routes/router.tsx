@@ -2,7 +2,6 @@ import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import Announcement from '@pages/Announcement';
-import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
 import Error from '@pages/Error';
 import Home from '@pages/Home';

@@ -33,7 +33,9 @@ const App = () => (
           <GlobalStyle />
           <PostOptionProvider>
             <AuthProvider>
-              <RouterProvider router={router} />
+              <Suspense fallback={<Skeleton isLarge />}>
+                <RouterProvider router={router} />
+              </Suspense>
             </AuthProvider>
           </PostOptionProvider>
         </ThemeProvider>

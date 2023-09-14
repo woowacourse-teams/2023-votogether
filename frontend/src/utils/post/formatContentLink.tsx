@@ -4,7 +4,6 @@ export const linkifyText = (text: string) => {
   const linkPattern = /\[\[([^[\]]+)\]\]/g;
 
   const parts = text.split(linkPattern);
-  window.console.log(parts);
 
   const result = parts.map((part, index) => {
     if (index % 2 === 1) {
@@ -27,8 +26,6 @@ export const linkifyText = (text: string) => {
       return <span>{part}</span>;
     }
   });
-
-  window.console.log(renderArrayWithStringsAndElements(result));
 
   return renderArrayWithStringsAndElements(result);
 };

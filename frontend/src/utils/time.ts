@@ -82,3 +82,9 @@ export const convertTimeToWord = (date: string, currentDate: Date = new Date()) 
 
   return `${positiveTimeDifference}분 ${afterBefore}`;
 };
+
+export const convertDayToSecond = (days: number) => {
+  const secondsPerDay = 24 * 60 * 60;
+
+  return secondsPerDay * days;
+};

@@ -1,4 +1,4 @@
-import { MouseEvent, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { PostInfo } from '@type/post';
 
@@ -12,6 +12,8 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
+import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
+import { linkifyText } from '@utils/post/formatContentLink';
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
 import photoIcon from '@assets/photo_white.svg';
@@ -76,10 +78,6 @@ export default function Post({ postInfo, isPreview }: PostProps) {
     });
   };
 
-  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (!isPreview) e.preventDefault();
-  };
-
   useEffect(() => {
     if (isCreateError && createError instanceof Error) {
       openToast(createError.message);
@@ -106,7 +104,6 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         as={isPreview ? '' : 'main'}
         to={isPreview ? `${PATH.POST}/${postId}` : '#'}
         $isPreview={isPreview}
-        onClick={handleLinkClick}
         aria-describedby={
           isPreview
             ? '해당 게시물의 상세페이지로 이동하기'
@@ -161,7 +158,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
           aria-label={`내용: ${content}`}
           $isPreview={isPreview}
         >
-          {content}
+          {linkifyText(content)}
         </S.Content>
         {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
       </S.DetailLink>

@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
@@ -13,11 +14,14 @@ import Skeleton from '@components/common/Skeleton';
 import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
 import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
+import { PATH } from '@constants/path';
+
 import EmptyPostList from '../EmptyPostList';
 
 import * as S from './style';
 
 export default function PostList() {
+  const topButtonRef = useRef<HTMLButtonElement>(null);
   const { postType, postOptionalOption } = usePostRequestInfo();
   const { loggedInfo } = useContext(AuthContext);
   const { targetRef, isIntersecting } = useIntersectionObserver({
@@ -43,6 +47,12 @@ export default function PostList() {
     postOptionalOption
   );
 
+  const focusTopContent = () => {
+    if (!topButtonRef.current) return;
+
+    topButtonRef.current.focus();
+  };
+
   useEffect(() => {
     if (isIntersecting && hasNextPage) {
       fetchNextPage();
@@ -51,6 +61,7 @@ export default function PostList() {
 
   return (
     <S.Container>
+      <button ref={topButtonRef} role="contentinfo" aria-label="최상단입니다"></button>
       <S.SelectContainer>
         <S.SelectWrapper>
           <Select<PostStatus>
@@ -81,6 +92,7 @@ export default function PostList() {
           />
         </S.SelectWrapper>
       </S.SelectContainer>
+      <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
       <S.PostListContainer>
         {isPostListEmpty && (
           <EmptyPostList status={selectedStatusOption} keyword={postOptionalOption.keyword} />
@@ -97,6 +109,8 @@ export default function PostList() {
               }
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
+            <button onClick={focusTopContent} aria-label="스크롤 맨 위로가기"></button>
+            <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
           </React.Fragment>
         ))}
         {isFetchingNextPage && <Skeleton isLarge={false} />}

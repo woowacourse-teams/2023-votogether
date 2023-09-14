@@ -111,4 +111,37 @@ class ReportRepositoryTest {
         );
     }
 
+    @Test
+    @DisplayName("신고유형, 신고대상ID를 통해 관련된 신고정보를 모두 삭제한다.")
+    void deleteByReportTypeAndTargetId() {
+        // given
+        Member member = MemberFixtures.FEMALE_30.get();
+        Member reporterA = MemberFixtures.MALE_30.get();
+        Member reporterB = MemberFixtures.FEMALE_20.get();
+
+        memberRepository.save(member);
+        memberRepository.save(reporterA);
+        memberRepository.save(reporterB);
+
+        reportTestPersister.builder()
+                .member(reporterA)
+                .reportType(ReportType.NICKNAME)
+                .targetId(member.getId())
+                .reason("불건전한 게시글")
+                .save();
+
+        reportTestPersister.builder()
+                .member(reporterB)
+                .reportType(ReportType.NICKNAME)
+                .targetId(member.getId())
+                .reason("불건전한 게시글")
+                .save();
+
+        // when
+        reportRepository.deleteByReportTypeAndTargetId(ReportType.NICKNAME, member.getId());
+
+        // then
+        assertThat(reportRepository.findAll()).isEmpty();
+    }
+
 }

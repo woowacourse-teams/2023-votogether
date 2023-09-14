@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+
+import { PostInfo } from '@type/post';
 
 import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
-import { usePostList } from '@hooks/query/usePostList';
+import { usePostListFeatSWR } from '@hooks/query/usePostListFeatSWR';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 import { useSelect } from '@hooks/useSelect';
@@ -37,7 +39,13 @@ export default function PostList() {
   const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
     useSelect<PostSorting>(postOption.sorting);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPostListEmpty } = usePostList(
+  const {
+    data: postList,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isPostListEmpty,
+  } = usePostListFeatSWR(
     {
       postType,
       postSorting: selectedSortingOption,
@@ -54,10 +62,10 @@ export default function PostList() {
   };
 
   useEffect(() => {
-    if (isIntersecting && hasNextPage) {
+    if (isIntersecting && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [isIntersecting, fetchNextPage, hasNextPage]);
+  }, [isIntersecting, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <S.Container>
@@ -94,25 +102,21 @@ export default function PostList() {
       </S.SelectContainer>
       <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
       <S.PostListContainer>
-        {isPostListEmpty && (
+        {!isFetchingNextPage && isPostListEmpty && (
           <EmptyPostList status={selectedStatusOption} keyword={postOptionalOption.keyword} />
         )}
-        {data?.pages.map((postListInfo, pageIndex) => (
-          <React.Fragment key={pageIndex}>
-            {postListInfo.postList.map((post, index) => {
-              if (index === 7) {
-                return (
-                  <div key={post.postId} ref={targetRef}>
-                    <Post isPreview={true} postInfo={post} />
-                  </div>
-                );
-              }
-              return <Post key={post.postId} isPreview={true} postInfo={post} />;
-            })}
-            <button onClick={focusTopContent} aria-label="스크롤 맨 위로가기"></button>
-            <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
-          </React.Fragment>
-        ))}
+        {postList?.map((post: PostInfo, index) => {
+          if (index === postList.length - 1) {
+            return (
+              <div key={post.postId} ref={targetRef}>
+                <Post isPreview={true} postInfo={post} />
+              </div>
+            );
+          }
+          return <Post key={post.postId} isPreview={true} postInfo={post} />;
+        })}
+        <button onClick={focusTopContent} aria-label="스크롤 맨 위로가기"></button>
+        <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
         {isFetchingNextPage && <Skeleton isLarge={false} />}
       </S.PostListContainer>
     </S.Container>

@@ -98,7 +98,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   };
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
-  const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
+  const {
+    text: writingContent,
+    handleTextChange: handleContentChange,
+    addText: addContent,
+  } = useText(content ?? '');
   const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
 
   const handleDeadlineButtonClick = (option: DeadlineOption) => {
@@ -119,6 +123,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       };
       setTime(updatedTime);
     }
+  };
+
+  const handleInsertContentLink = () => {
+    addContent('[[이 괄호 안에 링크를 작성해주세요]] ');
   };
 
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -227,6 +235,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               minLength={POST_CONTENT.MIN_LENGTH}
               required
             />
+            <S.ContentLinkButtonWrapper>
+              <S.Button onClick={handleInsertContentLink} type="button">
+                본문에 링크 넣기
+              </S.Button>
+            </S.ContentLinkButtonWrapper>
             <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>
               <ContentImagePart size="lg" contentImageHook={contentImageHook} />
             </S.ContentImagePartWrapper>

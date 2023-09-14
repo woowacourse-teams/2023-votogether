@@ -30,7 +30,7 @@ public class ReportNicknameStrategy implements ReportStrategy {
         validateNickname(reporter, request);
 
         saveReport(reporter, request, reportRepository);
-        changeNicknameByReport(reportedMember, request.type());
+        changeNicknameByReport(reportedMember, request);
     }
 
     private void validateNickname(
@@ -52,10 +52,11 @@ public class ReportNicknameStrategy implements ReportStrategy {
         }
     }
 
-    private void changeNicknameByReport(final Member reportedMember, final ReportType reportType) {
-        final int reportCount = reportRepository.countByReportTypeAndTargetId(reportType, reportedMember.getId());
+    private void changeNicknameByReport(final Member reportedMember, final ReportRequest request) {
+        final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), reportedMember.getId());
         if (reportCount >= NUMBER_OF_NICKNAME_CHANGE_REPORTS) {
             reportedMember.changeNicknameByReport();
+            reportRepository.deleteByReportTypeAndTargetId(ReportType.NICKNAME, request.id());
         }
     }
 }

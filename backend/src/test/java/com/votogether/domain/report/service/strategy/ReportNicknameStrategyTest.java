@@ -8,6 +8,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
@@ -21,6 +22,9 @@ class ReportNicknameStrategyTest {
 
     @Autowired
     ReportNicknameStrategy reportNicknameStrategy;
+
+    @Autowired
+    ReportRepository reportRepository;
 
     @Autowired
     MemberRepository memberRepository;
@@ -87,7 +91,10 @@ class ReportNicknameStrategyTest {
         reportNicknameStrategy.report(reporter3, request);
 
         // then
-        assertThat(reported.getNickname()).contains("Pause1");
+        assertAll(
+                () -> assertThat(reported.getNickname()).contains("Pause1"),
+                () -> assertThat(reportRepository.findAll()).isEmpty()
+        );
     }
 
 }

@@ -21,10 +21,7 @@ public class ReportCommentStrategy implements ReportStrategy {
     private final ReportRepository reportRepository;
 
     @Override
-    public void report(
-            final Member reporter,
-            final ReportRequest request
-    ) {
+    public void report(final Member reporter, final ReportRequest request) {
         final Comment reportedComment = commentRepository.findById(request.id())
                 .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
         validateComment(reporter, request, reportedComment);

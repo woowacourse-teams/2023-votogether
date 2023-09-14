@@ -21,10 +21,7 @@ public class ReportPostStrategy implements ReportStrategy {
     private final ReportRepository reportRepository;
 
     @Override
-    public void report(
-            final Member reporter,
-            final ReportRequest request
-    ) {
+    public void report(final Member reporter, final ReportRequest request) {
         final Post reportedPost = postRepository.findById(request.id())
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
         validatePost(reporter, reportedPost, request);

@@ -23,10 +23,7 @@ public class ReportNicknameStrategy implements ReportStrategy {
     private final ReportRepository reportRepository;
 
     @Override
-    public void report(
-            final Member reporter,
-            final ReportRequest request
-    ) {
+    public void report(final Member reporter, final ReportRequest request) {
         final Member reportedMember = memberRepository.findById(request.id())
                 .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
         validateNickname(reporter, request);

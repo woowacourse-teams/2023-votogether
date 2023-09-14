@@ -117,6 +117,33 @@ export const Content = styled.textarea`
   }
 `;
 
+export const ContentLinkButtonWrapper = styled.div`
+  width: 100%;
+  height: 36px;
+  margin-bottom: 5px;
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+  }
+`;
+
+export const Button = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--primary-color);
+  border-radius: 5px;
+  padding: 5px 0;
+
+  color: var(--primary-color);
+  background-color: white;
+
+  font-size: 16px;
+
+  cursor: pointer;
+`;
+
 export const ContentImagePartWrapper = styled.div<{ $hasImage: boolean }>`
   justify-self: ${props => props.$hasImage && 'center'};
   height: 100%;

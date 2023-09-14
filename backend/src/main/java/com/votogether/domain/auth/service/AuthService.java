@@ -14,6 +14,7 @@ import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.global.jwt.TokenProcessor;
 import com.votogether.global.jwt.exception.JsonException;
+import java.time.Duration;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -58,7 +59,7 @@ public class AuthService {
 
         final String newAccessToken = tokenProcessor.generateAccessToken(accessTokenPayload.memberId());
         final String newRefreshToken = tokenProcessor.generateRefreshToken(accessTokenPayload.memberId());
-        redisTemplate.opsForValue().set(newRefreshToken, accessTokenPayload.memberId());
+        redisTemplate.opsForValue().set(newRefreshToken, accessTokenPayload.memberId(), Duration.ofDays(14L));
         return new ReissuedTokenDto(newAccessToken, newRefreshToken);
     }
 

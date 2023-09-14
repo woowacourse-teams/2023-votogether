@@ -57,8 +57,8 @@ export default function Announcement() {
             </strong>
             <br></br>
             <br></br>
-            (이벤트 기간은 9월 13일(수)~9월 26일(화)이며, 상품 수령 대상자 명단은 공지사항
-            카테고리에서 확인 가능합니다🙂)
+            (이벤트 기간은 9월 14일(목)~9월 26일(화)이며, 상품 수령 대상자 명단은 공지사항
+            페이지에서 확인 가능합니다🙂)
           </S.Content>
           <S.ButtonWrapper>
             <SquareButton

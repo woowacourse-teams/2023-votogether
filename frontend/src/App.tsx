@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,8 +11,6 @@ import router from '@routes/router';
 import ErrorBoundaryForTopClass from '@pages/ErrorBoundaryForTopClass';
 
 import ChannelTalk from '@components/ChannelTalk';
-import Skeleton from '@components/common/Skeleton';
-import GoogleTagManager from '@components/GoogleTagManager';
 
 import { GlobalStyle } from '@styles/globalStyle';
 import { theme } from '@styles/theme';
@@ -26,23 +23,18 @@ ChannelTalk.boot({
 });
 
 const App = () => (
-  <>
-    <ErrorBoundaryForTopClass>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <PostOptionProvider>
-            <AuthProvider>
-              <Suspense fallback={<Skeleton isLarge />}>
-                <RouterProvider router={router} />
-              </Suspense>
-            </AuthProvider>
-          </PostOptionProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </ErrorBoundaryForTopClass>
-    <GoogleTagManager gtmId={process.env.VOTOGETHER_GOOGLE_TAG_ID} />
-  </>
+  <ErrorBoundaryForTopClass>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <PostOptionProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </PostOptionProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundaryForTopClass>
 );
 
 export default App;

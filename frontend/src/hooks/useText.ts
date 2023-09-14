@@ -26,5 +26,9 @@ export const useText = (originalText: string) => {
     setText('');
   };
 
-  return { text, setText, handleTextChange, resetText };
+  const addText = (newTextToAdd: string) => {
+    setText(text + newTextToAdd);
+  };
+
+  return { text, setText, handleTextChange, resetText, addText };
 };

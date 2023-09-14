@@ -92,7 +92,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Content = styled.p<{ $isPreview: boolean }>`
+export const Content = styled.div<{ $isPreview: boolean }>`
   display: -webkit-box;
 
   margin: 10px 0;
@@ -116,8 +116,6 @@ export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  pointer-events: ${({ $isPreview }) => !$isPreview && 'none'};
 `;
 
 export const Image = styled.img`

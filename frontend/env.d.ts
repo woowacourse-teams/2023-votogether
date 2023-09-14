@@ -5,6 +5,6 @@ declare module NodeJS {
     VOTOGETHER_REST_API_KEY: string;
     VOTOGETHER_SERVER_REDIRECT_URL: string;
     VOTOGETHER_CHANNEL_TALK_KEY: string;
-    VOTOGETHER_GOOGLE_TAG_ID: string;
+    VOTOGETHER_GOOGLE_ANALYTICS_ID: string;
   }
 }

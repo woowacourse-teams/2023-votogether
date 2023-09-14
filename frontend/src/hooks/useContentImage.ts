@@ -20,13 +20,15 @@ export const useContentImage = (imageUrl: string = '') => {
 
     const file = files[0];
 
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
     const webpFileList = await convertImageToWebP(file);
 
     event.target.files = webpFileList;
+
+    const reader = new FileReader();
+
+    const webpFile = webpFileList[0];
+
+    reader.readAsDataURL(webpFile);
 
     event.target.setCustomValidity('');
 

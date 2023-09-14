@@ -2,6 +2,8 @@ import React, { ChangeEvent, useState } from 'react';
 
 import { MAX_FILE_SIZE } from '@components/PostForm/constants';
 
+import { convertImageToWebP } from '@utils/resizeImage';
+
 const MAX_WRITING_LENGTH = 50;
 
 export interface WritingVoteOptionType {
@@ -78,12 +80,25 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     setOptionList(updatedOptionList);
   };
 
-  const handleUploadImage = (event: React.ChangeEvent<HTMLInputElement>, optionId: number) => {
+  const handleUploadImage = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    optionId: number
+  ) => {
     const { files } = event.target;
 
     if (!files) return;
 
     const file = files[0];
+
+    const webpFileList = await convertImageToWebP(file);
+
+    event.target.files = webpFileList;
+
+    const reader = new FileReader();
+
+    const webpFile = webpFileList[0];
+
+    reader.readAsDataURL(webpFile);
 
     event.target.setCustomValidity('');
 
@@ -93,11 +108,6 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
 
       return;
     }
-
-    const reader = new FileReader();
-
-    // readAsDataURL 메서드를 통해 파일을 모두 읽고 나면 reader의 loadend 이벤트에서 이미지 미리보기 결과를 확인할 수 있습니다.
-    reader.readAsDataURL(file);
 
     reader.onloadend = () => {
       const updatedOptionList = optionList.map(optionItem => {

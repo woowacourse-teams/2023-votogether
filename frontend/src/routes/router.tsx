@@ -1,7 +1,7 @@
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import Announcement from '@pages/Announcement';
-import Login from '@pages/auth/Login';
 import Redirection from '@pages/auth/Redirection';
 import Error from '@pages/Error';
 import Home from '@pages/Home';
@@ -11,8 +11,6 @@ import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetail';
 import Ranking from '@pages/Ranking';
-import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
-import VoteStatisticsPage from '@pages/VoteStatisticsPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 import RouteChangeTracker from '@components/RouteChangeTracker';
@@ -20,6 +18,10 @@ import RouteChangeTracker from '@components/RouteChangeTracker';
 import { PATH } from '@constants/path';
 
 import PrivateRoute from './PrivateRoute';
+
+const Login = lazy(() => import('@pages/auth/Login'));
+const RegisterPersonalInfo = lazy(() => import('@pages/user/RegisterPersonalInfo'));
+const VoteStatisticsPage = lazy(() => import('@pages/VoteStatisticsPage'));
 
 const router = createBrowserRouter([
   {

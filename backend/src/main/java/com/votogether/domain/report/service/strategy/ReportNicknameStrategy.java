@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportNicknameStrategy implements ReportStrategy {
 
+    private static final int NUMBER_OF_NICKNAME_CHANGE_REPORTS = 3;
+
     private final MemberRepository memberRepository;
     private final ReportRepository reportRepository;
 
@@ -59,4 +61,5 @@ public class ReportNicknameStrategy implements ReportStrategy {
             reportRepository.deleteByReportTypeAndTargetId(ReportType.NICKNAME, request.id());
         }
     }
+
 }

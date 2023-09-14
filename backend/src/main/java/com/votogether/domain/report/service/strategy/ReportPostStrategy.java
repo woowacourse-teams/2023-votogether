@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportPostStrategy implements ReportStrategy {
 
+    private static final int NUMBER_OF_POST_BLIND_BASED_REPORTS = 5;
+
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
 

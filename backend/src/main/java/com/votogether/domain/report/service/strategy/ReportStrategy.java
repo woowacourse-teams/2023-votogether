@@ -10,10 +10,6 @@ import com.votogether.global.exception.BadRequestException;
 @FunctionalInterface
 public interface ReportStrategy {
 
-    int NUMBER_OF_POST_BLIND_BASED_REPORTS = 5;
-    int NUMBER_OF_COMMENT_BLIND_BASED_REPORTS = 5;
-    int NUMBER_OF_NICKNAME_CHANGE_REPORTS = 3;
-
     void report(final Member reporter, final ReportRequest request);
 
     default void validateDuplicatedReport(

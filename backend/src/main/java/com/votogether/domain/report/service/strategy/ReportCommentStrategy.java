@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportCommentStrategy implements ReportStrategy {
 
+    private static final int NUMBER_OF_COMMENT_BLIND_BASED_REPORTS = 5;
+
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
 

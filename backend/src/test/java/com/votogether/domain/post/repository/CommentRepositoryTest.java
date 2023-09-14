@@ -9,6 +9,7 @@ import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.test.annotation.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;
+import com.votogether.test.persister.PostTestPersister;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -27,18 +28,21 @@ class CommentRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    PostTestPersister postTestPersister;
+
     @Test
     @DisplayName("게시글의 댓글 목록을 조회한다.")
     void findAllByPost() {
         // given
         Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-        Post post = postRepository.save(
-                Post.builder()
-                        .writer(member)
-                        .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                        .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                        .build()
-        );
+
+        final Post post = postTestPersister.builder()
+                .writer(member)
+                .postBody(PostBody.builder().title("titleA").content("contentA").build())
+                .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
+                .save();
+
         Comment commentA = commentRepository.save(
                 Comment.builder()
                         .member(member)

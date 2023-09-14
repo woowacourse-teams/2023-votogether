@@ -21,4 +21,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     List<Report> findAllByReportTypeAndTargetId(final ReportType reportType, final Long targetId);
 
+    void deleteByReportTypeAndTargetId(final ReportType reportType, final Long targetId);
+
 }

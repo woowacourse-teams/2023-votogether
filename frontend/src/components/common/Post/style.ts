@@ -126,7 +126,7 @@ export const Image = styled.img`
   align-self: center;
 
   aspect-ratio: 1/1;
-  object-fit: cover;
+  object-fit: contain;
 
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;

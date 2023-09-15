@@ -112,7 +112,7 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
     uploadImage({
       imageFile: file,
       inputElement: event.target,
-      setPreviewUrlFunc: setPreviewImageUrl(optionId),
+      setPreviewImageUrl: setPreviewImageUrl(optionId),
     });
   };
 

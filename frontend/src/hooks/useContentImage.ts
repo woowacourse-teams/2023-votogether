@@ -6,7 +6,7 @@ export const useContentImage = (imageUrl: string = '') => {
   const [contentImage, setContentImage] = useState(imageUrl);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handlePasteImage = async (event: ClipboardEvent<HTMLTextAreaElement>) => {
+  const handlePasteImage = (event: ClipboardEvent<HTMLTextAreaElement>) => {
     const file = event.clipboardData.files[0];
 
     if (file.type.slice(0, 5) === 'image') {
@@ -15,7 +15,7 @@ export const useContentImage = (imageUrl: string = '') => {
       uploadImage({
         imageFile: file,
         inputElement: contentInputRef.current,
-        setPreviewUrlFunc: setContentImage,
+        setPreviewImageUrl: setContentImage,
       });
     }
   };
@@ -35,7 +35,7 @@ export const useContentImage = (imageUrl: string = '') => {
     uploadImage({
       imageFile: file,
       inputElement: contentInputRef.current,
-      setPreviewUrlFunc: setContentImage,
+      setPreviewImageUrl: setContentImage,
     });
   };
 

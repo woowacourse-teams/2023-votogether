@@ -5,11 +5,11 @@ import { convertImageToWebP } from '@utils/resizeImage';
 export const uploadImage = async ({
   imageFile,
   inputElement,
-  setPreviewUrlFunc,
+  setPreviewImageUrl,
 }: {
   imageFile: File;
   inputElement: HTMLInputElement | null;
-  setPreviewUrlFunc: (previewUrl: string) => void;
+  setPreviewImageUrl: (previewUrl: string) => void;
 }) => {
   if (!inputElement) return;
 
@@ -33,6 +33,6 @@ export const uploadImage = async ({
   }
 
   reader.onloadend = () => {
-    setPreviewUrlFunc(reader.result?.toString() ?? '');
+    setPreviewImageUrl(reader.result?.toString() ?? '');
   };
 };

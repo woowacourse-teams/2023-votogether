@@ -25,47 +25,53 @@ export default function PassionUserRanking() {
   const { data: rankerList } = usePassionUserRanking();
 
   return (
-    <S.Table>
-      <S.Tr>
-        {columnNameList.map(text => (
-          <S.Th key={text}>{text}</S.Th>
-        ))}
-      </S.Tr>
-      {rankerList &&
-        new Array(10).fill(0).map((_, index) => {
-          const ranker = rankerList[index] ?? {
-            ranking: '',
-            nickname: '',
-            postCount: '',
-            voteCount: '',
-            score: '',
-          };
+    <>
+      <S.Table>
+        <thead>
+          <S.Tr>
+            {columnNameList.map(text => (
+              <S.Th key={text}>{text}</S.Th>
+            ))}
+          </S.Tr>
+        </thead>
+        <S.Tbody>
+          {rankerList &&
+            new Array(10).fill(0).map((_, index) => {
+              const ranker = rankerList[index] ?? {
+                ranking: '',
+                nickname: '',
+                postCount: '',
+                voteCount: '',
+                score: '',
+              };
 
-          const rankIcon = rankIconUrl[ranker.ranking] && (
-            <img src={rankIconUrl[ranker.ranking]} alt={ranker.ranking.toString()} />
-          );
+              const rankIcon = rankIconUrl[ranker.ranking] && (
+                <img src={rankIconUrl[ranker.ranking]} alt={ranker.ranking.toString()} />
+              );
 
-          return (
-            <S.Tr key={ranker.ranking}>
-              <S.RankingTd>{rankIcon ?? ranker.ranking}</S.RankingTd>
-              <S.Td>{ranker.nickname}</S.Td>
-              <S.Td>{ranker.postCount}</S.Td>
-              <S.Td>{ranker.voteCount}</S.Td>
-              <S.Td>{ranker.score}</S.Td>
-            </S.Tr>
-          );
-        })}
-      <ErrorBoundary>
-        <Suspense
-          fallback={
-            <S.LoadingSpinnerWrapper>
-              <LoadingSpinner size="sm" />
-            </S.LoadingSpinnerWrapper>
-          }
-        >
-          <UserRanking />
-        </Suspense>
-      </ErrorBoundary>
-    </S.Table>
+              return (
+                <S.Tr key={index}>
+                  <S.RankingTd>{rankIcon ?? ranker.ranking}</S.RankingTd>
+                  <S.Td>{ranker.nickname}</S.Td>
+                  <S.Td>{ranker.postCount}</S.Td>
+                  <S.Td>{ranker.voteCount}</S.Td>
+                  <S.Td>{ranker.score}</S.Td>
+                </S.Tr>
+              );
+            })}
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <S.LoadingSpinnerWrapper>
+                  <LoadingSpinner size="sm" />
+                </S.LoadingSpinnerWrapper>
+              }
+            >
+              <UserRanking />
+            </Suspense>
+          </ErrorBoundary>
+        </S.Tbody>
+      </S.Table>
+    </>
   );
 }

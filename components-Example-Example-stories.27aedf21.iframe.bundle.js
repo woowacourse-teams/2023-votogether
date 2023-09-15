@@ -1,6 +1,0 @@
-"use strict";(self.webpackChunkvotogether=self.webpackChunkvotogether||[]).push([[4773],{"./src/components/Example/Example.stories.tsx":(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.r(__webpack_exports__),__webpack_require__.d(__webpack_exports__,{Primary:()=>Primary,__namedExportsOrder:()=>__namedExportsOrder,default:()=>Example_stories});__webpack_require__("./node_modules/react/index.js");const Button=__webpack_require__("./node_modules/styled-components/dist/styled-components.browser.esm.js").zo.button`
-  width: 80px;
-  color: red;
-  background: black;
-  font-size: 1rem;
-`;var jsx_runtime=__webpack_require__("./node_modules/react/jsx-runtime.js");function Example(){return(0,jsx_runtime.jsx)(Button,{children:"버튼"})}Example.displayName="Example";const Example_stories={component:Example},Primary={render:()=>(0,jsx_runtime.jsx)(Example,{})};Primary.parameters={...Primary.parameters,docs:{...Primary.parameters?.docs,source:{originalSource:"{\n  render: () => <Example />\n}",...Primary.parameters?.docs?.source}}};const __namedExportsOrder=["Primary"]}}]);

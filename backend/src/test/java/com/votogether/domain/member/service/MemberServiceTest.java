@@ -63,13 +63,7 @@ class MemberServiceTest {
     CommentRepository commentRepository;
 
     @Autowired
-    MemberTestPersister memberTestPersister;
-
-    @Autowired
     PostTestPersister postTestPersister;
-
-    @Autowired
-    VoteTestPersister voteTestPersister;
 
     @Autowired
     EntityManager em;

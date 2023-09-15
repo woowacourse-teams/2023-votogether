@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "신고", description = "신고 API")
-public interface ReportControllerDocs {
+public interface ReportCommandControllerDocs {
 
     @Operation(summary = "신고", description = "게시글, 댓글, 닉네임을 신고한다.")
     @ApiResponses({

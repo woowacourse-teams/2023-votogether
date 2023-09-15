@@ -11,6 +11,7 @@ import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
+import com.votogether.domain.post.entity.comment.Content;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.repository.CommentRepository;
@@ -24,6 +25,8 @@ import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
+import com.votogether.test.persister.CommentTestPersister;
+import com.votogether.test.persister.PostTestPersister;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -32,10 +35,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @ServiceTest
-class ReportServiceTest {
+class ReportCommandServiceTest {
 
     @Autowired
-    ReportService reportService;
+    ReportCommandService reportCommandService;
 
     @Autowired
     MemberRepository memberRepository;
@@ -55,6 +58,12 @@ class ReportServiceTest {
     @Autowired
     PostCommentService postCommentService;
 
+    @Autowired
+    PostTestPersister postTestPersister;
+
+    @Autowired
+    CommentTestPersister commentTestPersister;
+
     @Nested
     @DisplayName("게시글 신고기능은")
     class ReportPost {
@@ -71,18 +80,16 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
-            assertDoesNotThrow(() -> reportService.report(reporter, request));
+            assertDoesNotThrow(() -> reportCommandService.report(reporter, request));
         }
 
         @Test
@@ -94,7 +101,7 @@ class ReportServiceTest {
             ReportRequest request = new ReportRequest(ReportType.POST, -1L, "불건전한 게시글");
 
             // when, then
-            assertThatThrownBy(() -> reportService.report(writer, request))
+            assertThatThrownBy(() -> reportCommandService.report(writer, request))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 게시글이 존재하지 않습니다.");
         }
@@ -110,18 +117,16 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
-            assertThatThrownBy(() -> reportService.report(writer, request))
+            assertThatThrownBy(() -> reportCommandService.report(writer, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("자신의 게시글은 신고할 수 없습니다.");
         }
@@ -138,20 +143,18 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-            post.blind();
-
-            postRepository.save(post);
+                    .blind()
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when, then
 
-            assertThatThrownBy(() -> reportService.report(reporter, request))
+            assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 블라인드 처리된 글입니다.");
         }
@@ -168,21 +171,19 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when
-            reportService.report(reporter, request);
+            reportCommandService.report(reporter, request);
 
             // then
-            assertThatThrownBy(() -> reportService.report(reporter, request))
+            assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("하나의 글에 대해서 중복하여 신고할 수 없습니다.");
         }
@@ -203,22 +204,20 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
-
-            postRepository.save(post);
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
 
             // when
-            reportService.report(reporter1, request);
-            reportService.report(reporter2, request);
-            reportService.report(reporter3, request);
-            reportService.report(reporter4, request);
-            reportService.report(reporter5, request);
+            reportCommandService.report(reporter1, request);
+            reportCommandService.report(reporter2, request);
+            reportCommandService.report(reporter3, request);
+            reportCommandService.report(reporter4, request);
+            reportCommandService.report(reporter5, request);
 
             // then
             final List<PostResponse> responses = postService.getPostsGuest(
@@ -252,25 +251,22 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 게시글");
 
             // when, then
-            assertDoesNotThrow(() -> reportService.report(reporter, request));
+            assertDoesNotThrow(() -> reportCommandService.report(reporter, request));
         }
 
         @Test
@@ -282,7 +278,7 @@ class ReportServiceTest {
             ReportRequest request = new ReportRequest(ReportType.COMMENT, -1L, "불건전한 댓글");
 
             // when, then
-            assertThatThrownBy(() -> reportService.report(writer, request))
+            assertThatThrownBy(() -> reportCommandService.report(writer, request))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("해당 댓글이 존재하지 않습니다.");
         }
@@ -298,25 +294,22 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when, then
-            assertThatThrownBy(() -> reportService.report(writer, request))
+            assertThatThrownBy(() -> reportCommandService.report(writer, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("자신의 댓글은 신고할 수 없습니다.");
         }
@@ -333,26 +326,23 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when, then
             comment.blind();
-            assertThatThrownBy(() -> reportService.report(reporter, request))
+            assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 블라인드 처리된 댓글입니다.");
         }
@@ -369,28 +359,25 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when
-            reportService.report(reporter, request);
+            reportCommandService.report(reporter, request);
 
             // then
-            assertThatThrownBy(() -> reportService.report(reporter, request))
+            assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("하나의 댓글에 대해서 중복하여 신고할 수 없습니다.");
         }
@@ -411,29 +398,26 @@ class ReportServiceTest {
                     .content("content")
                     .build();
 
-            Post post = Post.builder()
+            Post post = postTestPersister.builder()
                     .writer(writer)
                     .postBody(postBody)
                     .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                    .build();
+                    .save();
 
-            Comment comment = Comment.builder()
+            Comment comment = commentTestPersister.builder()
                     .post(post)
                     .member(writer)
-                    .content("으어어어어")
-                    .build();
-
-            postRepository.save(post);
-            commentRepository.save(comment);
+                    .content(new Content("으어어어어"))
+                    .save();
 
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when
-            reportService.report(reporter1, request);
-            reportService.report(reporter2, request);
-            reportService.report(reporter3, request);
-            reportService.report(reporter4, request);
-            reportService.report(reporter5, request);
+            reportCommandService.report(reporter1, request);
+            reportCommandService.report(reporter2, request);
+            reportCommandService.report(reporter3, request);
+            reportCommandService.report(reporter4, request);
+            reportCommandService.report(reporter5, request);
 
             // then
             assertAll(
@@ -458,7 +442,7 @@ class ReportServiceTest {
             ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 
             // when, then
-            assertDoesNotThrow(() -> reportService.report(reporter, request));
+            assertDoesNotThrow(() -> reportCommandService.report(reporter, request));
         }
 
         @Test
@@ -470,7 +454,7 @@ class ReportServiceTest {
             ReportRequest request = new ReportRequest(ReportType.NICKNAME, reporter.getId(), "불건전한 닉네임");
 
             // when, then
-            assertThatThrownBy(() -> reportService.report(reporter, request))
+            assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("자신의 닉네임은 신고할 수 없습니다.");
         }
@@ -485,10 +469,10 @@ class ReportServiceTest {
             ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 
             // when
-            reportService.report(reporter, request);
+            reportCommandService.report(reporter, request);
 
             // then
-            assertThatThrownBy(() -> reportService.report(reporter, request))
+            assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("하나의 닉네임에 대해서 중복하여 신고할 수 없습니다.");
         }
@@ -505,9 +489,9 @@ class ReportServiceTest {
             ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
 
             // when
-            reportService.report(reporter1, request);
-            reportService.report(reporter2, request);
-            reportService.report(reporter3, request);
+            reportCommandService.report(reporter1, request);
+            reportCommandService.report(reporter2, request);
+            reportCommandService.report(reporter3, request);
 
             // then
             assertThat(reported.getNickname()).contains("Pause1");

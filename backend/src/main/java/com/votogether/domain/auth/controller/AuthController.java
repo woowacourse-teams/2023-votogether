@@ -75,7 +75,7 @@ public class AuthController implements AuthControllerDocs {
         final ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .path("/auth")
+                .path("/")
                 .maxAge(1209600)
                 .sameSite(SameSite.NONE.attributeValue())
                 .build();
@@ -94,7 +94,7 @@ public class AuthController implements AuthControllerDocs {
         final ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .path("/auth")
+                .path("/")
                 .maxAge(0)
                 .sameSite(SameSite.NONE.attributeValue())
                 .build();

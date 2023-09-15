@@ -64,6 +64,8 @@ export default function PostForm({ data, mutate }: PostFormProps) {
 
   const navigate = useNavigate();
   const contentImageHook = useContentImage(serverImageUrl);
+  const { handlePasteImage } = contentImageHook;
+
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
@@ -214,6 +216,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               placeholder={CONTENT_PLACEHOLDER}
               maxLength={POST_CONTENT.MAX_LENGTH}
               minLength={POST_CONTENT.MIN_LENGTH}
+              onPaste={handlePasteImage}
               required
             />
             <S.ContentLinkButtonWrapper>

@@ -1,43 +1,21 @@
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Suspense } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { useFetch } from '@hooks/useFetch';
+import ErrorBoundary from '@pages/ErrorBoundary';
 
-import { getPost } from '@api/post';
-import { getPostStatistics } from '@api/voteResult';
-
-import ErrorMessage from '@components/common/ErrorMessage';
 import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
+import LoadingSpinner from '@components/common/LoadingSpinner';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
-import Skeleton from '@components/common/Skeleton';
-import VoteStatistics from '@components/VoteStatistics';
 
-import { PATH } from '@constants/path';
-
-import { checkWriter } from '@utils/post/checkWriter';
-
-import OptionStatistics from './OptionStatistics';
+import OptionWrapper from './OptionWrapper';
+import StatisticsWrapper from './StatisticsWrapper';
 import * as S from './style';
 
 export default function VoteStatisticsPage() {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
-
   const navigate = useNavigate();
-
-  const {
-    data: postDetail,
-    errorMessage: postError,
-    isLoading: isPostLoading,
-  } = useFetch(() => getPost(postId));
-
-  const {
-    data: voteResultResponse,
-    errorMessage: voteResultError,
-    isLoading: isVoteResultLoading,
-  } = useFetch(() => getPostStatistics(postId));
-
-  if (postDetail && !checkWriter(postDetail.writer.id)) return <Navigate to={PATH.HOME} />;
 
   return (
     <Layout isSidebarVisible={true}>
@@ -48,37 +26,22 @@ export default function VoteStatisticsPage() {
       </S.HeaderWrapper>
       <S.Container>
         <S.PageHeader>투표 통계</S.PageHeader>
-        {postError && <ErrorMessage />}
-        {isPostLoading && (
-          <S.LoadingWrapper>
-            <Skeleton isLarge={true} />
-          </S.LoadingWrapper>
-        )}
-        {postDetail && (
-          <S.OptionContainer>
-            {voteResultError && <ErrorMessage />}
-            {isVoteResultLoading && (
+        <S.OptionContainer>
+          <Suspense
+            fallback={
               <S.LoadingWrapper>
-                <Skeleton isLarge={true} />
+                <LoadingSpinner size="sm" />
               </S.LoadingWrapper>
-            )}
-            {voteResultResponse && (
-              <VoteStatistics voteResultResponse={voteResultResponse} size="md" />
-            )}
-            {postDetail.voteInfo.options.map(option => {
-              const { postId, voteInfo } = postDetail;
-              return (
-                <OptionStatistics
-                  key={option.id}
-                  postId={postId}
-                  isSelectedOption={voteInfo.selectedOptionId === option.id}
-                  voteOption={option}
-                  size="sm"
-                />
-              );
-            })}
-          </S.OptionContainer>
-        )}
+            }
+          >
+            <ErrorBoundary>
+              <StatisticsWrapper postId={postId} size="md" />
+            </ErrorBoundary>
+          </Suspense>
+          <ErrorBoundary>
+            <OptionWrapper postId={postId} />
+          </ErrorBoundary>
+        </S.OptionContainer>
       </S.Container>
     </Layout>
   );

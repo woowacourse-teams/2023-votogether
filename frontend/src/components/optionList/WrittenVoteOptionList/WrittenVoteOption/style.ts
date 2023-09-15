@@ -31,8 +31,7 @@ export const Image = styled.img`
   width: 80%;
 
   aspect-ratio: 1/1;
-  object-fit: cover;
-  align-self: center;
+  object-fit: contain;
 
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;

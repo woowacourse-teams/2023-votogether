@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final String LOCALHOST_FRONTEND = "http://localhost:3000";
-    private static final String DEV_SERVER = "http://dev.votogether.com";
+    private static final String DEV_SERVER = "https://dev.votogether.com";
     private static final String PROD_SERVER = "https://votogether.com";
 
     private final JwtAuthorizationArgumentResolver jwtAuthorizationArgumentResolver;

@@ -40,7 +40,7 @@ public class PostCommandController {
 
     @PutMapping(value = "/{postId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> updatePost(
-            @PathVariable(name = "postId") @Positive(message = "게시글 ID는 양의 정수만 가능합니다.") final Long postId,
+            @PathVariable @Positive(message = "게시글 ID는 양의 정수만 가능합니다.") final Long postId,
             @ModelAttribute @Valid final PostUpdateRequest postUpdateRequest,
             @Auth final Member loginMember
     ) {

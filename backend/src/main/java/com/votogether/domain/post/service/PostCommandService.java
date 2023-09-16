@@ -74,14 +74,14 @@ public class PostCommandService {
 
     private void addPostOptions(final Post post, final List<PostOptionCreateRequest> postOptionsCreates) {
         IntStream.range(0, postOptionsCreates.size())
-                .mapToObj(index -> createPostOptionFromRequest(index, postOptionsCreates.get(index)))
+                .mapToObj(index -> createPostOptionFromRequest(index + 1, postOptionsCreates.get(index)))
                 .forEach(post::addPostOption);
     }
 
-    private PostOption createPostOptionFromRequest(int index, final PostOptionCreateRequest postOptionCreate) {
+    private PostOption createPostOptionFromRequest(int sequence, final PostOptionCreateRequest postOptionCreate) {
         final String imageUrl = imageUploader.upload(postOptionCreate.getOptionImage());
         return PostOption.builder()
-                .sequence(index + 1)
+                .sequence(sequence)
                 .content(postOptionCreate.getContent())
                 .imageUrl(imageUrl)
                 .build();

@@ -1,6 +1,6 @@
 package com.votogether.domain.post.entity;
 
-import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.exception.PostOptionExceptionType;
 import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -26,10 +26,10 @@ public class PostOptionBody {
 
     private void validate(final String content) {
         if (!StringUtils.hasText(content)) {
-            throw new BadRequestException(PostExceptionType.POST_OPTION_CONTENT_EMPTY);
+            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_CONTENT_EMPTY);
         }
         if (content.length() > MAXIMUM_CONTENT_LENGTH) {
-            throw new BadRequestException(PostExceptionType.POST_OPTION_CONTENT_INVALID_LENGTH);
+            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_CONTENT_INVALID_LENGTH);
         }
     }
 

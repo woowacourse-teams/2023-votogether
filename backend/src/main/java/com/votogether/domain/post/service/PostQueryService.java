@@ -8,6 +8,7 @@ import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.exception.PostOptionExceptionType;
 import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
@@ -135,7 +136,7 @@ public class PostQueryService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
         final PostOption postOption = postOptionRepository.findById(optionId)
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_OPTION_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.POST_OPTION_NOT_FOUND));
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
         validatePostOptionBelongPost(post, postOption);
@@ -162,7 +163,7 @@ public class PostQueryService {
 
     private void validatePostOptionBelongPost(final Post post, final PostOption postOption) {
         if (!postOption.belongsTo(post)) {
-            throw new BadRequestException(PostExceptionType.UNRELATED_POST_OPTION);
+            throw new BadRequestException(PostOptionExceptionType.UNRELATED_POST_OPTION);
         }
     }
 

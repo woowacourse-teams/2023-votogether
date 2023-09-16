@@ -10,6 +10,7 @@ import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostContentImage;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.exception.PostOptionExceptionType;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostContentImageRepository;
@@ -145,7 +146,7 @@ public class PostCommandService {
                 .collect(Collectors.toSet())
                 .size();
         if (updatePostOptions.size() != uniqueUpdateOptionIdCount) {
-            throw new BadRequestException(PostExceptionType.DUPLICATE_UPDATE_POST_OPTION);
+            throw new BadRequestException(PostOptionExceptionType.DUPLICATE_UPDATE_POST_OPTION);
         }
         return postOptionUpdates.stream()
                 .collect(Collectors.toMap(
@@ -345,7 +346,7 @@ public class PostCommandService {
 
     private void validatePostOptionUpdateCount(final Post post, final PostUpdateRequest postUpdate) {
         if (!post.isLimitOptionSize(postUpdate.getPostOptions().size())) {
-            throw new BadRequestException(PostExceptionType.POST_OPTION_SIZE_EXCEED);
+            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_SIZE_EXCEED);
         }
     }
 

@@ -5,6 +5,7 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.exception.PostOptionExceptionType;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.exception.VoteExceptionType;
 import com.votogether.global.exception.BadRequestException;
@@ -158,7 +159,7 @@ public class Post extends BaseEntity {
 
     private void validatePostOption(final PostOption postOption) {
         if (!hasPostOption(postOption)) {
-            throw new BadRequestException(PostExceptionType.POST_OPTION_NOT_FOUND);
+            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_NOT_FOUND);
         }
     }
 

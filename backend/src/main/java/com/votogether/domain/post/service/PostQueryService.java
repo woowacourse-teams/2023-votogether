@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class PostQueryService {
 
@@ -34,7 +35,6 @@ public class PostQueryService {
     private final PostOptionRepository postOptionRepository;
     private final VoteRepository voteRepository;
 
-    @Transactional(readOnly = true)
     public List<PostResponse> getPosts(
             final int page,
             final PostClosingType postClosingType,
@@ -48,7 +48,6 @@ public class PostQueryService {
         return convertToResponses(posts, loginMember);
     }
 
-    @Transactional(readOnly = true)
     public PostResponse getPost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
@@ -64,7 +63,6 @@ public class PostQueryService {
         );
     }
 
-    @Transactional(readOnly = true)
     public List<PostResponse> searchPosts(
             final String keyword,
             final int page,
@@ -78,7 +76,6 @@ public class PostQueryService {
         return convertToResponses(posts, loginMember);
     }
 
-    @Transactional(readOnly = true)
     public List<PostResponse> getPostsWrittenByMe(
             final int page,
             final PostClosingType postClosingType,
@@ -95,7 +92,6 @@ public class PostQueryService {
         return convertToResponses(posts, loginMember);
     }
 
-    @Transactional(readOnly = true)
     public List<PostResponse> getPostsVotedByMe(
             final int page,
             final PostClosingType postClosingType,
@@ -112,7 +108,6 @@ public class PostQueryService {
         return convertToResponses(posts, loginMember);
     }
 
-    @Transactional(readOnly = true)
     public VoteOptionStatisticsResponse getVoteStatistics(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
@@ -127,7 +122,6 @@ public class PostQueryService {
         return VoteOptionStatisticsResponse.from(result);
     }
 
-    @Transactional(readOnly = true)
     public VoteOptionStatisticsResponse getVoteOptionStatistics(
             final Long postId,
             final Long optionId,

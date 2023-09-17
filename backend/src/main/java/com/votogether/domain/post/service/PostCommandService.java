@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class PostCommandService {
 
@@ -46,7 +47,6 @@ public class PostCommandService {
     private final VoteRepository voteRepository;
     private final CommentRepository commentRepository;
 
-    @Transactional
     public Long createPost(final PostCreateRequest postCreate, final Member loginMember) {
         final Post post = Post.builder()
                 .writer(loginMember)
@@ -88,7 +88,6 @@ public class PostCommandService {
                 .build();
     }
 
-    @Transactional
     public void updatePost(
             final Long postId,
             final PostUpdateRequest postUpdate,
@@ -278,7 +277,6 @@ public class PostCommandService {
         }
     }
 
-    @Transactional
     public void closePostEarly(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
@@ -287,7 +285,6 @@ public class PostCommandService {
         post.closeEarly();
     }
 
-    @Transactional
     public void deletePost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));

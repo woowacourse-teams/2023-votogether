@@ -253,9 +253,9 @@ public class PostCommandService {
 
         if (postContentImage == null && updatedImageUrl != null) {
             post.addContentImage(updatedImageUrl);
-        } else {
-            updateExistingPostContentImage(post, postContentImage, updatedImageUrl);
+            return;
         }
+        updateExistingPostContentImage(post, postContentImage, updatedImageUrl);
     }
 
     private void updateExistingPostContentImage(

@@ -131,13 +131,13 @@ class PostCommandServiceTest extends ServiceTest {
                     mockingMultipartFile("votogether.jpg"),
                     List.of(
                             new PostOptionUpdateRequest(
-                                    1L,
+                                    null,
                                     "option1",
                                     "votogether.png",
                                     null
                             ),
                             new PostOptionUpdateRequest(
-                                    2L,
+                                    null,
                                     "option2",
                                     null,
                                     mockingMultipartFile("votogether.png")
@@ -181,7 +181,7 @@ class PostCommandServiceTest extends ServiceTest {
                     mockingMultipartFile("votogether.jpg"),
                     List.of(
                             new PostOptionUpdateRequest(
-                                    1L,
+                                    null,
                                     "option1",
                                     null,
                                     null
@@ -224,19 +224,19 @@ class PostCommandServiceTest extends ServiceTest {
                     null,
                     List.of(
                             new PostOptionUpdateRequest(
-                                    1L,
+                                    null,
                                     "option1",
                                     "vogother.png",
                                     null
                             ),
                             new PostOptionUpdateRequest(
-                                    2L,
+                                    null,
                                     "option2",
                                     "votogether.png",
                                     mockingMultipartFile("votogether.jpg")
                             ),
                             new PostOptionUpdateRequest(
-                                    3L,
+                                    null,
                                     "option3",
                                     null,
                                     null
@@ -377,7 +377,7 @@ class PostCommandServiceTest extends ServiceTest {
 
             em.flush();
             em.clear();
-            
+
             // when
             postCommandService.deletePost(postId, member);
 

@@ -156,9 +156,16 @@ public class PostCommandService {
             final Set<Long> postOptionIds,
             final List<PostOptionUpdateRequest> postOptionUpdates
     ) {
+        final boolean hasInvalidId = postOptionUpdates.stream()
+                .map(PostOptionUpdateRequest::getId)
+                .anyMatch(id -> id != null && !postOptionIds.contains(id));
+
+        if (hasInvalidId) {
+            throw new BadRequestException(PostOptionExceptionType.UNRELATED_POST_OPTION);
+        }
+
         return postOptionUpdates.stream()
-                .filter(postOptionUpdate ->
-                        Objects.isNull(postOptionUpdate.getId()) || !postOptionIds.contains(postOptionUpdate.getId()))
+                .filter(postOptionUpdate -> postOptionUpdate.getId() == null)
                 .toList();
     }
 

@@ -35,7 +35,7 @@ public class PostUpdateRequest {
     @NotBlank(message = "게시글 내용이 존재하지 않거나 공백만 존재합니다.")
     private String content;
 
-    @Schema(description = "게시글 이미지 URL", example = "https://votogether.com/static/images/image.png")
+    @Schema(description = "게시글 이미지 URL", example = "https://test.com/image.png")
     private String imageUrl;
 
     @Schema(description = "게시글 이미지 파일", example = "votogether.png")

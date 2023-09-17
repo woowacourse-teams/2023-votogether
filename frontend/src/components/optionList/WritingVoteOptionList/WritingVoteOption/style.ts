@@ -5,6 +5,8 @@ import { theme } from '@styles/theme';
 export const Container = styled.li`
   display: flex;
   gap: 10px;
+
+  position: relative;
 `;
 
 export const OptionContainer = styled.div`

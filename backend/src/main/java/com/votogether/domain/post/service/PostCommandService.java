@@ -136,22 +136,15 @@ public class PostCommandService {
             final Set<Long> postOptionIds,
             final List<PostOptionUpdateRequest> postOptionUpdates
     ) {
-        final List<PostOptionUpdateRequest> updatePostOptions = postOptionUpdates.stream()
+        return postOptionUpdates.stream()
                 .filter(postOptionUpdate ->
                         Objects.nonNull(postOptionUpdate.getId()) && postOptionIds.contains(postOptionUpdate.getId()))
-                .toList();
-        final int uniqueUpdateOptionIdCount = updatePostOptions.stream()
-                .map(PostOptionUpdateRequest::getId)
-                .collect(Collectors.toSet())
-                .size();
-        if (updatePostOptions.size() != uniqueUpdateOptionIdCount) {
-            throw new BadRequestException(PostOptionExceptionType.DUPLICATE_UPDATE_POST_OPTION);
-        }
-        return postOptionUpdates.stream()
                 .collect(Collectors.toMap(
                         PostOptionUpdateRequest::getId,
                         postOptionUpdate -> postOptionUpdate,
-                        (exist, replace) -> replace,
+                        (exist, replace) -> {
+                            throw new BadRequestException(PostOptionExceptionType.DUPLICATE_UPDATE_POST_OPTION);
+                        },
                         HashMap::new
                 ));
     }

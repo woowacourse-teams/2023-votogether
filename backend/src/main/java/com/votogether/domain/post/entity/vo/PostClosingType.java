@@ -4,6 +4,7 @@ public enum PostClosingType {
 
     ALL,
     PROGRESS,
-    CLOSED
+    CLOSED,
+    ;
 
 }

@@ -70,8 +70,7 @@ public record PostVoteResultResponse(
             final int totalVoteCount
     ) {
         return postOptions.stream()
-                .map(postOption -> PostOptionVoteResultResponse.ofUser(user, post, postOption, isVoted,
-                        totalVoteCount))
+                .map(postOption -> PostOptionVoteResultResponse.ofUser(user, post, postOption, isVoted, totalVoteCount))
                 .toList();
     }
 

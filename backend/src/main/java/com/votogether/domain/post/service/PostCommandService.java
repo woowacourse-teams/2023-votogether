@@ -272,9 +272,9 @@ public class PostCommandService {
     ) {
         if (updatedImageUrl == null) {
             post.removePostContentImage(postContentImage);
-        } else {
-            postContentImage.updateImageUrl(updatedImageUrl);
+            return;
         }
+        postContentImage.updateImageUrl(updatedImageUrl);
     }
 
     public void closePostEarly(final Long postId, final Member loginMember) {

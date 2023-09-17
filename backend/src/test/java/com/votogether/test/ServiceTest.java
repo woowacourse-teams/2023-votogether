@@ -4,6 +4,7 @@ import com.votogether.test.persister.CategoryTestPersister;
 import com.votogether.test.persister.CommentTestPersister;
 import com.votogether.test.persister.MemberTestPersister;
 import com.votogether.test.persister.PostTestPersister;
+import com.votogether.test.persister.ReportTestPersister;
 import com.votogether.test.persister.VoteTestPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +25,9 @@ public class ServiceTest {
 
     @Autowired
     protected CommentTestPersister commentTestPersister;
+
+    @Autowired
+    protected ReportTestPersister reportTestPersister;
 
     @Autowired
     protected VoteTestPersister voteTestPersister;

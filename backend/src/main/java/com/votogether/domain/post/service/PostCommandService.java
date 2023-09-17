@@ -16,6 +16,8 @@ import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostContentImageRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
@@ -46,6 +48,7 @@ public class PostCommandService {
     private final PostOptionRepository postOptionRepository;
     private final VoteRepository voteRepository;
     private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
 
     public Long createPost(final PostCreateRequest postCreate, final Member loginMember) {
         final Post post = Post.builder()
@@ -319,6 +322,7 @@ public class PostCommandService {
         postCategoryRepository.deleteAllWithPostIdInBatch(postId);
         postContentImagePaths.forEach(imageUploader::delete);
         postContentImageRepository.deleteAllWithPostIdInBatch(postId);
+        reportRepository.deleteAllWithReportTypeAndTargetIdInBatch(ReportType.POST, postId);
         postRepository.deleteById(postId);
     }
 

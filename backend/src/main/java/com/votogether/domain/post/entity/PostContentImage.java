@@ -36,8 +36,8 @@ public class PostContentImage extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
-    public void updateImageUrl(final String imagePath) {
-        this.imageUrl = imagePath;
+    public void updateImageUrl(final String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

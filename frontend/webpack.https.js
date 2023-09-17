@@ -12,8 +12,8 @@ module.exports = merge(common, {
     server: {
       type: 'https',
       options: {
-        key: './localhost+1-key.pem',
-        cert: './localhost+1.pem',
+        key: './localhost-key.pem',
+        cert: './localhost.pem',
       },
     },
   },

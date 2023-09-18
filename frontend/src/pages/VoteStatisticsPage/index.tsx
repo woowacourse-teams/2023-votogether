@@ -27,18 +27,18 @@ export default function VoteStatisticsPage() {
       <S.Container>
         <S.PageHeader>투표 통계</S.PageHeader>
         <S.ContentContainer>
-          <Suspense
-            fallback={
-              <S.LoadingWrapper>
-                <LoadingSpinner size="sm" />
-              </S.LoadingWrapper>
-            }
-          >
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <S.LoadingWrapper>
+                  <LoadingSpinner size="sm" />
+                </S.LoadingWrapper>
+              }
+            >
               <StatisticsWrapper postId={postId} size="md" />
               <OptionWrapper postId={postId} />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         </S.ContentContainer>
       </S.Container>
     </Layout>

@@ -26,7 +26,7 @@ export default function VoteStatisticsPage() {
       </S.HeaderWrapper>
       <S.Container>
         <S.PageHeader>투표 통계</S.PageHeader>
-        <S.OptionContainer>
+        <S.ContentContainer>
           <Suspense
             fallback={
               <S.LoadingWrapper>
@@ -41,7 +41,7 @@ export default function VoteStatisticsPage() {
           <ErrorBoundary>
             <OptionWrapper postId={postId} />
           </ErrorBoundary>
-        </S.OptionContainer>
+        </S.ContentContainer>
       </S.Container>
     </Layout>
   );

@@ -36,11 +36,9 @@ export default function VoteStatisticsPage() {
           >
             <ErrorBoundary>
               <StatisticsWrapper postId={postId} size="md" />
+              <OptionWrapper postId={postId} />
             </ErrorBoundary>
           </Suspense>
-          <ErrorBoundary>
-            <OptionWrapper postId={postId} />
-          </ErrorBoundary>
         </S.ContentContainer>
       </S.Container>
     </Layout>

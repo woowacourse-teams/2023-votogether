@@ -1,10 +1,4 @@
-import { Suspense } from 'react';
-
 import { usePassionUserRanking } from '@hooks/query/ranking/usePassionUserRanking';
-
-import ErrorBoundary from '@pages/ErrorBoundary';
-
-import LoadingSpinner from '@components/common/LoadingSpinner';
 
 import firstRankIcon from '@assets/first-rank.svg';
 import secondRankIcon from '@assets/second-rank.svg';
@@ -59,17 +53,7 @@ export default function PassionUserRanking() {
                 </S.Tr>
               );
             })}
-          <ErrorBoundary>
-            <Suspense
-              fallback={
-                <S.LoadingSpinnerWrapper>
-                  <LoadingSpinner size="sm" />
-                </S.LoadingSpinnerWrapper>
-              }
-            >
-              <UserRanking />
-            </Suspense>
-          </ErrorBoundary>
+          <UserRanking />
         </S.Tbody>
       </S.Table>
     </>

@@ -38,6 +38,7 @@ const App = () => (
           </AuthProvider>
         </PostOptionProvider>
       </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </ErrorBoundaryForTopClass>
 

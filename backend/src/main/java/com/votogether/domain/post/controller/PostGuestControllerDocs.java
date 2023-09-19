@@ -1,5 +1,6 @@
 package com.votogether.domain.post.controller;
 
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
@@ -84,5 +85,9 @@ public interface PostGuestControllerDocs {
             @Parameter(description = "게시글 마감 여부", example = "ALL") final PostClosingType postClosingType,
             @Parameter(description = "게시글 정렬 기준", example = "HOT") final PostSortType postSortType
     );
+
+    @Operation(summary = "인기 게시글 랭킹 조회", description = "인기 게시글 랭킹을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "인기 게시글 랭킹 조회 성공")
+    ResponseEntity<List<PostRankingResponse>> getRanking();
 
 }

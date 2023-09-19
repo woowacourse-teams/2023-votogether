@@ -1,6 +1,7 @@
 package com.votogether.infra.image;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.votogether.global.exception.ImageException;
 import com.votogether.test.ServiceTest;
@@ -98,21 +99,20 @@ class LocalUploaderTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("이미지 파일이 아니라면 null 이미지 경로를 반환한다.")
+        @DisplayName("이미지 파일이 아니라면 예외를 던진다.")
         void invalidImage() {
             // given
             MultipartFile multipartFile = new MockMultipartFile(
                     "images",
-                    "votogether.png",
+                    "votogether.txt",
                     MediaType.TEXT_PLAIN_VALUE,
                     "hello".getBytes()
             );
 
-            // when
-            String imagePath = localUploader.upload(multipartFile);
-
-            // then
-            assertThat(imagePath).isNull();
+            // when, then
+            assertThatThrownBy(() -> localUploader.upload(multipartFile))
+                    .isInstanceOf(ImageException.class)
+                    .hasMessage("이미지 파일만 업로드할 수 있습니다.");
         }
 
     }

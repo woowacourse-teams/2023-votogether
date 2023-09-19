@@ -29,6 +29,8 @@ const getMockPost = (): PostInfoResponse => ({
   ],
   createdAt: '2023-07-12 12:40',
   deadline: '2023-07-13 18:40',
+  imageCount: 2,
+  commentCount: 5,
   voteInfo: {
     selectedOptionId: 9,
     totalVoteCount: 123,
@@ -91,6 +93,8 @@ const getMockGuestPost = (): PostInfoResponse => ({
   ],
   createdAt: '2023-07-12 12:40',
   deadline: '2023-07-13 18:40',
+  imageCount: 0,
+  commentCount: 1,
   voteInfo: {
     selectedOptionId: 0,
     totalVoteCount: 0,

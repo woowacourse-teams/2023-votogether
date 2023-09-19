@@ -24,6 +24,8 @@ export interface PostInfo {
   imageUrl: string;
   category: { id: number; name: string }[];
   createTime: string;
+  imageCount: number;
+  commentCount: number;
   deadline: string;
   voteInfo: {
     selectedOptionId: number;
@@ -41,6 +43,8 @@ export interface PostInfoResponse {
   categories: { id: number; name: string }[];
   createdAt: string;
   deadline: string;
+  imageCount: number;
+  commentCount: number;
   voteInfo: {
     selectedOptionId: number;
     totalVoteCount: number;

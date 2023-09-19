@@ -27,6 +27,8 @@ const MOCK_DATA: PostInfo = {
   ],
   createTime: '2023-07-18 12:40',
   deadline: '2023-08-15 12:40',
+  imageCount: 0,
+  commentCount: 1,
   voteInfo: {
     selectedOptionId: 1,
     allPeopleCount: 0,

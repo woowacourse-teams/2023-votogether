@@ -1,11 +1,8 @@
 package com.votogether.infra.image;
 
 import com.votogether.global.exception.ImageException;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +26,7 @@ public class LocalUploader implements ImageUploader {
 
     public String upload(final MultipartFile image) {
         final File directory = loadDirectory(getImageStorePath());
-
-        if (isEmptyFileOrNotImage(image)) {
+        if (isEmptyImage(image)) {
             return null;
         }
         final String saveFileName = ImageName.from(image.getOriginalFilename());
@@ -51,16 +47,8 @@ public class LocalUploader implements ImageUploader {
         return directory;
     }
 
-    private boolean isEmptyFileOrNotImage(final MultipartFile multipartFile) {
-        return multipartFile == null || multipartFile.isEmpty() || isNotImageFile(multipartFile);
-    }
-
-    private boolean isNotImageFile(final MultipartFile file) {
-        try (InputStream originalInputStream = new BufferedInputStream(file.getInputStream())) {
-            return ImageIO.read(originalInputStream) == null;
-        } catch (IOException e) {
-            throw new ImageException(ImageExceptionType.INVALID_IMAGE_READ);
-        }
+    private boolean isEmptyImage(final MultipartFile multipartFile) {
+        return multipartFile == null || multipartFile.isEmpty();
     }
 
     private void transferFile(final MultipartFile file, final File uploadPath) {
@@ -86,7 +74,6 @@ public class LocalUploader implements ImageUploader {
 
     private String getImageLocalPath(final String fullPath) {
         final int urlIndex = fullPath.lastIndexOf(url);
-
         if (urlIndex == -1) {
             throw new ImageException(ImageExceptionType.IMAGE_URL);
         }

@@ -26,7 +26,6 @@ public class LocalUploader implements ImageUploader {
 
     public String upload(final MultipartFile image) {
         final File directory = loadDirectory(getImageStorePath());
-
         if (isEmptyImage(image)) {
             return null;
         }
@@ -75,7 +74,6 @@ public class LocalUploader implements ImageUploader {
 
     private String getImageLocalPath(final String fullPath) {
         final int urlIndex = fullPath.lastIndexOf(url);
-
         if (urlIndex == -1) {
             throw new ImageException(ImageExceptionType.IMAGE_URL);
         }

@@ -1,3 +1,5 @@
+import { MAX_DEADLINE } from '@constants/post';
+
 import { addTimeToDate } from './post/formatTime';
 
 const convertNowTimeToNumber = () => {
@@ -16,6 +18,7 @@ const convertTimeFromStringToNumber = (date: string) => {
   const dateComponents = date.split(' ');
   const datePieces = dateComponents[0].split('-');
   const timePieces = dateComponents[1].split(':');
+
   return Number([...datePieces, ...timePieces].join(''));
 };
 
@@ -29,39 +32,47 @@ type TimeType = 'day' | 'hour' | 'minute';
 
 //시간 수정을 할 수 없다면 true
 export const checkIrreplaceableTime = (addTime: Record<TimeType, number>, createTime: string) => {
-  const changedDeadline = addTimeToDate(addTime, new Date(createTime));
-  // changedDeadline가 undefined인 경우는 작성일시에서 시간이 더해지지 않았을 경우라 거절
-  if (!changedDeadline) return true;
+  const transCreateTime = createTime.split('-').join('/');
+  const changedDeadline = addTimeToDate(addTime, new Date(transCreateTime));
 
-  const limitDeadline = addTimeToDate({ day: 3, hour: 0, minute: 0 }, new Date(createTime))!;
+  //마감시한이 0시간 0분 0초 추가된다면 거절
+  if (Object.values(addTime).every(time => time === 0)) return true;
+
+  const limitDeadline = addTimeToDate(
+    { day: MAX_DEADLINE, hour: 0, minute: 0 },
+    new Date(transCreateTime)
+  )!;
   const changedDeadlineNumber = convertTimeFromStringToNumber(changedDeadline);
   const limitDeadlineNumber = convertTimeFromStringToNumber(limitDeadline);
 
-  //작성일시로부터 3일된 일시보다 지정하고자 하는 일시가 크다면 거절
-  if (changedDeadlineNumber >= limitDeadlineNumber) return true;
+  //작성일시로부터 마감시간 최대일시보다 지정하고자 하는 일시가 크다면 거절
+  if (changedDeadlineNumber > limitDeadlineNumber) return true;
 
   //지금 일시보다 지정하고자 하는 일시가 작다면 거절
   return changedDeadlineNumber <= convertNowTimeToNumber();
 };
 
 const time = {
-  day: 3,
   hour: 24,
   minute: 60,
 };
 
-export const convertTimeToWord = (date: string) => {
-  const targetDate = new Date(date);
-  const currentDate = new Date();
+export const convertTimeToWord = (date: string, currentDate: Date = new Date()) => {
+  const targetDate = new Date(date.split('-').join('/'));
 
   //분 단위로 산출됨
   const timeDifference = Math.floor((targetDate.getTime() - currentDate.getTime()) / 60000);
 
   if (timeDifference === 0) return '지금';
 
-  const afterBefore = timeDifference > 0 ? '후 마감' : '전 작성 |';
+  const afterBefore = timeDifference > 0 ? '후 마감' : '전 작성';
 
   const positiveTimeDifference = Math.abs(timeDifference);
+
+  if (Math.round(positiveTimeDifference / (time.hour * time.minute)) > 0) {
+    const day = Math.round(positiveTimeDifference / (time.hour * time.minute));
+    return day >= 30 ? `${date.split(' ')[0]}` : `${day}일 ${afterBefore}`;
+  }
 
   if (Math.round(positiveTimeDifference / (time.hour * time.minute)) > 0)
     return `${Math.round(positiveTimeDifference / (time.hour * time.minute))}일 ${afterBefore}`;

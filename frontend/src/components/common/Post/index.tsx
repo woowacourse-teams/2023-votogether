@@ -12,7 +12,6 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
-import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
 import { linkifyText } from '@utils/post/formatContentLink';
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
@@ -144,7 +143,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
               aria-label={`작성일시 ${convertTimeToWord(createTime)}`}
               tabIndex={isPreviewTabIndex}
             >
-              {convertTimeToWord(createTime)}
+              {`${convertTimeToWord(createTime)}  |`}
             </span>
             <span
               aria-label={`투표 마감일시 ${isActive ? convertTimeToWord(deadline) : '마감 완료'}`}
@@ -161,9 +160,7 @@ export default function Post({ postInfo, isPreview }: PostProps) {
         >
           {linkifyText(content)}
         </S.Content>
-        {!isPreview && imageUrl && (
-          <S.Image src={convertImageUrlToServerUrl(imageUrl)} alt={'본문에 포함된 이미지'} />
-        )}
+        {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
       </S.DetailLink>
       <WrittenVoteOptionList
         isStatisticsVisible={isStatisticsVisible}

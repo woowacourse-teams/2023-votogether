@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 
 import { uploadImage } from '@utils/post/uploadImage';
 
@@ -14,19 +14,24 @@ const MIN_COUNT = 2;
 const MAX_COUNT = 5;
 
 const INIT_OPTION_LIST = [
-  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
-  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
+  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
+  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
 ];
 
-export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = INIT_OPTION_LIST) => {
-  const [optionList, setOptionList] = useState(initialOptionList);
+export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) => {
+  const [optionList, setOptionList] = useState(
+    initialOptionList
+      ? initialOptionList.map(option => ({ ...option, isServerId: true }))
+      : INIT_OPTION_LIST
+  );
+  const contentInputRefList = useRef<HTMLInputElement[]>([]);
 
   const addOption = () => {
     if (optionList.length >= MAX_COUNT) return;
 
     const updatedOptionList = [
       ...optionList,
-      { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
+      { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
     ];
 
     setOptionList(updatedOptionList);
@@ -76,6 +81,10 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     });
 
     setOptionList(updatedOptionList);
+    contentInputRefList.current &&
+      contentInputRefList.current.forEach(inputElement => {
+        if (inputElement?.id === optionId.toString()) inputElement.value = '';
+      });
   };
 
   const setPreviewImageUrl = (optionId: number) => (imageUrl: string) => {
@@ -107,5 +116,13 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     });
   };
 
-  return { optionList, addOption, writingOption, deleteOption, removeImage, handleUploadImage };
+  return {
+    optionList,
+    addOption,
+    writingOption,
+    deleteOption,
+    removeImage,
+    handleUploadImage,
+    contentInputRefList,
+  };
 };

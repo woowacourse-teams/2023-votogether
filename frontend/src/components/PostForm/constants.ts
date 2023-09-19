@@ -1,5 +1,53 @@
-export type DeadlineOption = '10분' | '30분' | '1시간' | '6시간' | '1일';
+import { Time } from '@type/post';
 
-export const DEADLINE_OPTION: DeadlineOption[] = ['10분', '30분', '1시간', '6시간', '1일'];
+export type DeadlineOptionName = '1일' | '3일' | '5일' | '7일' | '14일';
+
+export interface DeadlineOptionInfo {
+  name: DeadlineOptionName;
+  time: Time;
+}
+
+export const DEADLINE_OPTION: DeadlineOptionInfo[] = [
+  {
+    name: '1일',
+    time: {
+      day: 1,
+      hour: 0,
+      minute: 0,
+    },
+  },
+  {
+    name: '3일',
+    time: {
+      day: 3,
+      hour: 0,
+      minute: 0,
+    },
+  },
+  {
+    name: '5일',
+    time: {
+      day: 5,
+      hour: 0,
+      minute: 0,
+    },
+  },
+  {
+    name: '7일',
+    time: {
+      day: 7,
+      hour: 0,
+      minute: 0,
+    },
+  },
+  {
+    name: '14일',
+    time: {
+      day: 14,
+      hour: 0,
+      minute: 0,
+    },
+  },
+];
 
 export const MAX_FILE_SIZE = 1500000;

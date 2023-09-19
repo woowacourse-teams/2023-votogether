@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const HeaderWrapper = styled.div`
   display: flex;
   gap: 30px;
@@ -19,4 +21,6 @@ export const MenuWrapper = styled.div`
   position: absolute;
   top: 45px;
   right: 10px;
+
+  z-index: ${theme.zIndex.modal};
 `;

@@ -41,5 +41,5 @@ export const TagButtonWrapper = styled.div<{ $isWriter: boolean }>`
     right: ${props => (props.$isWriter ? '28%' : '7%')};
   }
 
-  z-index: ${theme.zIndex.modal};
+  z-index: ${theme.zIndex.tagButton};
 `;

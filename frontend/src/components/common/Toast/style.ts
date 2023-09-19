@@ -19,8 +19,8 @@ export const fadeInOutAnimation = keyframes`
 
 export const Wrapper = styled.div<{ $position: 'top' | 'bottom' }>`
   position: fixed;
-  left: 50%; /* 화면 좌측에서 가로 중앙으로 이동 */
-  transform: translateX(-50%); /* 가로 방향으로 중앙 정렬 */
+  left: 50%;
+  transform: translateX(-50%);
 
   top: ${props => POSITION[props.$position]};
 `;

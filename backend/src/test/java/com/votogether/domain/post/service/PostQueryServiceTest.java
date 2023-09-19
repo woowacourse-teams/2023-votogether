@@ -77,7 +77,7 @@ class PostQueryServiceTest extends ServiceTest {
                     postQueryService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null, member);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
@@ -99,7 +99,7 @@ class PostQueryServiceTest extends ServiceTest {
                     postQueryService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null, member);
 
             // then
-            PostResponse expected = expectedResponse(post, member, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, member, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
@@ -122,7 +122,7 @@ class PostQueryServiceTest extends ServiceTest {
                     postQueryService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null, member);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, postOption.getId(), 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, postOption.getId(), 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
@@ -195,7 +195,7 @@ class PostQueryServiceTest extends ServiceTest {
             PostResponse result = postQueryService.getPost(post.getId(), member);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
 
@@ -216,7 +216,7 @@ class PostQueryServiceTest extends ServiceTest {
             PostResponse result = postQueryService.getPost(post.getId(), member);
 
             // then
-            PostResponse expected = expectedResponse(post, member, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, member, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
 
@@ -238,7 +238,7 @@ class PostQueryServiceTest extends ServiceTest {
             PostResponse result = postQueryService.getPost(post.getId(), member);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, postOption.getId(), 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, postOption.getId(), 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
 
@@ -287,7 +287,7 @@ class PostQueryServiceTest extends ServiceTest {
                     postQueryService.searchPosts(post.getTitle(), 0, PostClosingType.ALL, PostSortType.LATEST, member);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
@@ -309,7 +309,7 @@ class PostQueryServiceTest extends ServiceTest {
                     postQueryService.searchPosts(post.getTitle(), 0, PostClosingType.ALL, PostSortType.LATEST, member);
 
             // then
-            PostResponse expected = expectedResponse(post, member, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, member, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
@@ -332,7 +332,7 @@ class PostQueryServiceTest extends ServiceTest {
                     postQueryService.searchPosts(post.getTitle(), 0, PostClosingType.ALL, PostSortType.LATEST, member);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, postOption.getId(), 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, postOption.getId(), 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
@@ -363,8 +363,8 @@ class PostQueryServiceTest extends ServiceTest {
                 postQueryService.getPostsWrittenByMe(0, PostClosingType.ALL, PostSortType.LATEST, member);
 
         // then
-        PostResponse expectedA = expectedResponse(postA, member, postOptionA, 0L, 1, 1, 1.0);
-        PostResponse expectedB = expectedResponse(postB, member, postOptionB, 0L, 1, 1, 1.0);
+        PostResponse expectedA = expectedResponse(postA, member, postOptionA, 0L, 1, 1, 100.0);
+        PostResponse expectedB = expectedResponse(postB, member, postOptionB, 0L, 1, 1, 100.0);
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expectedB, expectedA));
     }
 
@@ -394,8 +394,8 @@ class PostQueryServiceTest extends ServiceTest {
                 postQueryService.getPostsVotedByMe(0, PostClosingType.ALL, PostSortType.LATEST, member);
 
         // then
-        PostResponse expectedA = expectedResponse(postA, writer, postOptionA, postOptionA.getId(), 1, 1, 1.0);
-        PostResponse expectedB = expectedResponse(postB, writer, postOptionB, postOptionB.getId(), 1, 1, 1.0);
+        PostResponse expectedA = expectedResponse(postA, writer, postOptionA, postOptionA.getId(), 1, 1, 100.0);
+        PostResponse expectedB = expectedResponse(postB, writer, postOptionB, postOptionB.getId(), 1, 1, 100.0);
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expectedB, expectedA));
     }
 

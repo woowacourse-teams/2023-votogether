@@ -58,7 +58,7 @@ class PostGuestServiceTest extends ServiceTest {
             List<PostResponse> result = postGuestService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 
@@ -105,7 +105,7 @@ class PostGuestServiceTest extends ServiceTest {
             PostResponse result = postGuestService.getPost(post.getId());
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
 
@@ -178,7 +178,7 @@ class PostGuestServiceTest extends ServiceTest {
                     postGuestService.searchPosts(post.getTitle(), 0, PostClosingType.ALL, PostSortType.LATEST);
 
             // then
-            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 1.0);
+            PostResponse expected = expectedResponse(post, writer, postOption, 0L, 1, 1, 100.0);
             assertThat(result).usingRecursiveComparison().isEqualTo(List.of(expected));
         }
 

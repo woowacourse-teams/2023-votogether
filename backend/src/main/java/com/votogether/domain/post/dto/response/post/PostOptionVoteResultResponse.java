@@ -66,7 +66,8 @@ public record PostOptionVoteResultResponse(
         if (voteCount == HIDDEN_COUNT || totalCount == 0) {
             return 0.0;
         }
-        return ((double) voteCount / totalCount);
+        final double votePercent = ((double) voteCount / totalCount) * 100;
+        return Math.round(votePercent * 10) / 10.0;
     }
 
     public static PostOptionVoteResultResponse ofGuest(

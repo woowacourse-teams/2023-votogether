@@ -25,7 +25,12 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-  const { text: content, handleTextChange, resetText } = useText(initialComment.content);
+  const {
+    text: content,
+    handleTextChange,
+    resetText,
+    addText: addContent,
+  } = useText(initialComment.content);
   const { isToastOpen, openToast, toastMessage } = useToast();
 
   const params = useParams() as { postId: string };
@@ -75,6 +80,7 @@ export default function CommentTextForm({
       <S.TextArea
         aria-label={isEdit ? '댓글 수정' : '댓글 작성'}
         value={content}
+        placeholder="댓글을 입력해주세요. &#13;&#10;타인의 권리를 침해하거나 도배성/광고성/음란성 내용을 포함하는 경우, 댓글의 운영 원칙 및 관련 법률에 의하여 제재를 받을 수 있습니다."
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, COMMENT)}
       />
       <S.ButtonContainer>
@@ -90,6 +96,16 @@ export default function CommentTextForm({
             </SquareButton>
           </S.ButtonWrapper>
         )}
+        <S.ButtonWrapper>
+          <SquareButton
+            aria-label="댓글에 링크 넣기"
+            onClick={() => addContent('[[괄호 안에 링크 작성]] ')}
+            theme="blank"
+            type="button"
+          >
+            링크 넣기
+          </SquareButton>
+        </S.ButtonWrapper>
         <S.ButtonWrapper>
           <SquareButton
             aria-label="댓글 저장"

@@ -18,6 +18,14 @@ export const Container = styled.div`
   background-color: white;
 
   z-index: ${theme.zIndex.modal};
+
+  @media (max-width: 375px) {
+    margin-top: 30px;
+  }
+
+  @media (max-width: 375px) and (min-width: 280px) {
+    margin-top: 0;
+  }
 `;
 
 export const Content = styled.div`
@@ -34,6 +42,10 @@ export const Header = styled.div`
   justify-content: space-between;
 
   margin-bottom: 50px;
+
+  @media (max-width: 376px) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const LogoImage = styled.img`
@@ -41,6 +53,11 @@ export const LogoImage = styled.img`
 
   width: 80px;
   height: 80px;
+
+  @media (max-width: 375px) and (min-width: 280px) {
+    width: 50px;
+    height: 50px;
+  }
 `;
 
 export const HeaderContent = styled.div`
@@ -66,6 +83,10 @@ export const Title = styled.span`
 export const Description = styled.p`
   font-size: 1.6rem;
   font-weight: 700;
+
+  @media (max-width: 376px) and (min-width: 280px) {
+    font-size: 1.4rem;
+  }
 `;
 
 export const CancelButton = styled.button`
@@ -81,6 +102,11 @@ export const CancelButton = styled.button`
 export const IconImage = styled.img`
   width: 24px;
   height: 24px;
+
+  @media (max-width: 375px) and (min-width: 280px) {
+    width: 18px;
+    height: 18px;
+  }
 `;
 
 export const DescriptionWrapper = styled.div`

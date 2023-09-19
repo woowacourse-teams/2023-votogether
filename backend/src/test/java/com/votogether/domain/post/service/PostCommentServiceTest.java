@@ -4,120 +4,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.dto.request.comment.CommentRegisterRequest;
+import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.dto.request.comment.CommentUpdateRequest;
 import com.votogether.domain.post.dto.response.comment.CommentResponse;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
-import com.votogether.domain.post.repository.CommentRepository;
-import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
-import com.votogether.test.annotation.ServiceTest;
+import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@ServiceTest
-class PostCommentServiceTest {
+class PostCommentServiceTest extends ServiceTest {
 
     @Autowired
     PostCommentService postCommentService;
-
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    PostRepository postRepository;
-
-    @Autowired
-    CommentRepository commentRepository;
-
-    @Nested
-    @DisplayName("게시글 댓글 등록")
-    class CreateComment {
-
-        @Test
-        @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
-        void emptyPost() {
-            // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest("hello");
-
-            // when, then
-            assertThatThrownBy(() -> postCommentService.createComment(member, -1L, commentRegisterRequest))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
-        }
-
-        @Test
-        @DisplayName("게시글에 댓글을 등록한다.")
-        void createComment() {
-            // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            CommentRegisterRequest commentRegisterRequest = new CommentRegisterRequest("hello");
-
-            // when
-            postCommentService.createComment(member, post.getId(), commentRegisterRequest);
-
-            // then
-            assertThat(commentRepository.findAll()).hasSize(1);
-        }
-
-    }
 
     @Nested
     @DisplayName("게시글 댓글 목록 조회")
     class GetComments {
 
         @Test
-        @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
-        void emptyPost() {
-            // given, when, then
-            assertThatThrownBy(() -> postCommentService.getComments(-1L))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
-        }
-
-        @Test
         @DisplayName("게시글 댓글 목록을 조회한다.")
         void getComments() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Comment commentA = commentRepository.save(
-                    Comment.builder()
-                            .member(member)
-                            .post(post)
-                            .content("commentA")
-                            .build()
-            );
-            Comment commentB = commentRepository.save(
-                    Comment.builder()
-                            .member(member)
-                            .post(post)
-                            .content("commentB")
-                            .build()
-            );
+            Member writer = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(writer).save();
+            Comment commentA = commentTestPersister.builder().post(post).writer(writer).save();
+            Comment commentB = commentTestPersister.builder().post(post).writer(writer).save();
 
             // when
             List<CommentResponse> response = postCommentService.getComments(post.getId());
@@ -127,6 +45,77 @@ class PostCommentServiceTest {
                     .isEqualTo(List.of(CommentResponse.from(commentA), CommentResponse.from(commentB)));
         }
 
+        @Test
+        @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
+        void emptyPost() {
+            // given, when, then
+            assertThatThrownBy(() -> postCommentService.getComments(-1L))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Post post = postTestPersister.postBuilder().save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.getComments(post.getId()))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+    }
+
+    @Nested
+    @DisplayName("게시글 댓글 등록")
+    class CreateComment {
+
+        @Test
+        @DisplayName("게시글에 댓글을 등록한다.")
+        void createComment() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            CommentCreateRequest commentCreateRequest = new CommentCreateRequest("hello");
+
+            // when
+            postCommentService.createComment(post.getId(), commentCreateRequest, member);
+
+            // then
+            assertThat(postCommentService.getComments(post.getId())).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
+        void emptyPost() {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            CommentCreateRequest commentCreateRequest = new CommentCreateRequest("hello");
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.createComment(-1L, commentCreateRequest, member))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            CommentCreateRequest commentCreateRequest = new CommentCreateRequest("hello");
+            Post post = postTestPersister.postBuilder().save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.createComment(post.getId(), commentCreateRequest, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
     }
 
     @Nested
@@ -134,119 +123,12 @@ class PostCommentServiceTest {
     class UpdateComment {
 
         @Test
-        @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
-        void emptyPost() {
-            // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            CommentUpdateRequest request = new CommentUpdateRequest("hello");
-
-            // when, then
-            assertThatThrownBy(() -> postCommentService.updateComment(-1L, 1L, request, member))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
-        }
-
-        @Test
-        @DisplayName("존재하지 않는 댓글이라면 예외를 던진다.")
-        void emptyComment() {
-            // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            CommentUpdateRequest request = new CommentUpdateRequest("hello");
-
-            // when, then
-            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), -1L, request, member))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 댓글이 존재하지 않습니다.");
-        }
-
-        @Test
-        @DisplayName("댓글의 게시글과 일치하지 않으면 예외를 던진다.")
-        void invalidBelongPost() {
-            // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post postA = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Post postB = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("titleB").content("contentB").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Comment comment = commentRepository.save(
-                    Comment.builder()
-                            .member(member)
-                            .post(postA)
-                            .content("comment")
-                            .build()
-            );
-            CommentUpdateRequest request = new CommentUpdateRequest("hello");
-
-            // when, then
-            assertThatThrownBy(() -> postCommentService.updateComment(postB.getId(), comment.getId(), request, member))
-                    .isInstanceOf(BadRequestException.class)
-                    .hasMessage("댓글의 게시글 정보와 일치하지 않습니다.");
-        }
-
-        @Test
-        @DisplayName("댓글의 작성자가 아니라면 예외를 던진다.")
-        void invalidWriter() {
-            // given
-            Member memberA = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member memberB = memberRepository.save(MemberFixtures.FEMALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(memberA)
-                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Comment comment = commentRepository.save(
-                    Comment.builder()
-                            .member(memberB)
-                            .post(post)
-                            .content("comment")
-                            .build()
-            );
-            CommentUpdateRequest request = new CommentUpdateRequest("hello");
-
-            // when, then
-            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), comment.getId(), request, memberA))
-                    .isInstanceOf(BadRequestException.class)
-                    .hasMessage("댓글 작성자가 아닙니다.");
-        }
-
-        @Test
         @DisplayName("게시글의 댓글을 수정한다.")
         void deleteComment() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Comment comment = commentRepository.save(
-                    Comment.builder()
-                            .member(member)
-                            .post(post)
-                            .content("comment")
-                            .build()
-            );
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
             CommentUpdateRequest request = new CommentUpdateRequest("hello");
 
             // when
@@ -256,6 +138,95 @@ class PostCommentServiceTest {
             assertThat(comment.getContent()).isEqualTo("hello");
         }
 
+        @Test
+        @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
+        void emptyPost() {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(-1L, 1L, request, member))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("게시글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 댓글이라면 예외를 던진다.")
+        void emptyComment() {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            Post post = postTestPersister.postBuilder().save();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), -1L, request, member))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("댓글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), comment.getId(), request, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 댓글이라면 예외를 던진다.")
+        void blindComment() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+            comment.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), comment.getId(), request, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 댓글은 접근할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("댓글의 게시글과 일치하지 않으면 예외를 던진다.")
+        void invalidBelongPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().writer(member).save();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), comment.getId(), request, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("게시글의 댓글이 아닙니다.");
+        }
+
+        @Test
+        @DisplayName("댓글의 작성자가 아니라면 예외를 던진다.")
+        void invalidWriter() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).save();
+            CommentUpdateRequest request = new CommentUpdateRequest("hello");
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.updateComment(post.getId(), comment.getId(), request, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("댓글 작성자가 아닙니다.");
+        }
+
     }
 
     @Nested
@@ -263,121 +234,101 @@ class PostCommentServiceTest {
     class DeleteComment {
 
         @Test
+        @DisplayName("게시글의 댓글을 삭제한다.")
+        void deleteComment() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+
+            // when
+            postCommentService.deleteComment(post.getId(), comment.getId(), member);
+
+            // then
+            assertThat(postCommentService.getComments(post.getId())).isEmpty();
+        }
+
+        @Test
         @DisplayName("존재하지 않는 게시글이라면 예외를 던진다.")
         void emptyPost() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+            Member member = MemberFixtures.MALE_20.get();
 
             // when, then
             assertThatThrownBy(() -> postCommentService.deleteComment(-1L, 1L, member))
                     .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 게시글이 존재하지 않습니다.");
+                    .hasMessage("게시글이 존재하지 않습니다.");
         }
 
         @Test
         @DisplayName("존재하지 않는 댓글이라면 예외를 던진다.")
         void emptyComment() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("title").content("content").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
+            Member member = MemberFixtures.MALE_20.get();
+            Post post = postTestPersister.postBuilder().save();
 
             // when, then
             assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), -1L, member))
                     .isInstanceOf(NotFoundException.class)
-                    .hasMessage("해당 댓글이 존재하지 않습니다.");
+                    .hasMessage("댓글이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 게시글이라면 예외를 던진다.")
+        void blindPost() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            post.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("블라인드된 댓글이라면 예외를 던진다.")
+        void blindComment() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(member).save();
+            comment.blind();
+
+            // when, then
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("신고에 의해 숨겨진 댓글은 접근할 수 없습니다.");
         }
 
         @Test
         @DisplayName("댓글의 게시글과 일치하지 않으면 예외를 던진다.")
         void invalidBelongPost() {
             // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post postA = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Post postB = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("titleB").content("contentB").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Comment comment = commentRepository.save(
-                    Comment.builder()
-                            .member(member)
-                            .post(postA)
-                            .content("comment")
-                            .build()
-            );
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().writer(member).save();
 
             // when, then
-            assertThatThrownBy(() -> postCommentService.deleteComment(postB.getId(), comment.getId(), member))
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), member))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("댓글의 게시글 정보와 일치하지 않습니다.");
+                    .hasMessage("게시글의 댓글이 아닙니다.");
         }
 
         @Test
         @DisplayName("댓글의 작성자가 아니라면 예외를 던진다.")
         void invalidWriter() {
             // given
-            Member memberA = memberRepository.save(MemberFixtures.MALE_20.get());
-            Member memberB = memberRepository.save(MemberFixtures.FEMALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(memberA)
-                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Comment comment = commentRepository.save(
-                    Comment.builder()
-                            .member(memberB)
-                            .post(post)
-                            .content("comment")
-                            .build()
-            );
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            Comment comment = commentTestPersister.builder().post(post).save();
 
             // when, then
-            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), memberA))
+            assertThatThrownBy(() -> postCommentService.deleteComment(post.getId(), comment.getId(), member))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("댓글 작성자가 아닙니다.");
-        }
-
-        @Test
-        @DisplayName("게시글의 댓글을 삭제한다.")
-        void deleteComment() {
-            // given
-            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
-            Post post = postRepository.save(
-                    Post.builder()
-                            .writer(member)
-                            .postBody(PostBody.builder().title("titleA").content("contentA").build())
-                            .deadline(LocalDateTime.of(2100, 7, 12, 0, 0))
-                            .build()
-            );
-            Comment comment = commentRepository.save(
-                    Comment.builder()
-                            .member(member)
-                            .post(post)
-                            .content("comment")
-                            .build()
-            );
-
-            // when
-            postCommentService.deleteComment(post.getId(), comment.getId(), member);
-
-            // then
-            assertThat(commentRepository.findAll()).isEmpty();
         }
 
     }

@@ -3,7 +3,12 @@ import {
   getUserInfo,
   modifyNickname,
   transformUserInfoResponse,
+  logoutUser,
 } from '@api/userInfo';
+
+import { REFRESH_EXPIRATION_TIME } from '@constants/token';
+
+import { getCookie, setCookie } from '@utils/cookie';
 
 import { MOCK_USER_INFO } from '@mocks/mockData/user';
 
@@ -41,5 +46,15 @@ describe('서버와 통신하여 유저의 정보를 불러올 수 있어야 한
     await withdrawalMembership();
 
     expect(MOCK_USER_INFO.nickname).toBe('cancel');
+  });
+
+  test('유저가 로그아웃을 한다', async () => {
+    setCookie({ key: 'hasEssentialInfo', maxAge: REFRESH_EXPIRATION_TIME, value: 'REFRESH!!' });
+
+    await logoutUser();
+
+    const result = getCookie().hasEssentialInfo;
+
+    expect(result).toBe(undefined);
   });
 });

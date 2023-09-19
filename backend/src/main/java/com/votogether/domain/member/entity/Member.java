@@ -5,6 +5,8 @@ import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.entity.vo.SocialType;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -15,20 +17,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 
-@Table(indexes = {@Index(columnList = "socialId, socialType")})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id"})
-@ToString
 @Getter
 @Entity
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {@Index(columnList = "socialId, socialType")})
 public class Member extends BaseEntity {
 
     private static final String INITIAL_NICKNAME_PREFIX = "익명의손님";
@@ -44,7 +45,6 @@ public class Member extends BaseEntity {
     @Column(length = 20)
     private Gender gender;
 
-    @Column
     private Integer birthYear;
 
     @Enumerated(value = EnumType.STRING)
@@ -77,8 +77,22 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public void changeNickname(final String nickname) {
+    public void changeNicknameByCycle(final String nickname, final Long days) {
+        if (nickname.startsWith(INITIAL_NICKNAME_PREFIX)) {
+            throw new BadRequestException(MemberExceptionType.NOT_ALLOWED_INITIAL_NICKNAME_PREFIX);
+        }
+        if (isNotPassedChangingCycle(days) && isNotInitialNickname()) {
+            throw new BadRequestException(MemberExceptionType.NOT_PASSED_NICKNAME_CHANGING_CYCLE);
+        }
         this.nickname = new Nickname(nickname);
+    }
+
+    private boolean isNotPassedChangingCycle(final Long days) {
+        return this.getUpdatedAt().isAfter(LocalDateTime.now().minusDays(days));
+    }
+
+    private boolean isNotInitialNickname() {
+        return this.nickname.nonStartsWith(INITIAL_NICKNAME_PREFIX);
     }
 
     public void changeNicknameByReport() {

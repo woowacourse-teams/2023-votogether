@@ -1,17 +1,14 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import { WrittenVoteOptionType } from '@type/post';
 import { Size } from '@type/style';
 
-import { useFetch } from '@hooks/useFetch';
-import { useToast } from '@hooks/useToast';
-
-import { getOptionStatistics } from '@api/voteResult';
+import ErrorBoundary from '@pages/ErrorBoundary';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
-import Toast from '@components/common/Toast';
 import WrittenVoteOption from '@components/optionList/WrittenVoteOptionList/WrittenVoteOption';
-import VoteStatistics from '@components/VoteStatistics';
+
+import StatisticsWrapper from '../StatisticsWrapper';
 
 import * as S from './style';
 
@@ -29,24 +26,15 @@ export default function OptionStatistics({
   size,
 }: OptionStatisticsProps) {
   const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
-  const { isToastOpen, openToast, toastMessage } = useToast();
-
-  const {
-    data: voteResult,
-    errorMessage,
-    isLoading,
-  } = useFetch(() => getOptionStatistics({ postId, optionId: voteOption.id }));
 
   const toggleOptionStatistics = () => {
-    if (!voteResult) return openToast('투표 통계 불러오기를 실패했습니다.');
-
     setIsStatisticsOpen(!isStatisticsOpen);
   };
 
   return (
     <S.Container>
       <WrittenVoteOption
-        ariaLabel=""
+        ariaLabel="투표 통계"
         key={voteOption.id}
         {...voteOption}
         isPreview={false}
@@ -55,21 +43,30 @@ export default function OptionStatistics({
         handleVoteClick={toggleOptionStatistics}
       />
       <S.StatisticsContainer>
-        {isStatisticsOpen && voteResult && (
-          <VoteStatistics voteResultResponse={voteResult} size={size} />
+        {!isStatisticsOpen && (
+          <S.ScreenReaderDirection>
+            투표 선택지를 클릭하여 투표 통계를 열어 확인할 수 있습니다.
+          </S.ScreenReaderDirection>
         )}
-        {isStatisticsOpen && isLoading && (
-          <S.LoadingWrapper>
-            <LoadingSpinner size="sm" />
-          </S.LoadingWrapper>
+        {isStatisticsOpen && (
+          <>
+            <S.ScreenReaderDirection>
+              투표 선택지를 클릭하여 투표 통계를 닫을 수 있습니다.
+            </S.ScreenReaderDirection>
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <S.LoadingWrapper>
+                    <LoadingSpinner size="sm" />
+                  </S.LoadingWrapper>
+                }
+              >
+                <StatisticsWrapper postId={postId} optionId={voteOption.id} size={size} />
+              </Suspense>
+            </ErrorBoundary>
+          </>
         )}
-        {isStatisticsOpen && errorMessage}
       </S.StatisticsContainer>
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
-      )}
     </S.Container>
   );
 }

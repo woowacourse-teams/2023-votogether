@@ -54,14 +54,6 @@
             <AppenderRef ref="RollingFileAppender"/>
         </Logger>
 
-        <Logger name="com.zaxxer.hikari" level="debug">
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
-        <Logger name="org.springframework.orm.jpa.JpaTransactionManager" level="debug">
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
         <Root level="debug">
             <AppenderRef ref="RollingFileAppender"/>
             <AppenderRef ref="RollingErrorFileAppender"/>

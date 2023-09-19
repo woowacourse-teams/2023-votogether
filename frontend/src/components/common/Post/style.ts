@@ -26,27 +26,6 @@ export const Category = styled.span`
   }
 `;
 
-export const ImageIconWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-
-  position: absolute;
-  right: 25px;
-  top: 0;
-
-  background-color: var(--header);
-`;
-
-export const ImageIcon = styled.img`
-  width: 13px;
-  height: 13px;
-`;
-
 export const ActivateState = styled.div<{ $isActive: boolean }>`
   width: 15px;
   height: 15px;
@@ -92,7 +71,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Content = styled.p<{ $isPreview: boolean }>`
+export const Content = styled.div<{ $isPreview: boolean }>`
   display: -webkit-box;
 
   margin: 10px 0;
@@ -116,19 +95,41 @@ export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  pointer-events: ${({ $isPreview }) => !$isPreview && 'none'};
 `;
 
 export const Image = styled.img`
-  width: 100%;
+  width: 80%;
   border-radius: 4px;
   margin-bottom: 10px;
+  border: 1px solid var(--gray);
+  align-self: center;
 
   aspect-ratio: 1/1;
-  object-fit: cover;
+  object-fit: contain;
 
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;
   }
+`;
+
+export const PreviewBottom = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+
+  height: 30px;
+  margin-top: 10px;
+`;
+
+export const IconUint = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+
+  font: var(--text-caption);
+`;
+
+export const Icon = styled.img`
+  height: 24px;
+  width: 24px;
 `;

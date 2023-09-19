@@ -19,13 +19,18 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 30MB
-      max-request-size: 30MB
+      max-file-size: 5MB
+      max-request-size: 35MB
 
   h2:
     console:
       enabled: ${H2_CONSOLE_ENABLE}
       path: /h2-console
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
 logging:
   level:
@@ -34,6 +39,12 @@ logging:
 
 server:
   forward-headers-strategy: FRAMEWORK
+  tomcat:
+    max-http-form-post-size: 35MB
+    accept-count: ${ACCEPT_COUNT}
+    max-connections: ${MAX_CONNECTIONS}
+    threads:
+      max: ${THREADS_MAX}
 
 springdoc:
   swagger-ui:
@@ -54,8 +65,13 @@ oauth:
 jwt:
   token:
     secret-key: ${SECRET_KEY}
-    expiration-time: ${EXPIRATION_TIME}
+    access-expiration-time: ${ACCESS_EXPIRATION_TIME}
+    refresh-expiration-time: ${REFRESH_EXPIRATION_TIME}
 
 log4j2:
   slack_webhook_uri: ${LOG_SLACK_WEBHOOK_URI}
   slack_channel: ${LOG_SLACK_CHANNEL}
+
+image:
+  upload_url: ${IMAGE_UPLOAD_URL}
+  upload_directory: ${IMAGE_UPLOAD_DIRECTORY}

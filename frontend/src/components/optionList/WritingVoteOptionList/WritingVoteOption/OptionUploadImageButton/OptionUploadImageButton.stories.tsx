@@ -1,4 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
+
+import { useRef } from 'react';
 
 import OptionUploadImageButton from '.';
 
@@ -7,8 +9,16 @@ const meta: Meta<typeof OptionUploadImageButton> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof OptionUploadImageButton>;
 
-export const Default: Story = {
-  render: () => <OptionUploadImageButton isImageVisible={true} optionId={123} />,
+export const Default = () => {
+  const ref = useRef([]);
+
+  return (
+    <OptionUploadImageButton
+      isImageVisible={true}
+      optionId={123}
+      contentInputRefList={ref}
+      index={0}
+    />
+  );
 };

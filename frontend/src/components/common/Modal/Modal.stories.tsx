@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { styled } from 'styled-components';
 
+import { MAX_DEADLINE } from '@constants/post';
+
 import SquareButton from '../SquareButton';
 import TimePickerOptionList from '../TimePickerOptionList';
 
@@ -181,7 +183,7 @@ export const WithTimePicker = () => {
               <S.CloseButton onClick={closeModal}>X</S.CloseButton>
             </S.Header>
             <S.Body>
-              <S.Description>최대 3일을 넘을 수 없습니다.</S.Description>
+              <S.Description>최대 {MAX_DEADLINE}일을 넘을 수 없습니다.</S.Description>
               <TimePickerOptionList time={time} setTime={setTime} />
               <S.ButtonWrapper>
                 <SquareButton onClick={handleResetBUtton} theme="blank">

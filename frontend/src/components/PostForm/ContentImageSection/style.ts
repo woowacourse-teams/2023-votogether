@@ -25,7 +25,7 @@ export const ContentImage = styled.img`
   border-radius: 4px;
 
   aspect-ratio: 1/1;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const FileInputContainer = styled.div`

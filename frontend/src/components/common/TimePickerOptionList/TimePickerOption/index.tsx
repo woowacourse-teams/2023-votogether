@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-import { TIME_UNIT, TIMEBOX_CHILD_HEIGHT } from './constants';
+import { TIME_KOREAN, TIME_UNIT, TIMEBOX_CHILD_HEIGHT } from './constants';
 import * as S from './style';
 
 interface TimePickerOptionProps {
@@ -65,11 +65,19 @@ export default function TimePickerOption({
   return (
     <S.Container>
       <S.PickedTimeOverlay />
-      <S.TimeBox onScroll={handleScroll} ref={timeBoxRef} onWheel={handleWheel}>
+      <S.TimeBox
+        aria-label={`현재 선택된 ${TIME_KOREAN[option]}은 ${currentTime} 입니다. 위, 아래 방향키 혹은 터치로 시간 조절이 가능합니다.`}
+        tabIndex={0}
+        onScroll={handleScroll}
+        ref={timeBoxRef}
+        onWheel={handleWheel}
+      >
         <S.Empty />
         {Array.from({ length: timeUnit }).map((_, index) => (
           <S.Time
             key={index}
+            aria-live="polite"
+            aria-label={`현재 선택된 ${TIME_KOREAN[option]}은 ${currentTime} 입니다.`}
             ref={index === currentTime ? timeBoxChildRef : null}
             $isPicked={currentTime === index}
           >

@@ -99,18 +99,29 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const isAllowedMenu = userType !== COMMENT_USER.GUEST && action !== COMMENT_ACTION.EDIT;
 
   return (
-    <S.Container>
+    <S.Container tabIndex={0}>
       <S.Header>
         <S.UserContainer>
-          <S.Nickname>{member.nickname}</S.Nickname>
+          <S.Nickname aria-label={`댓글 작성자: ${member.nickname}`}>{member.nickname}</S.Nickname>
           <S.SubTitleContainer>
             <S.SubTitle>{createdAt}</S.SubTitle>
             {isEdit && <S.SubTitle>(수정됨)</S.SubTitle>}
           </S.SubTitleContainer>
         </S.UserContainer>
         {isAllowedMenu && (
-          <S.MenuContainer aria-label="댓글 메뉴" onClick={toggleComponent}>
-            <S.Image src={ellipsis}></S.Image>
+          <S.MenuContainer
+            as={isOpen ? 'div' : 'button'}
+            role="button"
+            tabIndex={0}
+            aria-label={isOpen ? '댓글 메뉴 닫기' : '댓글 메뉴 열기'}
+            onClick={toggleComponent}
+          >
+            <S.Image
+              tabIndex={0}
+              role="button"
+              alt={isOpen ? '댓글 메뉴 닫기' : '댓글 메뉴 열기'}
+              src={ellipsis}
+            ></S.Image>
             {isOpen && (
               <S.MenuWrapper>
                 <CommentMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />

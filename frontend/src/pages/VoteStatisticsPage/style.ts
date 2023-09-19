@@ -35,7 +35,7 @@ export const PageHeader = styled.div`
   font: var(--text-title);
 `;
 
-export const OptionContainer = styled.div`
+export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

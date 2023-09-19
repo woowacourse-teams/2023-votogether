@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
-export const Container = styled.div`
+export const Container = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,4 +39,8 @@ export const TextCardContainer = styled.ul`
 
 export const TextCard = styled.li`
   list-style: disc;
+
+  p {
+    font-weight: bold;
+  }
 `;

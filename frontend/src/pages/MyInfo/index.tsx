@@ -73,9 +73,10 @@ export default function MyInfo() {
   useEffect(() => {
     if (isWithdrawalMembershipSuccess) {
       clearLoggedInfo();
+
       navigate('/');
     }
-  }, [isWithdrawalMembershipSuccess, clearLoggedInfo, navigate]);
+  }, [isWithdrawalMembershipSuccess]);
 
   useEffect(() => {
     if (isWithdrawalMembershipError && withdrawalMembershipError instanceof Error) {
@@ -106,7 +107,9 @@ export default function MyInfo() {
             <S.DescribeUl>
               <li>- {NICKNAME_POLICY.LETTER_AMOUNT}</li>
               <li>- {NICKNAME_POLICY.LIMIT_LETTER_TYPE}</li>
+              <li>- {NICKNAME_POLICY.LIMIT_CHANGING}</li>
               <li>- {NICKNAME_POLICY.NO_DUPLICATION}</li>
+              <li>- {NICKNAME_POLICY.LIMIT_KOREAN}</li>
             </S.DescribeUl>
             <S.InputWrapper>
               <S.Input

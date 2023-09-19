@@ -1,5 +1,6 @@
 package com.votogether.domain.post.dto.response.vote;
 
+import com.votogether.domain.member.entity.vo.AgeRange;
 import com.votogether.domain.member.entity.vo.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Map;
@@ -18,12 +19,13 @@ public record VoteCountForAgeGroupResponse(
         @Schema(description = "여자 투표 수", example = "7")
         int femaleCount
 ) {
-    public static VoteCountForAgeGroupResponse of(final String ageGroup, final Map<Gender, Long> genderGroup) {
+
+    public static VoteCountForAgeGroupResponse of(final AgeRange ageRange, final Map<Gender, Long> genderGroup) {
         final int maleCount = genderGroup.getOrDefault(Gender.MALE, 0L).intValue();
         final int femaleCount = genderGroup.getOrDefault(Gender.FEMALE, 0L).intValue();
         final int voteCount = maleCount + femaleCount;
 
-        return new VoteCountForAgeGroupResponse(ageGroup, voteCount, maleCount, femaleCount);
+        return new VoteCountForAgeGroupResponse(ageRange.getName(), voteCount, maleCount, femaleCount);
     }
 
 }

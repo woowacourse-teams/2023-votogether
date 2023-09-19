@@ -25,12 +25,13 @@ export const Container = styled.button<{ $isSelected: boolean }>`
 
 export const Image = styled.img`
   border-radius: 4px;
+  border: 1px solid var(--gray);
   margin-bottom: 10px;
 
-  width: 100%;
+  width: 80%;
 
   aspect-ratio: 1/1;
-  object-fit: cover;
+  object-fit: contain;
 
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;
@@ -96,9 +97,9 @@ export const PeopleText = styled.span`
 export const PercentText = styled.span`
   margin-left: 4px;
 
-  font: var(--text-small);
+  color: var(--text-dark-gray);
 
-  opacity: 0.7;
+  font: var(--text-small);
 
   @media (min-width: ${theme.breakpoint.md}) {
     font: var(--text-caption);

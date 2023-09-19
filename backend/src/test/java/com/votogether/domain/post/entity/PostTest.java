@@ -1,205 +1,244 @@
 package com.votogether.domain.post.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.exception.PostExceptionType;
-import com.votogether.global.exception.BadRequestException;
-import com.votogether.global.util.ImageUploader;
 import com.votogether.test.fixtures.MemberFixtures;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class PostTest {
 
     @Test
-    @DisplayName("여러 Category를 전달하면 Post와 매핑되어 PostOptions를 생성한다")
-    void mapCategories() {
+    @DisplayName("게시글 옵션을 삭제한다.")
+    void removePostOption() {
         // given
-        Post post = Post.builder().build();
-        Category categoryA = Category.builder().build();
-        Category categoryB = Category.builder().build();
-
-        List<Category> categories = List.of(categoryA, categoryB);
-
-        // when
-        post.mapCategories(categories);
-
-        // then
-        PostCategories actualPostCategories = post.getPostCategories();
-        assertThat(actualPostCategories.getPostCategories()).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("PostOption의 내용을 전달하면 Post와 PostOption이 매핑된다")
-    void mapPostOptionsByElements() {
-        // given
-        Post post = Post.builder().build();
-
-        byte[] content = "Hello, World!".getBytes(StandardCharsets.UTF_8);
-        MockMultipartFile file1 = new MockMultipartFile(
-                "file1",
-                "hello1.txt",
-                MediaType.TEXT_PLAIN_VALUE,
-                content
-        );
-
-        MockMultipartFile file2 = new MockMultipartFile(
-                "file2",
-                "hello2.txt",
-                MediaType.TEXT_PLAIN_VALUE,
-                content
-        );
-
-        final List<String> imageUrls = Stream.of(file1, file2)
-                .map(ImageUploader::upload)
-                .toList();
-
-        // when
-        post.mapPostOptionsByElements(List.of("content1", "content2"), imageUrls);
-
-        // then
-        List<PostOption> postOptions = post.getPostOptions().getPostOptions();
-        assertThat(postOptions).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("게시글 작성 시, 게시글의 마감 기한이 현재 시간보다 3일 초과 여부에 따라 예외를 던질 지 결정한다.")
-    void throwExceptionIsWriter() {
-        // given
-        final Member writer = MemberFixtures.MALE_30.get();
-        ReflectionTestUtils.setField(writer, "id", 1L);
-
-        Post post1 = Post.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.now().plusDays(4))
-                .build();
-
-        Post post2 = Post.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.now().plusDays(2))
-                .build();
-
-        // when, then
-        assertAll(
-                () -> assertThatThrownBy(() -> post1.validateDeadlineNotExceedByMaximumDeadline(3))
-                        .isInstanceOf(BadRequestException.class)
-                        .hasMessage(PostExceptionType.DEADLINE_EXCEED_THREE_DAYS.getMessage()),
-                () -> assertThatNoException()
-                        .isThrownBy(() -> post2.validateDeadlineNotExceedByMaximumDeadline(3))
-        );
-    }
-
-    @Test
-    @DisplayName("게시글의 마감 여부에 따라 예외를 던질 지 결정한다.")
-    void throwExceptionIsDeadlinePassed() {
-        // given
-        final Member writer = MemberFixtures.MALE_30.get();
-        ReflectionTestUtils.setField(writer, "id", 1L);
-
-        Post post1 = Post.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.of(2000, 1, 1, 1, 1))
-                .build();
-
-        Post post2 = Post.builder()
-                .writer(writer)
-                .deadline(LocalDateTime.of(9999, 1, 1, 1, 1))
-                .build();
-
-        // when, then
-        assertAll(
-                () -> assertThatThrownBy(post1::validateDeadLine)
-                        .isInstanceOf(BadRequestException.class)
-                        .hasMessage(PostExceptionType.POST_CLOSED.getMessage()),
-                () -> assertThatNoException()
-                        .isThrownBy(post2::validateDeadLine)
-        );
-    }
-
-    @Test
-    @DisplayName("해당 게시글을 조기 마감 합니다.")
-    void closedEarly() {
-        // given
-        LocalDateTime deadline = LocalDateTime.of(2100, 1, 1, 0, 0);
         Post post = Post.builder()
-                .deadline(deadline)
+                .title("hello")
+                .content("world")
+                .deadline(LocalDateTime.now())
                 .build();
+        PostOption postOption = PostOption.builder()
+                .content("hello")
+                .imageUrl(null)
+                .build();
+        post.addPostOption(postOption);
+        ReflectionTestUtils.setField(postOption, "id", 1L);
 
         // when
-        post.closeEarly();
+        post.removePostOption(postOption);
 
         // then
-        assertThat(post.getDeadline()).isBefore(deadline);
+        assertThat(post.getPostOptions()).isEmpty();
     }
 
     @Test
     @DisplayName("게시글을 수정한다.")
     void update() {
         // given
-        final Member writer = MemberFixtures.MALE_30.get();
-        final PostBody postBody1 = PostBody.builder()
-                .title("title1")
-                .content("content1")
+        Post post = Post.builder()
+                .title("hello")
+                .content("world")
+                .deadline(LocalDateTime.now())
                 .build();
-        final Post post = Post.builder()
-                .writer(writer)
-                .postBody(postBody1)
-                .deadline(LocalDateTime.now().plusDays(3))
-                .build();
-        post.addContentImage("없는사진");
-
-        final PostBody postBody2 = PostBody.builder()
-                .title("title2")
-                .content("content2")
-                .build();
-
-        Category categoryA = Category.builder().name("category1").build();
-        Category categoryB = Category.builder().name("category2").build();
-
-        List<Category> categories = List.of(categoryA, categoryB);
+        String newTitle = "hello world";
+        String newContent = "votogether";
+        LocalDateTime newDeadline = LocalDateTime.now().plusDays(1);
 
         // when
-        final LocalDateTime deadline = LocalDateTime.now().plusDays(2);
-        post.update(
-                postBody2,
-                "oldContentUrl",
-                List.of("newContentUrl2"),
-                categories,
-                List.of("option1", "option2"),
-                List.of("optionImage1", "optionImage2"),
-                List.of("newOptionImage1", "newOptionImage2"),
-                deadline
-        );
+        post.update(newTitle, newContent, newDeadline);
 
         // then
-        final PostBody postBody = post.getPostBody();
-        final PostContentImage postContentImage = postBody.getPostContentImages().getContentImages().get(0);
-        final List<PostOption> postOptions = post.getPostOptions().getPostOptions();
-        final List<PostCategory> postCategories = post.getPostCategories().getPostCategories();
-        final LocalDateTime actualDeadline = post.getDeadline();
-        assertAll(
-                () -> assertThat(postBody.getTitle()).isEqualTo("title2"),
-                () -> assertThat(postBody.getContent()).isEqualTo("content2"),
-                () -> assertThat(postContentImage.getImageUrl()).isEqualTo("newContentUrl2"),
-                () -> assertThat(postOptions.get(0).getContent()).isEqualTo("option1"),
-                () -> assertThat(postOptions.get(0).getImageUrl()).isEqualTo("newOptionImage1"),
-                () -> assertThat(postCategories.get(0).getCategory().getName()).isEqualTo("category1"),
-                () -> assertThat(actualDeadline).hasYear(deadline.getYear()),
-                () -> assertThat(actualDeadline).hasMonth(deadline.getMonth()),
-                () -> assertThat(actualDeadline).hasDayOfMonth(deadline.getDayOfMonth())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(post.getTitle()).isEqualTo(newTitle);
+            softly.assertThat(post.getContent()).isEqualTo(newContent);
+            softly.assertThat(post.getDeadline()).isEqualTo(newDeadline);
+        });
+    }
+
+    @Nested
+    @DisplayName("삭제 가능 여부 확인")
+    class CanDelete {
+
+        @Test
+        @DisplayName("투표 수가 삭제 제한 개수보다 작으면 true 반환한다.")
+        void canDelete() {
+            // given
+            Post post = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            PostOption postOption = PostOption.builder()
+                    .content("hello")
+                    .imageUrl(null)
+                    .build();
+            ReflectionTestUtils.setField(postOption, "voteCount", 19);
+            post.addPostOption(postOption);
+
+            // when
+            boolean result = post.canDelete();
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("투표 수가 삭제 제한 개수보다 많으면 false 반환한다.")
+        void cannotDelete() {
+            // given
+            Post post = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            PostOption postOption = PostOption.builder()
+                    .content("hello")
+                    .imageUrl(null)
+                    .build();
+            ReflectionTestUtils.setField(postOption, "voteCount", 20);
+            post.addPostOption(postOption);
+
+            // when
+            boolean result = post.canDelete();
+
+            // then
+            assertThat(result).isFalse();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("작성자 확인")
+    class IsWriter {
+
+        @Test
+        @DisplayName("게시글 작성자라면 true 반환한다.")
+        void isWriter() {
+            // given
+            Member member = MemberFixtures.MALE_20.get();
+            Post post = Post.builder()
+                    .writer(member)
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            // when
+            boolean result = post.isWriter(member);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("게시글 작성자가 아니라면 false 반환한다.")
+        void isNotWriter() {
+            // given
+            Member writer = MemberFixtures.MALE_20.get();
+            Member member = MemberFixtures.MALE_30.get();
+            Post post = Post.builder()
+                    .writer(writer)
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            ReflectionTestUtils.setField(writer, "id", 1L);
+            ReflectionTestUtils.setField(member, "id", 2L);
+
+            // when
+            boolean result = post.isWriter(member);
+
+            // then
+            assertThat(result).isFalse();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("게시글 블라인드")
+    class Blind {
+
+        @Test
+        @DisplayName("게시글 생성 시 블라인드 되어 있지 않다.")
+        void initNotBlind() {
+            // given
+            Post post = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+
+            // when, then
+            assertThat(post.isHidden()).isFalse();
+        }
+
+        @Test
+        @DisplayName("게시글을 블라인드한다.")
+        void blind() {
+            // given
+            Post post = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+
+            // when
+            post.blind();
+
+            // then
+            assertThat(post.isHidden()).isTrue();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("게시글 첫번째 이미지 조회")
+    class GetFirstImage {
+
+        @Test
+        @DisplayName("게시글 이미지가 존재하지 않으면 null 반환한다.")
+        void returnNull() {
+            // given
+            Post post = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+
+            // when
+            PostContentImage result = post.getFirstContentImage();
+
+            // then
+            assertThat(result).isNull();
+        }
+
+        @Test
+        @DisplayName("게시글 이미지가 존재하면 첫번째 이미지를 반환한다.")
+        void returnFirstImage() {
+            // given
+            Post post = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            post.addContentImage("image.png");
+
+            // when
+            PostContentImage result = post.getFirstContentImage();
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result).isNotNull();
+                softly.assertThat(result.getImageUrl()).isEqualTo("image.png");
+            });
+        }
+
     }
 
 }

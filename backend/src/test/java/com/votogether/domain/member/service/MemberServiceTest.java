@@ -14,7 +14,6 @@ import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostBody;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.post.repository.PostRepository;
@@ -24,7 +23,7 @@ import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.annotation.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
-import com.votogether.test.persister.MemberTestPersister;
+import com.votogether.test.persister.PostTestPersister;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -61,7 +60,7 @@ class MemberServiceTest {
     CommentRepository commentRepository;
 
     @Autowired
-    MemberTestPersister memberTestPersister;
+    PostTestPersister postTestPersister;
 
     @Autowired
     EntityManager em;
@@ -84,17 +83,24 @@ class MemberServiceTest {
     class ChangeNickname {
 
         @Test
-        @DisplayName("주어질 때 정상적으로 닉네임을 변경한다.")
+        @DisplayName("한번도 변경되지 않았다면 닉네임 변경 주기에 상관없이 닉네임을 변경한다.")
         void changeNickname() {
             // given
+            Member member = Member.builder()
+                    .nickname("익명의손님fFp4vAgX2d")
+                    .gender(Gender.MALE)
+                    .birthYear(1966)
+                    .socialId("abc123")
+                    .socialType(SocialType.KAKAO)
+                    .build();
             String newNickname = "jeomxon";
-            Member member = memberRepository.save(MemberFixtures.FEMALE_30.get());
+            Member savedMember = memberRepository.save(member);
 
             // when
-            memberService.changeNickname(member, newNickname);
+            memberService.changeNickname(savedMember, newNickname);
 
             // then
-            assertThat(member.getNickname()).isEqualTo(newNickname);
+            assertThat(savedMember.getNickname()).isEqualTo(newNickname);
         }
 
         @ParameterizedTest
@@ -134,6 +140,27 @@ class MemberServiceTest {
             assertThatThrownBy(() -> memberService.changeNickname(member1, member2.getNickname()))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 중복된 닉네임이 존재합니다.");
+        }
+
+        @Test
+        @DisplayName("최초 닉네임을 변경한 후 닉네임 변경 주기가 지나지 않았다면 예외가 발생한다.")
+        void changeNicknameThrowsExceptionNotPassedChangingCycle() {
+            // given
+            Member member = Member.builder()
+                    .nickname("익명의손님fFp4vAgX2d")
+                    .gender(Gender.MALE)
+                    .birthYear(1966)
+                    .socialId("abc123")
+                    .socialType(SocialType.KAKAO)
+                    .build();
+            Member savedMember = memberRepository.save(member);
+
+            memberService.changeNickname(savedMember, "저문");
+
+            // when, then
+            assertThatThrownBy(() -> memberService.changeNickname(savedMember, "저라니"))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("최소 닉네임 변경주기가 지나지 않았습니다.");
         }
 
     }
@@ -227,14 +254,10 @@ class MemberServiceTest {
             // given
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(member)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 
@@ -257,14 +280,10 @@ class MemberServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Member writer = memberRepository.save(MemberFixtures.FEMALE_20.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(writer)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 
@@ -276,7 +295,7 @@ class MemberServiceTest {
             // then
             assertAll(
                     () -> assertThat(memberRepository.findAll()).hasSize(1),
-                    () -> assertThat(memberRepository.findById(writer.getId()).get()).isEqualTo(writer),
+                    () -> assertThat(memberRepository.findById(writer.getId())).contains(writer),
                     () -> assertThat(postRepository.findAll()).hasSize(1)
             );
         }
@@ -342,14 +361,10 @@ class MemberServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Member reporter = memberRepository.save(MemberFixtures.MALE_10.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(member)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 
@@ -381,20 +396,16 @@ class MemberServiceTest {
             Member member = memberRepository.save(MemberFixtures.MALE_20.get());
             Member reporter = memberRepository.save(MemberFixtures.MALE_10.get());
 
-            PostBody postBody = PostBody.builder()
-                    .title("title")
-                    .content("content")
-                    .build();
-
             Post post = Post.builder()
                     .writer(reporter)
-                    .postBody(postBody)
+                    .title("title")
+                    .content("content")
                     .deadline(LocalDateTime.now().plusDays(3L).truncatedTo(ChronoUnit.MINUTES))
                     .build();
 
             Comment comment = Comment.builder()
                     .post(post)
-                    .member(member)
+                    .writer(member)
                     .content("댓글입니다.")
                     .build();
 

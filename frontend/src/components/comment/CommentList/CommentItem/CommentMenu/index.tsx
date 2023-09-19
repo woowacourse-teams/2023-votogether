@@ -16,6 +16,8 @@ export default function CommentMenu({ menuList, handleMenuClick }: CommentMenuPr
         <S.Menu
           key={content}
           type="button"
+          tabIndex={0}
+          aria-label={`댓글 ${content}`}
           $color={color}
           onClick={(event: MouseEvent) => {
             event.stopPropagation();

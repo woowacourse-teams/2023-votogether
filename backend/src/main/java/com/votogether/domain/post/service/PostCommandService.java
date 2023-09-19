@@ -156,17 +156,25 @@ public class PostCommandService {
             final Set<Long> postOptionIds,
             final List<PostOptionUpdateRequest> postOptionUpdates
     ) {
-        final boolean hasInvalidId = postOptionUpdates.stream()
-                .map(PostOptionUpdateRequest::getId)
-                .anyMatch(id -> id != null && !postOptionIds.contains(id));
-
-        if (hasInvalidId) {
-            throw new BadRequestException(PostOptionExceptionType.UNRELATED_POST);
-        }
+        validatePostOptionIds(postOptionIds, postOptionUpdates);
 
         return postOptionUpdates.stream()
                 .filter(postOptionUpdate -> postOptionUpdate.getId() == null)
                 .toList();
+    }
+
+    private static void validatePostOptionIds(
+            final Set<Long> postOptionIds,
+            final List<PostOptionUpdateRequest> postOptionUpdates
+    ) {
+        postOptionUpdates.stream()
+                .map(PostOptionUpdateRequest::getId)
+                .filter(Objects::nonNull)
+                .filter(id -> !postOptionIds.contains(id))
+                .findFirst()
+                .ifPresent(id -> {
+                    throw new BadRequestException(PostOptionExceptionType.UNRELATED_POST);
+                });
     }
 
     private void removeOriginPostOptions(final Post post, final List<PostOption> removePostOptions) {

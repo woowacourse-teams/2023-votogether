@@ -84,7 +84,7 @@ export const Description = styled.p`
   font-size: 1.6rem;
   font-weight: 700;
 
-  @media (max-width: 376px) and (min-width: 280px) {
+  @media (max-width: 375px) and (min-width: 280px) {
     font-size: 1.4rem;
   }
 `;

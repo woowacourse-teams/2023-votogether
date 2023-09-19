@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRep
             "WHERE m IN :members " +
             "GROUP BY m.id")
     List<Integer> findCountsByMembers(@Param("members") final List<Member> members);
-    
+
     List<Post> findAllByWriter(final Member member);
 
     int countByWriter(final Member member);

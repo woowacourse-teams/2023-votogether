@@ -29,7 +29,7 @@ public record PostVoteResultResponse(
             final List<PostOption> postOptions,
             final Optional<Vote> vote
     ) {
-        final int totalVoteCount = countTotalVoteCount(postOptions);
+        final long totalVoteCount = countTotalVoteCount(postOptions);
         return new PostVoteResultResponse(
                 findSelectedOption(vote),
                 countVotesForUser(user, post, vote.isPresent(), totalVoteCount),
@@ -37,9 +37,9 @@ public record PostVoteResultResponse(
         );
     }
 
-    private static int countTotalVoteCount(final List<PostOption> postOptions) {
+    private static long countTotalVoteCount(final List<PostOption> postOptions) {
         return postOptions.stream()
-                .mapToInt(PostOption::getVoteCount)
+                .mapToLong(PostOption::getVoteCount)
                 .sum();
     }
 
@@ -50,11 +50,11 @@ public record PostVoteResultResponse(
         return vote.get().getPostOption().getId();
     }
 
-    private static int countVotesForUser(
+    private static long countVotesForUser(
             final Member user,
             final Post post,
             final boolean isVoted,
-            final int totalVoteCount
+            final long totalVoteCount
     ) {
         if (post.isClosed() || post.isWriter(user) || isVoted) {
             return totalVoteCount;
@@ -67,7 +67,7 @@ public record PostVoteResultResponse(
             final Post post,
             final List<PostOption> postOptions,
             final boolean isVoted,
-            final int totalVoteCount
+            final long totalVoteCount
     ) {
         return postOptions.stream()
                 .map(postOption -> PostOptionVoteResultResponse.ofUser(user, post, postOption, isVoted, totalVoteCount))
@@ -75,7 +75,7 @@ public record PostVoteResultResponse(
     }
 
     public static PostVoteResultResponse ofGuest(final Post post, final List<PostOption> postOptions) {
-        final int totalVoteCount = countTotalVoteCount(postOptions);
+        final long totalVoteCount = countTotalVoteCount(postOptions);
         return new PostVoteResultResponse(
                 NOT_SELECTED,
                 countVotesForGuest(post, totalVoteCount),
@@ -83,7 +83,7 @@ public record PostVoteResultResponse(
         );
     }
 
-    private static int countVotesForGuest(final Post post, final int totalVoteCount) {
+    private static long countVotesForGuest(final Post post, final long totalVoteCount) {
         if (post.isClosed()) {
             return totalVoteCount;
         }
@@ -93,7 +93,7 @@ public record PostVoteResultResponse(
     private static List<PostOptionVoteResultResponse> convertToGuestResponses(
             final Post post,
             final List<PostOption> postOptions,
-            final int totalVoteCount
+            final long totalVoteCount
     ) {
         return postOptions.stream()
                 .map(postOption -> PostOptionVoteResultResponse.ofGuest(post, postOption, totalVoteCount))

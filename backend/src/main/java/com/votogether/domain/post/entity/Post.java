@@ -38,7 +38,7 @@ import org.hibernate.annotations.Formula;
 public class Post extends BaseEntity {
 
     private static final int MAXIMUM_POST_OPTION_SIZE = 5;
-    private static final int DELETE_VOTE_LIMIT = 20;
+    private static final long DELETE_VOTE_LIMIT = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -168,8 +168,8 @@ public class Post extends BaseEntity {
     }
 
     public boolean canDelete() {
-        final int totalVoteCount = this.postOptions.stream()
-                .mapToInt(PostOption::getVoteCount)
+        final long totalVoteCount = this.postOptions.stream()
+                .mapToLong(PostOption::getVoteCount)
                 .sum();
         return totalVoteCount < DELETE_VOTE_LIMIT;
     }

@@ -17,7 +17,7 @@ public record PostOptionVoteResultResponse(
         String imageUrl,
 
         @Schema(description = "투표 옵션 총 투표 수", example = "4")
-        int voteCount,
+        long voteCount,
 
         @Schema(description = "투표 옵션 투표 비율", example = "50.0")
         double votePercent
@@ -31,9 +31,9 @@ public record PostOptionVoteResultResponse(
             final Post post,
             final PostOption postOption,
             final boolean isVoted,
-            final int totalVoteCount
+            final long totalVoteCount
     ) {
-        final int voteCount = countVotesForUser(user, post, postOption, isVoted);
+        final long voteCount = countVotesForUser(user, post, postOption, isVoted);
         return new PostOptionVoteResultResponse(
                 postOption.getId(),
                 postOption.getContent(),
@@ -43,7 +43,7 @@ public record PostOptionVoteResultResponse(
         );
     }
 
-    private static int countVotesForUser(
+    private static long countVotesForUser(
             final Member user,
             final Post post,
             final PostOption postOption,
@@ -62,7 +62,7 @@ public record PostOptionVoteResultResponse(
         return imageUrl;
     }
 
-    private static double calculateVotePercent(final int totalCount, final int voteCount) {
+    private static double calculateVotePercent(final long totalCount, final long voteCount) {
         if (voteCount == HIDDEN_COUNT || totalCount == 0) {
             return 0.0;
         }
@@ -72,9 +72,9 @@ public record PostOptionVoteResultResponse(
     public static PostOptionVoteResultResponse ofGuest(
             final Post post,
             final PostOption postOption,
-            final int totalVoteCount
+            final long totalVoteCount
     ) {
-        final int voteCount = countVotesForGuest(post, postOption);
+        final long voteCount = countVotesForGuest(post, postOption);
         return new PostOptionVoteResultResponse(
                 postOption.getId(),
                 postOption.getContent(),
@@ -84,7 +84,7 @@ public record PostOptionVoteResultResponse(
         );
     }
 
-    private static int countVotesForGuest(final Post post, final PostOption postOption) {
+    private static long countVotesForGuest(final Post post, final PostOption postOption) {
         if (post.isClosed()) {
             return postOption.getVoteCount();
         }

@@ -21,14 +21,6 @@
             <AppenderRef ref="ConsoleAppender"/>
         </Logger>
 
-        <Logger name="com.zaxxer.hikari" level="debug">
-            <AppenderRef ref="ConsoleAppender"/>
-        </Logger>
-
-        <Logger name="org.springframework.orm.jpa.JpaTransactionManager" level="debug">
-            <AppenderRef ref="ConsoleAppender"/>
-        </Logger>
-
         <Root level="debug">
             <AppenderRef ref="ConsoleAppender"/>
         </Root>

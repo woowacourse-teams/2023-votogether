@@ -52,7 +52,7 @@ public class ReportNicknameStrategy implements ReportStrategy {
         final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), reportedMember.getId());
         if (reportCount >= NUMBER_OF_NICKNAME_CHANGE_REPORTS) {
             reportedMember.changeNicknameByReport();
-            reportRepository.deleteByReportTypeAndTargetId(ReportType.NICKNAME, request.id());
+            reportRepository.deleteAllWithReportTypeAndTargetIdInBatch(ReportType.NICKNAME, request.id());
         }
     }
 

@@ -13,13 +13,15 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "category_id"})})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"post_id", "category_id"})})
 public class PostCategory extends BaseEntity {
 
     @Id
@@ -37,6 +39,10 @@ public class PostCategory extends BaseEntity {
     @Builder
     private PostCategory(final Post post, final Category category) {
         this.post = post;
+        this.category = category;
+    }
+
+    public void updateCategory(final Category category) {
         this.category = category;
     }
 

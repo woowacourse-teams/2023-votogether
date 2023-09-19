@@ -8,38 +8,28 @@ import lombok.Getter;
 @Getter
 public enum AgeRange {
 
-    UNDER_TEENS("10대 미만", 1, 9),
-    TEENS("10대", 10, 19),
-    TWENTIES("20대", 20, 29),
-    THIRTIES("30대", 30, 39),
-    FORTIES("40대", 40, 49),
-    FIFTIES("50대", 50, 59),
-    OVER_SIXTIES("60대 이상", 60, 999),
+    UNDER_TEENS("10대 미만", 0),
+    TEENS("10대", 1),
+    TWENTIES("20대", 2),
+    THIRTIES("30대", 3),
+    FORTIES("40대", 4),
+    FIFTIES("50대", 5),
+    OVER_SIXTIES("60대 이상", 6),
     ;
 
     private final String name;
-    private final int startAge;
-    private final int endAge;
+    private final int ageGroup;
 
-    AgeRange(
-            final String name,
-            final int startAge,
-            final int endAge
-    ) {
+    AgeRange(final String name, final int ageGroup) {
         this.name = name;
-        this.startAge = startAge;
-        this.endAge = endAge;
+        this.ageGroup = ageGroup;
     }
 
-    public static AgeRange from(final int age) {
+    public static AgeRange from(final int ageGroup) {
         return Arrays.stream(AgeRange.values())
-                .filter(ageRange -> ageRange.isBelong(age))
+                .filter(ageRange -> ageRange.ageGroup == ageGroup)
                 .findAny()
                 .orElseThrow(() -> new BadRequestException(MemberExceptionType.INVALID_AGE));
-    }
-
-    private boolean isBelong(final int age) {
-        return this.startAge <= age && this.endAge >= age;
     }
 
 }

@@ -7,6 +7,7 @@ import com.votogether.domain.post.repository.CommentRepository;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.report.repository.ReportRepository;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class ReportCommentStrategy implements ReportStrategy {
     @Override
     public void report(final Member reporter, final ReportRequest request) {
         final Comment reportedComment = commentRepository.findById(request.id())
-                .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(CommentExceptionType.NOT_FOUND));
         validateComment(reporter, request, reportedComment);
 
         saveReport(reporter, request, reportRepository);
@@ -35,8 +36,8 @@ public class ReportCommentStrategy implements ReportStrategy {
             final ReportRequest request,
             final Comment reportedComment
     ) {
-        reportedComment.validateMine(reporter);
-        reportedComment.validateHidden();
+        validateHiddenComment(reportedComment);
+        validateCommentMine(reportedComment, reporter);
         validateDuplicatedReport(
                 reporter,
                 request,
@@ -49,6 +50,18 @@ public class ReportCommentStrategy implements ReportStrategy {
         final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
         if (reportCount >= NUMBER_OF_COMMENT_BLIND_BASED_REPORTS) {
             reportedComment.blind();
+        }
+    }
+
+    private void validateHiddenComment(final Comment comment) {
+        if (comment.isHidden()) {
+            throw new BadRequestException(CommentExceptionType.IS_HIDDEN);
+        }
+    }
+
+    private void validateCommentMine(final Comment comment, final Member member) {
+        if (comment.isWriter(member)) {
+            throw new BadRequestException(CommentExceptionType.REPORT_MINE);
         }
     }
 

@@ -9,26 +9,31 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostCustomRepository {
 
-    List<Post> findAllByClosingTypeAndSortTypeAndCategoryId(
+    List<Post> findPostsWithFilteringAndPaging(
             final PostClosingType postClosingType,
             final PostSortType postSortType,
             final Long categoryId,
             final Pageable pageable
     );
 
-    List<Post> findAllWithKeyword(
-            final String keyword,
-            final PostClosingType postClosingType,
-            final PostSortType postSortType,
-            final Long categoryId,
-            final Pageable pageable
-    );
-
-    List<Post> findAllByWriterWithClosingTypeAndSortTypeAndCategoryId(
+    List<Post> findPostsByWriterWithFilteringAndPaging(
             final Member writer,
             final PostClosingType postClosingType,
             final PostSortType postSortType,
-            final Long categoryId,
+            final Pageable pageable
+    );
+
+    List<Post> findSearchPostsWithFilteringAndPaging(
+            final String keyword,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
+            final Pageable pageable
+    );
+
+    List<Post> findPostsByVotedWithFilteringAndPaging(
+            final Member voter,
+            final PostClosingType postClosingType,
+            final PostSortType postSortType,
             final Pageable pageable
     );
 

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
@@ -45,4 +47,12 @@ export const SelectWrapper = styled.div`
   &:last-child {
     right: 20px;
   }
+`;
+
+export const HiddenButton = styled.button`
+  position: absolute;
+`;
+
+export const HiddenLink = styled(Link)`
+  position: absolute;
 `;

@@ -1,6 +1,8 @@
 package com.votogether.domain.post.service;
 
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostSummaryResponse;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
@@ -9,7 +11,9 @@ import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +86,47 @@ public class PostGuestService {
                         )
                 )
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostRankingResponse> getRanking() {
+        final Pageable pageable = PageRequest.of(0, BASIC_PAGE_SIZE);
+        final List<Post> posts = postRepository.findPostsWithFilteringAndPaging(
+                PostClosingType.ALL,
+                PostSortType.HOT,
+                null,
+                pageable
+        );
+
+        final Map<Post, Integer> rankings = calculateRanking(posts);
+
+        return rankings.entrySet().stream()
+                .map(entry ->
+                        new PostRankingResponse(
+                                entry.getValue(),
+                                PostSummaryResponse.from(entry.getKey())
+                        )
+                )
+                .toList();
+    }
+
+    private Map<Post, Integer> calculateRanking(final List<Post> posts) {
+        final Map<Post, Integer> rankings = new LinkedHashMap<>();
+
+        int currentRanking = 1;
+        int previousRanking = -1;
+        long previousVoteCount = -1;
+        for (Post post : posts) {
+            final long currentVoteCount = post.getTotalVoteCount();
+            final int ranking = (currentVoteCount == previousVoteCount) ? previousRanking : currentRanking;
+            rankings.put(post, ranking);
+
+            previousRanking = ranking;
+            previousVoteCount = currentVoteCount;
+            currentRanking++;
+        }
+
+        return rankings;
     }
 
 }

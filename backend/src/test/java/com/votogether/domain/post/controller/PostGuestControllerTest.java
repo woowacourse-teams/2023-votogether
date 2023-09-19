@@ -11,14 +11,18 @@ import static org.mockito.BDDMockito.given;
 
 import com.votogether.domain.post.dto.response.post.CategoryResponse;
 import com.votogether.domain.post.dto.response.post.PostOptionVoteResultResponse;
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.post.dto.response.post.PostSummaryResponse;
 import com.votogether.domain.post.dto.response.post.PostVoteResultResponse;
 import com.votogether.domain.post.dto.response.post.PostWriterResponse;
+import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.service.PostGuestService;
 import com.votogether.global.exception.GlobalExceptionHandler;
 import com.votogether.test.ControllerTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.time.LocalDateTime;
@@ -33,6 +37,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -185,6 +190,32 @@ class PostGuestControllerTest extends ControllerTest {
                     .body("message", containsString("페이지는 0이상 정수만 가능합니다."));
         }
 
+    }
+
+    @Test
+    @DisplayName("인기 게시물 랭킹을 불러온다.")
+    void getRanking() {
+        // given
+        Post post = Post.builder()
+                .title("제목")
+                .content("내용")
+                .writer(MemberFixtures.MALE_10.get())
+                .deadline(LocalDateTime.now().plusDays(3))
+                .build();
+        ReflectionTestUtils.setField(post, "id", 1L);
+        PostRankingResponse postRankingResponse = new PostRankingResponse(1, PostSummaryResponse.from(post));
+        given(postGuestService.getRanking()).willReturn(List.of(postRankingResponse));
+
+        // when, then
+        List<PostRankingResponse> result = RestAssuredMockMvc.given().log().all()
+                .when().get("/posts/ranking/popular/guest")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(new TypeRef<List<PostRankingResponse>>() {
+                }.getType());
+
+        assertThat(result).isEqualTo(List.of(postRankingResponse));
     }
 
     private PostResponse mockingPostResponse() {

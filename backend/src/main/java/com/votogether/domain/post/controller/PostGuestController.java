@@ -1,5 +1,6 @@
 package com.votogether.domain.post.controller;
 
+import com.votogether.domain.post.dto.response.post.PostRankingResponse;
 import com.votogether.domain.post.dto.response.post.PostResponse;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
@@ -51,6 +52,12 @@ public class PostGuestController implements PostGuestControllerDocs {
             @RequestParam final PostSortType postSortType
     ) {
         final List<PostResponse> responses = postGuestService.searchPosts(keyword, page, postClosingType, postSortType);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("ranking/popular/guest")
+    public ResponseEntity<List<PostRankingResponse>> getRanking() {
+        final List<PostRankingResponse> responses = postGuestService.getRanking();
         return ResponseEntity.ok(responses);
     }
 

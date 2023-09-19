@@ -97,7 +97,7 @@ public class PostCommandService {
             final Member loginMember
     ) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
         validatePostOptionUpdateCount(post, postUpdate);
@@ -146,7 +146,7 @@ public class PostCommandService {
                         PostOptionUpdateRequest::getId,
                         postOptionUpdate -> postOptionUpdate,
                         (exist, replace) -> {
-                            throw new BadRequestException(PostOptionExceptionType.DUPLICATE_UPDATE_POST_OPTION);
+                            throw new BadRequestException(PostOptionExceptionType.DUPLICATE_UPDATE);
                         },
                         HashMap::new
                 ));
@@ -161,7 +161,7 @@ public class PostCommandService {
                 .anyMatch(id -> id != null && !postOptionIds.contains(id));
 
         if (hasInvalidId) {
-            throw new BadRequestException(PostOptionExceptionType.UNRELATED_POST_OPTION);
+            throw new BadRequestException(PostOptionExceptionType.UNRELATED_POST);
         }
 
         return postOptionUpdates.stream()
@@ -282,7 +282,7 @@ public class PostCommandService {
 
     public void closePostEarly(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
         post.closeEarly();
@@ -290,7 +290,7 @@ public class PostCommandService {
 
     public void deletePost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
         validatePostDeletePossible(post);
@@ -335,19 +335,19 @@ public class PostCommandService {
 
     private void validateHiddenPost(final Post post) {
         if (post.isHidden()) {
-            throw new BadRequestException(PostExceptionType.POST_IS_HIDDEN);
+            throw new BadRequestException(PostExceptionType.IS_HIDDEN);
         }
     }
 
     private void validatePostWriter(final Post post, final Member member) {
         if (!post.isWriter(member)) {
-            throw new BadRequestException(PostExceptionType.POST_NOT_WRITER);
+            throw new BadRequestException(PostExceptionType.NOT_WRITER);
         }
     }
 
     private void validatePostOptionUpdateCount(final Post post, final PostUpdateRequest postUpdate) {
         if (!post.isLimitOptionSize(postUpdate.getPostOptions().size())) {
-            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_SIZE_EXCEED);
+            throw new BadRequestException(PostOptionExceptionType.SIZE_EXCEED);
         }
     }
 

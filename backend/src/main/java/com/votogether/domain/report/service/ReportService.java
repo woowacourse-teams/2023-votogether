@@ -48,7 +48,7 @@ public class ReportService {
             final ReportRequest request
     ) {
         final Post reportedPost = postRepository.findById(request.id())
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validatePost(reporter, reportedPost, request);
 
         saveReport(reporter, request);
@@ -113,7 +113,7 @@ public class ReportService {
             final ReportRequest request
     ) {
         final Comment reportedComment = commentRepository.findById(request.id())
-                .orElseThrow(() -> new NotFoundException(CommentExceptionType.COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(CommentExceptionType.NOT_FOUND));
         validateComment(reporter, request, reportedComment);
 
         saveReport(reporter, request);

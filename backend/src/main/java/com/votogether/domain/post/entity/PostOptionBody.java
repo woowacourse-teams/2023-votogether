@@ -26,10 +26,10 @@ public class PostOptionBody {
 
     private void validate(final String content) {
         if (!StringUtils.hasText(content)) {
-            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_CONTENT_EMPTY);
+            throw new BadRequestException(PostOptionExceptionType.CONTENT_EMPTY);
         }
         if (content.length() > MAXIMUM_CONTENT_LENGTH) {
-            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_CONTENT_INVALID_LENGTH);
+            throw new BadRequestException(PostOptionExceptionType.CONTENT_INVALID_LENGTH);
         }
     }
 

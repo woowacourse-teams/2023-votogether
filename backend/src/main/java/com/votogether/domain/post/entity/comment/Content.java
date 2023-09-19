@@ -25,7 +25,7 @@ class Content {
 
     private void validate(final String content) {
         if (content.length() > MAXIMUM_LENGTH) {
-            throw new BadRequestException(CommentExceptionType.COMMENT_INVALID_LENGTH);
+            throw new BadRequestException(CommentExceptionType.INVALID_LENGTH);
         }
     }
 

@@ -53,7 +53,7 @@ public class PostOption extends BaseEntity {
     private String imageUrl;
 
     @Formula("(select count(*) from vote v where v.post_option_id = id)")
-    private int voteCount;
+    private long voteCount;
 
     @OneToMany(mappedBy = "postOption", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Vote> votes = new ArrayList<>();

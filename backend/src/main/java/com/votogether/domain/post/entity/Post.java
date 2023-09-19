@@ -147,7 +147,7 @@ public class Post extends BaseEntity {
 
     public void validateDeadLine() {
         if (isClosed()) {
-            throw new BadRequestException(PostExceptionType.POST_CLOSED);
+            throw new BadRequestException(PostExceptionType.CLOSED);
         }
     }
 
@@ -159,7 +159,7 @@ public class Post extends BaseEntity {
 
     private void validatePostOption(final PostOption postOption) {
         if (!hasPostOption(postOption)) {
-            throw new BadRequestException(PostOptionExceptionType.POST_OPTION_NOT_FOUND);
+            throw new BadRequestException(PostOptionExceptionType.NOT_FOUND);
         }
     }
 

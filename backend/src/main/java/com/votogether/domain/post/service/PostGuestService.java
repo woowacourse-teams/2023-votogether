@@ -41,7 +41,7 @@ public class PostGuestService {
     @Transactional(readOnly = true)
     public PostResponse getPost(final Long postId) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validateHiddenPost(post);
 
         return PostResponse.ofGuest(
@@ -67,7 +67,7 @@ public class PostGuestService {
 
     private void validateHiddenPost(final Post post) {
         if (post.isHidden()) {
-            throw new BadRequestException(PostExceptionType.POST_IS_HIDDEN);
+            throw new BadRequestException(PostExceptionType.IS_HIDDEN);
         }
     }
 

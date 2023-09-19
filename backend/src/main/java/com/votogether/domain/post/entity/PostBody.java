@@ -32,19 +32,19 @@ public class PostBody {
 
     private void validateTitle(final String title) {
         if (!StringUtils.hasText(title)) {
-            throw new BadRequestException(PostExceptionType.POST_TITLE_EMPTY);
+            throw new BadRequestException(PostExceptionType.TITLE_EMPTY);
         }
         if (title.length() > MAXIMUM_TITLE_LENGTH) {
-            throw new BadRequestException(PostExceptionType.POST_TITLE_INVALID_LENGTH);
+            throw new BadRequestException(PostExceptionType.TITLE_INVALID_LENGTH);
         }
     }
 
     private void validateContent(final String content) {
         if (!StringUtils.hasText(content)) {
-            throw new BadRequestException(PostExceptionType.POST_CONTENT_EMPTY);
+            throw new BadRequestException(PostExceptionType.CONTENT_EMPTY);
         }
         if (content.length() > MAXIMUM_CONTENT_LENGTH) {
-            throw new BadRequestException(PostExceptionType.POST_CONTENT_INVALID_LENGTH);
+            throw new BadRequestException(PostExceptionType.CONTENT_INVALID_LENGTH);
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { MouseEvent, MutableRefObject } from 'react';
+import React, { MutableRefObject } from 'react';
 
 import photoIcon from '@assets/photo_white.svg';
 
@@ -20,14 +20,9 @@ export default function OptionUploadImageButton({
 }: OptionUploadImageButtonProps) {
   const id = optionId.toString();
 
-  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    contentInputRefList.current[index].click();
-  };
-
   return (
     <S.Container $isVisible={isImageVisible}>
-      <button type="button" aria-label="선택지 이미지 업로드" onClick={handleButtonClick}>
+      <button type="button" aria-label="선택지 이미지 업로드">
         <S.Label htmlFor={id}>
           <S.Image src={photoIcon} alt="" />
         </S.Label>

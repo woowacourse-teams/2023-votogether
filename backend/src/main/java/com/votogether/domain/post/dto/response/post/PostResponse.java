@@ -45,7 +45,7 @@ public record PostResponse(
         int imageCount,
 
         @Schema(description = "게시글 댓글 수", example = "23")
-        int commentCount,
+        long commentCount,
 
         @Schema(description = "게시글 투표 결과")
         PostVoteResultResponse voteInfo

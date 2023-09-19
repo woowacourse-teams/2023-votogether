@@ -18,6 +18,7 @@ public enum PostExceptionType implements ExceptionType {
     TITLE_INVALID_LENGTH(509, "게시글 제목 길이가 유효하지 않습니다."),
     CONTENT_INVALID_LENGTH(510, "게시글 내용 길이가 유효하지 않습니다."),
     IS_HIDDEN(511, "신고에 의해 숨겨진 게시글은 접근할 수 없습니다."),
+    REPORT_MINE(512, "본인 게시글은 신고할 수 없습니다."),
     ;
 
     private final int code;

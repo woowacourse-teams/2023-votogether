@@ -10,10 +10,8 @@ import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostContentImageRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
-import com.votogether.domain.post.service.PostService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Persister

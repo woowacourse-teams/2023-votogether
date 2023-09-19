@@ -75,7 +75,7 @@ class ReportCommandServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> reportCommandService.report(writer, request))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("자신의 게시글은 신고할 수 없습니다.");
+                    .hasMessage("본인 게시글은 신고할 수 없습니다.");
         }
 
         @Test
@@ -90,7 +90,7 @@ class ReportCommandServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("이미 블라인드 처리된 글입니다.");
+                    .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
         }
 
         @Test
@@ -180,13 +180,13 @@ class ReportCommandServiceTest extends ServiceTest {
             // given
             Member writer = memberTestPersister.builder().save();
             Post post = postTestPersister.postBuilder().save();
-            Comment comment = commentTestPersister.builder().post(post).save();
+            Comment comment = commentTestPersister.builder().post(post).writer(writer).save();
             ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
 
             // when, then
             assertThatThrownBy(() -> reportCommandService.report(writer, request))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("자신의 댓글은 신고할 수 없습니다.");
+                    .hasMessage("본인 댓글은 신고할 수 없습니다.");
         }
 
         @Test
@@ -203,7 +203,7 @@ class ReportCommandServiceTest extends ServiceTest {
             comment.blind();
             assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
-                    .hasMessage("이미 블라인드 처리된 댓글입니다.");
+                    .hasMessage("신고에 의해 숨겨진 댓글은 접근할 수 없습니다.");
         }
 
         @Test

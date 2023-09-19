@@ -1,6 +1,7 @@
 package com.votogether.domain.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
@@ -73,9 +74,9 @@ class PostRepositoryTest extends RepositoryTest {
         Member member1 = memberTestPersister.builder().save();
         Member member2 = memberTestPersister.builder().save();
 
-        postTestPersister.builder().writer(member).save();
-        postTestPersister.builder().writer(member1).save();
-        postTestPersister.builder().writer(member1).save();
+        postTestPersister.postBuilder().writer(member).save();
+        postTestPersister.postBuilder().writer(member1).save();
+        postTestPersister.postBuilder().writer(member1).save();
 
         // when
         List<Integer> postCounts = postRepository.findCountsByMembers(List.of(member, member1, member2));

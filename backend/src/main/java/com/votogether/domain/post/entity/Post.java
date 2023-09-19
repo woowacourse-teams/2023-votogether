@@ -58,7 +58,7 @@ public class Post extends BaseEntity {
     private boolean isHidden;
 
     @Formula("(select count(*) from comment c where c.post_id = id)")
-    private int commentCount;
+    private long commentCount;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostCategory> postCategories = new ArrayList<>();
@@ -109,10 +109,6 @@ public class Post extends BaseEntity {
     public void addComment(final Comment comment) {
         comment.setPost(this);
         this.comments.add(comment);
-    }
-
-    public void removePostCategory(final PostCategory postCategory) {
-        this.postCategories.remove(postCategory);
     }
 
     public void removePostContentImage(final PostContentImage postContentImage) {

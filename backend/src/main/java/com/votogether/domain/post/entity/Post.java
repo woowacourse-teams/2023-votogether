@@ -205,4 +205,10 @@ public class Post extends BaseEntity {
         return postContentImages.get(0);
     }
 
+    public long getTotalVoteCount() {
+        return postOptions.stream()
+                .mapToLong(PostOption::getVoteCount)
+                .sum();
+    }
+
 }

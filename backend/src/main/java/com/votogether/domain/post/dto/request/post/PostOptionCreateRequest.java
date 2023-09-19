@@ -21,6 +21,6 @@ public class PostOptionCreateRequest {
     private String content;
 
     @Schema(description = "게시글 옵션 이미지 파일", example = "votogether.png")
-    private MultipartFile optionImage;
+    private MultipartFile imageFile;
 
 }

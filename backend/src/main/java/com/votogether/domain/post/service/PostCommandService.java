@@ -83,7 +83,7 @@ public class PostCommandService {
     }
 
     private PostOption createPostOptionFromRequest(int sequence, final PostOptionCreateRequest postOptionCreate) {
-        final String imageUrl = imageUploader.upload(postOptionCreate.getOptionImage());
+        final String imageUrl = imageUploader.upload(postOptionCreate.getImageFile());
         return PostOption.builder()
                 .sequence(sequence)
                 .content(postOptionCreate.getContent())

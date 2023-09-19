@@ -79,9 +79,6 @@ class ChannelTalk {
   loadScript() {
     (function () {
       let w = window;
-      if (w.ChannelIO) {
-        return w.console.error('ChannelIO script included twice.');
-      }
       let ch: IChannelIO = function () {
         ch.c?.(arguments);
       };

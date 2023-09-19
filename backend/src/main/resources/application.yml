@@ -27,6 +27,11 @@ spring:
       enabled: ${H2_CONSOLE_ENABLE}
       path: /h2-console
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
@@ -56,7 +61,8 @@ oauth:
 jwt:
   token:
     secret-key: ${SECRET_KEY}
-    expiration-time: ${EXPIRATION_TIME}
+    access-expiration-time: ${ACCESS_EXPIRATION_TIME}
+    refresh-expiration-time: ${REFRESH_EXPIRATION_TIME}
 
 image:
   upload_url: ${IMAGE_UPLOAD_URL}

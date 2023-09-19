@@ -31,6 +31,8 @@ export default function CommentTextForm({
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
+  const isEdit = initialComment.id !== -1;
+
   const {
     mutate: createComment,
     isSuccess: isCreateSuccess,
@@ -44,14 +46,13 @@ export default function CommentTextForm({
     error: editError,
   } = useEditComment(postId, commentId);
 
-  const updateComment =
-    initialComment.id !== -1
-      ? () => {
-          editComment({ ...initialComment, content });
-        }
-      : () => {
-          createComment({ content });
-        };
+  const updateComment = isEdit
+    ? () => {
+        editComment({ ...initialComment, content });
+      }
+    : () => {
+        createComment({ content });
+      };
 
   useEffect(() => {
     isCreateSuccess && resetText();
@@ -72,19 +73,30 @@ export default function CommentTextForm({
   return (
     <S.Container>
       <S.TextArea
+        aria-label={isEdit ? '댓글 수정' : '댓글 작성'}
         value={content}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, COMMENT)}
       />
       <S.ButtonContainer>
-        {handleCancelClick && (
+        {isEdit && (
           <S.ButtonWrapper>
-            <SquareButton onClick={handleCancelClick} theme="gray" type="button">
+            <SquareButton
+              aria-label="댓글 취소"
+              onClick={handleCancelClick}
+              theme="gray"
+              type="button"
+            >
               취소
             </SquareButton>
           </S.ButtonWrapper>
         )}
         <S.ButtonWrapper>
-          <SquareButton onClick={() => updateComment()} theme="blank" type="button">
+          <SquareButton
+            aria-label="댓글 저장"
+            onClick={() => updateComment()}
+            theme="blank"
+            type="button"
+          >
             저장
           </SquareButton>
         </S.ButtonWrapper>

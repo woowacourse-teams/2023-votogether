@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 
-import { MAX_FILE_SIZE } from '@components/PostForm/constants';
+import { uploadImage } from '@utils/post/uploadImage';
 
 const MAX_WRITING_LENGTH = 50;
 
@@ -78,38 +78,33 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     setOptionList(updatedOptionList);
   };
 
-  const handleUploadImage = (event: React.ChangeEvent<HTMLInputElement>, optionId: number) => {
+  const setPreviewImageUrl = (optionId: number) => (imageUrl: string) => {
+    const updatedOptionList = optionList.map(optionItem => {
+      if (optionItem.id === optionId) {
+        return { ...optionItem, imageUrl };
+      }
+
+      return optionItem;
+    });
+
+    setOptionList(updatedOptionList);
+  };
+
+  const handleUploadImage = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    optionId: number
+  ) => {
     const { files } = event.target;
 
     if (!files) return;
 
     const file = files[0];
 
-    event.target.setCustomValidity('');
-
-    if (file.size > MAX_FILE_SIZE) {
-      event.target.setCustomValidity('사진의 용량은 1.5MB 이하만 가능합니다.');
-      event.target.reportValidity();
-
-      return;
-    }
-
-    const reader = new FileReader();
-
-    // readAsDataURL 메서드를 통해 파일을 모두 읽고 나면 reader의 loadend 이벤트에서 이미지 미리보기 결과를 확인할 수 있습니다.
-    reader.readAsDataURL(file);
-
-    reader.onloadend = () => {
-      const updatedOptionList = optionList.map(optionItem => {
-        if (optionItem.id === optionId) {
-          return { ...optionItem, imageUrl: reader.result?.toString() ?? '' };
-        }
-
-        return optionItem;
-      });
-
-      setOptionList(updatedOptionList);
-    };
+    uploadImage({
+      imageFile: file,
+      inputElement: event.target,
+      setPreviewImageUrl: setPreviewImageUrl(optionId),
+    });
   };
 
   return { optionList, addOption, writingOption, deleteOption, removeImage, handleUploadImage };

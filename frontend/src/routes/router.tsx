@@ -1,6 +1,7 @@
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import Login from '@pages/auth/Login';
+import Announcement from '@pages/Announcement';
 import Redirection from '@pages/auth/Redirection';
 import Error from '@pages/Error';
 import Home from '@pages/Home';
@@ -10,14 +11,17 @@ import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetail';
 import Ranking from '@pages/Ranking';
-import RegisterPersonalInfo from '@pages/user/RegisterPersonalInfo';
-import VoteStatisticsPage from '@pages/VoteStatisticsPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
+import RouteChangeTracker from '@components/RouteChangeTracker';
 
 import { PATH } from '@constants/path';
 
 import PrivateRoute from './PrivateRoute';
+
+const Login = lazy(() => import('@pages/auth/Login'));
+const RegisterPersonalInfo = lazy(() => import('@pages/user/RegisterPersonalInfo'));
+const VoteStatisticsPage = lazy(() => import('@pages/VoteStatisticsPage'));
 
 const router = createBrowserRouter([
   {
@@ -26,6 +30,7 @@ const router = createBrowserRouter([
       <PrivateRoute isGuestAllowed={true}>
         <ScrollToTop />
         <Home />
+        <RouteChangeTracker />
       </PrivateRoute>
     ),
     errorElement: <Error />,
@@ -36,6 +41,7 @@ const router = createBrowserRouter([
           <PrivateRoute isGuestAllowed={true}>
             <ScrollToTop />
             <Home />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -43,7 +49,12 @@ const router = createBrowserRouter([
   },
   {
     path: PATH.LOGIN,
-    element: <Login />,
+    element: (
+      <>
+        <Login />
+        <RouteChangeTracker />
+      </>
+    ),
     errorElement: <Error />,
   },
   {
@@ -61,6 +72,7 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <ScrollToTop />
             <CreatePostPage />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -70,6 +82,7 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <ScrollToTop />
             <EditPostPage />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -79,6 +92,7 @@ const router = createBrowserRouter([
           <PrivateRoute isGuestAllowed={true}>
             <ScrollToTop />
             <PostDetailPage />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -88,6 +102,7 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <ScrollToTop />
             <VoteStatisticsPage />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -97,6 +112,7 @@ const router = createBrowserRouter([
           <PrivateRoute isGuestAllowed={true}>
             <ScrollToTop />
             <Home />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -112,6 +128,7 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <ScrollToTop />
             <MyInfo />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -121,6 +138,7 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <ScrollToTop />
             <Home />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -130,6 +148,7 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <ScrollToTop />
             <Home />
+            <RouteChangeTracker />
           </PrivateRoute>
         ),
       },
@@ -141,7 +160,22 @@ const router = createBrowserRouter([
   },
   {
     path: PATH.RANKING,
-    element: <Ranking />,
+    element: (
+      <>
+        <Ranking />
+        <RouteChangeTracker />
+      </>
+    ),
+    errorElement: <Error />,
+  },
+  {
+    path: PATH.ANNOUNCEMENT,
+    element: (
+      <>
+        <Announcement />
+        <RouteChangeTracker />
+      </>
+    ),
     errorElement: <Error />,
   },
   {

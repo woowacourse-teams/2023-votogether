@@ -8,7 +8,6 @@ describe('getSelectedState 사용했을 때 현재 유저에게 어떤 게시글
     const state: SelectedState = {
       postType: 'category',
       categoryId,
-      keyword: '',
       categoryList: MOCK_CATEGORY_LIST,
     };
 
@@ -18,53 +17,10 @@ describe('getSelectedState 사용했을 때 현재 유저에게 어떤 게시글
     expect(result).toBe(MOCK_CATEGORY_LIST[0].name);
   });
 
-  test('현재 검색을 한 상태이면, 검색 키워드를 반환한다.', () => {
-    const keyword = '갤럭시';
-    const state: SelectedState = {
-      postType: 'search',
-      categoryId: 0,
-      keyword,
-      categoryList: MOCK_CATEGORY_LIST,
-    };
-
-    const result = getSelectedState(state);
-
-    expect(result).toBe(keyword);
-  });
-
-  test('검색어를 길게 설정한 경우 10자만 보여주고 ...으로 표시해서 보여준다.', () => {
-    const keyword = '아이폰갤럭시뉴진스아이브세븐틴슈퍼주니어임';
-    const state: SelectedState = {
-      postType: 'search',
-      categoryId: 0,
-      keyword,
-      categoryList: MOCK_CATEGORY_LIST,
-    };
-
-    const result = getSelectedState(state);
-
-    expect(result).toBe('아이폰갤럭시뉴진스아...');
-  });
-
-  test('검색어를 10글자인 경우 10글자 전부 표시해서 보여준다.', () => {
-    const keyword = '아이폰갤럭시뉴진스아';
-    const state: SelectedState = {
-      postType: 'search',
-      categoryId: 0,
-      keyword,
-      categoryList: MOCK_CATEGORY_LIST,
-    };
-
-    const result = getSelectedState(state);
-
-    expect(result).toBe('아이폰갤럭시뉴진스아');
-  });
-
   test('현재 홈 화면에 있다면, "전체"를 반환한다', () => {
     const state: SelectedState = {
       postType: 'posts',
       categoryId: 0,
-      keyword: '',
       categoryList: MOCK_CATEGORY_LIST,
     };
 
@@ -77,7 +33,6 @@ describe('getSelectedState 사용했을 때 현재 유저에게 어떤 게시글
     const state: SelectedState = {
       postType: 'myPost',
       categoryId: 0,
-      keyword: '',
       categoryList: MOCK_CATEGORY_LIST,
     };
 
@@ -90,7 +45,6 @@ describe('getSelectedState 사용했을 때 현재 유저에게 어떤 게시글
     const state: SelectedState = {
       postType: 'myVote',
       categoryId: 0,
-      keyword: '',
       categoryList: MOCK_CATEGORY_LIST,
     };
 

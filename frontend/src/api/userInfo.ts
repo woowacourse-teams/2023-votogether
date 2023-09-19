@@ -40,3 +40,7 @@ export const withdrawalMembership = async () => {
 export const updateUserInfo = async (userInfo: UpdateUserInfoRequest) => {
   await patchFetch<UpdateUserInfoRequest>(`${BASE_URL}/members/me/detail`, userInfo);
 };
+
+export const logoutUser = async () => {
+  await fetch('/auth/logout', { method: 'DELETE' });
+};

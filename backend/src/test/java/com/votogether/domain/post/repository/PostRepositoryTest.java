@@ -65,4 +65,28 @@ class PostRepositoryTest extends RepositoryTest {
         assertThat(result).isEqualTo(2);
     }
 
+    @Test
+    @DisplayName("모든 유저의 작성한 게시글 수를 가져온다.")
+    void findCountsByMembers() {
+        // given
+        Member member = memberTestPersister.builder().save();
+        Member member1 = memberTestPersister.builder().save();
+        Member member2 = memberTestPersister.builder().save();
+
+        postTestPersister.builder().writer(member).save();
+        postTestPersister.builder().writer(member1).save();
+        postTestPersister.builder().writer(member1).save();
+
+        // when
+        List<Integer> postCounts = postRepository.findCountsByMembers(List.of(member, member1, member2));
+
+        // then
+        assertAll(
+                () -> assertThat(postCounts).hasSize(3),
+                () -> assertThat(postCounts.get(0)).isEqualTo(1),
+                () -> assertThat(postCounts.get(1)).isEqualTo(2),
+                () -> assertThat(postCounts.get(2)).isEqualTo(0)
+        );
+    }
+
 }

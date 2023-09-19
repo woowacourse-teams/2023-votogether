@@ -35,4 +35,8 @@ public class Nickname {
         }
     }
 
+    public boolean nonStartsWith(final String prefix) {
+        return !this.value.startsWith(prefix);
+    }
+
 }

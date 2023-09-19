@@ -2,7 +2,6 @@ package com.votogether.global.jwt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.votogether.domain.member.entity.Member;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -30,25 +29,39 @@ public class TokenProcessor {
 
     private final Key key;
     private final int tokenExpirationTime;
+    private final int refreshTokenExpirationTime;
     private final ObjectMapper objectMapper;
 
     public TokenProcessor(
             @Value("${jwt.token.secret-key}") final String secretKey,
-            @Value("${jwt.token.expiration-time}") final int tokenExpirationTime,
+            @Value("${jwt.token.access-expiration-time}") final int tokenExpirationTime,
+            @Value("${jwt.token.refresh-expiration-time}") final int refreshTokenExpirationTime,
             final ObjectMapper objectMapper
     ) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.tokenExpirationTime = tokenExpirationTime;
+        this.refreshTokenExpirationTime = refreshTokenExpirationTime;
         this.objectMapper = objectMapper;
     }
 
-    public String generateToken(final Member member) {
+    public String generateAccessToken(final Long memberId) {
         final Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .claim("memberId", member.getId())
+                .claim("memberId", memberId)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenExpirationTime))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(final Long memberId) {
+        final Date now = new Date();
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .claim("memberId", memberId)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenExpirationTime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -10,8 +10,10 @@ import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostContentImageRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.post.service.PostService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Persister
@@ -46,6 +48,7 @@ public class PostTestPersister {
         private String title;
         private String content;
         private LocalDateTime deadline;
+        private boolean isHidden;
 
         public PostBuilder writer(Member writer) {
             this.writer = writer;
@@ -67,6 +70,11 @@ public class PostTestPersister {
             return this;
         }
 
+        public PostBuilder blind() {
+            this.isHidden = true;
+            return this;
+        }
+
         public Post save() {
             Post post = Post.builder()
                     .writer(writer == null ? memberTestPersister.builder().save() : writer)
@@ -74,6 +82,10 @@ public class PostTestPersister {
                     .content(content == null ? "content" : content)
                     .deadline(deadline == null ? LocalDateTime.now().plusDays(14) : deadline)
                     .build();
+            if (isHidden) {
+                post.blind();
+            }
+
             return postRepository.save(post);
         }
 
@@ -165,7 +177,6 @@ public class PostTestPersister {
                     .build();
             return postOptionRepository.save(postOption);
         }
-
     }
 
 }

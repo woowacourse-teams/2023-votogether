@@ -11,6 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    private static final String LOCALHOST_FRONTEND = "http://localhost:3000";
+    private static final String HTTPS_LOCALHOST_FRONTEND = "https://localhost:3000";
+    private static final String DEV_SERVER = "https://dev.votogether.com";
+    private static final String PROD_SERVER = "https://votogether.com";
+
     private final JwtAuthorizationArgumentResolver jwtAuthorizationArgumentResolver;
 
     public WebMvcConfig(final JwtAuthorizationArgumentResolver jwtAuthorizationArgumentResolver) {
@@ -26,9 +31,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedHeaders("*")
-                .allowedOrigins("*")
+                .allowedOrigins(HTTPS_LOCALHOST_FRONTEND, LOCALHOST_FRONTEND, DEV_SERVER, PROD_SERVER)
                 .allowedMethods("*")
-                .exposedHeaders(HttpHeaders.LOCATION);
+                .allowCredentials(true)
+                .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.SET_COOKIE);
     }
 
 }

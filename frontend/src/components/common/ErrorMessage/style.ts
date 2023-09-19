@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 
   position: relative;
 `;
@@ -26,20 +26,22 @@ export const HeaderWrapper = styled.div`
 
 export const Title = styled.h1`
   width: 90%;
-  margin-top: 60px;
+  margin-top: 40px;
 
   font-size: 20px;
   font-weight: bold;
 
   text-align: center;
+  word-break: keep-all;
 `;
 
 export const Description = styled.p`
   width: 90%;
-  margin: 20px 0;
+  margin-bottom: 50px;
 
   font: var(--text-body);
   text-align: center;
+  word-break: keep-all;
 `;
 
 export const Direction = styled.div`

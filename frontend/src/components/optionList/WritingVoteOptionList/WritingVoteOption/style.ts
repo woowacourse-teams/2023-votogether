@@ -5,6 +5,8 @@ import { theme } from '@styles/theme';
 export const Container = styled.li`
   display: flex;
   gap: 10px;
+
+  position: relative;
 `;
 
 export const OptionContainer = styled.div`
@@ -56,7 +58,7 @@ export const Image = styled.img`
   border-radius: 4px;
 
   aspect-ratio: 1/1;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const ImageCancelWrapper = styled.div`

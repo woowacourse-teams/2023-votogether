@@ -27,6 +27,11 @@ spring:
       enabled: false
       path: /h2-console
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
@@ -55,7 +60,8 @@ oauth:
 jwt:
   token:
     secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
-    expiration-time: 222222
+    access-expiration-time: 100000
+    refresh-expiration-time: 222222
 
 image:
   upload_url: ${user.dir}

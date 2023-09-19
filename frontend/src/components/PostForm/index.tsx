@@ -27,7 +27,7 @@ import {
   POST_DEADLINE_POLICY,
   POST_TITLE_POLICY,
 } from '@constants/policyMessage';
-import { CATEGORY_COUNT_LIMIT, IMAGE_BASE_URL, POST_CONTENT, POST_TITLE } from '@constants/post';
+import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
@@ -67,6 +67,8 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   const contentImageHook = useContentImage(
     serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
   );
+  const { handlePasteImage } = contentImageHook;
+
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
@@ -98,7 +100,11 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   };
 
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
-  const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
+  const {
+    text: writingContent,
+    handleTextChange: handleContentChange,
+    addText: addContent,
+  } = useText(content ?? '');
   const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
 
   const handleDeadlineButtonClick = (option: DeadlineOption) => {
@@ -119,6 +125,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       };
       setTime(updatedTime);
     }
+  };
+
+  const handleInsertContentLink = () => {
+    addContent('[[이 괄호 안에 링크를 작성해주세요]] ');
   };
 
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -225,8 +235,14 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               placeholder={CONTENT_PLACEHOLDER}
               maxLength={POST_CONTENT.MAX_LENGTH}
               minLength={POST_CONTENT.MIN_LENGTH}
+              onPaste={handlePasteImage}
               required
             />
+            <S.ContentLinkButtonWrapper>
+              <S.Button onClick={handleInsertContentLink} type="button">
+                본문에 링크 넣기
+              </S.Button>
+            </S.ContentLinkButtonWrapper>
             <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>
               <ContentImagePart size="lg" contentImageHook={contentImageHook} />
             </S.ContentImagePartWrapper>

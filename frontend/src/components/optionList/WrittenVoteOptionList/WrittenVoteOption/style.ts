@@ -30,7 +30,7 @@ export const Image = styled.img`
   width: 100%;
 
   aspect-ratio: 1/1;
-  object-fit: cover;
+  object-fit: contain;
 
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;
@@ -96,9 +96,9 @@ export const PeopleText = styled.span`
 export const PercentText = styled.span`
   margin-left: 4px;
 
-  font: var(--text-small);
+  color: var(--text-dark-gray);
 
-  opacity: 0.7;
+  font: var(--text-small);
 
   @media (min-width: ${theme.breakpoint.md}) {
     font: var(--text-caption);

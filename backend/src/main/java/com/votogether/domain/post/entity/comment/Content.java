@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class Content {
+public class Content {
 
     private static final int MAXIMUM_LENGTH = 500;
 

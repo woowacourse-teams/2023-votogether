@@ -20,7 +20,7 @@ export const Dialog = styled.dialog<{
   left: ${({ $placement }) => ($placement === 'left' ? '0' : 'auto')};
   right: ${({ $placement }) => ($placement === 'right' ? '0' : 'auto')};
 
-  overflow: hidden;
+  overflow: visible;
 
   transition-property: transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

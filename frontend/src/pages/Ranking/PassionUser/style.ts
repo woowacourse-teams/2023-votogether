@@ -17,6 +17,18 @@ export const Table = styled.table`
   }
 `;
 
+export const Tbody = styled.tbody`
+  & > :nth-child(11) {
+    margin-top: 20px;
+    padding: 3px 0;
+    border-radius: 4px;
+
+    background-color: var(--white);
+
+    font-weight: 500;
+  }
+`;
+
 export const Tr = styled.tr`
   display: grid;
   grid-template-columns: 0.5fr 1.5fr 1fr 1fr 1fr;
@@ -38,4 +50,13 @@ export const RankingTd = styled.td`
 
 export const Td = styled.td`
   padding: 10px 0;
+`;
+
+export const LoadingSpinnerWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 50px;
+  padding: 0;
 `;

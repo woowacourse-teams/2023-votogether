@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import ErrorBoundaryWithNarrowHeader from '@pages/ErrorBoundaryWithNarrowHeader';
+import ErrorBoundary from '@pages/ErrorBoundary';
 
 import Layout from '@components/common/Layout';
 
@@ -10,11 +10,11 @@ import PostDetailFallback from './PostDetailFallback';
 export default function PostDetailPage() {
   return (
     <Layout isSidebarVisible={true}>
-      <ErrorBoundaryWithNarrowHeader>
+      <ErrorBoundary>
         <Suspense fallback={<PostDetailFallback />}>
           <PostDetail />
         </Suspense>
-      </ErrorBoundaryWithNarrowHeader>
+      </ErrorBoundary>
     </Layout>
   );
 }

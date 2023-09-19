@@ -30,3 +30,20 @@ export const BottomContainer = styled.div`
   margin: 10px;
   margin-bottom: 30px;
 `;
+
+export const TagButtonWrapper = styled.div`
+  position: fixed;
+  top: 70px;
+  right: 5%;
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    top: 55px;
+    right: 110px;
+  }
+
+  z-index: ${theme.zIndex.modal};
+`;
+
+export const LinkImg = styled.img`
+  fill: white;
+`;

@@ -155,9 +155,9 @@ export default function PostDetail() {
         </NarrowTemplateHeader>
       </S.HeaderContainer>
       <S.MainContainer>
-        <S.TagButtonWrapper>
+        <S.TagButtonWrapper $isWriter={isWriter}>
           <TagButton aria-label="게시글 링크 복사" size="sm" onClick={controlPost.copyPostURL}>
-            <S.LinkImg src={copyURL} alt="링크 복사 아이콘" />
+            <img src={copyURL} alt="링크 복사 아이콘" />
           </TagButton>
         </S.TagButtonWrapper>
         <Post postInfo={postDataFallback} isPreview={false} />

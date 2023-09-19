@@ -31,19 +31,15 @@ export const BottomContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-export const TagButtonWrapper = styled.div`
+export const TagButtonWrapper = styled.div<{ $isWriter: boolean }>`
   position: fixed;
   top: 70px;
-  right: 5%;
+  right: 7%;
 
   @media (max-width: ${theme.breakpoint.sm}) {
     top: 55px;
-    right: 110px;
+    right: ${props => (props.$isWriter ? '28%' : '7%')};
   }
 
   z-index: ${theme.zIndex.modal};
-`;
-
-export const LinkImg = styled.img`
-  fill: white;
 `;

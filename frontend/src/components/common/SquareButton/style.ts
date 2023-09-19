@@ -42,4 +42,8 @@ export const Button = styled.button<ButtonProps>`
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-body);
   }
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    font-size: 12px;
+  }
 `;

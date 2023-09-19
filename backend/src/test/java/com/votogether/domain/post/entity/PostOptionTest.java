@@ -1,28 +1,93 @@
 package com.votogether.domain.post.entity;
 
-import static com.votogether.test.fixtures.MemberFixtures.MALE_30;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.votogether.domain.vote.entity.Vote;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class PostOptionTest {
 
     @Test
-    @DisplayName("해당 선택지를 현재 회원이 투표한 건지 확인한다")
-    void isVoteByMember() {
+    @DisplayName("게시글 옵션을 수정한다.")
+    void update() {
         // given
-        PostOption postOption = PostOption.builder().build();
-
-        Vote vote = Vote.builder().member(MALE_30.get()).build();
-        postOption.getVotes().add(vote);
+        PostOption postOption = PostOption.builder()
+                .content("hello")
+                .imageUrl(null)
+                .build();
+        String newContent = "votogether";
+        String newImageUrl = "image.png";
 
         // when
-        boolean isVoteByMember = postOption.hasMemberVote(MALE_30.get());
+        postOption.update(newContent, newImageUrl);
 
         // then
-        assertThat(isVoteByMember).isTrue();
+        assertSoftly(softly -> {
+            softly.assertThat(postOption.getContent()).isEqualTo(newContent);
+            softly.assertThat(postOption.getImageUrl()).isEqualTo(newImageUrl);
+        });
+    }
+
+    @Nested
+    @DisplayName("속한 게시글 확인")
+    class BelongsToPost {
+
+        @Test
+        @DisplayName("게시글에 속해있으면 true 반환한다.")
+        void belongsTo() {
+            // given
+            Post post = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            PostOption postOption = PostOption.builder()
+                    .post(post)
+                    .content("hello")
+                    .imageUrl(null)
+                    .build();
+            ReflectionTestUtils.setField(post, "id", 1L);
+
+            // when
+            boolean result = postOption.belongsTo(post);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        @DisplayName("게시글에 속해있지 않으면 false 반환한다")
+        void notBelongsTo() {
+            // given
+            Post postA = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Post postB = Post.builder()
+                    .title("hello")
+                    .content("world")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            PostOption postOption = PostOption.builder()
+                    .post(postB)
+                    .content("hello")
+                    .imageUrl(null)
+                    .build();
+            ReflectionTestUtils.setField(postA, "id", 1L);
+            ReflectionTestUtils.setField(postB, "id", 2L);
+
+            // when
+            boolean result = postOption.belongsTo(postA);
+
+            // then
+            assertThat(result).isFalse();
+        }
+
     }
 
 }

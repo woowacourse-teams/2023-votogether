@@ -8,9 +8,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Content {
 
     private static final int MAXIMUM_LENGTH = 500;
@@ -25,7 +25,7 @@ public class Content {
 
     private void validate(final String content) {
         if (content.length() > MAXIMUM_LENGTH) {
-            throw new BadRequestException(CommentExceptionType.INVALID_CONTENT_LENGTH);
+            throw new BadRequestException(CommentExceptionType.INVALID_LENGTH);
         }
     }
 

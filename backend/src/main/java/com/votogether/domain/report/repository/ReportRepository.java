@@ -6,6 +6,9 @@ import com.votogether.domain.report.entity.vo.ReportType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
@@ -21,6 +24,11 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     List<Report> findAllByReportTypeAndTargetId(final ReportType reportType, final Long targetId);
 
-    void deleteByReportTypeAndTargetId(final ReportType reportType, final Long targetId);
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("delete from Report r where r.reportType = :reportType and r.targetId = :targetId")
+    void deleteAllWithReportTypeAndTargetIdInBatch(
+            @Param("reportType") ReportType reportType,
+            @Param("targetId") final Long targetId
+    );
 
 }

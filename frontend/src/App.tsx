@@ -41,7 +41,6 @@ const App = () => (
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </ErrorBoundaryForTopClass>
-
 );
 
 export default App;

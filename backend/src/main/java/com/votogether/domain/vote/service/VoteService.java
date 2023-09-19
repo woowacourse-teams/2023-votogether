@@ -3,7 +3,6 @@ package com.votogether.domain.vote.service;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
-import com.votogether.domain.post.entity.PostOptions;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
@@ -41,9 +40,9 @@ public class VoteService {
 
 
     private void validateAlreadyVoted(final Member member, final Post post) {
-        final PostOptions postOptions = post.getPostOptions();
+        final List<PostOption> postOptions = post.getPostOptions();
         final List<Vote> alreadyVoted =
-                voteRepository.findAllByMemberAndPostOptionIn(member, postOptions.getPostOptions());
+                voteRepository.findAllByMemberAndPostOptionIn(member, postOptions);
         if (!alreadyVoted.isEmpty()) {
             throw new IllegalStateException("해당 게시물에는 이미 투표하였습니다.");
         }

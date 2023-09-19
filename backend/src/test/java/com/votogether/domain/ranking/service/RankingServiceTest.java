@@ -5,33 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.ranking.dto.response.RankingResponse;
-import com.votogether.test.annotation.ServiceTest;
-import com.votogether.test.persister.MemberTestPersister;
-import com.votogether.test.persister.PostOptionTestPersister;
-import com.votogether.test.persister.PostTestPersister;
-import com.votogether.test.persister.VoteTestPersister;
+import com.votogether.test.ServiceTest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@ServiceTest
-class RankingServiceTest {
+class RankingServiceTest extends ServiceTest {
 
     @Autowired
     RankingService rankingService;
-
-    @Autowired
-    MemberTestPersister memberTestPersister;
-
-    @Autowired
-    PostTestPersister postTestPersister;
-
-    @Autowired
-    PostOptionTestPersister postOptionTestPersister;
-
-    @Autowired
-    VoteTestPersister voteTestPersister;
 
     @Test
     @DisplayName("회원의 열정 랭킹을 조회한다.")
@@ -43,10 +26,10 @@ class RankingServiceTest {
         Member memberD = memberTestPersister.builder().save();
         Member memberE = memberTestPersister.builder().save();
 
-        postTestPersister.builder().writer(memberA).save();
-        postTestPersister.builder().writer(memberB).save();
-        postTestPersister.builder().writer(memberC).save();
-        postTestPersister.builder().writer(memberD).save();
+        postTestPersister.postBuilder().writer(memberA).save();
+        postTestPersister.postBuilder().writer(memberB).save();
+        postTestPersister.postBuilder().writer(memberC).save();
+        postTestPersister.postBuilder().writer(memberD).save();
 
         voteTestPersister.builder().member(memberA).save();
         voteTestPersister.builder().member(memberC).save();
@@ -81,11 +64,11 @@ class RankingServiceTest {
         memberTestPersister.builder().save();
         memberTestPersister.builder().save();
 
-        postTestPersister.builder().writer(memberA).save();
-        postTestPersister.builder().writer(memberB).save();
+        postTestPersister.postBuilder().writer(memberA).save();
+        postTestPersister.postBuilder().writer(memberB).save();
 
         // when
-        final List<RankingResponse> rankings = rankingService.getPassionRanking();
+        List<RankingResponse> rankings = rankingService.getPassionRanking();
 
         // then
         assertAll(

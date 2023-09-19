@@ -40,6 +40,10 @@ server:
   forward-headers-strategy: FRAMEWORK
   tomcat:
     max-http-form-post-size: 35MB
+    accept-count: 100
+    max-connections: 8192
+    threads:
+      max: 200
 
 springdoc:
   swagger-ui:

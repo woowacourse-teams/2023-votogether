@@ -6,10 +6,14 @@ import { getLocalStorage, removeLocalStorage, setLocalStorage } from '../localSt
 
 import { isRefreshTokenRequested } from './isRefreshTokenRequested';
 
+let isRequest = false;
+
 export const silentLogin = async () => {
-  if (!isRefreshTokenRequested()) {
+  if (!isRefreshTokenRequested() || isRequest) {
     return;
   }
+
+  isRequest = true;
 
   try {
     const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);
@@ -23,8 +27,10 @@ export const silentLogin = async () => {
     setLocalStorage(ACCESS_TOKEN_KEY, updatedAccessToken);
   } catch (error) {
     removeLocalStorage(ACCESS_TOKEN_KEY);
-    window.location.href = '/login';
+    // window.location.href = '/login';
 
     throw new Error('로그인에 실패했습니다. 다시 로그인 해주세요.');
+  } finally {
+    isRequest = false;
   }
 };

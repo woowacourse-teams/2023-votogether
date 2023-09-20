@@ -108,7 +108,7 @@ export default function BottomButtonPart({
           target="POST"
           handleCancelClick={handleCancelClick}
           handleDeleteClick={deletePost}
-          isDeleting={isEventLoading.isDeletePostLoading}
+          isDeleting={isDeletePostLoading}
         />
       )}
       {action === 'POST_REPORT' && (

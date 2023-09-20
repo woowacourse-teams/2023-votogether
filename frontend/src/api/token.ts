@@ -7,7 +7,10 @@ const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 export const postTokens = async (accessToken: string): Promise<SilentLoginToken> => {
   const response = await fetch(`${BASE_URL}/auth/silent-login`, {
     method: 'POST',
-    body: accessToken,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ accessToken }),
     credentials: 'include',
   });
 

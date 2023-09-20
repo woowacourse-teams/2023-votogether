@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import kakao from '@assets/kakao_login_medium_wide.svg';
+import kakao from '@assets/kakao_login_medium_wide.webp';
 import logo from '@assets/stroke-logo.svg';
 
 import * as S from './style';

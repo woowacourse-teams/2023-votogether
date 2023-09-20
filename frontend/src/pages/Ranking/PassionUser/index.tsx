@@ -1,8 +1,8 @@
 import { usePassionUserRanking } from '@hooks/query/ranking/usePassionUserRanking';
 
-import firstRankIcon from '@assets/first-rank.svg';
-import secondRankIcon from '@assets/second-rank.svg';
-import thirdRankIcon from '@assets/third-rank.svg';
+import firstRankIcon from '@assets/first-rank.webp';
+import secondRankIcon from '@assets/second-rank.webp';
+import thirdRankIcon from '@assets/third-rank.webp';
 
 import * as S from './style';
 import UserRanking from './UserRanking';

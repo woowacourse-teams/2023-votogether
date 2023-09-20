@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react';
 
 import backIcon from '@assets/back.svg';
 import categoryIcon from '@assets/category.svg';
-import ranking from '@assets/ranking.svg';
+import ranking from '@assets/ranking.png';
 import retryIcon from '@assets/retry.svg';
 import searchIcon from '@assets/search_white.svg';
 import userInfo from '@assets/user.svg';

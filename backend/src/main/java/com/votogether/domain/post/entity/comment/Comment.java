@@ -3,9 +3,6 @@ package com.votogether.domain.post.entity.comment;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.exception.CommentExceptionType;
-import com.votogether.domain.report.exception.ReportExceptionType;
-import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -18,13 +15,15 @@ import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class Comment extends BaseEntity {
 
     @Id
@@ -38,7 +37,7 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member writer;
 
     @Embedded
     private Content content;
@@ -49,45 +48,29 @@ public class Comment extends BaseEntity {
     @Builder
     private Comment(
             final Post post,
-            final Member member,
+            final Member writer,
             final String content
     ) {
         this.post = post;
-        this.member = member;
+        this.writer = writer;
         this.content = new Content(content);
         this.isHidden = false;
     }
 
-    public void validateWriter(final Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new BadRequestException(CommentExceptionType.NOT_WRITER);
-        }
+    public boolean belongsTo(final Post post) {
+        return Objects.equals(this.post, post);
     }
 
-    public void validateBelong(final Post post) {
-        if (!Objects.equals(this.post.getId(), post.getId())) {
-            throw new BadRequestException(CommentExceptionType.NOT_BELONG_POST);
-        }
-    }
-
-    public void blind() {
-        this.isHidden = true;
-    }
-
-    public void validateMine(final Member reporter) {
-        if (this.member.equals(reporter)) {
-            throw new BadRequestException(ReportExceptionType.REPORT_MY_COMMENT);
-        }
-    }
-
-    public void validateHidden() {
-        if (this.isHidden) {
-            throw new BadRequestException(ReportExceptionType.ALREADY_HIDDEN_COMMENT);
-        }
+    public boolean isWriter(final Member member) {
+        return Objects.equals(this.writer, member);
     }
 
     public void updateContent(final String content) {
         this.content = new Content(content);
+    }
+
+    public void blind() {
+        this.isHidden = true;
     }
 
     public String getContent() {

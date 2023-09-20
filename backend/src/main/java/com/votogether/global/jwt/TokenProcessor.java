@@ -74,7 +74,6 @@ public class TokenProcessor {
     }
 
     public TokenPayload parseToken(final String token) throws JsonProcessingException {
-        validateToken(token);
         final String[] chunks = token.split(TOKEN_DELIMITER);
         final String payload = new String(Decoders.BASE64.decode(chunks[1]));
         return objectMapper.readValue(payload, TokenPayload.class);

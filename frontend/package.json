@@ -8,6 +8,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "webpack-dev-server --config webpack.dev.js --open --hot",
+    "https-dev": "webpack-dev-server --config webpack.https.js --open --hot",
     "prebuild": "cd src/utils && node generateSiteMap.js",
     "build": "webpack --config webpack.prod.js",
     "start": "webpack --config webpack.dev.js",
@@ -46,6 +47,7 @@
     "@storybook/react": "^7.0.26",
     "@storybook/react-webpack5": "^7.0.26",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "@tanstack/react-query-devtools": "^4.35.3",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.2",
     "@types/react": "^18.2.14",

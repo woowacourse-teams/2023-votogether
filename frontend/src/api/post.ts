@@ -19,6 +19,8 @@ export const transformPostResponse = (post: PostInfoResponse): PostInfo => {
     imageUrl: post.imageUrl,
     postId: post.postId,
     createTime: post.createdAt,
+    imageCount: post.imageCount,
+    commentCount: post.commentCount,
     title: post.title,
     voteInfo: {
       allPeopleCount: post.voteInfo.totalVoteCount,

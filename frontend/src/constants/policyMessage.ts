@@ -1,3 +1,5 @@
+import { MAX_DEADLINE } from './post';
+
 export const NICKNAME_POLICY = {
   LETTER_AMOUNT: '2자에서 15자 이내로 입력해주세요.',
   NO_DUPLICATION: '중복된 닉네임은 사용할 수 없습니다.',
@@ -33,7 +35,7 @@ export const POST_OPTION_POLICY = {
 };
 
 export const POST_DEADLINE_POLICY = {
-  DEFAULT: '3일 이내로 마감시간을 정해주세요.',
+  DEFAULT: `${MAX_DEADLINE}일 이내로 마감시간을 정해주세요.`,
 };
 
 export const CONTENT_PLACEHOLDER = [

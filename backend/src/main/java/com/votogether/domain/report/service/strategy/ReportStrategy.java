@@ -17,7 +17,7 @@ public interface ReportStrategy {
             final ReportRequest request,
             final ReportExceptionType reportExceptionType,
             final ReportRepository reportRepository
-            ) {
+    ) {
         reportRepository.findByMemberAndReportTypeAndTargetId(reporter, request.type(), request.id())
                 .ifPresent(report -> {
                     throw new BadRequestException(reportExceptionType);

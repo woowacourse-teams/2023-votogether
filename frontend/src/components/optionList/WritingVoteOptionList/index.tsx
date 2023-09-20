@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, MutableRefObject } from 'react';
 
 import { WritingVoteOptionType } from '@hooks/useWritingOption';
 
@@ -20,12 +20,20 @@ interface WritingVoteOptionListProps {
     deleteOption: (optionId: number) => void;
     removeImage: (optionId: number) => void;
     handleUploadImage: (event: ChangeEvent<HTMLInputElement>, optionId: number) => void;
+    contentInputRefList: MutableRefObject<HTMLInputElement[]>;
   };
 }
 
 export default function WritingVoteOptionList({ writingOptionHook }: WritingVoteOptionListProps) {
-  const { optionList, addOption, writingOption, deleteOption, removeImage, handleUploadImage } =
-    writingOptionHook;
+  const {
+    optionList,
+    addOption,
+    writingOption,
+    deleteOption,
+    removeImage,
+    handleUploadImage,
+    contentInputRefList,
+  } = writingOptionHook;
   const isDeletable = optionList.length > MINIMUM_COUNT;
 
   return (
@@ -44,6 +52,8 @@ export default function WritingVoteOptionList({ writingOptionHook }: WritingVote
             handleUploadImage(event, optionItem.id)
           }
           imageUrl={optionItem.imageUrl}
+          contentInputRefList={contentInputRefList}
+          index={index}
         />
       ))}
       {optionList.length < MAXIMUM_COUNT && (

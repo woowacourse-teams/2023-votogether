@@ -7,6 +7,7 @@ import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.report.repository.ReportRepository;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class ReportPostStrategy implements ReportStrategy {
     @Override
     public void report(final Member reporter, final ReportRequest request) {
         final Post reportedPost = postRepository.findById(request.id())
-                .orElseThrow(() -> new NotFoundException(PostExceptionType.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validatePost(reporter, reportedPost, request);
 
         saveReport(reporter, request, reportRepository);
@@ -35,8 +36,8 @@ public class ReportPostStrategy implements ReportStrategy {
             final Post reportedPost,
             final ReportRequest request
     ) {
-        reportedPost.validateMine(reporter);
-        reportedPost.validateHidden();
+        validateHiddenPost(reportedPost);
+        validatePostMine(reportedPost, reporter);
         validateDuplicatedReport(
                 reporter,
                 request,
@@ -49,6 +50,18 @@ public class ReportPostStrategy implements ReportStrategy {
         final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
         if (reportCount >= NUMBER_OF_POST_BLIND_BASED_REPORTS) {
             reportedPost.blind();
+        }
+    }
+
+    private void validateHiddenPost(final Post post) {
+        if (post.isHidden()) {
+            throw new BadRequestException(PostExceptionType.IS_HIDDEN);
+        }
+    }
+
+    private void validatePostMine(final Post post, final Member member) {
+        if (post.isWriter(member)) {
+            throw new BadRequestException(PostExceptionType.REPORT_MINE);
         }
     }
 

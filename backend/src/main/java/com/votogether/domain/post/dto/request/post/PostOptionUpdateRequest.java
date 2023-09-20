@@ -2,18 +2,31 @@ package com.votogether.domain.post.dto.request.post;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import org.hibernate.validator.constraints.Length;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
-@Schema(description = "게시글 선택지 수정 요청")
-@Builder
-public record PostOptionUpdateRequest(
-        @Schema(description = "선택지 내용", example = "content")
-        @NotBlank(message = "해당 선택지의 내용을 입력해주세요.")
-        @Length(max = 50, message = "선택지의 내용은 최대 50자까지 입력 가능합니다.")
-        String content,
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Schema(description = "게시글 옵션 작성 요청")
+public class PostOptionUpdateRequest {
 
-        @Schema(description = "이미지 URL", example = "http://asdasdsadsad.com")
-        String imageUrl
-) {
+    @Schema(description = "게시글 옵션 ID", example = "1")
+    private Long id;
+
+    @Schema(description = "게시글 옵션 내용", example = "1번 옵션")
+    @NotBlank(message = "게시글 옵션 내용이 존재하지 않거나 공백만 존재합니다.")
+    private String content;
+
+    @Schema(description = "게시글 옵션 이미지 URL", example = "https://test.com/image.png")
+    private String imageUrl;
+
+    @Schema(description = "게시글 옵션 이미지 파일", example = "votogether.png")
+    private MultipartFile imageFile;
+
 }

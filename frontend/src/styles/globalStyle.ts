@@ -40,8 +40,8 @@ export const GlobalStyle = createGlobalStyle`
     /* Fonts *****************************************/
     --text-title: 600 2rem/2.4rem san-serif;
     --text-subtitle: 600 1.8rem/2.8rem san-serif;
-    --text-body: 400 1.6rem/2.4rem san-serif;
-    --text-caption: 400 1.4rem/2rem san-serif;
+    --text-body: 400 1.7rem/2.4rem san-serif;
+    --text-caption: 400 1.6rem/2rem san-serif;
     --text-small: 400 1.2rem/1.8rem san-serif;
   }  
 `;

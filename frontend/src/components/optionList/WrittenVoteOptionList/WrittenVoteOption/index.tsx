@@ -1,5 +1,3 @@
-import { convertImageUrlToServerUrl } from '@utils/post/convertImageUrlToServerUrl';
-
 import ProgressBar from './ProgressBar';
 import * as S from './style';
 
@@ -33,9 +31,7 @@ export default function WrittenVoteOption({
       $isSelected={isSelected}
       onClick={handleVoteClick}
     >
-      {!isPreview && imageUrl && (
-        <S.Image src={convertImageUrlToServerUrl(imageUrl)} alt={'선택지에 포함된 이미지'} />
-      )}
+      {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'선택지에 포함된 이미지'} />}
       {isPreview ? (
         <S.PreviewContent>{text}</S.PreviewContent>
       ) : (

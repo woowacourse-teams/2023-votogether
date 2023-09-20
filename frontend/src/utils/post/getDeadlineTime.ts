@@ -1,12 +1,6 @@
-export const getDeadlineTime = ({
-  day,
-  hour,
-  minute,
-}: {
-  day: number;
-  hour: number;
-  minute: number;
-}) => {
+import { Time } from '@type/post';
+
+export const getDeadlineTime = ({ day, hour, minute }: Time) => {
   const timeMessage = [];
 
   if (day < 0 || hour < 0 || minute < 0) {

@@ -13,6 +13,8 @@ import Toast from '@components/common/Toast';
 
 import { COMMENT } from '@constants/comment';
 
+import { deleteOverlappingNewLine } from '@utils/post/deleteOverlappingNewLine';
+
 import * as S from './style';
 interface CommentTextFormProps {
   commentId: number;
@@ -53,10 +55,10 @@ export default function CommentTextForm({
 
   const updateComment = isEdit
     ? () => {
-        editComment({ ...initialComment, content });
+        editComment({ ...initialComment, content: deleteOverlappingNewLine(content) });
       }
     : () => {
-        createComment({ content });
+        createComment({ content: deleteOverlappingNewLine(content) });
       };
 
   useEffect(() => {

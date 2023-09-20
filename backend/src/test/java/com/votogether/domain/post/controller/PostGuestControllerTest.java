@@ -55,6 +55,7 @@ class PostGuestControllerTest extends ControllerTest {
                         .setControllerAdvice(GlobalExceptionHandler.class)
         );
         RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
+        mockingLog();
     }
 
     @Nested

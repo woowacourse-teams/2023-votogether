@@ -15,7 +15,7 @@ import com.votogether.domain.post.dto.response.comment.CommentResponse;
 import com.votogether.domain.post.dto.response.comment.CommentWriterResponse;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.global.exception.GlobalExceptionHandler;
-import com.votogether.test.annotation.ControllerTest;
+import com.votogether.test.ControllerTest;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.time.LocalDateTime;
@@ -49,6 +49,7 @@ class PostCommentControllerTest extends ControllerTest {
                         .setControllerAdvice(GlobalExceptionHandler.class)
         );
         RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
+        mockingLog();
     }
 
     @Nested

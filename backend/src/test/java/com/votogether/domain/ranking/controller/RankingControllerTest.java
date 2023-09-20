@@ -6,11 +6,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.ranking.dto.response.RankingResponse;
 import com.votogether.domain.ranking.service.RankingService;
 import com.votogether.global.jwt.TokenPayload;
-import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.ControllerTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -27,21 +26,14 @@ import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(RankingController.class)
-class RankingControllerTest {
+class RankingControllerTest extends ControllerTest {
 
     @MockBean
     RankingService rankingService;
 
-    @MockBean
-    MemberService memberService;
-
-    @MockBean
-    TokenProcessor tokenProcessor;
-
     @BeforeEach
     void setUp(final WebApplicationContext webApplicationContext) {
         RestAssuredMockMvc.standaloneSetup(new RankingController(rankingService));
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
     }
 
     @Test
@@ -62,6 +54,7 @@ class RankingControllerTest {
         RankingResponse result = RestAssuredMockMvc
                 .given().log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .contentType(MediaType.APPLICATION_JSON)
                 .when().get("/members/me/ranking/passion")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())

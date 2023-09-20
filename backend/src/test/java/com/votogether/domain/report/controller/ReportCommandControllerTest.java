@@ -12,7 +12,7 @@ import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.service.ReportCommandService;
 import com.votogether.global.jwt.TokenPayload;
-import com.votogether.test.annotation.ControllerTest;
+import com.votogether.test.ControllerTest;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +38,7 @@ class ReportCommandControllerTest extends ControllerTest {
     void setUp(WebApplicationContext webApplicationContext) {
         RestAssuredMockMvc.standaloneSetup(new ReportCommandCommandController(reportCommandService));
         RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
+        mockingLog();
     }
 
     @Nested

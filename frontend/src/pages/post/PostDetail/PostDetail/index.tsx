@@ -126,7 +126,7 @@ export default function PostDetail() {
         })
         .catch(error => {
           console.error('URL 복사 실패:', error);
-          alert('URL을 클립보드에 복사하는 동안 오류가 발생했습니다. 다시 시도해주세요.');
+          openToast('URL을 클립보드에 복사하는 동안 오류가 발생했습니다. 다시 시도해주세요.');
         });
     },
   };

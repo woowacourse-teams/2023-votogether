@@ -50,13 +50,17 @@ export default function CommentTextForm({
     isLoading: editLoading,
   } = useEditComment(postId, commentId);
 
-  const updateComment = isEdit
-    ? () => {
-        editComment({ ...initialComment, content: deleteOverlappingNewLine(content) });
-      }
-    : () => {
-        createComment({ content: deleteOverlappingNewLine(content) });
-      };
+  const handleUpdateComment = () => {
+    if (content.trim() === '') {
+      openToast('댓글에 내용을 입력해주세요.');
+      return;
+    }
+    if (isEdit) {
+      editComment({ ...initialComment, content: deleteOverlappingNewLine(content) });
+      return;
+    }
+    createComment({ content: deleteOverlappingNewLine(content) });
+  };
 
   useEffect(() => {
     isCreateSuccess && resetText();
@@ -97,7 +101,7 @@ export default function CommentTextForm({
         <S.ButtonWrapper>
           <SquareButton
             aria-label="댓글 저장"
-            onClick={() => updateComment()}
+            onClick={handleUpdateComment}
             theme={createLoading || editLoading ? 'gray' : 'fill'}
             type="button"
             disabled={isEdit ? editLoading : createLoading}

@@ -3,10 +3,15 @@ package com.votogether.domain.vote.service;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.post.exception.PostExceptionType;
+import com.votogether.domain.post.exception.PostOptionExceptionType;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
+import com.votogether.domain.vote.exception.VoteExceptionType;
 import com.votogether.domain.vote.repository.VoteRepository;
+import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,12 +32,12 @@ public class VoteService {
             final Long postOptionId
     ) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
 
         validateAlreadyVoted(member, post);
 
         final PostOption postOption = postOptionRepository.findById(postOptionId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 선택지가 존재 하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
 
         final Vote vote = post.makeVote(member, postOption);
         voteRepository.save(vote);
@@ -44,7 +49,7 @@ public class VoteService {
         final List<Vote> alreadyVoted =
                 voteRepository.findAllByMemberAndPostOptionIn(member, postOptions);
         if (!alreadyVoted.isEmpty()) {
-            throw new IllegalStateException("해당 게시물에는 이미 투표하였습니다.");
+            throw new BadRequestException(VoteExceptionType.ALREADY_VOTED);
         }
     }
 
@@ -55,16 +60,16 @@ public class VoteService {
             final Long newPostOptionId
     ) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
 
         final PostOption originPostOption = postOptionRepository.findById(originPostOptionId)
-                .orElseThrow(() -> new IllegalArgumentException("헤당 선택지가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
 
         final Vote originVote = voteRepository.findByMemberAndPostOption(member, originPostOption)
-                .orElseThrow(() -> new IllegalArgumentException("선택지에 해당되는 투표가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(VoteExceptionType.NOT_FOUND));
 
         final PostOption newPostOption = postOptionRepository.findById(newPostOptionId)
-                .orElseThrow(() -> new IllegalArgumentException("헤당 선택지가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
 
         voteRepository.delete(originVote);
         final Vote vote = post.makeVote(member, newPostOption);

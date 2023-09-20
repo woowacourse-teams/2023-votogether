@@ -1,3 +1,5 @@
+import type { LoadingType } from '../types';
+
 import { useContext, useState } from 'react';
 
 import { AuthContext } from '@hooks/context/auth';
@@ -9,7 +11,6 @@ import ReportModal from '@components/ReportModal';
 import * as S from './style';
 
 type MovePageEvent = 'moveWritePostPage' | 'moveVoteStatisticsPage' | 'movePostListPage';
-
 interface PostDetailPageChildProps {
   isWriter: boolean;
   isClosed: boolean;
@@ -23,17 +24,19 @@ interface PostDetailPageChildProps {
     };
     openToast: (text: string) => void;
   };
+  isEventLoading: Record<LoadingType, boolean>;
 }
 
 export default function BottomButtonPart({
   isWriter,
   isClosed,
   handleEvent: { movePage, controlPost, openToast },
+  isEventLoading,
 }: PostDetailPageChildProps) {
   const { loggedInfo } = useContext(AuthContext);
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
-
+  const { isDeletePostLoading, isReportPostLoading, isReportNicknameLoading } = isEventLoading;
   const [action, setAction] = useState<string | null>(null);
 
   const handleActionButtonClick = (action: string) => {
@@ -53,10 +56,18 @@ export default function BottomButtonPart({
     <S.BottomButtonContainer>
       {!isWriter ? (
         <>
-          <SquareButton theme="fill" onClick={() => handleActionButtonClick('POST_REPORT')}>
+          <SquareButton
+            aria-label="게시글 신고"
+            theme={isReportPostLoading ? 'gray' : 'fill'}
+            onClick={() => handleActionButtonClick('POST_REPORT')}
+          >
             게시물 신고
           </SquareButton>
-          <SquareButton theme="fill" onClick={() => handleActionButtonClick('NICKNAME_REPORT')}>
+          <SquareButton
+            aria-label="작성자 닉네임 신고"
+            theme={isReportNicknameLoading ? 'gray' : 'fill'}
+            onClick={() => handleActionButtonClick('NICKNAME_REPORT')}
+          >
             작성자 닉네임 신고
           </SquareButton>
         </>
@@ -71,7 +82,7 @@ export default function BottomButtonPart({
 
           <SquareButton
             aria-label="게시글 삭제"
-            theme="fill"
+            theme={isDeletePostLoading ? 'gray' : 'fill'}
             onClick={() => handleActionButtonClick('DELETE')}
           >
             삭 제
@@ -84,8 +95,9 @@ export default function BottomButtonPart({
           </SquareButton>
           <SquareButton
             aria-label="게시글 삭제"
-            theme="fill"
+            theme={isDeletePostLoading ? 'gray' : 'fill'}
             onClick={() => handleActionButtonClick('DELETE')}
+            disabled={isDeletePostLoading}
           >
             삭 제
           </SquareButton>
@@ -96,6 +108,7 @@ export default function BottomButtonPart({
           target="POST"
           handleCancelClick={handleCancelClick}
           handleDeleteClick={deletePost}
+          isDeleting={isEventLoading.isDeletePostLoading}
         />
       )}
       {action === 'POST_REPORT' && (
@@ -103,6 +116,7 @@ export default function BottomButtonPart({
           reportType="POST"
           handleReportClick={reportPost}
           handleCancelClick={handleCancelClick}
+          isReportLoading={isReportPostLoading}
         />
       )}
       {action === 'NICKNAME_REPORT' && (
@@ -110,6 +124,7 @@ export default function BottomButtonPart({
           reportType="NICKNAME"
           handleReportClick={reportNickname}
           handleCancelClick={handleCancelClick}
+          isReportLoading={isReportNicknameLoading}
         />
       )}
     </S.BottomButtonContainer>

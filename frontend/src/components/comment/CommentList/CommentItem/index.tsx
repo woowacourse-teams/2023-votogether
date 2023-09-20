@@ -29,6 +29,9 @@ interface CommentItemProps {
 }
 
 export default function CommentItem({ comment, userType }: CommentItemProps) {
+  const [isReportCommentLoading, setIsReportCommentLoading] = useState(false);
+  const [isReportNicknameLoading, setIsReportNicknameLoading] = useState(false);
+
   const { isOpen, toggleComponent, closeComponent } = useToggle();
   const { isToastOpen, openToast, toastMessage } = useToast();
   const { id, member, content, createdAt, isEdit } = comment;
@@ -37,7 +40,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const { mutate, isError, error } = useDeleteComment(postId, id);
+  const { mutate, isError, error, isLoading: isCommentDeleting } = useDeleteComment(postId, id);
 
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
@@ -46,6 +49,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
 
   const handleCommentReportClick = async (reason: string) => {
     const reportData: ReportRequest = { type: 'COMMENT', id, reason };
+    setIsReportCommentLoading(true);
 
     await reportContent(reportData)
       .then(res => {
@@ -58,11 +62,15 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           return;
         }
         openToast('댓글 신고가 실패했습니다.');
+      })
+      .finally(() => {
+        setIsReportCommentLoading(false);
       });
   };
 
   const handleNicknameReportClick = async (reason: string) => {
     const reportData: ReportRequest = { type: 'NICKNAME', id: member.id, reason };
+    setIsReportNicknameLoading(true);
 
     await reportContent(reportData)
       .then(res => {
@@ -75,6 +83,9 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           return;
         }
         openToast('작성자 닉네임 신고가 실패했습니다.');
+      })
+      .finally(() => {
+        setIsReportNicknameLoading(false);
       });
   };
 
@@ -146,6 +157,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           target="COMMENT"
           handleCancelClick={handleCancelClick}
           handleDeleteClick={handleDeleteClick}
+          isDeleting={isCommentDeleting}
         />
       )}
       {action === COMMENT_ACTION.USER_REPORT && (
@@ -153,6 +165,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           reportType="NICKNAME"
           handleReportClick={handleNicknameReportClick}
           handleCancelClick={handleCancelClick}
+          isReportLoading={isReportNicknameLoading}
         />
       )}
       {action === COMMENT_ACTION.COMMENT_REPORT && (
@@ -160,6 +173,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           reportType="COMMENT"
           handleReportClick={handleCommentReportClick}
           handleCancelClick={handleCancelClick}
+          isReportLoading={isReportCommentLoading}
         />
       )}
       {isToastOpen && (

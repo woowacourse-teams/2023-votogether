@@ -1,4 +1,4 @@
-import { Suspense, useContext, useEffect } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
@@ -30,6 +30,9 @@ import * as S from './style';
 export default function PostDetail() {
   const navigate = useNavigate();
 
+  const [isReportPostLoading, setIsReportPostLoading] = useState(false);
+  const [isReportNicknameLoading, setIsReportNicknameLoading] = useState(false);
+
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
   const { isToastOpen, openToast, toastMessage } = useToast();
@@ -43,6 +46,7 @@ export default function PostDetail() {
     isSuccess: isDeleteSuccess,
     isError: isDeleteError,
     error: deleteError,
+    isLoading: isDeletePostLoading,
   } = useDeletePost(postId, loggedInfo.isLoggedIn);
   const { mutate: earlyClosePost } = useEarlyClosePost(postId);
 
@@ -79,6 +83,7 @@ export default function PostDetail() {
       deletePost();
     },
     reportPost: async (reason: string) => {
+      setIsReportPostLoading(true);
       const reportData: ReportRequest = { type: 'POST', id: postId, reason };
 
       await reportContent(reportData)
@@ -92,9 +97,13 @@ export default function PostDetail() {
             return;
           }
           openToast('게시글 신고가 실패했습니다.');
+        })
+        .finally(() => {
+          setIsReportPostLoading(false);
         });
     },
     reportNickname: async (reason: string) => {
+      setIsReportNicknameLoading(true);
       const reportData: ReportRequest = {
         type: 'NICKNAME',
         id: postDataFallback.writer.id,
@@ -112,6 +121,9 @@ export default function PostDetail() {
             return;
           }
           openToast('작성자 닉네임 신고가 실패했습니다.');
+        })
+        .finally(() => {
+          setIsReportNicknameLoading(false);
         });
     },
   };
@@ -136,6 +148,11 @@ export default function PostDetail() {
             isClosed={isClosed}
             isWriter={isWriter}
             handleEvent={{ movePage, controlPost }}
+            isEventLoading={{
+              isDeletePostLoading,
+              isReportPostLoading,
+              isReportNicknameLoading,
+            }}
           />
         </NarrowTemplateHeader>
       </S.HeaderContainer>
@@ -145,6 +162,11 @@ export default function PostDetail() {
           isClosed={isClosed}
           isWriter={isWriter}
           handleEvent={{ movePage, controlPost, openToast }}
+          isEventLoading={{
+            isDeletePostLoading,
+            isReportPostLoading,
+            isReportNicknameLoading,
+          }}
         />
       </S.MainContainer>
       <S.BottomContainer>

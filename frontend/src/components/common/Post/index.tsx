@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { memo, useContext, useEffect } from 'react';
 
 import { PostInfo } from '@type/post';
 
@@ -27,7 +27,7 @@ interface PostProps {
   isPreview: boolean;
 }
 
-export default function Post({ postInfo, isPreview }: PostProps) {
+export default memo(function Post({ postInfo, isPreview }: PostProps) {
   const {
     postId,
     category,
@@ -188,4 +188,4 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       )}
     </S.Container>
   );
-}
+});

@@ -71,11 +71,19 @@ export default function CommentTextForm({
   }, [isEditSuccess]);
 
   useEffect(() => {
-    isCreateError && createError instanceof Error && openToast(createError.message);
+    if (isCreateError && createError instanceof Error) {
+      const errorResponse = JSON.parse(createError.message);
+      openToast(errorResponse.message);
+      return;
+    }
   }, [isCreateError, createError]);
 
   useEffect(() => {
-    isEditError && editError instanceof Error && openToast(editError.message);
+    if (isEditError && editError instanceof Error) {
+      const errorResponse = JSON.parse(editError.message);
+      openToast(errorResponse.message);
+      return;
+    }
   }, [isEditError, editError]);
 
   return (

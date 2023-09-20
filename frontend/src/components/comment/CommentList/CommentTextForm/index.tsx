@@ -40,12 +40,14 @@ export default function CommentTextForm({
     isSuccess: isCreateSuccess,
     isError: isCreateError,
     error: createError,
+    isLoading: createLoading,
   } = useCreateComment(postId);
   const {
     mutate: editComment,
     isSuccess: isEditSuccess,
     isError: isEditError,
     error: editError,
+    isLoading: editLoading,
   } = useEditComment(postId, commentId);
 
   const updateComment = isEdit
@@ -96,8 +98,9 @@ export default function CommentTextForm({
           <SquareButton
             aria-label="댓글 저장"
             onClick={() => updateComment()}
-            theme="blank"
+            theme={createLoading || editLoading ? 'gray' : 'fill'}
             type="button"
+            disabled={isEdit ? editLoading : createLoading}
           >
             저장
           </SquareButton>

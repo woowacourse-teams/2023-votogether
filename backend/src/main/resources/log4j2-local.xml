@@ -13,15 +13,15 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="org.hibernate.SQL" level="debug">
-            <AppenderRef ref="ConsoleAppender"/>
-        </Logger>
+        <!--        <Logger name="org.hibernate.SQL" level="debug">-->
+        <!--            <AppenderRef ref="ConsoleAppender"/>-->
+        <!--        </Logger>-->
 
-        <Logger name="org.hibernate.orm.jdbc.bind" level="trace">
-            <AppenderRef ref="ConsoleAppender"/>
-        </Logger>
+        <!--        <Logger name="org.hibernate.orm.jdbc.bind" level="trace">-->
+        <!--            <AppenderRef ref="ConsoleAppender"/>-->
+        <!--        </Logger>-->
 
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="ConsoleAppender"/>
         </Root>
     </Loggers>

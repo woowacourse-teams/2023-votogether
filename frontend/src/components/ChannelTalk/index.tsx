@@ -79,6 +79,7 @@ class ChannelTalk {
   loadScript() {
     (function () {
       let w = window;
+      if (w.ChannelIO) return;
       let ch: IChannelIO = function () {
         ch.c?.(arguments);
       };

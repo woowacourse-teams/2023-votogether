@@ -14,7 +14,7 @@ import { SORTING, STATUS } from '@constants/post';
 export default function CreatePostPage() {
   const navigate = useNavigate();
 
-  const { mutate, isSuccess, isError, error } = useCreatePost();
+  const { mutate, isSuccess, isError, error, isLoading } = useCreatePost();
   const { isToastOpen, openToast, toastMessage } = useToast();
   const { setPostOption } = useContext(PostOptionContext);
 
@@ -35,7 +35,7 @@ export default function CreatePostPage() {
 
   return (
     <Layout isSidebarVisible={false}>
-      <PostForm mutate={mutate} />
+      <PostForm mutate={mutate} isSubmitting={isLoading} />
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 
 import ChannelTalk from '@components/ChannelTalk';
 import Dashboard from '@components/common/Dashboard';
@@ -16,7 +16,9 @@ export default function Layout({
   isSidebarVisible,
   isChannelTalkVisible = true,
 }: LayoutProps) {
-  isChannelTalkVisible ? ChannelTalk.showChannelButton() : ChannelTalk.hideChannelButton();
+  useEffect(() => {
+    isChannelTalkVisible ? ChannelTalk.showChannelButton() : ChannelTalk.hideChannelButton();
+  }, [isChannelTalkVisible]);
 
   return (
     <S.Container>

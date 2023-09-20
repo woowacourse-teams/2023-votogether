@@ -6,6 +6,7 @@ const DotenvWebpack = require('dotenv-webpack');
 const { EsbuildPlugin } = require('esbuild-loader');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   mode: 'development',
@@ -62,7 +63,7 @@ module.exports = {
         type: 'asset/inline',
       },
       {
-        test: /\.(png|jpg|jpeg|gif)$/i,
+        test: /\.(png|jpg|jpeg|gif|webp)$/i,
         type: 'asset/resource',
       },
     ],
@@ -80,6 +81,7 @@ module.exports = {
       ],
     }),
     new ForkTsCheckerWebpackPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
   devtool: 'inline-source-map',
   devServer: {
@@ -93,5 +95,14 @@ module.exports = {
         target: 'es2021',
       }),
     ],
+    splitChunks: {
+      cacheGroups: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+        },
+      },
+    },
   },
 };

@@ -17,7 +17,8 @@
     "build-storybook": "storybook build",
     "test": "jest",
     "prepare": "cd .. && husky install frontend/.husky",
-    "mac-local-ip": "ifconfig | grep \"inet \" | grep -v 127.0.0.1"
+    "mac-local-ip": "ifconfig | grep \"inet \" | grep -v 127.0.0.1",
+    "check-bundle": "webpack --config webpack.analyzer.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.19",

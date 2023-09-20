@@ -59,6 +59,8 @@ export const SubTitle = styled.span`
 export const MenuWrapper = styled.div`
   position: absolute;
   right: 0%;
+
+  z-index: ${theme.zIndex.modal};
 `;
 
 export const Description = styled.p`

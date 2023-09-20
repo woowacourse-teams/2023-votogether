@@ -12,7 +12,8 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
-import { linkifyText } from '@utils/post/formatContentLink';
+import { linkifyText } from '@utils/post/formatTextLink';
+
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
 import commentIcon from '@assets/comment.svg';

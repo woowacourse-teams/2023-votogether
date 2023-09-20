@@ -15,6 +15,8 @@ import DeleteModal from '@components/common/DeleteModal';
 import Toast from '@components/common/Toast';
 import ReportModal from '@components/ReportModal';
 
+import { linkifyText } from '@utils/post/formatTextLink';
+
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
 import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '../constants';
@@ -22,7 +24,6 @@ import { type CommentAction, type CommentUser } from '../types';
 
 import CommentMenu from './CommentMenu';
 import * as S from './style';
-
 interface CommentItemProps {
   comment: Comment;
   userType: CommentUser;
@@ -139,7 +140,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           />
         </S.TextFormWrapper>
       ) : (
-        <S.Description>{content}</S.Description>
+        <S.Description>{linkifyText(content)}</S.Description>
       )}
       {action === COMMENT_ACTION.DELETE && (
         <DeleteModal

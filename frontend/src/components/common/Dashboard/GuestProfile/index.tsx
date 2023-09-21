@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { BASE_PATH } from '@constants/path';
 
-import kakaoLogin from '@assets/kakao_login.svg';
+import kakaoLogin from '@assets/kakao_login.webp';
 
 import * as S from './style';
 

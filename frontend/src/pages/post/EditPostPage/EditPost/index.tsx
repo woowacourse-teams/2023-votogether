@@ -18,7 +18,7 @@ export default function EditPost() {
   const { postId } = useParams();
 
   const { data } = usePostDetail(true, Number(postId));
-  const { mutate, isSuccess, isError, error } = useEditPost(Number(postId));
+  const { mutate, isSuccess, isError, error, isLoading } = useEditPost(Number(postId));
   const { isToastOpen, openToast, toastMessage } = useToast();
   const { setPostOption } = useContext(PostOptionContext);
 
@@ -39,7 +39,7 @@ export default function EditPost() {
 
   return (
     <>
-      <PostForm data={data} mutate={mutate} />
+      <PostForm data={data} mutate={mutate} isSubmitting={isLoading} />
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

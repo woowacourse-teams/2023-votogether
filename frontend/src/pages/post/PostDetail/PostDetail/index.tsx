@@ -1,4 +1,4 @@
-import { Suspense, useContext, useEffect } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
@@ -18,9 +18,12 @@ import CommentList from '@components/comment/CommentList';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Post from '@components/common/Post';
 import Skeleton from '@components/common/Skeleton';
+import TagButton from '@components/common/TagButton';
 import Toast from '@components/common/Toast';
 
 import { checkClosedPost } from '@utils/time';
+
+import copyURL from '@assets/chain.svg';
 
 import BottomButtonPart from '../BottomButtonPart';
 import InnerHeaderPart from '../InnerHeaderPart';
@@ -29,6 +32,9 @@ import * as S from './style';
 
 export default function PostDetail() {
   const navigate = useNavigate();
+
+  const [isReportPostLoading, setIsReportPostLoading] = useState(false);
+  const [isReportNicknameLoading, setIsReportNicknameLoading] = useState(false);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
@@ -43,6 +49,7 @@ export default function PostDetail() {
     isSuccess: isDeleteSuccess,
     isError: isDeleteError,
     error: deleteError,
+    isLoading: isDeletePostLoading,
   } = useDeletePost(postId, loggedInfo.isLoggedIn);
   const { mutate: earlyClosePost } = useEarlyClosePost(postId);
 
@@ -79,6 +86,7 @@ export default function PostDetail() {
       deletePost();
     },
     reportPost: async (reason: string) => {
+      setIsReportPostLoading(true);
       const reportData: ReportRequest = { type: 'POST', id: postId, reason };
 
       await reportContent(reportData)
@@ -92,9 +100,13 @@ export default function PostDetail() {
             return;
           }
           openToast('게시글 신고가 실패했습니다.');
+        })
+        .finally(() => {
+          setIsReportPostLoading(false);
         });
     },
     reportNickname: async (reason: string) => {
+      setIsReportNicknameLoading(true);
       const reportData: ReportRequest = {
         type: 'NICKNAME',
         id: postDataFallback.writer.id,
@@ -112,6 +124,21 @@ export default function PostDetail() {
             return;
           }
           openToast('작성자 닉네임 신고가 실패했습니다.');
+        })
+        .finally(() => {
+          setIsReportNicknameLoading(false);
+        });
+    },
+    copyPostURL: () => {
+      const currentURL = window.location.href;
+      navigator.clipboard
+        .writeText(currentURL)
+        .then(() => {
+          openToast('게시물 URL이 클립보드에 복사되었습니다.');
+        })
+        .catch(error => {
+          console.error('URL 복사 실패:', error);
+          openToast('URL을 클립보드에 복사하는 동안 오류가 발생했습니다. 다시 시도해주세요.');
         });
     },
   };
@@ -136,15 +163,30 @@ export default function PostDetail() {
             isClosed={isClosed}
             isWriter={isWriter}
             handleEvent={{ movePage, controlPost }}
+            isEventLoading={{
+              isDeletePostLoading,
+              isReportPostLoading,
+              isReportNicknameLoading,
+            }}
           />
         </NarrowTemplateHeader>
       </S.HeaderContainer>
       <S.MainContainer>
+        <S.TagButtonWrapper $isWriter={isWriter}>
+          <TagButton aria-label="게시글 링크 복사" size="sm" onClick={controlPost.copyPostURL}>
+            <img src={copyURL} alt="링크 복사 아이콘" />
+          </TagButton>
+        </S.TagButtonWrapper>
         <Post postInfo={postDataFallback} isPreview={false} />
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}
           handleEvent={{ movePage, controlPost, openToast }}
+          isEventLoading={{
+            isDeletePostLoading,
+            isReportPostLoading,
+            isReportNicknameLoading,
+          }}
         />
       </S.MainContainer>
       <S.BottomContainer>

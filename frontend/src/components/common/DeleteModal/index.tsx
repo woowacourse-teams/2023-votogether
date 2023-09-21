@@ -14,15 +14,17 @@ interface DeleteModalProps {
   target: TargetForDelete;
   handleCancelClick: () => void;
   handleDeleteClick: () => void;
+  isDeleting: boolean;
 }
 
 export default function DeleteModal({
   target,
   handleCancelClick,
   handleDeleteClick,
+  isDeleting,
 }: DeleteModalProps) {
   const handlePrimaryButtonClick = () => {
-    handleDeleteClick();
+    !isDeleting && handleDeleteClick();
     handleCancelClick();
   };
 

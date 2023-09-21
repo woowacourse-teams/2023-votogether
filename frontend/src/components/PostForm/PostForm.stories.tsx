@@ -62,7 +62,7 @@ export const NewPost = () => {
   const { mutate } = useCreatePost();
   return (
     <>
-      <PostForm mutate={mutate} />
+      <PostForm mutate={mutate} isSubmitting={false} />
     </>
   );
 };
@@ -72,7 +72,7 @@ export const OldPost = () => {
   const { mutate } = useEditPost(examplePostId);
   return (
     <>
-      <PostForm data={MOCK_DATA} mutate={mutate} />
+      <PostForm data={MOCK_DATA} mutate={mutate} isSubmitting={false} />
     </>
   );
 };

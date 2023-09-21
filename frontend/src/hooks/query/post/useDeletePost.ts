@@ -7,7 +7,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 export const useDeletePost = (postId: number, isLogged: boolean) => {
   const queryClient = useQueryClient();
 
-  const { mutate, isSuccess, isError, error } = useMutation({
+  const { mutate, isSuccess, isError, error, isLoading } = useMutation({
     mutationFn: () => deletePost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEY.USER_INFO, isLogged]);
@@ -17,5 +17,5 @@ export const useDeletePost = (postId: number, isLogged: boolean) => {
     },
   });
 
-  return { mutate, isSuccess, isError, error };
+  return { mutate, isSuccess, isError, error, isLoading };
 };

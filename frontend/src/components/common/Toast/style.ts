@@ -19,6 +19,8 @@ export const fadeInOutAnimation = keyframes`
 
 export const Wrapper = styled.div<{ $position: 'top' | 'bottom' }>`
   position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
 
   top: ${props => POSITION[props.$position]};
 `;
@@ -32,7 +34,7 @@ export const Content = styled.div<{ $size: Size | 'free' }>`
   height: ${props => SQUARE_SIZE[props.$size].height};
   border-radius: 4px;
 
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   color: var(--white);
 
   font: var(--text-caption);

@@ -42,5 +42,5 @@ export const updateUserInfo = async (userInfo: UpdateUserInfoRequest) => {
 };
 
 export const logoutUser = async () => {
-  await fetch('/auth/logout', { method: 'DELETE' });
+  await fetch('/auth/logout', { method: 'DELETE', credentials: 'include' });
 };

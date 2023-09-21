@@ -49,23 +49,6 @@ export const DescribeUl = styled.ul`
   margin: 0 0 20px 5px;
 `;
 
-export const InputWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-export const Input = styled.input`
-  width: 80%;
-  border: 1px solid #f2f2f2;
-  padding: 20px;
-`;
-
-export const ButtonWrapper = styled.div`
-  width: 90px;
-  height: 50px;
-`;
-
 export const ModalBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -94,5 +77,10 @@ export const ButtonListWrapper = styled.div`
   gap: 20px;
 
   width: 90%;
+  height: 50px;
+`;
+
+export const ButtonWrapper = styled.div`
+  width: 90px;
   height: 50px;
 `;

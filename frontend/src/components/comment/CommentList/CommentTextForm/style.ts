@@ -19,6 +19,17 @@ export const TextArea = styled.textarea`
 
   resize: none;
 
+  &::placeholder {
+    font-size: 14px;
+  }
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    &::placeholder {
+      font-size: 12px;
+      line-height: 2rem;
+    }
+  }
+
   @media (min-width: ${theme.breakpoint.sm}) {
     height: 160px;
 

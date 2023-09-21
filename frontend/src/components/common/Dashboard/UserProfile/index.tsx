@@ -22,13 +22,13 @@ export default function UserProfile({ userInfo }: UserProfileProps) {
           <S.TextCardTitle>작성글</S.TextCardTitle>
           <S.TextCardContent>
             {postCount}
-            <S.LinkImg src={arrowRight} alt="작성글 페이지 이동 화살표" />
+            <S.Img src={arrowRight} alt="작성글 페이지 이동 화살표" />
           </S.TextCardContent>
         </S.TextCardLink>
         <S.TextCardLink to={PATH.USER_VOTE}>
           <S.TextCardTitle>투표수</S.TextCardTitle>
           <S.TextCardContent>
-            {voteCount} <S.LinkImg src={arrowRight} alt="투표글 페이지 이동 화살표" />
+            {voteCount} <S.Img src={arrowRight} alt="투표글 페이지 이동 화살표" />
           </S.TextCardContent>
         </S.TextCardLink>
       </S.UserInfoContainer>

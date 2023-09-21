@@ -48,9 +48,9 @@ export const TextCardContent = styled.span`
   text-align: center;
 `;
 
-export const LinkImg = styled.img`
-  width: 12px;
-  height: 12px;
+export const Img = styled.img`
+  width: 10px;
+  height: 10px;
 
   margin-top: 3px;
 `;

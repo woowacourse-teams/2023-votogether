@@ -12,6 +12,8 @@ import PostMenu from '@components/common/PostMenu';
 import TagButton from '@components/common/TagButton';
 import ReportModal from '@components/ReportModal';
 
+import { PATH } from '@constants/path';
+
 import { LoadingType } from '../types';
 
 import * as S from './style';
@@ -62,14 +64,17 @@ export default function InnerHeaderPart({
     setAction(null);
   };
 
+  const handleBackButtonClick = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+    navigate(PATH.HOME);
+  };
+
   return (
     <>
-      <IconButton
-        category="back"
-        onClick={() => {
-          navigate(-1);
-        }}
-      />
+      <IconButton category="back" onClick={handleBackButtonClick} />
       <S.HeaderWrapper>
         {!isWriter ? (
           <>

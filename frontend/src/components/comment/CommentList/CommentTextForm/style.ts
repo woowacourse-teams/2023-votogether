@@ -46,14 +46,13 @@ export const ButtonContainer = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
-  width: 60px;
+  width: 90px;
   height: 40px;
 
   font: var(--text-caption);
   font-weight: 600;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    width: 74px;
     height: 46px;
 
     font: var(--text-body);

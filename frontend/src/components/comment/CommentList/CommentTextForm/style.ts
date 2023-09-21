@@ -19,17 +19,6 @@ export const TextArea = styled.textarea`
 
   resize: none;
 
-  &::placeholder {
-    font-size: 14px;
-  }
-
-  @media (max-width: ${theme.breakpoint.sm}) {
-    &::placeholder {
-      font-size: 12px;
-      line-height: 2rem;
-    }
-  }
-
   @media (min-width: ${theme.breakpoint.sm}) {
     height: 160px;
 
@@ -46,13 +35,14 @@ export const ButtonContainer = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
-  width: 90px;
+  width: 60px;
   height: 40px;
 
   font: var(--text-caption);
   font-weight: 600;
 
   @media (min-width: ${theme.breakpoint.sm}) {
+    width: 74px;
     height: 46px;
 
     font: var(--text-body);

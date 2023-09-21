@@ -33,21 +33,12 @@ export const TextCardLink = styled(Link)`
 `;
 
 export const TextCardTitle = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-
   font: var(--text-caption);
-  font-weight: 600;
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-position: under;
 `;
 
 export const TextCardContent = styled.span`
   font: var(--text-caption);
   text-align: center;
-`;
-
-export const Img = styled.img`
-  width: 10px;
-  height: 10px;
 `;

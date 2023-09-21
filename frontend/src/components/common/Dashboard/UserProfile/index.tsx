@@ -2,11 +2,10 @@ import { User } from '@type/user';
 
 import { PATH } from '@constants/path';
 
-import arrowRight from '@assets/arrow-right.png';
-
 import * as PS from '../profileStyle';
 
 import * as S from './style';
+
 interface UserProfileProps {
   userInfo: User;
 }
@@ -19,16 +18,11 @@ export default function UserProfile({ userInfo }: UserProfileProps) {
       <S.NickName>{nickname}</S.NickName>
       <S.UserInfoContainer>
         <S.TextCardLink to={PATH.USER_POST}>
-          <S.TextCardTitle>
-            작성글 <S.Img src={arrowRight} alt="작성글 페이지 이동 화살표" />
-          </S.TextCardTitle>
+          <S.TextCardTitle>작성글</S.TextCardTitle>
           <S.TextCardContent>{postCount}</S.TextCardContent>
         </S.TextCardLink>
         <S.TextCardLink to={PATH.USER_VOTE}>
-          <S.TextCardTitle>
-            투표수
-            <S.Img src={arrowRight} alt="투표글 페이지 이동 화살표" />
-          </S.TextCardTitle>
+          <S.TextCardTitle>투표수</S.TextCardTitle>
           <S.TextCardContent>{voteCount}</S.TextCardContent>
         </S.TextCardLink>
       </S.UserInfoContainer>

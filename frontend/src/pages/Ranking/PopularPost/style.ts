@@ -17,6 +17,7 @@ export const Th = styled.th`
   padding: 10px 0;
 
   font: var(--text-body);
+  font-weight: 600;
 `;
 
 export const RankingTd = styled.td`

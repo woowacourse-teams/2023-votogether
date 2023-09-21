@@ -1,10 +1,9 @@
-import { useContext, ChangeEvent, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useModifyUser } from '@hooks/query/user/useModifyUser';
 import { useWithdrawalMembership } from '@hooks/query/user/useWithdrawalMembership';
-import { useText } from '@hooks/useText';
 import { useToast } from '@hooks/useToast';
 import { useToggle } from '@hooks/useToggle';
 
@@ -19,6 +18,8 @@ import Toast from '@components/common/Toast';
 
 import { NICKNAME_POLICY } from '@constants/policyMessage';
 import { NICKNAME } from '@constants/user';
+
+import InputNSubmitButton from '../../components/common/InputNSubmitButton';
 
 import DeleteMemberModal from './DeleteMemberModal';
 import * as S from './style';
@@ -43,11 +44,8 @@ export default function MyInfo() {
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
-  const { text: newNickname, handleTextChange: handleNicknameChange } = useText(
-    loggedInfo.userInfo?.nickname ?? ''
-  );
 
-  const handleModifyNickname = () => {
+  const handleModifyNickname = (newNickname: string) => {
     modifyNickname(newNickname);
   };
 
@@ -111,18 +109,12 @@ export default function MyInfo() {
               <li>- {NICKNAME_POLICY.NO_DUPLICATION}</li>
               <li>- {NICKNAME_POLICY.LIMIT_KOREAN}</li>
             </S.DescribeUl>
-            <S.InputWrapper>
-              <S.Input
-                value={newNickname}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleNicknameChange(e, NICKNAME)}
-                placeholder="새로운 닉네임을 입력해주세요"
-              />
-              <S.ButtonWrapper>
-                <SquareButton aria-label="닉네임 변경" theme="fill" onClick={handleModifyNickname}>
-                  변경
-                </SquareButton>
-              </S.ButtonWrapper>
-            </S.InputWrapper>
+            <InputNSubmitButton
+              initText={loggedInfo.userInfo?.nickname}
+              handleSubmit={handleModifyNickname}
+              ariaLabel="닉네임"
+              limitText={NICKNAME}
+            />
           </Accordion>
           <Accordion title="회원 탈퇴">
             <S.ButtonWrapper>

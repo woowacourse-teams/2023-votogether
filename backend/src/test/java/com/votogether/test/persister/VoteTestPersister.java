@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 @Persister
 public class VoteTestPersister {
 
-    private final MemberTestPersister memberTestPersister;
-    private final PostOptionTestPersister postOptionTestPersister;
     private final VoteRepository voteRepository;
+    private final MemberTestPersister memberTestPersister;
+    private final PostTestPersister postTestPersister;
 
     public VoteBuilder builder() {
         return new VoteBuilder();
@@ -36,7 +36,7 @@ public class VoteTestPersister {
         public Vote save() {
             Vote vote = Vote.builder()
                     .member(member == null ? memberTestPersister.builder().save() : member)
-                    .postOption(postOption == null ? postOptionTestPersister.builder().save() : postOption)
+                    .postOption(postOption == null ? postTestPersister.postOptionBuilder().save() : postOption)
                     .build();
             return voteRepository.save(vote);
         }

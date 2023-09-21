@@ -29,13 +29,13 @@ export const TextCardLink = styled(Link)`
   display: flex;
   flex-direction: column;
 
-  text-decoration: none;
-
   color: initial;
 `;
 
 export const TextCardTitle = styled.span`
   font: var(--text-caption);
+  text-decoration: underline;
+  text-underline-position: under;
 `;
 
 export const TextCardContent = styled.span`

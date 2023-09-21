@@ -23,15 +23,13 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 
-@Table(indexes = {@Index(columnList = "socialId, socialType")})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id"})
-@ToString
 @Getter
 @Entity
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {@Index(columnList = "socialId, socialType")})
 public class Member extends BaseEntity {
 
     private static final String INITIAL_NICKNAME_PREFIX = "익명의손님";
@@ -47,7 +45,6 @@ public class Member extends BaseEntity {
     @Column(length = 20)
     private Gender gender;
 
-    @Column
     private Integer birthYear;
 
     @Enumerated(value = EnumType.STRING)

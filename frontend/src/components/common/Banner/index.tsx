@@ -17,7 +17,7 @@ export default function Banner({ title, content, handleClose, path }: BannerProp
         <S.Description aria-label="배너 내용">{content}</S.Description>
       </S.Content>
       <S.MovePageLink to={path} aria-label="세부 페이지로 이동">
-        자세히
+        보러가기
       </S.MovePageLink>
     </S.Wrapper>
   );

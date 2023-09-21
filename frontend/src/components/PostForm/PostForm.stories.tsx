@@ -27,6 +27,8 @@ const MOCK_DATA: PostInfo = {
   ],
   createTime: '2023-07-18 12:40',
   deadline: '2023-08-15 12:40',
+  imageCount: 0,
+  commentCount: 1,
   voteInfo: {
     selectedOptionId: 1,
     allPeopleCount: 0,
@@ -60,7 +62,7 @@ export const NewPost = () => {
   const { mutate } = useCreatePost();
   return (
     <>
-      <PostForm mutate={mutate} />
+      <PostForm mutate={mutate} isSubmitting={false} />
     </>
   );
 };
@@ -70,7 +72,7 @@ export const OldPost = () => {
   const { mutate } = useEditPost(examplePostId);
   return (
     <>
-      <PostForm data={MOCK_DATA} mutate={mutate} />
+      <PostForm data={MOCK_DATA} mutate={mutate} isSubmitting={false} />
     </>
   );
 };

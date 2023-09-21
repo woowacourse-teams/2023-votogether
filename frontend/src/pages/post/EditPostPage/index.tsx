@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import ErrorBoundaryWithNarrowHeader from '@pages/ErrorBoundaryWithNarrowHeader';
+import ErrorBoundary from '@pages/ErrorBoundary';
 
 import Layout from '@components/common/Layout';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
@@ -12,7 +12,7 @@ import * as S from './style';
 export default function EditPostPage() {
   return (
     <Layout isSidebarVisible={false}>
-      <ErrorBoundaryWithNarrowHeader>
+      <ErrorBoundary>
         <Suspense
           fallback={
             <>
@@ -25,7 +25,7 @@ export default function EditPostPage() {
         >
           <EditPost />
         </Suspense>
-      </ErrorBoundaryWithNarrowHeader>
+      </ErrorBoundary>
     </Layout>
   );
 }

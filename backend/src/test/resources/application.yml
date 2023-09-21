@@ -19,8 +19,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 30MB
-      max-request-size: 30MB
+      max-file-size: 5MB
+      max-request-size: 35MB
 
   h2:
     console:
@@ -38,6 +38,12 @@ logging:
 
 server:
   forward-headers-strategy: FRAMEWORK
+  tomcat:
+    max-http-form-post-size: 35MB
+    accept-count: 100
+    max-connections: 8192
+    threads:
+      max: 200
 
 springdoc:
   swagger-ui:
@@ -60,3 +66,7 @@ jwt:
     secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
     access-expiration-time: 100000
     refresh-expiration-time: 222222
+
+image:
+  upload_url: ${user.dir}
+  upload_directory: static/images

@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 
+import ChannelTalk from '@components/ChannelTalk';
+
 import { getCookie, setCookie } from '@utils/cookie';
 
 import { BeforeInstallPromptEvent } from '../../../../window';
@@ -11,6 +13,8 @@ const isBookMarkPromptActive = () => {
   const isActive = JSON.parse(getCookie().isAppInstallVisible || 'true');
 
   if (isActive) {
+    ChannelTalk.hideChannelButton();
+
     return true;
   }
 
@@ -38,6 +42,8 @@ export default function AppInstallPrompt() {
     setCookie({ key: 'isAppInstallVisible', value: 'false', maxAge: 7 * 24 * 60 * 60 });
     setBookMarkPrompt(null);
     setDeferredPrompt(null);
+
+    ChannelTalk.showChannelButton();
   };
 
   const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {

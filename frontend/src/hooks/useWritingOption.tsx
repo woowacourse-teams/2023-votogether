@@ -1,8 +1,6 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 
-import { MAX_FILE_SIZE } from '@components/PostForm/constants';
-
-import { convertImageToWebP } from '@utils/resizeImage';
+import { uploadImage } from '@utils/post/uploadImage';
 
 const MAX_WRITING_LENGTH = 50;
 
@@ -16,19 +14,24 @@ const MIN_COUNT = 2;
 const MAX_COUNT = 5;
 
 const INIT_OPTION_LIST = [
-  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
-  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
+  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
+  { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
 ];
 
-export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = INIT_OPTION_LIST) => {
-  const [optionList, setOptionList] = useState(initialOptionList);
+export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) => {
+  const [optionList, setOptionList] = useState(
+    initialOptionList
+      ? initialOptionList.map(option => ({ ...option, isServerId: true }))
+      : INIT_OPTION_LIST
+  );
+  const contentInputRefList = useRef<HTMLInputElement[]>([]);
 
   const addOption = () => {
     if (optionList.length >= MAX_COUNT) return;
 
     const updatedOptionList = [
       ...optionList,
-      { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '' },
+      { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
     ];
 
     setOptionList(updatedOptionList);
@@ -78,6 +81,22 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
     });
 
     setOptionList(updatedOptionList);
+    contentInputRefList.current &&
+      contentInputRefList.current.forEach(inputElement => {
+        if (inputElement?.id === optionId.toString()) inputElement.value = '';
+      });
+  };
+
+  const setPreviewImageUrl = (optionId: number) => (imageUrl: string) => {
+    const updatedOptionList = optionList.map(optionItem => {
+      if (optionItem.id === optionId) {
+        return { ...optionItem, imageUrl };
+      }
+
+      return optionItem;
+    });
+
+    setOptionList(updatedOptionList);
   };
 
   const handleUploadImage = async (
@@ -90,37 +109,20 @@ export const useWritingOption = (initialOptionList: WritingVoteOptionType[] = IN
 
     const file = files[0];
 
-    const webpFileList = await convertImageToWebP(file);
-
-    event.target.files = webpFileList;
-
-    const reader = new FileReader();
-
-    const webpFile = webpFileList[0];
-
-    reader.readAsDataURL(webpFile);
-
-    event.target.setCustomValidity('');
-
-    if (file.size > MAX_FILE_SIZE) {
-      event.target.setCustomValidity('사진의 용량은 1.5MB 이하만 가능합니다.');
-      event.target.reportValidity();
-
-      return;
-    }
-
-    reader.onloadend = () => {
-      const updatedOptionList = optionList.map(optionItem => {
-        if (optionItem.id === optionId) {
-          return { ...optionItem, imageUrl: reader.result?.toString() ?? '' };
-        }
-
-        return optionItem;
-      });
-
-      setOptionList(updatedOptionList);
-    };
+    uploadImage({
+      imageFile: file,
+      inputElement: event.target,
+      setPreviewImageUrl: setPreviewImageUrl(optionId),
+    });
   };
 
-  return { optionList, addOption, writingOption, deleteOption, removeImage, handleUploadImage };
+  return {
+    optionList,
+    addOption,
+    writingOption,
+    deleteOption,
+    removeImage,
+    handleUploadImage,
+    contentInputRefList,
+  };
 };

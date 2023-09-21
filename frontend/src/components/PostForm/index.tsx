@@ -14,6 +14,7 @@ import { useWritingOption } from '@hooks/useWritingOption';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
+import HeaderTextButton from '@components/common/HeaderTextButton';
 import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
@@ -27,30 +28,29 @@ import {
   POST_DEADLINE_POLICY,
   POST_TITLE_POLICY,
 } from '@constants/policyMessage';
-import { CATEGORY_COUNT_LIMIT, POST_CONTENT, POST_TITLE } from '@constants/post';
+import { CATEGORY_COUNT_LIMIT, MAX_DEADLINE, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
-import {
-  convertImageUrlToServerUrl,
-  convertServerUrlToImageUrl,
-} from '@utils/post/convertImageUrlToServerUrl';
-import { addTimeToDate, formatTimeWithOption } from '@utils/post/formatTime';
+import { deleteOverlappingNewLine } from '@utils/post/deleteOverlappingNewLine';
+import { addTimeToDate } from '@utils/post/formatTime';
 import { getDeadlineTime } from '@utils/post/getDeadlineTime';
 import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
 import { checkIrreplaceableTime } from '@utils/time';
 
 import CategoryWrapper from './CategoryWrapper';
-import { DEADLINE_OPTION, DeadlineOption } from './constants';
+import { DEADLINE_OPTION, DeadlineOptionInfo, DeadlineOptionName } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
+import { checkValidationPost } from './validation';
 
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
+  isSubmitting: boolean;
 }
 
-export default function PostForm({ data, mutate }: PostFormProps) {
+export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) {
   const {
     postId,
     title,
@@ -64,20 +64,19 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   } = data ?? {};
 
   const navigate = useNavigate();
-  const contentImageHook = useContentImage(
-    serverImageUrl && convertImageUrlToServerUrl(serverImageUrl)
-  );
+  const contentImageHook = useContentImage(serverImageUrl);
+  const { handlePasteImage } = contentImageHook;
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
-      imageUrl: option.imageUrl ? convertImageUrlToServerUrl(option.imageUrl) : '',
+      imageUrl: option.imageUrl ?? '',
     }))
   );
 
   const { isToastOpen, openToast, toastMessage } = useToast();
-  const [selectTimeOption, setSelectTimeOption] = useState<DeadlineOption | '사용자지정' | null>(
-    getSelectedTimeOption(calculateDeadlineTime(createTime, deadline))
-  );
+  const [selectTimeOption, setSelectTimeOption] = useState<
+    DeadlineOptionName | '사용자지정' | null
+  >(getSelectedTimeOption(calculateDeadlineTime(createTime, deadline)));
   const { isOpen, openComponent, closeComponent } = useToggle();
   const [time, setTime] = useState(calculateDeadlineTime(createTime, deadline));
   const baseTime = createTime ? new Date(createTime) : new Date();
@@ -105,12 +104,12 @@ export default function PostForm({ data, mutate }: PostFormProps) {
   } = useText(content ?? '');
   const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
 
-  const handleDeadlineButtonClick = (option: DeadlineOption) => {
-    const targetTime = formatTimeWithOption(option);
+  const handleDeadlineButtonClick = (option: DeadlineOptionInfo) => {
+    const targetTime = option.time;
 
     if (data && checkIrreplaceableTime(targetTime, data.createTime))
       return openToast('마감시간 지정 조건을 다시 확인해주세요.');
-    setSelectTimeOption(option);
+    setSelectTimeOption(option.name);
     setTime(targetTime);
   };
 
@@ -133,65 +132,49 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     e.preventDefault();
     const formData = new FormData();
 
-    const writingOptionList = writingOptionHook.optionList.map(({ text, imageUrl }, index) => {
-      return { content: text, imageUrl: convertServerUrlToImageUrl(imageUrl) };
-    });
-
-    const imageUrlList = [
-      convertServerUrlToImageUrl(contentImageHook.contentImage),
-      ...writingOptionList.map(option => option.imageUrl),
-    ];
-
     //예외처리
     const { selectedOptionList } = multiSelectHook;
-    if (selectedOptionList.length < 1) return openToast('카테고리를 최소 1개 골라주세요.');
-    if (selectedOptionList.length > 3) return openToast('카테고리를 최대 3개 골라주세요.');
-    if (writingTitle.trim() === '') return openToast('제목은 필수로 입력해야 합니다.');
-    if (writingContent.trim() === '') return openToast('내용은 필수로 입력해야 합니다.');
-    if (writingOptionList.length < 2) return openToast('선택지는 최소 2개 입력해주세요.');
-    if (writingOptionList.length > 5) return openToast('선택지는 최대 5개 입력할 수 있습니다.');
-    if (writingOptionList.some(option => option.content.trim() === ''))
-      return openToast('선택지에 글을 입력해주세요.');
-    if (Object.values(time).reduce((a, b) => a + b, 0) < 1)
-      return openToast('시간은 필수로 입력해야 합니다.');
+    const errorMessage = checkValidationPost(
+      selectedOptionList,
+      writingTitle,
+      writingContent,
+      writingOptionHook.optionList,
+      time
+    );
+    if (errorMessage) return openToast(errorMessage);
+
+    const writingOptionList = writingOptionHook.optionList.map(
+      ({ id, isServerId, text, imageUrl }, index) => {
+        return { id, isServerId, content: text, imageUrl };
+      }
+    );
 
     if (e.target instanceof HTMLFormElement) {
-      const optionImageFileInputs =
-        e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
-      const fileInputList: HTMLInputElement[] = [...optionImageFileInputs];
-      const contentImageFileList: File[] = [];
-      const optionImageFileList: File[] = [];
-      fileInputList.forEach((item, index) => {
+      const imageFileInputs = e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
+      const fileInputList = [...imageFileInputs];
+
+      selectedOptionList.forEach(categoryId =>
+        formData.append('categoryIds', categoryId.id.toString())
+      );
+      formData.append('title', writingTitle);
+      formData.append('content', deleteOverlappingNewLine(writingContent));
+      formData.append('imageUrl', contentImageHook.contentImage);
+      writingOptionList.forEach((option, index) => {
+        option.isServerId && formData.append(`postOptions[${index}].id`, option.id.toString());
+        formData.append(`postOptions[${index}].content`, deleteOverlappingNewLine(option.content));
+        formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
+      });
+      formData.append('deadline', addTimeToDate(time, baseTime));
+
+      fileInputList.forEach((item: HTMLInputElement, index: number) => {
         if (!item.files) return;
 
         if (index === 0) {
-          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
-          !imageUrlList[index] || imageUrlList[index] === serverImageUrl
-            ? contentImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
-            : contentImageFileList.push(item.files[0]);
+          item.files[0] && formData.append('imageFile', item.files[0]);
         } else {
-          //사진url이 ""거나 undefined이거나 기존 url과 동일한 url이면 true
-          !imageUrlList[index] ||
-          imageUrlList[index] === serverVoteInfo?.options[index - 1].imageUrl
-            ? optionImageFileList.push(new File(['없는사진'], '없는사진.jpg'))
-            : optionImageFileList.push(item.files[0]);
+          item.files[0] && formData.append(`postOptions[${index - 1}].imageFile`, item.files[0]);
         }
       });
-
-      contentImageFileList.map(file => formData.append('contentImages', file));
-      optionImageFileList.map(file => formData.append('optionImages', file));
-
-      const updatedPostTexts = {
-        categoryIds: selectedOptionList.map(option => option.id),
-        title: writingTitle,
-        imageUrl: convertServerUrlToImageUrl(contentImageHook.contentImage),
-        content: writingContent,
-        postOptions: writingOptionList,
-        deadline: addTimeToDate(time, baseTime),
-        // 글 수정의 경우 작성시간을 기준으로 마감시간 옵션을 더한다.
-        // 마감시간 옵션을 선택 안했다면 기존의 마감 시간을 유지한다.
-      };
-      formData.append('request', JSON.stringify(updatedPostTexts));
 
       mutate(formData);
     }
@@ -203,10 +186,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
     <>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
-          <S.HeaderButton onClick={() => navigate('/')}>취소</S.HeaderButton>
-          <S.HeaderButton type="submit" form="form-post">
-            저장
-          </S.HeaderButton>
+          <HeaderTextButton onClick={() => navigate('/')}>취소</HeaderTextButton>
+          <HeaderTextButton type="submit" form="form-post" disabled={isSubmitting}>
+            {isSubmitting ? '저장 중...' : '저장'}
+          </HeaderTextButton>
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
       <form id="form-post" onSubmit={handlePostFormSubmit}>
@@ -233,6 +216,7 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               placeholder={CONTENT_PLACEHOLDER}
               maxLength={POST_CONTENT.MAX_LENGTH}
               minLength={POST_CONTENT.MIN_LENGTH}
+              onPaste={handlePasteImage}
               required
             />
             <S.ContentLinkButtonWrapper>
@@ -260,14 +244,14 @@ export default function PostForm({ data, mutate }: PostFormProps) {
                 {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
                   <S.Description tabIndex={0}>
-                    현재 시간으로부터 글 작성일({createTime})로부터 3일 이내 (
-                    {addTimeToDate({ day: 3, hour: 0, minute: 0 }, baseTime)})까지만 선택
+                    현재 시간으로부터 글 작성일({createTime})로부터 {MAX_DEADLINE}일 이내 (
+                    {addTimeToDate({ day: MAX_DEADLINE, hour: 0, minute: 0 }, baseTime)})까지만 선택
                     가능합니다.
                   </S.Description>
                 )}
                 {data && (
                   <S.Description tabIndex={0}>
-                    * 작성일시로부터 마감시간이 계산됩니다.{' '}
+                    * 작성일시로부터 마감시간이 계산됩니다.
                   </S.Description>
                 )}
                 {data && (
@@ -277,13 +261,13 @@ export default function PostForm({ data, mutate }: PostFormProps) {
               <S.ButtonWrapper>
                 {DEADLINE_OPTION.map(option => (
                   <SquareButton
-                    aria-label={option}
-                    key={option}
+                    aria-label={option.name}
+                    key={option.name}
                     type="button"
                     onClick={() => handleDeadlineButtonClick(option)}
-                    theme={selectTimeOption === option ? 'fill' : 'blank'}
+                    theme={selectTimeOption === option.name ? 'fill' : 'blank'}
                   >
-                    {option}
+                    {option.name}
                   </SquareButton>
                 ))}
                 {
@@ -300,9 +284,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             <S.SaveButtonWrapper>
               <SquareButton
                 aria-label="글쓰기가 저장됩니다. 저장이 완료되면 메인화면으로 이동됩니다."
-                theme="fill"
+                theme={isSubmitting ? 'gray' : 'fill'}
                 type="submit"
                 form="form-post"
+                disabled={isSubmitting}
               >
                 저장
               </SquareButton>

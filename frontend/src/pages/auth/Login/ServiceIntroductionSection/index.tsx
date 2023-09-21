@@ -1,5 +1,5 @@
-import home from '@assets/votogether_home.png';
-import write from '@assets/votogether_write.png';
+import home from '@assets/votogether_home.webp';
+import write from '@assets/votogether_write.webp';
 
 import * as S from './style';
 

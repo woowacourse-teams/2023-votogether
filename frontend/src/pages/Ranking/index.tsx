@@ -21,7 +21,7 @@ export default function Ranking() {
   const { selectedButton, firstButton, secondButton } = useToggleSwitch('열정 유저', '인기글 유저');
 
   return (
-    <Layout isSidebarVisible={true}>
+    <Layout isSidebarVisible={true} isChannelTalkVisible={false}>
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
           <IconButton

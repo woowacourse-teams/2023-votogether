@@ -35,6 +35,7 @@ export const TextCardLink = styled(Link)`
 export const TextCardTitle = styled.span`
   font: var(--text-caption);
   text-decoration: underline;
+  text-underline-position: under;
 `;
 
 export const TextCardContent = styled.span`

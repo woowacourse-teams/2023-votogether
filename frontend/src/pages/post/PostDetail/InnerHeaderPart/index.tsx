@@ -109,6 +109,7 @@ export default function InnerHeaderPart({
               aria-label="게시글 삭제"
               onClick={() => handleMenuClick('DELETE')}
               disabled={isDeletePostLoading}
+              isLoading={isDeletePostLoading}
             >
               {isDeletePostLoading ? '삭제 중...' : '삭제'}
             </HeaderTextButton>

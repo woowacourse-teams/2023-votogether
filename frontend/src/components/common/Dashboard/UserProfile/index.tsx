@@ -19,17 +19,17 @@ export default function UserProfile({ userInfo }: UserProfileProps) {
       <S.NickName>{nickname}</S.NickName>
       <S.UserInfoContainer>
         <S.TextCardLink to={PATH.USER_POST}>
-          <S.TextCardTitle>작성글</S.TextCardTitle>
-          <S.TextCardContent>
-            {postCount}
-            <S.Img src={arrowRight} alt="작성글 페이지 이동 화살표" />
-          </S.TextCardContent>
+          <S.TextCardTitle>
+            작성글 <S.Img src={arrowRight} alt="작성글 페이지 이동 화살표" />
+          </S.TextCardTitle>
+          <S.TextCardContent>{postCount}</S.TextCardContent>
         </S.TextCardLink>
         <S.TextCardLink to={PATH.USER_VOTE}>
-          <S.TextCardTitle>투표수</S.TextCardTitle>
-          <S.TextCardContent>
-            {voteCount} <S.Img src={arrowRight} alt="투표글 페이지 이동 화살표" />
-          </S.TextCardContent>
+          <S.TextCardTitle>
+            투표수
+            <S.Img src={arrowRight} alt="투표글 페이지 이동 화살표" />
+          </S.TextCardTitle>
+          <S.TextCardContent>{voteCount}</S.TextCardContent>
         </S.TextCardLink>
       </S.UserInfoContainer>
     </PS.ProfileContainer>

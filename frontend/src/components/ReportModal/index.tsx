@@ -11,19 +11,21 @@ interface UserReportModalProps {
   reportType: ReportType;
   handleCancelClick: () => void;
   handleReportClick: (reason: string) => void;
+  isReportLoading: boolean;
 }
 
 export default function ReportModal({
   reportType,
   handleCancelClick,
   handleReportClick,
+  isReportLoading,
 }: UserReportModalProps) {
   const { name, reportMessageList } = REPORT_TYPE[reportType];
   const defaultReportMessage = Object.keys(reportMessageList)[0];
   const { selectedOption, handleOptionChange } = useSelect(defaultReportMessage);
 
   const handlePrimaryButtonClick = () => {
-    handleReportClick(selectedOption);
+    !isReportLoading && handleReportClick(selectedOption);
     handleCancelClick();
   };
 

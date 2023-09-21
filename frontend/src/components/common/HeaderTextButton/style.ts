@@ -1,11 +1,11 @@
 import { styled } from 'styled-components';
 
-export const Button = styled.button`
+export const Button = styled.button<{ $isLoading: boolean }>`
   background-color: rgba(0, 0, 0, 0);
-  color: var(--white);
+  color: ${props => (props.$isLoading ? 'gray' : 'var(--white)')};
 
   font: var(--text-caption);
-  font-weight: 500;
+  font-weight: ${props => (props.$isLoading ? 600 : 500)};
 
   cursor: pointer;
 `;

@@ -47,9 +47,10 @@ import { checkValidationPost } from './validation';
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
+  isSubmitting: boolean;
 }
 
-export default function PostForm({ data, mutate }: PostFormProps) {
+export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) {
   const {
     postId,
     title,
@@ -186,8 +187,8 @@ export default function PostForm({ data, mutate }: PostFormProps) {
       <S.HeaderWrapper>
         <NarrowTemplateHeader>
           <HeaderTextButton onClick={() => navigate('/')}>취소</HeaderTextButton>
-          <HeaderTextButton type="submit" form="form-post">
-            저장
+          <HeaderTextButton type="submit" form="form-post" disabled={isSubmitting}>
+            {isSubmitting ? '저장 중...' : '저장'}
           </HeaderTextButton>
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
@@ -283,9 +284,10 @@ export default function PostForm({ data, mutate }: PostFormProps) {
             <S.SaveButtonWrapper>
               <SquareButton
                 aria-label="글쓰기가 저장됩니다. 저장이 완료되면 메인화면으로 이동됩니다."
-                theme="fill"
+                theme={isSubmitting ? 'gray' : 'fill'}
                 type="submit"
                 form="form-post"
+                disabled={isSubmitting}
               >
                 저장
               </SquareButton>

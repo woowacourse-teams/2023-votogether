@@ -45,21 +45,27 @@ export default function CommentTextForm({
     isSuccess: isCreateSuccess,
     isError: isCreateError,
     error: createError,
+    isLoading: createLoading,
   } = useCreateComment(postId);
   const {
     mutate: editComment,
     isSuccess: isEditSuccess,
     isError: isEditError,
     error: editError,
+    isLoading: editLoading,
   } = useEditComment(postId, commentId);
 
-  const updateComment = isEdit
-    ? () => {
-        editComment({ ...initialComment, content: deleteOverlappingNewLine(content) });
-      }
-    : () => {
-        createComment({ content: deleteOverlappingNewLine(content) });
-      };
+  const handleUpdateComment = () => {
+    if (content.trim() === '') {
+      openToast('댓글에 내용을 입력해주세요.');
+      return;
+    }
+    if (isEdit) {
+      editComment({ ...initialComment, content: deleteOverlappingNewLine(content) });
+      return;
+    }
+    createComment({ content: deleteOverlappingNewLine(content) });
+  };
 
   useEffect(() => {
     isCreateSuccess && resetText();
@@ -70,11 +76,19 @@ export default function CommentTextForm({
   }, [isEditSuccess]);
 
   useEffect(() => {
-    isCreateError && createError instanceof Error && openToast(createError.message);
+    if (isCreateError && createError instanceof Error) {
+      const errorResponse = JSON.parse(createError.message);
+      openToast(errorResponse.message);
+      return;
+    }
   }, [isCreateError, createError]);
 
   useEffect(() => {
-    isEditError && editError instanceof Error && openToast(editError.message);
+    if (isEditError && editError instanceof Error) {
+      const errorResponse = JSON.parse(editError.message);
+      openToast(errorResponse.message);
+      return;
+    }
   }, [isEditError, editError]);
 
   return (
@@ -111,9 +125,10 @@ export default function CommentTextForm({
         <S.ButtonWrapper>
           <SquareButton
             aria-label="댓글 저장"
-            onClick={() => updateComment()}
-            theme="blank"
+            onClick={handleUpdateComment}
+            theme={createLoading || editLoading ? 'gray' : 'fill'}
             type="button"
+            disabled={isEdit ? editLoading : createLoading}
           >
             저장
           </SquareButton>

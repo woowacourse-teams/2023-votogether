@@ -47,13 +47,13 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
 
   const {
     mutate: createVote,
-    isError: isCreateError,
-    error: createError,
+    isError: isCreateVoteError,
+    error: createVoteError,
   } = useCreateVote({ isPreview, postId });
   const {
     mutate: editVote,
-    isError: isEditError,
-    error: editError,
+    isError: isEditVoteError,
+    error: editVoteError,
   } = useEditVote({ isPreview, postId });
 
   const isActive = !checkClosedPost(deadline);
@@ -91,16 +91,20 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
   };
 
   useEffect(() => {
-    if (isCreateError && createError instanceof Error) {
-      openToast(createError.message);
+    if (isCreateVoteError && createVoteError instanceof Error) {
+      const errorResponse = JSON.parse(createVoteError.message);
+      openToast(errorResponse.message);
+      return;
     }
-  }, [isCreateError, createError]);
+  }, [isCreateVoteError, createVoteError]);
 
   useEffect(() => {
-    if (isEditError && editError instanceof Error) {
-      openToast(editError.message);
+    if (isEditVoteError && editVoteError instanceof Error) {
+      const errorResponse = JSON.parse(editVoteError.message);
+      openToast(errorResponse.message);
+      return;
     }
-  }, [isEditError, editError]);
+  }, [isEditVoteError, editVoteError]);
 
   const isPreviewTabIndex = isPreview ? undefined : 0;
 

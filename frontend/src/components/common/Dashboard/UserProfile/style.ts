@@ -34,11 +34,23 @@ export const TextCardLink = styled(Link)`
 
 export const TextCardTitle = styled.span`
   font: var(--text-caption);
-  text-decoration: underline;
-  text-underline-position: under;
+  font-weight: 600;
+  text-decoration: none;
 `;
 
 export const TextCardContent = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
   font: var(--text-caption);
   text-align: center;
+`;
+
+export const LinkImg = styled.img`
+  width: 12px;
+  height: 12px;
+
+  margin-top: 3px;
 `;

@@ -16,10 +16,10 @@ import ErrorBoundary from '@pages/ErrorBoundary';
 
 import CommentList from '@components/comment/CommentList';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
-import Post from '@components/common/Post';
 import Skeleton from '@components/common/Skeleton';
 import TagButton from '@components/common/TagButton';
 import Toast from '@components/common/Toast';
+import Post from '@components/post/Post';
 
 import { checkClosedPost } from '@utils/time';
 

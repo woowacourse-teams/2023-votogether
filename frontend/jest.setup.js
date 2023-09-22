@@ -13,6 +13,8 @@ dotenv.config({ path: './.env.test' });
  *    SyntaxError: Unexpected token 'export'
 
     > 1 | import { imageConverter } from 'upload-images-converter';
+    
+    https://github.com/nrwl/nx/issues/7844#issuecomment-1220559108
  */
 jest.mock('upload-images-converter', () => ({
   __esModule: true,

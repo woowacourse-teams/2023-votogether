@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
@@ -28,6 +30,11 @@ export const PostListContainer = styled.ul`
 
   padding: 30px 20px;
 
+  > div > li {
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
   > li {
     padding-bottom: 30px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -45,4 +52,12 @@ export const SelectWrapper = styled.div`
   &:last-child {
     right: 20px;
   }
+`;
+
+export const HiddenButton = styled.button`
+  position: absolute;
+`;
+
+export const HiddenLink = styled(Link)`
+  position: absolute;
 `;

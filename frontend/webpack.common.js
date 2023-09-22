@@ -62,7 +62,7 @@ module.exports = {
         type: 'asset/inline',
       },
       {
-        test: /\.(png|jpg|jpeg|gif)$/i,
+        test: /\.(png|jpg|jpeg|gif|webp)$/i,
         type: 'asset/resource',
       },
     ],
@@ -93,5 +93,14 @@ module.exports = {
         target: 'es2021',
       }),
     ],
+    splitChunks: {
+      cacheGroups: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+        },
+      },
+    },
   },
 };

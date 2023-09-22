@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 
 import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
@@ -92,7 +91,7 @@ export default function PostList() {
           />
         </S.SelectWrapper>
       </S.SelectContainer>
-      <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
+      <S.HiddenLink aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE} />
       <S.PostListContainer>
         {isPostListEmpty && (
           <EmptyPostList status={selectedStatusOption} keyword={postOptionalOption.keyword} />
@@ -107,10 +106,17 @@ export default function PostList() {
                   </div>
                 );
               }
+
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
-            <button onClick={focusTopContent} aria-label="스크롤 맨 위로가기"></button>
-            <Link aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE}></Link>
+            <S.HiddenButton
+              onClick={focusTopContent}
+              aria-label="스크롤 맨 위로가기"
+            ></S.HiddenButton>
+            <S.HiddenLink
+              aria-label="게시글 작성 페이지로 이동"
+              to={PATH.POST_WRITE}
+            ></S.HiddenLink>
           </React.Fragment>
         ))}
         {isFetchingNextPage && <Skeleton isLarge={false} />}

@@ -12,6 +12,10 @@ import PostMenu from '@components/common/PostMenu';
 import TagButton from '@components/common/TagButton';
 import ReportModal from '@components/ReportModal';
 
+import { PATH } from '@constants/path';
+
+import { LoadingType } from '../types';
+
 import * as S from './style';
 
 type MovePageEvent = 'moveWritePostPage' | 'moveVoteStatisticsPage' | 'movePostListPage';
@@ -28,6 +32,7 @@ interface PostDetailPageChildProps {
       reportNickname: (reason: string) => void;
     };
   };
+  isEventLoading: Record<LoadingType, boolean>;
 }
 
 const menuList: PostMenuItem[] = [
@@ -39,6 +44,7 @@ export default function InnerHeaderPart({
   isWriter,
   isClosed,
   handleEvent: { movePage, controlPost },
+  isEventLoading,
 }: PostDetailPageChildProps) {
   const navigate = useNavigate();
 
@@ -46,6 +52,8 @@ export default function InnerHeaderPart({
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
   const { isOpen, toggleComponent, closeComponent } = useToggle();
   const [action, setAction] = useState<PostAction | null>(null);
+
+  const { isDeletePostLoading, isReportNicknameLoading, isReportPostLoading } = isEventLoading;
 
   const handleMenuClick = (action: PostAction) => {
     closeComponent();
@@ -56,14 +64,17 @@ export default function InnerHeaderPart({
     setAction(null);
   };
 
+  const handleBackButtonClick = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+    navigate(PATH.HOME);
+  };
+
   return (
     <>
-      <IconButton
-        category="back"
-        onClick={() => {
-          navigate(-1);
-        }}
-      />
+      <IconButton category="back" onClick={handleBackButtonClick} />
       <S.HeaderWrapper>
         {!isWriter ? (
           <>
@@ -84,8 +95,12 @@ export default function InnerHeaderPart({
             <HeaderTextButton aria-label="게시글 수정" onClick={moveWritePostPage}>
               수정
             </HeaderTextButton>
-            <HeaderTextButton aria-label="게시글 삭제" onClick={() => handleMenuClick('DELETE')}>
-              삭제
+            <HeaderTextButton
+              aria-label="게시글 삭제"
+              onClick={() => handleMenuClick('DELETE')}
+              disabled={isDeletePostLoading}
+            >
+              {isDeletePostLoading ? '삭제 중...' : '삭제'}
             </HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton aria-label="게시글 조기마감" size="sm" onClick={setEarlyClosePost}>
@@ -95,8 +110,13 @@ export default function InnerHeaderPart({
           </>
         ) : (
           <>
-            <HeaderTextButton aria-label="게시글 삭제" onClick={() => handleMenuClick('DELETE')}>
-              삭제
+            <HeaderTextButton
+              aria-label="게시글 삭제"
+              onClick={() => handleMenuClick('DELETE')}
+              disabled={isDeletePostLoading}
+              isLoading={isDeletePostLoading}
+            >
+              {isDeletePostLoading ? '삭제 중...' : '삭제'}
             </HeaderTextButton>
             <S.TagButtonWrapper>
               <TagButton aria-label="게시글 통계보기" size="sm" onClick={moveVoteStatisticsPage}>
@@ -110,6 +130,7 @@ export default function InnerHeaderPart({
             target="POST"
             handleCancelClick={handleCancelClick}
             handleDeleteClick={deletePost}
+            isDeleting={isDeletePostLoading}
           />
         )}
         {action === 'POST_REPORT' && (
@@ -117,6 +138,7 @@ export default function InnerHeaderPart({
             reportType="POST"
             handleReportClick={reportPost}
             handleCancelClick={handleCancelClick}
+            isReportLoading={isReportPostLoading}
           />
         )}
         {action === 'NICKNAME_REPORT' && (
@@ -124,6 +146,7 @@ export default function InnerHeaderPart({
             reportType="NICKNAME"
             handleReportClick={reportNickname}
             handleCancelClick={handleCancelClick}
+            isReportLoading={isReportNicknameLoading}
           />
         )}
       </S.HeaderWrapper>

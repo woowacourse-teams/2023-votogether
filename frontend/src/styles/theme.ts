@@ -11,6 +11,7 @@ const breakpoint = {
 
 const zIndex = {
   select: 1,
+  tagButton: 90,
   header: 100,
   modal: 200,
 };

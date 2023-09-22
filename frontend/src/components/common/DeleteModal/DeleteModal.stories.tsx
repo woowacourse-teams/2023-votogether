@@ -11,12 +11,22 @@ type Story = StoryObj<typeof DeleteModal>;
 
 export const Post: Story = {
   render: () => (
-    <DeleteModal target="POST" handleCancelClick={() => {}} handleDeleteClick={() => {}} />
+    <DeleteModal
+      target="POST"
+      handleCancelClick={() => {}}
+      handleDeleteClick={() => {}}
+      isDeleting={false}
+    />
   ),
 };
 
 export const User: Story = {
   render: () => (
-    <DeleteModal target="MEMBERSHIP" handleCancelClick={() => {}} handleDeleteClick={() => {}} />
+    <DeleteModal
+      target="MEMBERSHIP"
+      handleCancelClick={() => {}}
+      handleDeleteClick={() => {}}
+      isDeleting={false}
+    />
   ),
 };

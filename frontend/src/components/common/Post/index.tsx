@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { memo, useContext, useEffect } from 'react';
 
 import { PostInfo } from '@type/post';
 
@@ -12,7 +12,8 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/vote';
 
-import { linkifyText } from '@utils/post/formatContentLink';
+import { linkifyText } from '@utils/post/formatTextLink';
+
 import { checkClosedPost, convertTimeToWord } from '@utils/time';
 
 import commentIcon from '@assets/comment.svg';
@@ -27,7 +28,7 @@ interface PostProps {
   isPreview: boolean;
 }
 
-export default function Post({ postInfo, isPreview }: PostProps) {
+export default memo(function Post({ postInfo, isPreview }: PostProps) {
   const {
     postId,
     category,
@@ -46,13 +47,13 @@ export default function Post({ postInfo, isPreview }: PostProps) {
 
   const {
     mutate: createVote,
-    isError: isCreateError,
-    error: createError,
+    isError: isCreateVoteError,
+    error: createVoteError,
   } = useCreateVote({ isPreview, postId });
   const {
     mutate: editVote,
-    isError: isEditError,
-    error: editError,
+    isError: isEditVoteError,
+    error: editVoteError,
   } = useEditVote({ isPreview, postId });
 
   const isActive = !checkClosedPost(deadline);
@@ -90,16 +91,20 @@ export default function Post({ postInfo, isPreview }: PostProps) {
   };
 
   useEffect(() => {
-    if (isCreateError && createError instanceof Error) {
-      openToast(createError.message);
+    if (isCreateVoteError && createVoteError instanceof Error) {
+      const errorResponse = JSON.parse(createVoteError.message);
+      openToast(errorResponse.message);
+      return;
     }
-  }, [isCreateError, createError]);
+  }, [isCreateVoteError, createVoteError]);
 
   useEffect(() => {
-    if (isEditError && editError instanceof Error) {
-      openToast(editError.message);
+    if (isEditVoteError && editVoteError instanceof Error) {
+      const errorResponse = JSON.parse(editVoteError.message);
+      openToast(errorResponse.message);
+      return;
     }
-  }, [isEditError, editError]);
+  }, [isEditVoteError, editVoteError]);
 
   const isPreviewTabIndex = isPreview ? undefined : 0;
 
@@ -188,4 +193,4 @@ export default function Post({ postInfo, isPreview }: PostProps) {
       )}
     </S.Container>
   );
-}
+});

@@ -49,5 +49,3 @@ export const DEADLINE_OPTION: DeadlineOptionInfo[] = [
     },
   },
 ];
-
-export const MAX_FILE_SIZE = 1500000;

@@ -34,6 +34,7 @@ public class JwtAuthorizationArgumentResolver implements HandlerMethodArgumentRe
     ) throws JsonProcessingException {
         final String token = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenWithoutType = tokenProcessor.resolveToken(token);
+        tokenProcessor.validateToken(tokenWithoutType);
         final TokenPayload tokenPayload = tokenProcessor.parseToken(tokenWithoutType);
         return memberService.findById(tokenPayload.memberId());
     }

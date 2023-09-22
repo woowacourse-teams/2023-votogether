@@ -1,6 +1,6 @@
 import { PATH } from '@constants/path';
 
-import kakaoLogin from '@assets/kakao_login_large.svg';
+import kakaoLogin from '@assets/kakao_login_large.webp';
 
 import * as S from './style';
 

@@ -26,7 +26,7 @@ export const uploadImage = async ({
   inputElement.setCustomValidity('');
 
   if (imageFile.size > MAX_FILE_SIZE) {
-    inputElement.setCustomValidity('사진의 용량은 1.5MB 이하만 가능합니다.');
+    inputElement.setCustomValidity('사진의 용량은 10MB 이하만 가능합니다.');
     inputElement.reportValidity();
 
     return;

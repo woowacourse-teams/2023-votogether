@@ -1,13 +1,24 @@
-import imageCompression from 'browser-image-compression';
+import { imageConverter } from 'upload-images-converter';
+
+import { calculateAspectRatioSize } from './calculateAspectRatioSize';
+import { getImageSize } from './getImageSize';
 
 export const convertImageToWebP = async (imageFile: File) => {
-  const compressedBlob = await imageCompression(imageFile, {
+  const { width: originWidth, height: originHeight } = await getImageSize(imageFile);
+
+  const { width, height } = calculateAspectRatioSize({
+    originWidth,
+    originHeight,
     maxWidthOrHeight: 1280,
-    initialQuality: 0.5,
-    fileType: 'image/webp',
   });
 
-  const outputWebpFile = new File([compressedBlob], `${Date.now().toString()}.webp`);
+  const compressedBlob = await imageConverter({
+    files: [imageFile],
+    width,
+    height,
+  });
+
+  const outputWebpFile = new File([compressedBlob[0]], `${Date.now().toString()}.webp`);
 
   const dataTransfer = new DataTransfer();
 

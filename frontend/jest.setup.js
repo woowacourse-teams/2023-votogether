@@ -7,6 +7,17 @@ import { handlers } from './src/mocks/handlers';
 
 dotenv.config({ path: './.env.test' });
 
+/**
+ * 이 코드가 없다면 jest에서 upload-images-converter 패키지에 관한 에러가 발생합니다.
+ * 
+ *    SyntaxError: Unexpected token 'export'
+
+    > 1 | import { imageConverter } from 'upload-images-converter';
+ */
+jest.mock('upload-images-converter', () => ({
+  __esModule: true,
+}));
+
 export const server = setupServer(...handlers);
 
 beforeAll(() => {

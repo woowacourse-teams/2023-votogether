@@ -4,7 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Announcement from '@pages/Announcement';
 import Redirection from '@pages/auth/Redirection';
 import Error from '@pages/Error';
-import Home from '@pages/Home';
+import HomePage from '@pages/HomePage';
 import MyInfo from '@pages/MyInfo';
 import NotFound from '@pages/NotFound';
 import CreatePostPage from '@pages/post/CreatePostPage';
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute isGuestAllowed={true}>
         <ScrollToTop />
-        <Home />
+        <HomePage />
         <RouteChangeTracker />
       </PrivateRoute>
     ),
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute isGuestAllowed={true}>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -111,7 +111,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute isGuestAllowed={true}>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -137,7 +137,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -147,7 +147,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),

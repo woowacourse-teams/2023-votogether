@@ -1,6 +1,6 @@
 import { Category } from '@type/category';
 
-import { PostRequestKind } from '@pages/Home/PostListPage/types';
+import { PostRequestKind } from '@pages/HomePage/types';
 
 export interface SelectedState {
   postType: PostRequestKind;

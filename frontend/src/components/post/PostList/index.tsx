@@ -7,8 +7,8 @@ import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 import { useSelect } from '@hooks/useSelect';
 
-import { SORTING_OPTION, STATUS_OPTION } from '@pages/Home/PostListPage/constants';
-import { PostSorting, PostStatus } from '@pages/Home/PostListPage/types';
+import { SORTING_OPTION, STATUS_OPTION } from '@pages/HomePage/constants';
+import { PostSorting, PostStatus } from '@pages/HomePage/types';
 
 import Select from '@components/common/Select';
 import Skeleton from '@components/common/Skeleton';

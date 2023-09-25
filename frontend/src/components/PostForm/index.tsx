@@ -23,12 +23,12 @@ import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { PATH } from '@constants/path';
+import { MAX_DEADLINE, POST_CATEGORY, POST_CONTENT, POST_TITLE } from '@constants/policy';
 import {
   CONTENT_PLACEHOLDER,
   POST_DEADLINE_POLICY,
   POST_TITLE_POLICY,
 } from '@constants/policyMessage';
-import { CATEGORY_COUNT_LIMIT, MAX_DEADLINE, POST_CONTENT, POST_TITLE } from '@constants/post';
 
 import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
 import { checkWriter } from '@utils/post/checkWriter';
@@ -102,7 +102,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     handleTextChange: handleContentChange,
     addText: addContent,
   } = useText(content ?? '');
-  const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
+  const multiSelectHook = useMultiSelect(categoryIds ?? [], POST_CATEGORY.MAX_AMOUNT);
 
   const handleDeadlineButtonClick = (option: DeadlineOptionInfo) => {
     const targetTime = option.time;

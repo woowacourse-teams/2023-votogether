@@ -12,7 +12,7 @@ import SquareButton from '@components/common/SquareButton';
 import Toast from '@components/common/Toast';
 
 import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
-import { BIRTH_YEAR } from '@constants/user';
+import { BIRTH_YEAR } from '@constants/policy';
 
 import { getCookie, setCookie } from '@utils/cookie';
 

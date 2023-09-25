@@ -2,7 +2,7 @@ import React, { Dispatch } from 'react';
 
 import { Time } from '@type/post';
 
-import { MAX_DEADLINE } from '@constants/post';
+import { MAX_DEADLINE } from '@constants/policy';
 
 import * as S from './style';
 import TimePickerOption from './TimePickerOption';

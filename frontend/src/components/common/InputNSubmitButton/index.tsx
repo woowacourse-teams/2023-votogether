@@ -1,16 +1,14 @@
 import React, { ChangeEvent } from 'react';
 
-import { useText } from '@hooks/useText';
+import { InputLengthRange, useText } from '@hooks/useText';
 
 import SquareButton from '@components/common/SquareButton';
-
-import { TextLimit } from '@constants/user';
 
 import * as S from './style';
 
 interface InputNSubmitButtonProps {
   handleSubmit: (newText: string) => void;
-  limitText: TextLimit;
+  limitText: InputLengthRange;
   initText?: string;
   ariaLabel?: string;
 }

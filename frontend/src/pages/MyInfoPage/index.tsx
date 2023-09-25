@@ -14,8 +14,8 @@ import Layout from '@components/common/Layout';
 import SquareButton from '@components/common/SquareButton';
 import Toast from '@components/common/Toast';
 
+import { NICKNAME } from '@constants/policy';
 import { NICKNAME_POLICY } from '@constants/policyMessage';
-import { NICKNAME } from '@constants/user';
 
 import InputNSubmitButton from '../../components/common/InputNSubmitButton';
 

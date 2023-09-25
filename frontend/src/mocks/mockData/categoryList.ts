@@ -25,3 +25,16 @@ export const MOCK_GUEST_CATEGORY_LIST: CategoryResponse[] = [
   { id: 9, name: '개발', isFavorite: false },
   { id: 10, name: '전자기기', isFavorite: false },
 ];
+
+export const MOCK_OPTION_CATEGORY_LIST = [
+  { id: 1, name: '옵션1' },
+  { id: 2, name: '옵션2' },
+  { id: 5, name: '옵션3' },
+  { id: 7, name: '옵션4' },
+  { id: 9, name: '옵션5' },
+  { id: 10, name: '옵션6' },
+  { id: 11, name: '옵션7' },
+  { id: 13, name: '옵션8' },
+  { id: 15, name: '옵션9' },
+  { id: 16, name: '매우 긴----------~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~옵션10' },
+];

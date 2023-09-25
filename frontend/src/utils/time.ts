@@ -1,4 +1,4 @@
-import { MAX_DEADLINE } from '@constants/post';
+import { MAX_DEADLINE } from '@constants/policy';
 
 import { addTimeToDate } from './post/formatTime';
 
@@ -83,6 +83,11 @@ export const convertTimeToWord = (date: string, currentDate: Date = new Date()) 
   return `${positiveTimeDifference}분 ${afterBefore}`;
 };
 
+/**
+ * 일(day)만 입력가능합니다.
+ * @param days
+ * @returns 초로 반환해준다.
+ */
 export const convertDayToSecond = (days: number) => {
   const secondsPerDay = 24 * 60 * 60;
 

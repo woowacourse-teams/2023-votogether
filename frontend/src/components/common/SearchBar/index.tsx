@@ -5,8 +5,9 @@ import { Size } from '@type/style';
 import { useCurrentKeyword } from '@hooks/useCurrentKeyword';
 import { useSearch } from '@hooks/useSearch';
 
+import { SEARCH_KEYWORD } from '@constants/api';
 import { PATH } from '@constants/path';
-import { SEARCH_KEYWORD, SEARCH_KEYWORD_MAX_LENGTH } from '@constants/post';
+import { SEARCH_KEYWORD_MAX_LENGTH } from '@constants/policy';
 
 import searchIcon from '@assets/search_black.svg';
 

@@ -1,4 +1,5 @@
-import { MAX_FILE_SIZE } from '@constants/post';
+import { MAX_FILE_SIZE } from '@constants/policy';
+import { POST_PHOTO } from '@constants/policyMessage';
 
 import { convertImageToWebP } from '@utils/resizeImage';
 
@@ -26,7 +27,7 @@ export const uploadImage = async ({
   inputElement.setCustomValidity('');
 
   if (imageFile.size > MAX_FILE_SIZE) {
-    inputElement.setCustomValidity('사진의 용량은 10MB 이하만 가능합니다.');
+    inputElement.setCustomValidity(POST_PHOTO.PHOTO_CAPACITY);
     inputElement.reportValidity();
 
     return;

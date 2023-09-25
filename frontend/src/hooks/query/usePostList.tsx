@@ -4,7 +4,7 @@ import { PostList, PostListByOptionalOption, PostListByRequiredOption } from '@t
 
 import { getPostList } from '@api/postList';
 
-import { POST_LIST_MAX_LENGTH } from '@constants/post';
+import { POST_AMOUNT_PER_PAGE } from '@constants/api';
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const usePostList = (
@@ -21,7 +21,7 @@ export const usePostList = (
         getPostList({ ...requiredOption, pageNumber: pageParam }, optionalOption),
       {
         getNextPageParam: lastPage => {
-          if (lastPage.postList.length !== POST_LIST_MAX_LENGTH) return;
+          if (lastPage.postList.length !== POST_AMOUNT_PER_PAGE) return;
 
           return lastPage.pageNumber + 1;
         },

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Layout from '@components/common/Layout';
 import SquareButton from '@components/common/SquareButton';
 
-import { APP_LAUNCH_EVENT } from '@constants/announcement';
+import { APP_LAUNCH_EVENT } from '@constants/policyMessage';
 
 import * as S from './style';
 

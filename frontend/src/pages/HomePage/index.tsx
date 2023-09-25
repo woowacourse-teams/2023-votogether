@@ -16,8 +16,8 @@ import Skeleton from '@components/common/Skeleton';
 import UpButton from '@components/common/UpButton';
 import PostList from '@components/post/PostList';
 
-import { APP_LAUNCH_EVENT } from '@constants/announcement';
 import { PATH } from '@constants/path';
+import { APP_LAUNCH_EVENT } from '@constants/policyMessage';
 
 import { smoothScrollToTop } from '@utils/scrollToTop';
 

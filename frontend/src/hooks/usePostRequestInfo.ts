@@ -2,8 +2,9 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import { PostRequestKind } from '@pages/HomePage/types';
 
+import { POST_TYPE } from '@constants/api';
+import { DEFAULT_CATEGORY_ID } from '@constants/api';
 import { PATH } from '@constants/path';
-import { DEFAULT_CATEGORY_ID, POST_TYPE } from '@constants/post';
 
 import { getPathFragment } from '@utils/getPathFragment';
 

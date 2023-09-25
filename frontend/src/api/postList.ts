@@ -1,12 +1,8 @@
 import { PostInfoResponse, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
 
-import {
-  REQUEST_STATUS_OPTION,
-  REQUEST_SORTING_OPTION,
-  REQUEST_POST_KIND_URL,
-  POST_TYPE,
-  SEARCH_KEYWORD,
-} from '@constants/post';
+import { POST_TYPE, REQUEST_POST_KIND_URL } from '@constants/api';
+import { SEARCH_KEYWORD, DEFAULT_CATEGORY_ID } from '@constants/api';
+import { REQUEST_SORTING_OPTION, REQUEST_STATUS_OPTION } from '@constants/post';
 
 import { getFetch } from '@utils/fetch';
 
@@ -29,7 +25,7 @@ export const makePostListUrl = (
   }`;
   const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
 
-  if (categoryId > 0 && postType === POST_TYPE.CATEGORY) {
+  if (categoryId > DEFAULT_CATEGORY_ID && postType === POST_TYPE.CATEGORY) {
     return `${POST_BASE_URL}?${OPTION_URL}&category=${categoryId}`;
   }
 

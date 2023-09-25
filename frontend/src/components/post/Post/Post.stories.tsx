@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { MOCK_NOT_VOTE_POST, MOCK_VOTE_POST } from './mockData';
+import { MOCK_NOT_VOTE_POST, MOCK_VOTE_POST } from '@mocks/mockData/post';
 
 import Post from '.';
 

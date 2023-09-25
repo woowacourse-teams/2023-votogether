@@ -10,7 +10,7 @@ import { useToast } from '@hooks/useToast';
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
 import { PATH } from '@constants/path';
-import { POST } from '@constants/vote';
+import { POST } from '@constants/policy';
 
 import { linkifyText } from '@utils/post/formatTextLink';
 import { checkClosedPost, convertTimeToWord } from '@utils/time';

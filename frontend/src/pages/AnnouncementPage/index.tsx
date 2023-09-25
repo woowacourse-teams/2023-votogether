@@ -7,7 +7,7 @@ import { APP_LAUNCH_EVENT } from '@constants/announcement';
 
 import * as S from './style';
 
-export default function Announcement() {
+export default function AnnouncementPage() {
   const navigate = useNavigate();
   const { TITLE } = APP_LAUNCH_EVENT;
 

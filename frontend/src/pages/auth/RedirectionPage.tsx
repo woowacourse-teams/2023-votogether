@@ -5,7 +5,7 @@ import { AuthContext } from '@hooks/context/auth';
 
 import { getAuthInfo } from '@api/auth';
 
-import Error from '@pages/Error';
+import ErrorPage from '@pages/ErrorPage';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 
@@ -16,7 +16,7 @@ import { setCookie } from '@utils/cookie';
 import { setLocalStorage } from '@utils/localStorage';
 import { decodeToken } from '@utils/token/decodeToken';
 
-export default function Redirection() {
+export default function RedirectionPage() {
   const { loggedInfo, setLoggedInfo } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -68,5 +68,5 @@ export default function Redirection() {
       </div>
     );
 
-  if (errorMessage) return <Error message={errorMessage} />;
+  if (errorMessage) return <ErrorPage message={errorMessage} />;
 }

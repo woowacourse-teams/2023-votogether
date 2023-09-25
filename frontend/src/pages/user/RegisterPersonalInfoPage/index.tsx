@@ -24,7 +24,7 @@ interface UserInfoForm {
   isTermsAgreed: boolean;
 }
 
-export default function RegisterPersonalInfo() {
+export default function RegisterPersonalInfoPage() {
   const navigate = useNavigate();
   const hasEssentialInfo = getCookie().hasEssentialInfo === 'true';
 

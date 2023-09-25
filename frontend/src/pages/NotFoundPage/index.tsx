@@ -6,7 +6,7 @@ import SquareButton from '@components/common/SquareButton';
 
 import * as S from './style';
 
-export default function NotFound() {
+export default function NotFoundPage() {
   const navigate = useNavigate();
   return (
     <Layout isSidebarVisible={false}>

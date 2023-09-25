@@ -6,7 +6,7 @@ import SquareButton from '@components/common/SquareButton';
 
 import * as S from './style';
 
-export default function Error({ message }: { message?: string }) {
+export default function ErrorPage({ message }: { message?: string }) {
   const navigate = useNavigate();
 
   return (

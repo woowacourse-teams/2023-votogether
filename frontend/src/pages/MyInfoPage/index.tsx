@@ -22,7 +22,7 @@ import InputNSubmitButton from '../../components/common/InputNSubmitButton';
 import DeleteMemberModal from './DeleteMemberModal';
 import * as S from './style';
 
-export default function MyInfo() {
+export default function MyInfoPage() {
   const navigate = useNavigate();
 
   const {

@@ -11,7 +11,7 @@ import * as S from './style';
 
 export default function EditPostPage() {
   return (
-    <Layout isSidebarVisible={false}>
+    <Layout isSidebarVisible={false} isMobileDefaultHeaderVisible={false}>
       <ErrorBoundary>
         <Suspense
           fallback={

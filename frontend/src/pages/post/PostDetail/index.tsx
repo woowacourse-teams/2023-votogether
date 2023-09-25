@@ -9,7 +9,7 @@ import PostDetailFallback from './PostDetailFallback';
 
 export default function PostDetailPage() {
   return (
-    <Layout isSidebarVisible={true}>
+    <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>
       <ErrorBoundary>
         <Suspense fallback={<PostDetailFallback />}>
           <PostDetail />

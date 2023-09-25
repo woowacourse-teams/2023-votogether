@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
-import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 
 import { APP_LAUNCH_EVENT } from '@constants/announcement';
@@ -15,16 +13,6 @@ export default function Announcement() {
 
   return (
     <Layout isSidebarVisible={false}>
-      <S.HeaderWrapper>
-        <NarrowTemplateHeader>
-          <IconButton
-            category="back"
-            onClick={() => {
-              navigate(-1);
-            }}
-          />
-        </NarrowTemplateHeader>
-      </S.HeaderWrapper>
       <S.Wrapper>
         <S.Title>{TITLE}</S.Title>
         <S.MainWrapper>

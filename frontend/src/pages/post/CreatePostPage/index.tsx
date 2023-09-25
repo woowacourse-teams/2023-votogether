@@ -34,7 +34,7 @@ export default function CreatePostPage() {
   }, [isError, error]);
 
   return (
-    <Layout isSidebarVisible={false}>
+    <Layout isSidebarVisible={false} isMobileDefaultHeaderVisible={false}>
       <PostForm mutate={mutate} isSubmitting={isLoading} />
       {isToastOpen && (
         <Toast size="md" position="bottom">

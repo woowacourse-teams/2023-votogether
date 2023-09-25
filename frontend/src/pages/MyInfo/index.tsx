@@ -10,9 +10,7 @@ import { useToggle } from '@hooks/useToggle';
 import Accordion from '@components/common/Accordion';
 import GuestProfile from '@components/common/Dashboard/GuestProfile';
 import UserProfile from '@components/common/Dashboard/UserProfile';
-import IconButton from '@components/common/IconButton';
 import Layout from '@components/common/Layout';
-import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import Toast from '@components/common/Toast';
 
@@ -87,16 +85,6 @@ export default function MyInfo() {
   return (
     <Layout isSidebarVisible={true}>
       <S.Wrapper>
-        <S.HeaderWrapper>
-          <NarrowTemplateHeader>
-            <IconButton
-              category="back"
-              onClick={() => {
-                navigate(-1);
-              }}
-            />
-          </NarrowTemplateHeader>
-        </S.HeaderWrapper>
         <S.ProfileSection>
           {loggedInfo.userInfo ? <UserProfile userInfo={loggedInfo.userInfo} /> : <GuestProfile />}
         </S.ProfileSection>

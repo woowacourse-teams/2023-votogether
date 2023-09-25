@@ -5,7 +5,7 @@ import PostListPage from './PostListPage';
 
 export default function Home() {
   return (
-    <Layout isSidebarVisible={true}>
+    <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>
       <PostListPage />
       <AppInstallPrompt />
     </Layout>

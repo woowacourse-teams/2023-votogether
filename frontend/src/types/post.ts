@@ -1,4 +1,4 @@
-import { PostRequestKind, PostSorting, PostStatus } from '@components/post/PostListPage/types';
+import { PostRequestKind, PostSorting, PostStatus } from '@pages/Home/PostListPage/types';
 
 export interface WrittenVoteOptionType {
   id: number;

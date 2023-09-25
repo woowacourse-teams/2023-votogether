@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 
 import { useSelect } from '@hooks/useSelect';
 
-import { PostStatus } from '@components/post/PostListPage/types';
+import { PostStatus } from '@pages/Home/PostListPage/types';
 
 const INIT_SELECTED_OPTION = 'progress';
 const CHANGE_SELECTED_OPTION = 'closed';

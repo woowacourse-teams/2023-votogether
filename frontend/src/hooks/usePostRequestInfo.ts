@@ -1,6 +1,6 @@
 import { useLocation, useParams } from 'react-router-dom';
 
-import { PostRequestKind } from '@components/post/PostListPage/types';
+import { PostRequestKind } from '@pages/Home/PostListPage/types';
 
 import { PATH } from '@constants/path';
 import { DEFAULT_CATEGORY_ID, POST_TYPE } from '@constants/post';

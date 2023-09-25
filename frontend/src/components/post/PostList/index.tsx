@@ -7,13 +7,15 @@ import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 import { useSelect } from '@hooks/useSelect';
 
+import { SORTING_OPTION, STATUS_OPTION } from '@pages/Home/PostListPage/constants';
+import { PostSorting, PostStatus } from '@pages/Home/PostListPage/types';
+
 import Select from '@components/common/Select';
 import Skeleton from '@components/common/Skeleton';
 import Post from '@components/post/Post';
-import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
-import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
 
 import { PATH } from '@constants/path';
+import { REQUEST_SORTING_OPTION } from '@constants/post';
 
 import EmptyPostList from '../EmptyPostList';
 
@@ -87,7 +89,7 @@ export default function PostList() {
               handleSortingOptionChange(value);
             }}
             optionList={SORTING_OPTION}
-            selectedOption={SORTING_OPTION[selectedSortingOption]}
+            selectedOption={REQUEST_SORTING_OPTION[selectedSortingOption]}
           />
         </S.SelectWrapper>
       </S.SelectContainer>

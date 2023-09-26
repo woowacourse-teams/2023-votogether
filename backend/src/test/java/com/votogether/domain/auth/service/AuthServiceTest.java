@@ -2,6 +2,7 @@ package com.votogether.domain.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
 import com.votogether.domain.auth.service.dto.ReissuedTokenDto;
@@ -63,8 +64,17 @@ class AuthServiceTest {
             ReissuedTokenDto reissuedTokenDto = authService.reissueAuthToken(request, refreshToken);
 
             // then
-            redisTemplate.opsForValue().get(reissuedTokenDto.refreshToken());
-            assertThat(reissuedTokenDto.refreshToken()).isEqualTo(refreshToken);
+            final Long savedMemberId = redisTemplate.opsForValue().get(reissuedTokenDto.refreshToken());
+            final Long dbSize = Objects.requireNonNull(redisTemplate.getConnectionFactory())
+                    .getConnection()
+                    .serverCommands()
+                    .dbSize();
+
+            assertSoftly(softly -> {
+                        softly.assertThat(memberId).isEqualTo(savedMemberId);
+                        softly.assertThat(dbSize).isEqualTo(1L);
+                    }
+            );
         }
 
         @Test

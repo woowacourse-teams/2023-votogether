@@ -64,8 +64,8 @@ class AuthServiceTest {
             ReissuedTokenDto reissuedTokenDto = authService.reissueAuthToken(request, refreshToken);
 
             // then
-            final Long savedMemberId = redisTemplate.opsForValue().get(reissuedTokenDto.refreshToken());
-            final Long dbSize = Objects.requireNonNull(redisTemplate.getConnectionFactory())
+            Long savedMemberId = redisTemplate.opsForValue().get(reissuedTokenDto.refreshToken());
+            Long dbSize = Objects.requireNonNull(redisTemplate.getConnectionFactory())
                     .getConnection()
                     .serverCommands()
                     .dbSize();

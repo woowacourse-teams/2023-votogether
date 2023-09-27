@@ -57,13 +57,8 @@ public class AuthService {
         redisTemplate.delete(refreshTokenByRequest);
         validateTokenInfo(accessTokenPayload, refreshTokenPayload);
 
-        System.out.println("ac.memberID = " + accessTokenPayload.memberId());
-        System.out.println("rc.memberID = " + refreshTokenPayload.memberId());
-
         final String newAccessToken = tokenProcessor.generateAccessToken(accessTokenPayload.memberId());
         final String newRefreshToken = tokenProcessor.generateRefreshToken(refreshTokenPayload.memberId());
-        System.out.println("refreshTokenByRequest = " + refreshTokenByRequest);
-        System.out.println("newRefreshToken = " + newRefreshToken);
         redisTemplate.opsForValue().set(newRefreshToken, accessTokenPayload.memberId(), Duration.ofDays(14L));
         return new ReissuedTokenDto(newAccessToken, newRefreshToken);
     }

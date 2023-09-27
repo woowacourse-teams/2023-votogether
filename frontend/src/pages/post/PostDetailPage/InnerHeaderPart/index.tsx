@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { PostAction, PostMenuItem } from '@type/menu';
 
-import { useToggle } from '@hooks/useToggle';
+import { useToggle } from '@hooks';
 
 import DeleteModal from '@components/common/DeleteModal';
 import HeaderTextButton from '@components/common/HeaderTextButton';

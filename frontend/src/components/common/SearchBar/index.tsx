@@ -2,8 +2,9 @@ import { HTMLAttributes } from 'react';
 
 import { Size } from '@type/style';
 
+import { useSearch } from '@hooks';
+
 import { useCurrentKeyword } from '@hooks/useCurrentKeyword';
-import { useSearch } from '@hooks/useSearch';
 
 import { SEARCH_KEYWORD } from '@constants/api';
 import { PATH } from '@constants/path';

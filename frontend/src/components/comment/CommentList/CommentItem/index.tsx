@@ -4,9 +4,10 @@ import { useParams } from 'react-router-dom';
 import { Comment } from '@type/comment';
 import { ReportRequest } from '@type/report';
 
+import { useToggle } from '@hooks';
+import { useToast } from '@hooks';
+
 import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
-import { useToast } from '@hooks/useToast';
-import { useToggle } from '@hooks/useToggle';
 
 import { reportContent } from '@api/report';
 

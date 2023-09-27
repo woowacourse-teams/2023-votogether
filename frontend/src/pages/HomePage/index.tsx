@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 
+import { useToggle } from '@hooks';
+
 import { useDrawer } from '@hooks/useDrawer';
-import { useToggle } from '@hooks/useToggle';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 

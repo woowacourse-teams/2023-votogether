@@ -1,8 +1,9 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
+import { useToast } from '@hooks';
+
 import { useUpdateUserInfo } from '@hooks/query/user/useUpdateUserInfo';
-import { useToast } from '@hooks/useToast';
 
 import Accordion from '@components/common/Accordion';
 import Layout from '@components/common/Layout';

@@ -1,8 +1,8 @@
 import { rest } from 'msw';
 
-import { PassionUser, RankingPost } from '@type/ranking';
+import { PassionUserRanking, PopularPostRanking } from '@type/ranking';
 
-const userRankingInfo: PassionUser = {
+const userRankingInfo: PassionUserRanking = {
   ranking: 1111,
   nickname: 'wow',
   postCount: 1,
@@ -10,7 +10,7 @@ const userRankingInfo: PassionUser = {
   score: 8,
 };
 
-const rankerInfo: PassionUser = {
+const rankerInfo: PassionUserRanking = {
   ranking: 1,
   nickname: 'gil-dong',
   postCount: 11,
@@ -18,11 +18,11 @@ const rankerInfo: PassionUser = {
   score: 134,
 };
 
-const rankerList: PassionUser[] = new Array(10)
+const rankerList: PassionUserRanking[] = new Array(10)
   .fill(rankerInfo)
   .map((ranker, index) => ({ ...ranker, ranking: index + 1 }));
 
-const rankingPostInfo: RankingPost = {
+const rankingPostInfo: PopularPostRanking = {
   ranking: 1,
   post: {
     id: 29,
@@ -31,7 +31,7 @@ const rankingPostInfo: RankingPost = {
     voteCount: 10,
   },
 };
-const rankingPostList: RankingPost[] = new Array(10)
+const rankingPostList: PopularPostRanking[] = new Array(10)
   .fill(rankingPostInfo)
   .map((post, index) => ({ ...post, ranking: index + 1 }));
 

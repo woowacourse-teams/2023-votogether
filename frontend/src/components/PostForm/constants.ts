@@ -1,4 +1,4 @@
-import { Time } from '@type/post';
+import { Time } from '@type/time';
 
 export type DeadlineOptionName = '1일' | '3일' | '5일' | '7일' | '14일';
 

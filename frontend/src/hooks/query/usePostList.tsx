@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { PostList, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
 
-import { getPostList } from '@api/postList';
+import { getPostList } from '@api/post';
 
 import { POST_AMOUNT_PER_PAGE } from '@constants/api';
 import { QUERY_KEY } from '@constants/queryKey';

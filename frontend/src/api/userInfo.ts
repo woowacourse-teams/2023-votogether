@@ -1,11 +1,23 @@
-import type {
-  UserInfoResponse,
-  User,
-  ModifyNicknameRequest,
-  UpdateUserInfoRequest,
-} from '@type/user';
+import type { User } from '@type/user';
 
 import { deleteFetch, getFetch, patchFetch } from '@utils/fetch';
+
+export interface UserInfoResponse {
+  nickname: string;
+  gender: 'FEMALE' | 'MALE';
+  birthYear: number;
+  postCount: number;
+  voteCount: number;
+}
+
+export interface ModifyNicknameRequest {
+  nickname: string;
+}
+
+export interface UpdateUserInfoRequest {
+  gender: 'MALE' | 'FEMALE';
+  birthYear: number;
+}
 
 export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
   const { nickname, gender, birthYear, postCount, voteCount } = userInfo;

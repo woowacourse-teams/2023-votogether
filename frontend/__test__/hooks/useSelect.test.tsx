@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { useSelect } from '@hooks/useSelect';
+import { useSelect } from '@hooks';
 
 import { PostStatus } from '@pages/HomePage/types';
 

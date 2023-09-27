@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { useToggleSwitch } from '@hooks/useToggleSwitch';
+import { useToggleSwitch } from '@hooks';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 

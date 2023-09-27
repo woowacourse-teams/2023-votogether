@@ -1,6 +1,6 @@
 import React, { Dispatch } from 'react';
 
-import { Time } from '@type/post';
+import { Time } from '@type/time';
 
 import { MAX_DEADLINE } from '@constants/policy';
 

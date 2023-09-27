@@ -1,11 +1,12 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useToggle } from '@hooks';
+import { useToast } from '@hooks';
+
 import { AuthContext } from '@hooks/context/auth';
 import { useModifyUser } from '@hooks/query/user/useModifyUser';
 import { useWithdrawalMembership } from '@hooks/query/user/useWithdrawalMembership';
-import { useToast } from '@hooks/useToast';
-import { useToggle } from '@hooks/useToggle';
 
 import Accordion from '@components/common/Accordion';
 import GuestProfile from '@components/common/Dashboard/GuestProfile';

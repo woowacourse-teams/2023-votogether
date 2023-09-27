@@ -2,10 +2,11 @@ import { memo, useContext, useEffect } from 'react';
 
 import { PostInfo } from '@type/post';
 
+import { useToast } from '@hooks';
+
 import { AuthContext } from '@hooks/context/auth';
 import { useCreateVote } from '@hooks/query/post/useCreateVote';
 import { useEditVote } from '@hooks/query/post/useEditVote';
-import { useToast } from '@hooks/useToast';
 
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 

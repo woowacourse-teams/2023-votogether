@@ -4,11 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PostInfo } from '@type/post';
 import { ReportRequest } from '@type/report';
 
-import { AuthContext } from '@hooks/context/auth';
-import { useDeletePost } from '@hooks/query/post/useDeletePost';
-import { useEarlyClosePost } from '@hooks/query/post/useEarlyClosePost';
-import { usePostDetail } from '@hooks/query/post/usePostDetail';
-import { useToast } from '@hooks/useToast';
+import { useToast, AuthContext, useDeletePost, useEarlyClosePost, usePostDetail } from '@hooks';
 
 import { reportContent } from '@api/report';
 

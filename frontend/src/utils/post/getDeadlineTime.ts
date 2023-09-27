@@ -1,4 +1,4 @@
-import { Time } from '@type/post';
+import { Time } from '@type/time';
 
 export const getDeadlineTime = ({ day, hour, minute }: Time) => {
   const timeMessage = [];

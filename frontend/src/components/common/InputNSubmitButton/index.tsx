@@ -1,6 +1,8 @@
 import React, { ChangeEvent } from 'react';
 
-import { InputLengthRange, useText } from '@hooks/useText';
+import { useText } from '@hooks';
+
+import { InputLengthRange } from '@hooks/useText';
 
 import SquareButton from '@components/common/SquareButton';
 

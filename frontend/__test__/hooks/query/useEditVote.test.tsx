@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { useEditVote } from '@hooks/query/post/useEditVote';
+import { useEditVote } from '@hooks';
 
 import { MOCK_POST_INFO } from '@mocks/mockData/post';
 

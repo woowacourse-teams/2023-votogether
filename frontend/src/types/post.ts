@@ -8,14 +8,6 @@ export interface WrittenVoteOptionType {
   imageUrl: string;
 }
 
-export interface WrittenVoteOptionTypeResponse {
-  optionId: number;
-  content: string;
-  voteCount: number;
-  votePercent: number;
-  imageUrl: string;
-}
-
 export interface PostInfo {
   postId: number;
   title: string;
@@ -34,29 +26,14 @@ export interface PostInfo {
   };
 }
 
-export interface PostInfoResponse {
-  postId: number;
-  title: string;
-  writer: { id: number; nickname: string };
-  content: string;
-  imageUrl: string;
-  categories: { id: number; name: string }[];
-  createdAt: string;
-  deadline: string;
-  imageCount: number;
-  commentCount: number;
-  voteInfo: {
-    selectedOptionId: number;
-    totalVoteCount: number;
-    options: WrittenVoteOptionTypeResponse[];
-  };
-}
-
 export interface PostList {
   pageNumber: number;
   postList: PostInfo[];
 }
 
+/**
+ * 게시글 리스트를 요청할 때 필수로 지정되어야 하는 조건들
+ */
 export interface PostListByRequiredOption {
   postType: PostRequestKind;
   postStatus: PostStatus;
@@ -65,13 +42,10 @@ export interface PostListByRequiredOption {
   isLoggedIn: boolean;
 }
 
+/**
+ * 게시글 리스트를 요청할 때 선택적으로 지정되는 조건들
+ */
 export interface PostListByOptionalOption {
   categoryId: number;
   keyword: string;
-}
-
-export interface Time {
-  day: number;
-  hour: number;
-  minute: number;
 }

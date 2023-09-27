@@ -1,4 +1,4 @@
-import { getPostList } from '@api/postList';
+import { getPostList } from '@api/post';
 
 import { POST_TYPE } from '@constants/api';
 import { SORTING, STATUS } from '@constants/post';

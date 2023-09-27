@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
+import { useSelect } from '@hooks';
+
 import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
-import { useSelect } from '@hooks/useSelect';
 
 import { SORTING_OPTION, STATUS_OPTION } from '@pages/HomePage/constants';
 import { PostSorting, PostStatus } from '@pages/HomePage/types';

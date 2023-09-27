@@ -3,10 +3,9 @@ import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
 
-import { useCreateComment } from '@hooks/query/comment/useCreateComment';
-import { useEditComment } from '@hooks/query/comment/useEditComment';
-import { useText } from '@hooks/useText';
-import { useToast } from '@hooks/useToast';
+import { useToast } from '@hooks';
+import { useText } from '@hooks';
+import { useCreateComment, useEditComment } from '@hooks';
 
 import SquareButton from '@components/common/SquareButton';
 import Toast from '@components/common/Toast';

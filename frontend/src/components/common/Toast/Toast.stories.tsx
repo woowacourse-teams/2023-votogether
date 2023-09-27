@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 
-import { useToast } from '@hooks/useToast';
+import { useToast } from '@hooks';
 
 import Toast from '.';
 

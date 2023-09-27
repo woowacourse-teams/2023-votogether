@@ -1,4 +1,4 @@
-import { Time } from '@type/post';
+import { Time } from '@type/time';
 
 import { WritingVoteOptionType } from '@hooks/useWritingOption';
 

@@ -1,4 +1,4 @@
-import { CategoryResponse } from '@type/category';
+import { CategoryResponse } from '@api/categoryList';
 
 export const MOCK_CATEGORY_LIST: CategoryResponse[] = [
   { id: 1, name: '음식', isFavorite: false },

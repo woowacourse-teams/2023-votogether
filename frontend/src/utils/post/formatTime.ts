@@ -1,4 +1,4 @@
-import { Time } from '@type/post';
+import { Time } from '@type/time';
 
 export function addTimeToDate(addTime: Time, baseTime: Date) {
   const { day, hour, minute } = addTime;

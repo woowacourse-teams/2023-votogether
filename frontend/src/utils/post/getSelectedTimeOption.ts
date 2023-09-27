@@ -1,4 +1,4 @@
-import { Time } from '@type/post';
+import { Time } from '@type/time';
 
 import { DEADLINE_OPTION, DeadlineOptionName } from '@components/PostForm/constants';
 

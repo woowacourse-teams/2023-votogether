@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { PassionUser } from '@type/ranking';
+import { PassionUserRanking } from '@type/ranking';
 
 import { getUserRanking } from '@api/ranking';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const useUserRanking = (isLoggedIn: boolean) => {
-  const { data, error, isLoading, isError } = useQuery<PassionUser | null>(
+  const { data, error, isLoading, isError } = useQuery<PassionUserRanking | null>(
     [QUERY_KEY.USER_INFO, isLoggedIn, QUERY_KEY.PASSION_RANKING],
     () => getUserRanking(isLoggedIn),
     {

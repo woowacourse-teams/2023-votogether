@@ -1,8 +1,8 @@
-import { PostInfo, PostInfoResponse } from '@type/post';
+import { PostInfo } from '@type/post';
 
-import { transformPostResponse } from '@api/post';
+import { PostDetailResponse, transformPostResponse } from '@api/post';
 
-const getMockPost = (): PostInfoResponse => ({
+const getMockPost = (): PostDetailResponse => ({
   postId: Math.floor(Math.random() * 100000),
   title:
     '어느 곳에서 정보를 찾아야 할지도 막막한 사람들을 위한, 심심풀이로 나의 취향과 남의 취향을 비교해보고 싶은 사람들을 위한 프로젝트',
@@ -68,7 +68,7 @@ const getMockPost = (): PostInfoResponse => ({
   },
 });
 
-const getMockGuestPost = (): PostInfoResponse => ({
+const getMockGuestPost = (): PostDetailResponse => ({
   postId: Math.floor(Math.random() * 100000),
   title: '애국가',
   writer: {
@@ -131,11 +131,11 @@ const getMockGuestPost = (): PostInfoResponse => ({
   },
 });
 
-export const MOCK_POST_LIST: PostInfoResponse[] = [];
-export const MOCK_GUEST_POST_LIST: PostInfoResponse[] = [];
+export const MOCK_POST_LIST: PostDetailResponse[] = [];
+export const MOCK_GUEST_POST_LIST: PostDetailResponse[] = [];
 
-export const MOCK_POST_INFO: PostInfoResponse = getMockPost();
-export const MOCK_GUEST_POST_INFO: PostInfoResponse = getMockGuestPost();
+export const MOCK_POST_INFO: PostDetailResponse = getMockPost();
+export const MOCK_GUEST_POST_INFO: PostDetailResponse = getMockGuestPost();
 
 for (let index = 0; index < 10; index += 1) {
   MOCK_POST_LIST.push(getMockPost());

@@ -10,7 +10,7 @@ import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { clearCookie } from '@utils/cookie';
 import { getLocalStorage, removeLocalStorage } from '@utils/localStorage';
-import { decodeToken } from '@utils/token/decodeToken';
+import { decodeToken } from '@utils/login/decodeToken';
 
 interface Auth {
   loggedInfo: LoggedInfo;

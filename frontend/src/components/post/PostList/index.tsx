@@ -1,19 +1,22 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
+import { useSelect } from '@hooks';
+
 import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
-import { useSelect } from '@hooks/useSelect';
 
-import Post from '@components/common/Post';
+import { SORTING_OPTION, STATUS_OPTION } from '@pages/HomePage/constants';
+import { PostSorting, PostStatus } from '@pages/HomePage/types';
+
 import Select from '@components/common/Select';
 import Skeleton from '@components/common/Skeleton';
-import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
-import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
+import Post from '@components/post/Post';
 
 import { PATH } from '@constants/path';
+import { REQUEST_SORTING_OPTION } from '@constants/post';
 
 import EmptyPostList from '../EmptyPostList';
 
@@ -87,7 +90,7 @@ export default function PostList() {
               handleSortingOptionChange(value);
             }}
             optionList={SORTING_OPTION}
-            selectedOption={SORTING_OPTION[selectedSortingOption]}
+            selectedOption={REQUEST_SORTING_OPTION[selectedSortingOption]}
           />
         </S.SelectWrapper>
       </S.SelectContainer>

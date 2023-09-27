@@ -1,8 +1,21 @@
-import { Comment, CommentRequest, CommentResponse } from '@type/comment';
+import { Comment } from '@type/comment';
 
 import { getFetch, postFetch, putFetch, deleteFetch } from '@utils/fetch';
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
+
+export interface CommentResponse {
+  id: number;
+  member: {
+    id: number;
+    nickname: string;
+  };
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CommentRequest = Pick<CommentResponse, 'content'>;
 
 export const transformCommentListResponse = (commentList: CommentResponse[]): Comment[] => {
   return commentList.map(comment => ({

@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { useModifyUser } from '@hooks/query/user/useModifyUser';
+import { useModifyUser } from '@hooks';
 
 import { MOCK_USER_INFO } from '@mocks/mockData/user';
 

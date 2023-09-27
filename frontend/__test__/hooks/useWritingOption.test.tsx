@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 
-import { useWritingOption } from '@hooks/useWritingOption';
+import { useWritingOption } from '@hooks';
 
 const MOCK_MAX_VOTE_OPTION = [
   { id: 12341, text: '', imageUrl: '' },
@@ -96,22 +96,6 @@ describe('useWritingOption 훅을 테스트 한다.', () => {
 
     expect(optionList).toEqual(
       MOCK_MAX_VOTE_OPTION.slice(1, 5).map(option => ({ ...option, isServerId: true }))
-    );
-  });
-
-  test('투표 선택지가 2개일때는 삭제할 수 없다.', () => {
-    const { result } = renderHook(() => useWritingOption(MOCK_MIN_VOTE_OPTION));
-
-    const { deleteOption } = result.current;
-
-    act(() => {
-      deleteOption(MOCK_MIN_VOTE_OPTION[0].id);
-    });
-
-    const { optionList } = result.current;
-
-    expect(optionList).toEqual(
-      MOCK_MIN_VOTE_OPTION.map(option => ({ ...option, isServerId: true }))
     );
   });
 

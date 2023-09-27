@@ -6,7 +6,7 @@ import { getPost, getPostForGuest } from '@api/post';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-import { checkClosedPost } from '@utils/time';
+import { checkClosedPost } from '@utils/time/checkClosedPost';
 
 export const usePostDetail = (isLoggedIn: boolean, postId: number) => {
   const fetchApi = isLoggedIn ? getPost : getPostForGuest;

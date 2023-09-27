@@ -1,4 +1,4 @@
-import { PostStatus } from '../PostListPage/types';
+import { PostStatus } from '@pages/HomePage/types';
 
 import * as S from './style';
 

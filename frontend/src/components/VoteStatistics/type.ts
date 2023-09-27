@@ -5,15 +5,7 @@ export interface GraphProps {
   size: Size;
 }
 
-export const AGE_OPTION = [
-  '10대 미만',
-  '10대',
-  '20대',
-  '30대',
-  '40대',
-  '50대',
-  '60대 이상',
-] as const;
+const AGE_OPTION = ['10대 미만', '10대', '20대', '30대', '40대', '50대', '60대 이상'] as const;
 
 export type AgeCategory = (typeof AGE_OPTION)[number];
 

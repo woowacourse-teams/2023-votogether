@@ -4,9 +4,10 @@ import { useParams } from 'react-router-dom';
 import { Comment } from '@type/comment';
 import { ReportRequest } from '@type/report';
 
+import { useToggle } from '@hooks';
+import { useToast } from '@hooks';
+
 import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
-import { useToast } from '@hooks/useToast';
-import { useToggle } from '@hooks/useToggle';
 
 import { reportContent } from '@api/report';
 
@@ -15,7 +16,7 @@ import DeleteModal from '@components/common/DeleteModal';
 import Toast from '@components/common/Toast';
 import ReportModal from '@components/ReportModal';
 
-import { linkifyText } from '@utils/post/formatTextLink';
+import { convertTextToElement } from '@utils/post/convertTextToElement';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
@@ -151,7 +152,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           />
         </S.TextFormWrapper>
       ) : (
-        <S.Description>{linkifyText(content)}</S.Description>
+        <S.Description>{convertTextToElement(content)}</S.Description>
       )}
       {action === COMMENT_ACTION.DELETE && (
         <DeleteModal

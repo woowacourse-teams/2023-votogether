@@ -1,4 +1,4 @@
-export interface PassionUser {
+export interface PassionUserRanking {
   ranking: number;
   nickname: string;
   postCount: number;
@@ -6,7 +6,7 @@ export interface PassionUser {
   score: number;
 }
 
-export interface RankingPost {
+export interface PopularPostRanking {
   ranking: number;
   post: {
     id: number;

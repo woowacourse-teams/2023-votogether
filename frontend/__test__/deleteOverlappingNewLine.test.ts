@@ -1,4 +1,4 @@
-import { deleteOverlappingNewLine } from '@utils/post/deleteOverlappingNewLine';
+import { deleteOverlappingNewLine } from '@utils/deleteOverlappingNewLine';
 
 describe('연속된 개행은 하나의 개행으로 처리하는 유틸함수를 테스트한다.', () => {
   test('개행이 없는 문자열은 인자와 동일한 결과를 반환한다.', () => {

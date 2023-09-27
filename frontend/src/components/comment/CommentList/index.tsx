@@ -1,8 +1,6 @@
 import { useContext, useRef, Fragment } from 'react';
 
-import { AuthContext } from '@hooks/context/auth';
-import { useCommentList } from '@hooks/query/comment/useCommentList';
-import { useMoreComment } from '@hooks/useMoreComment';
+import { useCommentList, useMoreComment, AuthContext } from '@hooks';
 
 import SquareButton from '@components/common/SquareButton';
 

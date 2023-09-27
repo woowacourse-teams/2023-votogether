@@ -1,6 +1,6 @@
-import { Comment, CommentResponse } from '@type/comment';
+import { Comment } from '@type/comment';
 
-import { transformCommentListResponse } from '@api/comment';
+import { CommentResponse, transformCommentListResponse } from '@api/comment';
 
 export const MOCK_COMMENT_LIST: CommentResponse[] = [];
 

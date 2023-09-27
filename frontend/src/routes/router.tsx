@@ -1,16 +1,16 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import Announcement from '@pages/Announcement';
-import Redirection from '@pages/auth/Redirection';
-import Error from '@pages/Error';
-import Home from '@pages/Home';
-import MyInfo from '@pages/MyInfo';
-import NotFound from '@pages/NotFound';
+import AnnouncementPage from '@pages/AnnouncementPage';
+import RedirectionPage from '@pages/auth/RedirectionPage';
+import ErrorPage from '@pages/ErrorPage';
+import HomePage from '@pages/HomePage';
+import MyInfoPage from '@pages/MyInfoPage';
+import NotFoundPage from '@pages/NotFoundPage';
 import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
-import PostDetailPage from '@pages/post/PostDetail';
-import Ranking from '@pages/Ranking';
+import PostDetailPage from '@pages/post/PostDetailPage';
+import RankingPage from '@pages/RankingPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 import RouteChangeTracker from '@components/RouteChangeTracker';
@@ -19,8 +19,8 @@ import { PATH } from '@constants/path';
 
 import PrivateRoute from './PrivateRoute';
 
-const Login = lazy(() => import('@pages/auth/Login'));
-const RegisterPersonalInfo = lazy(() => import('@pages/user/RegisterPersonalInfo'));
+const Login = lazy(() => import('@pages/auth/LoginPage'));
+const RegisterPersonalInfo = lazy(() => import('@pages/user/RegisterPersonalInfoPage'));
 const VoteStatisticsPage = lazy(() => import('@pages/VoteStatisticsPage'));
 
 const router = createBrowserRouter([
@@ -29,18 +29,18 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute isGuestAllowed={true}>
         <ScrollToTop />
-        <Home />
+        <HomePage />
         <RouteChangeTracker />
       </PrivateRoute>
     ),
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: 'search',
         element: (
           <PrivateRoute isGuestAllowed={true}>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -55,16 +55,16 @@ const router = createBrowserRouter([
         <RouteChangeTracker />
       </>
     ),
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
   },
   {
     path: 'auth/kakao/callback',
-    element: <Redirection />,
-    errorElement: <Error />,
+    element: <RedirectionPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: PATH.POST,
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: 'write',
@@ -111,7 +111,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute isGuestAllowed={true}>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -120,14 +120,14 @@ const router = createBrowserRouter([
   },
   {
     path: PATH.USER,
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: 'myPage',
         element: (
           <PrivateRoute>
             <ScrollToTop />
-            <MyInfo />
+            <MyInfoPage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -137,7 +137,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -147,7 +147,7 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ScrollToTop />
-            <Home />
+            <HomePage />
             <RouteChangeTracker />
           </PrivateRoute>
         ),
@@ -162,25 +162,25 @@ const router = createBrowserRouter([
     path: PATH.RANKING,
     element: (
       <>
-        <Ranking />
+        <RankingPage />
         <RouteChangeTracker />
       </>
     ),
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
   },
   {
     path: PATH.ANNOUNCEMENT,
     element: (
       <>
-        <Announcement />
+        <AnnouncementPage />
         <RouteChangeTracker />
       </>
     ),
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
   },
   {
     path: '*',
-    element: <NotFound />,
+    element: <NotFoundPage />,
   },
 ]);
 export default router;

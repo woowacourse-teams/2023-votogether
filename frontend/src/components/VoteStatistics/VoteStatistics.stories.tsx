@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { MOCK_VOTE_RESULT } from '@mocks/mockData/voteResult';
+import { transVoteStatisticsFormat } from '@api/voteResult';
 
-import { transVoteStatisticsFormat } from './util';
+import { MOCK_VOTE_RESULT } from '@mocks/mockData/voteResult';
 
 import VoteStatistics from '.';
 

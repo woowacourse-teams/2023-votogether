@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { useMoreComment } from '@hooks/useMoreComment';
+import { useMoreComment } from '@hooks';
 
 import { MOCK_TRANSFORMED_COMMENT_LIST } from '@mocks/mockData/comment';
 

@@ -1,7 +1,7 @@
 import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useToggle } from '@hooks/useToggle';
+import { useToggle } from '@hooks';
 
 import { PATH } from '@constants/path';
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { styled } from 'styled-components';
 
-import { MAX_DEADLINE } from '@constants/post';
+import { MAX_DEADLINE } from '@constants/policy';
 
 import SquareButton from '../SquareButton';
 import TimePickerOptionList from '../TimePickerOptionList';

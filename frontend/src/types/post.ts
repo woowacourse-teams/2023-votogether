@@ -1,5 +1,7 @@
 import { PostRequestKind, PostSorting, PostStatus } from '@pages/HomePage/types';
 
+import { StringDate } from './time';
+
 export interface WrittenVoteOptionType {
   id: number;
   text: string;
@@ -15,10 +17,10 @@ export interface PostInfo {
   content: string;
   imageUrl: string;
   category: { id: number; name: string }[];
-  createTime: string;
+  createTime: StringDate;
   imageCount: number;
   commentCount: number;
-  deadline: string;
+  deadline: StringDate;
   voteInfo: {
     selectedOptionId: number;
     allPeopleCount: number;

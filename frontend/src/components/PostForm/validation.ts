@@ -1,4 +1,4 @@
-import { Time } from '@type/time';
+import { DHMTime } from '@type/time';
 
 import { WritingVoteOptionType } from '@hooks/useWritingOption';
 
@@ -17,7 +17,7 @@ export const checkValidationPost = (
   title: string,
   content: string,
   optionList: WritingVoteOptionType[],
-  time: Time
+  time: DHMTime
 ) => {
   if (categoryList.length < 1) return POST_CATEGORY_POLICY.MIN;
   if (categoryList.length > 3) return POST_CATEGORY_POLICY.MAX;

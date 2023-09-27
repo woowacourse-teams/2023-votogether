@@ -1,10 +1,10 @@
-import { Time } from '@type/time';
+import { DHMTime } from '@type/time';
 
 export type DeadlineOptionName = '1일' | '3일' | '5일' | '7일' | '14일';
 
 export interface DeadlineOptionInfo {
   name: DeadlineOptionName;
-  time: Time;
+  time: DHMTime;
 }
 
 export const DEADLINE_OPTION: DeadlineOptionInfo[] = [

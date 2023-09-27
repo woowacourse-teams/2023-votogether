@@ -4,7 +4,7 @@ import { AuthContext } from '@hooks/context/auth';
 import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
 
-import { getSelectedState } from '@utils/post/getSelectedState';
+import { getSelectedPostListState } from '@utils/post/getSelectedPostListState';
 
 import CategoryToggle from '../CategoryToggle';
 
@@ -21,7 +21,7 @@ export default function CategorySection() {
   const { postOptionalOption, postType } = usePostRequestInfo();
   const { categoryId } = postOptionalOption;
 
-  const selectedState = getSelectedState({
+  const selectedState = getSelectedPostListState({
     categoryId,
     categoryList: categoryListFallback,
     postType,

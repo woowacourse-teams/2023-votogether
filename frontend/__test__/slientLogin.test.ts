@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { getLocalStorage, setLocalStorage } from '@utils/localStorage';
-import { silentLogin } from '@utils/token/silentLogin';
+import { silentLogin } from '@utils/login/silentLogin';
 
 import { MOCK_TOKEN } from '@mocks/mockData/token';
 

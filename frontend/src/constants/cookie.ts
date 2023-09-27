@@ -1,4 +1,4 @@
-import { convertDayToSecond } from '@utils/time';
+import { convertDayToSecond } from '@utils/time/convertDayToSecond';
 
 /**
  * 유저의 나이, 성별을 입력했는지 여부를 확인하는 쿠키의 저장하는 기간을 뜻 합니다.

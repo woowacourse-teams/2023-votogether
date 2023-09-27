@@ -1,6 +1,6 @@
 import { AccessToken } from '@type/token';
 
-export const isExpiredAccessToken = ({
+export const checkExpiredAccessToken = ({
   decodedToken,
   currentTime,
 }: {

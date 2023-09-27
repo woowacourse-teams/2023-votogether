@@ -12,7 +12,7 @@ import Toast from '@components/common/Toast';
 
 import { POST_COMMENT } from '@constants/policy';
 
-import { deleteOverlappingNewLine } from '@utils/post/deleteOverlappingNewLine';
+import { deleteOverlappingNewLine } from '@utils/deleteOverlappingNewLine';
 
 import * as S from './style';
 interface CommentTextFormProps {

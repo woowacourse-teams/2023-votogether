@@ -1,4 +1,5 @@
 import { PostInfo, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
+import { StringDate } from '@type/time';
 
 import {
   DEFAULT_CATEGORY_ID,
@@ -34,8 +35,8 @@ export interface PostDetailResponse {
   content: string;
   imageUrl: string;
   categories: { id: number; name: string }[];
-  createdAt: string;
-  deadline: string;
+  createdAt: StringDate;
+  deadline: StringDate;
   imageCount: number;
   commentCount: number;
   voteInfo: {

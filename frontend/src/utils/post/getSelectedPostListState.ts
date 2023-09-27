@@ -2,13 +2,17 @@ import { Category } from '@type/category';
 
 import { PostRequestKind } from '@pages/HomePage/types';
 
-export interface SelectedState {
+export interface SelectedPostListState {
   postType: PostRequestKind;
   categoryId: number;
   categoryList: Category[];
 }
 
-export const getSelectedState = ({ postType, categoryId, categoryList }: SelectedState) => {
+export const getSelectedPostListState = ({
+  postType,
+  categoryId,
+  categoryList,
+}: SelectedPostListState) => {
   if (postType === 'category') {
     const selectedCategory = categoryList.find(category => category.id === categoryId);
 

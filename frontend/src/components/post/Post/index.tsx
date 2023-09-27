@@ -13,8 +13,9 @@ import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList'
 import { PATH } from '@constants/path';
 import { POST } from '@constants/policy';
 
-import { linkifyText } from '@utils/post/formatTextLink';
-import { checkClosedPost, convertTimeToWord } from '@utils/time';
+import { convertTextToElement } from '@utils/post/convertTextToElement';
+import { checkClosedPost } from '@utils/time/checkClosedPost';
+import { convertTimeToWord } from '@utils/time/convertTimeToWord';
 
 import commentIcon from '@assets/comment.svg';
 import photoIcon from '@assets/photo_black.svg';
@@ -163,7 +164,7 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
           aria-label={`내용: ${content}`}
           $isPreview={isPreview}
         >
-          {linkifyText(content)}
+          {convertTextToElement(content)}
         </S.Content>
         {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
       </S.DetailLink>

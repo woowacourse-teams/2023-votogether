@@ -1,7 +1,7 @@
 import { MAX_FILE_SIZE } from '@constants/policy';
 import { POST_PHOTO } from '@constants/policyMessage';
 
-import { convertImageToWebP } from '@utils/resizeImage';
+import { convertImageToWebP } from '@utils/image/convertImageToWebP';
 
 export const uploadImage = async ({
   imageFile,

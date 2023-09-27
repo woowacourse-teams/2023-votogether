@@ -4,16 +4,16 @@ import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { getLocalStorage, removeLocalStorage, setLocalStorage } from '../localStorage';
 
-import { isRefreshTokenRequested } from './isRefreshTokenRequested';
+import { checkRefreshTokenRequired } from './checkRefreshTokenRequired';
 
-let isRequest = false;
+let isRequesting = false;
 
 export const silentLogin = async () => {
-  if (!isRefreshTokenRequested() || isRequest) {
+  if (!checkRefreshTokenRequired() || isRequesting) {
     return;
   }
 
-  isRequest = true;
+  isRequesting = true;
 
   try {
     const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);
@@ -21,7 +21,6 @@ export const silentLogin = async () => {
     if (!accessToken) return;
 
     const tokenData = await postTokens(accessToken);
-
     const updatedAccessToken = tokenData.accessToken;
 
     setLocalStorage(ACCESS_TOKEN_KEY, updatedAccessToken);
@@ -31,6 +30,6 @@ export const silentLogin = async () => {
 
     throw new Error('로그인에 실패했습니다. 다시 로그인 해주세요.');
   } finally {
-    isRequest = false;
+    isRequesting = false;
   }
 };

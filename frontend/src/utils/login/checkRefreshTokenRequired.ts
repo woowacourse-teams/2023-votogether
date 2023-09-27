@@ -2,11 +2,11 @@ import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { getLocalStorage, removeLocalStorage } from '@utils/localStorage';
 
+import { checkExpiredAccessToken } from './checkExpiredAccessToken';
+import { checkExpiredRefreshToken } from './checkExpiredRefreshToken';
 import { decodeToken } from './decodeToken';
-import { isExpiredAccessToken } from './isExpiredAccessToken';
-import { isExpiredRefreshToken } from './isExpiredRefreshToken';
 
-export const isRefreshTokenRequested = () => {
+export const checkRefreshTokenRequired = () => {
   const accessToken = getLocalStorage<string>(ACCESS_TOKEN_KEY);
 
   const isGuest = !accessToken;
@@ -16,11 +16,11 @@ export const isRefreshTokenRequested = () => {
   const decodedToken = decodeToken(accessToken);
   const currentTime = Math.floor(new Date().getTime() / 1000);
 
-  if (!isExpiredAccessToken({ decodedToken, currentTime })) {
+  if (!checkExpiredAccessToken({ decodedToken, currentTime })) {
     return false;
   }
 
-  if (isExpiredRefreshToken({ decodedToken, currentTime })) {
+  if (checkExpiredRefreshToken({ decodedToken, currentTime })) {
     removeLocalStorage(ACCESS_TOKEN_KEY);
 
     return false;

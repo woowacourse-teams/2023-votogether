@@ -1,4 +1,4 @@
-import { calculateAspectRatioSize } from '@utils/calculateAspectRatioSize';
+import { calculateAspectRatioSize } from '@utils/image/calculateAspectRatioSize';
 
 test.each([
   [

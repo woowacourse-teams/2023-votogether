@@ -2,7 +2,7 @@ import { AccessToken } from '@type/token';
 
 import { REFRESH_EXPIRATION_TIME } from '@constants/token';
 
-export const isExpiredRefreshToken = ({
+export const checkExpiredRefreshToken = ({
   decodedToken,
   currentTime,
 }: {

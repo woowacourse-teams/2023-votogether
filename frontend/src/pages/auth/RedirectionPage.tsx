@@ -14,7 +14,7 @@ import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { setCookie } from '@utils/cookie';
 import { setLocalStorage } from '@utils/localStorage';
-import { decodeToken } from '@utils/token/decodeToken';
+import { decodeToken } from '@utils/login/decodeToken';
 
 export default function RedirectionPage() {
   const { loggedInfo, setLoggedInfo } = useContext(AuthContext);

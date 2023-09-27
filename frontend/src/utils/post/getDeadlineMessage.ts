@@ -1,6 +1,6 @@
-import { Time } from '@type/time';
+import { DHMTime } from '@type/time';
 
-export const getDeadlineTime = ({ day, hour, minute }: Time) => {
+export const getDeadlineMessage = ({ day, hour, minute }: DHMTime) => {
   const timeMessage = [];
 
   if (day < 0 || hour < 0 || minute < 0) {

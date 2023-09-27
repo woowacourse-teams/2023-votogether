@@ -17,7 +17,7 @@ import TagButton from '@components/common/TagButton';
 import Toast from '@components/common/Toast';
 import Post from '@components/post/Post';
 
-import { checkClosedPost } from '@utils/time';
+import { checkClosedPost } from '@utils/time/checkClosedPost';
 
 import copyURL from '@assets/chain.svg';
 

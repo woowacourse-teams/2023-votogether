@@ -16,7 +16,6 @@ import Skeleton from '@components/common/Skeleton';
 import Post from '@components/post/Post';
 
 import { PATH } from '@constants/path';
-import { REQUEST_SORTING_OPTION } from '@constants/post';
 
 import EmptyPostList from '../EmptyPostList';
 
@@ -90,7 +89,7 @@ export default function PostList() {
               handleSortingOptionChange(value);
             }}
             optionList={SORTING_OPTION}
-            selectedOption={REQUEST_SORTING_OPTION[selectedSortingOption]}
+            selectedOption={SORTING_OPTION[selectedSortingOption]}
           />
         </S.SelectWrapper>
       </S.SelectContainer>

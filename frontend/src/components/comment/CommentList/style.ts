@@ -56,6 +56,8 @@ export const HiddenInput = styled.input`
   position: absolute;
   bottom: 0;
 
+  outline: none;
+
   color: white;
   z-index: -1;
 `;

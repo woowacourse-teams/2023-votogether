@@ -30,11 +30,6 @@ export const PostListContainer = styled.ul`
 
   padding: 30px 20px;
 
-  > div > li {
-    padding-bottom: 30px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
   > li {
     padding-bottom: 30px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);

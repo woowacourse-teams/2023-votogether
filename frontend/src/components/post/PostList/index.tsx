@@ -102,23 +102,23 @@ export default function PostList() {
           <React.Fragment key={pageIndex}>
             {postListInfo.postList.map((post, index) => {
               if (index === 7) {
-                return (
-                  <div key={post.postId} ref={targetRef}>
-                    <Post isPreview={true} postInfo={post} />
-                  </div>
-                );
+                return <Post key={post.postId} ref={targetRef} isPreview={true} postInfo={post} />;
               }
 
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
-            <S.HiddenButton
-              onClick={focusTopContent}
-              aria-label="스크롤 맨 위로가기"
-            ></S.HiddenButton>
-            <S.HiddenLink
-              aria-label="게시글 작성 페이지로 이동"
-              to={PATH.POST_WRITE}
-            ></S.HiddenLink>
+            <li>
+              <S.HiddenButton
+                onClick={focusTopContent}
+                aria-label="스크롤 맨 위로가기"
+              ></S.HiddenButton>
+            </li>
+            <li>
+              <S.HiddenLink
+                aria-label="게시글 작성 페이지로 이동"
+                to={PATH.POST_WRITE}
+              ></S.HiddenLink>
+            </li>
           </React.Fragment>
         ))}
         {isFetchingNextPage && <Skeleton isLarge={false} />}

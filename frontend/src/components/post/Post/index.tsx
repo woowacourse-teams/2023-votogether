@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect } from 'react';
+import { ForwardedRef, forwardRef, memo, useContext, useEffect } from 'react';
 
 import { PostInfo } from '@type/post';
 
@@ -29,7 +29,10 @@ interface PostProps {
   isPreview: boolean;
 }
 
-export default memo(function Post({ postInfo, isPreview }: PostProps) {
+const Post = forwardRef(function Post(
+  { postInfo, isPreview }: PostProps,
+  ref: ForwardedRef<HTMLLIElement>
+) {
   const {
     postId,
     category,
@@ -110,7 +113,7 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
   const isPreviewTabIndex = isPreview ? undefined : 0;
 
   return (
-    <S.Container as={isPreview ? 'li' : 'div'}>
+    <S.Container as={isPreview ? 'li' : 'div'} ref={ref}>
       <S.DetailLink
         as={isPreview ? '' : 'main'}
         to={isPreview ? `${PATH.POST}/${postId}` : '#'}
@@ -195,3 +198,5 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
     </S.Container>
   );
 });
+
+export default memo(Post);

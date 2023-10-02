@@ -107,17 +107,17 @@ export default function PostList() {
 
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
-            <li>
-              <S.HiddenButton
+            <li key={`${pageIndex}UserButton`}>
+              <S.HiddenList
+                role="button"
                 onClick={focusTopContent}
                 aria-label="스크롤 맨 위로가기"
-              ></S.HiddenButton>
-            </li>
-            <li>
+              ></S.HiddenList>
               <S.HiddenLink
+                role="link"
                 aria-label="게시글 작성 페이지로 이동"
                 to={PATH.POST_WRITE}
-              ></S.HiddenLink>
+              />
             </li>
           </React.Fragment>
         ))}

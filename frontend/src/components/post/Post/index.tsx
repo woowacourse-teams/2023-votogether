@@ -113,7 +113,7 @@ const Post = forwardRef(function Post(
   const isPreviewTabIndex = isPreview ? undefined : 0;
 
   return (
-    <S.Container as={isPreview ? 'li' : 'div'} ref={ref}>
+    <S.Container as={isPreview ? 'li' : 'div'} ref={ref} $isPreview={isPreview}>
       <S.DetailLink
         as={isPreview ? '' : 'main'}
         to={isPreview ? `${PATH.POST}/${postId}` : '#'}

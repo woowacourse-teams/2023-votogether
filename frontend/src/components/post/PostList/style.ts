@@ -29,11 +29,6 @@ export const PostListContainer = styled.ul`
   gap: 30px;
 
   padding: 30px 20px;
-
-  > li {
-    padding-bottom: 30px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
 `;
 
 export const SelectWrapper = styled.div`
@@ -49,10 +44,11 @@ export const SelectWrapper = styled.div`
   }
 `;
 
-export const HiddenButton = styled.button`
+export const HiddenLink = styled(Link)`
   position: absolute;
 `;
 
-export const HiddenLink = styled(Link)`
-  position: absolute;
+export const HiddenList = styled.li`
+  padding-bottom: none;
+  border-bottom: none;
 `;

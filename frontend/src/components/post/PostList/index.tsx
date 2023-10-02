@@ -108,11 +108,11 @@ export default function PostList() {
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
             <li key={`${pageIndex}UserButton`}>
-              <S.HiddenList
+              <S.HiddenButton
                 role="button"
                 onClick={focusTopContent}
                 aria-label="스크롤 맨 위로가기"
-              ></S.HiddenList>
+              ></S.HiddenButton>
               <S.HiddenLink
                 role="link"
                 aria-label="게시글 작성 페이지로 이동"

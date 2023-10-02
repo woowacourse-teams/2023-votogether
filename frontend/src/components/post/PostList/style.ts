@@ -44,6 +44,10 @@ export const SelectWrapper = styled.div`
   }
 `;
 
+export const HiddenButton = styled.button`
+  position: absolute;
+`;
+
 export const HiddenLink = styled(Link)`
   position: absolute;
 `;

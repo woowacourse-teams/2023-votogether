@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, ClipboardEvent, useRef, useState } from 'react';
 
 import { POST_WRITING_OPTION } from '@constants/policy';
 
@@ -68,6 +68,36 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
     setOptionList(removedOptionList);
   };
 
+  const handlePasteImage = (event: ClipboardEvent<HTMLTextAreaElement>, optionId: number) => {
+    const file = event.clipboardData.files[0];
+
+    if (!file) return;
+
+    if (file.type.slice(0, 5) === 'image') {
+      event.preventDefault();
+
+      const updatePreviewImage = (imageUrl: string) => {
+        const updatedOptionList = optionList.map(optionItem => {
+          if (optionItem.id === optionId) {
+            return { ...optionItem, imageUrl };
+          }
+
+          return optionItem;
+        });
+
+        setOptionList(updatedOptionList);
+      };
+
+      const optionIndex = optionList.findIndex(option => option.id === optionId);
+
+      uploadImage({
+        imageFile: file,
+        inputElement: contentInputRefList.current[optionIndex],
+        setPreviewImageUrl: updatePreviewImage,
+      });
+    }
+  };
+
   const removeImage = (optionId: number) => {
     const updatedOptionList = optionList.map(optionItem => {
       if (optionItem.id === optionId) {
@@ -121,5 +151,6 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
     removeImage,
     handleUploadImage,
     contentInputRefList,
+    handlePasteImage,
   };
 };

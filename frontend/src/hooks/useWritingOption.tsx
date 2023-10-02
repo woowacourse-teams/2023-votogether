@@ -76,24 +76,12 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
     if (file.type.slice(0, 5) === 'image') {
       event.preventDefault();
 
-      const updatePreviewImage = (imageUrl: string) => {
-        const updatedOptionList = optionList.map(optionItem => {
-          if (optionItem.id === optionId) {
-            return { ...optionItem, imageUrl };
-          }
-
-          return optionItem;
-        });
-
-        setOptionList(updatedOptionList);
-      };
-
       const optionIndex = optionList.findIndex(option => option.id === optionId);
 
       uploadImage({
         imageFile: file,
         inputElement: contentInputRefList.current[optionIndex],
-        setPreviewImageUrl: updatePreviewImage,
+        setPreviewImageUrl: setPreviewImageUrl(optionId),
       });
     }
   };

@@ -26,12 +26,7 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-  const {
-    text: content,
-    handleTextChange,
-    resetText,
-    addText: addContent,
-  } = useText(initialComment.content);
+  const { text: content, handleTextChange, resetText } = useText(initialComment.content);
   const { isToastOpen, openToast, toastMessage } = useToast();
 
   const params = useParams() as { postId: string };
@@ -111,16 +106,6 @@ export default function CommentTextForm({
             </SquareButton>
           </S.ButtonWrapper>
         )}
-        <S.ButtonWrapper>
-          <SquareButton
-            aria-label="댓글에 링크 넣기"
-            onClick={() => addContent('[[괄호 안에 링크 작성]] ')}
-            theme="blank"
-            type="button"
-          >
-            링크 넣기
-          </SquareButton>
-        </S.ButtonWrapper>
         <S.ButtonWrapper>
           <SquareButton
             aria-label="댓글 저장"

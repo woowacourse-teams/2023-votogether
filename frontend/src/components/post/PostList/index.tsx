@@ -62,7 +62,7 @@ export default function PostList() {
 
   return (
     <S.Container>
-      <button ref={topButtonRef} role="contentinfo" aria-label="최상단입니다"></button>
+      <button ref={topButtonRef} role="contentinfo" aria-label="최상단입니다" />
       <S.SelectContainer>
         <S.SelectWrapper>
           <Select<PostStatus>
@@ -108,10 +108,7 @@ export default function PostList() {
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
             <li key={`${pageIndex}UserButton`}>
-              <S.HiddenButton
-                onClick={focusTopContent}
-                aria-label="스크롤 맨 위로가기"
-              ></S.HiddenButton>
+              <S.HiddenButton onClick={focusTopContent} aria-label="스크롤 맨 위로가기" />
               <S.HiddenLink aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE} />
             </li>
           </React.Fragment>

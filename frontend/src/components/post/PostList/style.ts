@@ -51,8 +51,3 @@ export const HiddenButton = styled.button`
 export const HiddenLink = styled(Link)`
   position: absolute;
 `;
-
-export const HiddenList = styled.li`
-  padding-bottom: none;
-  border-bottom: none;
-`;

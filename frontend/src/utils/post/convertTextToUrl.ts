@@ -8,7 +8,7 @@
  * (?!\]\]) 는 뒤에 ]]로 끝나는 지 여부를 확인한다.
  * [^\s] 는 공백이 아닌 문자인지 여부를 확인한다.
  */
-const httpsOrHttpRegex = /(?<!\[\[)(https?:\/\/[^\s]+)(?!\]\])/;
+const httpsOrHttpRegex = /(?<!\[\[)(https?:\/\/[^\s]+)(?!\]\])/g;
 
 /**
  * www.naver.com
@@ -19,7 +19,7 @@ const httpsOrHttpRegex = /(?<!\[\[)(https?:\/\/[^\s]+)(?!\]\])/;
  * [^\s] 는 공백이 아닌 문자인지 여부를 확인한다.
  * (?!\]\]) 는 뒤에 ]]로 끝나는 지 여부를 확인한다.
  */
-const wwwRegex = /(?<!\[\[)(?<!\/)\b(w{3})\b[^\s]+(?!\]\])/;
+const wwwRegex = /(?<!\[\[)(?<!\/)\b(w{3})\b[^\s]+(?!\]\])/g;
 
 export const convertTextToUrl = (text: string) => {
   const httpOrHttpsConvertedText = text.replace(httpsOrHttpRegex, url => `[[${url}]]`);

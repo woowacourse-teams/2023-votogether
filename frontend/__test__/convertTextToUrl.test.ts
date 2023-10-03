@@ -22,6 +22,10 @@ test.each([
     '[[https://votogether.com/ranking]] https://www.naver.com/',
     '[[https://votogether.com/ranking]] [[https://www.naver.com/]]',
   ],
+  [
+    'www.naver.com www.naver.com www.naver.com https://www.npmjs.com/package/dotenv-webpack',
+    '[[www.naver.com]] [[www.naver.com]] [[www.naver.com]] [[https://www.npmjs.com/package/dotenv-webpack]]',
+  ],
 ])(
   'convertTextToUrl 함수에서 링크가 포함된 문자를 입력했을 때 문자에서 링크는 [[]]로 감싸서 반환한다.',
   (word, expectedWord) => {

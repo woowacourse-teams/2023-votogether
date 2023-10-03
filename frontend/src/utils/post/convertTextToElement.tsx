@@ -1,7 +1,10 @@
+import { convertTextToUrl } from './convertTextToUrl';
+
 export const convertTextToElement = (text: string) => {
+  const convertedUrlText = convertTextToUrl(text);
   const linkPattern = /\[\[([^[\]]+)\]\]/g;
 
-  const parts = text.split(linkPattern);
+  const parts = convertedUrlText.split(linkPattern);
 
   const elementList = parts.map((part, index) => {
     if (index % 2 === 1) {

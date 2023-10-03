@@ -164,7 +164,7 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
           aria-label={`내용: ${content}`}
           $isPreview={isPreview}
         >
-          {convertTextToElement(content)}
+          {convertTextToElement(content, !isPreview)}
         </S.Content>
         {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
       </S.DetailLink>

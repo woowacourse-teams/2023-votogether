@@ -62,14 +62,6 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="org.hibernate.SQL" level="debug">
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
-        <Logger name="org.hibernate.orm.jdbc.bind" level="trace">
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
         <Root level="info">
             <AppenderRef ref="RollingFileAppender"/>
             <AppenderRef ref="RollingErrorFileAppender"/>

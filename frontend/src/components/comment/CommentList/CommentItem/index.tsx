@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
+import { CommentUser, PostAction } from '@type/menu';
 import { ReportRequest } from '@type/report';
 
 import { useToggle } from '@hooks';
@@ -13,17 +14,16 @@ import { reportContent } from '@api/report';
 
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
 import DeleteModal from '@components/common/DeleteModal';
+import Menu from '@components/common/Menu';
 import Toast from '@components/common/Toast';
 import ReportModal from '@components/ReportModal';
+
+import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '@constants/post';
 
 import { convertTextToElement } from '@utils/post/convertTextToElement';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
-import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '../constants';
-import { type CommentAction, type CommentUser } from '../types';
-
-import CommentMenu from './CommentMenu';
 import * as S from './style';
 interface CommentItemProps {
   comment: Comment;
@@ -37,14 +37,14 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const { isOpen, toggleComponent, closeComponent } = useToggle();
   const { isToastOpen, openToast, toastMessage } = useToast();
   const { id, member, content, createdAt, isEdit } = comment;
-  const [action, setAction] = useState<CommentAction | null>(null);
+  const [action, setAction] = useState<PostAction | null>(null);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
   const { mutate, isError, error, isLoading: isCommentDeleting } = useDeleteComment(postId, id);
 
-  const handleMenuClick = (menu: CommentAction) => {
+  const handleMenuClick = (menu: PostAction) => {
     closeComponent();
     setAction(menu);
   };
@@ -137,7 +137,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
             ></S.Image>
             {isOpen && (
               <S.MenuWrapper>
-                <CommentMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
+                <Menu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
               </S.MenuWrapper>
             )}
           </S.MenuContainer>

@@ -8,7 +8,7 @@ import { useToggle } from '@hooks';
 import DeleteModal from '@components/common/DeleteModal';
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import IconButton from '@components/common/IconButton';
-import PostMenu from '@components/common/PostMenu';
+import Menu from '@components/common/Menu';
 import TagButton from '@components/common/TagButton';
 import ReportModal from '@components/ReportModal';
 
@@ -86,7 +86,7 @@ export default function InnerHeaderPart({
             </HeaderTextButton>
             {isOpen && (
               <S.MenuWrapper>
-                <PostMenu menuList={menuList} handleMenuClick={handleMenuClick} />
+                <Menu menuList={menuList} handleMenuClick={handleMenuClick} />
               </S.MenuWrapper>
             )}
           </>

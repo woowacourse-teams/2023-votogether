@@ -4,18 +4,20 @@ import { PostAction, PostMenuItem } from '@type/menu';
 
 import * as S from './style';
 
-interface PostMenuProps {
+interface MenuProps {
   menuList: PostMenuItem[];
   handleMenuClick: (menu: PostAction) => void;
 }
 
-export default function PostMenu({ menuList, handleMenuClick }: PostMenuProps) {
+export default function Menu({ menuList, handleMenuClick }: MenuProps) {
   return (
     <S.Container>
       {menuList.map(({ content, color, action }) => (
         <S.Menu
           key={content}
           type="button"
+          tabIndex={0}
+          aria-label={content}
           $color={color}
           onClick={(event: MouseEvent) => {
             event.stopPropagation();

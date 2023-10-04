@@ -1,6 +1,9 @@
-import { AuthResponse } from '@type/auth';
-
 import { makeFetchHeaders } from '@utils/fetch';
+
+interface AuthResponse {
+  accessToken: string;
+  hasEssentialInfo: boolean;
+}
 
 export const getAuthInfo = async (url: string): Promise<AuthResponse> => {
   return await getLoginFetch<AuthResponse>(url);

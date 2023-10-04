@@ -3,8 +3,8 @@ export const QUERY_KEY = {
   POST_DETAIL: 'postDetail',
   COMMENTS: 'comments',
   CATEGORIES: 'categories',
-  USER_INFO: 'user_info',
-  PASSION_RANKING: 'passion_ranking',
-  POPULAR_RANKING: 'popular_ranking',
-  VOTE_STATISTICS: 'vote_statistics',
+  USER_INFO: 'userInfo',
+  PASSION_RANKING: 'passionRanking',
+  POPULAR_RANKING: 'popularRanking',
+  VOTE_STATISTICS: 'voteStatistics',
 };

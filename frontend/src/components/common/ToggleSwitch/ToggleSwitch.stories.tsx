@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 
-import { useToggleSwitch } from '@hooks/useToggleSwitch';
+import { useToggleSwitch } from '@hooks';
 
 import ToggleSwitch from '.';
 

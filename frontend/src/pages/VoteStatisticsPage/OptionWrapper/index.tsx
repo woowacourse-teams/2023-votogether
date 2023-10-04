@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { AuthContext } from '@hooks/context/auth';
-import { usePostDetail } from '@hooks/query/post/usePostDetail';
+import { AuthContext, usePostDetail } from '@hooks';
 
 import { PATH } from '@constants/path';
 

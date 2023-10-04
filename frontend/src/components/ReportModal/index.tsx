@@ -1,6 +1,6 @@
 import { ReportType } from '@type/report';
 
-import { useSelect } from '@hooks/useSelect';
+import { useSelect } from '@hooks';
 
 import Select from '@components/common/Select';
 import TwoButtonModal from '@components/common/TwoButtonModal';

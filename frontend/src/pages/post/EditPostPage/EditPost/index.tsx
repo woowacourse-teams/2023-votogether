@@ -1,10 +1,11 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { useToast } from '@hooks';
+
 import { PostOptionContext } from '@hooks/context/postOption';
 import { useEditPost } from '@hooks/query/post/useEditPost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
-import { useToast } from '@hooks/useToast';
 
 import Toast from '@components/common/Toast';
 import PostForm from '@components/PostForm';

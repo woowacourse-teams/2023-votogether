@@ -1,15 +1,15 @@
 import React, { Dispatch } from 'react';
 
-import { Time } from '@type/post';
+import { DHMTime } from '@type/time';
 
-import { MAX_DEADLINE } from '@constants/post';
+import { MAX_DEADLINE } from '@constants/policy';
 
 import * as S from './style';
 import TimePickerOption from './TimePickerOption';
 
 interface TimePickerOptionListProps {
-  time: Time;
-  setTime: Dispatch<React.SetStateAction<Time>>;
+  time: DHMTime;
+  setTime: Dispatch<React.SetStateAction<DHMTime>>;
 }
 
 export default function TimePickerOptionList({ time, setTime }: TimePickerOptionListProps) {

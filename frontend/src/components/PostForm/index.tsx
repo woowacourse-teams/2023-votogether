@@ -5,12 +5,14 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
-import { useContentImage } from '@hooks/useContentImage';
-import { useMultiSelect } from '@hooks/useMultiSelect';
-import { useText } from '@hooks/useText';
-import { useToast } from '@hooks/useToast';
-import { useToggle } from '@hooks/useToggle';
-import { useWritingOption } from '@hooks/useWritingOption';
+import {
+  useMultiSelect,
+  useContentImage,
+  useText,
+  useToast,
+  useToggle,
+  useWritingOption,
+} from '@hooks';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
@@ -23,20 +25,20 @@ import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { PATH } from '@constants/path';
+import { MAX_DEADLINE, POST_CATEGORY, POST_CONTENT, POST_TITLE } from '@constants/policy';
 import {
   CONTENT_PLACEHOLDER,
   POST_DEADLINE_POLICY,
   POST_TITLE_POLICY,
 } from '@constants/policyMessage';
-import { CATEGORY_COUNT_LIMIT, MAX_DEADLINE, POST_CONTENT, POST_TITLE } from '@constants/post';
 
-import { calculateDeadlineTime } from '@utils/post/calculateDeadlineTime';
+import { deleteOverlappingNewLine } from '@utils/deleteOverlappingNewLine';
+import { addTimeToDate } from '@utils/post/addTimeToDate';
+import { calculateDeadlineDHMTime } from '@utils/post/calculateDeadlineDHMTime';
 import { checkWriter } from '@utils/post/checkWriter';
-import { deleteOverlappingNewLine } from '@utils/post/deleteOverlappingNewLine';
-import { addTimeToDate } from '@utils/post/formatTime';
-import { getDeadlineTime } from '@utils/post/getDeadlineTime';
-import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
-import { checkIrreplaceableTime } from '@utils/time';
+import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
+import { getSelectedDHMTimeOption } from '@utils/post/getSelectedTimeOption';
+import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 
 import CategoryWrapper from './CategoryWrapper';
 import { DEADLINE_OPTION, DeadlineOptionInfo, DeadlineOptionName } from './constants';
@@ -73,12 +75,14 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }))
   );
 
+  const deadlineDHMTime = calculateDeadlineDHMTime(createTime, deadline);
+
   const { isToastOpen, openToast, toastMessage } = useToast();
   const [selectTimeOption, setSelectTimeOption] = useState<
     DeadlineOptionName | '사용자지정' | null
-  >(getSelectedTimeOption(calculateDeadlineTime(createTime, deadline)));
+  >(getSelectedDHMTimeOption(deadlineDHMTime));
   const { isOpen, openComponent, closeComponent } = useToggle();
-  const [time, setTime] = useState(calculateDeadlineTime(createTime, deadline));
+  const [time, setTime] = useState(deadlineDHMTime);
   const baseTime = createTime ? new Date(createTime) : new Date();
   const closeModal = () => {
     if (data && checkIrreplaceableTime(time, data.createTime)) {
@@ -102,7 +106,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     handleTextChange: handleContentChange,
     addText: addContent,
   } = useText(content ?? '');
-  const multiSelectHook = useMultiSelect(categoryIds ?? [], CATEGORY_COUNT_LIMIT);
+  const multiSelectHook = useMultiSelect(categoryIds ?? [], POST_CATEGORY.MAX_AMOUNT);
 
   const handleDeadlineButtonClick = (option: DeadlineOptionInfo) => {
     const targetTime = option.time;
@@ -234,14 +238,14 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
             </S.OptionListWrapper>
             <S.Deadline aria-label="마감시간 설정">
               <S.DeadlineDescription
-                aria-label={getDeadlineTime({
+                aria-label={getDeadlineMessage({
                   hour: time.hour,
                   day: time.day,
                   minute: time.minute,
                 })}
                 aria-live="polite"
               >
-                {getDeadlineTime({ hour: time.hour, day: time.day, minute: time.minute })}
+                {getDeadlineMessage({ hour: time.hour, day: time.day, minute: time.minute })}
                 {data && (
                   <S.Description tabIndex={0}>
                     현재 시간으로부터 글 작성일({createTime})로부터 {MAX_DEADLINE}일 이내 (

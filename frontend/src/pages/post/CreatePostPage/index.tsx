@@ -1,9 +1,10 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useToast } from '@hooks';
+
 import { PostOptionContext } from '@hooks/context/postOption';
 import { useCreatePost } from '@hooks/query/post/useCreatePost';
-import { useToast } from '@hooks/useToast';
 
 import Layout from '@components/common/Layout';
 import Toast from '@components/common/Toast';
@@ -34,7 +35,7 @@ export default function CreatePostPage() {
   }, [isError, error]);
 
   return (
-    <Layout isSidebarVisible={false}>
+    <Layout isSidebarVisible={false} isMobileDefaultHeaderVisible={false}>
       <PostForm mutate={mutate} isSubmitting={isLoading} />
       {isToastOpen && (
         <Toast size="md" position="bottom">

@@ -1,8 +1,10 @@
-import { Time } from '@type/post';
+import { DHMTime } from '@type/time';
 
 import { DEADLINE_OPTION, DeadlineOptionName } from '@components/PostForm/constants';
 
-export const getSelectedTimeOption = (time: Time): DeadlineOptionName | '사용자지정' | null => {
+export const getSelectedDHMTimeOption = (
+  time: DHMTime
+): DeadlineOptionName | '사용자지정' | null => {
   if (time.day === 0 && time.hour === 0 && time.minute === 0) return null;
 
   const stringTime = JSON.stringify(time);

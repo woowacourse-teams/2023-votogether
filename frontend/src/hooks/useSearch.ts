@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { SEARCH_KEYWORD_MAX_LENGTH } from '@constants/post';
+import { SEARCH_KEYWORD_MAX_LENGTH } from '@constants/policy';
 
 import { getTrimmedWord } from '@utils/getTrimmedWord';
 

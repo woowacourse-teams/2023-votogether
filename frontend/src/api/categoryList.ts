@@ -1,6 +1,10 @@
-import { CategoryResponse } from '@type/category';
-
 import { deleteFetch, getFetch, postFetch } from '@utils/fetch';
+
+export interface CategoryResponse {
+  id: number;
+  name: string;
+  isFavorite: boolean;
+}
 
 export const transformCategoryListResponse = (categoryList: CategoryResponse[]) => {
   return categoryList.map(category => ({

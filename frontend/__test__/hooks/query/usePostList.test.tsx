@@ -3,9 +3,10 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { usePostList } from '@hooks/query/usePostList';
+import { usePostList } from '@hooks';
 
-import { POST_TYPE, SORTING, STATUS } from '@constants/post';
+import { POST_TYPE } from '@constants/api';
+import { SORTING, STATUS } from '@constants/post';
 import { QUERY_KEY } from '@constants/queryKey';
 
 import { MOCK_TRANSFORM_GUEST_POST_LIST, MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/post';

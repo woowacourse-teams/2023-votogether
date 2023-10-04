@@ -1,17 +1,14 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, ClipboardEvent, useRef, useState } from 'react';
+
+import { POST_WRITING_OPTION } from '@constants/policy';
 
 import { uploadImage } from '@utils/post/uploadImage';
-
-const MAX_WRITING_LENGTH = 50;
 
 export interface WritingVoteOptionType {
   id: number;
   text: string;
   imageUrl: string;
 }
-
-const MIN_COUNT = 2;
-const MAX_COUNT = 5;
 
 const INIT_OPTION_LIST = [
   { id: Math.floor(Math.random() * 100000), text: '', imageUrl: '', isServerId: false },
@@ -27,7 +24,7 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
   const contentInputRefList = useRef<HTMLInputElement[]>([]);
 
   const addOption = () => {
-    if (optionList.length >= MAX_COUNT) return;
+    if (optionList.length >= POST_WRITING_OPTION.MAX_COUNT) return;
 
     const updatedOptionList = [
       ...optionList,
@@ -42,9 +39,9 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
       const { value } = event.target;
       const standard = value.length;
 
-      if (standard === MAX_WRITING_LENGTH) {
+      if (standard === POST_WRITING_OPTION.MAX_LENGTH) {
         event.target.setCustomValidity(
-          `선택지 내용은 ${MAX_WRITING_LENGTH}자까지 입력 가능합니다.`
+          `선택지 내용은 ${POST_WRITING_OPTION.MAX_LENGTH}자까지 입력 가능합니다.`
         );
         event.target.reportValidity();
         return;
@@ -64,11 +61,29 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
     };
 
   const deleteOption = (optionId: number) => {
-    if (optionList.length <= MIN_COUNT) return;
+    if (optionList.length <= POST_WRITING_OPTION.MIN_LENGTH) return;
 
     const removedOptionList = optionList.filter(optionItem => optionItem.id !== optionId);
 
     setOptionList(removedOptionList);
+  };
+
+  const handlePasteImage = (event: ClipboardEvent<HTMLTextAreaElement>, optionId: number) => {
+    const file = event.clipboardData.files[0];
+
+    if (!file) return;
+
+    if (file.type.slice(0, 5) === 'image') {
+      event.preventDefault();
+
+      const optionIndex = optionList.findIndex(option => option.id === optionId);
+
+      uploadImage({
+        imageFile: file,
+        inputElement: contentInputRefList.current[optionIndex],
+        setPreviewImageUrl: setPreviewImageUrl(optionId),
+      });
+    }
   };
 
   const removeImage = (optionId: number) => {
@@ -124,5 +139,6 @@ export const useWritingOption = (initialOptionList?: WritingVoteOptionType[]) =>
     removeImage,
     handleUploadImage,
     contentInputRefList,
+    handlePasteImage,
   };
 };

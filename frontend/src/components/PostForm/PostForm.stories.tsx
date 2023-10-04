@@ -2,8 +2,7 @@ import type { Meta } from '@storybook/react';
 
 import { PostInfo } from '@type/post';
 
-import { useCreatePost } from '@hooks/query/post/useCreatePost';
-import { useEditPost } from '@hooks/query/post/useEditPost';
+import { useCreatePost, useEditPost } from '@hooks';
 
 import PostForm from '.';
 

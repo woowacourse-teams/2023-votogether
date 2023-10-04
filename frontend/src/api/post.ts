@@ -1,4 +1,13 @@
-import { PostInfo, PostInfoResponse } from '@type/post';
+import { PostInfo, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
+import { StringDate } from '@type/time';
+
+import {
+  DEFAULT_CATEGORY_ID,
+  POST_TYPE,
+  REQUEST_POST_KIND_URL,
+  SEARCH_KEYWORD,
+} from '@constants/api';
+import { REQUEST_SORTING_OPTION, REQUEST_STATUS_OPTION } from '@constants/post';
 
 import {
   getFetch,
@@ -11,7 +20,33 @@ import {
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 
-export const transformPostResponse = (post: PostInfoResponse): PostInfo => {
+interface WrittenVoteOptionTypeResponse {
+  optionId: number;
+  content: string;
+  voteCount: number;
+  votePercent: number;
+  imageUrl: string;
+}
+
+export interface PostDetailResponse {
+  postId: number;
+  title: string;
+  writer: { id: number; nickname: string };
+  content: string;
+  imageUrl: string;
+  categories: { id: number; name: string }[];
+  createdAt: StringDate;
+  deadline: StringDate;
+  imageCount: number;
+  commentCount: number;
+  voteInfo: {
+    selectedOptionId: number;
+    totalVoteCount: number;
+    options: WrittenVoteOptionTypeResponse[];
+  };
+}
+
+export const transformPostResponse = (post: PostDetailResponse): PostInfo => {
   return {
     category: post.categories.map(category => ({ id: category.id, name: category.name })),
     content: post.content,
@@ -56,13 +91,13 @@ export const changeVotedOption = async (postId: number, optionData: OptionData) 
 };
 
 export const getPost = async (postId: number): Promise<PostInfo> => {
-  const post = await getFetch<PostInfoResponse>(`${BASE_URL}/posts/${postId}`);
+  const post = await getFetch<PostDetailResponse>(`${BASE_URL}/posts/${postId}`);
 
   return transformPostResponse(post);
 };
 
 export const getPostForGuest = async (postId: number): Promise<PostInfo> => {
-  const post = await getFetch<PostInfoResponse>(`${BASE_URL}/posts/${postId}/guest`);
+  const post = await getFetch<PostDetailResponse>(`${BASE_URL}/posts/${postId}/guest`);
 
   return transformPostResponse(post);
 };
@@ -81,4 +116,46 @@ export const deletePost = async (postId: number) => {
 
 export const setEarlyClosePost = async (postId: number) => {
   return await patchFetch(`${BASE_URL}/posts/${postId}/close`);
+};
+
+export const makePostListUrl = (
+  requiredOption: PostListByRequiredOption,
+  optionalOption: PostListByOptionalOption
+) => {
+  const { pageNumber, postSorting, postStatus, postType, isLoggedIn } = requiredOption;
+  const { categoryId, keyword } = optionalOption;
+
+  const requestedStatus = REQUEST_STATUS_OPTION[postStatus];
+  const requestedSorting = REQUEST_SORTING_OPTION[postSorting];
+
+  const POST_BASE_URL = `${BASE_URL}/${REQUEST_POST_KIND_URL[postType]}${
+    isLoggedIn ? '' : '/guest'
+  }`;
+  const OPTION_URL = `postClosingType=${requestedStatus}&postSortType=${requestedSorting}&page=${pageNumber}`;
+
+  if (categoryId > DEFAULT_CATEGORY_ID && postType === POST_TYPE.CATEGORY) {
+    return `${POST_BASE_URL}?${OPTION_URL}&category=${categoryId}`;
+  }
+
+  if (postType === POST_TYPE.SEARCH) {
+    return `${POST_BASE_URL}?${SEARCH_KEYWORD}=${keyword}&${OPTION_URL}`;
+  }
+
+  return `${POST_BASE_URL}?${OPTION_URL}`;
+};
+
+export const getPostList = async (
+  requiredOption: PostListByRequiredOption,
+  optionalOption: PostListByOptionalOption
+) => {
+  const { pageNumber } = requiredOption;
+
+  const postListUrl = makePostListUrl(requiredOption, optionalOption);
+
+  const postList = await getFetch<PostDetailResponse[]>(postListUrl);
+
+  return {
+    pageNumber,
+    postList: postList.map(post => transformPostResponse(post)),
+  };
 };

@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { UpdateUserInfoRequest } from '@type/user';
-
-import { updateUserInfo } from '@api/userInfo';
+import { UpdateUserInfoRequest, updateUserInfo } from '@api/userInfo';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

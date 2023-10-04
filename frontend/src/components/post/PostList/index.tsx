@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
+import { useSelect } from '@hooks';
+
 import { AuthContext } from '@hooks/context/auth';
 import { PostOptionContext } from '@hooks/context/postOption';
 import { usePostList } from '@hooks/query/usePostList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
 import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
-import { useSelect } from '@hooks/useSelect';
 
-import Post from '@components/common/Post';
+import { SORTING_OPTION, STATUS_OPTION } from '@pages/HomePage/constants';
+import { PostSorting, PostStatus } from '@pages/HomePage/types';
+
 import Select from '@components/common/Select';
 import Skeleton from '@components/common/Skeleton';
-import { SORTING_OPTION, STATUS_OPTION } from '@components/post/PostListPage/constants';
-import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
+import Post from '@components/post/Post';
 
 import { PATH } from '@constants/path';
 
@@ -60,7 +62,7 @@ export default function PostList() {
 
   return (
     <S.Container>
-      <button ref={topButtonRef} role="contentinfo" aria-label="최상단입니다"></button>
+      <button ref={topButtonRef} role="contentinfo" aria-label="최상단입니다" />
       <S.SelectContainer>
         <S.SelectWrapper>
           <Select<PostStatus>
@@ -100,23 +102,15 @@ export default function PostList() {
           <React.Fragment key={pageIndex}>
             {postListInfo.postList.map((post, index) => {
               if (index === 7) {
-                return (
-                  <div key={post.postId} ref={targetRef}>
-                    <Post isPreview={true} postInfo={post} />
-                  </div>
-                );
+                return <Post key={post.postId} ref={targetRef} isPreview={true} postInfo={post} />;
               }
 
               return <Post key={post.postId} isPreview={true} postInfo={post} />;
             })}
-            <S.HiddenButton
-              onClick={focusTopContent}
-              aria-label="스크롤 맨 위로가기"
-            ></S.HiddenButton>
-            <S.HiddenLink
-              aria-label="게시글 작성 페이지로 이동"
-              to={PATH.POST_WRITE}
-            ></S.HiddenLink>
+            <li key={`${pageIndex}UserButton`}>
+              <S.HiddenButton onClick={focusTopContent} aria-label="스크롤 맨 위로가기" />
+              <S.HiddenLink aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE} />
+            </li>
           </React.Fragment>
         ))}
         {isFetchingNextPage && <Skeleton isLarge={false} />}

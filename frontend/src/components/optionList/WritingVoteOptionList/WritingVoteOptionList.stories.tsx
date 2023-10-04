@@ -2,7 +2,7 @@ import type { Meta } from '@storybook/react';
 
 import { styled } from 'styled-components';
 
-import { useWritingOption } from '@hooks/useWritingOption';
+import { useWritingOption } from '@hooks';
 
 import WritingVoteOptionList from '.';
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { styled } from 'styled-components';
 
-import { useToggle } from '@hooks/useToggle';
+import { useToggle } from '@hooks';
 
 import Modal from '../Modal';
 import SquareButton from '../SquareButton';

@@ -21,6 +21,7 @@ export const IsDeletable = () => {
       handleDeleteOptionClick={() => {}}
       handleRemoveImageClick={() => {}}
       handleUploadImage={() => {}}
+      handlePasteImage={() => {}}
       optionId={Math.floor(Math.random() * 100000)}
       text="방학 때 강릉으로  강아지와 기차여행을 하려했지
   만 장마가 와서 취소했어요. 여행을 별로 좋"
@@ -42,6 +43,7 @@ export const IsNotDeletable = () => {
       handleDeleteOptionClick={() => {}}
       handleRemoveImageClick={() => {}}
       handleUploadImage={() => {}}
+      handlePasteImage={() => {}}
       optionId={Math.floor(Math.random() * 100000)}
       text="방학 때 강릉으로  강아지와 기차여행을 하려했지
   만 장마가 와서 취소했어요. 여행을 별로 좋"
@@ -62,6 +64,7 @@ export const ShowImage = () => {
       handleDeleteOptionClick={() => {}}
       handleRemoveImageClick={() => {}}
       handleUploadImage={() => {}}
+      handlePasteImage={() => {}}
       optionId={Math.floor(Math.random() * 100000)}
       text="방학 때 강릉으로  강아지와 기차여행을 하려했지
   만 장마가 와서 취소했어요. 여행을 별로 좋"

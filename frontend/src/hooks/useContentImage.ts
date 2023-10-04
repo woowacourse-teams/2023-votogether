@@ -9,6 +9,8 @@ export const useContentImage = (imageUrl: string = '') => {
   const handlePasteImage = (event: ClipboardEvent<HTMLTextAreaElement>) => {
     const file = event.clipboardData.files[0];
 
+    if (!file) return;
+
     if (file.type.slice(0, 5) === 'image') {
       event.preventDefault();
 

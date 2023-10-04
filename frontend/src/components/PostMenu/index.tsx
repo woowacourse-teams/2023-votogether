@@ -9,7 +9,7 @@ interface MenuProps {
   handleMenuClick: (menu: PostAction) => void;
 }
 
-export default function Menu({ menuList, handleMenuClick }: MenuProps) {
+export default function PostMenu({ menuList, handleMenuClick }: MenuProps) {
   return (
     <S.Container>
       {menuList.map(({ content, color, action }) => (

@@ -14,8 +14,8 @@ import { reportContent } from '@api/report';
 
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
 import DeleteModal from '@components/common/DeleteModal';
-import Menu from '@components/common/Menu';
 import Toast from '@components/common/Toast';
+import PostMenu from '@components/PostMenu';
 import ReportModal from '@components/ReportModal';
 
 import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '@constants/post';
@@ -137,7 +137,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
             ></S.Image>
             {isOpen && (
               <S.MenuWrapper>
-                <Menu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
+                <PostMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
               </S.MenuWrapper>
             )}
           </S.MenuContainer>

@@ -1,4 +1,4 @@
-import { CommentMenu, CommentMenuItem, CommentUser } from '@type/menu';
+import type { CommentMenu, CommentUser, PostMenuItem } from '@type/menu';
 
 export const STATUS = {
   ALL: 'all',
@@ -41,7 +41,7 @@ export const COMMENT_USER_MENU: Record<CommentUser, CommentMenu> = {
   [COMMENT_USER.WRITER]: COMMENT_USER.WRITER,
 } as const;
 
-export const COMMENT_MENU: Record<CommentMenu, CommentMenuItem[]> = {
+export const COMMENT_MENU: Record<CommentMenu, PostMenuItem[]> = {
   [COMMENT_USER.NOT_WRITER]: [
     { color: 'black', content: '닉네임 신고', action: COMMENT_ACTION.USER_REPORT },
     { color: 'black', content: '댓글 신고', action: COMMENT_ACTION.COMMENT_REPORT },

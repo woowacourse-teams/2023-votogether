@@ -65,7 +65,6 @@ oauth:
 jwt:
   token:
     secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
-    expiration-time: 222222
     access-expiration-time: 100000
     refresh-expiration-time: 222222
 

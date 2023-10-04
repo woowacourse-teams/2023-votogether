@@ -58,7 +58,7 @@ public class AuthService {
         validateTokenInfo(accessTokenPayload, refreshTokenPayload);
 
         final String newAccessToken = tokenProcessor.generateAccessToken(accessTokenPayload.memberId());
-        final String newRefreshToken = tokenProcessor.generateRefreshToken(accessTokenPayload.memberId());
+        final String newRefreshToken = tokenProcessor.generateRefreshToken(refreshTokenPayload.memberId());
         redisTemplate.opsForValue().set(newRefreshToken, accessTokenPayload.memberId(), Duration.ofDays(14L));
         return new ReissuedTokenDto(newAccessToken, newRefreshToken);
     }

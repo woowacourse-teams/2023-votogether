@@ -4,12 +4,12 @@ import { PostAction, PostMenuItem } from '@type/menu';
 
 import * as S from './style';
 
-interface MenuProps {
+interface PostMenuProps {
   menuList: PostMenuItem[];
   handleMenuClick: (menu: PostAction) => void;
 }
 
-export default function PostMenu({ menuList, handleMenuClick }: MenuProps) {
+export default function PostMenu({ menuList, handleMenuClick }: PostMenuProps) {
   return (
     <S.Container>
       {menuList.map(({ content, color, action }) => (

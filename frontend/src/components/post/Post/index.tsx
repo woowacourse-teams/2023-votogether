@@ -1,4 +1,5 @@
 import { memo, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
@@ -30,6 +31,7 @@ interface PostProps {
 }
 
 export default memo(function Post({ postInfo, isPreview }: PostProps) {
+  const navigate = useNavigate();
   const {
     postId,
     category,
@@ -112,8 +114,14 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
   return (
     <S.Container as={isPreview ? 'li' : 'div'}>
       <S.DetailLink
+        role={isPreview ? 'link' : 'none'}
+        tabIndex={0}
         as={isPreview ? '' : 'main'}
-        to={isPreview ? `${PATH.POST}/${postId}` : '#'}
+        onClick={() => {
+          if (!isPreview) return;
+
+          navigate(`${PATH.POST}/${postId}`);
+        }}
         $isPreview={isPreview}
         aria-describedby={
           isPreview
@@ -164,7 +172,7 @@ export default memo(function Post({ postInfo, isPreview }: PostProps) {
           aria-label={`내용: ${content}`}
           $isPreview={isPreview}
         >
-          {convertTextToElement(content, !isPreview)}
+          {convertTextToElement(content)}
         </S.Content>
         {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
       </S.DetailLink>

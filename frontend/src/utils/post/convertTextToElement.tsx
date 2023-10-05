@@ -1,14 +1,12 @@
+import { MouseEvent } from 'react';
+
 import { convertTextToUrl } from './convertTextToUrl';
 
-export const convertTextToElement = (text: string, isLinkEnabled = true) => {
+export const convertTextToElement = (text: string) => {
   const convertedUrlText = convertTextToUrl(text);
   const linkPattern = /\[\[([^[\]]+)\]\]/g;
 
   const parts = convertedUrlText.split(linkPattern);
-
-  if (!isLinkEnabled) {
-    return parts.join('');
-  }
 
   const elementList = parts.map((part, index) => {
     if (index % 2 === 1) {
@@ -17,6 +15,9 @@ export const convertTextToElement = (text: string, isLinkEnabled = true) => {
       const linkUrl = linkText.startsWith('http' || 'https') ? linkText : `https://${linkText}`;
       return (
         <a
+          onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+            event.stopPropagation();
+          }}
           key={index}
           href={linkUrl}
           target="_blank"

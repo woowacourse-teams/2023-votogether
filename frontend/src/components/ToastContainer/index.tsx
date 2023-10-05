@@ -4,6 +4,7 @@ import { ToastInfo } from '@hooks/context/toast';
 
 import Toast from '@components/common/Toast';
 
+import * as S from './style';
 interface ToastContainerProps {
   toastList: ToastInfo[];
 }
@@ -12,11 +13,13 @@ export default function ToastContainer({ toastList }: ToastContainerProps) {
   const rootElem = document.getElementById('toast-root') as HTMLElement;
 
   return createPortal(
-    toastList.map(toast => (
-      <Toast size="sm" position="bottom">
-        {toast.text}
-      </Toast>
-    )),
+    <S.Container>
+      {toastList.map(toast => (
+        <Toast size="free" position="bottom">
+          {toast.text}
+        </Toast>
+      ))}
+    </S.Container>,
     rootElem
   );
 }

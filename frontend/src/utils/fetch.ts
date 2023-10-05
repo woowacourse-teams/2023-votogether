@@ -51,116 +51,96 @@ export const getFetch = async <T>(url: string): Promise<T> => {
 };
 
 export const postFetch = async <T>(url: string, body: T) => {
-  try {
-    await silentLogin();
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: makeFetchHeaders(),
-    });
+  await silentLogin();
+  const response = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: makeFetchHeaders(),
+  });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
+  if (!response.ok) {
+    const errorText = await response.text();
+    const error: Error = JSON.parse(errorText);
 
-    return response;
-  } catch (e) {
-    const error = e as Error;
     throw new Error(error.message);
   }
 };
 
 export const putFetch = async <T>(url: string, body: T) => {
-  try {
-    await silentLogin();
-    const response = await fetch(url, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-      headers: makeFetchHeaders(),
-    });
+  await silentLogin();
+  const response = await fetch(url, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+    headers: makeFetchHeaders(),
+  });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
-  } catch (e) {
-    const error = e as Error;
+  if (!response.ok) {
+    const errorText = await response.text();
+    const error: Error = JSON.parse(errorText);
+
     throw new Error(error.message);
   }
 };
 
 export const patchFetch = async <T>(url: string, body?: T) => {
-  try {
-    await silentLogin();
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: makeFetchHeaders(),
-      body: JSON.stringify(body),
-    });
+  await silentLogin();
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: makeFetchHeaders(),
+    body: JSON.stringify(body),
+  });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
-  } catch (e) {
-    const error = e as Error;
+  if (!response.ok) {
+    const errorText = await response.text();
+    const error: Error = JSON.parse(errorText);
+
     throw new Error(error.message);
   }
 };
 
 export const deleteFetch = async (url: string) => {
-  try {
-    await silentLogin();
-    const response = await fetch(url, {
-      method: 'DELETE',
-      headers: makeFetchHeaders(),
-    });
+  await silentLogin();
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: makeFetchHeaders(),
+  });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
-  } catch (e) {
-    const error = e as Error;
+  if (!response.ok) {
+    const errorText = await response.text();
+    const error: Error = JSON.parse(errorText);
+
     throw new Error(error.message);
   }
 };
 
 export const multiPostFetch = async (url: string, body: FormData) => {
-  try {
-    await silentLogin();
-    const response = await fetch(url, {
-      method: 'POST',
-      body,
-      headers: makeFetchMultiHeaders(),
-    });
+  await silentLogin();
+  const response = await fetch(url, {
+    method: 'POST',
+    body,
+    headers: makeFetchMultiHeaders(),
+  });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
-  } catch (e) {
-    const error = e as Error;
+  if (!response.ok) {
+    const errorText = await response.text();
+    const error: Error = JSON.parse(errorText);
+
     throw new Error(error.message);
   }
 };
 
 export const multiPutFetch = async (url: string, body: FormData) => {
-  try {
-    await silentLogin();
-    const response = await fetch(url, {
-      method: 'PUT',
-      body,
-      headers: makeFetchMultiHeaders(),
-    });
+  await silentLogin();
+  const response = await fetch(url, {
+    method: 'PUT',
+    body,
+    headers: makeFetchMultiHeaders(),
+  });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
-  } catch (e) {
-    const error = e as Error;
+  if (!response.ok) {
+    const errorText = await response.text();
+    const error: Error = JSON.parse(errorText);
+
     throw new Error(error.message);
   }
 };

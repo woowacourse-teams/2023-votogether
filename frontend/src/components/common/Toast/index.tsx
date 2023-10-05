@@ -10,10 +10,8 @@ interface ToastProps {
 
 export default function Toast({ children, size, position }: ToastProps) {
   return (
-    <S.Wrapper $position={position}>
-      <S.Content aria-live="polite" $size={size}>
-        {children}
-      </S.Content>
-    </S.Wrapper>
+    <S.Content aria-live="polite" $size={size}>
+      {children}
+    </S.Content>
   );
 }

@@ -42,7 +42,7 @@ public class RequestLogInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             final RequestLog requestLog = new RequestLog(logContext.getLogId(), request);
             requestLog.put("Controller Method", handlerMethod((HandlerMethod) handler));
-            log.info("[Web Request START] : [\n{}]", requestLog);
+            log.info("\n[Web Request START] : [\n{}]", requestLog);
         }
         return true;
     }
@@ -65,10 +65,11 @@ public class RequestLogInterceptor implements HandlerInterceptor {
         }
         final LogContext logContext = logContextHolder.getLogContext();
         final ResponseLog responseLog = new ResponseLog(logContext.getLogId(), response);
-        final long totalTime = logContext.totalTakenTime();
+        final long currentTimeMillis = System.currentTimeMillis();
+        final long totalTime = logContext.totalTakenTime(currentTimeMillis);
         responseLog.put("Query Count", queryCount.getCount());
         responseLog.put("Total Time", totalTime + "ms");
-        log.info("[Web Request END] : [\n{}]", responseLog);
+        log.info("\n[Web Request END] : [\n{}]", responseLog);
         logWarning(logContext, totalTime);
     }
 

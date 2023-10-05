@@ -14,9 +14,8 @@ import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
-import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.jwt.TokenPayload;
-import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.ControllerTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -28,24 +27,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(MemberController.class)
-class MemberControllerTest {
-
-    @MockBean
-    MemberService memberService;
-
-    @MockBean
-    TokenProcessor tokenProcessor;
+class MemberControllerTest extends ControllerTest {
 
     @BeforeEach
-    void setUp(final WebApplicationContext webApplicationContext) {
+    void setUp() {
         RestAssuredMockMvc.standaloneSetup(new MemberController(memberService));
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
     }
 
     @Test

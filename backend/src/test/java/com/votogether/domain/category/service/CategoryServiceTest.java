@@ -11,7 +11,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.test.annotation.ServiceTest;
+import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.CategoryFixtures;
 import com.votogether.test.fixtures.MemberFixtures;
 import java.util.List;
@@ -21,8 +21,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@ServiceTest
-class CategoryServiceTest {
+class CategoryServiceTest extends ServiceTest {
 
     @Autowired
     CategoryService categoryService;

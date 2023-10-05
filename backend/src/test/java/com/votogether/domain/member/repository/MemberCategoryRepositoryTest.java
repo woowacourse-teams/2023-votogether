@@ -7,7 +7,7 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
-import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.RepositoryTest;
 import com.votogether.test.fixtures.CategoryFixtures;
 import com.votogether.test.fixtures.MemberFixtures;
 import java.util.List;
@@ -15,8 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@RepositoryTest
-class MemberCategoryRepositoryTest {
+class MemberCategoryRepositoryTest extends RepositoryTest {
 
     @Autowired
     CategoryRepository categoryRepository;

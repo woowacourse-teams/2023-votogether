@@ -1,5 +1,7 @@
 package com.votogether.global.log.context;
 
+import java.util.Stack;
+
 public class LogContext {
 
     private static final String BAR = "|";
@@ -7,6 +9,7 @@ public class LogContext {
 
     private final LogId logId;
     private final long startTimeMillis;
+    private final Stack<Long> callTimeStack = new Stack<>();
     private int methodDepth = 0;
 
     public LogContext(final LogId logId) {
@@ -15,6 +18,7 @@ public class LogContext {
     }
 
     public void increaseMethodCall() {
+        callTimeStack.push(System.currentTimeMillis());
         ++methodDepth;
     }
 
@@ -36,8 +40,15 @@ public class LogContext {
         return logId.getId();
     }
 
-    public long totalTakenTime() {
-        return System.currentTimeMillis() - startTimeMillis;
+    public long executionTime(final long currentTimeMillis) {
+        if (callTimeStack.isEmpty()) {
+            return 0;
+        }
+        return currentTimeMillis - callTimeStack.pop();
+    }
+
+    public long totalTakenTime(final long currentTimeMillis) {
+        return currentTimeMillis - startTimeMillis;
     }
 
 }

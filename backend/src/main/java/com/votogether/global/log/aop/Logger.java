@@ -30,20 +30,24 @@ public class Logger {
 
     public void methodReturn(final String className, final String methodName) {
         final LogContext logContext = logContextHolder.getLogContext();
-        log.info("[{}]  {}  time={}ms",
+        final long currentTimeMillis = System.currentTimeMillis();
+        log.info("[{}]  {} - [execution time = {}ms]  [total time = {}ms]",
                 logContext.getLogId(),
                 formattedClassAndMethod(logContext.depthPrefix(RETURN_PREFIX), className, methodName),
-                logContext.totalTakenTime()
+                logContext.executionTime(currentTimeMillis),
+                logContext.totalTakenTime(currentTimeMillis)
         );
         logContextHolder.decreaseCall();
     }
 
     public void throwException(final String className, final String methodName, final Throwable exception) {
         final LogContext logContext = logContextHolder.getLogContext();
-        log.warn("[{}]  {}  time={}ms,  throws {}",
+        final long currentTimeMillis = System.currentTimeMillis();
+        log.warn("[{}]  {} - [execution time = {}ms]  [total time = {}ms]  [throws {}]",
                 logContext.getLogId(),
                 formattedClassAndMethod(logContext.depthPrefix(EX_PREFIX), className, methodName),
-                logContext.totalTakenTime(),
+                logContext.executionTime(currentTimeMillis),
+                logContext.totalTakenTime(currentTimeMillis),
                 exception.getClass().getSimpleName()
         );
         logContextHolder.decreaseCall();

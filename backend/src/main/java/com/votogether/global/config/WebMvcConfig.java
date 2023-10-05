@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -37,9 +38,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin(LOCALHOST_FRONTEND);
+        config.addAllowedOrigin(HTTPS_LOCALHOST_FRONTEND);
+        config.addAllowedOrigin(DEV_SERVER);
+        config.addAllowedOrigin(PROD_SERVER);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setMaxAge(6000L);
+        config.addExposedHeader(HttpHeaders.LOCATION);
+        config.addExposedHeader(HttpHeaders.SET_COOKIE);
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

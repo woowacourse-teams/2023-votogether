@@ -7,6 +7,7 @@ import { ThemeProvider } from 'styled-components';
 
 import { AuthProvider } from '@hooks/context/auth';
 import PostOptionProvider from '@hooks/context/postOption';
+import ToastProvider from '@hooks/context/toast';
 
 import router from '@routes/router';
 
@@ -32,9 +33,11 @@ const App = () => (
         <GlobalStyle />
         <PostOptionProvider>
           <AuthProvider>
-            <Suspense fallback={<Skeleton isLarge />}>
-              <RouterProvider router={router} />
-            </Suspense>
+            <ToastProvider>
+              <Suspense fallback={<Skeleton isLarge />}>
+                <RouterProvider router={router} />
+              </Suspense>
+            </ToastProvider>
           </AuthProvider>
         </PostOptionProvider>
       </ThemeProvider>

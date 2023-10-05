@@ -1,7 +1,6 @@
 package com.votogether.global.log.aop;
 
 import com.votogether.global.log.context.LogContext;
-import com.votogether.global.log.context.LogContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,11 +16,10 @@ public class Logger {
     private static final String RETURN_PREFIX = "<---";
     private static final String EX_PREFIX = "<X--";
 
-    private final LogContextHolder logContextHolder;
+    private final LogContext logContext;
 
     public void methodCall(final String className, final String methodName) {
-        final LogContext logContext = logContextHolder.getLogContext();
-        logContextHolder.increaseCall();
+        logContext.increaseMethodCall();
         log.info("[{}]  {}",
                 logContext.getLogId(),
                 formattedClassAndMethod(logContext.depthPrefix(CALL_PREFIX), className, methodName)
@@ -29,7 +27,6 @@ public class Logger {
     }
 
     public void methodReturn(final String className, final String methodName) {
-        final LogContext logContext = logContextHolder.getLogContext();
         final long currentTimeMillis = System.currentTimeMillis();
         log.info("[{}]  {} - [execution time = {}ms]  [total time = {}ms]",
                 logContext.getLogId(),
@@ -37,11 +34,10 @@ public class Logger {
                 logContext.executionTime(currentTimeMillis),
                 logContext.totalTakenTime(currentTimeMillis)
         );
-        logContextHolder.decreaseCall();
+        logContext.decreaseMethodCall();
     }
 
     public void throwException(final String className, final String methodName, final Throwable exception) {
-        final LogContext logContext = logContextHolder.getLogContext();
         final long currentTimeMillis = System.currentTimeMillis();
         log.warn("[{}]  {} - [execution time = {}ms]  [total time = {}ms]  [throws {}]",
                 logContext.getLogId(),
@@ -50,7 +46,7 @@ public class Logger {
                 logContext.totalTakenTime(currentTimeMillis),
                 exception.getClass().getSimpleName()
         );
-        logContextHolder.decreaseCall();
+        logContext.decreaseMethodCall();
     }
 
     private String formattedClassAndMethod(final String prefix, final String className, final String methodName) {

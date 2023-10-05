@@ -51,7 +51,6 @@ class PostQueryControllerTest extends ControllerTest {
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.mockMvc(mockMvc);
-        mockingLog();
     }
 
     @Nested

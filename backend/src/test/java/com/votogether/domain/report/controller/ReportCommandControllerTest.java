@@ -22,11 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ReportCommandCommandController.class)
 class ReportCommandControllerTest extends ControllerTest {
@@ -34,11 +35,12 @@ class ReportCommandControllerTest extends ControllerTest {
     @MockBean
     ReportCommandService reportCommandService;
 
+    @Autowired
+    MockMvc mockMvc;
+
     @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext) {
-        RestAssuredMockMvc.standaloneSetup(new ReportCommandCommandController(reportCommandService));
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
-        mockingLog();
+    void setUp() {
+        RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
     @Nested

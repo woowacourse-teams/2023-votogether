@@ -14,7 +14,6 @@ import com.votogether.domain.post.dto.request.comment.CommentUpdateRequest;
 import com.votogether.domain.post.dto.response.comment.CommentResponse;
 import com.votogether.domain.post.dto.response.comment.CommentWriterResponse;
 import com.votogether.domain.post.service.PostCommentService;
-import com.votogether.global.exception.GlobalExceptionHandler;
 import com.votogether.test.ControllerTest;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -27,13 +26,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(PostCommentController.class)
 class PostCommentControllerTest extends ControllerTest {
@@ -41,15 +40,12 @@ class PostCommentControllerTest extends ControllerTest {
     @MockBean
     PostCommentService postCommentService;
 
+    @Autowired
+    MockMvc mockMvc;
+
     @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext) {
-        RestAssuredMockMvc.standaloneSetup(
-                MockMvcBuilders
-                        .standaloneSetup(new PostCommentController(postCommentService))
-                        .setControllerAdvice(GlobalExceptionHandler.class)
-        );
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
-        mockingLog();
+    void setUp() {
+        RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
     @Nested

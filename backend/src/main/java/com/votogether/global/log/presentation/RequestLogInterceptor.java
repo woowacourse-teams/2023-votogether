@@ -1,7 +1,6 @@
 package com.votogether.global.log.presentation;
 
 import com.votogether.global.log.context.LogContext;
-import com.votogether.global.log.context.LogContextHolder;
 import com.votogether.global.log.context.LogId;
 import com.votogether.global.log.context.MemberIdHolder;
 import com.votogether.global.log.context.QueryCount;
@@ -26,7 +25,7 @@ public class RequestLogInterceptor implements HandlerInterceptor {
 
     private final MemberIdHolder memberIdHolder;
     private final QueryCount queryCount;
-    private final LogContextHolder logContextHolder;
+    private final LogContext logContext;
 
     @Override
     public boolean preHandle(
@@ -37,8 +36,7 @@ public class RequestLogInterceptor implements HandlerInterceptor {
         if (CorsUtils.isPreflightRequest(request)) {
             return true;
         }
-        final LogContext logContext = new LogContext(LogId.from(memberIdHolder));
-        logContextHolder.setLogContext(logContext);
+        logContext.setLogId(LogId.from(memberIdHolder));
         if (handler instanceof HandlerMethod) {
             final RequestLog requestLog = new RequestLog(logContext.getLogId(), request);
             requestLog.put("Controller Method", handlerMethod((HandlerMethod) handler));
@@ -63,7 +61,6 @@ public class RequestLogInterceptor implements HandlerInterceptor {
         if (CorsUtils.isPreflightRequest(request)) {
             return;
         }
-        final LogContext logContext = logContextHolder.getLogContext();
         final ResponseLog responseLog = new ResponseLog(logContext.getLogId(), response);
         final long currentTimeMillis = System.currentTimeMillis();
         final long totalTime = logContext.totalTakenTime(currentTimeMillis);

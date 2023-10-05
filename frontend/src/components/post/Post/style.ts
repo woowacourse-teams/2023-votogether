@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
-export const Container = styled.li`
+export const Container = styled.li<{ $isPreview: boolean }>`
   width: 100%;
 
   position: relative;
@@ -10,6 +10,9 @@ export const Container = styled.li`
   font: var(--text-small);
   letter-spacing: 0.5px;
   line-height: 1.5;
+
+  padding-bottom: ${({ $isPreview }) => $isPreview && '30px'};
+  border-bottom: ${({ $isPreview }) => $isPreview && '1px solid rgba(0, 0, 0, 0.1)'};
 
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-caption);
@@ -78,6 +81,7 @@ export const Content = styled.div<{ $isPreview: boolean }>`
   text-overflow: ellipsis;
   word-break: break-word;
   white-space: pre-wrap;
+  text-align: start;
 
   overflow: hidden;
 

@@ -1,5 +1,6 @@
-import { ChangeEvent, MutableRefObject } from 'react';
+import { ChangeEvent, ClipboardEvent, MutableRefObject } from 'react';
 
+import { POST_WRITING_OPTION } from '@constants/policy';
 import { POST_OPTION_POLICY } from '@constants/policyMessage';
 
 import OptionCancelButton from './OptionCancelButton';
@@ -11,16 +12,15 @@ interface WritingVoteOptionProps {
   text: string;
   isDeletable: boolean;
   ariaLabel: string;
-  handleUpdateOptionChange: (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  handleUpdateOptionChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   handleDeleteOptionClick: () => void;
   handleRemoveImageClick: () => void;
   handleUploadImage: (event: ChangeEvent<HTMLInputElement>) => void;
+  handlePasteImage: (event: ClipboardEvent<HTMLTextAreaElement>) => void;
   imageUrl: string;
   contentInputRefList: MutableRefObject<HTMLInputElement[]>;
   index: number;
 }
-
-const MAX_WRITING_LENGTH = 50;
 
 export default function WritingVoteOption({
   optionId,
@@ -31,6 +31,7 @@ export default function WritingVoteOption({
   handleDeleteOptionClick,
   handleRemoveImageClick,
   handleUploadImage,
+  handlePasteImage,
   imageUrl,
   contentInputRefList,
   index,
@@ -47,9 +48,10 @@ export default function WritingVoteOption({
           <S.ContentTextArea
             name="optionText"
             defaultValue={text}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleUpdateOptionChange(e)}
+            onChange={handleUpdateOptionChange}
+            onPaste={handlePasteImage}
             placeholder={POST_OPTION_POLICY.DEFAULT}
-            maxLength={MAX_WRITING_LENGTH}
+            maxLength={POST_WRITING_OPTION.MAX_LENGTH}
           />
 
           <OptionUploadImageButton

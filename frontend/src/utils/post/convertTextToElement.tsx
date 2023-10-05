@@ -6,8 +6,12 @@ export const convertTextToElement = (text: string, isLinkEnabled = true) => {
 
   const parts = convertedUrlText.split(linkPattern);
 
+  if (!isLinkEnabled) {
+    return parts.join('');
+  }
+
   const elementList = parts.map((part, index) => {
-    if (index % 2 === 1 && isLinkEnabled) {
+    if (index % 2 === 1) {
       // 링크
       const linkText = part;
       const linkUrl = linkText.startsWith('http' || 'https') ? linkText : `https://${linkText}`;

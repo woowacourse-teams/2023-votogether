@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.category.entity.Category;
-import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.RepositoryTest;
 import com.votogether.test.fixtures.CategoryFixtures;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
-@RepositoryTest
-class CategoryRepositoryTest {
+class CategoryRepositoryTest extends RepositoryTest {
 
     @Autowired
     CategoryRepository categoryRepository;

@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import React, { MouseEvent, useState } from 'react';
 
+import styled from 'styled-components';
+
 import { useDialog } from '@hooks/useDialog';
+
+import { theme } from '@styles/theme';
 
 import ImageZoomModal from '.';
 
@@ -19,7 +23,7 @@ export const Default: Story = {
 
 function ImageZoomModalStory() {
   const [imageSrc, setImageSrc] = useState<string>('');
-  const { closeDialog, dialogRef, handleCloseClick, handleKeyDown, openDialog } = useDialog();
+  const { closeDialog, dialogRef, handleCloseClick, openDialog } = useDialog();
 
   const handleImageClick = (event: MouseEvent<HTMLImageElement>) => {
     const src = event.currentTarget.src;
@@ -29,15 +33,42 @@ function ImageZoomModalStory() {
 
   return (
     <>
-      <img onClick={handleImageClick} src="https://source.unsplash.com/random" />
-      <img onClick={handleImageClick} src="https://source.unsplash.com/random" />
+      <Container>
+        {IMAGE_URL_LIST.map(item => (
+          <Image key={item} src={item} onClick={handleImageClick} />
+        ))}
+      </Container>
       <ImageZoomModal
         src={imageSrc}
         closeDialog={closeDialog}
         handleCloseClick={handleCloseClick}
-        handleCloseKeyDown={handleKeyDown}
         ref={dialogRef}
       />
     </>
   );
 }
+
+const getRandomImageUrl = (signal: number) => `https://source.unsplash.com/random/sig=${signal}`;
+
+const IMAGE_URL_LIST = Array.from({ length: 50 }, (__, index) => getRandomImageUrl(index));
+
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+
+  @media (min-width: ${theme.breakpoint.md}) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: ${theme.breakpoint.lg}) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+`;
+
+const Image = styled.img`
+  width: 100%;
+  object-fit: contain;
+
+  cursor: pointer;
+`;

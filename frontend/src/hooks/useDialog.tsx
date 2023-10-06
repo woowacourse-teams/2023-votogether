@@ -1,4 +1,4 @@
-import { KeyboardEvent, MouseEvent, useRef } from 'react';
+import { MouseEvent, useRef } from 'react';
 
 export const useDialog = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -28,13 +28,5 @@ export const useDialog = () => {
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDialogElement>) => {
-    event.preventDefault();
-
-    if (event.currentTarget.open && event.key === 'Escape') {
-      closeDialog();
-    }
-  };
-
-  return { dialogRef, openDialog, closeDialog, handleCloseClick, handleKeyDown };
+  return { dialogRef, openDialog, closeDialog, handleCloseClick };
 };

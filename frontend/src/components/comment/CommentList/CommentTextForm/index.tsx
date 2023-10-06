@@ -1,14 +1,14 @@
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
 
-import { useToast } from '@hooks';
 import { useText } from '@hooks';
 import { useCreateComment, useEditComment } from '@hooks';
 
+import { ToastContext } from '@hooks/context/toast';
+
 import SquareButton from '@components/common/SquareButton';
-import Toast from '@components/common/Toast';
 
 import { POST_COMMENT } from '@constants/policy';
 
@@ -32,7 +32,7 @@ export default function CommentTextForm({
     resetText,
     addText: addContent,
   } = useText(initialComment.content);
-  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { addMessage } = useContext(ToastContext);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
@@ -42,21 +42,17 @@ export default function CommentTextForm({
   const {
     mutate: createComment,
     isSuccess: isCreateSuccess,
-    isError: isCreateError,
-    error: createError,
     isLoading: createLoading,
   } = useCreateComment(postId);
   const {
     mutate: editComment,
     isSuccess: isEditSuccess,
-    isError: isEditError,
-    error: editError,
     isLoading: editLoading,
   } = useEditComment(postId, commentId);
 
   const handleUpdateComment = () => {
     if (content.trim() === '') {
-      openToast('댓글에 내용을 입력해주세요.');
+      addMessage('댓글에 내용을 입력해주세요.');
       return;
     }
     if (isEdit) {
@@ -73,22 +69,6 @@ export default function CommentTextForm({
   useEffect(() => {
     isEditSuccess && handleCancelClick && handleCancelClick();
   }, [isEditSuccess]);
-
-  useEffect(() => {
-    if (isCreateError && createError instanceof Error) {
-      const errorResponse = JSON.parse(createError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isCreateError, createError]);
-
-  useEffect(() => {
-    if (isEditError && editError instanceof Error) {
-      const errorResponse = JSON.parse(editError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isEditError, editError]);
 
   return (
     <S.Container>
@@ -133,11 +113,6 @@ export default function CommentTextForm({
           </SquareButton>
         </S.ButtonWrapper>
       </S.ButtonContainer>
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
-      )}
     </S.Container>
   );
 }

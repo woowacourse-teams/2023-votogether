@@ -6,7 +6,7 @@ import Modal from '@components/common/Modal';
 import Select from '@components/common/Select';
 
 import { REPORT_TYPE } from './constants';
-
+import * as S from './style';
 interface UserReportModalProps {
   reportType: ReportType;
   handleCancelClick: () => void;
@@ -42,12 +42,14 @@ export default function ReportModal({
         handleClick: handleCancelClick,
       }}
     >
-      <Select
-        aria-label={`${name} 방법 선택`}
-        optionList={reportMessageList}
-        handleOptionChange={handleOptionChange}
-        selectedOption={reportMessageList[selectedOption]}
-      />
+      <S.ModalBody>
+        <Select
+          aria-label={`${name} 방법 선택`}
+          optionList={reportMessageList}
+          handleOptionChange={handleOptionChange}
+          selectedOption={reportMessageList[selectedOption]}
+        />
+      </S.ModalBody>
     </Modal>
   );
 }

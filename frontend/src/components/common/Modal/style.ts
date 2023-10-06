@@ -40,14 +40,18 @@ export const Container = styled.div<{ size: Size }>`
   max-width: 290px;
   border-radius: 12px;
   border: 2px solid #f6f6f6;
-  padding: 5px;
+  padding-left: 5px 0 0 10px;
 
   background-color: white;
 
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-  overflow-y: auto;
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    width: 96%;
+  }
 
   @media (min-width: ${theme.breakpoint.sm}) {
+    width: 50%;
     max-width: 500px;
   }
 `;
@@ -59,7 +63,7 @@ export const HiddenCloseButton = styled.button`
 `;
 
 export const Title = styled.span`
-  padding: 12px 2px 0 15px;
+  padding: 15px 2px 0 20px;
   margin-top: 5px;
   margin-bottom: 16px;
 
@@ -82,7 +86,7 @@ export const ButtonContainer = styled.div`
   gap: 12px;
 
   padding: 0 17px;
-  margin: 16px 0 13px 0;
+  margin: 16px 0 15px 0;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     gap: 14px;

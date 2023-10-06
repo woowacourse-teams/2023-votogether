@@ -2,6 +2,8 @@ import { styled } from 'styled-components';
 
 import { Size } from '@type/style';
 
+import { theme } from '@styles/theme';
+
 const MODAL_SIZE: Record<Size, string> = {
   sm: '290px',
   md: '590px',
@@ -26,7 +28,7 @@ export const Backdrop = styled.div`
 
 export const Container = styled.div<{ size: Size }>`
   display: grid;
-  grid-template-rows: 1fr 6fr;
+  grid-template-rows: 1fr 3fr 1fr;
 
   position: fixed;
   top: 50%;
@@ -34,7 +36,6 @@ export const Container = styled.div<{ size: Size }>`
   transform: translate(-50%, -50%);
 
   width: ${props => MODAL_SIZE[props.size]};
-  height: 290px;
   border-radius: 12px;
   border: 2px solid #f6f6f6;
   padding: 5px;
@@ -42,10 +43,46 @@ export const Container = styled.div<{ size: Size }>`
   background-color: white;
 
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
 `;
 
 export const HiddenCloseButton = styled.button`
   position: absolute;
   left: -10000px;
   top: -10000px;
+`;
+
+export const Title = styled.span`
+  padding: 12px 2px 0 15px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+
+  color: #334253;
+
+  font: var(--text-title);
+  font-weight: 500;
+`;
+
+export const Body = styled.div`
+  min-height: 100%;
+
+  font: var(--text-body);
+
+  box-sizing: border-box;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  gap: 12px;
+
+  padding: 0 17px;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    gap: 14px;
+  }
+`;
+
+export const ButtonWrapper = styled.div`
+  width: 100%;
+  height: 40px;
 `;

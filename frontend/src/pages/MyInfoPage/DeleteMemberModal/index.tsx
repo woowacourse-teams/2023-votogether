@@ -1,5 +1,4 @@
 import Modal from '@components/common/Modal';
-import SquareButton from '@components/common/SquareButton';
 
 import * as S from './style';
 interface DeleteMemberModalProps {
@@ -11,10 +10,24 @@ export default function DeleteMemberModal({
   handleModalClose,
   handleWithdrawalMembership,
 }: DeleteMemberModalProps) {
+  const primaryButton = {
+    text: '저장',
+    handleClick: handleWithdrawalMembership,
+  };
+
+  const secondaryButton = {
+    text: '초기화',
+    handleClick: handleModalClose,
+  };
+
   return (
-    <Modal size="sm" onModalClose={handleModalClose}>
+    <Modal
+      title="정말 탈퇴하시겠어요?<"
+      size="sm"
+      primaryButton={primaryButton}
+      secondaryButton={secondaryButton}
+    >
       <S.ModalBody>
-        <S.ModalTitle>정말 탈퇴하시겠어요?</S.ModalTitle>
         <S.ModalDescription>
           탈퇴 버튼 클릭 시, <br></br>계정은 삭제되며 복구되지 않아요.
           <p>
@@ -22,14 +35,6 @@ export default function DeleteMemberModal({
             유의해주세요.
           </p>
         </S.ModalDescription>
-        <S.ButtonListWrapper>
-          <SquareButton onClick={handleWithdrawalMembership} aria-label="회원 탈퇴" theme="fill">
-            탈퇴
-          </SquareButton>
-          <SquareButton onClick={handleModalClose} aria-label="회원 탈퇴" theme="blank">
-            취소
-          </SquareButton>
-        </S.ButtonListWrapper>
       </S.ModalBody>
     </Modal>
   );

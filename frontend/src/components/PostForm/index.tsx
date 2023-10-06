@@ -128,6 +128,16 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }
   };
 
+  const primaryButton = {
+    text: '저장',
+    handleClick: closeModal,
+  };
+
+  const secondaryButton = {
+    text: '초기화',
+    handleClick: handleResetButton,
+  };
+
   const handleInsertContentLink = () => {
     addContent('[[이 괄호 안에 링크를 작성해주세요]] ');
   };
@@ -299,31 +309,19 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
           </S.RightSide>
         </S.Wrapper>
         {isOpen && (
-          <Modal size="sm" onModalClose={closeModal} aria-label="마감시간 설정 모달">
-            <>
-              <S.ModalHeader>
-                <h3>마감 시간 선택</h3>
-                <S.CloseButton onClick={closeModal} aria-label="마감시간 설정 모달 끄기">
-                  X
-                </S.CloseButton>
-              </S.ModalHeader>
-              <S.ModalBody>
-                <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
-                  {POST_DEADLINE_POLICY.DEFAULT}
-                </S.Description>
-                <TimePickerOptionList time={time} setTime={setTime} />
-                <S.ResetButtonWrapper>
-                  <SquareButton
-                    aria-label="마감시간 초기화"
-                    onClick={handleResetButton}
-                    type="button"
-                    theme="blank"
-                  >
-                    초기화
-                  </SquareButton>
-                </S.ResetButtonWrapper>
-              </S.ModalBody>
-            </>
+          <Modal
+            title="마감 시간 선택"
+            size="sm"
+            primaryButton={primaryButton}
+            secondaryButton={secondaryButton}
+            aria-label="마감시간 설정 모달"
+          >
+            <S.ModalBody>
+              <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
+                {POST_DEADLINE_POLICY.DEFAULT}
+              </S.Description>
+              <TimePickerOptionList time={time} setTime={setTime} />
+            </S.ModalBody>
           </Modal>
         )}
       </form>

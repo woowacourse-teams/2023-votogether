@@ -1,4 +1,4 @@
-import TwoButtonModal from '../../common/TwoButtonModal';
+import Modal from '../Modal';
 
 import * as S from './style';
 
@@ -29,8 +29,9 @@ export default function DeleteModal({
   };
 
   return (
-    <TwoButtonModal
+    <Modal
       title={`${TARGET_FOR_DELETE[target]} 삭제하기`}
+      size="sm"
       primaryButton={{
         text: '삭제',
         handleClick: handlePrimaryButtonClick,
@@ -43,6 +44,6 @@ export default function DeleteModal({
       <S.Description
         tabIndex={0}
       >{`${TARGET_FOR_DELETE[target]} 삭제하시겠습니까?\n${TARGET_FOR_DELETE[target]} 삭제하면 취소할 수 없습니다.`}</S.Description>
-    </TwoButtonModal>
+    </Modal>
   );
 }

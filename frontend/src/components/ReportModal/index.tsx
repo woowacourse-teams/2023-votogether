@@ -2,8 +2,8 @@ import { ReportType } from '@type/report';
 
 import { useSelect } from '@hooks';
 
+import Modal from '@components/common/Modal';
 import Select from '@components/common/Select';
-import TwoButtonModal from '@components/common/TwoButtonModal';
 
 import { REPORT_TYPE } from './constants';
 
@@ -30,8 +30,9 @@ export default function ReportModal({
   };
 
   return (
-    <TwoButtonModal
+    <Modal
       title={name}
+      size="sm"
       primaryButton={{
         text: '신고',
         handleClick: handlePrimaryButtonClick,
@@ -47,6 +48,6 @@ export default function ReportModal({
         handleOptionChange={handleOptionChange}
         selectedOption={reportMessageList[selectedOption]}
       />
-    </TwoButtonModal>
+    </Modal>
   );
 }

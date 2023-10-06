@@ -1,10 +1,9 @@
-import { ForwardedRef, forwardRef, memo, useContext, useEffect } from 'react';
+import { ForwardedRef, forwardRef, memo, useContext } from 'react';
 
 import { PostInfo } from '@type/post';
 
-import { useToast } from '@hooks';
-
 import { AuthContext } from '@hooks/context/auth';
+import { ToastContext } from '@hooks/context/toast';
 import { useCreateVote } from '@hooks/query/post/useCreateVote';
 import { useEditVote } from '@hooks/query/post/useEditVote';
 
@@ -19,8 +18,6 @@ import { convertTimeToWord } from '@utils/time/convertTimeToWord';
 
 import commentIcon from '@assets/comment.svg';
 import photoIcon from '@assets/photo_black.svg';
-
-import Toast from '../../common/Toast';
 
 import * as S from './style';
 
@@ -47,18 +44,10 @@ const Post = forwardRef(function Post(
     commentCount,
   } = postInfo;
   const { loggedInfo } = useContext(AuthContext);
-  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { addMessage } = useContext(ToastContext);
 
-  const {
-    mutate: createVote,
-    isError: isCreateVoteError,
-    error: createVoteError,
-  } = useCreateVote({ isPreview, postId });
-  const {
-    mutate: editVote,
-    isError: isEditVoteError,
-    error: editVoteError,
-  } = useEditVote({ isPreview, postId });
+  const { mutate: createVote } = useCreateVote({ isPreview, postId });
+  const { mutate: editVote } = useEditVote({ isPreview, postId });
 
   const isActive = !checkClosedPost(deadline);
 
@@ -67,17 +56,17 @@ const Post = forwardRef(function Post(
 
   const handleVoteClick = (newOptionId: number) => {
     if (!loggedInfo.isLoggedIn) {
-      openToast('투표는 로그인 후에 이용하실 수 있습니다.');
+      addMessage('투표는 로그인 후에 이용하실 수 있습니다.');
       return;
     }
 
     if (!isActive) {
-      openToast('마감된 게시글에는 투표를 할 수 없습니다.');
+      addMessage('마감된 게시글에는 투표를 할 수 없습니다.');
       return;
     }
 
     if (writer.nickname === loggedInfo.userInfo?.nickname) {
-      openToast('내가 쓴 글에는 투표를 할 수 없습니다.');
+      addMessage('내가 쓴 글에는 투표를 할 수 없습니다.');
       return;
     }
 
@@ -93,22 +82,6 @@ const Post = forwardRef(function Post(
       newOptionId,
     });
   };
-
-  useEffect(() => {
-    if (isCreateVoteError && createVoteError instanceof Error) {
-      const errorResponse = JSON.parse(createVoteError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isCreateVoteError, createVoteError]);
-
-  useEffect(() => {
-    if (isEditVoteError && editVoteError instanceof Error) {
-      const errorResponse = JSON.parse(editVoteError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isEditVoteError, editVoteError]);
 
   const isPreviewTabIndex = isPreview ? undefined : 0;
 
@@ -189,11 +162,6 @@ const Post = forwardRef(function Post(
             <span>{commentCount}</span>
           </S.IconUint>
         </S.PreviewBottom>
-      )}
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
       )}
     </S.Container>
   );

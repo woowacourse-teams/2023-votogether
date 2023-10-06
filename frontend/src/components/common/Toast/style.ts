@@ -15,8 +15,8 @@ export const fadeInOutAnimation = keyframes`
   }
 `;
 
-export const Content = styled.div<{ $size: Size | 'free' }>`
-  display: flex;
+export const Content = styled.div<{ $size: Size | 'free'; $isBlind: boolean }>`
+  display: ${props => (props.$isBlind ? 'none' : 'flex')};
   align-items: center;
   justify-content: center;
 
@@ -31,5 +31,5 @@ export const Content = styled.div<{ $size: Size | 'free' }>`
   font: var(--text-caption);
   letter-spacing: 1px;
 
-  animation: ${fadeInOutAnimation} ${TOAST_TIME}s linear infinite;
+  animation: ${fadeInOutAnimation} ${TOAST_TIME}ms linear infinite;
 `;

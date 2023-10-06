@@ -21,7 +21,7 @@ export const useToast = () => {
 
     timeIdRef.current = window.setTimeout(() => {
       setIsToastOpen(false);
-    }, TOAST_TIME * 1000);
+    }, TOAST_TIME);
   };
 
   useEffect(() => {

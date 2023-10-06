@@ -15,7 +15,7 @@ export default function ToastContainer({ toastList }: ToastContainerProps) {
   return createPortal(
     <S.Container>
       {toastList.map(toast => (
-        <Toast size="free" position="bottom">
+        <Toast key={toast.id} size="free" position="bottom">
           {toast.text}
         </Toast>
       ))}

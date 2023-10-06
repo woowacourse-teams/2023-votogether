@@ -2,9 +2,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { PostList, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
 
-import { getPostList } from '@api/postList';
+import { getPostList } from '@api/post';
 
-import { POST_LIST_MAX_LENGTH } from '@constants/post';
+import { POST_AMOUNT_PER_PAGE } from '@constants/api';
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const usePostList = (
@@ -21,7 +21,7 @@ export const usePostList = (
         getPostList({ ...requiredOption, pageNumber: pageParam }, optionalOption),
       {
         getNextPageParam: lastPage => {
-          if (lastPage.postList.length !== POST_LIST_MAX_LENGTH) return;
+          if (lastPage.postList.length !== POST_AMOUNT_PER_PAGE) return;
 
           return lastPage.pageNumber + 1;
         },

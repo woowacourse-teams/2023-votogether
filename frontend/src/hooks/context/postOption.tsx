@@ -1,6 +1,6 @@
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useState } from 'react';
 
-import type { PostSorting, PostStatus } from '@components/post/PostListPage/types';
+import { PostSorting, PostStatus } from '@pages/HomePage/types';
 
 import { SORTING, STATUS } from '@constants/post';
 

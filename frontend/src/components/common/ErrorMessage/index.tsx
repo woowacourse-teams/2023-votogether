@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import IconButton from '../IconButton';
 import LogoButton from '../LogoButton';
-import NarrowTemplateHeader from '../NarrowTemplateHeader';
 import SquareButton from '../SquareButton';
 
 import * as S from './style';
@@ -12,16 +10,6 @@ export default function ErrorMessage() {
 
   return (
     <>
-      <S.HeaderContainer>
-        <NarrowTemplateHeader>
-          <IconButton
-            category="back"
-            onClick={() => {
-              navigate(-1);
-            }}
-          />
-        </NarrowTemplateHeader>
-      </S.HeaderContainer>
       <S.Wrapper>
         <S.Title>요청하신 데이터를 불러오는데 실패했습니다.</S.Title>
         <LogoButton content="icon" style={{ width: '100px', height: '100px' }} />

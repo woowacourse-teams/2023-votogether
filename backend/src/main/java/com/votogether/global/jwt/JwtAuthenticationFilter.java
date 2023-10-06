@@ -1,5 +1,6 @@
 package com.votogether.global.jwt;
 
+import com.votogether.global.log.context.MemberIdHolder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,11 +13,9 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final List<String> ALLOWED_URIS = List.of(
@@ -43,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             )
     );
 
+    private final MemberIdHolder memberIdHolder;
     private final TokenProcessor tokenProcessor;
 
     @Override
@@ -54,6 +54,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenWithoutType = tokenProcessor.resolveToken(token);
         tokenProcessor.validateToken(tokenWithoutType);
+        final TokenPayload tokenPayload = tokenProcessor.parseToken(tokenWithoutType);
+        memberIdHolder.setId(tokenPayload.memberId());
         filterChain.doFilter(request, response);
     }
 

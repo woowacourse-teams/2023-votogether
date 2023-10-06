@@ -8,7 +8,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.RepositoryTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,8 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 @Import(TokenProcessor.class)
-@RepositoryTest
-class TokenProcessorTest {
+class TokenProcessorTest extends RepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;

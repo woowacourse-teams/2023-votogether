@@ -1,4 +1,4 @@
-import { UserInfoResponse } from '@type/user';
+import { UserInfoResponse } from '@api/userInfo';
 
 export const MOCK_USER_INFO: UserInfoResponse = {
   nickname: '우아한 코끼리',

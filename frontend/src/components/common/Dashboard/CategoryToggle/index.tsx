@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { Category } from '@type/category';
 
+import { useToast } from '@hooks';
+
 import { AuthContext } from '@hooks/context/auth';
 import { useCategoryFavoriteToggle } from '@hooks/query/category/useCategoryFavoriteToggle';
-import { useToast } from '@hooks/useToast';
 
 import Toast from '@components/common/Toast';
 

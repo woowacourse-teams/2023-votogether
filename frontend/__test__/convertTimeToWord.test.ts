@@ -1,4 +1,4 @@
-import { convertTimeToWord } from '@utils/time';
+import { convertTimeToWord } from '@utils/time/convertTimeToWord';
 
 describe('게시글 작성시간을 숫자 문자열로 받아 현재 시간과 비교해 반올림한 차이를 한글로 반환하는 유틸함수를 테스트한다.', () => {
   test('2023-01-01 12:00에 작성한 글은 2023-01-01 12:05을 기준으로 "5분"이 반환된다.', () => {

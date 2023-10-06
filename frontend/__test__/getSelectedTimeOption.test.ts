@@ -1,4 +1,4 @@
-import { getSelectedTimeOption } from '@utils/post/getSelectedTimeOption';
+import { getSelectedDHMTimeOption } from '@utils/post/getSelectedTimeOption';
 
 describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력받아 "1일" | "3일" | "5일" | "7일" | "14일" | "사용자 지정" | null 을 반환한다.', () => {
   test('1일 객체를 입력했을 때 1일을 반환한다.', () => {
@@ -8,7 +8,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 0,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe('1일');
   });
@@ -20,7 +20,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 0,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe('3일');
   });
@@ -32,7 +32,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 0,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe('5일');
   });
@@ -44,7 +44,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 0,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe('7일');
   });
@@ -56,7 +56,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 0,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe('14일');
   });
@@ -68,7 +68,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 0,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe('사용자지정');
   });
@@ -80,7 +80,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 3,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe('사용자지정');
   });
@@ -92,7 +92,7 @@ describe('getSelectedTimeOption 함수에서 day, hour, minute 객체를 입력�
       minute: 0,
     };
 
-    const result = getSelectedTimeOption(time);
+    const result = getSelectedDHMTimeOption(time);
 
     expect(result).toBe(null);
   });

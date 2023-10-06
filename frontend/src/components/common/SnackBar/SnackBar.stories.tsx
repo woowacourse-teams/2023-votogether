@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 
-import { useToggle } from '@hooks/useToggle';
+import { useToggle } from '@hooks';
 
 import SnackBar from '.';
 

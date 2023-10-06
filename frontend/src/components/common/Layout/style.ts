@@ -59,3 +59,15 @@ export const ChildrenWrapper = styled.div<{ $isSidebarVisible: boolean }>`
   width: 100%;
   max-width: ${({ $isSidebarVisible }) => $isSidebarVisible && '700px'};
 `;
+
+export const MobileHeaderWrapper = styled.div`
+  width: 100%;
+
+  position: fixed;
+
+  z-index: ${theme.zIndex.header};
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    display: none;
+  }
+`;

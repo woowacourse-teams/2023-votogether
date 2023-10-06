@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 
 import { getLocalStorage } from './localStorage';
-import { silentLogin } from './token/silentLogin';
+import { silentLogin } from './login/silentLogin';
 
 const headers = {
   'Content-Type': 'application/json',

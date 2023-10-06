@@ -20,7 +20,6 @@ import com.votogether.domain.post.dto.response.vote.VoteOptionStatisticsResponse
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.service.PostQueryService;
-import com.votogether.global.exception.GlobalExceptionHandler;
 import com.votogether.test.ControllerTest;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -33,27 +32,25 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(PostQueryController.class)
 class PostQueryControllerTest extends ControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
 
     @MockBean
     PostQueryService postQueryService;
 
     @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext) {
-        RestAssuredMockMvc.standaloneSetup(
-                MockMvcBuilders
-                        .standaloneSetup(new PostQueryController(postQueryService))
-                        .setControllerAdvice(GlobalExceptionHandler.class)
-        );
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
+    void setUp() {
+        RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
     @Nested

@@ -2,11 +2,11 @@ import { ACCESS_TOKEN_KEY } from '@constants/localStorage';
 import { REFRESH_EXPIRATION_TIME } from '@constants/token';
 
 import { getLocalStorage, setLocalStorage } from '@utils/localStorage';
-import { isRefreshTokenRequested } from '@utils/token/isRefreshTokenRequested';
+import { checkRefreshTokenRequired } from '@utils/login/checkRefreshTokenRequired';
 
 describe('액세스 토큰의 정보를 통해 검증하여 리프레시 토큰 재발급 요청을 보낼지 여부를 true/false 값으로 반환한다.', () => {
   test('액세스 토큰이 없다면 비회원 상태라고 판단하여 리프레시 토큰 재발급 요청을 하지 않는다.', () => {
-    const result = isRefreshTokenRequested();
+    const result = checkRefreshTokenRequired();
 
     expect(result).toBe(false);
   });
@@ -28,7 +28,7 @@ describe('액세스 토큰의 정보를 통해 검증하여 리프레시 토큰 
 
     setLocalStorage(ACCESS_TOKEN_KEY, ACCESS_TOKEN);
 
-    const result = isRefreshTokenRequested();
+    const result = checkRefreshTokenRequired();
 
     const accessToken = getLocalStorage(ACCESS_TOKEN_KEY);
 
@@ -53,7 +53,7 @@ describe('액세스 토큰의 정보를 통해 검증하여 리프레시 토큰 
 
     setLocalStorage(ACCESS_TOKEN_KEY, ACCESS_TOKEN);
 
-    const result = isRefreshTokenRequested();
+    const result = checkRefreshTokenRequired();
 
     expect(result).toBe(true);
   });
@@ -75,7 +75,7 @@ describe('액세스 토큰의 정보를 통해 검증하여 리프레시 토큰 
 
     setLocalStorage(ACCESS_TOKEN_KEY, ACCESS_TOKEN);
 
-    const result = isRefreshTokenRequested();
+    const result = checkRefreshTokenRequired();
 
     expect(result).toBe(false);
   });

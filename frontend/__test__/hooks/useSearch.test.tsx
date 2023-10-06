@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 
-import { useSearch } from '@hooks/useSearch';
+import { useSearch } from '@hooks';
 
 describe('useSearch 훅이 검색을 하는지 확인한다.', () => {
   test('초기 값이 없다면 keyword는 빈 문자열이다.', () => {

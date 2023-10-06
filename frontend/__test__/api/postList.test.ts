@@ -1,6 +1,7 @@
-import { getPostList } from '@api/postList';
+import { getPostList } from '@api/post';
 
-import { POST_TYPE, SORTING, STATUS } from '@constants/post';
+import { POST_TYPE } from '@constants/api';
+import { SORTING, STATUS } from '@constants/post';
 
 import { MOCK_TRANSFORM_GUEST_POST_LIST, MOCK_TRANSFORM_POST_LIST } from '@mocks/mockData/post';
 

@@ -1,4 +1,4 @@
-import { MAX_DEADLINE } from '@constants/post';
+import { MAX_DEADLINE } from '@constants/policy';
 
 export const TIMEBOX_CHILD_HEIGHT = 33;
 

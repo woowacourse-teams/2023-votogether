@@ -4,15 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Nickname;
-import com.votogether.test.annotation.RepositoryTest;
+import com.votogether.test.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@RepositoryTest
-class MemberRepositoryTest {
+class MemberRepositoryTest extends RepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;

@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { useSelect } from '@hooks/useSelect';
+import { useSelect } from '@hooks';
 
-import { PostStatus } from '@components/post/PostListPage/types';
+import { PostStatus } from '@pages/HomePage/types';
 
 const INIT_SELECTED_OPTION = 'progress';
 const CHANGE_SELECTED_OPTION = 'closed';

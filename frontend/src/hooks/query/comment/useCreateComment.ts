@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { CommentRequest } from '@type/comment';
-
-import { createComment } from '@api/comment';
+import { CommentRequest, createComment } from '@api/comment';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

@@ -2,6 +2,7 @@
 <Configuration status="debug" monitorInterval="5">
     <Properties>
         <Property name="FILE_NAME">votogether</Property>
+        <Property name="ERROR_FILE_NAME">votogether-error</Property>
         <Property name="FILE_LOG_PATTERN">
             [%d{yyyy-MM-dd 'T' HH:mm:ss.SSS}] %-5p %pid --- [%t] %c : %m%n
         </Property>
@@ -18,24 +19,36 @@
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
             <DefaultRolloverStrategy>
-                <Delete basePath="logs" maxDepth="2">
-                    <IfAccumulatedFileCount exceeds="4"/>
+                <Delete basePath="logs" maxDepth="1">
+                    <IfLastModified agd="3d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="RollingErrorFileAppender"
+                fileName="logs/${ERROR_FILE_NAME}.log"
+                filePattern="logs/error/${ERROR_FILE_NAME}.%d{yyyy-MM-dd}.log"
+        >
+            <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
+            <Filters>
+                <LevelMatchFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs/error" maxDepth="1">
+                    <IfLastModified age="3d"/>
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
     </Appenders>
 
     <Loggers>
-        <Logger name="org.hibernate.SQL" level="debug">
+        <Root level="info">
             <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
-        <Logger name="org.hibernate.orm.jdbc.bind" level="trace">
-            <AppenderRef ref="RollingFileAppender"/>
-        </Logger>
-
-        <Root level="debug">
-            <AppenderRef ref="RollingFileAppender"/>
+            <AppenderRef ref="RollingErrorFileAppender"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-export type InputLength = Record<'MAX_LENGTH' | 'MIN_LENGTH', number>;
+export type InputLengthRange = Record<'MAX_LENGTH' | 'MIN_LENGTH', number>;
 
 export const useText = (originalText: string) => {
   const [text, setText] = useState(originalText);
 
   const handleTextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    limit: InputLength
+    limit: InputLengthRange
   ) => {
     const { value } = event.target;
     const standard = value.length;

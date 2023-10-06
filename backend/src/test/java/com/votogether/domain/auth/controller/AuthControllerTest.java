@@ -13,8 +13,7 @@ import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
 import com.votogether.domain.auth.service.AuthService;
 import com.votogether.domain.auth.service.dto.LoginTokenDto;
 import com.votogether.domain.auth.service.dto.ReissuedTokenDto;
-import com.votogether.domain.member.service.MemberService;
-import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.ControllerTest;
 import io.restassured.http.Cookie;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,16 +28,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @WebMvcTest(controllers = AuthController.class)
-class AuthControllerTest {
+class AuthControllerTest extends ControllerTest {
 
     @MockBean
     AuthService authService;
-
-    @MockBean
-    TokenProcessor tokenProcessor;
-
-    @MockBean
-    MemberService memberService;
 
     @BeforeEach
     void setUp() {

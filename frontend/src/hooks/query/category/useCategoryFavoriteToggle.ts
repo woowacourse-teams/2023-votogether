@@ -1,6 +1,10 @@
+import { useContext } from 'react';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Category } from '@type/category';
+
+import { ToastContext } from '@hooks/context/toast';
 
 import { addFavoriteCategory, removeFavoriteCategory } from '@api/categoryList';
 
@@ -8,10 +12,11 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useCategoryFavoriteToggle = () => {
   const queryClient = useQueryClient();
+  const { addMessage } = useContext(ToastContext);
   const LOGGED_IN = true;
   const queryKey = [QUERY_KEY.CATEGORIES, LOGGED_IN];
 
-  const { mutate, isLoading, isError, error } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({ id, isFavorite }: Omit<Category, 'name'>) =>
       isFavorite ? removeFavoriteCategory(id) : addFavoriteCategory(id),
     {
@@ -33,7 +38,8 @@ export const useCategoryFavoriteToggle = () => {
           rollback();
           return;
         }
-        window.console.log('Category favorite toggle error', error);
+        const message = error instanceof Error ? error.message : '카테고리 설정을 실패했습니다.';
+        addMessage(message);
       },
       onSettled: () => {
         queryClient.invalidateQueries(queryKey);
@@ -41,5 +47,5 @@ export const useCategoryFavoriteToggle = () => {
     }
   );
 
-  return { mutate, isLoading, isError, error };
+  return { mutate, isLoading };
 };

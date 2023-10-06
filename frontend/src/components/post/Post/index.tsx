@@ -7,7 +7,9 @@ import { useToast } from '@hooks';
 import { AuthContext } from '@hooks/context/auth';
 import { useCreateVote } from '@hooks/query/post/useCreateVote';
 import { useEditVote } from '@hooks/query/post/useEditVote';
+import { useImageZoomModal } from '@hooks/useImageZoomModal';
 
+import ImageZoomModal from '@components/common/ImageZoomModal';
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
 import { PATH } from '@constants/path';
@@ -48,6 +50,8 @@ const Post = forwardRef(function Post(
   } = postInfo;
   const { loggedInfo } = useContext(AuthContext);
   const { isToastOpen, openToast, toastMessage } = useToast();
+  const { closeZoomModal, handleCloseClick, handleImageClick, imageSrc, zoomModalRef } =
+    useImageZoomModal();
 
   const {
     mutate: createVote,
@@ -169,7 +173,9 @@ const Post = forwardRef(function Post(
         >
           {convertTextToElement(content)}
         </S.Content>
-        {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
+        {!isPreview && imageUrl && (
+          <S.Image onClick={handleImageClick} src={imageUrl} alt={'본문에 포함된 이미지'} />
+        )}
       </S.DetailLink>
       <WrittenVoteOptionList
         isStatisticsVisible={isStatisticsVisible}
@@ -177,6 +183,7 @@ const Post = forwardRef(function Post(
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}
         voteOptionList={voteInfo.options}
+        handleImageClick={handleImageClick}
       />
       {isPreview && (
         <S.PreviewBottom>
@@ -195,6 +202,12 @@ const Post = forwardRef(function Post(
           {toastMessage}
         </Toast>
       )}
+      <ImageZoomModal
+        ref={zoomModalRef}
+        src={imageSrc}
+        closeZoomModal={closeZoomModal}
+        handleCloseClick={handleCloseClick}
+      />
     </S.Container>
   );
 });

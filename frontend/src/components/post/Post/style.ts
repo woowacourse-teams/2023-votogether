@@ -110,6 +110,8 @@ export const Image = styled.img`
   aspect-ratio: 1/1;
   object-fit: contain;
 
+  cursor: pointer;
+
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;
   }

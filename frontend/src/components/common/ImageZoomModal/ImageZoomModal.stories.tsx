@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import React, { MouseEvent, useState } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 
-import { useDialog } from '@hooks/useDialog';
+import { useImageZoomModal } from '@hooks/useImageZoomModal';
 
 import { theme } from '@styles/theme';
 
@@ -22,14 +22,8 @@ export const Default: Story = {
 };
 
 function ImageZoomModalStory() {
-  const [imageSrc, setImageSrc] = useState<string>('');
-  const { closeDialog, dialogRef, handleCloseClick, openDialog } = useDialog();
-
-  const handleImageClick = (event: MouseEvent<HTMLImageElement>) => {
-    const src = event.currentTarget.src;
-    setImageSrc(src);
-    openDialog();
-  };
+  const { closeZoomModal, handleCloseClick, handleImageClick, imageSrc, zoomModalRef } =
+    useImageZoomModal();
 
   return (
     <>
@@ -40,9 +34,9 @@ function ImageZoomModalStory() {
       </Container>
       <ImageZoomModal
         src={imageSrc}
-        closeDialog={closeDialog}
+        closeZoomModal={closeZoomModal}
         handleCloseClick={handleCloseClick}
-        ref={dialogRef}
+        ref={zoomModalRef}
       />
     </>
   );

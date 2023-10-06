@@ -7,11 +7,11 @@ import * as S from './style';
 interface ImageZoomModalProps {
   src: string;
   handleCloseClick: (event: MouseEvent<HTMLDialogElement>) => void;
-  closeDialog: () => void;
+  closeZoomModal: () => void;
 }
 
 const ImageZoomModal = forwardRef(function ImageZoomModal(
-  { src, handleCloseClick, closeDialog }: ImageZoomModalProps,
+  { src, handleCloseClick, closeZoomModal }: ImageZoomModalProps,
   ref: ForwardedRef<HTMLDialogElement>
 ) {
   return (
@@ -23,8 +23,8 @@ const ImageZoomModal = forwardRef(function ImageZoomModal(
       onClick={handleCloseClick}
     >
       <S.Container>
-        <S.HiddenCloseButton onClick={closeDialog}>이미지 확대 창 닫기</S.HiddenCloseButton>
-        <S.CloseButton onClick={closeDialog} aria-label="이미지 확대 창 닫기">
+        <S.HiddenCloseButton onClick={closeZoomModal}>이미지 확대 창 닫기</S.HiddenCloseButton>
+        <S.CloseButton onClick={closeZoomModal} aria-label="이미지 확대 창 닫기">
           <S.IconImage src={cancel} alt="취소 아이콘" />
         </S.CloseButton>
         <S.Image src={src}></S.Image>

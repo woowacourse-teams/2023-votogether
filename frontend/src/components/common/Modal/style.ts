@@ -27,15 +27,17 @@ export const Backdrop = styled.div`
 `;
 
 export const Container = styled.div<{ size: Size }>`
-  display: grid;
-  grid-template-rows: 1fr 3fr 1fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: ${props => MODAL_SIZE[props.size]};
+  width: ${props => props.size && MODAL_SIZE[props.size]};
+  max-width: 290px;
   border-radius: 12px;
   border: 2px solid #f6f6f6;
   padding: 5px;
@@ -44,6 +46,10 @@ export const Container = styled.div<{ size: Size }>`
 
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
   overflow-y: auto;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    max-width: 500px;
+  }
 `;
 
 export const HiddenCloseButton = styled.button`
@@ -55,7 +61,7 @@ export const HiddenCloseButton = styled.button`
 export const Title = styled.span`
   padding: 12px 2px 0 15px;
   margin-top: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 
   color: #334253;
 
@@ -76,6 +82,7 @@ export const ButtonContainer = styled.div`
   gap: 12px;
 
   padding: 0 17px;
+  margin: 16px 0 13px 0;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     gap: 14px;

@@ -13,7 +13,7 @@ interface ButtonProps {
 
 interface ModalProps extends PropsWithChildren {
   title?: string;
-  size: Size;
+  size?: Size;
   primaryButton: ButtonProps;
   secondaryButton: ButtonProps;
 }
@@ -21,7 +21,7 @@ interface ModalProps extends PropsWithChildren {
 export default function Modal({
   title,
   children,
-  size,
+  size = 'sm',
   primaryButton,
   secondaryButton,
 }: ModalProps) {

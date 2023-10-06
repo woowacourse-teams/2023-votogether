@@ -37,9 +37,6 @@ export const CloseButton = styled.button`
 export const Dialog = styled.dialog`
   position: fixed;
 
-  width: min(fit-content, 50vw);
-  height: 100%;
-  max-height: 80vh;
   margin: auto;
 
   overflow: visible;
@@ -63,6 +60,7 @@ export const Container = styled.div`
 export const Image = styled.img`
   width: 100%;
   height: 100%;
+  max-height: 80vh;
 
   object-fit: contain;
 `;

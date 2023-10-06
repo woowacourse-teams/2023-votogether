@@ -17,6 +17,8 @@ export default function ToastProvider({ children }: PropsWithChildren) {
   const [toastList, setToastList] = useState<ToastInfo[]>([]);
 
   const addMessage = (message: string) => {
+    if (toastList.find(toast => toast.text === message)) return;
+
     const timeId = window.setTimeout(() => {
       setToastList(toastList => toastList.filter(toast => toast.id !== timeId));
       window.clearTimeout(timeId);

@@ -35,9 +35,9 @@ export default forwardRef(function Drawer(
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDialogElement>) => {
-    event.preventDefault();
-
     if (event.currentTarget.open && event.key === 'Escape') {
+      event.preventDefault();
+
       handleDrawerClose();
     }
   };
@@ -56,7 +56,6 @@ export default forwardRef(function Drawer(
     >
       <S.CloseButton onClick={handleDrawerClose}>사이드바 닫기버튼</S.CloseButton>
       {children}
-      <div style={{ backgroundColor: 'red', width: '100%', height: '100%' }} />
     </S.Dialog>
   );
 });

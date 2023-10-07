@@ -11,7 +11,7 @@ export default function ToastContainer({ toastList }: ToastContainerProps) {
   return (
     <S.Container>
       {toastList.map(toast => (
-        <Toast key={toast.id} size="free" position="bottom">
+        <Toast key={toast.id} size="free">
           {toast.text}
         </Toast>
       ))}

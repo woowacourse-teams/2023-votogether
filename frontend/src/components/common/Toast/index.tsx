@@ -9,10 +9,9 @@ import * as S from './style';
 interface ToastProps {
   children: string;
   size: Size | 'free';
-  position: 'top' | 'bottom';
 }
 
-export default memo(function Toast({ children, size, position }: ToastProps) {
+export default memo(function Toast({ children, size }: ToastProps) {
   const [isBlind, setIsBlind] = useState(false);
 
   const timeId = window.setTimeout(() => {

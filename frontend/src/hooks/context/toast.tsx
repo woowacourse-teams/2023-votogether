@@ -15,7 +15,7 @@ export const ToastContext = createContext({
 
 export default function ToastProvider({ children }: PropsWithChildren) {
   const [toastList, setToastList] = useState<ToastInfo[]>([]);
-  const isAllToastBlind = useRef<{ id: number; isBlind: boolean }[]>([]);
+
   const timeId = useRef<number | null>(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function ToastProvider({ children }: PropsWithChildren) {
     if (toastList.length !== 0) {
       timeId.current = window.setTimeout(() => {
         setToastList([]);
-        isAllToastBlind.current = [];
+
         if (timeId.current) window.clearTimeout(timeId.current);
       }, TOAST_TIME);
     }
@@ -35,7 +35,6 @@ export default function ToastProvider({ children }: PropsWithChildren) {
 
     const id = Date.now();
     setToastList(toastList => [...toastList, { id, text: message }]);
-    isAllToastBlind.current = [...isAllToastBlind.current, { id, isBlind: false }];
   };
 
   return (

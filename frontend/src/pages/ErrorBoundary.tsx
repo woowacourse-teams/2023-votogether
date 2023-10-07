@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 
-import ErrorMessage from '@components/common/ErrorMessage';
+import ErrorItem from '@components/common/ErrorItem';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -22,13 +22,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // You can also log the error to an error reporting service
     window.console.log(error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return <ErrorMessage />;
+      return <ErrorItem />;
     }
 
     return this.props.children;

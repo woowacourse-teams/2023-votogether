@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import ErrorMessage from '@components/common/ErrorMessage';
+import ErrorItem from '@components/common/ErrorItem';
 
 import { theme } from '@styles/theme';
 
@@ -18,7 +18,7 @@ class ErrorBoundaryForTopClass extends ErrorBoundary {
           <WideTemplateHeader />
           <NarrowTemplateHeader />
           <ErrorWrapper>
-            <ErrorMessage />
+            <ErrorItem />
           </ErrorWrapper>
         </>
       );

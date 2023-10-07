@@ -5,7 +5,7 @@ import SquareButton from '../SquareButton';
 
 import * as S from './style';
 
-export default function ErrorMessage() {
+export default function ErrorItem() {
   const navigate = useNavigate();
 
   return (

@@ -67,10 +67,10 @@ const NarrowTemplateHeader = styled.div`
 `;
 
 const ErrorWrapper = styled.div`
-  margin-top: 20px;
+  margin: 90px 10px 20px 10px;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    margin-top: 50px;
+    margin-top: 120px;
   }
 `;
 

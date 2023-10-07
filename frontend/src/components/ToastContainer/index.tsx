@@ -1,5 +1,3 @@
-import { createPortal } from 'react-dom';
-
 import { ToastInfo } from '@hooks/context/toast';
 
 import Toast from '@components/common/Toast';
@@ -10,16 +8,13 @@ interface ToastContainerProps {
 }
 
 export default function ToastContainer({ toastList }: ToastContainerProps) {
-  const rootElem = document.getElementById('toast-root') as HTMLElement;
-
-  return createPortal(
+  return (
     <S.Container>
       {toastList.map(toast => (
         <Toast key={toast.id} size="free" position="bottom">
           {toast.text}
         </Toast>
       ))}
-    </S.Container>,
-    rootElem
+    </S.Container>
   );
 }

@@ -53,7 +53,7 @@ export default function OptionStatistics({
             <S.ScreenReaderDirection>
               투표 선택지를 클릭하여 투표 통계를 닫을 수 있습니다.
             </S.ScreenReaderDirection>
-            <ErrorBoundary>
+            <ErrorBoundary retryInteraction={true}>
               <Suspense
                 fallback={
                   <S.LoadingWrapper>

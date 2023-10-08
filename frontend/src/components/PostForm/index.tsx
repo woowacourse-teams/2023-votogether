@@ -9,8 +9,6 @@ import { useMultiSelect, useContentImage, useText, useToggle, useWritingOption }
 
 import { ToastContext } from '@hooks/context/toast';
 
-import ErrorBoundary from '@pages/ErrorBoundary';
-
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
@@ -201,9 +199,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
       <form id="form-post" onSubmit={handlePostFormSubmit}>
         <S.Wrapper>
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
-            <ErrorBoundary>
-              <CategoryWrapper multiSelectHook={categorySelectHook} />
-            </ErrorBoundary>
+            <CategoryWrapper multiSelectHook={categorySelectHook} />
             <S.Title
               value={writingTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

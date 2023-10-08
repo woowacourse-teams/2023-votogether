@@ -4,16 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { PostOptionContext } from '@hooks/context/postOption';
 import { useCreatePost } from '@hooks/query/post/useCreatePost';
 
-import ErrorBoundary from '@pages/ErrorBoundary';
+import ErrorBoundaryWithNarrowHeader from '@pages/ErrorBoundaryWithNarrowHeader';
 
 import Layout from '@components/common/Layout';
-import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
+import MobileLayoutTemplate from '@components/common/MobileLayoutTemplate';
 import Skeleton from '@components/common/Skeleton';
 import PostForm from '@components/PostForm';
 
 import { SORTING, STATUS } from '@constants/post';
-
-import * as S from '../writePageStyle';
 
 export default function CreatePostPage() {
   const navigate = useNavigate();
@@ -32,7 +30,7 @@ export default function CreatePostPage() {
 
   return (
     <Layout isSidebarVisible={false} isMobileDefaultHeaderVisible={false}>
-      <ErrorBoundary
+      <ErrorBoundaryWithNarrowHeader
         text={errorText}
         haveIcon={true}
         retryInteraction={true}
@@ -40,17 +38,14 @@ export default function CreatePostPage() {
       >
         <Suspense
           fallback={
-            <>
-              <NarrowTemplateHeader />
-              <S.SkeletonWrapper>
-                <Skeleton isLarge={true} />
-              </S.SkeletonWrapper>
-            </>
+            <MobileLayoutTemplate>
+              <Skeleton isLarge={true} />
+            </MobileLayoutTemplate>
           }
         >
           <PostForm mutate={mutate} isSubmitting={isLoading} />
         </Suspense>
-      </ErrorBoundary>
+      </ErrorBoundaryWithNarrowHeader>
     </Layout>
   );
 }

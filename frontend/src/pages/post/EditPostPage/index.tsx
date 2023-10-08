@@ -1,12 +1,10 @@
 import { Suspense } from 'react';
 
-import ErrorBoundary from '@pages/ErrorBoundary';
+import ErrorBoundaryWithNarrowHeader from '@pages/ErrorBoundaryWithNarrowHeader';
 
 import Layout from '@components/common/Layout';
-import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
+import MobileLayoutTemplate from '@components/common/MobileLayoutTemplate';
 import Skeleton from '@components/common/Skeleton';
-
-import * as S from '../writePageStyle';
 
 import EditPost from './EditPost';
 
@@ -15,7 +13,7 @@ export default function EditPostPage() {
 
   return (
     <Layout isSidebarVisible={false} isMobileDefaultHeaderVisible={false}>
-      <ErrorBoundary
+      <ErrorBoundaryWithNarrowHeader
         text={errorText}
         haveIcon={true}
         retryInteraction={true}
@@ -23,17 +21,14 @@ export default function EditPostPage() {
       >
         <Suspense
           fallback={
-            <>
-              <NarrowTemplateHeader />
-              <S.SkeletonWrapper>
-                <Skeleton isLarge={true} />
-              </S.SkeletonWrapper>
-            </>
+            <MobileLayoutTemplate>
+              <Skeleton isLarge={true} />
+            </MobileLayoutTemplate>
           }
         >
           <EditPost />
         </Suspense>
-      </ErrorBoundary>
+      </ErrorBoundaryWithNarrowHeader>
     </Layout>
   );
 }

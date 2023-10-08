@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import ErrorItem from '@components/common/ErrorItem';
+import LogoButton from '@components/common/LogoButton';
 
 import { theme } from '@styles/theme';
 
@@ -10,6 +10,7 @@ import ErrorBoundary from './ErrorBoundary';
  * nav를 사용할 수 없고 글로벌 스타일드도 사용할 수 없음.
  * 때문에 nav를 제거한 빈 헤더를 정의하고, 에러메세지 컴포넌트를 사용
  */
+
 class ErrorBoundaryForTopClass extends ErrorBoundary {
   render() {
     if (this.state.hasError) {
@@ -18,7 +19,11 @@ class ErrorBoundaryForTopClass extends ErrorBoundary {
           <WideTemplateHeader />
           <NarrowTemplateHeader />
           <ErrorWrapper>
-            <ErrorItem />
+            <LogoButton content="icon" style={{ width: '80px', height: '80px' }} />
+            <Title>'요청하신 데이터를 불러오는데 실패했습니다.'</Title>
+            <Description>
+              문제가 지속되는 경우 votogether2023@gmail.com 로 문의해주세요.
+            </Description>
           </ErrorWrapper>
         </>
       );
@@ -67,11 +72,46 @@ const NarrowTemplateHeader = styled.div`
 `;
 
 const ErrorWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  & > button {
+    border: 0;
+
+    cursor: auto;
+  }
+
   margin: 90px 10px 20px 10px;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     margin-top: 120px;
   }
+`;
+
+export const Title = styled.h1`
+  width: 90%;
+  margin-top: 20px;
+
+  color: rgba(0, 0, 0, 0.7);
+
+  font-size: 20px;
+  font-weight: bold;
+
+  text-align: center;
+  word-break: keep-all;
+`;
+
+export const Description = styled.p`
+  width: 90%;
+
+  color: gray;
+
+  font: var(--text-body);
+  text-align: center;
+  word-break: keep-all;
 `;
 
 export default ErrorBoundaryForTopClass;

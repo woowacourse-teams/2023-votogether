@@ -14,7 +14,7 @@ export const useEditVote = ({ isPreview, postId }: { isPreview: boolean; postId:
 
   const LOGGED_IN = true;
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: (optionData: OptionData) => changeVotedOption(postId, optionData),
     onSuccess: () => {
       if (isPreview) {
@@ -32,5 +32,5 @@ export const useEditVote = ({ isPreview, postId }: { isPreview: boolean; postId:
     },
   });
 
-  return { mutate };
+  return { mutate, isLoading };
 };

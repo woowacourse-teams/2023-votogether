@@ -46,8 +46,11 @@ const Post = forwardRef(function Post(
   const { loggedInfo } = useContext(AuthContext);
   const { addMessage } = useContext(ToastContext);
 
-  const { mutate: createVote } = useCreateVote({ isPreview, postId });
-  const { mutate: editVote } = useEditVote({ isPreview, postId });
+  const { mutate: createVote, isLoading: isCreateVoteLoading } = useCreateVote({
+    isPreview,
+    postId,
+  });
+  const { mutate: editVote, isLoading: isEditVoteLoading } = useEditVote({ isPreview, postId });
 
   const isActive = !checkClosedPost(deadline);
 
@@ -55,6 +58,11 @@ const Post = forwardRef(function Post(
     writer.id === loggedInfo.id || !isActive || voteInfo.selectedOptionId !== POST.NOT_VOTE;
 
   const handleVoteClick = (newOptionId: number) => {
+    if (isCreateVoteLoading || isEditVoteLoading) {
+      addMessage('투표 중입니다. 잠시후 다시 시도해주세요.');
+      return;
+    }
+
     if (!loggedInfo.isLoggedIn) {
       addMessage('투표는 로그인 후에 이용하실 수 있습니다.');
       return;

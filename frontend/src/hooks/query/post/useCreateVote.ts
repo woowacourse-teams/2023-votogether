@@ -13,7 +13,7 @@ export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postI
   const { addMessage } = useContext(ToastContext);
   const LOGGED_IN = true;
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: (optionId: number) => votePost(postId, optionId),
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEY.USER_INFO, true]);
@@ -33,5 +33,5 @@ export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postI
     },
   });
 
-  return { mutate };
+  return { mutate, isLoading };
 };

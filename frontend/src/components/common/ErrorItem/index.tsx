@@ -14,9 +14,9 @@ export interface ErrorItemProps {
 
 export default function ErrorItem({
   text = '요청하신 데이터를 불러오는데 실패했습니다.',
-  haveIcon = true,
-  retryInteraction = true,
-  homeInteraction = true,
+  haveIcon = false,
+  retryInteraction = false,
+  homeInteraction = false,
 }: ErrorItemProps) {
   const navigate = useNavigate();
 

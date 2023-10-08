@@ -29,25 +29,23 @@ const makeFetchMultiHeaders = () => {
 };
 
 export const getFetch = async <T>(url: string): Promise<T> => {
-  try {
-    await silentLogin();
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: makeFetchHeaders(),
-    });
+  await silentLogin();
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: makeFetchHeaders(),
+  });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage);
-    }
+  if (!response.ok) {
+    const errorText = await response.text();
+    const originError: Error = JSON.parse(errorText);
+    const error = { status: response.status, message: originError.message };
 
-    const data = await response.json();
-
-    return data;
-  } catch (e) {
-    const error = e as Error;
-    throw new Error(error.message);
+    throw new Error(JSON.stringify(error));
   }
+
+  const data = await response.json();
+
+  return data;
 };
 
 export const postFetch = async <T>(url: string, body: T) => {

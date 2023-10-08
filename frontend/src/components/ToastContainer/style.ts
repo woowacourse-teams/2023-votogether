@@ -6,7 +6,7 @@ import { theme } from '@styles/theme';
 export const Container = styled.div`
   width: 80%;
 
-  position: absolute;
+  position: fixed;
   bottom: 20vh;
   left: 10%;
 

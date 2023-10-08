@@ -5,7 +5,7 @@ import SquareButton from '../SquareButton';
 
 import * as S from './style';
 
-interface ErrorItemProps {
+export interface ErrorItemProps {
   text?: string;
   haveIcon?: boolean;
   retryInteraction?: boolean;
@@ -14,9 +14,9 @@ interface ErrorItemProps {
 
 export default function ErrorItem({
   text = '요청하신 데이터를 불러오는데 실패했습니다.',
-  haveIcon = false,
-  retryInteraction = false,
-  homeInteraction = false,
+  haveIcon = true,
+  retryInteraction = true,
+  homeInteraction = true,
 }: ErrorItemProps) {
   const navigate = useNavigate();
 

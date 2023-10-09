@@ -4,11 +4,6 @@ import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.comment.Comment;
-import com.votogether.domain.post.exception.PostExceptionType;
-import com.votogether.domain.post.exception.PostOptionExceptionType;
-import com.votogether.domain.vote.entity.Vote;
-import com.votogether.domain.vote.exception.VoteExceptionType;
-import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -128,38 +123,7 @@ public class Post extends BaseEntity {
         this.postDeadline.close();
     }
 
-    public Vote makeVote(final Member voter, final PostOption postOption) {
-        validateDeadLine();
-        validateVoter(voter);
-        validatePostOption(postOption);
-
-        final Vote vote = Vote.builder()
-                .member(voter)
-                .build();
-
-        postOption.addVote(vote);
-        return vote;
-    }
-
-    public void validateDeadLine() {
-        if (isClosed()) {
-            throw new BadRequestException(PostExceptionType.CLOSED);
-        }
-    }
-
-    private void validateVoter(final Member voter) {
-        if (Objects.equals(this.writer.getId(), voter.getId())) {
-            throw new BadRequestException(VoteExceptionType.CANNOT_VOTE_MY_POST);
-        }
-    }
-
-    private void validatePostOption(final PostOption postOption) {
-        if (!hasPostOption(postOption)) {
-            throw new BadRequestException(PostOptionExceptionType.NOT_FOUND);
-        }
-    }
-
-    private boolean hasPostOption(final PostOption postOption) {
+    public boolean hasPostOption(final PostOption postOption) {
         return this.postOptions.contains(postOption);
     }
 

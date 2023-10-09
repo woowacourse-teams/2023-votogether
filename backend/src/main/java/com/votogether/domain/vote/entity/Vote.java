@@ -3,6 +3,8 @@ package com.votogether.domain.vote.entity;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.PostOption;
+import com.votogether.domain.vote.exception.VoteExceptionType;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,12 +39,19 @@ public class Vote extends BaseEntity {
 
     @Builder
     private Vote(final Member member, final PostOption postOption) {
+        validateVotingRights(member, postOption);
         this.member = member;
         this.postOption = postOption;
+    }
+
+    private void validateVotingRights(final Member member, final PostOption postOption) {
+        if (postOption.getPost().isWriter(member)) {
+            throw new BadRequestException(VoteExceptionType.CANNOT_VOTE_MY_POST);
+        }
     }
 
     public void setPostOption(final PostOption postOption) {
         this.postOption = postOption;
     }
-    
+
 }

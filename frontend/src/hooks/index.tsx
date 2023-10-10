@@ -38,6 +38,7 @@ import { useUserRanking } from './query/ranking/useUserRanking';
 // 컨텍스트 커스텀 훅
 import { AuthContext } from './context/auth';
 import { PostOptionContext } from './context/postOption';
+import { ToastContext } from './context/toast';
 
 // 일반 커스텀 훅
 import { useContentImage } from './useContentImage';
@@ -96,4 +97,4 @@ export {
   useEditComment,
 };
 
-export { AuthContext, PostOptionContext };
+export { AuthContext, PostOptionContext, ToastContext };

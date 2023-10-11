@@ -62,9 +62,9 @@ export default function CommentTextForm({
   };
 
   const handleKeyboardCommentSubmit = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    const isPressCtrlEnterKey = event.ctrlKey && event.key === 'Enter';
+    const isPressCtrlAndEnterKey = event.ctrlKey && event.key === 'Enter';
 
-    if (isPressCtrlEnterKey) {
+    if (isPressCtrlAndEnterKey) {
       handleUpdateComment();
     }
   };

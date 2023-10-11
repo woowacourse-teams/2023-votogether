@@ -50,6 +50,10 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .fetch();
     }
 
+    private BooleanExpression categoryIdEq(final Long categoryId) {
+        return categoryId == null ? null : postCategory.category.id.eq(categoryId);
+    }
+
     @Override
     public List<Post> findPostsByWriterWithFilteringAndPaging(
             final Member writer,
@@ -70,36 +74,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-    }
-
-    private BooleanExpression categoryIdEq(final Long categoryId) {
-        return categoryId == null ? null : postCategory.category.id.eq(categoryId);
-    }
-
-    private BooleanExpression deadlineEq(final PostClosingType postClosingType) {
-        final LocalDateTime now = LocalDateTime.now();
-        return switch (postClosingType) {
-            case PROGRESS -> post.postDeadline.deadline.after(now);
-            case CLOSED -> post.postDeadline.deadline.before(now);
-            default -> null;
-        };
-    }
-
-    private OrderSpecifier orderBy(final PostSortType postSortType) {
-        return switch (postSortType) {
-            case LATEST -> post.createdAt.desc();
-            case HOT -> new OrderSpecifier<>(
-                    Order.DESC,
-                    JPAExpressions.select(vote.id.count())
-                            .from(vote)
-                            .where(vote.postOption.id.in(
-                                    JPAExpressions.select(postOption.id)
-                                            .from(postOption)
-                                            .where(postOption.post.id.eq(post.id))
-                            ))
-            );
-            default -> OrderByNull.DEFAULT;
-        };
     }
 
     @Override
@@ -151,6 +125,32 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private BooleanExpression deadlineEq(final PostClosingType postClosingType) {
+        final LocalDateTime now = LocalDateTime.now();
+        return switch (postClosingType) {
+            case PROGRESS -> post.postDeadline.deadline.after(now);
+            case CLOSED -> post.postDeadline.deadline.before(now);
+            default -> null;
+        };
+    }
+
+    private OrderSpecifier orderBy(final PostSortType postSortType) {
+        return switch (postSortType) {
+            case LATEST -> post.id.desc();
+            case HOT -> new OrderSpecifier<>(
+                    Order.DESC,
+                    JPAExpressions.select(vote.id.count())
+                            .from(vote)
+                            .where(vote.postOption.id.in(
+                                    JPAExpressions.select(postOption.id)
+                                            .from(postOption)
+                                            .where(postOption.post.id.eq(post.id))
+                            ))
+            );
+            default -> OrderByNull.DEFAULT;
+        };
     }
 
 }

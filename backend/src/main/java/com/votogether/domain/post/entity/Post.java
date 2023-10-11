@@ -29,7 +29,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
 @Getter
 @Entity
@@ -56,9 +55,6 @@ public class Post extends BaseEntity {
 
     @Column(nullable = false)
     private boolean isHidden;
-
-    @Formula("(select count(*) from comment c where c.post_id = id)")
-    private long commentCount;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostCategory> postCategories = new ArrayList<>();

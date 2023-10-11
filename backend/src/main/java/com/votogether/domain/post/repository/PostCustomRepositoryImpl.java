@@ -3,6 +3,7 @@ package com.votogether.domain.post.repository;
 import static com.votogether.domain.post.entity.QPost.post;
 import static com.votogether.domain.post.entity.QPostCategory.postCategory;
 import static com.votogether.domain.post.entity.QPostOption.postOption;
+import static com.votogether.domain.post.entity.comment.QComment.comment;
 import static com.votogether.domain.vote.entity.QVote.vote;
 
 import com.querydsl.core.types.Order;
@@ -14,9 +15,12 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
+import com.votogether.domain.post.repository.dto.PostCommentCountDto;
+import com.votogether.domain.post.repository.dto.QPostCommentCountDto;
 import com.votogether.global.persistence.OrderByNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -26,6 +30,21 @@ import org.springframework.stereotype.Repository;
 public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<PostCommentCountDto> getCommentCountsInPosts(final Set<Long> postIds) {
+        return jpaQueryFactory.select(
+                        new QPostCommentCountDto(
+                                post.id,
+                                comment.count()
+                        )
+                )
+                .from(post)
+                .innerJoin(comment).on(comment.post.eq(post))
+                .where(post.id.in(postIds))
+                .groupBy(post.id)
+                .fetch();
+    }
 
     @Override
     public List<Post> findPostsWithFilteringAndPaging(

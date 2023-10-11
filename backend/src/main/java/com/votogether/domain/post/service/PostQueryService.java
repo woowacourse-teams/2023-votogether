@@ -12,11 +12,15 @@ import com.votogether.domain.post.exception.PostOptionExceptionType;
 import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.post.repository.dto.PostCommentCountDto;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.domain.vote.repository.dto.VoteCountByAgeGroupAndGenderDto;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -53,13 +57,15 @@ public class PostQueryService {
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validateHiddenPost(post);
 
+        final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(List.of(post));
         return PostResponse.ofUser(
                 loginMember,
                 post,
                 postCategoryRepository.findAllByPost(post),
                 post.getFirstContentImage(),
                 post.getPostOptions(),
-                voteRepository.findByMemberAndPostOptionPost(loginMember, post)
+                voteRepository.findByMemberAndPostOptionPost(loginMember, post),
+                postCommentCountMapper.getOrDefault(post.getId(), 0L)
         );
     }
 
@@ -162,6 +168,7 @@ public class PostQueryService {
     }
 
     private List<PostResponse> convertToResponses(final List<Post> posts, final Member member) {
+        final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(posts);
         return posts.stream()
                 .map(post ->
                         PostResponse.ofUser(
@@ -170,10 +177,23 @@ public class PostQueryService {
                                 postCategoryRepository.findAllByPost(post),
                                 post.getFirstContentImage(),
                                 post.getPostOptions(),
-                                voteRepository.findByMemberAndPostOptionPost(member, post)
+                                voteRepository.findByMemberAndPostOptionPost(member, post),
+                                postCommentCountMapper.getOrDefault(post.getId(), 0L)
                         )
                 )
                 .toList();
+    }
+
+    private Map<Long, Long> generatePostCommentCountMapper(final List<Post> posts) {
+        final List<PostCommentCountDto> postCommentCountDtos =
+                postRepository.getCommentCountsInPosts(posts.stream().map(Post::getId).collect(Collectors.toSet()));
+        return postCommentCountDtos.stream()
+                .collect(Collectors.toMap(
+                        PostCommentCountDto::postId,
+                        PostCommentCountDto::commentCount,
+                        (exist, replace) -> replace,
+                        HashMap::new
+                ));
     }
 
 }

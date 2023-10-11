@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
@@ -83,6 +81,7 @@ export const Content = styled.div<{ $isPreview: boolean }>`
   text-overflow: ellipsis;
   word-break: break-word;
   white-space: pre-wrap;
+  text-align: start;
 
   overflow: hidden;
 
@@ -94,10 +93,12 @@ export const Content = styled.div<{ $isPreview: boolean }>`
   }
 `;
 
-export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
+export const DetailLink = styled.button<{ $isPreview: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  cursor: ${({ $isPreview }) => $isPreview && 'pointer'};
 `;
 
 export const Image = styled.img`

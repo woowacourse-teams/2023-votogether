@@ -1,4 +1,5 @@
 import { ForwardedRef, forwardRef, memo, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
@@ -33,6 +34,7 @@ const Post = forwardRef(function Post(
   { postInfo, isPreview }: PostProps,
   ref: ForwardedRef<HTMLLIElement>
 ) {
+  const navigate = useNavigate();
   const {
     postId,
     category,
@@ -115,8 +117,14 @@ const Post = forwardRef(function Post(
   return (
     <S.Container as={isPreview ? 'li' : 'div'} ref={ref} $isPreview={isPreview}>
       <S.DetailLink
+        role={isPreview ? 'link' : 'none'}
+        tabIndex={0}
         as={isPreview ? '' : 'main'}
-        to={isPreview ? `${PATH.POST}/${postId}` : '#'}
+        onClick={() => {
+          if (!isPreview) return;
+
+          navigate(`${PATH.POST}/${postId}`);
+        }}
         $isPreview={isPreview}
         aria-describedby={
           isPreview

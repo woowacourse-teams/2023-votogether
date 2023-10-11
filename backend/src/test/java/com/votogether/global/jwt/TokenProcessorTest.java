@@ -8,6 +8,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.RepositoryTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -94,7 +95,7 @@ class TokenProcessorTest extends RepositoryTest {
 
             // when, then
             assertThatThrownBy(() -> tokenProcessor.resolveToken(token))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("올바르지 않은 토큰입니다.");
         }
 

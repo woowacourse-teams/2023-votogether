@@ -1,3 +1,5 @@
+import { NoticeResponse, transformNotice } from '@api/notice';
+
 const noticeTitleList = [
   '방방뛰는 코끼리',
   '환상의 드래곤',
@@ -50,12 +52,17 @@ const noticeDeadlineList = [
 ];
 
 const getMockNoticeResponse = () => ({
+  id: Math.floor(Math.random() * 30),
   title: noticeTitleList[Math.floor(Math.random() * 8)],
   content: noticeContentList[Math.floor(Math.random() * 11)],
   bannerTitle: noticeTitleList[Math.floor(Math.random() * 8)],
   bannerSubtitle: noticeTitleList[Math.floor(Math.random() * 8)],
-  createAt: noticeCreatedAtList[Math.floor(Math.random() * 9)],
+  createdAt: noticeCreatedAtList[Math.floor(Math.random() * 9)],
   deadline: noticeDeadlineList[Math.floor(Math.random() * 9)],
 });
 
-export const MOCK_NOTICE_RESPONSE = Array.from({ length: 20 }, () => getMockNoticeResponse);
+export const MOCK_NOTICE_RESPONSE: NoticeResponse[] = Array.from({ length: 20 }, () =>
+  getMockNoticeResponse()
+);
+
+export const MOCK_TRANSFORM_NOTICE_LIST = MOCK_NOTICE_RESPONSE.map(item => transformNotice(item));

@@ -1,6 +1,6 @@
 import { KeyboardEvent, useRef } from 'react';
 
-import { convertTextToUrl } from '@utils/post/convertTextToUrl';
+import { convertTextTotStringLinkElement } from '@utils/post/convertTextTotStringLinkElement';
 
 import * as S from './style';
 
@@ -17,26 +17,6 @@ import * as S from './style';
 export default function TextForm() {
   const textRef = useRef<HTMLDivElement>(null);
 
-  const convertTextToHtml = (text: string) => {
-    const convertedUrlText = convertTextToUrl(text);
-
-    const linkPattern = /(?<!<span)\[\[([^[\]]+)\]\]/g;
-
-    const parts = convertedUrlText.split(linkPattern);
-
-    const elementList = parts.map((part, index) => {
-      if (index % 2 === 1) {
-        // 링크
-
-        return `<span style="text-decoration: underline; color: #004EC5;">${part}</span>`;
-      }
-
-      return part;
-    });
-
-    return elementList.join('');
-  };
-
   const focusContentEditableTextToEnd = (element: HTMLElement) => {
     if (element.innerText.length === 0) {
       element.focus();
@@ -46,6 +26,7 @@ export default function TextForm() {
 
     const selection = window.getSelection();
     const newRange = document.createRange();
+
     newRange.selectNodeContents(element);
     newRange.collapse(false);
     selection?.removeAllRanges();
@@ -53,25 +34,17 @@ export default function TextForm() {
   };
 
   const handleKeyboardConvertHtml = (event: KeyboardEvent) => {
-    if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
+    if (event.nativeEvent.isComposing) return;
 
     if (!textRef.current) return;
 
-    const removeEmptySpanText = textRef.current.innerHTML.replaceAll('<span></span>', '\n');
-    const removeEmptyDivText = removeEmptySpanText.replaceAll('<div><br></div>', '\n');
-    const contentText = removeEmptyDivText;
+    const contentText = convertTextTotStringLinkElement(textRef.current.innerText);
 
     if (event.code === 'Enter' || event.code === 'Space') {
-      textRef.current.innerHTML = convertTextToHtml(contentText);
+      textRef.current.innerHTML = contentText;
       focusContentEditableTextToEnd(textRef.current);
     }
   };
 
-  return (
-    <S.Container
-      onKeyDown={handleKeyboardConvertHtml}
-      ref={textRef}
-      contentEditable="true"
-    ></S.Container>
-  );
+  return <S.Container onKeyDown={handleKeyboardConvertHtml} ref={textRef} contentEditable="true" />;
 }

@@ -1,4 +1,4 @@
-import { Notice } from '@type/notice';
+import { Notice, NoticeList } from '@type/notice';
 
 import { deleteFetch, getFetch, patchFetch, postFetch } from '@utils/fetch';
 
@@ -46,10 +46,13 @@ export const getBannerNotice = async () => {
   return transformNotice(bannerNotice);
 };
 
-export const getNoticeList = async (page: number) => {
+export const getNoticeList = async (page: number): Promise<NoticeList> => {
   const noticeList = await getFetch<NoticeResponse[]>(`${BASE_URL}/notices?page=${page}`);
 
-  return noticeList.map(notice => transformNotice(notice));
+  return {
+    pageNumber: page,
+    noticeList: noticeList.map(notice => transformNotice(notice)),
+  };
 };
 
 export const getNoticeDetail = async (noticeId: number) => {

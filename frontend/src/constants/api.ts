@@ -21,6 +21,8 @@ export const DEFAULT_CATEGORY_ID = 0;
 
 export const POST_AMOUNT_PER_PAGE = 10;
 
+export const NOTICE_AMOUNT_PER_PAGE = 10;
+
 /**
  * 백앤드로 보낼때 검색 쿼리키로 사용하는 문자입니다. ?keyword="검색어"
  */

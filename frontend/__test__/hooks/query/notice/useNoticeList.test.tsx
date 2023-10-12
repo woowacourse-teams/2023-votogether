@@ -20,7 +20,7 @@ describe('useNoticeList 훅이 공지 사항 리스트를 불러오는 지 확�
     });
 
     await waitFor(() => {
-      expect(result.current.data).toEqual(MOCK_TRANSFORM_NOTICE_LIST);
+      expect(result.current.data?.pages[0].noticeList).toEqual(MOCK_TRANSFORM_NOTICE_LIST);
     });
   });
 });

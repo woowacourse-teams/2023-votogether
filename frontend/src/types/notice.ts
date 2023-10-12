@@ -7,3 +7,8 @@ export interface Notice {
   bannerTitle: string;
   bannerSubtitle: string;
 }
+
+export interface NoticeList {
+  pageNumber: number;
+  noticeList: Notice[];
+}

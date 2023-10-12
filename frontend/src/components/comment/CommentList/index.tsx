@@ -4,12 +4,13 @@ import { useCommentList, useMoreComment, AuthContext } from '@hooks';
 
 import SquareButton from '@components/common/SquareButton';
 
+import { COMMENT_USER } from '@constants/post';
+
 import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import CommentItem from './CommentItem';
 import CommentLoginSection from './CommentLoginSection';
 import CommentTextForm from './CommentTextForm';
-import { COMMENT_USER } from './constants';
 import * as S from './style';
 
 interface CommentListProps {

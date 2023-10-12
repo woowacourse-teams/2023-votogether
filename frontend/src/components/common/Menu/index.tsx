@@ -1,15 +1,14 @@
 import { MouseEvent } from 'react';
 
-import { PostAction, PostMenuItem } from '@type/menu';
-
 import * as S from './style';
+import { MenuItem } from './types';
 
-interface PostMenuProps {
-  menuList: PostMenuItem[];
-  handleMenuClick: (menu: PostAction) => void;
+interface MenuProps<T> {
+  menuList: MenuItem<T>[];
+  handleMenuClick: (menu: T) => void;
 }
 
-export default function PostMenu({ menuList, handleMenuClick }: PostMenuProps) {
+export default function Menu<T>({ menuList, handleMenuClick }: MenuProps<T>) {
   return (
     <S.Container>
       {menuList.map(({ content, color, action }) => (

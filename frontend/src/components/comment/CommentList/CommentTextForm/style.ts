@@ -58,3 +58,12 @@ export const ButtonWrapper = styled.div`
     font: var(--text-body);
   }
 `;
+
+export const KeyDescription = styled.span`
+  margin-top: 20px;
+
+  text-align: right;
+  font: var(--text-caption);
+
+  color: var(--dark-gray);
+`;

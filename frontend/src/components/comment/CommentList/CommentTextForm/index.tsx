@@ -62,7 +62,7 @@ export default function CommentTextForm({
   };
 
   const handleKeyboardCommentSubmit = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    const isPressCtrlAndEnterKey = event.ctrlKey && event.key === 'Enter';
+    const isPressCtrlAndEnterKey = (event.metaKey || event.ctrlKey) && event.key === 'Enter';
 
     if (isPressCtrlAndEnterKey) {
       handleUpdateComment();
@@ -127,6 +127,7 @@ export default function CommentTextForm({
           </SquareButton>
         </S.ButtonWrapper>
       </S.ButtonContainer>
+      <S.KeyDescription>Ctrl(Command) + Enter 키로 댓글을 저장할 수 있습니다</S.KeyDescription>
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

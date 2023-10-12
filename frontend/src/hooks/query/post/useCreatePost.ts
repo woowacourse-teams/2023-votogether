@@ -17,10 +17,9 @@ export const useCreatePost = () => {
   const { mutate, isLoading, isSuccess } = useMutation((post: FormData) => createPost(post), {
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEY.USER_INFO, IS_LOGGED_IN]);
-      addMessage('게시글 작성을 완료했습니다.');
     },
     onError: error => {
-      const message = error instanceof Error ? error.message : '회원 탈퇴를 실패했습니다.';
+      const message = error instanceof Error ? error.message : '게시글 작성을 실패했습니다.';
       addMessage(message);
     },
   });

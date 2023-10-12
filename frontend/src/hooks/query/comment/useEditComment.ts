@@ -19,11 +19,9 @@ export const useEditComment = (postId: number, commentId: number) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries([QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS]);
-
-        addMessage('댓글을 수성했습니다.');
       },
       onError: error => {
-        const message = error instanceof Error ? error.message : '댓글 작성을 실패했습니다.';
+        const message = error instanceof Error ? error.message : '댓글 수성을 실패했습니다.';
         addMessage(message);
       },
     }

@@ -27,7 +27,7 @@ export const useEditVote = ({ isPreview, postId }: { isPreview: boolean; postId:
       queryClient.invalidateQueries([QUERY_KEY.POST_DETAIL, postId, LOGGED_IN]);
     },
     onError: error => {
-      const message = error instanceof Error ? error.message : '투표를 실패했습니다.';
+      const message = error instanceof Error ? error.message : '투표 변경을 실패했습니다.';
       addMessage(message);
     },
   });

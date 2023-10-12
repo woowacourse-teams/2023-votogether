@@ -89,7 +89,7 @@ export default function PostDetail() {
           addMessage('게시물을 신고했습니다.');
         })
         .catch(error => {
-          const message = error instanceof Error ? error.message : '게시글 신고가 실패했습니다.';
+          const message = error instanceof Error ? error.message : '게시글 신고를 실패했습니다.';
           addMessage(message);
         })
         .finally(() => {
@@ -110,7 +110,7 @@ export default function PostDetail() {
         })
         .catch(error => {
           const message =
-            error instanceof Error ? error.message : '작성자 닉네임 신고가 실패했습니다.';
+            error instanceof Error ? error.message : '작성자 닉네임 신고를 실패했습니다.';
           addMessage(message);
         })
         .finally(() => {

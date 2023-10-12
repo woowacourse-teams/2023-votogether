@@ -40,7 +40,6 @@ import { useBannerNotice } from './query/notice/useBannerNotice';
 import { useCreateNotice } from './query/notice/useCreateNotice';
 import { useDeleteNotice } from './query/notice/useDeleteNotice';
 import { useModifyNotice } from './query/notice/useModifyNotice';
-import { useNoticeDelete } from './query/notice/useNoticeDelete';
 import { useNoticeList } from './query/notice/useNoticeList';
 import { useNoticeDetail } from './query/notice/useNoticeDetail';
 
@@ -109,7 +108,6 @@ export {
   useCreateNotice,
   useDeleteNotice,
   useModifyNotice,
-  useNoticeDelete,
   useNoticeList,
   useNoticeDetail,
 };

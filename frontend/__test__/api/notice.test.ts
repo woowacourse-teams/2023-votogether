@@ -24,7 +24,7 @@ describe('서버와 통신하여 공지사항 관련된 api를 통신할 수 있
 
     const result = MOCK_NOTICE_TEST;
 
-    expect(result).toBe('갤럭시');
+    expect(result).toBe(data.title);
   });
 
   test('배너 공지 사항을 조회한다.', async () => {
@@ -58,7 +58,7 @@ describe('서버와 통신하여 공지사항 관련된 api를 통신할 수 있
 
     const result = MOCK_NOTICE_TEST;
 
-    expect(result).toBe('아이폰입니다');
+    expect(result).toBe(data.title);
   });
 
   test('공지 사항을 삭제한다.', async () => {

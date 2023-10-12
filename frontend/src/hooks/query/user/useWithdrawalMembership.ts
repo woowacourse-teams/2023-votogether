@@ -17,7 +17,7 @@ export const useWithdrawalMembership = () => {
     mutationFn: async () => await withdrawalMembership(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO, LOGGED_IN] });
-      addMessage('회원 탈퇴을 완료했습니다.');
+      addMessage('회원 탈퇴를 완료했습니다.');
     },
     onError: () => {
       const message = error instanceof Error ? error.message : '회원 탈퇴를 실패했습니다.';

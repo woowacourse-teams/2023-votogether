@@ -62,7 +62,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           addMessage(errorResponse.message);
           return;
         }
-        addMessage('댓글 신고가 실패했습니다.');
+        addMessage('댓글 신고를 실패했습니다.');
       })
       .finally(() => {
         setIsReportCommentLoading(false);
@@ -83,7 +83,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           addMessage(errorResponse.message);
           return;
         }
-        addMessage('작성자 닉네임 신고가 실패했습니다.');
+        addMessage('작성자 닉네임 신고를 실패했습니다.');
       })
       .finally(() => {
         setIsReportNicknameLoading(false);

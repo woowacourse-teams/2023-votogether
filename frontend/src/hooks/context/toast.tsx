@@ -9,7 +9,11 @@ export interface ToastInfo {
   text: string;
 }
 
-export const ToastContext = createContext({
+interface ToastContextProps {
+  addMessage: (message: string) => void;
+}
+
+export const ToastContext = createContext<ToastContextProps>({
   addMessage: (message: string) => {},
 });
 

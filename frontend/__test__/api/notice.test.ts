@@ -36,7 +36,7 @@ describe('서버와 통신하여 공지사항 관련된 api를 통신할 수 있
   test('공지 사항 목록을 조회한다.', async () => {
     const result = await getNoticeList(0);
 
-    expect(result).toEqual(MOCK_TRANSFORM_NOTICE_LIST);
+    expect(result).toEqual({ pageNumber: 0, noticeList: MOCK_TRANSFORM_NOTICE_LIST });
   });
 
   test('공지 사항의 상세 내용을 조회한다.', async () => {

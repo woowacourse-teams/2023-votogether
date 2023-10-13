@@ -32,6 +32,12 @@ export interface NoticeResponse {
   bannerSubtitle: string;
 }
 
+export interface NoticeListResponse {
+  totalPageNumber: number;
+  currentPageNumber: number;
+  notices: NoticeResponse[];
+}
+
 export type NoticeRequest = Omit<NoticeResponse, 'createdAt' | 'id'>;
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
@@ -47,11 +53,12 @@ export const getBannerNotice = async () => {
 };
 
 export const getNoticeList = async (page: number): Promise<NoticeList> => {
-  const noticeList = await getFetch<NoticeResponse[]>(`${BASE_URL}/notices?page=${page}`);
+  const noticeListInfo = await getFetch<NoticeListResponse>(`${BASE_URL}/notices?page=${page}`);
 
   return {
-    pageNumber: page,
-    noticeList: noticeList.map(notice => transformNotice(notice)),
+    totalPageNumber: noticeListInfo.totalPageNumber,
+    currentPageNumber: noticeListInfo.currentPageNumber,
+    noticeList: noticeListInfo.notices.map(notice => transformNotice(notice)),
   };
 };
 

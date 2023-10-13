@@ -9,6 +9,7 @@ export interface Notice {
 }
 
 export interface NoticeList {
-  pageNumber: number;
+  totalPageNumber: number;
+  currentPageNumber: number;
   noticeList: Notice[];
 }

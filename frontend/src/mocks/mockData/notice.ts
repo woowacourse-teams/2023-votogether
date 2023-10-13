@@ -1,4 +1,4 @@
-import { NoticeResponse, transformNotice } from '@api/notice';
+import { NoticeListResponse, NoticeResponse, transformNotice } from '@api/notice';
 
 const noticeTitleList = [
   '방방뛰는 코끼리',
@@ -64,5 +64,11 @@ const getMockNoticeResponse = () => ({
 export const MOCK_NOTICE_RESPONSE: NoticeResponse[] = Array.from({ length: 20 }, () =>
   getMockNoticeResponse()
 );
+
+export const MOCK_NOTICE_LIST_RESPONSE: NoticeListResponse = {
+  totalPageNumber: 3,
+  currentPageNumber: 0,
+  notices: MOCK_NOTICE_RESPONSE,
+};
 
 export const MOCK_TRANSFORM_NOTICE_LIST = MOCK_NOTICE_RESPONSE.map(item => transformNotice(item));

@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { MOCK_NOTICE_RESPONSE } from './mockData/notice';
+import { MOCK_NOTICE_LIST_RESPONSE, MOCK_NOTICE_RESPONSE } from './mockData/notice';
 
 export let MOCK_NOTICE_TEST = '';
 
@@ -18,7 +18,7 @@ export const mockNotice = [
   }),
 
   rest.get(`/notices`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(MOCK_NOTICE_RESPONSE));
+    return res(ctx.status(200), ctx.json(MOCK_NOTICE_LIST_RESPONSE));
   }),
 
   rest.get(`/notices/:id`, (req, res, ctx) => {

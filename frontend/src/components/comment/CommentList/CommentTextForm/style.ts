@@ -20,12 +20,12 @@ export const TextArea = styled.textarea`
   resize: none;
 
   &::placeholder {
-    font-size: 14px;
+    font-size: 1.4rem;
   }
 
   @media (max-width: ${theme.breakpoint.sm}) {
     &::placeholder {
-      font-size: 12px;
+      font-size: 1.2rem;
       line-height: 2rem;
     }
   }
@@ -56,5 +56,19 @@ export const ButtonWrapper = styled.div`
     height: 46px;
 
     font: var(--text-body);
+  }
+`;
+
+export const KeyDescription = styled.span`
+  margin-top: 20px;
+
+  text-align: right;
+  font: var(--text-caption);
+  font-size: 1.2rem;
+
+  color: var(--dark-gray);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font-size: 1.4rem;
   }
 `;

@@ -10,6 +10,7 @@ import LogoButton from '../LogoButton';
 import SearchBar from '../SearchBar';
 import ToolTip from '../ToolTip';
 
+import AlarmContainer from './AlarmContainer';
 import * as S from './style';
 
 export default function WideHeader() {
@@ -42,8 +43,8 @@ export default function WideHeader() {
       </S.Wrapper>
       {isOpen && (
         <S.ToolTipBackdrop onClick={handleToolTipClick} ref={toolTipRef}>
-          <ToolTip size="lg">
-            <></>
+          <ToolTip size="free">
+            <AlarmContainer />
           </ToolTip>
         </S.ToolTipBackdrop>
       )}

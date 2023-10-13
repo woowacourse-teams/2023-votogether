@@ -5,7 +5,7 @@ import { ReportAlarmList, getReportAlarmList } from '@api/alarm';
 import { ALARM_AMOUNT_PER_PAGE } from '@constants/api';
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const useContentAlarmList = () => {
+export const useReportAlarmList = () => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<ReportAlarmList>(
       [QUERY_KEY.ALARM_REPORT],
@@ -20,7 +20,7 @@ export const useContentAlarmList = () => {
       }
     );
 
-  const isPostListEmpty = data?.pages[0].alarmList.length === 0;
+  const isListEmpty = data?.pages[0].alarmList.length === 0;
 
-  return { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isPostListEmpty };
+  return { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isListEmpty };
 };

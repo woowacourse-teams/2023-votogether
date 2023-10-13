@@ -11,7 +11,12 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  min-height: 300px;
+  max-height: 600px;
+  padding: 10px;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+
+  overflow: scroll;
 `;
 
 export const LoadingSpinnerWrapper = styled.div`
@@ -19,6 +24,5 @@ export const LoadingSpinnerWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  // 컨테이너 높이 - 토글 셀렉터 높이 - gap 높이 빼기
-  height: calc(300px - 40px - 10px);
+  height: 200px;
 `;

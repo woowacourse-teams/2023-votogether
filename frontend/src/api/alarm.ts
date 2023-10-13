@@ -1,3 +1,4 @@
+import { ReportType } from '@type/report';
 import { StringDate } from '@type/time';
 
 import { getFetch } from '@utils/fetch';
@@ -31,7 +32,7 @@ interface ReportAlarm {
   isRead: boolean;
   info: {
     id: number;
-    type: 'POST' | 'COMMENT' | 'NICKNAME';
+    type: ReportType;
     content: string;
   };
 }

@@ -14,7 +14,7 @@ import * as S from './style';
 const CONTENT = 'content';
 const REPORT = 'report';
 
-export default function AlarmContainer() {
+export default function AlarmContainer({ closeToolTip }: { closeToolTip: () => void }) {
   const { selectedButton, firstButton, secondButton } = useToggleSwitch(CONTENT, REPORT);
 
   return (
@@ -34,8 +34,8 @@ export default function AlarmContainer() {
               </S.LoadingSpinnerWrapper>
             }
           >
-            {selectedButton === CONTENT && <ContentAlarmList />}
-            {selectedButton === REPORT && <ReportAlarmList />}
+            {selectedButton === CONTENT && <ContentAlarmList closeToolTip={closeToolTip} />}
+            {selectedButton === REPORT && <ReportAlarmList closeToolTip={closeToolTip} />}
           </Suspense>
         </ErrorBoundary>
       </S.Content>

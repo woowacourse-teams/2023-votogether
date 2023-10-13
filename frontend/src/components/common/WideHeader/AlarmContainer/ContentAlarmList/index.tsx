@@ -11,7 +11,7 @@ import { PATH } from '@constants/path';
 import * as LS from '../ListStyle';
 import * as S from '../style';
 
-export default function ContentAlarmList() {
+export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () => void }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isListEmpty } =
     useContentAlarmList();
   const navigation = useNavigate();
@@ -22,6 +22,7 @@ export default function ContentAlarmList() {
 
   const movePost = (postId: number) => {
     navigation(`${PATH.POST}/${postId}`);
+    closeToolTip();
   };
 
   return (

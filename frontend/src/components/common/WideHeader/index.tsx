@@ -44,7 +44,7 @@ export default function WideHeader() {
       {isOpen && (
         <S.ToolTipBackdrop onClick={handleToolTipClick} ref={toolTipRef}>
           <ToolTip size="free">
-            <AlarmContainer />
+            <AlarmContainer closeToolTip={closeComponent} />
           </ToolTip>
         </S.ToolTipBackdrop>
       )}

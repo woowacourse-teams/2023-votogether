@@ -19,7 +19,7 @@ const REPORT_TYPE: Record<ReportType, string> = {
   NICKNAME: '닉네임',
 };
 
-export default function ReportAlarmList() {
+export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => void }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isListEmpty } =
     useReportAlarmList();
   const navigation = useNavigate();
@@ -30,6 +30,7 @@ export default function ReportAlarmList() {
 
   const movePost = (postId: number) => {
     navigation(`${PATH.POST}/${postId}`);
+    closeToolTip();
   };
 
   return (

@@ -32,7 +32,7 @@ interface ReportAlarm {
   info: {
     id: number;
     type: 'POST' | 'COMMENT' | 'NICKNAME';
-    nickname: string;
+    content: string;
   };
 }
 

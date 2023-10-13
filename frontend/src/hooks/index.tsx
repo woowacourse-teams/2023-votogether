@@ -35,6 +35,15 @@ import { usePassionUserRanking } from './query/ranking/usePassionUserRanking';
 import { usePopularPostRanking } from './query/ranking/usePopularPostRanking';
 import { useUserRanking } from './query/ranking/useUserRanking';
 
+// 공지 사항 리엑트 쿼리 훅
+import { useBannerNotice } from './query/notice/useBannerNotice';
+import { useCreateNotice } from './query/notice/useCreateNotice';
+import { useDeleteNotice } from './query/notice/useDeleteNotice';
+import { useModifyNotice } from './query/notice/useModifyNotice';
+import { usePagedNoticeList } from './query/notice/usePagedNoticeList';
+import { useNoticeDetail } from './query/notice/useNoticeDetail';
+import { useStackedNoticeList } from './query/notice/useStackedNoticeList';
+
 // 컨텍스트 커스텀 훅
 import { AuthContext } from './context/auth';
 import { PostOptionContext } from './context/postOption';
@@ -96,6 +105,13 @@ export {
   useCreateComment,
   useDeleteComment,
   useEditComment,
+  useBannerNotice,
+  useCreateNotice,
+  useDeleteNotice,
+  useModifyNotice,
+  usePagedNoticeList,
+  useNoticeDetail,
+  useStackedNoticeList,
 };
 
 export { AuthContext, PostOptionContext };

@@ -35,7 +35,7 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
             const shortNickname = nickname.length < 6 ? nickname : `${nickname.slice(0, 6)}...`;
 
             return (
-              <LS.ListItem key={alarm.id}>
+              <LS.ListItem key={alarm.id} $isRead={alarm.isRead}>
                 <LS.LinkButton
                   onClick={() => {
                     movePost(postId);

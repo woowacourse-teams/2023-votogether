@@ -42,7 +42,7 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
             const shortContent = content.length < 8 ? content : `${content.slice(0, 8)}...`;
 
             return (
-              <LS.ListItem key={alarm.id}>
+              <LS.ListItem key={alarm.id} $isRead={alarm.isRead}>
                 <LS.LinkButton
                   onClick={() => {
                     movePost(postId);

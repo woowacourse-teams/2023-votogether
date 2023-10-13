@@ -2,13 +2,14 @@ import styled from 'styled-components';
 
 export const ListContainer = styled.ul``;
 
-export const ListItem = styled.li`
+export const ListItem = styled.li<{ $isRead: boolean }>`
   display: flex;
   border: 1px solid var(--gray);
   align-items: center;
 
   min-height: 60px;
   margin: 2px 0;
+  background-color: ${props => props.$isRead && 'var(--bright-gray)'};
 
   font-size: 1.4rem;
 `;
@@ -27,7 +28,7 @@ export const LinkButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: var(--bright-gray);
+    background-color: var(--gray);
   }
 
   & > *:first-child {

@@ -102,6 +102,7 @@ export default function CommentTextForm({
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, POST_COMMENT)}
         onKeyDown={handleKeyboardCommentSubmit}
       />
+      <S.KeyDescription>Ctrl(Command) + Enter 키로 댓글을 저장할 수 있습니다</S.KeyDescription>
       <S.ButtonContainer>
         {isEdit && (
           <S.ButtonWrapper>
@@ -127,7 +128,6 @@ export default function CommentTextForm({
           </SquareButton>
         </S.ButtonWrapper>
       </S.ButtonContainer>
-      <S.KeyDescription>Ctrl(Command) + Enter 키로 댓글을 저장할 수 있습니다</S.KeyDescription>
       {isToastOpen && (
         <Toast size="md" position="bottom">
           {toastMessage}

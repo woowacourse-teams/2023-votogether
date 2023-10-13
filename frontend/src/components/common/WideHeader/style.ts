@@ -44,7 +44,6 @@ export const ToolTipBackdrop = styled.div`
     // + 랭킹 아이콘 크기(35px)
     // + 아이콘 사이 간격(15px)
     // - 툴팁 화살표 오른쪽 공백(20px)
-    // + 화살표 가로 길이 1/2 (17px)
-    right: calc(80px + 35px + 15px - 20px + 17px);
+    right: calc(80px + 35px + 15px - 20px);
   }
 `;

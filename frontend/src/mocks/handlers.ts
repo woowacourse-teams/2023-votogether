@@ -1,3 +1,4 @@
+import { mockAlarm } from './alarm';
 import { mockCategoryHandlers } from './categoryList';
 import { mockComment } from './comment';
 import { example } from './example/get';
@@ -22,4 +23,5 @@ export const handlers = [
   ...mockReport,
   ...mockRanking,
   ...mockToken,
+  ...mockAlarm,
 ];

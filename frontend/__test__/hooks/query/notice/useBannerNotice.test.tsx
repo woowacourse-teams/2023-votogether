@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import { useBannerNotice } from '@hooks';
 
-import { MOCK_TRANSFORM_NOTICE_LIST } from '@mocks/mockData/notice';
+import { MOCK_TRANSFORM_NOTICE } from '@mocks/mockData/notice';
 
 const queryClient = new QueryClient();
 
@@ -19,6 +19,6 @@ describe('useBannerNotice 훅이 배너 공지사항을 불러오는지 확인�
       wrapper,
     });
 
-    await waitFor(() => expect(result.current.data).toEqual(MOCK_TRANSFORM_NOTICE_LIST[0]));
+    await waitFor(() => expect(result.current.data).toEqual(MOCK_TRANSFORM_NOTICE));
   });
 });

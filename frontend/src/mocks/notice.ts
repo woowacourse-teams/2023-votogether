@@ -14,7 +14,7 @@ export const mockNotice = [
   }),
 
   rest.get('/notices/progress', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(MOCK_NOTICE_RESPONSE[0]));
+    return res(ctx.status(200), ctx.json(MOCK_NOTICE_RESPONSE));
   }),
 
   rest.get(`/notices`, (req, res, ctx) => {
@@ -22,7 +22,7 @@ export const mockNotice = [
   }),
 
   rest.get(`/notices/:id`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(MOCK_NOTICE_RESPONSE[0]));
+    return res(ctx.status(200), ctx.json(MOCK_NOTICE_RESPONSE));
   }),
 
   rest.patch(`/notices/:id`, async (req, res, ctx) => {

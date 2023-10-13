@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import { useNoticeDetail } from '@hooks';
 
-import { MOCK_TRANSFORM_NOTICE_LIST } from '@mocks/mockData/notice';
+import { MOCK_TRANSFORM_NOTICE } from '@mocks/mockData/notice';
 
 const queryClient = new QueryClient();
 
@@ -20,7 +20,7 @@ describe('useNoticeDetail 훅이 공지 사항 상세 정보를 불러오는 지
     });
 
     await waitFor(() => {
-      expect(result.current.data).toEqual(MOCK_TRANSFORM_NOTICE_LIST[0]);
+      expect(result.current.data).toEqual(MOCK_TRANSFORM_NOTICE);
     });
   });
 });

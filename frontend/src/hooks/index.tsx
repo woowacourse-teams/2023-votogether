@@ -40,7 +40,7 @@ import { useBannerNotice } from './query/notice/useBannerNotice';
 import { useCreateNotice } from './query/notice/useCreateNotice';
 import { useDeleteNotice } from './query/notice/useDeleteNotice';
 import { useModifyNotice } from './query/notice/useModifyNotice';
-import { useNoticeList } from './query/notice/useNoticeList';
+import { usePagedNoticeList } from './query/notice/usePagedNoticeList';
 import { useNoticeDetail } from './query/notice/useNoticeDetail';
 
 // 컨텍스트 커스텀 훅
@@ -108,7 +108,7 @@ export {
   useCreateNotice,
   useDeleteNotice,
   useModifyNotice,
-  useNoticeList,
+  usePagedNoticeList,
   useNoticeDetail,
 };
 

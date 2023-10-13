@@ -1,3 +1,5 @@
+import { Notice, NoticeList } from '@type/notice';
+
 import { NoticeListResponse, NoticeResponse, transformNotice } from '@api/notice';
 
 const noticeTitleList = [
@@ -61,14 +63,18 @@ const getMockNoticeResponse = () => ({
   deadline: noticeDeadlineList[Math.floor(Math.random() * 9)],
 });
 
-export const MOCK_NOTICE_RESPONSE: NoticeResponse[] = Array.from({ length: 20 }, () =>
-  getMockNoticeResponse()
-);
+export const MOCK_NOTICE_RESPONSE: NoticeResponse = getMockNoticeResponse();
+
+export const MOCK_TRANSFORM_NOTICE: Notice = transformNotice(MOCK_NOTICE_RESPONSE);
 
 export const MOCK_NOTICE_LIST_RESPONSE: NoticeListResponse = {
   totalPageNumber: 3,
   currentPageNumber: 0,
-  notices: MOCK_NOTICE_RESPONSE,
+  notices: Array.from({ length: 20 }, () => getMockNoticeResponse()),
 };
 
-export const MOCK_TRANSFORM_NOTICE_LIST = MOCK_NOTICE_RESPONSE.map(item => transformNotice(item));
+export const MOCK_TRANSFORM_NOTICE_LIST: NoticeList = {
+  totalPageNumber: 3,
+  currentPageNumber: 0,
+  noticeList: MOCK_NOTICE_LIST_RESPONSE.notices.map(item => transformNotice(item)),
+};

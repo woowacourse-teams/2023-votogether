@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import PendingReportPage from '@pages/admin/PendingReportPage';
 import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
 import ErrorPage from '@pages/ErrorPage';
@@ -175,6 +176,15 @@ const router = createBrowserRouter([
         <AnnouncementPage />
         <RouteChangeTracker />
       </>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: PATH.PENDING_REPORT,
+    element: (
+      <PrivateRoute isOnlyAdminAllowed>
+        <PendingReportPage />
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
   },

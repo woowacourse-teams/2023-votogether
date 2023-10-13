@@ -11,10 +11,16 @@ import { getLocalStorage } from '@utils/localStorage';
 
 interface Route extends PropsWithChildren {
   isGuestAllowed?: boolean;
+  isOnlyAdminAllowed?: boolean;
   path?: (typeof PATH)[keyof typeof PATH];
 }
 
-const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: Route) => {
+const PrivateRoute = ({
+  children,
+  isGuestAllowed = false,
+  isOnlyAdminAllowed = true,
+  path = PATH.LOGIN,
+}: Route) => {
   const authInfo = useContext(AuthContext);
   const isLoggedIn = getLocalStorage(ACCESS_TOKEN_KEY);
   const hasEssentialInfo = getCookie().hasEssentialInfo;
@@ -26,14 +32,6 @@ const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: R
     return <Navigate to={path} />;
   }
 
-  /*
-  if (!isGuestAllowed && !isAuthenticated) {
-    alert('해당 페이지에 대한 접근 권한이 없습니다.');
-
-    return <Navigate to={path} />;
-  }
-  */
-
   if (isLoggedIn && hasEssentialInfo === 'false') {
     alert('개인정보를 먼저 등록해주세요.');
 
@@ -44,6 +42,13 @@ const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: R
     authInfo.clearLoggedInfo();
 
     return <Navigate to="/" />;
+  }
+
+  const role = 'ADMIN';
+  if (isLoggedIn && isOnlyAdminAllowed && role !== 'ADMIN') {
+    alert('해당 페이지에 대한 접근 권한이 없습니다.');
+
+    return <Navigate to={path} />;
   }
 
   return children;

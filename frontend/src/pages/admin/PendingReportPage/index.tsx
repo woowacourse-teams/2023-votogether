@@ -78,7 +78,11 @@ export default function PendingReportPage() {
         {isLoading && <LoadingSpinner size="md" />}
         {data && (
           <>
-            <Table columns={columnList} rows={reportListWithAction} />
+            <Table
+              columns={columnList}
+              rows={reportListWithAction}
+              columnTemplate="1fr 2fr 3fr 2fr 1fr 2fr 2fr"
+            />
             <S.PaginationContainer>
               <S.MovePageButton
                 onClick={() => navigate(`${PATH.PENDING_REPORT}?page=${data.currentPageCount - 1}`)}

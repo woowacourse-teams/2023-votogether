@@ -61,16 +61,30 @@ export const MovePageButton = styled.button`
 `;
 
 export const ReportActionButton = styled.button<{ $isEdit: boolean }>`
+  height: 35px;
   border: 1px solid red;
   border-radius: 4px;
   border-color: ${props => (props.$isEdit ? 'blue' : 'red')};
+
   color: ${props => (props.$isEdit ? 'blue' : 'red')};
-  padding: 7px;
+  padding: 7px 14px;
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    padding: 10px;
+    font-size: 10px;
+  }
 `;
 
 export const ReportDeleteButton = styled.button`
+  height: 35px;
+
   border: 1px solid gray;
   border-radius: 4px;
   color: gray;
-  padding: 7px;
+  padding: 7px 14px;
+
+  @media (max-width: ${theme.breakpoint.sm}) {
+    padding: 10px;
+    font-size: 10px;
+  }
 `;

@@ -67,3 +67,10 @@ export const ReportActionButton = styled.button<{ $isEdit: boolean }>`
   color: ${props => (props.$isEdit ? 'blue' : 'red')};
   padding: 7px;
 `;
+
+export const ReportDeleteButton = styled.button`
+  border: 1px solid gray;
+  border-radius: 4px;
+  color: gray;
+  padding: 7px;
+`;

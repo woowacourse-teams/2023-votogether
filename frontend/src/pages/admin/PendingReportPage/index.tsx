@@ -59,13 +59,13 @@ export default function PendingReportPage() {
             </S.ReportActionButton>
           ),
           deleteReport: (
-            <button
+            <S.ReportDeleteButton
               onClick={() =>
                 handleClickReportAction({ ...reportData, hasAction: false }, reportDetail)
               }
             >
               해제
-            </button>
+            </S.ReportDeleteButton>
           ),
         };
       })

@@ -105,7 +105,7 @@ export const Image = styled.img`
   width: 80%;
   border-radius: 4px;
   margin-bottom: 10px;
-  border: 1px solid var(--gray);
+  border: 1px solid var(--bright-gray);
   align-self: center;
 
   aspect-ratio: 1/1;

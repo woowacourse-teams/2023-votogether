@@ -25,7 +25,7 @@ export const Container = styled.button<{ $isSelected: boolean }>`
 
 export const Image = styled.img`
   border-radius: 4px;
-  border: 1px solid var(--gray);
+  border: 1px solid var(--bright-gray);
   margin-bottom: 10px;
 
   width: 80%;

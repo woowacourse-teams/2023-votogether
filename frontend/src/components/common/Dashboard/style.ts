@@ -10,7 +10,7 @@ export const Container = styled.div`
   width: 225px;
   height: 100vh;
   padding: 20px;
-  border-right: 2px solid var(--gray);
+  border-right: 2px solid var(--bright-gray);
 
   @media (min-width: ${theme.breakpoint.sm}) {
     height: 100%;

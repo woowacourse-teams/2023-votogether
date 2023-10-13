@@ -2,6 +2,29 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
+export const Dialog = styled.dialog`
+  position: fixed;
+
+  margin: auto;
+
+  overflow: visible;
+
+  background: none;
+
+  z-index: ${theme.zIndex.modal};
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.35);
+  }
+`;
+
+export const Container = styled.div`
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+`;
+
 export const HiddenCloseButton = styled.button`
   position: absolute;
   top: 0;
@@ -34,27 +57,9 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Dialog = styled.dialog`
-  position: fixed;
-
-  margin: auto;
-
-  overflow: visible;
-
-  background: none;
-
-  z-index: ${theme.zIndex.modal};
-
-  &::backdrop {
-    background-color: rgba(0, 0, 0, 0.35);
-  }
-`;
-
-export const Container = styled.div`
-  position: relative;
-
-  width: 100%;
-  height: 100%;
+export const IconImage = styled.img`
+  width: 24px;
+  height: 24px;
 `;
 
 export const Image = styled.img`
@@ -63,8 +68,4 @@ export const Image = styled.img`
   max-height: 80vh;
 
   object-fit: contain;
-`;
-export const IconImage = styled.img`
-  width: 24px;
-  height: 24px;
 `;

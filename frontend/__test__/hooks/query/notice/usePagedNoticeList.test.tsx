@@ -25,6 +25,16 @@ describe('usePagedNoticeList 훅이 공지 사항 리스트를 페이지 버튼�
     });
   });
 
+  test('초기 페이지를 인자를 넣어 설정할 수 있다..', async () => {
+    const { result } = renderHook(() => usePagedNoticeList(5), {
+      wrapper,
+    });
+
+    waitFor(() => {
+      expect(result.current.page).toEqual(5);
+    });
+  });
+
   test('현재 페이지를 3으로 설정했을 때 3페이지를 데이터만 불러온다. 클라이언트 측에서 3으로 설정했어도 서버로는 2를 보내야 하기 때문에 현재 페이지는 2로 설정된다.', async () => {
     const { result } = renderHook(() => usePagedNoticeList(), {
       wrapper,
@@ -52,6 +62,18 @@ describe('usePagedNoticeList 훅이 공지 사항 리스트를 페이지 버튼�
 
     waitFor(() => {
       expect(result.current.page).toEqual(currentPage + 1);
+    });
+  });
+
+  test('현재 페이지가 5이고, 이전의 페이지를 불러올 때 현재 페이지 - 1을 하여 불러온다.', async () => {
+    const { result } = renderHook(() => usePagedNoticeList(5), {
+      wrapper,
+    });
+
+    waitFor(() => {
+      result.current.fetchPrevPage();
+
+      expect(result.current.page).toEqual(3);
     });
   });
 

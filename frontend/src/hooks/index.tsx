@@ -42,6 +42,7 @@ import { useDeleteNotice } from './query/notice/useDeleteNotice';
 import { useModifyNotice } from './query/notice/useModifyNotice';
 import { usePagedNoticeList } from './query/notice/usePagedNoticeList';
 import { useNoticeDetail } from './query/notice/useNoticeDetail';
+import { useStackedNoticeList } from './query/notice/useStackedNoticeList';
 
 // 컨텍스트 커스텀 훅
 import { AuthContext } from './context/auth';
@@ -110,6 +111,7 @@ export {
   useModifyNotice,
   usePagedNoticeList,
   useNoticeDetail,
+  useStackedNoticeList,
 };
 
 export { AuthContext, PostOptionContext };

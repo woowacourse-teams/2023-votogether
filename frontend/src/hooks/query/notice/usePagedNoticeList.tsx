@@ -8,8 +8,8 @@ import { getNoticeList } from '@api/notice';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const usePagedNoticeList = () => {
-  const [pageNumber, setPageNumber] = useState(0);
+export const usePagedNoticeList = (initialPageNumber: number = 0) => {
+  const [pageNumber, setPageNumber] = useState(initialPageNumber);
   const { data, isError, isLoading, error } = useQuery<NoticeList>(
     [QUERY_KEY.NOTICE, pageNumber],
     () => getNoticeList(pageNumber),
@@ -32,6 +32,12 @@ export const usePagedNoticeList = () => {
 
   const hasNextPage = data && pageNumber < data.totalPageNumber;
 
+  const fetchPrevPage = () => {
+    if (pageNumber === 0) return;
+
+    setPageNumber(prev => prev - 1);
+  };
+
   const fetchNextPage = () => {
     if (!hasNextPage) return;
 
@@ -45,6 +51,7 @@ export const usePagedNoticeList = () => {
     error,
     hasNextPage,
     fetchNextPage,
+    fetchPrevPage,
     page: pageNumber,
     setPage,
   };

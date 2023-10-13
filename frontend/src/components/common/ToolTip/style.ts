@@ -25,7 +25,7 @@ export const Pointer = styled.div`
   height: 0;
   border-left: 17px solid transparent;
   border-right: 17px solid transparent;
-  border-bottom: 20px solid var(--primary-color);
+  border-bottom: 20px solid var(--gray);
   margin-right: 20px;
 `;
 
@@ -44,7 +44,7 @@ export const InnerPointer = styled.div`
 export const Content = styled.div<{ $size: Size | 'free' }>`
   height: ${props => SIZE[props.$size].height};
   width: ${props => SIZE[props.$size].width};
-  border: 2px solid var(--primary-color);
+  border: 2px solid var(--gray);
   border-radius: 4px;
   background-color: var(--white);
 `;

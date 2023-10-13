@@ -13,7 +13,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useModifyNotice 훅이 공지 사항을 수정하는 지 확인한다.', () => {
+describe('요청을 통해 공지 사항을 수정하는 지 확인한다.', () => {
   test('공지 사항을 생성한다.', async () => {
     const data = {
       title: '아이폰입니다',

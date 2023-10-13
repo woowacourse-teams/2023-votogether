@@ -14,7 +14,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useStackedNoticeList 훅이 공지 사항 리스트를 불러오는 지 확인한다.', () => {
+describe('더보기 버튼을 눌러 공지 사항 리스트 데이터를 불러와서 여러 페이지의 데이터를 가지고 있는 지 확인한다..', () => {
   test('공지 사항 목록 0 페이지를 불러온다.', async () => {
     const { result } = renderHook(() => useStackedNoticeList(), {
       wrapper,

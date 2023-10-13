@@ -14,7 +14,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('usePagedNoticeList 훅이 공지 사항 리스트를 페이지 버튼을 눌러 불러오는 지 확인한다.', () => {
+describe('페이지 버튼을 눌러 공지 사항 리스트를 불러오는 지 확인한다.', () => {
   test('초기 설정으로는 0 페이지를 불러온다.', async () => {
     const { result } = renderHook(() => usePagedNoticeList(), {
       wrapper,
@@ -25,7 +25,7 @@ describe('usePagedNoticeList 훅이 공지 사항 리스트를 페이지 버튼�
     });
   });
 
-  test('초기 페이지를 인자를 넣어 설정할 수 있다..', async () => {
+  test('초기 페이지를 인자를 넣어 설정할 수 있다.', async () => {
     const { result } = renderHook(() => usePagedNoticeList(5), {
       wrapper,
     });

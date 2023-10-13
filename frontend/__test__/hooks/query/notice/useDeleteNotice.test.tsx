@@ -13,7 +13,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useDeleteNotice 훅이 공지 사항을 삭제하는 지 확인한다.', () => {
+describe('요청을 통해 공지 사항을 삭제하는 지 확인한다.', () => {
   test('공지 사항을 삭제한다.', async () => {
     const { result } = renderHook(() => useDeleteNotice(), {
       wrapper,

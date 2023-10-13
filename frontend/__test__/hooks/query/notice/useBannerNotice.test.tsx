@@ -13,7 +13,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useBannerNotice 훅이 배너 공지사항을 불러오는지 확인한다.', () => {
+describe('배너 공지사항을 불러오는지 확인한다.', () => {
   test('배너 공지사항을 확인한다', async () => {
     const { result } = renderHook(() => useBannerNotice(), {
       wrapper,

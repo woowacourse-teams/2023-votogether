@@ -13,7 +13,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useNoticeDetail 훅이 공지 사항 상세 정보를 불러오는 지 확인한다.', () => {
+describe('공지 사항 상세 정보를 불러오는 지 확인한다.', () => {
   test('공지 사항 상세 정보를 불러온다.', async () => {
     const { result } = renderHook(() => useNoticeDetail(1), {
       wrapper,

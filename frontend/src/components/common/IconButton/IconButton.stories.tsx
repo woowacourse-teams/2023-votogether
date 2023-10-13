@@ -38,7 +38,7 @@ export const Retry: Story = {
 };
 
 export const UserInfo: Story = {
-  render: () => <IconButton category="userInfo" />,
+  render: () => <IconButton category="alarm" />,
 };
 
 export const Ranking: Story = {

@@ -15,10 +15,6 @@ export default function WideHeader() {
     navigate('/');
   };
 
-  const moveUserInfoPage = () => {
-    navigate(PATH.USER_INFO);
-  };
-
   const moveRankingPage = () => {
     navigate(PATH.RANKING);
   };
@@ -30,7 +26,7 @@ export default function WideHeader() {
       </S.LogoWrapper>
       <S.Wrapper>
         <SearchBar size="sm" />
-        <IconButton category="userInfo" onClick={moveUserInfoPage} />
+        <IconButton category="alarm" onClick={moveRankingPage} />
         <IconButton category="ranking" onClick={moveRankingPage} />
       </S.Wrapper>
     </S.Container>

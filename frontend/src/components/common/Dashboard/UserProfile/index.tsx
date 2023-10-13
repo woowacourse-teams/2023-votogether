@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import { User } from '@type/user';
 
 import { PATH } from '@constants/path';
@@ -12,11 +14,18 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({ userInfo }: UserProfileProps) {
+  const navigate = useNavigate();
   const { nickname, postCount, voteCount } = userInfo;
+
+  const moveUserInfoPage = () => {
+    navigate(PATH.USER_INFO);
+  };
 
   return (
     <PS.ProfileContainer role="region" aria-label="회원 프로필">
-      <S.NickName>{nickname}</S.NickName>
+      <S.NickName onClick={moveUserInfoPage}>
+        {nickname} <S.Img src={arrowRight} alt="마이페이지 이동 화살표" />
+      </S.NickName>
       <S.UserInfoContainer>
         <S.TextCardLink to={PATH.USER_POST}>
           <S.TextCardTitle>

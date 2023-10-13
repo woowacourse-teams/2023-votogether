@@ -28,10 +28,6 @@ export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHead
     navigate('/');
   };
 
-  const moveUserInfoPage = () => {
-    navigate(PATH.USER_INFO);
-  };
-
   const moveRankingPage = () => {
     navigate(PATH.RANKING);
   };
@@ -47,7 +43,7 @@ export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHead
       <IconButton category="category" onClick={handleMenuOpenClick} />
       <LogoButton content="icon" onClick={movePostListPage} />
       <IconButton category="search" onClick={openSearchInput} />
-      <IconButton category="userInfo" onClick={moveUserInfoPage} />
+      <IconButton category="alarm" onClick={() => {}} />
       <IconButton category="ranking" onClick={moveRankingPage} />
     </S.Container>
   );

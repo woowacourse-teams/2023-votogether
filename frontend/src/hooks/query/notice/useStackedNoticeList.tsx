@@ -19,7 +19,7 @@ export const useStackedNoticeList = () => {
           return data;
         },
         onError: () => {
-          console.error('공지 사항을 리스트를 불러오는데 실패했습니다');
+          console.error('공지 사항의 리스트를 불러오는데 실패했습니다');
         },
         getNextPageParam: lastPage => {
           if (lastPage.currentPageNumber === lastPage.totalPageNumber) return;

@@ -18,7 +18,7 @@ export const useNoticeDetail = (noticeId: number) => {
         return data;
       },
       onError: () => {
-        console.error('공지 사항을 상세 정보를 불러오는데 실패했습니다');
+        console.error('공지 사항의 상세 정보를 불러오는데 실패했습니다');
       },
     }
   );

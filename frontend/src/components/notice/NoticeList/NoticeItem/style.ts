@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.li``;
 
 export const DetailLink = styled(Link)`
@@ -10,6 +12,13 @@ export const DetailLink = styled(Link)`
   width: 100%;
 
   padding: 10px 15px;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding: 16px 20px;
+  }
 `;
 
 export const Title = styled.span`
@@ -40,4 +49,8 @@ export const CreatedAt = styled.span`
   text-align: right;
 
   color: var(--text-dark-gray);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    width: 100%;
+  }
 `;

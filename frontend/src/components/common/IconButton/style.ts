@@ -10,7 +10,7 @@ export const Button = styled.button<{ $isRoundBackground: boolean }>`
   cursor: pointer;
 
   > * {
-    width: ${props => props.$isRoundBackground && '25px'};
-    height: ${props => props.$isRoundBackground && '25px'};
+    width: ${props => props.$isRoundBackground && '20px'};
+    height: ${props => props.$isRoundBackground && '20px'};
   }
 `;

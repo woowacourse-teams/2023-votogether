@@ -8,6 +8,7 @@ export interface UserInfoResponse {
   birthYear: number;
   postCount: number;
   voteCount: number;
+  hasLatestAlarm: boolean;
 }
 
 export interface ModifyNicknameRequest {
@@ -20,7 +21,7 @@ export interface UpdateUserInfoRequest {
 }
 
 export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
-  const { nickname, gender, birthYear, postCount, voteCount } = userInfo;
+  const { nickname, gender, birthYear, postCount, voteCount, hasLatestAlarm } = userInfo;
 
   return {
     nickname,
@@ -28,10 +29,11 @@ export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
     birthYear,
     postCount,
     voteCount,
+    hasLatestAlarm,
   };
 };
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export const getUserInfo = async (isLoggedIn: boolean): Promise<User | null> => {
   if (!isLoggedIn) return null;

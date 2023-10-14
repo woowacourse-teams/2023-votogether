@@ -1,7 +1,7 @@
-import { CSSProperties, MouseEvent, useRef } from 'react';
+import { CSSProperties, MouseEvent, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useToggle } from '@hooks';
+import { AuthContext, useToggle } from '@hooks';
 
 import { PATH } from '@constants/path';
 
@@ -24,6 +24,7 @@ export default function WideHeader() {
   const navigate = useNavigate();
   const { isOpen, openComponent, closeComponent } = useToggle();
   const toolTipRef = useRef<HTMLDivElement | null>(null);
+  const isActive = useContext(AuthContext).loggedInfo.userInfo?.hasLatestAlarm;
 
   const movePostListPage = () => {
     navigate('/');
@@ -45,7 +46,7 @@ export default function WideHeader() {
       </S.LogoWrapper>
       <S.Wrapper>
         <SearchBar size="sm" />
-        <AlarmIconButton isActive={true}>
+        <AlarmIconButton isActive={isActive ?? false}>
           <IconButton category="alarm" onClick={openComponent} />
         </AlarmIconButton>
         <IconButton category="ranking" onClick={moveRankingPage} />

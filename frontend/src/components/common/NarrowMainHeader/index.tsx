@@ -1,7 +1,7 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useToggle } from '@hooks';
+import { AuthContext, useToggle } from '@hooks';
 
 import { PATH } from '@constants/path';
 
@@ -26,6 +26,7 @@ export default function NarrowMainHeader({
     openComponent: openSearchInput,
     closeComponent: closeSearchInput,
   } = useToggle();
+  const isActive = useContext(AuthContext).loggedInfo.userInfo?.hasLatestAlarm;
 
   const navigate = useNavigate();
 
@@ -48,7 +49,7 @@ export default function NarrowMainHeader({
       <IconButton category="category" onClick={handleCategoryOpenClick} />
       <LogoButton content="icon" onClick={movePostListPage} />
       <IconButton category="search" onClick={openSearchInput} />
-      <AlarmIconButton isActive={true}>
+      <AlarmIconButton isActive={isActive ?? false}>
         <IconButton category="alarm" onClick={handleAlarmOpenClick} />
       </AlarmIconButton>
       <IconButton category="ranking" onClick={moveRankingPage} />

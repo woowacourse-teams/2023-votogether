@@ -17,6 +17,7 @@ const MOCK_USER_INFO: User = {
   birthYear: 1989,
   postCount: 4,
   voteCount: 128,
+  hasLatestAlarm: false,
 };
 
 export const NoBadge: Story = {

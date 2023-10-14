@@ -4,6 +4,7 @@ export interface User {
   birthYear: number;
   postCount: number;
   voteCount: number;
+  hasLatestAlarm: boolean;
 }
 
 export interface LoggedInfo {

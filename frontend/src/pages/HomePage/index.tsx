@@ -7,6 +7,7 @@ import { useDrawer } from '@hooks/useDrawer';
 import ErrorBoundary from '@pages/ErrorBoundary';
 
 import AddButton from '@components/common/AddButton';
+import AlarmContainer from '@components/common/AlarmContainer';
 import AppInstallPrompt from '@components/common/AppInstallPrompt';
 import Banner from '@components/common/Banner';
 import Dashboard from '@components/common/Dashboard';
@@ -25,7 +26,16 @@ import { smoothScrollToTop } from '@utils/scrollToTop';
 import * as S from './style';
 
 export default function HomePage() {
-  const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
+  const {
+    drawerRef: categoryDrawerRdf,
+    openDrawer: openCategoryDrawer,
+    closeDrawer: closeCategoryDrawer,
+  } = useDrawer('left');
+  const {
+    drawerRef: alarmDrawerRef,
+    openDrawer: openAlarmDrawer,
+    closeDrawer: closeAlarmDrawer,
+  } = useDrawer('right');
   const { TITLE, CONTENT } = APP_LAUNCH_EVENT;
 
   const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(true);
@@ -34,7 +44,10 @@ export default function HomePage() {
     <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>
       <S.Container>
         <S.HeaderWrapper>
-          <NarrowMainHeader handleMenuOpenClick={openDrawer} />
+          <NarrowMainHeader
+            handleCategoryOpenClick={openCategoryDrawer}
+            handleAlarmOpenClick={openAlarmDrawer}
+          />
         </S.HeaderWrapper>
         {isBannerOpen && (
           <S.BannerWrapper>
@@ -47,8 +60,21 @@ export default function HomePage() {
           </S.BannerWrapper>
         )}
         <S.DrawerWrapper>
-          <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
+          <Drawer
+            handleDrawerClose={closeCategoryDrawer}
+            placement="left"
+            width="225px"
+            ref={categoryDrawerRdf}
+          >
             <Dashboard />
+          </Drawer>
+          <Drawer
+            handleDrawerClose={closeAlarmDrawer}
+            placement="right"
+            width="225px"
+            ref={alarmDrawerRef}
+          >
+            <AlarmContainer closeToolTip={closeAlarmDrawer} />
           </Drawer>
         </S.DrawerWrapper>
         <ErrorBoundary>

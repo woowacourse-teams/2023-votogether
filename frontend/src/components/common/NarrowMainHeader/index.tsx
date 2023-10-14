@@ -12,10 +12,14 @@ import SearchBar from '../SearchBar';
 import * as S from './style';
 
 interface NarrowMainHeaderProps {
-  handleMenuOpenClick: () => void;
+  handleCategoryOpenClick: () => void;
+  handleAlarmOpenClick: () => void;
 }
 
-export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHeaderProps) {
+export default function NarrowMainHeader({
+  handleCategoryOpenClick,
+  handleAlarmOpenClick,
+}: NarrowMainHeaderProps) {
   const {
     isOpen: isSearchInputOpen,
     openComponent: openSearchInput,
@@ -40,10 +44,10 @@ export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHead
     </S.Background>
   ) : (
     <S.Container>
-      <IconButton category="category" onClick={handleMenuOpenClick} />
+      <IconButton category="category" onClick={handleCategoryOpenClick} />
       <LogoButton content="icon" onClick={movePostListPage} />
       <IconButton category="search" onClick={openSearchInput} />
-      <IconButton category="alarm" onClick={() => {}} />
+      <IconButton category="alarm" onClick={handleAlarmOpenClick} />
       <IconButton category="ranking" onClick={moveRankingPage} />
     </S.Container>
   );

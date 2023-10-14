@@ -5,6 +5,7 @@ import { useToggle } from '@hooks';
 
 import { PATH } from '@constants/path';
 
+import AlarmIconButton from '../AlarmIconButton';
 import IconButton from '../IconButton';
 import LogoButton from '../LogoButton';
 import SearchBar from '../SearchBar';
@@ -47,7 +48,7 @@ export default function NarrowMainHeader({
       <IconButton category="category" onClick={handleCategoryOpenClick} />
       <LogoButton content="icon" onClick={movePostListPage} />
       <IconButton category="search" onClick={openSearchInput} />
-      <IconButton category="alarm" onClick={handleAlarmOpenClick} />
+      <AlarmIconButton isActive={true} handleAlarmOpenClick={handleAlarmOpenClick} />
       <IconButton category="ranking" onClick={moveRankingPage} />
     </S.Container>
   );

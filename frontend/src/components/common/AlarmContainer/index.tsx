@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { CSSProperties, Suspense } from 'react';
 
 import { useToggleSwitch } from '@hooks';
 
@@ -14,7 +14,12 @@ import * as S from './style';
 const CONTENT = 'content';
 const REPORT = 'report';
 
-export default function AlarmContainer({ closeToolTip }: { closeToolTip: () => void }) {
+interface AlarmContainerProps {
+  style?: CSSProperties;
+  closeToolTip: () => void;
+}
+
+export default function AlarmContainer({ style, closeToolTip }: AlarmContainerProps) {
   const { selectedButton, firstButton, secondButton } = useToggleSwitch(CONTENT, REPORT);
 
   return (
@@ -25,7 +30,7 @@ export default function AlarmContainer({ closeToolTip }: { closeToolTip: () => v
         firstButton={firstButton}
         secondButton={secondButton}
       />
-      <S.Content>
+      <S.Content style={style}>
         <ErrorBoundary>
           <Suspense
             fallback={

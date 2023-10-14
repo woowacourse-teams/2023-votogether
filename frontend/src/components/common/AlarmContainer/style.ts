@@ -6,12 +6,10 @@ export const Container = styled.div`
   gap: 10px;
 
   height: 100%;
-  width: 450px;
   padding: 10px;
 `;
 
 export const Content = styled.div`
-  max-height: 600px;
   padding: 10px;
   border: 1px solid var(--primary-color);
   border-radius: 4px;

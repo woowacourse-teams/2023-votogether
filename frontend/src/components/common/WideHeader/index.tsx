@@ -1,4 +1,4 @@
-import { MouseEvent, useRef } from 'react';
+import { CSSProperties, MouseEvent, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useToggle } from '@hooks';
@@ -12,6 +12,12 @@ import SearchBar from '../SearchBar';
 import ToolTip from '../ToolTip';
 
 import * as S from './style';
+
+// 70px = 토글 스위치의 크기(40px) 및 상하 padding(각 10px), gap(10px)
+const alarmToolTipStyle: CSSProperties = {
+  maxHeight: '600px',
+  width: '450px',
+};
 
 export default function WideHeader() {
   const navigate = useNavigate();
@@ -44,7 +50,7 @@ export default function WideHeader() {
       {isOpen && (
         <S.ToolTipBackdrop onClick={handleToolTipClick} ref={toolTipRef}>
           <ToolTip size="free">
-            <AlarmContainer closeToolTip={closeComponent} />
+            <AlarmContainer closeToolTip={closeComponent} style={alarmToolTipStyle} />
           </ToolTip>
         </S.ToolTipBackdrop>
       )}

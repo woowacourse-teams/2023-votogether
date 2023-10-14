@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { CSSProperties, Suspense } from 'react';
 
 import { useToggle } from '@hooks';
 
@@ -24,6 +24,11 @@ import { APP_LAUNCH_EVENT } from '@constants/policyMessage';
 import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
+
+// 70px = 토글 스위치의 크기(40px) 및 상하 padding(각 10px), gap(10px)
+const alarmDrawerStyle: CSSProperties = {
+  height: 'calc(100vh - 70px)',
+};
 
 export default function HomePage() {
   const {
@@ -71,10 +76,10 @@ export default function HomePage() {
           <Drawer
             handleDrawerClose={closeAlarmDrawer}
             placement="right"
-            width="225px"
+            width="310px"
             ref={alarmDrawerRef}
           >
-            <AlarmContainer closeToolTip={closeAlarmDrawer} />
+            <AlarmContainer closeToolTip={closeAlarmDrawer} style={alarmDrawerStyle} />
           </Drawer>
         </S.DrawerWrapper>
         <ErrorBoundary>

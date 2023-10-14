@@ -5,8 +5,8 @@ import { useToggle } from '@hooks';
 
 import { PATH } from '@constants/path';
 
+import AlarmIconButton from '../ActiveContainer';
 import AlarmContainer from '../AlarmContainer';
-import AlarmIconButton from '../AlarmIconButton';
 import IconButton from '../IconButton';
 import LogoButton from '../LogoButton';
 import SearchBar from '../SearchBar';
@@ -45,7 +45,9 @@ export default function WideHeader() {
       </S.LogoWrapper>
       <S.Wrapper>
         <SearchBar size="sm" />
-        <AlarmIconButton isActive={true} handleAlarmOpenClick={openComponent} />
+        <AlarmIconButton isActive={true}>
+          <IconButton category="alarm" onClick={openComponent} />
+        </AlarmIconButton>
         <IconButton category="ranking" onClick={moveRankingPage} />
       </S.Wrapper>
       {isOpen && (

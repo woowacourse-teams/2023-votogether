@@ -3,6 +3,7 @@ package com.votogether.test;
 import com.votogether.global.log.context.LogContext;
 import com.votogether.test.persister.CategoryTestPersister;
 import com.votogether.test.persister.CommentTestPersister;
+import com.votogether.test.persister.MemberMetricTestPersister;
 import com.votogether.test.persister.MemberTestPersister;
 import com.votogether.test.persister.PostTestPersister;
 import com.votogether.test.persister.ReportTestPersister;
@@ -20,16 +21,19 @@ public class ServiceTest {
     LogContext logContext;
 
     @Autowired
-    protected MemberTestPersister memberTestPersister;
-
-    @Autowired
     protected CategoryTestPersister categoryTestPersister;
 
     @Autowired
-    protected PostTestPersister postTestPersister;
+    protected CommentTestPersister commentTestPersister;
 
     @Autowired
-    protected CommentTestPersister commentTestPersister;
+    protected MemberMetricTestPersister memberMetricTestPersister;
+
+    @Autowired
+    protected MemberTestPersister memberTestPersister;
+
+    @Autowired
+    protected PostTestPersister postTestPersister;
 
     @Autowired
     protected ReportTestPersister reportTestPersister;

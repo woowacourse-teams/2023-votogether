@@ -52,21 +52,6 @@ class PostRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    @DisplayName("회원이 작성한 게시글 수를 조회한다.")
-    void countPostsByWriter() {
-        // given
-        Member writer = memberTestPersister.builder().save();
-        postTestPersister.postBuilder().writer(writer).save();
-        postTestPersister.postBuilder().writer(writer).save();
-
-        // when
-        int result = postRepository.countByWriter(writer);
-
-        // then
-        assertThat(result).isEqualTo(2);
-    }
-
-    @Test
     @DisplayName("모든 유저의 작성한 게시글 수를 가져온다.")
     void findCountsByMembers() {
         // given

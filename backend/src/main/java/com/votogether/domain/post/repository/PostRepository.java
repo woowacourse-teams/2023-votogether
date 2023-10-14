@@ -21,9 +21,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRep
 
     List<Post> findAllByWriter(final Member member);
 
-    int countByWriter(final Member member);
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Post p where p.id = :postId")
     Optional<Post> findByIdForUpdate(@Param("postId") final Long postId);
+
 }

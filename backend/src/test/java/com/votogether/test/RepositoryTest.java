@@ -4,6 +4,7 @@ import com.votogether.global.config.JpaConfig;
 import com.votogether.global.config.QuerydslConfig;
 import com.votogether.test.persister.CategoryTestPersister;
 import com.votogether.test.persister.CommentTestPersister;
+import com.votogether.test.persister.MemberMetricTestPersister;
 import com.votogether.test.persister.MemberTestPersister;
 import com.votogether.test.persister.Persister;
 import com.votogether.test.persister.PostTestPersister;
@@ -22,16 +23,19 @@ import org.springframework.context.annotation.Import;
 public class RepositoryTest {
 
     @Autowired
-    protected MemberTestPersister memberTestPersister;
-
-    @Autowired
     protected CategoryTestPersister categoryTestPersister;
 
     @Autowired
-    protected PostTestPersister postTestPersister;
+    protected CommentTestPersister commentTestPersister;
 
     @Autowired
-    protected CommentTestPersister commentTestPersister;
+    protected MemberMetricTestPersister memberMetricTestPersister;
+
+    @Autowired
+    protected MemberTestPersister memberTestPersister;
+
+    @Autowired
+    protected PostTestPersister postTestPersister;
 
     @Autowired
     protected ReportTestPersister reportTestPersister;

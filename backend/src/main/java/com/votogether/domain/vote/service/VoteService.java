@@ -1,6 +1,9 @@
 package com.votogether.domain.vote.service;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.MemberMetric;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.exception.PostExceptionType;
@@ -27,6 +30,7 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final PostRepository postRepository;
     private final PostOptionRepository postOptionRepository;
+    private final MemberMetricRepository memberMetricRepository;
 
     public void vote(
             final Member member,
@@ -40,9 +44,13 @@ public class VoteService {
 
         final PostOption postOption = postOptionRepository.findByIdForUpdate(postOptionId)
                 .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
+        final MemberMetric memberMetric = memberMetricRepository.findByMemberIdForUpdate(member.getId())
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+        final int voteCount = voteRepository.countByMember(member);
 
         final Vote vote = post.makeVote(member, postOption);
         voteRepository.save(vote);
+        memberMetric.updateVoteCount(voteCount);
         post.increaseVoteCount();
         postOption.increaseVoteCount();
     }

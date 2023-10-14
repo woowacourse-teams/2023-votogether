@@ -27,7 +27,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
 
 class PostQueryServiceTest extends ServiceTest {
 
@@ -65,12 +64,11 @@ class PostQueryServiceTest extends ServiceTest {
             LocalDateTime deadline = LocalDateTime.now().minusDays(1);
             Member writer = memberTestPersister.builder().save();
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -87,12 +85,11 @@ class PostQueryServiceTest extends ServiceTest {
             // given
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(member).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(member).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -110,12 +107,11 @@ class PostQueryServiceTest extends ServiceTest {
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
             Member writer = memberTestPersister.builder().save();
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).member(member).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -184,12 +180,11 @@ class PostQueryServiceTest extends ServiceTest {
             LocalDateTime deadline = LocalDateTime.now().minusDays(1);
             Member writer = memberTestPersister.builder().save();
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postQueryService.getPost(post.getId(), member);
@@ -205,12 +200,11 @@ class PostQueryServiceTest extends ServiceTest {
             // given
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(member).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(member).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postQueryService.getPost(post.getId(), member);
@@ -227,12 +221,11 @@ class PostQueryServiceTest extends ServiceTest {
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
             Member writer = memberTestPersister.builder().save();
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).member(member).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postQueryService.getPost(post.getId(), member);
@@ -275,12 +268,11 @@ class PostQueryServiceTest extends ServiceTest {
             LocalDateTime deadline = LocalDateTime.now().minusDays(1);
             Member writer = memberTestPersister.builder().save();
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -297,12 +289,11 @@ class PostQueryServiceTest extends ServiceTest {
             // given
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(member).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(member).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -320,12 +311,11 @@ class PostQueryServiceTest extends ServiceTest {
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
             Member writer = memberTestPersister.builder().save();
             Member member = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).member(member).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -345,18 +335,16 @@ class PostQueryServiceTest extends ServiceTest {
         LocalDateTime open = LocalDateTime.now().plusDays(1);
         LocalDateTime closed = LocalDateTime.now().minusDays(1);
         Member member = memberTestPersister.builder().save();
-        Post postA = postTestPersister.postBuilder().deadline(open).writer(member).save();
-        Post postB = postTestPersister.postBuilder().deadline(closed).writer(member).save();
-        PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
-        PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
+        Post postA = postTestPersister.postBuilder().deadline(open).writer(member).voteCount(1).save();
+        Post postB = postTestPersister.postBuilder().deadline(closed).writer(member).voteCount(1).save();
+        PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).voteCount(1).save();
+        PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).voteCount(1).save();
         Vote voteA = voteTestPersister.builder().postOption(postOptionA).save();
         Vote voteB = voteTestPersister.builder().postOption(postOptionB).save();
         postOptionA.addVote(voteA);
         postOptionB.addVote(voteB);
         postA.addPostOption(postOptionA);
         postB.addPostOption(postOptionB);
-        ReflectionTestUtils.setField(postOptionA, "voteCount", 1);
-        ReflectionTestUtils.setField(postOptionB, "voteCount", 1);
 
         // when
         List<PostResponse> result =
@@ -376,18 +364,16 @@ class PostQueryServiceTest extends ServiceTest {
         LocalDateTime closed = LocalDateTime.now().minusDays(1);
         Member member = memberTestPersister.builder().save();
         Member writer = memberTestPersister.builder().save();
-        Post postA = postTestPersister.postBuilder().deadline(open).writer(writer).save();
-        Post postB = postTestPersister.postBuilder().deadline(closed).writer(writer).save();
-        PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
-        PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
+        Post postA = postTestPersister.postBuilder().deadline(open).writer(writer).voteCount(1).save();
+        Post postB = postTestPersister.postBuilder().deadline(closed).writer(writer).voteCount(1).save();
+        PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).voteCount(1).save();
+        PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).voteCount(1).save();
         Vote voteA = voteTestPersister.builder().postOption(postOptionA).member(member).save();
         Vote voteB = voteTestPersister.builder().postOption(postOptionB).member(member).save();
         postOptionA.addVote(voteA);
         postOptionB.addVote(voteB);
         postA.addPostOption(postOptionA);
         postB.addPostOption(postOptionB);
-        ReflectionTestUtils.setField(postOptionA, "voteCount", 1);
-        ReflectionTestUtils.setField(postOptionB, "voteCount", 1);
 
         // when
         List<PostResponse> result =

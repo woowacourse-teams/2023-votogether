@@ -13,6 +13,8 @@ import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,18 +33,19 @@ public class VoteService {
             final Long postId,
             final Long postOptionId
     ) {
-        final Post post = postRepository.findById(postId)
+        final Post post = postRepository.findByIdForUpdate(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
 
         validateAlreadyVoted(member, post);
 
-        final PostOption postOption = postOptionRepository.findById(postOptionId)
+        final PostOption postOption = postOptionRepository.findByIdForUpdate(postOptionId)
                 .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
 
         final Vote vote = post.makeVote(member, postOption);
         voteRepository.save(vote);
+        post.increaseVoteCount();
+        postOption.increaseVoteCount();
     }
-
 
     private void validateAlreadyVoted(final Member member, final Post post) {
         final List<PostOption> postOptions = post.getPostOptions();
@@ -62,18 +65,30 @@ public class VoteService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
 
-        final PostOption originPostOption = postOptionRepository.findById(originPostOptionId)
-                .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
+        final List<PostOption> postOptions = Stream.of(originPostOptionId, newPostOptionId)
+                .sorted()
+                .map(postOptionRepository::findByIdForUpdate)
+                .map(postOption -> postOption.orElseThrow(() -> new NotFoundException(VoteExceptionType.NOT_FOUND)))
+                .toList();
+
+        final PostOption originPostOption = getPostOptionById(postOptions, originPostOptionId);
+        final PostOption newPostOption = getPostOptionById(postOptions, newPostOptionId);
 
         final Vote originVote = voteRepository.findByMemberAndPostOption(member, originPostOption)
                 .orElseThrow(() -> new NotFoundException(VoteExceptionType.NOT_FOUND));
 
-        final PostOption newPostOption = postOptionRepository.findById(newPostOptionId)
-                .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
-
         voteRepository.delete(originVote);
         final Vote vote = post.makeVote(member, newPostOption);
         voteRepository.save(vote);
+        originPostOption.decreaseVoteCount();
+        newPostOption.increaseVoteCount();
+    }
+
+    private PostOption getPostOptionById(final List<PostOption> postOptions, final Long id) {
+        return postOptions.stream()
+                .filter(postOption -> Objects.equals(postOption.getId(), id))
+                .findAny()
+                .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
     }
 
 }

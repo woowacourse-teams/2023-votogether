@@ -45,6 +45,7 @@ public class PostTestPersister {
         private Member writer;
         private String title;
         private String content;
+        private long voteCount;
         private LocalDateTime deadline;
         private boolean isHidden;
 
@@ -63,6 +64,11 @@ public class PostTestPersister {
             return this;
         }
 
+        public PostBuilder voteCount(long voteCount) {
+            this.voteCount = voteCount;
+            return this;
+        }
+
         public PostBuilder deadline(LocalDateTime deadline) {
             this.deadline = deadline;
             return this;
@@ -78,6 +84,7 @@ public class PostTestPersister {
                     .writer(writer == null ? memberTestPersister.builder().save() : writer)
                     .title(title == null ? "title" : title)
                     .content(content == null ? "content" : content)
+                    .voteCount(voteCount)
                     .deadline(deadline == null ? LocalDateTime.now().plusDays(14) : deadline)
                     .build();
             if (isHidden) {
@@ -145,6 +152,7 @@ public class PostTestPersister {
         private int sequence;
         private String content;
         private String imageUrl;
+        private long voteCount;
 
         public PostOptionBuilder post(Post post) {
             this.post = post;
@@ -166,12 +174,18 @@ public class PostTestPersister {
             return this;
         }
 
+        public PostOptionBuilder voteCount(long voteCount) {
+            this.voteCount = voteCount;
+            return this;
+        }
+
         public PostOption save() {
             PostOption postOption = PostOption.builder()
                     .post(post == null ? postBuilder().save() : post)
                     .sequence(sequence)
                     .content(content == null ? "content" : content)
                     .imageUrl(imageUrl)
+                    .voteCount(voteCount)
                     .build();
             return postOptionRepository.save(postOption);
         }

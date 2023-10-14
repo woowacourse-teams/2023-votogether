@@ -136,7 +136,7 @@ public class PostGuestService {
         int previousRanking = -1;
         long previousVoteCount = -1;
         for (Post post : posts) {
-            final long currentVoteCount = post.getTotalVoteCount();
+            final long currentVoteCount = post.getVoteCount();
             final int ranking = (currentVoteCount == previousVoteCount) ? previousRanking : currentRanking;
             rankings.put(post, ranking);
 

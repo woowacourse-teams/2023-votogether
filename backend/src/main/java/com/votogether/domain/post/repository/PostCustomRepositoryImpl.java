@@ -6,10 +6,8 @@ import static com.votogether.domain.post.entity.QPostOption.postOption;
 import static com.votogether.domain.post.entity.comment.QComment.comment;
 import static com.votogether.domain.vote.entity.QVote.vote;
 
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
@@ -158,16 +156,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private OrderSpecifier orderBy(final PostSortType postSortType) {
         return switch (postSortType) {
             case LATEST -> post.id.desc();
-            case HOT -> new OrderSpecifier<>(
-                    Order.DESC,
-                    JPAExpressions.select(vote.id.count())
-                            .from(vote)
-                            .where(vote.postOption.id.in(
-                                    JPAExpressions.select(postOption.id)
-                                            .from(postOption)
-                                            .where(postOption.post.id.eq(post.id))
-                            ))
-            );
+            case HOT -> post.voteCount.desc();
             default -> OrderByNull.DEFAULT;
         };
     }

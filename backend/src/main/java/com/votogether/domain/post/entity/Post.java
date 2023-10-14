@@ -50,6 +50,9 @@ public class Post extends BaseEntity {
     @Embedded
     private PostBody postBody;
 
+    @Column(nullable = false)
+    private long voteCount;
+
     @Embedded
     private PostDeadline postDeadline;
 
@@ -73,10 +76,12 @@ public class Post extends BaseEntity {
             final Member writer,
             final String title,
             final String content,
+            final long voteCount,
             final LocalDateTime deadline
     ) {
         this.writer = writer;
         this.postBody = new PostBody(title, content);
+        this.voteCount = voteCount;
         this.postDeadline = new PostDeadline(deadline);
         this.isHidden = false;
     }
@@ -118,6 +123,14 @@ public class Post extends BaseEntity {
     public void update(final String title, final String content, final LocalDateTime deadline) {
         this.postBody = new PostBody(title, content);
         this.postDeadline = new PostDeadline(deadline);
+    }
+
+    public void increaseVoteCount() {
+        this.voteCount += 1;
+    }
+
+    public void decreaseVoteCount() {
+        this.voteCount -= 1;
     }
 
     public void closeEarly() {
@@ -199,12 +212,6 @@ public class Post extends BaseEntity {
             return null;
         }
         return postContentImages.get(0);
-    }
-
-    public long getTotalVoteCount() {
-        return postOptions.stream()
-                .mapToLong(PostOption::getVoteCount)
-                .sum();
     }
 
 }

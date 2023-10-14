@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { AuthContext, useToggle } from '@hooks';
 
+import { useReadLatestAlarm } from '@hooks/query/user/useReadLastestAlarm';
+
 import { PATH } from '@constants/path';
 
 import AlarmIconButton from '../ActiveContainer';
@@ -24,7 +26,10 @@ export default function WideHeader() {
   const navigate = useNavigate();
   const { isOpen, openComponent, closeComponent } = useToggle();
   const toolTipRef = useRef<HTMLDivElement | null>(null);
-  const isActive = useContext(AuthContext).loggedInfo.userInfo?.hasLatestAlarm;
+  const loggedInfo = useContext(AuthContext).loggedInfo;
+  const isAlarmActive = loggedInfo.userInfo?.hasLatestAlarm;
+
+  const { mutate } = useReadLatestAlarm();
 
   const movePostListPage = () => {
     navigate('/');
@@ -32,6 +37,13 @@ export default function WideHeader() {
 
   const moveRankingPage = () => {
     navigate(PATH.RANKING);
+  };
+
+  const handleToolTipOpen = () => {
+    if (!loggedInfo.isLoggedIn) return;
+
+    openComponent();
+    mutate();
   };
 
   const handleToolTipClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -46,8 +58,8 @@ export default function WideHeader() {
       </S.LogoWrapper>
       <S.Wrapper>
         <SearchBar size="sm" />
-        <AlarmIconButton isActive={isActive ?? false}>
-          <IconButton category="alarm" onClick={openComponent} />
+        <AlarmIconButton isActive={isAlarmActive ?? false}>
+          <IconButton category="alarm" onClick={handleToolTipOpen} />
         </AlarmIconButton>
         <IconButton category="ranking" onClick={moveRankingPage} />
       </S.Wrapper>

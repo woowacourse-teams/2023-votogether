@@ -1,7 +1,8 @@
-import { CSSProperties, Suspense } from 'react';
+import { CSSProperties, Suspense, useContext } from 'react';
 
-import { useToggle } from '@hooks';
+import { AuthContext, useToggle } from '@hooks';
 
+import { useReadLatestAlarm } from '@hooks/query/user/useReadLastestAlarm';
 import { useDrawer } from '@hooks/useDrawer';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
@@ -45,13 +46,25 @@ export default function HomePage() {
 
   const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(true);
 
+  const loggedInfo = useContext(AuthContext).loggedInfo;
+  const isAlarmActive = loggedInfo.userInfo?.hasLatestAlarm;
+  const { mutate } = useReadLatestAlarm();
+
+  const handleToolTipOpen = () => {
+    if (!loggedInfo.isLoggedIn) return;
+
+    openAlarmDrawer();
+    mutate();
+  };
+
   return (
     <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>
       <S.Container>
         <S.HeaderWrapper>
           <NarrowMainHeader
             handleCategoryOpenClick={openCategoryDrawer}
-            handleAlarmOpenClick={openAlarmDrawer}
+            handleAlarmOpenClick={handleToolTipOpen}
+            isAlarmActive={isAlarmActive ?? false}
           />
         </S.HeaderWrapper>
         {isBannerOpen && (

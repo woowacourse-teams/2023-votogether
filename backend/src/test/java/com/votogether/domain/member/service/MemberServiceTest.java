@@ -2,6 +2,7 @@ package com.votogether.domain.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.category.entity.Category;
@@ -12,6 +13,7 @@ import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
@@ -44,6 +46,9 @@ class MemberServiceTest extends ServiceTest {
     MemberRepository memberRepository;
 
     @Autowired
+    MemberMetricRepository memberMetricRepository;
+
+    @Autowired
     PostRepository postRepository;
 
     @Autowired
@@ -74,7 +79,10 @@ class MemberServiceTest extends ServiceTest {
         Member registeredMember = memberService.register(member);
 
         // then
-        assertThat(registeredMember.getId()).isNotNull();
+        assertSoftly(softly -> {
+            softly.assertThat(registeredMember.getId()).isNotNull();
+            softly.assertThat(memberMetricRepository.findByMember(member)).isPresent();
+        });
     }
 
     @Nested
@@ -245,6 +253,20 @@ class MemberServiceTest extends ServiceTest {
 
             // then
             assertThat(memberRepository.findAll()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("멤버 통계 정보도 함께 삭제한다.")
+        void deleteWithMetric() {
+            // given
+            Member member = MemberFixtures.FEMALE_20.get();
+            Member registeredMember = memberService.register(member);
+
+            // when
+            memberService.deleteMember(registeredMember);
+
+            // then
+            assertThat(memberMetricRepository.findAll()).isEmpty();
         }
 
         @Test

@@ -50,7 +50,7 @@ public class VoteService {
 
         final Vote vote = post.makeVote(member, postOption);
         voteRepository.save(vote);
-        memberMetric.updateVoteCount(voteCount);
+        memberMetric.updateVoteCount(voteCount + 1);
         post.increaseVoteCount();
         postOption.increaseVoteCount();
     }

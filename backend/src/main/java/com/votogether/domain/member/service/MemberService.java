@@ -115,6 +115,7 @@ public class MemberService {
         deleteMemberCategories(member);
         deleteReports(member, posts, comments);
 
+        memberMetricRepository.deleteByMember(member);
         memberRepository.delete(member);
     }
 

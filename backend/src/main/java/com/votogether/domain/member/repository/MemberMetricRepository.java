@@ -17,4 +17,6 @@ public interface MemberMetricRepository extends JpaRepository<MemberMetric, Long
 
     Optional<MemberMetric> findByMember(final Member member);
 
+    void deleteByMember(final Member member);
+
 }

@@ -108,6 +108,7 @@ class PostCommandServiceTest extends ServiceTest {
             softly.assertThat(post.getPostCategories()).hasSize(2);
             softly.assertThat(post.getPostContentImages()).hasSize(1);
             softly.assertThat(post.getPostOptions()).hasSize(2);
+            softly.assertThat(post.getVoteCount()).isZero();
             softly.assertThat(memberMetric.getPostCount()).isEqualTo(1);
         });
     }

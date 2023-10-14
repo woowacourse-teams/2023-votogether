@@ -1,19 +1,18 @@
 package com.votogether.domain.alarm.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.test.ServiceTest;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class AlarmServiceTest extends ServiceTest {
 

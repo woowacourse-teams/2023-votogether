@@ -1,19 +1,18 @@
 package com.votogether.domain.alarm.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.test.RepositoryTest;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReportActionAlarmRepositoryTest extends RepositoryTest {
 
@@ -58,9 +57,12 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
         // then
         assertAll(
                 () -> assertThat(reportActionAlarms.size()).isEqualTo(3),
-                () -> assertThat(reportActionAlarms.get(0).getReportType()).isEqualTo(reportActionAlarmC.getReportType()),
-                () -> assertThat(reportActionAlarms.get(1).getReportType()).isEqualTo(reportActionAlarmB.getReportType()),
-                () -> assertThat(reportActionAlarms.get(2).getReportType()).isEqualTo(reportActionAlarmA.getReportType())
+                () -> assertThat(reportActionAlarms.get(0).getReportType()).isEqualTo(
+                        reportActionAlarmC.getReportType()),
+                () -> assertThat(reportActionAlarms.get(1).getReportType()).isEqualTo(
+                        reportActionAlarmB.getReportType()),
+                () -> assertThat(reportActionAlarms.get(2).getReportType()).isEqualTo(
+                        reportActionAlarmA.getReportType())
         );
     }
 

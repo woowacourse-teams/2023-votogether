@@ -9,7 +9,7 @@ public record ReportActionResponse(
         String target
 ) {
 
-    public static ReportActionResponse of(final ReportActionAlarm reportActionAlarm) {
+    public static ReportActionResponse from(final ReportActionAlarm reportActionAlarm) {
         return new ReportActionResponse(
                 reportActionAlarm.getId(),
                 reportActionAlarm.getReportType(),

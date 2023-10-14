@@ -1,7 +1,6 @@
 package com.votogether.domain.alarm.dto;
 
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
-
 import java.time.LocalDateTime;
 
 public record ReportActionAlarmResponse(
@@ -12,10 +11,10 @@ public record ReportActionAlarmResponse(
 
 ) {
 
-    public static ReportActionAlarmResponse of(final ReportActionAlarm reportActionAlarm) {
+    public static ReportActionAlarmResponse from(final ReportActionAlarm reportActionAlarm) {
         return new ReportActionAlarmResponse(
                 reportActionAlarm.getId(),
-                ReportActionResponse.of(reportActionAlarm),
+                ReportActionResponse.from(reportActionAlarm),
                 reportActionAlarm.getCreatedAt(),
                 reportActionAlarm.isChecked()
         );

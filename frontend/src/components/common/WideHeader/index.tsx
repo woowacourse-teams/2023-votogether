@@ -5,12 +5,12 @@ import { useToggle } from '@hooks';
 
 import { PATH } from '@constants/path';
 
+import AlarmContainer from '../AlarmContainer';
 import IconButton from '../IconButton';
 import LogoButton from '../LogoButton';
 import SearchBar from '../SearchBar';
 import ToolTip from '../ToolTip';
 
-import AlarmContainer from './AlarmContainer';
 import * as S from './style';
 
 export default function WideHeader() {

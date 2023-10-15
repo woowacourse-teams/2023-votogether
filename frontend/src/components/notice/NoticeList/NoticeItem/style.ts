@@ -51,6 +51,6 @@ export const CreatedAt = styled.span`
   color: var(--text-dark-gray);
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    width: 100%;
+    width: 90px;
   }
 `;

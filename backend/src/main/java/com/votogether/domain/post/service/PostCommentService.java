@@ -1,5 +1,7 @@
 package com.votogether.domain.post.service;
 
+import com.votogether.domain.alarm.dto.event.PostAlarmEvent;
+import com.votogether.domain.alarm.entity.vo.AlarmType;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.dto.request.comment.CommentUpdateRequest;
@@ -14,6 +16,7 @@ import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,7 @@ public class PostCommentService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional(readOnly = true)
     public List<CommentResponse> getComments(final Long postId) {
@@ -51,6 +55,16 @@ public class PostCommentService {
                 .content(commentCreateRequest.content())
                 .build();
         post.addComment(comment);
+
+        commentRepository.flush();
+
+        final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
+                loginMember,
+                comment.getId(),
+                AlarmType.COMMENT,
+                comment.getContent()
+        );
+        applicationEventPublisher.publishEvent(postAlarmEvent);
     }
 
     @Transactional

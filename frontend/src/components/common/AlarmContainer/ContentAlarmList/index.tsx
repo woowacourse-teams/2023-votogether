@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useContentAlarmList } from '@hooks/query/alarm/useContentAlarmList';
-import { useReadAlarm } from '@hooks/query/user/useReadAlarm';
+import { useReadAlarm } from '@hooks/query/alarm/useReadAlarm';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import SquareButton from '@components/common/SquareButton';

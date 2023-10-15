@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { ReportType } from '@type/report';
 
+import { useReadAlarm } from '@hooks/query/alarm/useReadAlarm';
 import { useReportAlarmList } from '@hooks/query/alarm/useReportAlarmList';
-import { useReadAlarm } from '@hooks/query/user/useReadAlarm';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import SquareButton from '@components/common/SquareButton';

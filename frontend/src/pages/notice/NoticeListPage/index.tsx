@@ -64,7 +64,7 @@ export default function NoticeListPage() {
   ];
 
   return (
-    <Layout isSidebarVisible>
+    <Layout isSidebarVisible isChannelTalkVisible={false}>
       <S.Container>
         <S.Title tabIndex={0}>보투게더 소식</S.Title>
         <NoticeList noticeList={MOCK_NOTICE_LIST} />

@@ -56,7 +56,11 @@ export const updateUserInfo = async (userInfo: UpdateUserInfoRequest) => {
 };
 
 export const readLatestAlarm = async () => {
-  await patchFetch('/members/me/check-alarm');
+  await patchFetch(`${BASE_URL}/members/me/check-alarm`);
+};
+
+export const readAlarm = async (alarmId: number) => {
+  await patchFetch(`${BASE_URL}/alarms/${alarmId}`);
 };
 
 export const logoutUser = async () => {

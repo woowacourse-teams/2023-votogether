@@ -2,18 +2,6 @@ import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
 
-export const HeaderWrapper = styled.div`
-  width: 100%;
-
-  position: fixed;
-
-  z-index: ${theme.zIndex.header};
-
-  @media (min-width: ${theme.breakpoint.sm}) {
-    display: none;
-  }
-`;
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,6 +31,6 @@ export const ContentContainer = styled.div`
   flex-direction: column;
   gap: 10px;
 
-  margin-top: 20px;
+  margin: 20px 0;
   padding: 0 15px;
 `;

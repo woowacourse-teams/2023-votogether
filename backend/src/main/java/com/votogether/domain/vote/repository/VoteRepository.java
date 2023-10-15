@@ -14,61 +14,56 @@ import org.springframework.data.repository.query.Param;
 
 public interface VoteRepository extends JpaRepository<Vote, Long> {
 
-    @Query(value = "select" +
-            " case" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 10 then 0" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 20 then 1" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 30 then 2" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 40 then 3" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 50 then 4" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 60 then 5" +
-            " else 6 end as ageGroup," +
-            " m.gender as gender," +
-            " count(m.id) as voteCount" +
-            " from vote as v" +
-            " left join member as m on v.member_id = m.id" +
-            " left join post_option as p on v.post_option_id = p.id" +
-            " where p.post_id = :post_id" +
-            " group by" +
-            " ageGroup, m.gender" +
-            " order by" +
-            " ageGroup, m.gender desc",
-            nativeQuery = true
+    @Query(
+            nativeQuery = true,
+            value = "select" +
+                    " case" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 10 then 0" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 20 then 1" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 30 then 2" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 40 then 3" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 50 then 4" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 60 then 5" +
+                    " else 6 end as ageGroup," +
+                    " m.gender as gender," +
+                    " count(m.id) as voteCount" +
+                    " from vote as v" +
+                    " left join member as m on v.member_id = m.id" +
+                    " left join post_option as p on v.post_option_id = p.id" +
+                    " where p.post_id = :post_id" +
+                    " group by" +
+                    " ageGroup, m.gender" +
+                    " order by" +
+                    " ageGroup, m.gender desc"
     )
     List<VoteCountByAgeGroupAndGenderInterface> findPostVoteCountByAgeGroupAndGender(
             @Param("post_id") final Long postId
     );
 
-    @Query(value = "select" +
-            " case" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 10 then 0" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 20 then 1" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 30 then 2" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 40 then 3" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 50 then 4" +
-            " when YEAR(CURRENT_DATE) - m.birth_year < 60 then 5" +
-            " else 6 end as ageGroup," +
-            " m.gender as gender," +
-            " count(m.id) as voteCount" +
-            " from vote as v" +
-            " left join member as m on v.member_id = m.id" +
-            " where v.post_option_id = :post_option_id" +
-            " group by" +
-            " ageGroup, m.gender" +
-            " order by" +
-            " ageGroup, m.gender desc",
-            nativeQuery = true
+    @Query(
+            nativeQuery = true,
+            value = "select" +
+                    " case" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 10 then 0" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 20 then 1" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 30 then 2" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 40 then 3" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 50 then 4" +
+                    " when YEAR(CURRENT_DATE) - m.birth_year < 60 then 5" +
+                    " else 6 end as ageGroup," +
+                    " m.gender as gender," +
+                    " count(m.id) as voteCount" +
+                    " from vote as v" +
+                    " left join member as m on v.member_id = m.id" +
+                    " where v.post_option_id = :post_option_id" +
+                    " group by" +
+                    " ageGroup, m.gender" +
+                    " order by" +
+                    " ageGroup, m.gender desc"
     )
     List<VoteCountByAgeGroupAndGenderInterface> findPostOptionVoteCountByAgeGroupAndGender(
             @Param("post_option_id") final Long postOptionId
     );
-
-    @Query("SELECT COUNT(v)" +
-            "FROM Member m " +
-            "LEFT JOIN Vote v ON m.id = v.member.id AND v.member IN :members " +
-            "WHERE m IN :members " +
-            "GROUP BY m.id")
-    List<Integer> findCountsByMembers(@Param("members") final List<Member> members);
 
     Optional<Vote> findByMemberAndPostOptionPost(final Member member, final Post post);
 

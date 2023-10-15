@@ -12,13 +12,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRepository {
 
-    @Query("SELECT COUNT(p)" +
-            "FROM Member m " +
-            "LEFT JOIN Post p ON m.id = p.writer.id AND p.writer IN :members " +
-            "WHERE m IN :members " +
-            "GROUP BY m.id")
-    List<Integer> findCountsByMembers(@Param("members") final List<Member> members);
-
     List<Post> findAllByWriter(final Member member);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

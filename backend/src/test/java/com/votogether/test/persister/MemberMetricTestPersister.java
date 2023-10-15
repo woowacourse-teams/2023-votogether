@@ -21,6 +21,7 @@ public class MemberMetricTestPersister {
         private Member member;
         private long postCount;
         private long voteCount;
+        private long score;
 
         public MemberMetricBuilder member(Member member) {
             this.member = member;
@@ -37,11 +38,17 @@ public class MemberMetricTestPersister {
             return this;
         }
 
+        public MemberMetricBuilder score(long score) {
+            this.score = score;
+            return this;
+        }
+
         public MemberMetric save() {
             MemberMetric memberMetric = MemberMetric.builder()
                     .member(member == null ? memberTestPersister.builder().save() : member)
                     .postCount(postCount)
                     .voteCount(voteCount)
+                    .score(score)
                     .build();
             return memberMetricRepository.save(memberMetric);
         }

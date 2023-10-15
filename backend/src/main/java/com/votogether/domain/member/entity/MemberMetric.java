@@ -23,6 +23,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberMetric extends BaseEntity {
 
+    private static final int POST_SCORE = 5;
+    private static final int VOTE_SCORE = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,19 +40,25 @@ public class MemberMetric extends BaseEntity {
     @Column(nullable = false)
     private long voteCount;
 
+    @Column(nullable = false)
+    private long score;
+
     @Builder
-    private MemberMetric(final Member member, final long postCount, final long voteCount) {
+    private MemberMetric(final Member member, final long postCount, final long voteCount, final long score) {
         this.member = member;
         this.postCount = postCount;
         this.voteCount = voteCount;
+        this.score = score;
     }
 
     public void increasePostCount() {
         this.postCount += 1;
+        updateScore();
     }
 
     public void decreasePostCount() {
         this.postCount -= 1;
+        updateScore();
     }
 
     public void updateVoteCount(final long voteCount) {
@@ -57,6 +66,11 @@ public class MemberMetric extends BaseEntity {
             throw new BadRequestException(MemberExceptionType.INVALID_VOTE_COUNT);
         }
         this.voteCount = voteCount;
+        updateScore();
+    }
+
+    private void updateScore() {
+        this.score = (postCount * POST_SCORE) + (voteCount * VOTE_SCORE);
     }
 
 }

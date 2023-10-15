@@ -26,16 +26,11 @@ class RankingServiceTest extends ServiceTest {
         Member memberD = memberTestPersister.builder().save();
         Member memberE = memberTestPersister.builder().save();
 
-        postTestPersister.postBuilder().writer(memberA).save();
-        postTestPersister.postBuilder().writer(memberB).save();
-        postTestPersister.postBuilder().writer(memberC).save();
-        postTestPersister.postBuilder().writer(memberD).save();
-
-        voteTestPersister.builder().member(memberA).save();
-        voteTestPersister.builder().member(memberC).save();
-        voteTestPersister.builder().member(memberD).save();
-        voteTestPersister.builder().member(memberD).save();
-        voteTestPersister.builder().member(memberE).save();
+        memberMetricTestPersister.builder().member(memberA).postCount(1).voteCount(1).score(6).save();
+        memberMetricTestPersister.builder().member(memberB).postCount(1).score(5).save();
+        memberMetricTestPersister.builder().member(memberC).postCount(1).voteCount(2).score(7).save();
+        memberMetricTestPersister.builder().member(memberD).postCount(1).voteCount(1).score(6).save();
+        memberMetricTestPersister.builder().member(memberE).voteCount(1).score(1).save();
 
         // when
         RankingResponse response = rankingService.getPassionRanking(memberA);
@@ -55,17 +50,25 @@ class RankingServiceTest extends ServiceTest {
         // given
         Member memberA = memberTestPersister.builder().save();
         Member memberB = memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
-        memberTestPersister.builder().save();
+        Member memberC = memberTestPersister.builder().save();
+        Member memberD = memberTestPersister.builder().save();
+        Member memberE = memberTestPersister.builder().save();
+        Member memberF = memberTestPersister.builder().save();
+        Member memberG = memberTestPersister.builder().save();
+        Member memberH = memberTestPersister.builder().save();
+        Member memberI = memberTestPersister.builder().save();
+        Member memberJ = memberTestPersister.builder().save();
 
-        postTestPersister.postBuilder().writer(memberA).save();
-        postTestPersister.postBuilder().writer(memberB).save();
+        memberMetricTestPersister.builder().member(memberA).postCount(1).score(5).save();
+        memberMetricTestPersister.builder().member(memberB).postCount(1).score(5).save();
+        memberMetricTestPersister.builder().member(memberC).save();
+        memberMetricTestPersister.builder().member(memberD).save();
+        memberMetricTestPersister.builder().member(memberE).save();
+        memberMetricTestPersister.builder().member(memberF).save();
+        memberMetricTestPersister.builder().member(memberG).save();
+        memberMetricTestPersister.builder().member(memberH).save();
+        memberMetricTestPersister.builder().member(memberI).save();
+        memberMetricTestPersister.builder().member(memberJ).save();
 
         // when
         List<RankingResponse> rankings = rankingService.getPassionRanking();

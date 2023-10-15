@@ -9,13 +9,15 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface MemberMetricRepository extends JpaRepository<MemberMetric, Long> {
+public interface MemberMetricRepository extends JpaRepository<MemberMetric, Long>, MemberMetricCustomRepository {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT mm FROM MemberMetric mm where mm.member.id = :memberId")
     Optional<MemberMetric> findByMemberIdForUpdate(@Param("memberId") final Long memberId);
 
     Optional<MemberMetric> findByMember(final Member member);
+
+    long countByScoreGreaterThan(final long score);
 
     void deleteByMember(final Member member);
 

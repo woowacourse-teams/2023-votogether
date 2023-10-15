@@ -16,7 +16,7 @@ public record ReportActionAlarmResponse(
         return new ReportActionAlarmResponse(
                 reportActionAlarm.getId(),
                 reportActionAlarm.isChecked(),
-                ReportActionResponse.of(reportActionAlarm, Collections.emptyList())
+                ReportActionResponse.of(reportActionAlarm, Collections.EMPTY_SET)
         );
     }
 

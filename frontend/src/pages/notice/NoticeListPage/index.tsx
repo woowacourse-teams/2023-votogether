@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Layout from '@components/common/Layout';
 import SquareButton from '@components/common/SquareButton';
 import NoticeList from '@components/notice/NoticeList';

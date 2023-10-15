@@ -1,18 +1,12 @@
 import { styled } from 'styled-components';
 
-import { theme } from '@styles/theme';
-
 export const Container = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
 
   width: 100%;
-  padding: 0 30px 30px 30px;
-
-  @media (min-width: ${theme.breakpoint.sm}) {
-    padding: 0 0 30px 0;
-  }
+  padding-bottom: 30px;
 `;
 
 export const Title = styled.span`

@@ -5,6 +5,10 @@ import { AuthContext } from '@hooks/context/auth';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
+import { PATH } from '@constants/path';
+
+import arrowRight from '@assets/arrow-right.png';
+
 import Skeleton from '../Skeleton';
 import SquareButton from '../SquareButton';
 
@@ -29,6 +33,10 @@ export default function Dashboard() {
       <ErrorBoundary>
         {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
       </ErrorBoundary>
+      <S.NoticeListLink to={PATH.NOTICES}>
+        <span>공지사항 보러가기</span>
+        <S.Image src={arrowRight} alt="작성글 페이지 이동 화살표" />
+      </S.NoticeListLink>
       <S.CategorySectionWrapper>
         <ErrorBoundary>
           <Suspense fallback={<Skeleton isLarge={true} />}>

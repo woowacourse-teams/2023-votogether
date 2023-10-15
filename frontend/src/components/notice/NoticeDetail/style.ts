@@ -8,16 +8,14 @@ export const Container = styled.div`
 
   width: 100%;
   max-width: 600px;
-  padding-top: 30px;
+  padding-top: 48px;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    padding-top: 55px;
+    padding-top: 30px;
   }
 `;
 
 export const Category = styled.span`
-  margin-top: 18px;
-
   font: var(--text-body);
 `;
 

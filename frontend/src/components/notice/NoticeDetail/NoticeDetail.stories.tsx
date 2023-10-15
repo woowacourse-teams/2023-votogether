@@ -37,6 +37,7 @@ const MOCK_NOTICE_DETAIL = {
   앞으로도 보투게더 서비스에 많은 관심과 사랑 부탁드립니다. 감사합니다😊😄`,
   createdAt: '2023-09-23 18:23',
 };
+
 export default meta;
 type Story = StoryObj<typeof NoticeDetail>;
 

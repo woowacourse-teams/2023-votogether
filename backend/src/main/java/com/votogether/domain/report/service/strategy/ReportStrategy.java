@@ -11,6 +11,8 @@ public interface ReportStrategy {
 
     void report(final Member reporter, final ReportRequest request);
 
+    String parseTarget(Long targetId);
+
     default void validateDuplicatedReport(
             final Member reporter,
             final ReportRequest request,
@@ -36,7 +38,5 @@ public interface ReportStrategy {
                 .build();
         reportRepository.save(report);
     }
-
-    String parseTarget(Long targetId);
 
 }

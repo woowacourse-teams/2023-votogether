@@ -129,4 +129,20 @@ class ReportCommentStrategyTest extends ServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("targetId를 통해 comment의 내용을 가져온다")
+    void parseTarget() {
+        // given
+        final String savedCommentContent = "commentA";
+        final Comment comment = commentTestPersister.builder()
+                .content(savedCommentContent)
+                .save();
+
+        // when
+        final String content = reportCommentStrategy.parseTarget(comment.getId());
+
+        // then
+        assertThat(content).isEqualTo(savedCommentContent);
+    }
+
 }

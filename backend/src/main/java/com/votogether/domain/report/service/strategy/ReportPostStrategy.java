@@ -65,4 +65,9 @@ public class ReportPostStrategy implements ReportStrategy {
         }
     }
 
+    @Override
+    public String parseTarget(final Long targetId) {
+        return String.valueOf(targetId);
+    }
+
 }

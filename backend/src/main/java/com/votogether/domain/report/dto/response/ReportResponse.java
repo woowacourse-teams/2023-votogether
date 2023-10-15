@@ -1,9 +1,11 @@
 package com.votogether.domain.report.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Schema(description = "신고 정보 응답")
@@ -22,6 +24,17 @@ public record ReportResponse(
 
         @Schema(description = "신고 생성시간", example = "2023-08-01 13:56")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-        LocalDateTime localDateTime
+        LocalDateTime createdAt
 ) {
+
+        public static ReportResponse of(final Report report, final String target) {
+                return new ReportResponse(
+                        report.getId(),
+                        report.getReportType(),
+                        Arrays.stream(report.getReason().split(",")).toList(),
+                        target,
+                        report.getCreatedAt()
+                );
+        }
+
 }

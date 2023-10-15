@@ -22,4 +22,11 @@ public abstract class BaseEntity {
     @Column(columnDefinition = "datetime(6)", nullable = false)
     private LocalDateTime updatedAt;
 
+    protected BaseEntity() {
+    }
+
+    protected BaseEntity(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
 }

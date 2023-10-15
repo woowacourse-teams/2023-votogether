@@ -133,4 +133,17 @@ class ReportPostStrategyTest extends ServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("targetId를 통해 해당 멤버의 Nickname을 가져온다")
+    void parseTarget() {
+        // given
+        Post post = postTestPersister.postBuilder().save();
+
+        // when
+        final String postId = reportPostStrategy.parseTarget(post.getId());
+
+        // then
+        assertThat(postId).isEqualTo(post.getId().toString());
+    }
+
 }

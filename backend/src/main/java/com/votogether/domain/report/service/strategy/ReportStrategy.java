@@ -7,7 +7,6 @@ import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 
-@FunctionalInterface
 public interface ReportStrategy {
 
     void report(final Member reporter, final ReportRequest request);
@@ -37,5 +36,7 @@ public interface ReportStrategy {
                 .build();
         reportRepository.save(report);
     }
+
+    String parseTarget(Long targetId);
 
 }

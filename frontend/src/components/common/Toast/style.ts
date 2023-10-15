@@ -15,8 +15,8 @@ export const fadeInOutAnimation = keyframes`
   }
 `;
 
-export const Content = styled.div<{ $size: Size | 'free'; $isBlind: boolean }>`
-  display: ${props => (props.$isBlind ? 'none' : 'flex')};
+export const Content = styled.div<{ $size: Size | 'free'; $isShown: boolean }>`
+  display: ${props => (props.$isShown ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
 

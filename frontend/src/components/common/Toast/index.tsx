@@ -12,15 +12,15 @@ interface ToastProps {
 }
 
 export default memo(function Toast({ children, size }: ToastProps) {
-  const [isBlind, setIsBlind] = useState(false);
+  const [isShown, setIsShown] = useState(true);
 
   const timeId = window.setTimeout(() => {
     window.clearTimeout(timeId);
-    setIsBlind(true);
+    setIsShown(true);
   }, TOAST_TIME);
 
   return (
-    <S.Content aria-live="polite" $size={size} $isBlind={isBlind}>
+    <S.Content aria-live="polite" $size={size} $isShown={isShown}>
       {children}
     </S.Content>
   );

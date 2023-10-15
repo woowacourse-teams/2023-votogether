@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
 import { CommentAction, CommentUser } from '@type/menu';
-import { ReportRequest } from '@type/report';
+import { ReportMessage, ReportRequest } from '@type/report';
 
 import { useToggle } from '@hooks';
 import { useToast } from '@hooks';
@@ -49,7 +49,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
     setAction(menu);
   };
 
-  const handleCommentReportClick = async (reason: string) => {
+  const handleCommentReportClick = async (reason: ReportMessage) => {
     const reportData: ReportRequest = { type: 'COMMENT', id, reason };
     setIsReportCommentLoading(true);
 
@@ -70,7 +70,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       });
   };
 
-  const handleNicknameReportClick = async (reason: string) => {
+  const handleNicknameReportClick = async (reason: ReportMessage) => {
     const reportData: ReportRequest = { type: 'NICKNAME', id: member.id, reason };
     setIsReportNicknameLoading(true);
 

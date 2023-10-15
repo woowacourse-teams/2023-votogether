@@ -17,7 +17,7 @@ class ErrorBoundaryWithNarrowHeader extends ErrorBoundary {
         return (
           <MobileLayoutTemplate>
             <ErrorItem
-              text="해당 페이지는 존재하지 않습니다. 확인 후 다시 요청해주세요."
+              text="해당 페이지는 존재하지 않습니다. 올바른 페이지 경로인지 확인해주세요."
               {...errorItemProps}
             />
           </MobileLayoutTemplate>

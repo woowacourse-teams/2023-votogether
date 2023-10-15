@@ -2,6 +2,7 @@ package com.votogether.domain.notice.controller;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.dto.request.NoticeRequest;
+import com.votogether.domain.notice.dto.response.NoticeResponse;
 import com.votogether.global.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,6 +14,16 @@ import org.springframework.http.ResponseEntity;
 
 @Tag(name = "공지사항", description = "공지사항 API")
 public interface NoticeControllerDocs {
+
+    @Operation(
+            summary = "배너 공지사항 조회",
+            description = "배너 공지사항을 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "배너 공지사항 조회 성공"
+    )
+    ResponseEntity<NoticeResponse> getProgressNotice();
 
     @Operation(
             summary = "공지사항 생성",

@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.dto.request.NoticeRequest;
+import com.votogether.domain.notice.dto.response.NoticeResponse;
+import com.votogether.domain.notice.entity.Notice;
 import com.votogether.domain.notice.repository.NoticeRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.ServiceTest;
@@ -23,6 +25,54 @@ class NoticeServiceTest extends ServiceTest {
 
     @Autowired
     NoticeRepository noticeRepository;
+
+    @Nested
+    @DisplayName("배너 공지사항 조회 시")
+    class GetProgressNotice {
+
+        @Test
+        @DisplayName("유효한 배너 공지사항이 존재하면 공지사항 응답을 반환한다.")
+        void getProgressNotice() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Notice notice = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now().plusDays(1))
+                    .build();
+            Notice savedNotice = noticeRepository.save(notice);
+
+            // when
+            NoticeResponse noticeResponse = noticeService.getProgressNotice();
+
+            // then
+            NoticeResponse expected = NoticeResponse.from(savedNotice);
+            assertThat(noticeResponse).usingRecursiveComparison().isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("유효한 배너 공지사항이 존재하지 않으면 null 필드로 채워진 응답을 반환한다.")
+        void nullNotice() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Notice notice = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now().minusDays(1))
+                    .build();
+            noticeRepository.save(notice);
+
+            // when
+            NoticeResponse noticeResponse = noticeService.getProgressNotice();
+
+            // then
+            NoticeResponse expected = new NoticeResponse(null, null, null, null, null, null, null, null);
+            assertThat(noticeResponse).usingRecursiveComparison().isEqualTo(expected);
+        }
+
+    }
 
     @Nested
     @DisplayName("공지사항 생성 시")

@@ -1,11 +1,14 @@
 package com.votogether.domain.notice.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.dto.request.NoticeRequest;
+import com.votogether.domain.notice.dto.response.NoticeResponse;
 import com.votogether.domain.notice.service.NoticeService;
 import com.votogether.test.ControllerTest;
 import io.restassured.http.ContentType;
@@ -17,7 +20,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,6 +41,37 @@ class NoticeControllerTest extends ControllerTest {
         RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
+    @Test
+    @DisplayName("배너 공지사항 조회에 성공하면 200 응답을 반환한다.")
+    void getProgressNotice() throws Exception {
+        // given
+        mockingAuthArgumentResolver();
+        NoticeResponse expected = new NoticeResponse(
+                1L,
+                "title",
+                "bannerTitle",
+                "bannerSubtitle",
+                "content",
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        given(noticeService.getProgressNotice()).willReturn(expected);
+
+        // when
+        NoticeResponse result = RestAssuredMockMvc
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                .when().get("/notices/progress")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(NoticeResponse.class);
+
+        // then
+        assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+    }
+
     @Nested
     @DisplayName("공지사항 생성 시")
     class CreateNotice {
@@ -55,7 +88,7 @@ class NoticeControllerTest extends ControllerTest {
                     "content",
                     LocalDateTime.now()
             );
-            BDDMockito.given(noticeService.createNotice(any(NoticeRequest.class), any(Member.class))).willReturn(1L);
+            given(noticeService.createNotice(any(NoticeRequest.class), any(Member.class))).willReturn(1L);
 
             // when, then
             RestAssuredMockMvc

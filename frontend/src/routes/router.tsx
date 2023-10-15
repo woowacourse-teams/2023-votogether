@@ -7,6 +7,8 @@ import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
 import MyInfoPage from '@pages/MyInfoPage';
 import NotFoundPage from '@pages/NotFoundPage';
+import NoticeDetailPage from '@pages/notice/NoticeDetailPage';
+import NoticeListPage from '@pages/notice/NoticeListPage';
 import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
@@ -176,6 +178,30 @@ const router = createBrowserRouter([
         <RouteChangeTracker />
       </>
     ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: PATH.NOTICES,
+    children: [
+      {
+        path: ':id',
+        element: (
+          <>
+            <NoticeDetailPage />
+            <RouteChangeTracker />
+          </>
+        ),
+      },
+      {
+        path: '',
+        element: (
+          <>
+            <NoticeListPage />
+            <RouteChangeTracker />
+          </>
+        ),
+      },
+    ],
     errorElement: <ErrorPage />,
   },
   {

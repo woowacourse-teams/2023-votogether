@@ -2,7 +2,7 @@ import { CSSProperties, Suspense, useContext } from 'react';
 
 import { AuthContext, useToggle } from '@hooks';
 
-import { useReadLatestAlarm } from '@hooks/query/user/useReadLastestAlarm';
+import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 import { useDrawer } from '@hooks/useDrawer';
 
 import ErrorBoundary from '@pages/ErrorBoundary';

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { AuthContext, useToggle } from '@hooks';
 
-import { useReadLatestAlarm } from '@hooks/query/user/useReadLastestAlarm';
+import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 
 import { PATH } from '@constants/path';
 

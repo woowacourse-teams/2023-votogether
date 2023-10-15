@@ -28,8 +28,8 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
     return <p>현재 도착한 알림이 없습니다!</p>;
   }
 
-  const movePost = (postId: number) => {
-    navigation(`${PATH.POST}/${postId}`);
+  const movePost = (reportId: number) => {
+    navigation(`${PATH.REPORT_ALARM}/${reportId}`);
     closeToolTip();
   };
 
@@ -38,14 +38,14 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
       {data?.pages.map((listInfo, pageIndex) => (
         <Fragment key={pageIndex}>
           {listInfo.alarmList.map(alarm => {
-            const { id: postId, type, content } = alarm.info;
+            const { id: reportId, type, content } = alarm.info;
             const shortContent = content.length < 8 ? content : `${content.slice(0, 8)}...`;
 
             return (
               <LS.ListItem key={alarm.id} $isRead={alarm.isRead}>
                 <LS.LinkButton
                   onClick={() => {
-                    movePost(postId);
+                    movePost(reportId);
                   }}
                 >
                   <p>{`"${shortContent}" ${REPORT_TYPE[type]}이 신고를 받아 처리되었습니다.`}</p>

@@ -59,7 +59,7 @@ const Post = forwardRef(function Post(
 
   const handleVoteClick = (newOptionId: number) => {
     if (isCreateVoteLoading || isEditVoteLoading) {
-      addMessage('투표 중입니다. 잠시후 다시 시도해주세요.');
+      addMessage('투표 중입니다. 잠시 후 다시 시도해주세요.');
       return;
     }
 

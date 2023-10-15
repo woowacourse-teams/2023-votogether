@@ -76,5 +76,5 @@ export const APP_LAUNCH_EVENT = {
 } as const;
 
 export const ERROR_MESSAGE = {
-  DEFAULT: '요청을 처리할 수 없습니다. 잠시후 다시 시도해주세요',
+  DEFAULT: '요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요',
 };

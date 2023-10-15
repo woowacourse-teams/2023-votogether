@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useContentAlarmList } from '@hooks/query/alarm/useContentAlarmList';
+import { useReadAlarm } from '@hooks/query/user/useReadAlarm';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import SquareButton from '@components/common/SquareButton';
@@ -14,13 +15,17 @@ import * as S from '../style';
 export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () => void }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isListEmpty } =
     useContentAlarmList();
+  const { mutate } = useReadAlarm('CONTENT');
+
   const navigation = useNavigate();
 
   if (isListEmpty) {
     return <p>현재 도착한 알림이 없습니다!</p>;
   }
 
-  const movePost = (postId: number) => {
+  const handleAlarmClick = (alarmId: number, postId: number) => {
+    mutate(alarmId);
+
     navigation(`${PATH.POST}/${postId}`);
     closeToolTip();
   };
@@ -38,7 +43,7 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
               <LS.ListItem key={alarm.id} $isRead={alarm.isRead}>
                 <LS.LinkButton
                   onClick={() => {
-                    movePost(postId);
+                    handleAlarmClick(alarm.id, postId);
                   }}
                 >
                   <p>

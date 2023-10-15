@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ReportType } from '@type/report';
 
 import { useReportAlarmList } from '@hooks/query/alarm/useReportAlarmList';
+import { useReadAlarm } from '@hooks/query/user/useReadAlarm';
 
 import LoadingSpinner from '@components/common/LoadingSpinner';
 import SquareButton from '@components/common/SquareButton';
@@ -22,13 +23,17 @@ const REPORT_TYPE: Record<ReportType, string> = {
 export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => void }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isListEmpty } =
     useReportAlarmList();
+  const { mutate } = useReadAlarm('REPORT');
+
   const navigation = useNavigate();
 
   if (isListEmpty) {
     return <p>현재 도착한 알림이 없습니다!</p>;
   }
 
-  const movePost = (reportId: number) => {
+  const handleAlarmClick = (alarmId: number, reportId: number) => {
+    mutate(alarmId);
+
     navigation(`${PATH.REPORT_ALARM}/${reportId}`);
     closeToolTip();
   };
@@ -45,7 +50,7 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
               <LS.ListItem key={alarm.id} $isRead={alarm.isRead}>
                 <LS.LinkButton
                   onClick={() => {
-                    movePost(reportId);
+                    handleAlarmClick(alarm.id, reportId);
                   }}
                 >
                   <p>{`"${shortContent}" ${REPORT_TYPE[type]}이 신고를 받아 처리되었습니다.`}</p>

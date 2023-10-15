@@ -7,12 +7,14 @@ import com.votogether.domain.notice.dto.response.NoticeResponse;
 import com.votogether.domain.notice.service.NoticeService;
 import com.votogether.global.jwt.Auth;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +40,14 @@ public class NoticeController implements NoticeControllerDocs {
             @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
     ) {
         final NoticePageResponse response = noticeService.getNotices(page);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NoticeResponse> getNotice(
+            @PathVariable("id") @Positive(message = "공지사항 ID는 양수만 가능합니다.") final Long noticeId
+    ) {
+        final NoticeResponse response = noticeService.getNotice(noticeId);
         return ResponseEntity.ok(response);
     }
 

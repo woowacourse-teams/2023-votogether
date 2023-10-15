@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import com.votogether.domain.member.entity.Member;
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -140,6 +142,61 @@ class NoticeControllerTest extends ControllerTest {
                     .status(HttpStatus.BAD_REQUEST)
                     .body("code", equalTo(201))
                     .body("message", containsString("페이지는 0이상 정수만 가능합니다."));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("공지사항 상세 조회 시")
+    class GetNotice {
+
+        @Test
+        @DisplayName("정상적인 요청이라면 200 응답을 반환한다.")
+        void getNotice() throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            NoticeResponse expected = new NoticeResponse(
+                    1L,
+                    "title",
+                    "bannerTitle",
+                    "bannerSubtitle",
+                    "content",
+                    LocalDateTime.now().plusDays(1),
+                    LocalDateTime.now(),
+                    LocalDateTime.now()
+            );
+            given(noticeService.getNotice(anyLong())).willReturn(expected);
+
+            // when
+            NoticeResponse result = RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .when().get("/notices/{id}", 1L)
+                    .then().log().all()
+                    .status(HttpStatus.OK)
+                    .extract()
+                    .as(NoticeResponse.class);
+
+            // then
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+        }
+
+        @ParameterizedTest
+        @ValueSource(longs = {-1, 0})
+        @DisplayName("공지사항 ID가 양수가 아니라면 400 응답을 반환한다.")
+        void notPositiveNoticeId(Long noticeId) throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .when().get("/notices/{id}", noticeId)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(201))
+                    .body("message", containsString("공지사항 ID는 양수만 가능합니다."));
         }
 
     }

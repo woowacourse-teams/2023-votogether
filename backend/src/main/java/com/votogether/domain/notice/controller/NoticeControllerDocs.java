@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
 
@@ -37,6 +38,16 @@ public interface NoticeControllerDocs {
             description = "공지사항 목록 조회 성공"
     )
     ResponseEntity<NoticePageResponse> getNotices(@PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page);
+
+    @Operation(
+            summary = "공지사항 상세 조회",
+            description = "공지사항 상세 정보를 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "공지사항 상세 조회 성공"
+    )
+    ResponseEntity<NoticeResponse> getNotice(@Positive(message = "공지사항 ID는 양수만 가능합니다.") final Long noticeId);
 
     @Operation(
             summary = "공지사항 생성",

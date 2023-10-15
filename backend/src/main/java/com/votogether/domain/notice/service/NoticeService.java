@@ -5,7 +5,9 @@ import com.votogether.domain.notice.dto.request.NoticeRequest;
 import com.votogether.domain.notice.dto.response.NoticePageResponse;
 import com.votogether.domain.notice.dto.response.NoticeResponse;
 import com.votogether.domain.notice.entity.Notice;
+import com.votogether.domain.notice.exception.NoticeExceptionType;
 import com.votogether.domain.notice.repository.NoticeRepository;
+import com.votogether.global.exception.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +49,13 @@ public class NoticeService {
             totalPage += 1;
         }
         return totalPage;
+    }
+
+    @Transactional(readOnly = true)
+    public NoticeResponse getNotice(final Long noticeId) {
+        final Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new NotFoundException(NoticeExceptionType.NOT_FOUND));
+        return NoticeResponse.from(notice);
     }
 
     @Transactional

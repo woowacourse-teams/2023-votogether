@@ -11,6 +11,7 @@ public enum NoticeExceptionType implements ExceptionType {
     INVALID_TITLE_LENGTH(1102, "공지사항 제목의 길이가 유효하지 않습니다."),
     INVALID_CONTENT_LENGTH(1103, "공지사항 내용의 길이가 유효하지 않습니다."),
     INVALID_BANNER_TITLE_LENGTH(1104, "공지사항 배너 제목의 길이가 유효하지 않습니다."),
+    NOT_FOUND(1105, "공지사항이 존재하지 않습니다."),
     ;
 
     private final int code;

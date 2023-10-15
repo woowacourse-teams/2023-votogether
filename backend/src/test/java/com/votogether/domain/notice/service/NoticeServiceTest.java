@@ -10,6 +10,7 @@ import com.votogether.domain.notice.dto.response.NoticeResponse;
 import com.votogether.domain.notice.entity.Notice;
 import com.votogether.domain.notice.repository.NoticeRepository;
 import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -118,6 +119,42 @@ class NoticeServiceTest extends ServiceTest {
             // then
             NoticePageResponse expected = NoticePageResponse.of(0, 0, Collections.emptyList());
             assertThat(response).usingRecursiveComparison().isEqualTo(expected);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("공지사항 상세 조회 시")
+    class GetNotice {
+
+        @Test
+        @DisplayName("정상적인 요청이라면 공지사항 상세 정보를 응답한다.")
+        void getNotice() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Notice notice = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now().minusDays(1))
+                    .build();
+            Notice savedNotice = noticeRepository.save(notice);
+
+            // when
+            NoticeResponse result = noticeService.getNotice(savedNotice.getId());
+
+            // then
+            NoticeResponse expected = NoticeResponse.from(savedNotice);
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("존재하지 않은 공지사항이라면 예외를 던진다.")
+        void notFoundNotice() {
+            // given, when, then
+            assertThatThrownBy(() -> noticeService.getNotice(-1L))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("공지사항이 존재하지 않습니다.");
         }
 
     }

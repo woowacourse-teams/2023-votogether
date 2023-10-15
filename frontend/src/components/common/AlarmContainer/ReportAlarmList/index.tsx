@@ -49,7 +49,7 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
                   }}
                 >
                   <p>{`"${shortContent}" ${REPORT_TYPE[type]}이 신고를 받아 처리되었습니다.`}</p>
-                  <p>{alarm.createAt}</p>
+                  <p>{alarm.info.createAt}</p>
                 </LS.LinkButton>
               </LS.ListItem>
             );

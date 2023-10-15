@@ -1,4 +1,4 @@
-import { ReportType } from '@type/report';
+import { ReportMessage, ReportType } from '@type/report';
 import { StringDate } from '@type/time';
 
 import { getFetch } from '@utils/fetch';
@@ -28,12 +28,13 @@ export interface ReportAlarmList {
 
 interface ReportAlarm {
   id: number;
-  createAt: StringDate;
   isRead: boolean;
   info: {
     id: number;
     type: ReportType;
+    reason: ReportMessage[];
     content: string;
+    createAt: StringDate;
   };
 }
 

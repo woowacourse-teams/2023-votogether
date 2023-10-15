@@ -66,7 +66,7 @@ export default function NoticeListPage() {
   return (
     <Layout isSidebarVisible>
       <S.Container>
-        <S.Title>보투게더 소식</S.Title>
+        <S.Title tabIndex={0}>보투게더 소식</S.Title>
         <NoticeList noticeList={MOCK_NOTICE_LIST} />
         <S.ButtonWrapper>
           <SquareButton theme="fill" aria-label="공지사항 더보기">

@@ -35,7 +35,7 @@ export default function Dashboard() {
       </ErrorBoundary>
       <S.NoticeListLink to={PATH.NOTICES}>
         <span>공지사항 보러가기</span>
-        <S.Image src={arrowRight} alt="작성글 페이지 이동 화살표" />
+        <S.Image src={arrowRight} alt="" />
       </S.NoticeListLink>
       <S.CategorySectionWrapper>
         <ErrorBoundary>

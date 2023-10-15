@@ -1,22 +1,22 @@
 package com.votogether.domain.alarm.dto;
 
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
-import java.time.LocalDateTime;
+import java.util.Collections;
 
 public record ReportActionAlarmResponse(
         Long id,
-        ReportActionResponse reportActionResponse,
-        LocalDateTime createdAt,
-        boolean isChecked
+        boolean isChecked,
+        ReportActionResponse reportActionResponse
 
 ) {
 
-    public static ReportActionAlarmResponse from(final ReportActionAlarm reportActionAlarm) {
+    public static ReportActionAlarmResponse from(
+            final ReportActionAlarm reportActionAlarm
+    ) {
         return new ReportActionAlarmResponse(
                 reportActionAlarm.getId(),
-                ReportActionResponse.from(reportActionAlarm),
-                reportActionAlarm.getCreatedAt(),
-                reportActionAlarm.isChecked()
+                reportActionAlarm.isChecked(),
+                ReportActionResponse.of(reportActionAlarm, Collections.emptyList())
         );
     }
 

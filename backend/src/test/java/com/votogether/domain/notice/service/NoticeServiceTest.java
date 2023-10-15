@@ -2,6 +2,7 @@ package com.votogether.domain.notice.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.dto.request.NoticeRequest;
@@ -297,6 +298,63 @@ class NoticeServiceTest extends ServiceTest {
             assertThatThrownBy(() -> noticeService.createNotice(noticeRequest, member))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("공지사항 배너 제목의 길이가 유효하지 않습니다.");
+        }
+
+    }
+
+    @Nested
+    @DisplayName("공지사항 수정 시")
+    class UpdateNotice {
+
+        @Test
+        @DisplayName("정상적인 요청이라면 공지사항을 수정한다.")
+        void updateNotice() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Notice notice = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Notice savedNotice = noticeRepository.save(notice);
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "updateTitle",
+                    "updateBannerTitle",
+                    "updateBannerSubtitle",
+                    "updateContent",
+                    LocalDateTime.now().plusDays(1)
+            );
+
+            // when
+            noticeService.updateNotice(savedNotice.getId(), noticeRequest);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(savedNotice.getTitle()).isEqualTo(noticeRequest.title());
+                softly.assertThat(savedNotice.getBannerTitle()).isEqualTo(noticeRequest.bannerTitle());
+                softly.assertThat(savedNotice.getBannerSubtitle()).isEqualTo(noticeRequest.bannerSubtitle());
+                softly.assertThat(savedNotice.getContent()).isEqualTo(noticeRequest.content());
+                softly.assertThat(savedNotice.getDeadline()).isEqualTo(noticeRequest.deadline());
+            });
+        }
+
+        @Test
+        @DisplayName("공지사항이 존재하지 않으면 예외를 던진다.")
+        void notFoundNotice() {
+            // given
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "updateTitle",
+                    "updateBannerTitle",
+                    "updateBannerSubtitle",
+                    "updateContent",
+                    LocalDateTime.now().plusDays(1)
+            );
+
+            // when, then
+            assertThatThrownBy(() -> noticeService.updateNotice(-1L, noticeRequest))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("공지사항이 존재하지 않습니다.");
         }
 
     }

@@ -43,10 +43,17 @@ public interface NoticeControllerDocs {
             summary = "공지사항 상세 조회",
             description = "공지사항 상세 정보를 조회합니다."
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "공지사항 상세 조회 성공"
-    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "공지사항 상세 조회 성공"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "공지사항이 존재하지 않은 경우",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            )
+    })
     ResponseEntity<NoticeResponse> getNotice(@Positive(message = "공지사항 ID는 양수만 가능합니다.") final Long noticeId);
 
     @Operation(
@@ -79,5 +86,25 @@ public interface NoticeControllerDocs {
             )
     })
     ResponseEntity<Void> createNotice(@Valid final NoticeRequest noticeRequest, final Member loginMember);
+
+    @Operation(
+            summary = "공지사항 수정",
+            description = "공지사항을 수정합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "공지사항 수정 성공"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "공지사항이 존재하지 않은 경우",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            )
+    })
+    ResponseEntity<Void> updateNotice(
+            @Positive(message = "공지사항 ID는 양수만 가능합니다.") final Long noticeId,
+            @Valid final NoticeRequest noticeRequest
+    );
 
 }

@@ -5,6 +5,8 @@ import com.votogether.domain.notice.dto.request.NoticeRequest;
 import com.votogether.domain.notice.dto.response.NoticePageResponse;
 import com.votogether.domain.notice.dto.response.NoticeResponse;
 import com.votogether.domain.notice.entity.Notice;
+import com.votogether.domain.notice.entity.vo.BannerTitle;
+import com.votogether.domain.notice.entity.vo.Detail;
 import com.votogether.domain.notice.exception.NoticeExceptionType;
 import com.votogether.domain.notice.repository.NoticeRepository;
 import com.votogether.global.exception.NotFoundException;
@@ -69,5 +71,16 @@ public class NoticeService {
                 .deadline(noticeRequest.deadline())
                 .build();
         return noticeRepository.save(notice).getId();
+    }
+
+    @Transactional
+    public void updateNotice(final Long noticeId, final NoticeRequest noticeRequest) {
+        final Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new NotFoundException(NoticeExceptionType.NOT_FOUND));
+        notice.update(
+                new Detail(noticeRequest.title(), noticeRequest.content()),
+                new BannerTitle(noticeRequest.bannerTitle(), noticeRequest.bannerSubtitle()),
+                noticeRequest.deadline()
+        );
     }
 }

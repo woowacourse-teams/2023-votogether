@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,6 +59,15 @@ public class NoticeController implements NoticeControllerDocs {
     ) {
         final Long noticeId = noticeService.createNotice(noticeRequest, loginMember);
         return ResponseEntity.created(URI.create("/notices/" + noticeId)).build();
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateNotice(
+            @PathVariable("id") @Positive(message = "공지사항 ID는 양수만 가능합니다.") final Long noticeId,
+            @RequestBody @Valid final NoticeRequest noticeRequest
+    ) {
+        noticeService.updateNotice(noticeId, noticeRequest);
+        return ResponseEntity.noContent().build();
     }
 
 }

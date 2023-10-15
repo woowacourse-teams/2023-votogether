@@ -61,6 +61,12 @@ public class Notice extends BaseEntity {
         this.deadline = deadline;
     }
 
+    public void update(final Detail detail, final BannerTitle bannerTitle, final LocalDateTime deadline) {
+        this.detail = detail;
+        this.bannerTitle = bannerTitle;
+        this.deadline = deadline;
+    }
+
     public String getTitle() {
         return this.detail.getTitle();
     }
@@ -76,5 +82,4 @@ public class Notice extends BaseEntity {
     public String getBannerSubtitle() {
         return this.bannerTitle.getBannerSubtitle();
     }
-
 }

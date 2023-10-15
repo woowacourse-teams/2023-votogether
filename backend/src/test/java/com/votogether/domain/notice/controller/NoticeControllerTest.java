@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.dto.request.NoticeRequest;
@@ -305,6 +306,145 @@ class NoticeControllerTest extends ControllerTest {
                     .contentType(ContentType.JSON)
                     .body(noticeRequest)
                     .when().post("/notices")
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(200))
+                    .body("message", containsString("배너 노출 마감기한을 입력하지 않았습니다."));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("공지사항 수정 시")
+    class UpdateNotice {
+
+        @Test
+        @DisplayName("정상적인 요청이라면 204 응답을 반환한다.")
+        void updateNotice() throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "title",
+                    null,
+                    null,
+                    "content",
+                    LocalDateTime.now()
+            );
+            willDoNothing().given(noticeService).updateNotice(anyLong(), any(NoticeRequest.class));
+
+            // when
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .contentType(ContentType.JSON)
+                    .body(noticeRequest)
+                    .when().put("/notices/{id}", 1L)
+                    .then().log().all()
+                    .status(HttpStatus.NO_CONTENT);
+        }
+
+        @ParameterizedTest
+        @ValueSource(longs = {-1, 0})
+        @DisplayName("공지사항 ID가 양수가 아니라면 400 응답을 반환한다.")
+        void notPositiveNoticeId(Long noticeId) throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "title",
+                    null,
+                    null,
+                    "content",
+                    LocalDateTime.now()
+            );
+            willDoNothing().given(noticeService).updateNotice(anyLong(), any(NoticeRequest.class));
+
+            // when
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .contentType(ContentType.JSON)
+                    .body(noticeRequest)
+                    .when().put("/notices/{id}", noticeId)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(201))
+                    .body("message", containsString("공지사항 ID는 양수만 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @DisplayName("공지사항 제목이 존재하지 않거나 공백이라면 400 응답을 반환한다.")
+        void nullAndEmptyTitle(String title) throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    title,
+                    null,
+                    null,
+                    "content",
+                    LocalDateTime.now()
+            );
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .contentType(ContentType.JSON)
+                    .body(noticeRequest)
+                    .when().put("/notices/{id}", 1L)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(200))
+                    .body("message", containsString("공지사항 제목을 입력하지 않았습니다."));
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @DisplayName("공지사항 내용이 존재하지 않거나 공백이라면 400 응답을 반환한다.")
+        void nullAndEmptyContent(String content) throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "title",
+                    null,
+                    null,
+                    content,
+                    LocalDateTime.now()
+            );
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .contentType(ContentType.JSON)
+                    .body(noticeRequest)
+                    .when().put("/notices/{id}", 1L)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(200))
+                    .body("message", containsString("공지사항 내용을 입력하지 않았습니다."));
+        }
+
+        @Test
+        @DisplayName("공지사항 배너 마감기한이 존재하지 않으면 400 응답을 반환한다.")
+        void nullDeadline() throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "title",
+                    null,
+                    null,
+                    "content",
+                    null
+            );
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .contentType(ContentType.JSON)
+                    .body(noticeRequest)
+                    .when().put("/notices/{id}", 1L)
                     .then().log().all()
                     .status(HttpStatus.BAD_REQUEST)
                     .body("code", equalTo(200))

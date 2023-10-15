@@ -11,11 +11,13 @@ interface NoticeItemProps {
   createdAt: string;
 }
 export default function NoticeItem({ id, title, createdAt }: NoticeItemProps) {
+  const createdDate = createdAt.slice(0, 10);
+
   return (
     <S.Container>
       <S.DetailLink to={`${PATH.NOTICES}/${id}`}>
         <S.Title>{title}</S.Title>
-        <S.CreatedAt>{createdAt}</S.CreatedAt>
+        <S.CreatedAt>{createdDate}</S.CreatedAt>
       </S.DetailLink>
     </S.Container>
   );

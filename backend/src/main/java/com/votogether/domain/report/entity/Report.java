@@ -76,15 +76,4 @@ public class Report extends BaseEntity {
         this.reason = reason;
     }
 
-    @Override
-    public String toString() {
-        return "Report{" +
-                "id=" + id +
-                ", member=" + member +
-                ", reportType=" + reportType +
-                ", targetId=" + targetId +
-                ", reason='" + reason + '\'' +
-                ", created_at=" + getCreatedAt() +
-                '}';
-    }
 }

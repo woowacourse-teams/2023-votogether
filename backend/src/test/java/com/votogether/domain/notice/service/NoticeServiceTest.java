@@ -359,4 +359,24 @@ class NoticeServiceTest extends ServiceTest {
 
     }
 
+    @Test
+    @DisplayName("공지사항을 삭제한다.")
+    void deleteNotice() {
+        // given
+        Member member = memberTestPersister.builder().save();
+        Notice notice = Notice.builder()
+                .member(member)
+                .title("title")
+                .content("content")
+                .deadline(LocalDateTime.now())
+                .build();
+        Notice savedNotice = noticeRepository.save(notice);
+
+        // when
+        noticeService.deleteNotice(savedNotice.getId());
+
+        // then
+        assertThat(noticeRepository.findById(savedNotice.getId())).isNotPresent();
+    }
+
 }

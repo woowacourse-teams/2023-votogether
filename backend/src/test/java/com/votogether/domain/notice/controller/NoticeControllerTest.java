@@ -453,4 +453,45 @@ class NoticeControllerTest extends ControllerTest {
 
     }
 
+    @Nested
+    @DisplayName("공지사항 삭제 시")
+    class DeleteNotice {
+
+        @Test
+        @DisplayName("정상적인 요청이라면 200 응답 반환한다.")
+        void deleteNotice() throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            willDoNothing().given(noticeService).deleteNotice(anyLong());
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .when().delete("/notices/{id}", 1L)
+                    .then().log().all()
+                    .status(HttpStatus.NO_CONTENT);
+        }
+
+        @ParameterizedTest
+        @ValueSource(longs = {-1, 0})
+        @DisplayName("공지사항 ID가 양수가 아니라면 400 응답을 반환한다.")
+        void notPositiveNoticeId(Long noticeId) throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            willDoNothing().given(noticeService).deleteNotice(anyLong());
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .when().delete("/notices/{id}", noticeId)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(201))
+                    .body("message", containsString("공지사항 ID는 양수만 가능합니다."));
+        }
+
+    }
+
 }

@@ -83,4 +83,10 @@ public class NoticeService {
                 noticeRequest.deadline()
         );
     }
+
+    @Transactional
+    public void deleteNotice(final Long noticeId) {
+        noticeRepository.deleteById(noticeId);
+    }
+
 }

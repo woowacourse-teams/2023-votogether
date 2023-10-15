@@ -13,6 +13,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,12 +62,20 @@ public class NoticeController implements NoticeControllerDocs {
         return ResponseEntity.created(URI.create("/notices/" + noticeId)).build();
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateNotice(
             @PathVariable("id") @Positive(message = "공지사항 ID는 양수만 가능합니다.") final Long noticeId,
             @RequestBody @Valid final NoticeRequest noticeRequest
     ) {
         noticeService.updateNotice(noticeId, noticeRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNotice(
+            @PathVariable("id") @Positive(message = "공지사항 ID는 양수만 가능합니다.") final Long noticeId
+    ) {
+        noticeService.deleteNotice(noticeId);
         return ResponseEntity.noContent().build();
     }
 

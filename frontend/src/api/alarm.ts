@@ -29,13 +29,15 @@ export interface ReportAlarmList {
 interface ReportAlarm {
   id: number;
   isRead: boolean;
-  info: {
-    id: number;
-    type: ReportType;
-    reason: ReportMessage[];
-    content: string;
-    createAt: StringDate;
-  };
+  info: ReportConfirmResult;
+}
+
+export interface ReportConfirmResult {
+  id: number;
+  type: ReportType;
+  reason: ReportMessage[];
+  content: string;
+  createAt: StringDate;
 }
 
 export const getContentAlarmList = async (page: number): Promise<ContentAlarmList> => {
@@ -54,4 +56,12 @@ export const getReportAlarmList = async (page: number): Promise<ReportAlarmList>
     pageNumber: page,
     alarmList,
   };
+};
+
+export const getReportConfirmResult = async (reportId: number): Promise<ReportConfirmResult> => {
+  const reportConfirmResult = await getFetch<ReportConfirmResult>(
+    `${BASE_URL}/alarms/report/${reportId}`
+  );
+
+  return reportConfirmResult;
 };

@@ -35,9 +35,9 @@ const contentAlarmAtComment = {
 
 const reportAlarmAtPost = {
   id: Math.round(Math.random() * 1000),
-  createAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
   isRead: randomBoolean(),
   info: {
+    createAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
     id: Math.round(Math.random() * 1000),
     type: 'POST',
     content: '신고되어 삭제된 게시물',
@@ -46,9 +46,9 @@ const reportAlarmAtPost = {
 
 const reportAlarmAtComment = {
   id: Math.round(Math.random() * 1000),
-  createAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
   isRead: randomBoolean(),
   info: {
+    createAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
     id: Math.round(Math.random() * 1000),
     type: 'COMMENT',
     content: '삭제된 댓글 내용',
@@ -57,9 +57,9 @@ const reportAlarmAtComment = {
 
 const reportAlarmAtNickName = {
   id: Math.round(Math.random() * 1000),
-  createAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
   isRead: randomBoolean(),
   info: {
+    createAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
     id: Math.round(Math.random() * 1000),
     type: 'NICKNAME',
     content: '변경처리된 닉네임',

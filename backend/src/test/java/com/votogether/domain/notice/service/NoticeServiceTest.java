@@ -5,12 +5,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.dto.request.NoticeRequest;
+import com.votogether.domain.notice.dto.response.NoticePageResponse;
 import com.votogether.domain.notice.dto.response.NoticeResponse;
 import com.votogether.domain.notice.entity.Notice;
 import com.votogether.domain.notice.repository.NoticeRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.ServiceTest;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -70,6 +73,51 @@ class NoticeServiceTest extends ServiceTest {
             // then
             NoticeResponse expected = new NoticeResponse(null, null, null, null, null, null, null, null);
             assertThat(noticeResponse).usingRecursiveComparison().isEqualTo(expected);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("공지사항 목록 최근순으로 페이징 조회 시")
+    class GetNotices {
+
+        @Test
+        @DisplayName("전체 페이지 개수도 함께 응답한다.")
+        void getTotalPageNumber() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Notice noticeA = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Notice noticeB = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Notice savedNoticeA = noticeRepository.save(noticeA);
+            Notice savedNoticeB = noticeRepository.save(noticeB);
+
+            // when
+            NoticePageResponse response = noticeService.getNotices(0);
+
+            // then
+            NoticePageResponse expected = NoticePageResponse.of(1, 0, List.of(savedNoticeB, savedNoticeA));
+            assertThat(response).usingRecursiveComparison().isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("공지사항이 존재하지 않으면 빈 목록을 응답한다.")
+        void emptyNotices() {
+            // given, when
+            NoticePageResponse response = noticeService.getNotices(0);
+
+            // then
+            NoticePageResponse expected = NoticePageResponse.of(0, 0, Collections.emptyList());
+            assertThat(response).usingRecursiveComparison().isEqualTo(expected);
         }
 
     }

@@ -7,11 +7,14 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.entity.Notice;
 import com.votogether.test.RepositoryTest;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class NoticeRepositoryTest extends RepositoryTest {
 
@@ -103,6 +106,68 @@ class NoticeRepositoryTest extends RepositoryTest {
 
             // then
             assertThat(foundNotice).isNotPresent();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("공지사항 목록 최근순으로 페이징 조회 시")
+    class FindAllByOrderByCreatedAtDesc {
+
+        @Test
+        @DisplayName("생성시각 내림차순으로 공지사항 목록을 조회한다.")
+        void findAllByOrderByCreatedAtDesc() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Notice noticeA = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Notice noticeB = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Notice savedNoticeA = noticeRepository.save(noticeA);
+            Notice savedNoticeB = noticeRepository.save(noticeB);
+
+            // when
+            Pageable pageable = PageRequest.of(0, 2);
+            List<Notice> notices = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
+
+            // then
+            assertThat(notices).containsExactly(savedNoticeB, savedNoticeA);
+        }
+
+        @Test
+        @DisplayName("페이지 크기만큼 공지사항 목록을 조회한다.")
+        void findByPage() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Notice noticeA = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Notice noticeB = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .build();
+            Notice savedNoticeA = noticeRepository.save(noticeA);
+            Notice savedNoticeB = noticeRepository.save(noticeB);
+
+            // when
+            Pageable pageable = PageRequest.of(0, 1);
+            List<Notice> notices = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
+
+            // then
+            assertThat(notices).containsExactly(savedNoticeB);
         }
 
     }

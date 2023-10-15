@@ -1,7 +1,7 @@
 import { ReportMessage, ReportType } from '@type/report';
 import { StringDate } from '@type/time';
 
-import { getFetch } from '@utils/fetch';
+import { getFetch, patchFetch } from '@utils/fetch';
 
 const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
@@ -64,4 +64,8 @@ export const getReportConfirmResult = async (reportId: number): Promise<ReportCo
   );
 
   return reportConfirmResult;
+};
+
+export const readAlarm = async (alarmId: number) => {
+  await patchFetch(`${BASE_URL}/alarms/${alarmId}`);
 };

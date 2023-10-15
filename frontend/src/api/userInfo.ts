@@ -59,10 +59,6 @@ export const readLatestAlarm = async () => {
   await patchFetch(`${BASE_URL}/members/me/check-alarm`);
 };
 
-export const readAlarm = async (alarmId: number) => {
-  await patchFetch(`${BASE_URL}/alarms/${alarmId}`);
-};
-
 export const logoutUser = async () => {
   await fetch('/auth/logout', { method: 'DELETE', credentials: 'include' });
 };

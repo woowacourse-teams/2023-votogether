@@ -2,7 +2,10 @@ package com.votogether.domain.notice.entity;
 
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.notice.entity.vo.BannerTitle;
+import com.votogether.domain.notice.entity.vo.Detail;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,17 +34,11 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(nullable = false, length = 100)
-    private String title;
+    @Embedded
+    private Detail detail;
 
-    @Column(length = 100)
-    private String bannerTitle;
-
-    @Column(length = 100)
-    private String bannerSubtitle;
-
-    @Column(nullable = false, length = 3000)
-    private String content;
+    @Embedded
+    private BannerTitle bannerTitle;
 
     @Column(columnDefinition = "datetime(6)", nullable = false)
     private LocalDateTime deadline;
@@ -56,11 +53,25 @@ public class Notice extends BaseEntity {
             final LocalDateTime deadline
     ) {
         this.member = member;
-        this.title = title;
-        this.bannerTitle = bannerTitle;
-        this.bannerSubtitle = bannerSubtitle;
-        this.content = content;
+        this.detail = new Detail(title, content);
+        this.bannerTitle = new BannerTitle(bannerTitle, bannerSubtitle);
         this.deadline = deadline;
+    }
+
+    public String getTitle() {
+        return this.detail.getTitle();
+    }
+
+    public String getContent() {
+        return this.detail.getContent();
+    }
+
+    public String getBannerTitle() {
+        return this.bannerTitle.getBannerTitle();
+    }
+
+    public String getBannerSubtitle() {
+        return this.bannerTitle.getBannerSubtitle();
     }
 
 }

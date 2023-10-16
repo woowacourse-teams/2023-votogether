@@ -2,16 +2,26 @@ package com.votogether.domain.alarm.dto;
 
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.report.entity.vo.ReportType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public record ReportActionResponse(
+        @Schema(description = "신고조치 ID", example = "1")
         Long reportActionId,
+
+        @Schema(description = "신고조치타입", example = "POST")
         ReportType type,
-        String target,
+
+        @Schema(description = "신고대상내용", example = "1")
+        String content,
+
+        @Schema(description = "신고사유")
         Set<String> reasons,
+
+        @Schema(description = "신고조치시간", example = "2023-08-01 13:56")
         LocalDateTime createdAt
 ) {
 

@@ -50,7 +50,7 @@ class AlarmServiceTest extends ServiceTest {
                 () -> assertThat(result.alarmId()).isNotNull(),
                 () -> assertThat(result.isChecked()).isFalse(),
                 () -> assertThat(result.detail().reportActionId()).isNotNull(),
-                () -> assertThat(result.detail().target()).isEqualTo("1"),
+                () -> assertThat(result.detail().content()).isEqualTo("1"),
                 () -> assertThat(result.detail().reasons()).containsAll(Set.of("광고성", "부적합성")),
                 () -> assertThat(result.detail().type()).isEqualTo(ReportType.POST)
         );
@@ -79,7 +79,7 @@ class AlarmServiceTest extends ServiceTest {
         assertAll(
                 () -> assertThat(response.reportActionId()).isEqualTo(savedReportActionAlarm.getId()),
                 () -> assertThat(response.type()).isEqualTo(ReportType.POST),
-                () -> assertThat(response.target()).isEqualTo("1"),
+                () -> assertThat(response.content()).isEqualTo("1"),
                 () -> assertThat(response.reasons()).containsAll(Set.of("광고성", "부적합성"))
         );
     }

@@ -90,7 +90,7 @@ export default function MyInfoPage() {
     <Layout isSidebarVisible={true}>
       <S.Wrapper>
         <S.ProfileSection>
-          {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile />}
+          {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile isLargeKaKao />}
         </S.ProfileSection>
         <S.NoticeWrapper>
           <S.NoticeTitle to={PATH.NOTICES}>공지사항 보러가기</S.NoticeTitle>

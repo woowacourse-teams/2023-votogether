@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Container = styled.ul`
   display: flex;
   flex-direction: column;
@@ -7,6 +9,10 @@ export const Container = styled.ul`
   gap: 10px;
 
   font: var(--text-caption);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font: var(--text-body);
+  }
 `;
 
 export const List = styled.ul`
@@ -15,11 +21,15 @@ export const List = styled.ul`
   padding-left: 30px;
   margin-top: 10px;
 
-  font-size: 1.4rem;
+  font: var(--text-default);
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font: var(--text-caption);
+  }
 `;
 
 export const ListItem = styled.li`
-  margin: 5px 0;
+  margin: 10px 0;
 
   list-style-type: disc;
 `;

@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 export const Description = styled.p`
-  font-size: 1.4rem;
+  font: var(--text-default);
   text-align: center;
 `;
 
 export const ListContainer = styled.ul`
-  font-size: 1.4rem;
+  font: var(--text-default);
 `;
 
 export const ListItem = styled.li<{ $isRead: boolean }>`

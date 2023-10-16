@@ -3,6 +3,7 @@ package com.votogether.domain.alarm.entity.service;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
+import com.votogether.domain.alarm.service.AlarmService;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.entity.Post;

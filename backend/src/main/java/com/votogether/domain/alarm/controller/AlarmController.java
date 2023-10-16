@@ -1,7 +1,7 @@
 package com.votogether.domain.alarm.controller;
 
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
-import com.votogether.domain.alarm.entity.service.AlarmService;
+import com.votogether.domain.alarm.service.AlarmService;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

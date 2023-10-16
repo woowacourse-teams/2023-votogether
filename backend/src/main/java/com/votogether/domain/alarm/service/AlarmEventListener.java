@@ -1,8 +1,8 @@
-package com.votogether.domain.alarm.entity.service;
+package com.votogether.domain.alarm.service;
 
 import com.votogether.domain.alarm.dto.event.PostAlarmEvent;
 import com.votogether.domain.alarm.entity.Alarm;
-import com.votogether.domain.alarm.entity.repository.AlarmRepository;
+import com.votogether.domain.alarm.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

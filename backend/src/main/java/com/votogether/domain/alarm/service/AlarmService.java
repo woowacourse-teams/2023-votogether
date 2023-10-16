@@ -1,8 +1,8 @@
-package com.votogether.domain.alarm.entity.service;
+package com.votogether.domain.alarm.service;
 
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
 import com.votogether.domain.alarm.entity.Alarm;
-import com.votogether.domain.alarm.entity.repository.AlarmRepository;
+import com.votogether.domain.alarm.repository.AlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

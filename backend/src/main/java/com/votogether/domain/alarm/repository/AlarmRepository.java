@@ -1,4 +1,4 @@
-package com.votogether.domain.alarm.entity.repository;
+package com.votogether.domain.alarm.repository;
 
 import com.votogether.domain.alarm.entity.Alarm;
 import org.springframework.data.domain.Pageable;

@@ -7,7 +7,7 @@ export const Container = styled.li<{ $isPreview: boolean }>`
 
   position: relative;
 
-  font: var(--text-small);
+  font: var(--text-default);
   letter-spacing: 0.5px;
   line-height: 1.5;
 
@@ -20,7 +20,7 @@ export const Container = styled.li<{ $isPreview: boolean }>`
 `;
 
 export const Category = styled.span`
-  font: var(--text-small);
+  font: var(--text-default);
 
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-caption);
@@ -61,7 +61,7 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  font: var(--text-small);
+  font: var(--text-default);
 
   & > :nth-child(2) {
     margin-left: 10px;

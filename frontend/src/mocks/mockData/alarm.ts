@@ -11,7 +11,7 @@ const randomNum = () => {
   return random(new Array(9).fill(0).map((_, index) => index + 1))[0];
 };
 
-const contentAlarmAtPost = {
+const contentAlarmAtPost = () => ({
   alarmId: Math.round(Math.random() * 1000),
   createdAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
   isChecked: randomBoolean(),
@@ -20,9 +20,9 @@ const contentAlarmAtPost = {
     postTitle: '이것은 게시물 제목입니다만', //post
     commentWriter: '누가 댓글을?', //댓글 작성자
   },
-};
+});
 
-const contentAlarmAtComment = {
+const contentAlarmAtComment = () => ({
   alarmId: Math.round(Math.random() * 1000),
   createdAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
   isChecked: randomBoolean(),
@@ -31,9 +31,9 @@ const contentAlarmAtComment = {
     postTitle: '이것은 게시물 제목입니다만', //post
     commentWriter: '', //댓글 작성자
   },
-};
+});
 
-const reportAlarmAtPost = {
+const reportAlarmAtPost = () => ({
   alarmId: Math.round(Math.random() * 1000),
   isChecked: randomBoolean(),
   detail: {
@@ -42,9 +42,9 @@ const reportAlarmAtPost = {
     type: 'POST',
     content: '신고되어 삭제된 게시물',
   },
-};
+});
 
-const reportAlarmAtComment = {
+const reportAlarmAtComment = () => ({
   alarmId: Math.round(Math.random() * 1000),
   isChecked: randomBoolean(),
   detail: {
@@ -53,9 +53,9 @@ const reportAlarmAtComment = {
     type: 'COMMENT',
     content: '삭제된 댓글 내용',
   },
-};
+});
 
-const reportAlarmAtNickName = {
+const reportAlarmAtNickName = () => ({
   alarmId: Math.round(Math.random() * 1000),
   isChecked: randomBoolean(),
   detail: {
@@ -64,11 +64,11 @@ const reportAlarmAtNickName = {
     type: 'NICKNAME',
     content: '변경처리된 닉네임',
   },
-};
+});
 
 export const MOCK_CONTENT_ALARM_LIST = () =>
   random([
-    new Array(10).fill(0).map(_ => random([contentAlarmAtPost, contentAlarmAtComment])[0]),
+    new Array(10).fill(0).map(_ => random([contentAlarmAtPost(), contentAlarmAtComment()])[0]),
     [],
   ])[0];
 
@@ -76,5 +76,5 @@ export const MOCK_REPORT_ALARM_LIST = () =>
   random([
     new Array(10)
       .fill(0)
-      .map(_ => random([reportAlarmAtPost, reportAlarmAtComment, reportAlarmAtNickName])[0]),
+      .map(_ => random([reportAlarmAtPost(), reportAlarmAtComment(), reportAlarmAtNickName()])[0]),
   ])[0];

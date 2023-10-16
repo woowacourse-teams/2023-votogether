@@ -43,18 +43,18 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
       {data?.pages.map((listInfo, pageIndex) => (
         <Fragment key={pageIndex}>
           {listInfo.alarmList.map(alarm => {
-            const { id: reportId, type, content } = alarm.info;
+            const { reportId, type, content } = alarm.detail;
             const shortContent = content.length < 8 ? content : `${content.slice(0, 8)}...`;
 
             return (
-              <LS.ListItem key={alarm.id} $isRead={alarm.isRead}>
+              <LS.ListItem key={alarm.alarmId} $isRead={alarm.isChecked}>
                 <LS.LinkButton
                   onClick={() => {
-                    handleAlarmClick(alarm.id, reportId);
+                    handleAlarmClick(alarm.alarmId, reportId);
                   }}
                 >
                   <p>{`"${shortContent}" ${REPORT_TYPE[type]}이 신고를 받아 처리되었습니다.`}</p>
-                  <p>{alarm.info.createAt}</p>
+                  <p>{alarm.detail.createdAt}</p>
                 </LS.LinkButton>
               </LS.ListItem>
             );

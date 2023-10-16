@@ -35,15 +35,15 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
       {data?.pages.map((listInfo, pageIndex) => (
         <Fragment key={pageIndex}>
           {listInfo.alarmList.map(alarm => {
-            const { id: postId, title, nickname } = alarm.info;
+            const { postId, postTitle: title, commentWriter: nickname } = alarm.detail;
             const shortTitle = title.length < 10 ? title : `${title.slice(0, 10)}...`;
             const shortNickname = nickname.length < 6 ? nickname : `${nickname.slice(0, 6)}...`;
 
             return (
-              <LS.ListItem key={alarm.id} $isRead={alarm.isRead}>
+              <LS.ListItem key={alarm.alarmId} $isRead={alarm.isChecked}>
                 <LS.LinkButton
                   onClick={() => {
-                    handleAlarmClick(alarm.id, postId);
+                    handleAlarmClick(alarm.alarmId, postId);
                   }}
                 >
                   <p>
@@ -51,7 +51,7 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
                       ? `"${shortTitle}" 게시글이 마감되었습니다!`
                       : `"${shortNickname}" 님이 "${shortTitle}" 게시글에 댓글을 달았습니다!`}
                   </p>
-                  <p>{alarm.createAt}</p>
+                  <p>{alarm.createdAt}</p>
                 </LS.LinkButton>
               </LS.ListItem>
             );

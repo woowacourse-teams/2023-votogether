@@ -36,12 +36,12 @@ export default function ReportConfirmResult() {
           <b>조치 :</b> {reportType[data.type].result}
         </S.ListItem>
         <S.ListItem>
-          <b>조치 일시:</b> {data.createAt}
+          <b>조치 일시:</b> {data.createdAt}
         </S.ListItem>
         <S.ListItem>
           <b>사유 </b>
           <S.List>
-            {[...new Set(data.reason.map(each => REPORT_MESSAGE[each]))].map(reason => {
+            {[...new Set(data.reasonList.map(each => REPORT_MESSAGE[each]))].map(reason => {
               return <S.ListItem>{reason}</S.ListItem>;
             })}
           </S.List>

@@ -3,7 +3,7 @@ import { StringDate } from '@type/time';
 
 import { getFetch, patchFetch } from '@utils/fetch';
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export interface ContentAlarmList {
   pageNumber: number;
@@ -11,33 +11,14 @@ export interface ContentAlarmList {
 }
 
 interface ContentAlarm {
-  id: number;
-  createAt: StringDate;
-  isRead: boolean;
-  info: {
-    id: number; //post
-    title: string; //post
-    nickname: string; //댓글 작성자
+  alarmId: number;
+  createdAt: StringDate;
+  isChecked: boolean;
+  detail: {
+    postId: number;
+    postTitle: string;
+    commentWriter: string; // 게시글에 관한 알림일때는 ""으로 옴
   };
-}
-
-export interface ReportAlarmList {
-  pageNumber: number;
-  alarmList: ReportAlarm[];
-}
-
-interface ReportAlarm {
-  id: number;
-  isRead: boolean;
-  info: ReportConfirmResult;
-}
-
-export interface ReportConfirmResult {
-  id: number;
-  type: ReportType;
-  reason: ReportMessage[];
-  content: string;
-  createAt: StringDate;
 }
 
 export const getContentAlarmList = async (page: number): Promise<ContentAlarmList> => {
@@ -49,21 +30,62 @@ export const getContentAlarmList = async (page: number): Promise<ContentAlarmLis
   };
 };
 
+export interface ReportAlarmList {
+  pageNumber: number;
+  alarmList: ReportAlarm[];
+}
+
+interface ReportAlarm {
+  alarmId: number;
+  isChecked: boolean;
+  detail: ReportConfirmResult;
+}
+
+interface ReportAlarmResponse {
+  alarmId: number;
+  isChecked: boolean;
+  detail: ReportConfirmResultResponse;
+}
+
+export interface ReportConfirmResult {
+  reportId: number;
+  type: ReportType;
+  reasonList: ReportMessage[];
+  content: string;
+  createdAt: StringDate;
+}
+
+export interface ReportConfirmResultResponse {
+  reportId: number;
+  type: ReportType;
+  reasons: ReportMessage[];
+  content: string;
+  createdAt: StringDate;
+}
+
+const transformReportConfirmResultResponse = (reportConfirmResult: ReportConfirmResultResponse) => {
+  const { reportId, type, reasons, content, createdAt } = reportConfirmResult;
+  return { reportId, type, reasonList: reasons, content, createdAt };
+};
+
 export const getReportAlarmList = async (page: number): Promise<ReportAlarmList> => {
-  const alarmList = await getFetch<ReportAlarm[]>(`${BASE_URL}/alarms/report?page=${page}`);
+  const alarmList = await getFetch<ReportAlarmResponse[]>(`${BASE_URL}/alarms/report?page=${page}`);
 
   return {
     pageNumber: page,
-    alarmList,
+    alarmList: alarmList.map(alarm => ({
+      ...alarm,
+      detail: transformReportConfirmResultResponse(alarm.detail),
+    })),
   };
 };
 
 export const getReportConfirmResult = async (reportId: number): Promise<ReportConfirmResult> => {
-  const reportConfirmResult = await getFetch<ReportConfirmResult>(
+  const reportConfirmResult = await getFetch<ReportConfirmResultResponse>(
     `${BASE_URL}/alarms/report/${reportId}`
   );
 
-  return reportConfirmResult;
+  return transformReportConfirmResultResponse(reportConfirmResult);
 };
 
 export const readAlarm = async (alarmId: number) => {

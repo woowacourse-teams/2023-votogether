@@ -67,9 +67,14 @@ const reportAlarmAtNickName = {
 };
 
 export const MOCK_CONTENT_ALARM_LIST = () =>
-  new Array(10).fill(0).map(_ => random([contentAlarmAtPost, contentAlarmAtComment])[0]);
+  random([
+    new Array(10).fill(0).map(_ => random([contentAlarmAtPost, contentAlarmAtComment])[0]),
+    [],
+  ])[0];
 
 export const MOCK_REPORT_ALARM_LIST = () =>
-  new Array(10)
-    .fill(0)
-    .map(_ => random([reportAlarmAtPost, reportAlarmAtComment, reportAlarmAtNickName])[0]);
+  random([
+    new Array(10)
+      .fill(0)
+      .map(_ => random([reportAlarmAtPost, reportAlarmAtComment, reportAlarmAtNickName])[0]),
+  ])[0];

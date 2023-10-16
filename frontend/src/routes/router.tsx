@@ -17,6 +17,7 @@ import RouteChangeTracker from '@components/RouteChangeTracker';
 
 import { PATH } from '@constants/path';
 
+import AdminRoute from './AdminRoute';
 import PrivateRoute from './PrivateRoute';
 
 const Login = lazy(() => import('@pages/auth/LoginPage'));
@@ -186,7 +187,9 @@ const router = createBrowserRouter([
         path: 'categories',
         element: (
           <PrivateRoute>
-            <div>어드민 카테고리 목록 페이지</div>
+            <AdminRoute>
+              <div>어드민 카테고리 목록 페이지</div>
+            </AdminRoute>
           </PrivateRoute>
         ),
       },
@@ -194,7 +197,9 @@ const router = createBrowserRouter([
         path: 'reports',
         element: (
           <PrivateRoute>
-            <div>어드민 신고 목록 페이지</div>
+            <AdminRoute>
+              <div>어드민 신고 목록 페이지</div>
+            </AdminRoute>
           </PrivateRoute>
         ),
       },

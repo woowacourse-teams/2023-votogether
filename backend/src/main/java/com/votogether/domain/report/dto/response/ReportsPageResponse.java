@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 @Schema(description = "신고 조치 예정 목록 응답")
 public record ReportsPageResponse(
         @Schema(description = "신고 조치 예정 목록 전체 페이지 수", example = "20")
-        long totalPageCount,
+        long totalPageNumber,
 
         @Schema(description = "신고 조치 예정 목록 중 현재 페이지", example = "3")
         long currentPageNumber,
@@ -18,13 +18,13 @@ public record ReportsPageResponse(
 ) {
 
     public static ReportsPageResponse of(
-            final int totalPages,
+            final int totalPageNumber,
             final int currentPageNumber,
             final List<Report> reports,
             final List<String> targets
     ) {
         return new ReportsPageResponse(
-                totalPages,
+                totalPageNumber,
                 currentPageNumber,
                 IntStream.range(0, reports.size())
                         .mapToObj(index -> ReportResponse.of(reports.get(index), targets.get(index)))

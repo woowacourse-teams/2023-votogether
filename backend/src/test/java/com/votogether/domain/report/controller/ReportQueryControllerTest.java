@@ -94,7 +94,7 @@ class ReportQueryControllerTest extends ControllerTest {
             final List<ReportResponse> reports = reportsPageResponses.reports();
             final ReportResponse reportResponse = reports.get(0);
             assertSoftly(softly -> {
-                softly.assertThat(reportsPageResponses.totalPageCount()).isEqualTo(totalPages);
+                softly.assertThat(reportsPageResponses.totalPageNumber()).isEqualTo(totalPages);
                 softly.assertThat(reportsPageResponses.currentPageNumber()).isEqualTo(currentPageNumber);
                 softly.assertThat(reports).hasSize(1);
                 softly.assertThat(reportResponse.target()).isEqualTo(target);

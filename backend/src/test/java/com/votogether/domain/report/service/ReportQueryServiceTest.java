@@ -6,7 +6,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.report.dto.response.ReportResponse;
-import com.votogether.domain.report.dto.response.ReportsPageResponse;
+import com.votogether.domain.report.dto.response.ReportPageResponse;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.test.ServiceTest;
@@ -49,13 +49,13 @@ class ReportQueryServiceTest extends ServiceTest {
                 .save();
 
         // when
-        final ReportsPageResponse reportsPageResponse = reportQueryService.getReports(0);
+        final ReportPageResponse reportPageResponse = reportQueryService.getReports(0);
 
         // then
-        final List<ReportResponse> reportResponses = reportsPageResponse.reports();
+        final List<ReportResponse> reportResponses = reportPageResponse.reports();
         assertSoftly(softly -> {
-            softly.assertThat(reportsPageResponse.totalPageNumber()).isOne();
-            softly.assertThat(reportsPageResponse.currentPageNumber()).isZero();
+            softly.assertThat(reportPageResponse.totalPageNumber()).isOne();
+            softly.assertThat(reportPageResponse.currentPageNumber()).isZero();
             softly.assertThat(reportResponses.get(0).id()).isEqualTo(savedReportB.getId());
             softly.assertThat(reportResponses.get(0).type()).isEqualTo(savedReportB.getReportType());
             softly.assertThat(reportResponses.get(0).reasons().get(0)).isEqualTo(savedReportB.getReason());

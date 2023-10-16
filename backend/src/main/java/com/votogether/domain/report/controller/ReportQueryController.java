@@ -1,6 +1,6 @@
 package com.votogether.domain.report.controller;
 
-import com.votogether.domain.report.dto.response.ReportsPageResponse;
+import com.votogether.domain.report.dto.response.ReportPageResponse;
 import com.votogether.domain.report.service.ReportQueryService;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +18,11 @@ public class ReportQueryController implements ReportQueryControllerDocs {
     private final ReportQueryService reportQueryService;
 
     @GetMapping("/reports/admin")
-    public ResponseEntity<ReportsPageResponse> getReports(
+    public ResponseEntity<ReportPageResponse> getReports(
             @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
     ) {
-        final ReportsPageResponse reportsPageResponse = reportQueryService.getReports(page);
-        return ResponseEntity.ok(reportsPageResponse);
+        final ReportPageResponse reportPageResponse = reportQueryService.getReports(page);
+        return ResponseEntity.ok(reportPageResponse);
     }
 
 }

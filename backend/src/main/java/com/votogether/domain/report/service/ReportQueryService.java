@@ -1,7 +1,7 @@
 package com.votogether.domain.report.service;
 
 import com.votogether.domain.report.dto.response.ReportResponse;
-import com.votogether.domain.report.dto.response.ReportsPageResponse;
+import com.votogether.domain.report.dto.response.ReportPageResponse;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.report.service.strategy.ReportActionProvider;
@@ -23,7 +23,7 @@ public class ReportQueryService {
     private final ReportRepository reportRepository;
     private final ReportActionProvider reportActionProvider;
 
-    public ReportsPageResponse getReports(final int page) {
+    public ReportPageResponse getReports(final int page) {
         long totalCount = reportRepository.count();
         final int totalPageNumber = (int) Math.ceil((double) totalCount / BASIC_PAGE_SIZE);
 
@@ -31,7 +31,7 @@ public class ReportQueryService {
         final List<Report> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
         final List<ReportResponse> reportResponses = parseReportResponses(reports);
 
-        return ReportsPageResponse.of(totalPageNumber, page, reportResponses);
+        return ReportPageResponse.of(totalPageNumber, page, reportResponses);
     }
 
     private List<ReportResponse> parseReportResponses(final List<Report> reports) {

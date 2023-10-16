@@ -1,6 +1,6 @@
 package com.votogether.domain.report.controller;
 
-import com.votogether.domain.report.dto.response.ReportsPageResponse;
+import com.votogether.domain.report.dto.response.ReportPageResponse;
 import com.votogether.global.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +26,7 @@ public interface ReportQueryControllerDocs {
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
-    ResponseEntity<ReportsPageResponse> getReports(
+    ResponseEntity<ReportPageResponse> getReports(
             @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
     );
 

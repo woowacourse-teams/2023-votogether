@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 
 import com.votogether.domain.report.dto.response.ReportResponse;
-import com.votogether.domain.report.dto.response.ReportsPageResponse;
+import com.votogether.domain.report.dto.response.ReportPageResponse;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.service.ReportQueryService;
@@ -16,7 +16,6 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.util.List;
-import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,18 +66,18 @@ class ReportQueryControllerTest extends ControllerTest {
                     .build();
             ReflectionTestUtils.setField(report, "id", 1L);
 
-            final ReportsPageResponse reportsPageResponse =
-                    ReportsPageResponse.of(
+            final ReportPageResponse reportPageResponse =
+                    ReportPageResponse.of(
                             totalPages,
                             currentPageNumber,
                             List.of(ReportResponse.of(report, targetId.toString()))
                     );
 
             int page = 0;
-            given(reportQueryService.getReports(page)).willReturn(reportsPageResponse);
+            given(reportQueryService.getReports(page)).willReturn(reportPageResponse);
 
             // when
-            final ReportsPageResponse reportsPageResponses = RestAssuredMockMvc
+            final ReportPageResponse reportPageResponses = RestAssuredMockMvc
                     .given().log().all()
                     .contentType(ContentType.JSON)
                     .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
@@ -91,11 +90,11 @@ class ReportQueryControllerTest extends ControllerTest {
                     });
 
             // then
-            final List<ReportResponse> reports = reportsPageResponses.reports();
+            final List<ReportResponse> reports = reportPageResponses.reports();
             final ReportResponse reportResponse = reports.get(0);
             assertSoftly(softly -> {
-                softly.assertThat(reportsPageResponses.totalPageNumber()).isEqualTo(totalPages);
-                softly.assertThat(reportsPageResponses.currentPageNumber()).isEqualTo(currentPageNumber);
+                softly.assertThat(reportPageResponses.totalPageNumber()).isEqualTo(totalPages);
+                softly.assertThat(reportPageResponses.currentPageNumber()).isEqualTo(currentPageNumber);
                 softly.assertThat(reports).hasSize(1);
                 softly.assertThat(reportResponse.target()).isEqualTo(targetId.toString());
                 softly.assertThat(reportResponse.type()).isEqualTo(reportType);

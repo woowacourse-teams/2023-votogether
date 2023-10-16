@@ -56,6 +56,10 @@ public class PostCommentService {
                 .build();
         post.addComment(comment);
 
+        publishAlarmEvent(loginMember, post);
+    }
+
+    private void publishAlarmEvent(final Member loginMember, final Post post) {
         final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
                 loginMember,
                 post.getId(),

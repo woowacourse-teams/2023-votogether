@@ -299,6 +299,10 @@ public class PostCommandService {
         validatePostWriter(post, loginMember);
         post.closeEarly();
 
+        publishAlarmEvent(postId, loginMember, post);
+    }
+
+    private void publishAlarmEvent(final Long postId, final Member loginMember, final Post post) {
         final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
                 loginMember,
                 postId,

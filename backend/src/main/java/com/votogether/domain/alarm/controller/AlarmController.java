@@ -22,7 +22,7 @@ public class AlarmController {
     public ResponseEntity<List<PostAlarmResponse>> getPostAlarm(
             @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
     ) {
-        final List<PostAlarmResponse> postAlarmResponses = alarmService.findPostAlarm(page);
+        final List<PostAlarmResponse> postAlarmResponses = alarmService.getPostAlarm(page);
         return ResponseEntity.ok(postAlarmResponses);
     }
 

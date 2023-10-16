@@ -4,8 +4,8 @@ import com.votogether.domain.alarm.entity.Alarm;
 import java.time.LocalDateTime;
 
 public record PostAlarmResponse(
-        Long id,
-        PostAlarmDetailResponse postAlarmDetailResponse,
+        Long alarmId,
+        PostAlarmDetailResponse detail,
         LocalDateTime createdAt,
         boolean isChecked
 ) {

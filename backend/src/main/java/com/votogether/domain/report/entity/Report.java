@@ -55,7 +55,7 @@ public class Report extends BaseEntity {
             final Long targetId,
             final String reason,
             final LocalDateTime createdAt
-            ) {
+    ) {
         super(createdAt);
         this.id = id;
         this.reportType = reportType;

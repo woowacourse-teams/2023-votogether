@@ -24,7 +24,9 @@ public class ReportQueryService {
     public ReportsPageResponse getReports(final int page) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);
         final List<Report> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
-        final int totalPageNumber = reportRepository.findAll(pageable).getTotalPages();
+
+        long totalCount = reportRepository.count();
+        final int totalPageNumber = (int) Math.ceil((double) totalCount / BASIC_PAGE_SIZE);
 
         final List<String> targets = reports.stream()
                 .map(report ->

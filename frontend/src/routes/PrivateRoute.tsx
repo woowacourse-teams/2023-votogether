@@ -15,10 +15,24 @@ interface Route extends PropsWithChildren {
   path?: (typeof PATH)[keyof typeof PATH];
 }
 
-const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: Route) => {
-  const authInfo = useContext(AuthContext);
+const PrivateRoute = ({
+  children,
+  isGuestAllowed = false,
+  isAdminAllowed = false,
+  path = PATH.LOGIN,
+}: Route) => {
+  const {
+    clearLoggedInfo,
+    loggedInfo: { userInfo },
+  } = useContext(AuthContext);
   const isLoggedIn = getLocalStorage(ACCESS_TOKEN_KEY);
   const hasEssentialInfo = getCookie().hasEssentialInfo;
+
+  if (isAdminAllowed && userInfo?.role !== 'ADMIN') {
+    alert('해당 페이지는 관리자만 접근이 가능합니다.');
+
+    return <Navigate to={path} />;
+  }
 
   if (!isGuestAllowed && !isLoggedIn) {
     alert('해당 페이지에 접근하려면 로그인이 필요합니다.');
@@ -33,7 +47,7 @@ const PrivateRoute = ({ children, isGuestAllowed = false, path = PATH.LOGIN }: R
   }
 
   if (isLoggedIn && hasEssentialInfo === undefined) {
-    authInfo.clearLoggedInfo();
+    clearLoggedInfo();
 
     return <Navigate to="/" />;
   }

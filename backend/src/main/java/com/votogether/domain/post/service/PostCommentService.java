@@ -30,7 +30,7 @@ public class PostCommentService {
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validateHiddenPost(post);
 
-        return commentRepository.findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(post)
+        return commentRepository.findAllByPostAndIsHiddenFalseOrderByIdAsc(post)
                 .stream()
                 .map(CommentResponse::from)
                 .toList();

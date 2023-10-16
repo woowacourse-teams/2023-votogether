@@ -26,7 +26,7 @@ class CommentRepositoryTest extends RepositoryTest {
         Comment commentB = commentTestPersister.builder().post(post).writer(writer).save();
 
         // when
-        List<Comment> comments = commentRepository.findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(post);
+        List<Comment> comments = commentRepository.findAllByPostAndIsHiddenFalseOrderByIdAsc(post);
 
         // then
         assertThat(comments).containsExactly(commentA, commentB);

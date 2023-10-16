@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @EntityGraph(attributePaths = {"writer"})
-    List<Comment> findAllByPostAndIsHiddenFalseOrderByCreatedAtAsc(final Post post);
+    List<Comment> findAllByPostAndIsHiddenFalseOrderByIdAsc(final Post post);
 
     List<Comment> findAllByWriter(final Member writer);
 

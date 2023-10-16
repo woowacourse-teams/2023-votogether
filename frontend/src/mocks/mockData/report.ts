@@ -1,8 +1,8 @@
 import { PendingReportActionListResponse } from '@type/report';
 
 export const MOCK_PENDING_REPORT_LIST: PendingReportActionListResponse = {
-  totalPageCount: 5,
-  currentPageCount: 0,
+  totalPageNumber: 5,
+  currentPageNumber: 0,
   reports: [
     {
       id: 0,

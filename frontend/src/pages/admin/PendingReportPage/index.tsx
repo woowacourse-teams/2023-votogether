@@ -81,16 +81,18 @@ export default function PendingReportPage() {
             <Table
               columns={columnList}
               rows={reportListWithAction}
-              columnTemplate="1fr 2fr 3fr 2fr 1fr 2fr 2fr"
+              columnTemplate="1fr 2fr 3fr 2fr 1fr 1fr 1fr"
             />
             <S.PaginationContainer>
               <S.MovePageButton
-                onClick={() => navigate(`${PATH.PENDING_REPORT}?page=${data.currentPageCount - 1}`)}
+                onClick={() =>
+                  navigate(`${PATH.PENDING_REPORT}?page=${data.currentPageNumber - 1}`)
+                }
                 disabled={currentPageNumber === 1}
               >
                 이전
               </S.MovePageButton>
-              {new Array(data.totalPageCount).fill(0).map((_, index) => (
+              {new Array(data.totalPageNumber).fill(0).map((_, index) => (
                 <S.PaginationButton
                   to={`${PATH.PENDING_REPORT}?page=${currentPageNumber}`}
                   $isSelected={index + 1 === currentPageNumber}
@@ -99,8 +101,10 @@ export default function PendingReportPage() {
                 </S.PaginationButton>
               ))}
               <S.MovePageButton
-                onClick={() => navigate(`${PATH.PENDING_REPORT}?page=${data.currentPageCount + 1}`)}
-                disabled={currentPageNumber === data.totalPageCount}
+                onClick={() =>
+                  navigate(`${PATH.PENDING_REPORT}?page=${data.currentPageNumber + 1}`)
+                }
+                disabled={currentPageNumber === data.totalPageNumber}
               >
                 다음
               </S.MovePageButton>

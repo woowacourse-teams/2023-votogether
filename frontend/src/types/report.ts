@@ -22,8 +22,8 @@ export interface ReportInfo {
 }
 
 export interface PendingReportActionListResponse {
-  totalPageCount: number;
-  currentPageCount: number;
+  totalPageNumber: number;
+  currentPageNumber: number;
   reports: PendingReportActionResponse[];
 }
 export interface PendingReportActionResponse {

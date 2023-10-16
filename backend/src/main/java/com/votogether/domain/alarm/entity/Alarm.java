@@ -60,5 +60,9 @@ public class Alarm extends BaseEntity {
         this.detail = detail;
         this.isChecked = isChecked;
     }
-    
+
+    public boolean matches(final AlarmType alarmType) {
+        return this.alarmType == alarmType;
+    }
+
 }

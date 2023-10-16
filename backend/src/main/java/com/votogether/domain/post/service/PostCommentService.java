@@ -56,13 +56,11 @@ public class PostCommentService {
                 .build();
         post.addComment(comment);
 
-        commentRepository.flush();
-
         final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
                 loginMember,
-                comment.getId(),
+                post.getId(),
                 AlarmType.COMMENT,
-                comment.getContent()
+                post.getTitle()
         );
         applicationEventPublisher.publishEvent(postAlarmEvent);
     }

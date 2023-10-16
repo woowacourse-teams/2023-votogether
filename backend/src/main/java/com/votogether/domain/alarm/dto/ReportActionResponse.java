@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public record ReportActionResponse(
-        Long id,
+        Long reportActionId,
         ReportType type,
         String target,
         Set<String> reasons,

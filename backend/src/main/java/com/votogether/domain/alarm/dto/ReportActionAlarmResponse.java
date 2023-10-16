@@ -4,9 +4,9 @@ import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import java.util.Collections;
 
 public record ReportActionAlarmResponse(
-        Long id,
+        Long alarmId,
         boolean isChecked,
-        ReportActionResponse reportActionResponse
+        ReportActionResponse detail
 
 ) {
 

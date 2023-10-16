@@ -55,7 +55,7 @@ class ReportQueryServiceTest extends ServiceTest {
         final List<ReportResponse> reportResponses = reportsPageResponse.reports();
         assertSoftly(softly -> {
             softly.assertThat(reportsPageResponse.totalPageNumber()).isOne();
-            softly.assertThat(reportsPageResponse.currentPageNumber()).isOne();
+            softly.assertThat(reportsPageResponse.currentPageNumber()).isZero();
             softly.assertThat(reportResponses.get(0).id()).isEqualTo(savedReportB.getId());
             softly.assertThat(reportResponses.get(0).type()).isEqualTo(savedReportB.getReportType());
             softly.assertThat(reportResponses.get(0).reasons().get(0)).isEqualTo(savedReportB.getReason());

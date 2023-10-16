@@ -1,10 +1,12 @@
 package com.votogether.domain.report.service;
 
+import com.votogether.domain.report.dto.response.ReportResponse;
 import com.votogether.domain.report.dto.response.ReportsPageResponse;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.report.service.strategy.ReportActionProvider;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,19 +24,32 @@ public class ReportQueryService {
     private final ReportActionProvider reportActionProvider;
 
     public ReportsPageResponse getReports(final int page) {
-        final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);
-        final List<Report> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
-
         long totalCount = reportRepository.count();
         final int totalPageNumber = (int) Math.ceil((double) totalCount / BASIC_PAGE_SIZE);
 
-        final List<String> targets = reports.stream()
-                .map(report ->
-                        reportActionProvider.getStrategy(report.getReportType())
-                                .parseTarget(report.getTargetId())
-                )
+        final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);
+        final List<Report> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
+        final List<ReportResponse> reportResponses = parseReportResponses(reports);
+
+        return ReportsPageResponse.of(totalPageNumber, page, reportResponses);
+    }
+
+    private List<ReportResponse> parseReportResponses(final List<Report> reports) {
+        final List<String> targets = parseTargets(reports);
+        return IntStream.range(0, reports.size())
+                .mapToObj(index -> ReportResponse.of(reports.get(index), targets.get(index)))
                 .toList();
-        return ReportsPageResponse.of(totalPageNumber, page + 1, reports, targets);
+    }
+
+    private List<String> parseTargets(final List<Report> reports) {
+        return reports.stream()
+                .map(this::parseTarget)
+                .toList();
+    }
+
+    private String parseTarget(final Report report) {
+        return reportActionProvider.getStrategy(report.getReportType())
+                .parseTarget(report.getTargetId());
     }
 
 }

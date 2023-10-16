@@ -16,6 +16,7 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -56,12 +57,12 @@ class ReportQueryControllerTest extends ControllerTest {
             final int currentPageNumber = 1;
             final String reason = "reason";
             final ReportType reportType = ReportType.POST;
-            final String target = "1L";
+            final Long targetId = 1L;
 
             final Report report = Report.builder()
                     .reason(reason)
                     .reportType(reportType)
-                    .targetId(1L)
+                    .targetId(targetId)
                     .member(MemberFixtures.MALE_10.get())
                     .build();
             ReflectionTestUtils.setField(report, "id", 1L);
@@ -70,8 +71,7 @@ class ReportQueryControllerTest extends ControllerTest {
                     ReportsPageResponse.of(
                             totalPages,
                             currentPageNumber,
-                            List.of(report),
-                            List.of(target)
+                            List.of(ReportResponse.of(report, targetId.toString()))
                     );
 
             int page = 0;
@@ -97,7 +97,7 @@ class ReportQueryControllerTest extends ControllerTest {
                 softly.assertThat(reportsPageResponses.totalPageNumber()).isEqualTo(totalPages);
                 softly.assertThat(reportsPageResponses.currentPageNumber()).isEqualTo(currentPageNumber);
                 softly.assertThat(reports).hasSize(1);
-                softly.assertThat(reportResponse.target()).isEqualTo(target);
+                softly.assertThat(reportResponse.target()).isEqualTo(targetId.toString());
                 softly.assertThat(reportResponse.type()).isEqualTo(reportType);
                 softly.assertThat(reportResponse.reasons()).containsExactly(reason);
             });

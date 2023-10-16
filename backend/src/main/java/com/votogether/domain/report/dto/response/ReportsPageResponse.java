@@ -20,15 +20,12 @@ public record ReportsPageResponse(
     public static ReportsPageResponse of(
             final int totalPageNumber,
             final int currentPageNumber,
-            final List<Report> reports,
-            final List<String> targets
+            final List<ReportResponse> reportResponses
     ) {
         return new ReportsPageResponse(
                 totalPageNumber,
                 currentPageNumber,
-                IntStream.range(0, reports.size())
-                        .mapToObj(index -> ReportResponse.of(reports.get(index), targets.get(index)))
-                        .toList()
+                reportResponses
         );
     }
 

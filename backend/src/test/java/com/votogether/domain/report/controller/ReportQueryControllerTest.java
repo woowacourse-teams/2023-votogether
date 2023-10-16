@@ -3,17 +3,13 @@ package com.votogether.domain.report.controller;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-import com.votogether.domain.post.entity.vo.PostClosingType;
-import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.report.dto.response.ReportResponse;
-import com.votogether.domain.report.dto.response.ReportsResponse;
+import com.votogether.domain.report.dto.response.ReportsPageResponse;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.service.ReportQueryService;
-import com.votogether.global.jwt.TokenPayload;
 import com.votogether.test.ControllerTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.common.mapper.TypeRef;
@@ -70,8 +66,8 @@ class ReportQueryControllerTest extends ControllerTest {
                     .build();
             ReflectionTestUtils.setField(report, "id", 1L);
 
-            final ReportsResponse reportsResponse =
-                    ReportsResponse.of(
+            final ReportsPageResponse reportsPageResponse =
+                    ReportsPageResponse.of(
                             totalPages,
                             currentPageNumber,
                             List.of(report),
@@ -79,10 +75,10 @@ class ReportQueryControllerTest extends ControllerTest {
                     );
 
             int page = 0;
-            given(reportQueryService.getReports(page)).willReturn(reportsResponse);
+            given(reportQueryService.getReports(page)).willReturn(reportsPageResponse);
 
             // when
-            final ReportsResponse reportsResponses = RestAssuredMockMvc
+            final ReportsPageResponse reportsPageResponses = RestAssuredMockMvc
                     .given().log().all()
                     .contentType(ContentType.JSON)
                     .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
@@ -95,11 +91,11 @@ class ReportQueryControllerTest extends ControllerTest {
                     });
 
             // then
-            final List<ReportResponse> reports = reportsResponses.reports();
+            final List<ReportResponse> reports = reportsPageResponses.reports();
             final ReportResponse reportResponse = reports.get(0);
             assertSoftly(softly -> {
-                softly.assertThat(reportsResponses.totalPageCount()).isEqualTo(totalPages);
-                softly.assertThat(reportsResponses.currentPageNumber()).isEqualTo(currentPageNumber);
+                softly.assertThat(reportsPageResponses.totalPageCount()).isEqualTo(totalPages);
+                softly.assertThat(reportsPageResponses.currentPageNumber()).isEqualTo(currentPageNumber);
                 softly.assertThat(reports).hasSize(1);
                 softly.assertThat(reportResponse.target()).isEqualTo(target);
                 softly.assertThat(reportResponse.type()).isEqualTo(reportType);

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @Schema(description = "신고 조치 예정 목록 응답")
-public record ReportsResponse(
+public record ReportsPageResponse(
         @Schema(description = "신고 조치 예정 목록 전체 페이지 수", example = "20")
         long totalPageCount,
 
@@ -17,13 +17,13 @@ public record ReportsResponse(
         List<ReportResponse> reports
 ) {
 
-    public static ReportsResponse of(
+    public static ReportsPageResponse of(
             final int totalPages,
             final int currentPageNumber,
             final List<Report> reports,
             final List<String> targets
     ) {
-        return new ReportsResponse(
+        return new ReportsPageResponse(
                 totalPages,
                 currentPageNumber,
                 IntStream.range(0, reports.size())

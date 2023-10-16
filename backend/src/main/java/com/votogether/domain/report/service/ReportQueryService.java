@@ -1,17 +1,10 @@
 package com.votogether.domain.report.service;
 
-import com.votogether.domain.report.dto.response.ReportsResponse;
+import com.votogether.domain.report.dto.response.ReportsPageResponse;
 import com.votogether.domain.report.entity.Report;
-import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.report.service.strategy.ReportActionProvider;
-import com.votogether.domain.report.service.strategy.ReportCommentStrategy;
-import com.votogether.domain.report.service.strategy.ReportNicknameStrategy;
-import com.votogether.domain.report.service.strategy.ReportPostStrategy;
-import com.votogether.domain.report.service.strategy.ReportStrategy;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +21,7 @@ public class ReportQueryService {
     private final ReportRepository reportRepository;
     private final ReportActionProvider reportActionProvider;
 
-    public ReportsResponse getReports(final int page) {
+    public ReportsPageResponse getReports(final int page) {
         final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);
         final List<Report> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
         final int totalPages = reportRepository.findAll(pageable).getTotalPages();
@@ -39,7 +32,7 @@ public class ReportQueryService {
                                 .parseTarget(report.getTargetId())
                 )
                 .toList();
-        return ReportsResponse.of(totalPages, page + 1, reports, targets);
+        return ReportsPageResponse.of(totalPages, page + 1, reports, targets);
     }
 
 }

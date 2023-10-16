@@ -8,6 +8,8 @@ export interface UserInfoResponse {
   birthYear: number;
   postCount: number;
   voteCount: number;
+  hasLatestAlarm: boolean;
+  role: 'ADMIN' | 'USER';
 }
 
 export interface ModifyNicknameRequest {

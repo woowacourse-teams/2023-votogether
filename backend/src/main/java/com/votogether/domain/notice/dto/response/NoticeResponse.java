@@ -31,6 +31,8 @@ public record NoticeResponse(
         LocalDateTime updatedAt
 ) {
 
+    public static final NoticeResponse empty = new NoticeResponse(null, null, null, null, null, null, null, null);
+
     public static NoticeResponse from(final Notice notice) {
         return new NoticeResponse(
                 notice.getId(),

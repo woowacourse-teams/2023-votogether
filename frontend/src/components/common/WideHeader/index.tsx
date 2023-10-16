@@ -7,8 +7,8 @@ import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 
 import { PATH } from '@constants/path';
 
+import AlarmContainer from '../../AlarmContainer';
 import AlarmIconButton from '../ActiveContainer';
-import AlarmContainer from '../AlarmContainer';
 import IconButton from '../IconButton';
 import LogoButton from '../LogoButton';
 import SearchBar from '../SearchBar';

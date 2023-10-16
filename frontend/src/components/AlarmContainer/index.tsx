@@ -11,8 +11,8 @@ import ContentAlarmList from './ContentAlarmList';
 import ReportAlarmList from './ReportAlarmList';
 import * as S from './style';
 
-const CONTENT = 'content';
-const REPORT = 'report';
+const CONTENT = '알림';
+const REPORT = '신고';
 
 interface AlarmContainerProps {
   style?: CSSProperties;

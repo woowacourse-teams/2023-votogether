@@ -7,8 +7,8 @@ import { useDrawer } from '@hooks/useDrawer';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
+import AlarmContainer from '@components/AlarmContainer';
 import AddButton from '@components/common/AddButton';
-import AlarmContainer from '@components/common/AlarmContainer';
 import AppInstallPrompt from '@components/common/AppInstallPrompt';
 import Banner from '@components/common/Banner';
 import Dashboard from '@components/common/Dashboard';

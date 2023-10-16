@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
@@ -17,24 +15,6 @@ export const Container = styled.div`
   @media (min-width: ${theme.breakpoint.sm}) {
     height: 100%;
   }
-`;
-
-export const NoticeListLink = styled(Link)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 100%;
-  margin-top: 20px;
-
-  font: var(--text-body);
-`;
-
-export const Image = styled.img`
-  width: 10px;
-  height: 10px;
-
-  margin-left: 10px;
 `;
 
 export const CategorySectionWrapper = styled.div`

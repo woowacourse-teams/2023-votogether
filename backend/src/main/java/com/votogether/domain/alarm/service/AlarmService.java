@@ -3,8 +3,10 @@ package com.votogether.domain.alarm.service;
 import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
 import com.votogether.domain.alarm.dto.ReportActionResponse;
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.exception.ReportActionAlarmExceptionType;
 import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.global.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +32,7 @@ public class AlarmService {
     public ReportActionResponse getReportActionAlarm(final Long reportActionAlarmId, final Member member) {
         final ReportActionAlarm reportActionAlarm = reportActionAlarmRepository
                 .findByIdAndMember(reportActionAlarmId, member)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NotFoundException(ReportActionAlarmExceptionType.NOT_FOUND));
 
         return ReportActionResponse.from(reportActionAlarm);
     }

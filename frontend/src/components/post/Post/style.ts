@@ -56,19 +56,23 @@ export const Title = styled.p<{ $isPreview: boolean }>`
   }
 `;
 
-export const Wrapper = styled.div`
+export const WriterInfoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  font: var(--text-small);
+  width: 100%;
 
-  & > :nth-child(2) {
-    margin-left: 10px;
-  }
+  font: var(--text-small);
 
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-caption);
+  }
+`;
+
+export const Wrapper = styled.div`
+  & > :nth-child(2) {
+    margin-left: 10px;
   }
 `;
 
@@ -97,6 +101,8 @@ export const DetailLink = styled.button<{ $isPreview: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  width: 100%;
 
   cursor: ${({ $isPreview }) => $isPreview && 'pointer'};
 `;

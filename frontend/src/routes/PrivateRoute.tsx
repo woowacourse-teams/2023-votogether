@@ -24,7 +24,7 @@ const PrivateRoute = ({
   const authInfo = useContext(AuthContext);
   const isLoggedIn = getLocalStorage(ACCESS_TOKEN_KEY);
   const hasEssentialInfo = getCookie().hasEssentialInfo;
-  let role = 'USER'; // 로그인 시 response 로 받아야 함.
+  let role = 'ADMIN'; // 로그인 시 response 로 받아야 함.
   // const role = 'getCookie().role;
 
   // const isAuthenticated = true;

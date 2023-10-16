@@ -5,8 +5,9 @@ import { theme } from '@styles/theme';
 export const Container = styled.ul`
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
   gap: 10px;
+
+  padding-left: 20px;
 
   font: var(--text-caption);
 
@@ -17,9 +18,10 @@ export const Container = styled.ul`
 
 export const List = styled.ul`
   background-color: var(--bright-gray);
-  padding: 10px;
   padding-left: 30px;
   margin-top: 10px;
+
+  padding: 10px;
 
   font: var(--text-default);
 
@@ -35,9 +37,10 @@ export const ListItem = styled.li`
 `;
 
 export const Content = styled.div`
-  background-color: var(--bright-gray);
   padding: 30px;
   margin-top: 10px;
+
+  background-color: var(--bright-gray);
 
   //포함된 부분에서 이벤트 발생을 막는 속성
   pointer-events: none;

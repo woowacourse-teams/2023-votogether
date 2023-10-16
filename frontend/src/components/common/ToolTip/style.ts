@@ -46,5 +46,6 @@ export const Content = styled.div<{ $size: Size | 'free' }>`
   width: ${props => SIZE[props.$size].width};
   border: 2px solid var(--gray);
   border-radius: 4px;
+
   background-color: var(--white);
 `;

@@ -11,11 +11,12 @@ export const ListContainer = styled.ul`
 
 export const ListItem = styled.li<{ $isRead: boolean }>`
   display: flex;
+
   border: 1px solid var(--gray);
   align-items: center;
-
   min-height: 60px;
   margin: 2px 0;
+
   background-color: ${props => props.$isRead && 'var(--bright-gray)'};
 `;
 
@@ -26,8 +27,8 @@ export const ButtonWrapper = styled.li`
 export const LinkButton = styled.button`
   height: 100%;
   width: 100%;
-
   padding: 10px;
+
   text-align: left;
 
   cursor: pointer;
@@ -42,6 +43,7 @@ export const LinkButton = styled.button`
 
   & > *:last-child {
     margin-top: 5px;
+
     text-align: right;
     font: var(--text-small);
   }

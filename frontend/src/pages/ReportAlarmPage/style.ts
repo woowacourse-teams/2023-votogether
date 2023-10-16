@@ -23,7 +23,7 @@ export const PageHeader = styled.div`
   margin: 15px;
 
   text-align: center;
-  font: var(--text-title);
+  font: var(--text-page-title);
 `;
 
 export const ContentContainer = styled.div`

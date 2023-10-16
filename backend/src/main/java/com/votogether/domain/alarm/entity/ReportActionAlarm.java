@@ -39,6 +39,9 @@ public class ReportActionAlarm extends BaseEntity {
     @Column(length = 500, nullable = false)
     private String target;
 
+    @Column(length = 500, nullable = false)
+    private String reasons;
+
     @Column(nullable = false)
     private boolean isChecked;
 
@@ -47,11 +50,14 @@ public class ReportActionAlarm extends BaseEntity {
             final Member member,
             final ReportType reportType,
             final String target,
+            final String reasons,
             final boolean isChecked
     ) {
         this.member = member;
         this.reportType = reportType;
         this.target = target;
+        this.reasons = reasons;
         this.isChecked = isChecked;
     }
+
 }

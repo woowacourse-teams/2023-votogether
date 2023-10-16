@@ -1,6 +1,5 @@
 package com.votogether.domain.report.repository;
 
-import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
@@ -32,7 +31,4 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             @Param("targetId") final Long targetId
     );
 
-    @Query("SELECT r FROM Report r JOIN ReportToAction re on r.id = re.report.id "
-            + "WHERE re.reportActionAlarm = :reportActionAlarm")
-    List<Report> findAllByReportActionAlarm(@Param("reportActionAlarm") final ReportActionAlarm reportActionAlarm);
 }

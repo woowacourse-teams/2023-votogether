@@ -30,6 +30,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
                 .member(member)
                 .isChecked(false)
                 .target("1")
+                .reasons("광고성, 부적합성")
                 .build();
 
         ReportActionAlarm reportActionAlarmB = ReportActionAlarm.builder()
@@ -37,6 +38,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
                 .member(member)
                 .isChecked(false)
                 .target("닉네임")
+                .reasons("광고성, 부적합성")
                 .build();
 
         ReportActionAlarm reportActionAlarmC = ReportActionAlarm.builder()
@@ -44,6 +46,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
                 .member(member)
                 .isChecked(false)
                 .target("댓글내용")
+                .reasons("광고성, 부적합성")
                 .build();
 
         reportActionAlarmRepository.save(reportActionAlarmA);
@@ -78,6 +81,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
                     .member(member)
                     .isChecked(false)
                     .target(String.valueOf(i))
+                    .reasons("광고성, 부적합성")
                     .build();
             reportActionAlarmRepository.save(reportActionAlarm);
         }
@@ -93,41 +97,6 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
         assertAll(
                 () -> assertThat(reportActionAlarmsA.size()).isEqualTo(10),
                 () -> assertThat(reportActionAlarmsB.size()).isEqualTo(1)
-        );
-    }
-
-    @Test
-    @DisplayName("ID와 회원으로 신고조치알림을 조회한다")
-    void findByIdAndMember() {
-        // given
-        Member memberA = memberTestPersister.builder().save();
-        Member memberB = memberTestPersister.builder().save();
-
-        ReportActionAlarm reportActionAlarmA = ReportActionAlarm.builder()
-                .reportType(ReportType.POST)
-                .member(memberA)
-                .isChecked(false)
-                .target("1")
-                .build();
-        ReportActionAlarm savedReportActionAlarmA = reportActionAlarmRepository.save(reportActionAlarmA);
-
-        ReportActionAlarm reportActionAlarmB = ReportActionAlarm.builder()
-                .reportType(ReportType.POST)
-                .member(memberB)
-                .isChecked(false)
-                .target("2")
-                .build();
-        reportActionAlarmRepository.save(reportActionAlarmB);
-
-        // when
-        ReportActionAlarm foundReportActionAlarm = reportActionAlarmRepository
-                .findByIdAndMember(savedReportActionAlarmA.getId(), memberA)
-                .get();
-
-        // then
-        assertAll(
-                () -> assertThat(foundReportActionAlarm.getId()).isEqualTo(savedReportActionAlarmA.getId()),
-                () -> assertThat(foundReportActionAlarm.getMember().getId()).isEqualTo(memberA.getId())
         );
     }
 

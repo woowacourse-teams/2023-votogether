@@ -40,6 +40,7 @@ export default function WideHeader() {
   };
 
   const handleToolTipOpen = () => {
+    //추후 토스트 처리
     if (!loggedInfo.isLoggedIn) return;
 
     openComponent();

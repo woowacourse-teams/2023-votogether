@@ -51,6 +51,7 @@ export default function HomePage() {
   const { mutate } = useReadLatestAlarm();
 
   const handleToolTipOpen = () => {
+    //추후 토스트 처리
     if (!loggedInfo.isLoggedIn) return;
 
     openAlarmDrawer();

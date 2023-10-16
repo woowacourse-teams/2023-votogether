@@ -76,7 +76,8 @@ public class VoteService {
         final List<PostOption> postOptions = Stream.of(originPostOptionId, newPostOptionId)
                 .sorted()
                 .map(postOptionRepository::findByIdForUpdate)
-                .map(postOption -> postOption.orElseThrow(() -> new NotFoundException(VoteExceptionType.NOT_FOUND)))
+                .map(postOption -> postOption.orElseThrow(
+                        () -> new NotFoundException(PostOptionExceptionType.NOT_FOUND)))
                 .toList();
 
         final PostOption originPostOption = getPostOptionById(postOptions, originPostOptionId);

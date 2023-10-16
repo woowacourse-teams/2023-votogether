@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 
-export const ListContainer = styled.ul``;
+export const Description = styled.p`
+  font-size: 1.4rem;
+  text-align: center;
+`;
+
+export const ListContainer = styled.ul`
+  font-size: 1.4rem;
+`;
 
 export const ListItem = styled.li<{ $isRead: boolean }>`
   display: flex;
@@ -10,8 +17,6 @@ export const ListItem = styled.li<{ $isRead: boolean }>`
   min-height: 60px;
   margin: 2px 0;
   background-color: ${props => props.$isRead && 'var(--bright-gray)'};
-
-  font-size: 1.4rem;
 `;
 
 export const ButtonWrapper = styled.li`

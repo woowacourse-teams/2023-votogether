@@ -20,7 +20,7 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
   const navigation = useNavigate();
 
   if (isListEmpty) {
-    return <p>현재 도착한 알림이 없습니다!</p>;
+    return <LS.Description>현재 도착한 알림이 없습니다!</LS.Description>;
   }
 
   const handleAlarmClick = (alarmId: number, postId: number) => {

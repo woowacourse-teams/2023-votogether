@@ -30,11 +30,11 @@ export default function PendingReportPage() {
   const { data, isLoading } = usePendingReportActionList(currentPageNumber - 1);
   const { mutate: reportAction } = useReportAction();
 
-  const handleClickReportAction = (reportData: ReportActionRequest, reportDetail: ReportDetail) => {
+  const handleClickButton = (reportData: ReportActionRequest, reportDetail: ReportDetail) => {
     const { typeName, target, isEdit } = reportDetail;
     const editOrDelete = isEdit ? '수정' : '삭제';
     const message = `'${typeName}: ${target}'을 ${
-      reportData.hasAction ? editOrDelete : '해제'
+      reportData.hasAction ? editOrDelete : '신고 해제'
     }하시겠습니까?`;
 
     if (window.confirm(message)) reportAction(reportData);
@@ -53,16 +53,14 @@ export default function PendingReportPage() {
           editOrDeleteAction: (
             <S.ReportActionButton
               $isEdit={report.typeName === REPORT_TYPE.NICKNAME}
-              onClick={() => handleClickReportAction(reportData, reportDetail)}
+              onClick={() => handleClickButton(reportData, reportDetail)}
             >
               {REPORT_ACTION_TYPE[report.typeName]}
             </S.ReportActionButton>
           ),
           deleteReport: (
             <S.ReportDeleteButton
-              onClick={() =>
-                handleClickReportAction({ ...reportData, hasAction: false }, reportDetail)
-              }
+              onClick={() => handleClickButton({ ...reportData, hasAction: false }, reportDetail)}
             >
               해제
             </S.ReportDeleteButton>
@@ -81,7 +79,7 @@ export default function PendingReportPage() {
             <Table
               columns={columnList}
               rows={reportListWithAction}
-              columnTemplate="1fr 2fr 3fr 2fr 1fr 1fr 1fr"
+              columnTemplate="1fr 3fr 3fr 2fr 3fr 2fr 2fr"
             />
             <S.PaginationContainer>
               <S.MovePageButton

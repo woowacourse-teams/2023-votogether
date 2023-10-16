@@ -180,13 +180,18 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: PATH.PENDING_REPORT,
-    element: (
-      <PrivateRoute isOnlyAdminAllowed>
-        <PendingReportPage />
-      </PrivateRoute>
-    ),
+    path: PATH.ADMIN,
     errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'reports/pending',
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <PendingReportPage />
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
   {
     path: '*',

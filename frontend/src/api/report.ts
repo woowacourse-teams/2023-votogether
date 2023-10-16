@@ -23,8 +23,8 @@ export const getPendingReportActionList = async (
   );
   const { reports, ...rest } = pendingReportActionList;
   const reportList = reports.map(report => {
-    const { type, ...rest } = report;
-    return { ...rest, typeName: REPORT_TYPE[report.type] };
+    const { type, reasons, ...rest } = report;
+    return { ...rest, typeName: REPORT_TYPE[report.type], reason: reasons.join(', ') };
   });
 
   return { ...rest, reportList };

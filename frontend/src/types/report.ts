@@ -34,8 +34,9 @@ export interface PendingReportActionResponse {
   target: string;
 }
 
-export type PendingReportAction = Omit<PendingReportActionResponse, 'type'> & {
+export type PendingReportAction = Omit<PendingReportActionResponse, 'type' | 'reasons'> & {
   typeName: (typeof REPORT_TYPE)[keyof typeof REPORT_TYPE];
+  reason: string;
 };
 
 export type PendingReportActionList = Omit<PendingReportActionListResponse, 'reports'> & {

@@ -11,13 +11,14 @@ import SquareButton from '@components/common/SquareButton';
 
 import { PATH } from '@constants/path';
 
+import { SHORTEN_TEXT_LENGTH } from '../constant';
 import * as LS from '../ListStyle';
 import * as S from '../style';
 
-const REPORT_TYPE: Record<ReportType, string> = {
-  POST: '게시글',
-  COMMENT: '댓글',
-  NICKNAME: '닉네임',
+const REPORT_TYPE: Record<ReportType, { name: string; action: '삭제' | '변경' }> = {
+  POST: { name: '게시글', action: '삭제' },
+  COMMENT: { name: '댓글', action: '삭제' },
+  NICKNAME: { name: '닉네임', action: '변경' },
 };
 
 export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => void }) {
@@ -44,7 +45,10 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
         <Fragment key={pageIndex}>
           {listInfo.alarmList.map(alarm => {
             const { reportId, type, content } = alarm.detail;
-            const shortContent = content.length < 8 ? content : `${content.slice(0, 8)}...`;
+            const shortContent =
+              content.length < SHORTEN_TEXT_LENGTH.DEFAULT
+                ? content
+                : `${content.slice(0, SHORTEN_TEXT_LENGTH.DEFAULT)}...`;
 
             return (
               <LS.ListItem key={alarm.alarmId} $isRead={alarm.isChecked}>
@@ -53,7 +57,7 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
                     handleAlarmClick(alarm.alarmId, reportId);
                   }}
                 >
-                  <p>{`"${shortContent}" ${REPORT_TYPE[type]}이 신고를 받아 처리되었습니다.`}</p>
+                  <p>{`"${shortContent}" ${REPORT_TYPE[type].name}이 신고를 받아 ${REPORT_TYPE[type].action}처리되었습니다.`}</p>
                   <p>{alarm.detail.createdAt}</p>
                 </LS.LinkButton>
               </LS.ListItem>

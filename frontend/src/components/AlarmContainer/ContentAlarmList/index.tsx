@@ -9,6 +9,7 @@ import SquareButton from '@components/common/SquareButton';
 
 import { PATH } from '@constants/path';
 
+import { SHORTEN_TEXT_LENGTH } from '../constant';
 import * as LS from '../ListStyle';
 import * as S from '../style';
 
@@ -36,8 +37,14 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
         <Fragment key={pageIndex}>
           {listInfo.alarmList.map(alarm => {
             const { postId, postTitle: title, commentWriter: nickname } = alarm.detail;
-            const shortTitle = title.length < 10 ? title : `${title.slice(0, 10)}...`;
-            const shortNickname = nickname.length < 6 ? nickname : `${nickname.slice(0, 6)}...`;
+            const shortTitle =
+              title.length < SHORTEN_TEXT_LENGTH.TITLE
+                ? title
+                : `${title.slice(0, SHORTEN_TEXT_LENGTH.TITLE)}...`;
+            const shortNickname =
+              nickname.length < SHORTEN_TEXT_LENGTH.NICKNAME
+                ? nickname
+                : `${nickname.slice(0, SHORTEN_TEXT_LENGTH.NICKNAME)}...`;
 
             return (
               <LS.ListItem key={alarm.alarmId} $isRead={alarm.isChecked}>

@@ -8,6 +8,7 @@ export interface UserInfoResponse {
   birthYear: number;
   postCount: number;
   voteCount: number;
+  role: 'ADMIN' | 'USER';
 }
 
 export interface ModifyNicknameRequest {
@@ -20,7 +21,7 @@ export interface UpdateUserInfoRequest {
 }
 
 export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
-  const { nickname, gender, birthYear, postCount, voteCount } = userInfo;
+  const { nickname, gender, birthYear, postCount, voteCount, role } = userInfo;
 
   return {
     nickname,
@@ -28,6 +29,7 @@ export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
     birthYear,
     postCount,
     voteCount,
+    role,
   };
 };
 

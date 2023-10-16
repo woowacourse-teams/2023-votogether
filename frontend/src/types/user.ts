@@ -4,6 +4,7 @@ export interface User {
   birthYear: number;
   postCount: number;
   voteCount: number;
+  role: 'ADMIN' | 'USER';
 }
 
 export interface LoggedInfo {

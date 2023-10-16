@@ -179,6 +179,29 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: PATH.ADMIN,
+
+    children: [
+      {
+        path: 'categories',
+        element: (
+          <PrivateRoute>
+            <div>어드민 카테고리 목록 페이지</div>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'reports',
+        element: (
+          <PrivateRoute>
+            <div>어드민 신고 목록 페이지</div>
+          </PrivateRoute>
+        ),
+      },
+    ],
+    errorElement: <ErrorPage />,
+  },
+  {
     path: '*',
     element: <NotFoundPage />,
   },

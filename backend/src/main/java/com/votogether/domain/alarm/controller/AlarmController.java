@@ -33,11 +33,11 @@ public class AlarmController {
     }
 
     @RequestMapping("/report/{id}")
-    public ResponseEntity<ReportActionResponse> getReportAction(
-            @PathVariable final Long reportActionAlarmId,
+    public ResponseEntity<ReportActionResponse> getReportActionAlarm(
+            @PathVariable("id") final Long reportActionAlarmId,
             @Auth final Member member
     ) {
-        ReportActionResponse response = alarmService.getReportAction(reportActionAlarmId, member);
+        final ReportActionResponse response = alarmService.getReportActionAlarm(reportActionAlarmId, member);
         return ResponseEntity.ok().body(response);
     }
 

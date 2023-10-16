@@ -3,9 +3,11 @@ package com.votogether.domain.alarm.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
+import com.votogether.domain.alarm.dto.ReportActionResponse;
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.alarm.service.AlarmService;
 import com.votogether.domain.member.entity.Member;
@@ -39,6 +41,7 @@ class AlarmControllerTest extends ControllerTest {
         ReportActionAlarm reportActionAlarm = ReportActionAlarm.builder()
                 .reportType(ReportType.POST)
                 .isChecked(false)
+                .reasons("광고성, 부적합성")
                 .target("1")
                 .build();
 
@@ -57,7 +60,35 @@ class AlarmControllerTest extends ControllerTest {
                 }.getType());
 
         // then
-        assertThat(results.get(0)).usingRecursiveComparison().isEqualTo(response);
+        assertThat(results.get(0)).isEqualTo(response);
+    }
+
+    @Test
+    @DisplayName("신고조치알림을 상세조회한다.")
+    void getReportAlarmAction() {
+        // given
+        ReportActionAlarm reportActionAlarm = ReportActionAlarm.builder()
+                .reportType(ReportType.POST)
+                .isChecked(false)
+                .target("1")
+                .reasons("광고성, 부적합성")
+                .build();
+
+        ReportActionResponse response = ReportActionResponse.from(reportActionAlarm);
+
+        given(alarmService.getReportActionAlarm(anyLong(), any(Member.class)))
+                .willReturn(response);
+
+        // when
+        ReportActionResponse result = RestAssuredMockMvc
+                .when().get("/alarms/report/{id}", 1)
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract()
+                .as(ReportActionResponse.class);
+
+        // then
+        assertThat(result).isEqualTo(response);
     }
 
 }

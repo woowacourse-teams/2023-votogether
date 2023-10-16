@@ -51,8 +51,19 @@ public class PostQueryService {
     public PostResponse getPost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
-        validateHiddenPost(post);
 
+        if (post.isWriter(loginMember) && post.isHidden()) {
+            return PostResponse.ofUser(
+                    loginMember,
+                    post,
+                    postCategoryRepository.findAllByPost(post),
+                    post.getFirstContentImage(),
+                    post.getPostOptions(),
+                    voteRepository.findByMemberAndPostOptionPost(loginMember, post)
+            );
+        }
+
+        validateHiddenPost(post);
         return PostResponse.ofUser(
                 loginMember,
                 post,

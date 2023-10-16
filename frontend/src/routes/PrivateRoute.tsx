@@ -24,6 +24,8 @@ const PrivateRoute = ({
   const authInfo = useContext(AuthContext);
   const isLoggedIn = getLocalStorage(ACCESS_TOKEN_KEY);
   const hasEssentialInfo = getCookie().hasEssentialInfo;
+  let role = 'USER'; // 로그인 시 response 로 받아야 함.
+  // const role = 'getCookie().role;
 
   // const isAuthenticated = true;
   if (!isGuestAllowed && !isLoggedIn) {
@@ -44,7 +46,6 @@ const PrivateRoute = ({
     return <Navigate to="/" />;
   }
 
-  const role = 'ADMIN';
   if (isLoggedIn && isOnlyAdminAllowed && role !== 'ADMIN') {
     alert('해당 페이지에 대한 접근 권한이 없습니다.');
 

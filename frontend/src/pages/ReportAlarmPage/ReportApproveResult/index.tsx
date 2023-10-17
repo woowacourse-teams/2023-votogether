@@ -34,7 +34,7 @@ export default function ReportApproveResult() {
           <b>사유 </b>
           <S.List>
             {[...new Set(data.reasonList.map(each => REPORT_MESSAGE[each]))].map(reason => {
-              return <S.ListItem>{reason}</S.ListItem>;
+              return <S.ListItem key={reason}>{reason}</S.ListItem>;
             })}
           </S.List>
         </S.ListItem>

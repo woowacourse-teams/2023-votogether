@@ -53,6 +53,7 @@ public class MemberService {
                     .member(member)
                     .postCount(0)
                     .voteCount(0)
+                    .score(0)
                     .build();
             memberMetricRepository.save(memberMetric);
             return savedMember;

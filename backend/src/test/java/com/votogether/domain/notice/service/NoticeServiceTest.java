@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class NoticeServiceTest extends ServiceTest {
@@ -221,6 +222,46 @@ class NoticeServiceTest extends ServiceTest {
             assertThatThrownBy(() -> noticeService.createNotice(noticeRequest, member))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("공지사항 제목의 길이가 유효하지 않습니다.");
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", " "})
+        @DisplayName("공지사항 배너 제목이 공백이라면 예외를 던진다.")
+        void emptyBannerTitle(String bannerTitle) {
+            // given
+            Member member = memberTestPersister.builder().save();
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "title",
+                    bannerTitle,
+                    null,
+                    "content",
+                    LocalDateTime.now()
+            );
+
+            // when, then
+            assertThatThrownBy(() -> noticeService.createNotice(noticeRequest, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("공지사항 배너 제목이 공백으로 이루어져 있습니다.");
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", " "})
+        @DisplayName("공지사항 배너 부제목이 공백이라면 예외를 던진다.")
+        void emptyBannerSubtitle(String bannerSubtitle) {
+            // given
+            Member member = memberTestPersister.builder().save();
+            NoticeRequest noticeRequest = new NoticeRequest(
+                    "title",
+                    null,
+                    bannerSubtitle,
+                    "content",
+                    LocalDateTime.now()
+            );
+
+            // when, then
+            assertThatThrownBy(() -> noticeService.createNotice(noticeRequest, member))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("공지사항 배너 제목이 공백으로 이루어져 있습니다.");
         }
 
         @ParameterizedTest

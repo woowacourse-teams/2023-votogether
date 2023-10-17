@@ -29,8 +29,11 @@ public class BannerTitle {
     }
 
     private void validate(final String title) {
-        if (title == null || title.isBlank()) {
+        if (title == null) {
             return;
+        }
+        if (title.isBlank()) {
+            throw new BadRequestException(NoticeExceptionType.EMPTY_BANNER_TITLE);
         }
         if (title.length() > MAXIMUM_TITLE_LENGTH) {
             throw new BadRequestException(NoticeExceptionType.INVALID_BANNER_TITLE_LENGTH);

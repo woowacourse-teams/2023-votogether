@@ -27,7 +27,7 @@ class AlarmEventListenerTest extends ServiceTest {
 
     @Test
     @DisplayName("게시글 관련 알림 이벤트를 수신한다.")
-    void handlePostAlarmEvent() {
+    void handlePostAlarmEvent() throws Exception {
         // given
         Member member = memberTestPersister.builder().save();
         PostAlarmEvent postAlarmEvent = new PostAlarmEvent(member, 1L, AlarmType.COMMENT, "title");
@@ -37,6 +37,8 @@ class AlarmEventListenerTest extends ServiceTest {
 
         TestTransaction.flagForCommit();
         TestTransaction.end();
+
+        Thread.sleep(1000);
 
         // then
         List<Alarm> alarms = alarmRepository.findAll();

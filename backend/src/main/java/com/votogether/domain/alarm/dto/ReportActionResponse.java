@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Schema(description = "신고조치 응답")
 public record ReportActionResponse(
         @Schema(description = "신고조치 ID", example = "1")
         Long reportActionId,

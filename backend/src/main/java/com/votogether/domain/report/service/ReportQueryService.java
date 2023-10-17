@@ -6,6 +6,7 @@ import com.votogether.domain.report.dto.response.ReportPageResponse;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.report.service.strategy.ReportActionProvider;
+import com.votogether.domain.report.service.strategy.ReportStrategy;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +50,8 @@ public class ReportQueryService {
     }
 
     private String parseTarget(final ReportAggregateDto reportAggregateDto) {
-        return reportActionProvider.getStrategy(reportAggregateDto.reportType())
-                .parseTarget(reportAggregateDto.targetId());
+        final ReportStrategy strategy = reportActionProvider.getStrategy(reportAggregateDto.reportType());
+        return strategy.parseTarget(reportAggregateDto.targetId());
     }
 
 }

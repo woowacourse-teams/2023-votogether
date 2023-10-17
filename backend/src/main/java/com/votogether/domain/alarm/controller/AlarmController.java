@@ -28,8 +28,8 @@ public class AlarmController implements AlarmControllerDocs {
             @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
             @Auth final Member member
     ) {
-        final List<ReportActionAlarmResponse> reportActionAlarms = alarmService.getReportActionAlarms(member, page);
-        return ResponseEntity.ok().body(reportActionAlarms);
+        final List<ReportActionAlarmResponse> response = alarmService.getReportActionAlarms(member, page);
+        return ResponseEntity.ok(response);
     }
 
     @RequestMapping("/report/{id}")
@@ -38,7 +38,7 @@ public class AlarmController implements AlarmControllerDocs {
             @Auth final Member member
     ) {
         final ReportActionResponse response = alarmService.getReportActionAlarm(reportActionAlarmId, member);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(response);
     }
 
 }

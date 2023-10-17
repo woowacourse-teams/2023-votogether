@@ -1,13 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 
+import { StringDate } from '@type/time';
+
 import SquareButton from '@components/common/SquareButton';
+
+import { PATH } from '@constants/path';
 
 import * as S from './style';
 
 interface NoticeDetailProps {
   title: string;
   content: string;
-  createdAt: string;
+  createdAt: StringDate;
 }
 
 export default function NoticeDetail({ title, content, createdAt }: NoticeDetailProps) {
@@ -25,7 +29,7 @@ export default function NoticeDetail({ title, content, createdAt }: NoticeDetail
           <SquareButton
             theme="fill"
             onClick={() => {
-              navigate('/');
+              navigate(PATH.HOME);
             }}
           >
             홈으로 가기
@@ -35,7 +39,7 @@ export default function NoticeDetail({ title, content, createdAt }: NoticeDetail
           <SquareButton
             theme="blank"
             onClick={() => {
-              navigate('/notices');
+              navigate(PATH.NOTICES);
             }}
           >
             {`공지사항\n목록으로 가기`}

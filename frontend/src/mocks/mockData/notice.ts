@@ -1,7 +1,7 @@
-import { Notice, NoticeList } from '@type/notice';
+import { Notice, NoticeList, NoticeListResponse, NoticeResponse } from '@type/notice';
 import { StringDate } from '@type/time';
 
-import { NoticeListResponse, NoticeResponse, transformNotice } from '@api/notice';
+import { transformNotice } from '@api/notice';
 
 const noticeTitleList = [
   '방방뛰는 코끼리',

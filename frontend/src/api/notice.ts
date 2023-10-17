@@ -1,5 +1,11 @@
-import { Notice, NoticeList } from '@type/notice';
-import { StringDate, StringDateOnly } from '@type/time';
+import {
+  Notice,
+  NoticeList,
+  NoticeListResponse,
+  NoticeRequest,
+  NoticeResponse,
+} from '@type/notice';
+import { StringDateOnly } from '@type/time';
 
 import { deleteFetch, getFetch, patchFetch, postFetch } from '@utils/fetch';
 
@@ -22,24 +28,6 @@ export const transformNotice = ({
     bannerSubtitle,
   };
 };
-
-export interface NoticeResponse {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: StringDate;
-  deadline: StringDate;
-  bannerTitle: string;
-  bannerSubtitle: string;
-}
-
-export interface NoticeListResponse {
-  totalPageNumber: number;
-  currentPageNumber: number;
-  notices: NoticeResponse[];
-}
-
-export type NoticeRequest = Omit<Notice, 'createdAt' | 'id'>;
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 

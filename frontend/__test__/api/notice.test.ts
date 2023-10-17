@@ -1,5 +1,6 @@
+import { NoticeRequest } from '@type/notice';
+
 import {
-  NoticeRequest,
   createNotice,
   deleteNotice,
   getBannerNotice,

@@ -3,9 +3,9 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { useCreateNotice } from '@hooks';
+import { NoticeRequest } from '@type/notice';
 
-import { NoticeRequest } from '@api/notice';
+import { useCreateNotice } from '@hooks';
 
 import { MOCK_NOTICE_TEST } from '@mocks/notice';
 

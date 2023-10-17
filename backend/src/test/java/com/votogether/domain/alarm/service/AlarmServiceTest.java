@@ -25,13 +25,13 @@ import org.springframework.test.context.transaction.TestTransaction;
 class AlarmServiceTest extends ServiceTest {
 
     @Autowired
-    private AlarmService alarmService;
+    AlarmService alarmService;
 
     @Autowired
-    private PostCommentService postCommentService;
+    PostCommentService postCommentService;
 
     @Autowired
-    private PostCommandService postCommandService;
+    PostCommandService postCommandService;
 
     @Nested
     @DisplayName("알림 조회는 ")

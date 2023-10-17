@@ -20,10 +20,10 @@ import org.springframework.test.context.transaction.TestTransaction;
 class AlarmEventListenerTest extends ServiceTest {
 
     @Autowired
-    private AlarmEventListener alarmEventListener;
+    AlarmEventListener alarmEventListener;
 
     @Autowired
-    private AlarmRepository alarmRepository;
+    AlarmRepository alarmRepository;
 
     @Test
     @DisplayName("게시글 관련 알림 이벤트를 수신한다.")

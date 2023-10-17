@@ -22,7 +22,7 @@ import org.springframework.http.HttpHeaders;
 class AlarmControllerTest extends ControllerTest {
 
     @MockBean
-    private AlarmService alarmService;
+    AlarmService alarmService;
 
     @BeforeEach
     void setUp() {

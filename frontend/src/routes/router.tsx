@@ -184,7 +184,6 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <ReportAlarmPage />
-        <RouteChangeTracker />
       </PrivateRoute>
     ),
     errorElement: <ErrorPage />,

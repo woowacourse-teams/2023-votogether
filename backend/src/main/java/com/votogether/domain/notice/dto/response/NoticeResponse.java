@@ -25,13 +25,10 @@ public record NoticeResponse(
         LocalDateTime deadline,
 
         @Schema(description = "공지사항 생성시각", example = "2023-12-25 23:59")
-        LocalDateTime createdAt,
-
-        @Schema(description = "공지사항 수정시각", example = "2023-12-25 23:59")
-        LocalDateTime updatedAt
+        LocalDateTime createdAt
 ) {
 
-    public static final NoticeResponse empty = new NoticeResponse(null, null, null, null, null, null, null, null);
+    public static final NoticeResponse empty = new NoticeResponse(null, null, null, null, null, null, null);
 
     public static NoticeResponse from(final Notice notice) {
         return new NoticeResponse(
@@ -41,8 +38,7 @@ public record NoticeResponse(
                 notice.getBannerSubtitle(),
                 notice.getContent(),
                 notice.getDeadline(),
-                notice.getCreatedAt(),
-                notice.getUpdatedAt()
+                notice.getCreatedAt()
         );
     }
 

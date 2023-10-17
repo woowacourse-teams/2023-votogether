@@ -59,7 +59,6 @@ class NoticeControllerTest extends ControllerTest {
                 "bannerSubtitle",
                 "content",
                 LocalDateTime.now().plusDays(1),
-                LocalDateTime.now(),
                 LocalDateTime.now()
         );
         given(noticeService.getProgressNotice()).willReturn(expected);
@@ -94,7 +93,6 @@ class NoticeControllerTest extends ControllerTest {
                     "bannerSubtitle",
                     "content",
                     LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now(),
                     LocalDateTime.now()
             );
             NoticePageResponse expected = new NoticePageResponse(1, 0, List.of(noticeResponse));
@@ -127,7 +125,6 @@ class NoticeControllerTest extends ControllerTest {
                     "bannerSubtitle",
                     "content",
                     LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now(),
                     LocalDateTime.now()
             );
             NoticePageResponse expected = new NoticePageResponse(1, 0, List.of(noticeResponse));
@@ -163,7 +160,6 @@ class NoticeControllerTest extends ControllerTest {
                     "bannerSubtitle",
                     "content",
                     LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now(),
                     LocalDateTime.now()
             );
             given(noticeService.getNotice(anyLong())).willReturn(expected);

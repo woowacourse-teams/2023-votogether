@@ -73,7 +73,7 @@ class NoticeServiceTest extends ServiceTest {
             NoticeResponse noticeResponse = noticeService.getProgressNotice();
 
             // then
-            NoticeResponse expected = new NoticeResponse(null, null, null, null, null, null, null, null);
+            NoticeResponse expected = NoticeResponse.empty;
             assertThat(noticeResponse).usingRecursiveComparison().isEqualTo(expected);
         }
 

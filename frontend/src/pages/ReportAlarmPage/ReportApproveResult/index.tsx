@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useReportConfirmResult } from '@hooks/query/useReportConfirmResult';
+import { useReportApproveResult } from '@hooks/query/useReportApproveResult';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
@@ -12,11 +12,11 @@ import { REPORT_MESSAGE, REPORT_TYPE } from '@constants/policyMessage';
 import ReportTargetPost from './ReportTargetPost';
 import * as S from './style';
 
-export default function ReportConfirmResult() {
+export default function ReportApproveResult() {
   const params = useParams() as { reportId: string };
   const reportId = Number(params.reportId);
 
-  const { data } = useReportConfirmResult(reportId);
+  const { data } = useReportApproveResult(reportId);
 
   return (
     data && (

@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { ReportConfirmResult, getReportConfirmResult } from '@api/alarm';
+import { ReportApproveResult, getReportApproveResult } from '@api/alarm';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const useReportConfirmResult = (reportId: number) => {
-  const { data } = useQuery<ReportConfirmResult>(
+export const useReportApproveResult = (reportId: number) => {
+  const { data } = useQuery<ReportApproveResult>(
     [QUERY_KEY.REPORT_CONFIRM_RESULT, reportId],
-    () => getReportConfirmResult(reportId),
+    () => getReportApproveResult(reportId),
     {
       cacheTime: 60 * 60 * 1000,
       staleTime: 60 * 60 * 1000,

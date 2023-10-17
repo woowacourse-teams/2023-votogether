@@ -5,7 +5,7 @@ import ErrorBoundary from '@pages/ErrorBoundary';
 import Layout from '@components/common/Layout';
 import Skeleton from '@components/common/Skeleton';
 
-import ReportConfirmResult from './ReportConfirmResult';
+import ReportApproveResult from './ReportApproveResult';
 import * as S from './style';
 
 export default function ReportAlarmPage() {
@@ -16,7 +16,7 @@ export default function ReportAlarmPage() {
         <ErrorBoundary>
           <Suspense fallback={<Skeleton isLarge={true} />}>
             <S.ContentContainer>
-              <ReportConfirmResult />
+              <ReportApproveResult />
             </S.ContentContainer>
           </Suspense>
         </ErrorBoundary>

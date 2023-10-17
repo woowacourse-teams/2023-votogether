@@ -9,5 +9,5 @@ export const QUERY_KEY = {
   VOTE_STATISTICS: 'voteStatistics',
   ALARM_CONTENT: 'contentAlarm',
   ALARM_REPORT: 'reportAlarm',
-  REPORT_CONFIRM_RESULT: 'reportConfirmResult',
+  REPORT_CONFIRM_RESULT: 'reportApproveResult',
 };

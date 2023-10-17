@@ -38,16 +38,16 @@ export interface ReportAlarmList {
 interface ReportAlarm {
   alarmId: number;
   isChecked: boolean;
-  detail: ReportConfirmResult;
+  detail: ReportApproveResult;
 }
 
 interface ReportAlarmResponse {
   alarmId: number;
   isChecked: boolean;
-  detail: ReportConfirmResultResponse;
+  detail: ReportApproveResultResponse;
 }
 
-export interface ReportConfirmResult {
+export interface ReportApproveResult {
   reportId: number;
   type: ReportType;
   reasonList: ReportMessage[];
@@ -55,7 +55,7 @@ export interface ReportConfirmResult {
   createdAt: StringDate;
 }
 
-export interface ReportConfirmResultResponse {
+export interface ReportApproveResultResponse {
   reportId: number;
   type: ReportType;
   reasons: ReportMessage[];
@@ -63,8 +63,8 @@ export interface ReportConfirmResultResponse {
   createdAt: StringDate;
 }
 
-const transformReportConfirmResultResponse = (reportConfirmResult: ReportConfirmResultResponse) => {
-  const { reportId, type, reasons, content, createdAt } = reportConfirmResult;
+const transformReportApproveResultResponse = (reportApproveResult: ReportApproveResultResponse) => {
+  const { reportId, type, reasons, content, createdAt } = reportApproveResult;
   return { reportId, type, reasonList: reasons, content, createdAt };
 };
 
@@ -75,17 +75,17 @@ export const getReportAlarmList = async (page: number): Promise<ReportAlarmList>
     pageNumber: page,
     alarmList: alarmList.map(alarm => ({
       ...alarm,
-      detail: transformReportConfirmResultResponse(alarm.detail),
+      detail: transformReportApproveResultResponse(alarm.detail),
     })),
   };
 };
 
-export const getReportConfirmResult = async (reportId: number): Promise<ReportConfirmResult> => {
-  const reportConfirmResult = await getFetch<ReportConfirmResultResponse>(
+export const getReportApproveResult = async (reportId: number): Promise<ReportApproveResult> => {
+  const reportApproveResult = await getFetch<ReportApproveResultResponse>(
     `${BASE_URL}/alarms/report/${reportId}`
   );
 
-  return transformReportConfirmResultResponse(reportConfirmResult);
+  return transformReportApproveResultResponse(reportApproveResult);
 };
 
 export const readAlarm = async (alarmId: number) => {

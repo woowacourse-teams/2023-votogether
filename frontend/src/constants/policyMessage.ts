@@ -1,3 +1,5 @@
+import { ReportType } from '@type/report';
+
 import {
   MAX_DEADLINE,
   NICKNAME,
@@ -74,3 +76,9 @@ export const APP_LAUNCH_EVENT = {
   CONTENT: '지금 결과를 확인하러 가볼까요?',
   CONTENT_DETAIL: '',
 } as const;
+
+export const REPORT_TYPE: Record<ReportType, { name: string; actionMessage: string }> = {
+  POST: { name: '게시글', actionMessage: '게시글이 삭제 조치 되었습니다.' },
+  COMMENT: { name: '댓글', actionMessage: '댓글이 삭제 조치 되었습니다.' },
+  NICKNAME: { name: '닉네임', actionMessage: '닉네임이 변경 조치 되었습니다.' },
+};

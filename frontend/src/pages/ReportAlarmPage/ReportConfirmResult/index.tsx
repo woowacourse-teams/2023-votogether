@@ -1,24 +1,16 @@
 import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ReportType } from '@type/report';
-
 import { useReportConfirmResult } from '@hooks/query/useReportConfirmResult';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
 import Skeleton from '@components/common/Skeleton';
 
-import { REPORT_MESSAGE } from '@constants/policyMessage';
+import { REPORT_MESSAGE, REPORT_TYPE } from '@constants/policyMessage';
 
 import ReportTargetPost from './ReportTargetPost';
 import * as S from './style';
-
-const reportType: Record<ReportType, { name: string; result: string }> = {
-  POST: { name: '게시글', result: '게시글이 삭제조치 되었습니다.' },
-  COMMENT: { name: '댓글', result: '댓글이 삭제조치 되었습니다.' },
-  NICKNAME: { name: '닉네임', result: '닉네임이 변경조치 되었습니다.' },
-};
 
 export default function ReportConfirmResult() {
   const params = useParams() as { reportId: string };
@@ -30,10 +22,10 @@ export default function ReportConfirmResult() {
     data && (
       <S.Container>
         <S.ListItem>
-          <b>대상 카테고리:</b> {reportType[data.type].name}
+          <b>대상 카테고리:</b> {REPORT_TYPE[data.type].name}
         </S.ListItem>
         <S.ListItem>
-          <b>조치 :</b> {reportType[data.type].result}
+          <b>조치 :</b> {REPORT_TYPE[data.type].actionMessage}
         </S.ListItem>
         <S.ListItem>
           <b>조치 일시:</b> {data.createdAt}

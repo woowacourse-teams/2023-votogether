@@ -1,8 +1,6 @@
 import { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ReportType } from '@type/report';
-
 import { useReadAlarm } from '@hooks/query/alarm/useReadAlarm';
 import { useReportAlarmList } from '@hooks/query/alarm/useReportAlarmList';
 
@@ -10,16 +8,11 @@ import LoadingSpinner from '@components/common/LoadingSpinner';
 import SquareButton from '@components/common/SquareButton';
 
 import { PATH } from '@constants/path';
+import { REPORT_TYPE } from '@constants/policyMessage';
 
 import { SHORTEN_TEXT_LENGTH } from '../constant';
 import * as LS from '../ListStyle';
 import * as S from '../style';
-
-const REPORT_TYPE: Record<ReportType, { name: string; action: '삭제' | '변경' }> = {
-  POST: { name: '게시글', action: '삭제' },
-  COMMENT: { name: '댓글', action: '삭제' },
-  NICKNAME: { name: '닉네임', action: '변경' },
-};
 
 export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => void }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isListEmpty } =
@@ -57,7 +50,7 @@ export default function ReportAlarmList({ closeToolTip }: { closeToolTip: () => 
                     handleAlarmClick(alarm.alarmId, reportId);
                   }}
                 >
-                  <p>{`"${shortContent}" ${REPORT_TYPE[type].name}이 신고를 받아 ${REPORT_TYPE[type].action}처리되었습니다.`}</p>
+                  <p>{`신고를 받아 "${shortContent}" ${REPORT_TYPE[type].actionMessage}`}</p>
                   <p>{alarm.detail.createdAt}</p>
                 </LS.LinkButton>
               </LS.ListItem>

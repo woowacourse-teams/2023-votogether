@@ -182,9 +182,10 @@ const router = createBrowserRouter([
   },
   {
     path: PATH.NOTICES,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: ':id',
+        path: ':noticeId',
         element: (
           <>
             <NoticeDetailPage />
@@ -202,7 +203,6 @@ const router = createBrowserRouter([
         ),
       },
     ],
-    errorElement: <ErrorPage />,
   },
   {
     path: '*',

@@ -52,6 +52,7 @@ export const ButtonContainer = styled.div`
 
   @media (min-width: ${theme.breakpoint.sm}) {
     flex-direction: row;
+    justify-content: center;
     gap: 80px;
 
     padding: 0 100px;
@@ -68,5 +69,9 @@ export const ButtonWrapper = styled.div`
     height: 60px;
 
     white-space: pre-wrap;
+
+    &:first-child {
+      display: none;
+    }
   }
 `;

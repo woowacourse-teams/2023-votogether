@@ -28,7 +28,8 @@
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-router-dom": "^6.14.1",
-    "upload-images-converter": "^2.0.2"
+    "upload-images-converter": "^2.0.2",
+    "votogether-design-system": "^0.0.12"
   },
   "eslintConfig": {
     "extends": [

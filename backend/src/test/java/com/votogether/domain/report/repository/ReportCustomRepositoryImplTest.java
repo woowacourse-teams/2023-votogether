@@ -4,6 +4,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.test.RepositoryTest;
@@ -46,25 +47,41 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
                 .targetId(1L)
                 .save();
 
+        final ReportAggregateDto reportAggregateDtoA = new ReportAggregateDto(
+                savedReportA.getId(),
+                savedReportA.getReportType(),
+                savedReportA.getTargetId(),
+                savedReportA.getReason(),
+                savedReportA.getCreatedAt()
+        );
+
+        final ReportAggregateDto reportAggregateDtoB = new ReportAggregateDto(
+                savedReportB.getId(),
+                savedReportB.getReportType(),
+                savedReportB.getTargetId(),
+                savedReportB.getReason(),
+                savedReportB.getCreatedAt()
+        );
+
         final PageRequest pageRequest = PageRequest.of(0, 20);
 
         // when
-        final List<Report> reports = reportCustomRepository
+        final List<ReportAggregateDto> reports = reportCustomRepository
                 .findReportsGroupedByMemberAndReportTypeAndTargetId(pageRequest);
 
         // then
         assertSoftly(softly -> {
-            equalTo(softly, reports.get(0), savedReportB);
-            equalTo(softly, reports.get(1), savedReportA);
+            equalTo(softly, reports.get(0), reportAggregateDtoB);
+            equalTo(softly, reports.get(1), reportAggregateDtoA);
         });
     }
 
-    private RecursiveComparisonAssert<?> equalTo(
+    private void equalTo(
             final SoftAssertions softly,
-            final Report actualReport,
-            final Report expectReport
+            final ReportAggregateDto actualReport,
+            final ReportAggregateDto expectReport
     ) {
-        return softly.assertThat(actualReport).usingRecursiveComparison()
+        softly.assertThat(actualReport).usingRecursiveComparison()
                 .withEqualsForType(
                         (createdAtA, createdAtB) -> createdAtA.truncatedTo(ChronoUnit.SECONDS)
                                 .isEqual(createdAtB.truncatedTo(ChronoUnit.SECONDS)),

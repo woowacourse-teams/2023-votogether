@@ -1,5 +1,6 @@
 package com.votogether.domain.report.service;
 
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.response.ReportResponse;
 import com.votogether.domain.report.dto.response.ReportPageResponse;
 import com.votogether.domain.report.entity.Report;
@@ -28,28 +29,28 @@ public class ReportQueryService {
         final int totalPageNumber = (int) Math.ceil((double) totalCount / BASIC_PAGE_SIZE);
 
         final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);
-        final List<Report> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
+        final List<ReportAggregateDto> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
         final List<ReportResponse> reportResponses = parseReportResponses(reports);
 
         return ReportPageResponse.of(totalPageNumber, page, reportResponses);
     }
 
-    private List<ReportResponse> parseReportResponses(final List<Report> reports) {
+    private List<ReportResponse> parseReportResponses(final List<ReportAggregateDto> reports) {
         final List<String> targets = parseTargets(reports);
         return IntStream.range(0, reports.size())
                 .mapToObj(index -> ReportResponse.of(reports.get(index), targets.get(index)))
                 .toList();
     }
 
-    private List<String> parseTargets(final List<Report> reports) {
-        return reports.stream()
+    private List<String> parseTargets(final List<ReportAggregateDto> reportAggregateDtos) {
+        return reportAggregateDtos.stream()
                 .map(this::parseTarget)
                 .toList();
     }
 
-    private String parseTarget(final Report report) {
-        return reportActionProvider.getStrategy(report.getReportType())
-                .parseTarget(report.getTargetId());
+    private String parseTarget(final ReportAggregateDto reportAggregateDto) {
+        return reportActionProvider.getStrategy(reportAggregateDto.reportType())
+                .parseTarget(reportAggregateDto.targetId());
     }
 
 }

@@ -5,16 +5,16 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 
-import com.votogether.domain.report.dto.response.ReportResponse;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.response.ReportPageResponse;
-import com.votogether.domain.report.entity.Report;
+import com.votogether.domain.report.dto.response.ReportResponse;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.service.ReportQueryService;
 import com.votogether.test.ControllerTest;
-import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ReportQueryController.class)
@@ -56,21 +55,21 @@ class ReportQueryControllerTest extends ControllerTest {
             final int currentPageNumber = 1;
             final String reason = "reason";
             final ReportType reportType = ReportType.POST;
-            final Long targetId = 1L;
+            final long targetId = 1L;
 
-            final Report report = Report.builder()
-                    .reason(reason)
-                    .reportType(reportType)
-                    .targetId(targetId)
-                    .member(MemberFixtures.MALE_10.get())
-                    .build();
-            ReflectionTestUtils.setField(report, "id", 1L);
+            final ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+                    1L,
+                    reportType,
+                    targetId,
+                    reason,
+                    LocalDateTime.now()
+            );
 
             final ReportPageResponse reportPageResponse =
                     ReportPageResponse.of(
                             totalPages,
                             currentPageNumber,
-                            List.of(ReportResponse.of(report, targetId.toString()))
+                            List.of(ReportResponse.of(reportAggregateDto, Long.toString(targetId)))
                     );
 
             int page = 0;
@@ -96,7 +95,7 @@ class ReportQueryControllerTest extends ControllerTest {
                 softly.assertThat(reportPageResponses.totalPageNumber()).isEqualTo(totalPages);
                 softly.assertThat(reportPageResponses.currentPageNumber()).isEqualTo(currentPageNumber);
                 softly.assertThat(reports).hasSize(1);
-                softly.assertThat(reportResponse.target()).isEqualTo(targetId.toString());
+                softly.assertThat(reportResponse.target()).isEqualTo(Long.toString(targetId));
                 softly.assertThat(reportResponse.type()).isEqualTo(reportType);
                 softly.assertThat(reportResponse.reasons()).containsExactly(reason);
             });

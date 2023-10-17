@@ -16,7 +16,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,20 +47,6 @@ public class Report extends BaseEntity {
 
     @Column(nullable = false, length = 50)
     private String reason;
-
-    public Report(
-            final Long id,
-            final ReportType reportType,
-            final Long targetId,
-            final String reason,
-            final LocalDateTime createdAt
-    ) {
-        super(createdAt);
-        this.id = id;
-        this.reportType = reportType;
-        this.targetId = targetId;
-        this.reason = reason;
-    }
 
     @Builder
     private Report(

@@ -5,7 +5,7 @@ import static com.votogether.domain.report.entity.QReport.report;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.votogether.domain.report.entity.Report;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +18,10 @@ public class ReportCustomRepositoryImpl implements ReportCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Report> findReportsGroupedByMemberAndReportTypeAndTargetId(final Pageable pageable) {
+    public List<ReportAggregateDto> findReportsGroupedByMemberAndReportTypeAndTargetId(final Pageable pageable) {
         return jpaQueryFactory.select(
                         Projections.constructor(
-                                Report.class,
+                                ReportAggregateDto.class,
                                 report.id.max(),
                                 report.reportType,
                                 report.targetId,

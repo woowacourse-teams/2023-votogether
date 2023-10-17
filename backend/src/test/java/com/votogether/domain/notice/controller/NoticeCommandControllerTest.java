@@ -1,24 +1,19 @@
 package com.votogether.domain.notice.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.notice.dto.request.NoticeRequest;
-import com.votogether.domain.notice.dto.response.NoticePageResponse;
-import com.votogether.domain.notice.dto.response.NoticeResponse;
-import com.votogether.domain.notice.service.NoticeService;
+import com.votogether.domain.notice.service.NoticeCommandService;
 import com.votogether.test.ControllerTest;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,169 +28,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(NoticeController.class)
-class NoticeControllerTest extends ControllerTest {
+@WebMvcTest(NoticeCommandController.class)
+class NoticeCommandControllerTest extends ControllerTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    NoticeService noticeService;
+    NoticeCommandService noticeCommandService;
 
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.mockMvc(mockMvc);
-    }
-
-    @Test
-    @DisplayName("배너 공지사항 조회에 성공하면 200 응답을 반환한다.")
-    void getProgressNotice() throws Exception {
-        // given
-        mockingAuthArgumentResolver();
-        NoticeResponse expected = new NoticeResponse(
-                1L,
-                "title",
-                "bannerTitle",
-                "bannerSubtitle",
-                "content",
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now()
-        );
-        given(noticeService.getProgressNotice()).willReturn(expected);
-
-        // when
-        NoticeResponse result = RestAssuredMockMvc
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
-                .when().get("/notices/progress")
-                .then().log().all()
-                .status(HttpStatus.OK)
-                .extract()
-                .as(NoticeResponse.class);
-
-        // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    @Nested
-    @DisplayName("공지사항 목록 조회 시")
-    class GetNotices {
-
-        @Test
-        @DisplayName("정상적인 요청이라면 200 응답을 반환한다.")
-        void getNotices() throws Exception {
-            // given
-            mockingAuthArgumentResolver();
-            NoticeResponse noticeResponse = new NoticeResponse(
-                    1L,
-                    "title",
-                    "bannerTitle",
-                    "bannerSubtitle",
-                    "content",
-                    LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now()
-            );
-            NoticePageResponse expected = new NoticePageResponse(1, 0, List.of(noticeResponse));
-            given(noticeService.getNotices(anyInt())).willReturn(expected);
-
-            // when
-            NoticePageResponse result = RestAssuredMockMvc
-                    .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
-                    .param("page", 0)
-                    .when().get("/notices")
-                    .then().log().all()
-                    .status(HttpStatus.OK)
-                    .extract()
-                    .as(NoticePageResponse.class);
-
-            // then
-            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
-        }
-
-        @Test
-        @DisplayName("페이지가 음수라면 400 응답을 반환한다.")
-        void negativePage() throws Exception {
-            // given
-            mockingAuthArgumentResolver();
-            NoticeResponse noticeResponse = new NoticeResponse(
-                    1L,
-                    "title",
-                    "bannerTitle",
-                    "bannerSubtitle",
-                    "content",
-                    LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now()
-            );
-            NoticePageResponse expected = new NoticePageResponse(1, 0, List.of(noticeResponse));
-            given(noticeService.getNotices(anyInt())).willReturn(expected);
-
-            // when, then
-            RestAssuredMockMvc
-                    .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
-                    .param("page", -1)
-                    .when().get("/notices")
-                    .then().log().all()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("code", equalTo(201))
-                    .body("message", containsString("페이지는 0이상 정수만 가능합니다."));
-        }
-
-    }
-
-    @Nested
-    @DisplayName("공지사항 상세 조회 시")
-    class GetNotice {
-
-        @Test
-        @DisplayName("정상적인 요청이라면 200 응답을 반환한다.")
-        void getNotice() throws Exception {
-            // given
-            mockingAuthArgumentResolver();
-            NoticeResponse expected = new NoticeResponse(
-                    1L,
-                    "title",
-                    "bannerTitle",
-                    "bannerSubtitle",
-                    "content",
-                    LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now()
-            );
-            given(noticeService.getNotice(anyLong())).willReturn(expected);
-
-            // when
-            NoticeResponse result = RestAssuredMockMvc
-                    .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
-                    .when().get("/notices/{id}", 1L)
-                    .then().log().all()
-                    .status(HttpStatus.OK)
-                    .extract()
-                    .as(NoticeResponse.class);
-
-            // then
-            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
-        }
-
-        @ParameterizedTest
-        @ValueSource(longs = {-1, 0})
-        @DisplayName("공지사항 ID가 양수가 아니라면 400 응답을 반환한다.")
-        void notPositiveNoticeId(Long noticeId) throws Exception {
-            // given
-            mockingAuthArgumentResolver();
-
-            // when, then
-            RestAssuredMockMvc
-                    .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
-                    .when().get("/notices/{id}", noticeId)
-                    .then().log().all()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("code", equalTo(201))
-                    .body("message", containsString("공지사항 ID는 양수만 가능합니다."));
-        }
-
     }
 
     @Nested
@@ -214,7 +58,7 @@ class NoticeControllerTest extends ControllerTest {
                     "content",
                     LocalDateTime.now()
             );
-            given(noticeService.createNotice(any(NoticeRequest.class), any(Member.class))).willReturn(1L);
+            given(noticeCommandService.createNotice(any(NoticeRequest.class), any(Member.class))).willReturn(1L);
 
             // when, then
             RestAssuredMockMvc
@@ -326,7 +170,7 @@ class NoticeControllerTest extends ControllerTest {
                     "content",
                     LocalDateTime.now()
             );
-            willDoNothing().given(noticeService).updateNotice(anyLong(), any(NoticeRequest.class));
+            willDoNothing().given(noticeCommandService).updateNotice(anyLong(), any(NoticeRequest.class));
 
             // when
             RestAssuredMockMvc
@@ -352,7 +196,7 @@ class NoticeControllerTest extends ControllerTest {
                     "content",
                     LocalDateTime.now()
             );
-            willDoNothing().given(noticeService).updateNotice(anyLong(), any(NoticeRequest.class));
+            willDoNothing().given(noticeCommandService).updateNotice(anyLong(), any(NoticeRequest.class));
 
             // when
             RestAssuredMockMvc
@@ -458,7 +302,7 @@ class NoticeControllerTest extends ControllerTest {
         void deleteNotice() throws Exception {
             // given
             mockingAuthArgumentResolver();
-            willDoNothing().given(noticeService).deleteNotice(anyLong());
+            willDoNothing().given(noticeCommandService).deleteNotice(anyLong());
 
             // when, then
             RestAssuredMockMvc
@@ -475,7 +319,7 @@ class NoticeControllerTest extends ControllerTest {
         void notPositiveNoticeId(Long noticeId) throws Exception {
             // given
             mockingAuthArgumentResolver();
-            willDoNothing().given(noticeService).deleteNotice(anyLong());
+            willDoNothing().given(noticeCommandService).deleteNotice(anyLong());
 
             // when, then
             RestAssuredMockMvc

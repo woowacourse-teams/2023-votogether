@@ -12,7 +12,7 @@ class ErrorBoundaryWithNarrowHeader extends ErrorBoundary {
       const error: { status: number; message: string } = JSON.parse(this.state.errorMessage);
 
       if (error.status === 404) {
-        errorItemProps.retryInteraction = false;
+        errorItemProps.hasRetryInteraction = false;
 
         return (
           <MobileLayoutTemplate>

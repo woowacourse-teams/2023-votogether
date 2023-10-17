@@ -11,7 +11,11 @@ import PostDetail from './PostDetail';
 export default function PostDetailPage() {
   return (
     <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>
-      <ErrorBoundaryWithNarrowHeader haveIcon={true} retryInteraction={true} homeInteraction={true}>
+      <ErrorBoundaryWithNarrowHeader
+        hasIcon={true}
+        hasRetryInteraction={true}
+        hasHomeInteraction={true}
+      >
         <Suspense
           fallback={
             <MobileLayoutTemplate>

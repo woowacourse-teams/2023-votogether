@@ -15,9 +15,9 @@ export default function EditPostPage() {
     <Layout isSidebarVisible={false} isMobileDefaultHeaderVisible={false}>
       <ErrorBoundaryWithNarrowHeader
         text={ERROR_MESSAGE.DEFAULT}
-        haveIcon={true}
-        retryInteraction={true}
-        homeInteraction={true}
+        hasIcon={true}
+        hasRetryInteraction={true}
+        hasHomeInteraction={true}
       >
         <Suspense
           fallback={

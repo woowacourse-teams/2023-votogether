@@ -7,16 +7,16 @@ import * as S from './style';
 
 export interface ErrorItemProps {
   text?: string;
-  haveIcon?: boolean;
-  retryInteraction?: boolean;
-  homeInteraction?: boolean;
+  hasIcon?: boolean;
+  hasRetryInteraction?: boolean;
+  hasHomeInteraction?: boolean;
 }
 
 export default function ErrorItem({
   text = '요청하신 데이터를 불러오는데 실패했습니다.',
-  haveIcon = false,
-  retryInteraction = false,
-  homeInteraction = false,
+  hasIcon: haveIcon = false,
+  hasRetryInteraction = false,
+  hasHomeInteraction = false,
 }: ErrorItemProps) {
   const navigate = useNavigate();
 
@@ -25,13 +25,13 @@ export default function ErrorItem({
       <S.Wrapper>
         {haveIcon && <LogoButton content="icon" style={{ width: '80px', height: '80px' }} />}
         <S.Title>{text}</S.Title>
-        {retryInteraction && (
+        {hasRetryInteraction && (
           <S.Description>
             문제가 지속되는 경우 votogether2023@gmail.com 로 문의해주세요.
           </S.Description>
         )}
         <S.ButtonContainer>
-          {homeInteraction && (
+          {hasHomeInteraction && (
             <S.ButtonWrapper>
               <SquareButton
                 theme="fill"
@@ -43,7 +43,7 @@ export default function ErrorItem({
               </SquareButton>
             </S.ButtonWrapper>
           )}
-          {retryInteraction && (
+          {hasRetryInteraction && (
             <S.ButtonWrapper>
               <SquareButton
                 onClick={() => window.location.reload()}

@@ -6,24 +6,24 @@ const meta: Meta<typeof ErrorItem> = {
   component: ErrorItem,
   args: {
     text: '에러메세지를 작성할 수 있습니다.',
-    haveIcon: true,
-    retryInteraction: true,
-    homeInteraction: true,
+    hasIcon: true,
+    hasRetryInteraction: true,
+    hasHomeInteraction: true,
   },
   argTypes: {
-    haveIcon: {
+    hasIcon: {
       control: {
         type: 'radio',
       },
       options: [true, false],
     },
-    retryInteraction: {
+    hasRetryInteraction: {
       control: {
         type: 'radio',
       },
       options: [true, false],
     },
-    homeInteraction: {
+    hasHomeInteraction: {
       control: {
         type: 'radio',
       },

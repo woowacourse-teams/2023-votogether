@@ -7,9 +7,6 @@ import * as S from './style';
 interface NoticeItemProps {
   id: number;
   title: string;
-  /**
-   * yyyy-mm-dd 형식
-   */
   createdAt: StringDate;
 }
 export default function NoticeItem({ id, title, createdAt }: NoticeItemProps) {

@@ -7,9 +7,6 @@ interface NoticeListProps {
   noticeList: {
     id: number;
     title: string;
-    /**
-     * yyyy-mm-dd 형식
-     */
     createdAt: StringDate;
   }[];
 }

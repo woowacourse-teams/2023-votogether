@@ -28,7 +28,7 @@ describe('서버와 통신하여 유저의 정보를 불러올 수 있어야 한
     expect(data).toEqual(transformUserInfoResponse(MOCK_USER_INFO));
   });
 
-  test('클라이언트에서 사용하는 유저 정보 API 명세가 [nickname, gender, birthYear, postCount, voteCount, hasLatestAlarm]으로 존재해야한다', async () => {
+  test('클라이언트에서 사용하는 유저 정보 API 명세가 [nickname, gender, birthYear, postCount, voteCount, hasLatestAlarm, role]으로 존재해야한다', async () => {
     const data = await getUserInfo(isLoggedIn);
 
     const userInfoKeys = Object.keys(data ?? {});
@@ -40,6 +40,7 @@ describe('서버와 통신하여 유저의 정보를 불러올 수 있어야 한
       'postCount',
       'voteCount',
       'hasLatestAlarm',
+      'role',
     ]);
   });
 

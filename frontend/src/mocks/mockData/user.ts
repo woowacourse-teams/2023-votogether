@@ -7,4 +7,5 @@ export const MOCK_USER_INFO: UserInfoResponse = {
   postCount: 4,
   voteCount: 128,
   hasLatestAlarm: true,
+  role: 'USER',
 };

@@ -198,7 +198,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
           $smGap="20px"
           $lgGap="30px"
           $smPadding="60px 15px 0px 0px"
-          $lgPadding="20px 80px 40px 70px"
+          $lgPadding="20px 80px 40px 60px"
         >
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
             <ErrorBoundary>

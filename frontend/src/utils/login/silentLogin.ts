@@ -28,7 +28,7 @@ export const silentLogin = async () => {
     removeLocalStorage(ACCESS_TOKEN_KEY);
     window.location.href = '/login';
 
-    throw new Error('로그인에 실패했습니다. 다시 로그인 해주세요.');
+    throw new Error('로그인을 실패했습니다. 다시 로그인 해주세요.');
   } finally {
     isRequesting = false;
   }

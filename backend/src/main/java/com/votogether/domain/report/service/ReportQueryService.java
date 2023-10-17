@@ -25,7 +25,7 @@ public class ReportQueryService {
     private final ReportActionProvider reportActionProvider;
 
     public ReportPageResponse getReports(final int page) {
-        long totalCount = reportRepository.count();
+        final long totalCount = reportRepository.count();
         final int totalPageNumber = (int) Math.ceil((double) totalCount / BASIC_PAGE_SIZE);
 
         final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);

@@ -6,6 +6,8 @@ import { useCategoryList } from '@hooks/query/category/useCategoryList';
 import MultiSelect from '@components/common/MultiSelect';
 import { Option } from '@components/common/MultiSelect/types';
 
+import { POST_CATEGORY } from '@constants/policy';
+
 import { changeCategoryToOption } from '@utils/post/changeCategoryToOption';
 
 interface CategoryWrapperProps {
@@ -30,6 +32,7 @@ export default function CategoryWrapper({ multiSelectHook }: CategoryWrapperProp
       handleOptionAdd={handleOptionAdd}
       handleOptionDelete={handleOptionDelete}
       placeholder="카테고리를 선택해주세요."
+      maxOptionCount={POST_CATEGORY.MAX_AMOUNT}
     />
   );
 }

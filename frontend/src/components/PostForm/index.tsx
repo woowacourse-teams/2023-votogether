@@ -68,11 +68,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
 
   const categorySelectHook = useMultiSelect(categoryIds ?? [], POST_CATEGORY.MAX_AMOUNT);
   const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
-  const {
-    text: writingContent,
-    handleTextChange: handleContentChange,
-    addText: addContent,
-  } = useText(content ?? '');
+  const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,

@@ -134,7 +134,7 @@ class ReportPostStrategyTest extends ServiceTest {
     }
 
     @Test
-    @DisplayName("targetId를 통해 해당 멤버의 Nickname을 가져온다")
+    @DisplayName("targetId를 문자열로 파싱한다.")
     void parseTarget() {
         // given
         Post post = postTestPersister.postBuilder().save();

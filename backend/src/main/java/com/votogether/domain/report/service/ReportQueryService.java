@@ -3,12 +3,10 @@ package com.votogether.domain.report.service;
 import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.response.ReportResponse;
 import com.votogether.domain.report.dto.response.ReportPageResponse;
-import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.report.service.strategy.ReportActionProvider;
 import com.votogether.domain.report.service.strategy.ReportStrategy;
 import java.util.List;
-import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,28 +28,22 @@ public class ReportQueryService {
         final int totalPageNumber = (int) Math.ceil((double) totalCount / BASIC_PAGE_SIZE);
 
         final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);
-        final List<ReportAggregateDto> reports = reportRepository.findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
-        final List<ReportResponse> reportResponses = parseReportResponses(reports);
+        final List<ReportAggregateDto> reportAggregateDtos = reportRepository
+                .findReportsGroupedByMemberAndReportTypeAndTargetId(pageable);
+        final List<ReportResponse> reportResponses = parseReportResponses(reportAggregateDtos);
 
         return ReportPageResponse.of(totalPageNumber, page, reportResponses);
     }
 
-    private List<ReportResponse> parseReportResponses(final List<ReportAggregateDto> reports) {
-        final List<String> targets = parseTargets(reports);
-        return IntStream.range(0, reports.size())
-                .mapToObj(index -> ReportResponse.of(reports.get(index), targets.get(index)))
-                .toList();
-    }
-
-    private List<String> parseTargets(final List<ReportAggregateDto> reportAggregateDtos) {
+    private List<ReportResponse> parseReportResponses(final List<ReportAggregateDto> reportAggregateDtos) {
         return reportAggregateDtos.stream()
-                .map(this::parseTarget)
+                .map(this::parseReportResponse)
                 .toList();
     }
 
-    private String parseTarget(final ReportAggregateDto reportAggregateDto) {
+    private ReportResponse parseReportResponse(final ReportAggregateDto reportAggregateDto) {
         final ReportStrategy strategy = reportActionProvider.getStrategy(reportAggregateDto.reportType());
-        return strategy.parseTarget(reportAggregateDto.targetId());
+        return ReportResponse.of(reportAggregateDto, strategy.parseTarget(reportAggregateDto.targetId()));
     }
 
 }

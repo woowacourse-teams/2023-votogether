@@ -46,8 +46,7 @@ class NoticeRepositoryTest extends RepositoryTest {
             Notice savedNoticeB = noticeRepository.save(noticeB);
 
             // when
-            Optional<Notice> notice =
-                    noticeRepository.findFirstByDeadlineAfterOrderByCreatedAtDesc(LocalDateTime.now());
+            Optional<Notice> notice = noticeRepository.findFirstByDeadlineAfterOrderByIdDesc(LocalDateTime.now());
 
             // then
             assertSoftly(softly -> {
@@ -77,8 +76,7 @@ class NoticeRepositoryTest extends RepositoryTest {
             Notice savedNoticeB = noticeRepository.save(noticeB);
 
             // when
-            Optional<Notice> notice =
-                    noticeRepository.findFirstByDeadlineAfterOrderByCreatedAtDesc(LocalDateTime.now());
+            Optional<Notice> notice = noticeRepository.findFirstByDeadlineAfterOrderByIdDesc(LocalDateTime.now());
 
             // then
             assertSoftly(softly -> {
@@ -101,8 +99,7 @@ class NoticeRepositoryTest extends RepositoryTest {
             noticeRepository.save(notice);
 
             // when
-            Optional<Notice> foundNotice =
-                    noticeRepository.findFirstByDeadlineAfterOrderByCreatedAtDesc(LocalDateTime.now());
+            Optional<Notice> foundNotice = noticeRepository.findFirstByDeadlineAfterOrderByIdDesc(LocalDateTime.now());
 
             // then
             assertThat(foundNotice).isNotPresent();
@@ -136,7 +133,7 @@ class NoticeRepositoryTest extends RepositoryTest {
 
             // when
             Pageable pageable = PageRequest.of(0, 2);
-            List<Notice> notices = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
+            List<Notice> notices = noticeRepository.findAllByOrderByIdDesc(pageable);
 
             // then
             assertThat(notices).containsExactly(savedNoticeB, savedNoticeA);
@@ -164,7 +161,7 @@ class NoticeRepositoryTest extends RepositoryTest {
 
             // when
             Pageable pageable = PageRequest.of(0, 1);
-            List<Notice> notices = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
+            List<Notice> notices = noticeRepository.findAllByOrderByIdDesc(pageable);
 
             // then
             assertThat(notices).containsExactly(savedNoticeB);

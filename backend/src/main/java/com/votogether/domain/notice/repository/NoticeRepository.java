@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
-    Optional<Notice> findFirstByDeadlineAfterOrderByCreatedAtDesc(final LocalDateTime now);
+    Optional<Notice> findFirstByDeadlineAfterOrderByIdDesc(final LocalDateTime now);
 
-    List<Notice> findAllByOrderByCreatedAtDesc(final Pageable pageable);
+    List<Notice> findAllByOrderByIdDesc(final Pageable pageable);
 
 }

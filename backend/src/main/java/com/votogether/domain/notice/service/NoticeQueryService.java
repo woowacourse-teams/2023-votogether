@@ -26,7 +26,7 @@ public class NoticeQueryService {
 
     public NoticeResponse getProgressNotice() {
         final LocalDateTime now = LocalDateTime.now();
-        final Optional<Notice> notice = noticeRepository.findFirstByDeadlineAfterOrderByCreatedAtDesc(now);
+        final Optional<Notice> notice = noticeRepository.findFirstByDeadlineAfterOrderByIdDesc(now);
         if (notice.isPresent()) {
             return NoticeResponse.from(notice.get());
         }
@@ -35,7 +35,7 @@ public class NoticeQueryService {
 
     public NoticePageResponse getNotices(final int page) {
         final Pageable pageable = PageRequest.of(page, DEFAULT_PAGE_SIZE);
-        final List<Notice> notices = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
+        final List<Notice> notices = noticeRepository.findAllByOrderByIdDesc(pageable);
         final long noticeTotalCount = noticeRepository.count();
         final int totalPage = (int) Math.ceil((double) noticeTotalCount / DEFAULT_PAGE_SIZE);
         return NoticePageResponse.of(totalPage, page, notices);

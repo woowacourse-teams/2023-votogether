@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +20,7 @@ public class AlarmService {
 
     private final ReportActionAlarmRepository reportActionAlarmRepository;
 
+    @Transactional(readOnly = true)
     public List<ReportActionAlarmResponse> getReportActionAlarms(final Member member, final int page) {
         final PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         final List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository
@@ -29,6 +31,7 @@ public class AlarmService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ReportActionResponse getReportActionAlarm(final Long reportActionAlarmId, final Member member) {
         final ReportActionAlarm reportActionAlarm = reportActionAlarmRepository
                 .findByIdAndMember(reportActionAlarmId, member)

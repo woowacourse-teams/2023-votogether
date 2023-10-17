@@ -26,22 +26,28 @@ export const usePagedNoticeList = (initialPageNumber: number = 0) => {
     }
   );
 
+  const startPage = Math.floor(pageNumber / 5) * 5;
+
   const setPage = (value: number) => {
     setPageNumber(value - 1);
   };
 
-  const hasNextPage = data && pageNumber < data.totalPageNumber;
+  const isCheckNextPage = (totalPage: number) => {
+    return totalPage > startPage + 5;
+  };
+
+  const hasNextPage = data && isCheckNextPage(data.totalPageNumber);
 
   const fetchPrevPage = () => {
     if (pageNumber === 0) return;
 
-    setPageNumber(prev => prev - 1);
+    setPageNumber(startPage - 5);
   };
 
   const fetchNextPage = () => {
     if (!hasNextPage) return;
 
-    setPageNumber(prev => prev + 1);
+    setPageNumber(startPage + 5);
   };
 
   return {
@@ -54,5 +60,7 @@ export const usePagedNoticeList = (initialPageNumber: number = 0) => {
     fetchPrevPage,
     page: pageNumber,
     setPage,
+    startPage,
+    isCheckNextPage,
   };
 };

@@ -1,3 +1,5 @@
+import { NoticeListResponse } from '@api/notice';
+
 export interface Notice {
   id: number;
   title: string;
@@ -8,8 +10,4 @@ export interface Notice {
   bannerSubtitle: string;
 }
 
-export interface NoticeList {
-  totalPageNumber: number;
-  currentPageNumber: number;
-  noticeList: Notice[];
-}
+export type NoticeList = Omit<NoticeListResponse, 'notices'> & { noticeList: Notice[] };

@@ -1,6 +1,6 @@
 import { Notice, NoticeList } from '@type/notice';
 
-import { NoticeListResponse, NoticeResponse, transformNotice } from '@api/notice';
+import { NoticeListResponse, transformNotice } from '@api/notice';
 
 const noticeTitleList = [
   '방방뛰는 코끼리',
@@ -63,7 +63,7 @@ const getMockNoticeResponse = () => ({
   deadline: noticeDeadlineList[Math.floor(Math.random() * 9)],
 });
 
-export const MOCK_NOTICE_RESPONSE: NoticeResponse = getMockNoticeResponse();
+export const MOCK_NOTICE_RESPONSE: Notice = getMockNoticeResponse();
 
 export const MOCK_TRANSFORM_NOTICE: Notice = transformNotice(MOCK_NOTICE_RESPONSE);
 

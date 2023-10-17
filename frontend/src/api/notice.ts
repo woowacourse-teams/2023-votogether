@@ -10,7 +10,7 @@ export const transformNotice = ({
   deadline,
   bannerTitle,
   bannerSubtitle,
-}: NoticeResponse): Notice => {
+}: Notice): Notice => {
   return {
     id,
     title,
@@ -22,23 +22,13 @@ export const transformNotice = ({
   };
 };
 
-export interface NoticeResponse {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  deadline: string;
-  bannerTitle: string;
-  bannerSubtitle: string;
-}
-
 export interface NoticeListResponse {
   totalPageNumber: number;
   currentPageNumber: number;
-  notices: NoticeResponse[];
+  notices: Notice[];
 }
 
-export type NoticeRequest = Omit<NoticeResponse, 'createdAt' | 'id'>;
+export type NoticeRequest = Omit<Notice, 'createdAt' | 'id'>;
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 
@@ -47,7 +37,7 @@ export const createNotice = async (notice: NoticeRequest) => {
 };
 
 export const getBannerNotice = async () => {
-  const bannerNotice = await getFetch<NoticeResponse>(`${BASE_URL}/notices/progress`);
+  const bannerNotice = await getFetch<Notice>(`${BASE_URL}/notices/progress`);
 
   return transformNotice(bannerNotice);
 };
@@ -63,7 +53,7 @@ export const getNoticeList = async (page: number): Promise<NoticeList> => {
 };
 
 export const getNoticeDetail = async (noticeId: number) => {
-  const noticeDetail = await getFetch<NoticeResponse>(`${BASE_URL}/notices/${noticeId}`);
+  const noticeDetail = await getFetch<Notice>(`${BASE_URL}/notices/${noticeId}`);
 
   return transformNotice(noticeDetail);
 };

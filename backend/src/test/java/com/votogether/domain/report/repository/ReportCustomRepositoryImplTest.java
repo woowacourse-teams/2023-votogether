@@ -12,7 +12,6 @@ import com.votogether.test.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import org.assertj.core.api.RecursiveComparisonAssert;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,7 +66,7 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
 
         // when
         final List<ReportAggregateDto> reports = reportCustomRepository
-                .findReportsGroupedByMemberAndReportTypeAndTargetId(pageRequest);
+                .findReportsGroupedByReportTypeAndTargetId(pageRequest);
 
         // then
         assertSoftly(softly -> {

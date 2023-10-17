@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface ReportCustomRepository {
 
-    List<ReportAggregateDto> findReportsGroupedByMemberAndReportTypeAndTargetId(final Pageable pageable);
+    List<ReportAggregateDto> findReportsGroupedByReportTypeAndTargetId(final Pageable pageable);
 
 }

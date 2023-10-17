@@ -18,7 +18,7 @@ public class ReportCustomRepositoryImpl implements ReportCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<ReportAggregateDto> findReportsGroupedByMemberAndReportTypeAndTargetId(final Pageable pageable) {
+    public List<ReportAggregateDto> findReportsGroupedByReportTypeAndTargetId(final Pageable pageable) {
         return jpaQueryFactory.select(
                         Projections.constructor(
                                 ReportAggregateDto.class,

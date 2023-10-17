@@ -37,7 +37,7 @@ export const Retry: Story = {
   render: () => <IconButton category="retry" />,
 };
 
-export const UserInfo: Story = {
+export const Alarm: Story = {
   render: () => <IconButton category="alarm" />,
 };
 

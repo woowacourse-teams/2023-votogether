@@ -9,12 +9,11 @@ import { QUERY_KEY } from '@constants/queryKey';
 export const useReportAction = () => {
   const queryClient = useQueryClient();
 
-  const LOGGED_IN = true;
   const { mutate, isLoading, isSuccess, isError, error } = useMutation({
     mutationFn: async (reportActionData: ReportActionRequest) =>
       await reportAction(reportActionData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.REPORT, LOGGED_IN] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.REPORT] });
     },
     onError: () => {
       window.console.error('신고 조치를 실패했습니다.');

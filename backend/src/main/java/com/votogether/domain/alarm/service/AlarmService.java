@@ -18,11 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AlarmService {
 
+    private static final int BASIC_PAGE_SIZE = 10;
     private final ReportActionAlarmRepository reportActionAlarmRepository;
 
     @Transactional(readOnly = true)
     public List<ReportActionAlarmResponse> getReportActionAlarms(final Member member, final int page) {
-        final PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
         final List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository
                 .findByMember(member, pageRequest);
 

@@ -23,15 +23,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 
-@WebMvcTest(AlarmControllerTest.class)
-class AlarmControllerTest extends ControllerTest {
+@WebMvcTest(AlarmCommandControllerTest.class)
+class AlarmCommandControllerTest extends ControllerTest {
 
     @MockBean
     AlarmService alarmService;
 
     @BeforeEach
     void setUp() {
-        RestAssuredMockMvc.standaloneSetup(new AlarmController(alarmService));
+        RestAssuredMockMvc.standaloneSetup(new AlarmCommandController(alarmService));
     }
 
     @Test

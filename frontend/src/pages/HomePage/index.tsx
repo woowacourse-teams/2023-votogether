@@ -51,7 +51,7 @@ export default function HomePage() {
             <Dashboard />
           </Drawer>
         </S.DrawerWrapper>
-        <ErrorBoundary>
+        <ErrorBoundary hasIcon={true} hasRetryInteraction={true}>
           <Suspense fallback={<Skeleton isLarge={true} />}>
             <PostList />
           </Suspense>

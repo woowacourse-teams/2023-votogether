@@ -29,7 +29,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(ReportCommandCommandController.class)
+@WebMvcTest(ReportCommandController.class)
 class ReportCommandControllerTest extends ControllerTest {
 
     @MockBean

@@ -19,7 +19,7 @@ export default function VoteStatisticsPage() {
       <S.Container>
         <S.PageHeader>투표 통계</S.PageHeader>
         <S.ContentContainer>
-          <ErrorBoundary>
+          <ErrorBoundary hasRetryInteraction={true}>
             <Suspense
               fallback={
                 <S.LoadingWrapper>

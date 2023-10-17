@@ -74,3 +74,7 @@ export const APP_LAUNCH_EVENT = {
   CONTENT: '지금 결과를 확인하러 가볼까요?',
   CONTENT_DETAIL: '',
 } as const;
+
+export const ERROR_MESSAGE = {
+  DEFAULT: '요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요',
+};

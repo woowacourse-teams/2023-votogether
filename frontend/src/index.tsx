@@ -22,6 +22,7 @@ if (process.env.VOTOGETHER_GOOGLE_ANALYTICS_ID) {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
 root.render(
   <React.StrictMode>
     <App />

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { StringDate } from '@type/time';
+import { Notice } from '@type/notice';
 
 import SquareButton from '@components/common/SquareButton';
 
@@ -9,20 +9,17 @@ import { PATH } from '@constants/path';
 import * as S from './style';
 
 interface NoticeDetailProps {
-  title: string;
-  content: string;
-  createdAt: StringDate;
+  notice: Notice;
 }
 
-export default function NoticeDetail({ title, content, createdAt }: NoticeDetailProps) {
+export default function NoticeDetail({ notice: { title, content, createdAt } }: NoticeDetailProps) {
   const navigate = useNavigate();
-  const createdDate = createdAt.slice(0, 10);
 
   return (
     <S.Container>
       <S.Category tabIndex={0}>VoTogether 공지사항</S.Category>
       <S.Title tabIndex={0}>{title}</S.Title>
-      <S.CreatedAt tabIndex={0}>작성일 : {createdDate}</S.CreatedAt>
+      <S.CreatedAt tabIndex={0}>작성일 : {createdAt}</S.CreatedAt>
       <S.Content tabIndex={0}>{content}</S.Content>
       <S.ButtonContainer>
         <S.ButtonWrapper>

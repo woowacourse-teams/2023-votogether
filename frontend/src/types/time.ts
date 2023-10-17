@@ -7,4 +7,12 @@ export interface DHMTime {
   minute: number;
 }
 
+/**
+ * yyyy-mm-dd HH-MM
+ */
 export type StringDate = `${number}-${number}-${number} ${number}:${number}`;
+
+/**
+ * yyyy-mm-dd
+ */
+export type StringDateOnly = `${number}-${number}-${number}`;

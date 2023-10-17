@@ -46,6 +46,13 @@ describe('서버와 통신하여 공지사항 관련된 api를 통신할 수 있
     expect(result).toEqual(MOCK_TRANSFORM_NOTICE);
   });
 
+  test('공지 사항의 createdAt을 날짜만 받도록 변환시킨다.', async () => {
+    const createdAt = '2023-08-19 08:23';
+    const result = '2023-08-19';
+
+    expect(createdAt.split(' ')[0]).toBe(result);
+  });
+
   test('공지 사항을 수정한다.', async () => {
     const data: NoticeRequest = {
       title: '아이폰입니다',

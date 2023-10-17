@@ -13,5 +13,5 @@ export default meta;
 type Story = StoryObj<typeof NoticeItem>;
 
 export const Default: Story = {
-  render: () => <NoticeItem {...MOCK_TRANSFORM_NOTICE} />,
+  render: () => <NoticeItem notice={MOCK_TRANSFORM_NOTICE} />,
 };

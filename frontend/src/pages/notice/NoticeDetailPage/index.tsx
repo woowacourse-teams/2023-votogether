@@ -9,7 +9,7 @@ export default function NoticeDetailPage() {
   return (
     <Layout isSidebarVisible>
       <S.Container>
-        <NoticeDetail {...MOCK_TRANSFORM_NOTICE} />
+        <NoticeDetail notice={MOCK_TRANSFORM_NOTICE} />
       </S.Container>
     </Layout>
   );

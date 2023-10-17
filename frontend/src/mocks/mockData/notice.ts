@@ -1,7 +1,7 @@
 import { Notice, NoticeList } from '@type/notice';
 import { StringDate } from '@type/time';
 
-import { NoticeListResponse, transformNotice } from '@api/notice';
+import { NoticeListResponse, NoticeResponse, transformNotice } from '@api/notice';
 
 const noticeTitleList = [
   '방방뛰는 코끼리',
@@ -54,7 +54,7 @@ const noticeDeadlineList: StringDate[] = [
   '2023-10-11 12:23',
 ];
 
-const getMockNoticeResponse = (): Notice => ({
+const getMockNoticeResponse = (): NoticeResponse => ({
   id: Math.floor(Math.random() * 30),
   title: noticeTitleList[Math.floor(Math.random() * 8)],
   content: noticeContentList[Math.floor(Math.random() * 11)],
@@ -64,7 +64,7 @@ const getMockNoticeResponse = (): Notice => ({
   deadline: noticeDeadlineList[Math.floor(Math.random() * 9)],
 });
 
-export const MOCK_NOTICE_RESPONSE: Notice = getMockNoticeResponse();
+export const MOCK_NOTICE_RESPONSE: NoticeResponse = getMockNoticeResponse();
 
 export const MOCK_TRANSFORM_NOTICE: Notice = transformNotice(MOCK_NOTICE_RESPONSE);
 

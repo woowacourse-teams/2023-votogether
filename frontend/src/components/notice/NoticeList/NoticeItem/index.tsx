@@ -1,22 +1,18 @@
-import { StringDate } from '@type/time';
+import { Notice } from '@type/notice';
 
 import { PATH } from '@constants/path';
 
 import * as S from './style';
 
 interface NoticeItemProps {
-  id: number;
-  title: string;
-  createdAt: StringDate;
+  notice: Notice;
 }
-export default function NoticeItem({ id, title, createdAt }: NoticeItemProps) {
-  const createdDate = createdAt.slice(0, 10);
-
+export default function NoticeItem({ notice: { id, title, createdAt } }: NoticeItemProps) {
   return (
     <S.Container>
       <S.DetailLink to={`${PATH.NOTICES}/${id}`}>
         <S.Title>{title}</S.Title>
-        <S.CreatedAt>{createdDate}</S.CreatedAt>
+        <S.CreatedAt>{createdAt}</S.CreatedAt>
       </S.DetailLink>
     </S.Container>
   );

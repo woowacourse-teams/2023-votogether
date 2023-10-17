@@ -9,8 +9,7 @@ import static org.mockito.Mockito.doNothing;
 
 import com.votogether.domain.category.dto.response.CategoryResponse;
 import com.votogether.domain.category.service.CategoryService;
-import com.votogether.domain.member.service.MemberService;
-import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.ControllerTest;
 import com.votogether.test.fixtures.CategoryFixtures;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.util.List;
@@ -23,16 +22,10 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 
 @WebMvcTest(CategoryController.class)
-class CategoryControllerTest {
+class CategoryControllerTest extends ControllerTest {
 
     @MockBean
     CategoryService categoryService;
-
-    @MockBean
-    TokenProcessor tokenProcessor;
-
-    @MockBean
-    MemberService memberService;
 
     @BeforeEach
     void setUp() {

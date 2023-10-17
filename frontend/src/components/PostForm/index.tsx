@@ -130,10 +130,6 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     closeComponent();
   };
 
-  const handleInsertContentLink = () => {
-    addContent('[[이 괄호 안에 링크를 작성해주세요]] ');
-  };
-
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
@@ -221,11 +217,6 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
               onPaste={handlePasteImage}
               required
             />
-            <S.ContentLinkButtonWrapper>
-              <S.Button onClick={handleInsertContentLink} type="button">
-                본문에 링크 넣기
-              </S.Button>
-            </S.ContentLinkButtonWrapper>
             <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>
               <ContentImagePart size="lg" contentImageHook={contentImageHook} />
             </S.ContentImagePartWrapper>

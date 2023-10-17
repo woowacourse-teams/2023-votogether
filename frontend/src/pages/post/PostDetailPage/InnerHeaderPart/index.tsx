@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PostAction, PostMenuItem } from '@type/menu';
+import { PostAction, MenuItem } from '@type/menu';
 
 import { useToggle } from '@hooks';
 
 import DeleteModal from '@components/common/DeleteModal';
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import IconButton from '@components/common/IconButton';
-import PostMenu from '@components/common/PostMenu';
+import Menu from '@components/common/Menu';
 import TagButton from '@components/common/TagButton';
 import ReportModal from '@components/ReportModal';
 
@@ -35,7 +35,7 @@ interface PostDetailPageChildProps {
   isEventLoading: Record<LoadingType, boolean>;
 }
 
-const menuList: PostMenuItem[] = [
+const menuList: MenuItem<PostAction>[] = [
   { color: 'black', content: '닉네임 신고', action: 'NICKNAME_REPORT' },
   { color: 'black', content: '게시글 신고', action: 'POST_REPORT' },
 ];
@@ -86,7 +86,7 @@ export default function InnerHeaderPart({
             </HeaderTextButton>
             {isOpen && (
               <S.MenuWrapper>
-                <PostMenu menuList={menuList} handleMenuClick={handleMenuClick} />
+                <Menu menuList={menuList} handleMenuClick={handleMenuClick} />
               </S.MenuWrapper>
             )}
           </>

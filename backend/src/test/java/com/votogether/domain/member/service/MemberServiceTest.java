@@ -21,7 +21,7 @@ import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
-import com.votogether.test.annotation.ServiceTest;
+import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import com.votogether.test.persister.PostTestPersister;
 import jakarta.persistence.EntityManager;
@@ -35,8 +35,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@ServiceTest
-class MemberServiceTest {
+class MemberServiceTest extends ServiceTest {
 
     @Autowired
     MemberService memberService;

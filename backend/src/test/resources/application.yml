@@ -35,6 +35,7 @@ spring:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+  config: classpath:log4j2-local.xml
 
 server:
   forward-headers-strategy: FRAMEWORK
@@ -66,6 +67,10 @@ jwt:
     secret-key: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabc
     access-expiration-time: 100000
     refresh-expiration-time: 222222
+
+log4j2:
+  slack_webhook_uri: test_uri
+  slack_channel: test_channel
 
 image:
   upload_url: ${user.dir}

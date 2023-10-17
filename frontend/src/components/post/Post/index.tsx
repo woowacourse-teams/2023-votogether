@@ -1,4 +1,5 @@
 import { ForwardedRef, forwardRef, memo, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
@@ -6,7 +7,9 @@ import { AuthContext } from '@hooks/context/auth';
 import { ToastContext } from '@hooks/context/toast';
 import { useCreateVote } from '@hooks/query/post/useCreateVote';
 import { useEditVote } from '@hooks/query/post/useEditVote';
+import { useImageZoomModal } from '@hooks/useImageZoomModal';
 
+import ImageZoomModal from '@components/common/ImageZoomModal';
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
 import { PATH } from '@constants/path';
@@ -30,6 +33,7 @@ const Post = forwardRef(function Post(
   { postInfo, isPreview }: PostProps,
   ref: ForwardedRef<HTMLLIElement>
 ) {
+  const navigate = useNavigate();
   const {
     postId,
     category,
@@ -45,6 +49,8 @@ const Post = forwardRef(function Post(
   } = postInfo;
   const { loggedInfo } = useContext(AuthContext);
   const { addMessage } = useContext(ToastContext);
+  const { closeZoomModal, handleCloseClick, handleImageClick, imageSrc, zoomModalRef } =
+    useImageZoomModal();
 
   const { mutate: createVote, isLoading: isCreateVoteLoading } = useCreateVote({
     isPreview,
@@ -96,8 +102,14 @@ const Post = forwardRef(function Post(
   return (
     <S.Container as={isPreview ? 'li' : 'div'} ref={ref} $isPreview={isPreview}>
       <S.DetailLink
+        role={isPreview ? 'link' : 'none'}
+        tabIndex={0}
         as={isPreview ? '' : 'main'}
-        to={isPreview ? `${PATH.POST}/${postId}` : '#'}
+        onClick={() => {
+          if (!isPreview) return;
+
+          navigate(`${PATH.POST}/${postId}`);
+        }}
         $isPreview={isPreview}
         aria-describedby={
           isPreview
@@ -150,7 +162,9 @@ const Post = forwardRef(function Post(
         >
           {convertTextToElement(content)}
         </S.Content>
-        {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
+        {!isPreview && imageUrl && (
+          <S.Image onClick={handleImageClick} src={imageUrl} alt={'본문에 포함된 이미지'} />
+        )}
       </S.DetailLink>
       <WrittenVoteOptionList
         isStatisticsVisible={isStatisticsVisible}
@@ -158,6 +172,7 @@ const Post = forwardRef(function Post(
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}
         voteOptionList={voteInfo.options}
+        handleImageClick={handleImageClick}
       />
       {isPreview && (
         <S.PreviewBottom>
@@ -171,6 +186,12 @@ const Post = forwardRef(function Post(
           </S.IconUint>
         </S.PreviewBottom>
       )}
+      <ImageZoomModal
+        ref={zoomModalRef}
+        src={imageSrc}
+        closeZoomModal={closeZoomModal}
+        handleCloseClick={handleCloseClick}
+      />
     </S.Container>
   );
 });

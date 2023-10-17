@@ -68,6 +68,10 @@ jwt:
     access-expiration-time: ${ACCESS_EXPIRATION_TIME}
     refresh-expiration-time: ${REFRESH_EXPIRATION_TIME}
 
+log4j2:
+  slack_webhook_uri: ${LOG_SLACK_WEBHOOK_URI}
+  slack_channel: ${LOG_SLACK_CHANNEL}
+
 image:
   upload_url: ${IMAGE_UPLOAD_URL}
   upload_directory: ${IMAGE_UPLOAD_DIRECTORY}

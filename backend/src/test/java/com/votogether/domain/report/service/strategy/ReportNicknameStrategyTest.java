@@ -11,15 +11,14 @@ import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
-import com.votogether.test.annotation.ServiceTest;
+import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@ServiceTest
 @DisplayName("닉네임 신고기능은")
-class ReportNicknameStrategyTest {
+class ReportNicknameStrategyTest extends ServiceTest {
 
     @Autowired
     ReportNicknameStrategy reportNicknameStrategy;

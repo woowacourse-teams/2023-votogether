@@ -24,11 +24,11 @@ export const Container = styled.button<{ $isSelected: boolean }>`
 `;
 
 export const Image = styled.img`
+  width: 80%;
+
   border-radius: 4px;
   border: 1px solid var(--gray);
-  margin-bottom: 10px;
-
-  width: 80%;
+  margin: 0 auto 10px auto;
 
   aspect-ratio: 1/1;
   object-fit: contain;

@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useEffect } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
@@ -26,13 +26,9 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-  const {
-    text: content,
-    handleTextChange,
-    resetText,
-    addText: addContent,
-  } = useText(initialComment.content);
+
   const { addMessage } = useContext(ToastContext);
+  const { text: content, handleTextChange, resetText } = useText(initialComment.content);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
@@ -62,6 +58,14 @@ export default function CommentTextForm({
     createComment({ content: deleteOverlappingNewLine(content) });
   };
 
+  const handleKeyboardCommentSubmit = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const isPressCtrlAndEnterKey = (event.metaKey || event.ctrlKey) && event.key === 'Enter';
+
+    if (isPressCtrlAndEnterKey) {
+      handleUpdateComment();
+    }
+  };
+
   useEffect(() => {
     isCreateSuccess && resetText();
   }, [isCreateSuccess]);
@@ -77,7 +81,9 @@ export default function CommentTextForm({
         value={content}
         placeholder="댓글을 입력해주세요. &#13;&#10;타인의 권리를 침해하거나 도배성/광고성/음란성 내용을 포함하는 경우, 댓글의 운영 원칙 및 관련 법률에 의하여 제재를 받을 수 있습니다."
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, POST_COMMENT)}
+        onKeyDown={handleKeyboardCommentSubmit}
       />
+      <S.KeyDescription>Ctrl(Command) + Enter 키로 댓글을 저장할 수 있습니다</S.KeyDescription>
       <S.ButtonContainer>
         {isEdit && (
           <S.ButtonWrapper>
@@ -91,16 +97,6 @@ export default function CommentTextForm({
             </SquareButton>
           </S.ButtonWrapper>
         )}
-        <S.ButtonWrapper>
-          <SquareButton
-            aria-label="댓글에 링크 넣기"
-            onClick={() => addContent('[[괄호 안에 링크 작성]] ')}
-            theme="blank"
-            type="button"
-          >
-            링크 넣기
-          </SquareButton>
-        </S.ButtonWrapper>
         <S.ButtonWrapper>
           <SquareButton
             aria-label="댓글 저장"

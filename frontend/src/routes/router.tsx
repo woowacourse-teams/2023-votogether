@@ -180,20 +180,19 @@ const router = createBrowserRouter([
   },
   {
     path: PATH.ADMIN,
-
     children: [
       {
-        path: 'categories',
+        path: PATH.NOTICES,
         element: (
-          <PrivateRoute isAdminAllowed={true}>
+          <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
             <div>어드민 카테고리 목록 페이지</div>
           </PrivateRoute>
         ),
       },
       {
-        path: 'reports',
+        path: `${PATH.REPORTS}/pending`,
         element: (
-          <PrivateRoute isAdminAllowed={true}>
+          <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
             <div>어드민 신고 목록 페이지</div>
           </PrivateRoute>
         ),

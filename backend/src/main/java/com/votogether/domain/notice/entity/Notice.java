@@ -61,7 +61,11 @@ public class Notice extends BaseEntity {
         this.deadline = deadline;
     }
 
-    public void update(final Detail detail, final BannerTitle bannerTitle, final LocalDateTime deadline) {
+    public void update(
+            final Detail detail,
+            final BannerTitle bannerTitle,
+            final LocalDateTime deadline
+    ) {
         this.detail = detail;
         this.bannerTitle = bannerTitle;
         this.deadline = deadline;

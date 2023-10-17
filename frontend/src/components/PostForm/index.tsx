@@ -3,6 +3,8 @@ import type { UseMutateFunction } from '@tanstack/react-query';
 import React, { HTMLAttributes, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
+import { ResponsiveFlex } from 'votogether-design-system';
+
 import { PostInfo } from '@type/post';
 
 import {
@@ -40,12 +42,13 @@ import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
 import { getSelectedDHMTimeOption } from '@utils/post/getSelectedTimeOption';
 import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 
+import { theme } from '@styles/theme';
+
 import CategoryWrapper from './CategoryWrapper';
 import { DEADLINE_OPTION, DeadlineOptionInfo, DeadlineOptionName } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
 import { checkValidationPost } from './validation';
-
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
@@ -189,7 +192,14 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
       <form id="form-post" onSubmit={handlePostFormSubmit}>
-        <S.Wrapper>
+        <ResponsiveFlex
+          breakpoint={theme.breakpoint.sm}
+          ratio={70}
+          $smGap="20px"
+          $lgGap="30px"
+          $smPadding="60px 15px 0px 0px"
+          $lgPadding="20px 80px 40px 70px"
+        >
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
             <ErrorBoundary>
               <CategoryWrapper multiSelectHook={multiSelectHook} />
@@ -284,7 +294,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
               </SquareButton>
             </S.SaveButtonWrapper>
           </S.RightSide>
-        </S.Wrapper>
+        </ResponsiveFlex>
         {isOpen && (
           <Modal size="sm" onModalClose={closeModal} aria-label="마감시간 설정 모달">
             <>

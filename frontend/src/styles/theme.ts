@@ -1,6 +1,6 @@
 import { DefaultTheme, keyframes } from 'styled-components';
 
-const breakpoint = {
+const breakpoint: Record<'sm' | 'md' | 'lg', `${number}px`> = {
   /** @media (min-width: 576px) { ... } */
   sm: '576px',
   /** @media (min-width: 768px) { ... } */

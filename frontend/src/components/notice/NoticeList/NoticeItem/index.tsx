@@ -1,3 +1,5 @@
+import { StringDate } from '@type/time';
+
 import { PATH } from '@constants/path';
 
 import * as S from './style';
@@ -8,7 +10,7 @@ interface NoticeItemProps {
   /**
    * yyyy-mm-dd 형식
    */
-  createdAt: string;
+  createdAt: StringDate;
 }
 export default function NoticeItem({ id, title, createdAt }: NoticeItemProps) {
   const createdDate = createdAt.slice(0, 10);

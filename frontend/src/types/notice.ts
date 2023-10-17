@@ -1,11 +1,13 @@
 import { NoticeListResponse } from '@api/notice';
 
+import { StringDate } from './time';
+
 export interface Notice {
   id: number;
   title: string;
   content: string;
-  createdAt: string;
-  deadline: string;
+  createdAt: StringDate;
+  deadline: StringDate;
   bannerTitle: string;
   bannerSubtitle: string;
 }

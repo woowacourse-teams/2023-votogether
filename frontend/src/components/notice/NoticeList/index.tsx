@@ -1,3 +1,5 @@
+import { StringDate } from '@type/time';
+
 import NoticeItem from './NoticeItem';
 import * as S from './style';
 
@@ -8,7 +10,7 @@ interface NoticeListProps {
     /**
      * yyyy-mm-dd 형식
      */
-    createdAt: string;
+    createdAt: StringDate;
   }[];
 }
 

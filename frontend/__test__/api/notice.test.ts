@@ -1,4 +1,5 @@
 import {
+  NoticeRequest,
   createNotice,
   deleteNotice,
   getBannerNotice,
@@ -12,7 +13,7 @@ import { MOCK_NOTICE_TEST } from '@mocks/notice';
 
 describe('서버와 통신하여 공지사항 관련된 api를 통신할 수 있어야 한다. ', () => {
   test('공지사항을 생성한다.', async () => {
-    const data = {
+    const data: NoticeRequest = {
       title: '갤럭시',
       content: '공지사항입니다',
       deadline: '2023-10-12 15:13',
@@ -46,7 +47,7 @@ describe('서버와 통신하여 공지사항 관련된 api를 통신할 수 있
   });
 
   test('공지 사항을 수정한다.', async () => {
-    const data = {
+    const data: NoticeRequest = {
       title: '아이폰입니다',
       content: '공지사항입니다',
       deadline: '2023-10-12 15:13',

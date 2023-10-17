@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { MOCK_TRANSFORM_NOTICE } from '@mocks/mockData/notice';
+
 import NoticeItem from '.';
 
 const meta: Meta<typeof NoticeItem> = {
@@ -10,12 +12,6 @@ const meta: Meta<typeof NoticeItem> = {
 export default meta;
 type Story = StoryObj<typeof NoticeItem>;
 
-const MOCK_NOTICE_ITEM = {
-  id: 1,
-  title: '방방뛰는 코끼리',
-  createdAt: '2022-01-11 12:23',
-};
-
 export const Default: Story = {
-  render: () => <NoticeItem {...MOCK_NOTICE_ITEM} />,
+  render: () => <NoticeItem {...MOCK_TRANSFORM_NOTICE} />,
 };

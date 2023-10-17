@@ -44,7 +44,12 @@ public class MemberMetric extends BaseEntity {
     private long score;
 
     @Builder
-    private MemberMetric(final Member member, final long postCount, final long voteCount, final long score) {
+    private MemberMetric(
+            final Member member,
+            final long postCount,
+            final long voteCount,
+            final long score
+    ) {
         this.member = member;
         this.postCount = postCount;
         this.voteCount = voteCount;

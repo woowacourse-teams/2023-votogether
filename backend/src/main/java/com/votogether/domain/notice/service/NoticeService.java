@@ -34,7 +34,7 @@ public class NoticeService {
         if (notice.isPresent()) {
             return NoticeResponse.from(notice.get());
         }
-        return NoticeResponse.empty;
+        return NoticeResponse.empty();
     }
 
     @Transactional(readOnly = true)

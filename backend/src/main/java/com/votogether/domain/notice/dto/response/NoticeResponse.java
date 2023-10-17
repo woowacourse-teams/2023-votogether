@@ -28,7 +28,9 @@ public record NoticeResponse(
         LocalDateTime createdAt
 ) {
 
-    public static final NoticeResponse empty = new NoticeResponse(null, null, null, null, null, null, null);
+    public static NoticeResponse empty() {
+        return new NoticeResponse(null, null, null, null, null, null, null);
+    }
 
     public static NoticeResponse from(final Notice notice) {
         return new NoticeResponse(

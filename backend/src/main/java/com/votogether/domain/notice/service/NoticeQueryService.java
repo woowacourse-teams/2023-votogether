@@ -37,15 +37,8 @@ public class NoticeQueryService {
         final Pageable pageable = PageRequest.of(page, DEFAULT_PAGE_SIZE);
         final List<Notice> notices = noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
         final long noticeTotalCount = noticeRepository.count();
-        return NoticePageResponse.of(calculateTotalPage(noticeTotalCount), page, notices);
-    }
-
-    private int calculateTotalPage(final long noticeTotalCount) {
-        int totalPage = (int) (noticeTotalCount / DEFAULT_PAGE_SIZE);
-        if (noticeTotalCount % DEFAULT_PAGE_SIZE > 0) {
-            totalPage += 1;
-        }
-        return totalPage;
+        final int totalPage = (int) Math.ceil((double) noticeTotalCount / DEFAULT_PAGE_SIZE);
+        return NoticePageResponse.of(totalPage, page, notices);
     }
 
     public NoticeResponse getNotice(final Long noticeId) {

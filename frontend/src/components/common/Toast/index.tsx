@@ -16,7 +16,7 @@ export default memo(function Toast({ children, size }: ToastProps) {
 
   const timeId = window.setTimeout(() => {
     window.clearTimeout(timeId);
-    setIsShown(true);
+    setIsShown(false);
   }, TOAST_TIME);
 
   return (

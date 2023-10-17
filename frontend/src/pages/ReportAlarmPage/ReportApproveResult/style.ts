@@ -17,11 +17,11 @@ export const Container = styled.ul`
 `;
 
 export const List = styled.ul`
-  background-color: var(--bright-gray);
-  padding-left: 30px;
+  /* padding-left: 30px; */
   margin-top: 10px;
+  padding: 10px 10px 10px 30px;
 
-  padding: 10px;
+  background-color: var(--bright-gray);
 
   font: var(--text-default);
 

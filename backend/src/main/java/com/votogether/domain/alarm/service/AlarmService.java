@@ -24,7 +24,7 @@ public class AlarmService {
     @Transactional(readOnly = true)
     public List<PostAlarmResponse> getPostAlarm(final int page) {
         final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE);
-        final Slice<Alarm> alarms = alarmRepository.findAllBy(pageRequest);
+        final Slice<Alarm> alarms = alarmRepository.findAllByOrderByCreatedAtDesc(pageRequest);
 
         return getPostAlarmResponses(alarms);
     }

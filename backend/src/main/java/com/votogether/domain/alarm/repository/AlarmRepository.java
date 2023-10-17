@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
-    Slice<Alarm> findAllBy(final Pageable pageable);
+    Slice<Alarm> findAllByOrderByCreatedAtDesc(final Pageable pageable);
 
 }

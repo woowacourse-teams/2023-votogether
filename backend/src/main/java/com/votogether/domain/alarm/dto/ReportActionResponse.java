@@ -39,5 +39,3 @@ public record ReportActionResponse(
         );
     }
 }
-
-

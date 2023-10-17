@@ -44,9 +44,7 @@ class AlarmControllerTest extends ControllerTest {
                 .reasons("광고성, 부적합성")
                 .target("1")
                 .build();
-
         ReportActionAlarmResponse response = ReportActionAlarmResponse.from(reportActionAlarm);
-
         given(alarmService.getReportActionAlarms(any(Member.class), anyInt()))
                 .willReturn(List.of(response));
 
@@ -73,9 +71,7 @@ class AlarmControllerTest extends ControllerTest {
                 .target("1")
                 .reasons("광고성, 부적합성")
                 .build();
-
         ReportActionResponse response = ReportActionResponse.from(reportActionAlarm);
-
         given(alarmService.getReportActionAlarm(anyLong(), any(Member.class)))
                 .willReturn(response);
 

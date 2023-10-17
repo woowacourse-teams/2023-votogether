@@ -16,4 +16,5 @@ public enum ReportActionAlarmExceptionType implements ExceptionType {
         this.code = code;
         this.message = message;
     }
+    
 }

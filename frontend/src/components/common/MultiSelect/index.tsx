@@ -15,6 +15,7 @@ interface MultiSelectProps {
   handleOptionAdd: (newItem: Option) => void;
   handleOptionDelete: (optionId: number) => void;
   placeholder?: string;
+  maxOptionCount?: number;
 }
 
 export default function MultiSelect({
@@ -22,6 +23,7 @@ export default function MultiSelect({
   optionList,
   handleOptionAdd,
   handleOptionDelete,
+  maxOptionCount,
   placeholder = '여러 개의 옵션을 선택해주세요',
 }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +35,15 @@ export default function MultiSelect({
 
   const handleToggleWrapper = () => {
     setIsOpen(!isOpen);
+  };
+
+  const addOption = ({ id, name }: Option) => {
+    handleOptionAdd({ id, name });
+
+    // selectedOptionList.length 는 추가되기 이전의 값
+    if (maxOptionCount && selectedOptionList.length + 1 >= maxOptionCount) {
+      setIsOpen(false);
+    }
   };
 
   const handleOutsideClick = (event: MouseEvent) => {
@@ -90,7 +101,7 @@ export default function MultiSelect({
               aria-label={`클릭시 ${name} 추가`}
               onClick={e => {
                 e.stopPropagation();
-                handleOptionAdd({ id, name });
+                addOption({ id, name });
               }}
             >
               {name}

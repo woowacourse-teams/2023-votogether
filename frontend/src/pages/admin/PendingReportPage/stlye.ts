@@ -19,7 +19,7 @@ export const Wrapper = styled.main`
 `;
 
 export const PageTitle = styled.h1`
-  font-size: 25px;
+  font-size: 1.6rem;
   font-weight: 600;
 `;
 

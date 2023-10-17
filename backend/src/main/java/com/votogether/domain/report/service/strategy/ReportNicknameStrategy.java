@@ -56,4 +56,11 @@ public class ReportNicknameStrategy implements ReportStrategy {
         }
     }
 
+    @Override
+    public String parseTarget(final Long targetId) {
+        final Member reportedMember = memberRepository.findById(targetId)
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+        return reportedMember.getNickname();
+    }
+
 }

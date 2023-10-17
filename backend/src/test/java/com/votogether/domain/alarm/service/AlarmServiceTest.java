@@ -17,8 +17,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.transaction.TestTransaction;
 
+@Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 class AlarmServiceTest extends ServiceTest {
 
     @Autowired
@@ -48,7 +51,6 @@ class AlarmServiceTest extends ServiceTest {
             TestTransaction.end();
 
             // when
-            TestTransaction.start();
             List<PostAlarmResponse> postAlarmResponses = alarmService.getPostAlarm(0);
 
             // then
@@ -57,13 +59,13 @@ class AlarmServiceTest extends ServiceTest {
             assertSoftly(softly -> {
                 softly.assertThat(postAlarmResponses).hasSize(1);
                 softly.assertThat(postAlarmResponse.isChecked()).isEqualTo(false);
-                softly.assertThat(postAlarmDetailResponse.postTitle()).isEqualTo("postTitle");
+                softly.assertThat(postAlarmDetailResponse.postTitle()).isEqualTo("title");
             });
         }
 
         @Test
         @DisplayName("게시글이 마감완료가 되었을 때 가능하다.")
-        void whenPostClosed() {
+        void whenPostClosed() throws Exception {
             // given
             Member member = memberTestPersister.builder().save();
             Post post = postTestPersister.postBuilder().writer(member).save();
@@ -73,8 +75,9 @@ class AlarmServiceTest extends ServiceTest {
             TestTransaction.flagForCommit();
             TestTransaction.end();
 
+            Thread.sleep(1000);
+
             // when
-            TestTransaction.start();
             List<PostAlarmResponse> postAlarmResponses = alarmService.getPostAlarm(0);
 
             // then
@@ -83,7 +86,7 @@ class AlarmServiceTest extends ServiceTest {
             assertSoftly(softly -> {
                 softly.assertThat(postAlarmResponses).hasSize(1);
                 softly.assertThat(postAlarmResponse.isChecked()).isEqualTo(false);
-                softly.assertThat(postAlarmDetailResponse.postTitle()).isEqualTo("postTitle");
+                softly.assertThat(postAlarmDetailResponse.postTitle()).isEqualTo("title");
             });
         }
 

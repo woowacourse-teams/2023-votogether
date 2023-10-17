@@ -55,9 +55,12 @@ class AlarmControllerTest extends ControllerTest {
 
         // then
         PostAlarmResponse actualPostAlarmResponse = postAlarmResponses.get(0);
+        PostAlarmDetailResponse actualPostAlarmDetailResponse = actualPostAlarmResponse.detail();
         assertSoftly(softly -> {
             softly.assertThat(postAlarmResponses).hasSize(1);
-            softly.assertThat(actualPostAlarmResponse).usingRecursiveComparison().isEqualTo(postAlarmResponse);
+            softly.assertThat(actualPostAlarmResponse.isChecked()).isEqualTo(false);
+            softly.assertThat(actualPostAlarmDetailResponse.postTitle()).isEqualTo("title");
+            softly.assertThat(actualPostAlarmDetailResponse.commentWriter()).isEqualTo("저문");
         });
     }
 

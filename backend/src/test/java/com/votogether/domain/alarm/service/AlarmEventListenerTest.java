@@ -1,5 +1,7 @@
 package com.votogether.domain.alarm.service;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.votogether.domain.alarm.dto.event.PostAlarmEvent;
 import com.votogether.domain.alarm.entity.Alarm;
 import com.votogether.domain.alarm.entity.vo.AlarmType;
@@ -7,12 +9,14 @@ import com.votogether.domain.alarm.repository.AlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.test.ServiceTest;
 import java.util.List;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.transaction.TestTransaction;
 
+@Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 class AlarmEventListenerTest extends ServiceTest {
 
     @Autowired
@@ -34,12 +38,10 @@ class AlarmEventListenerTest extends ServiceTest {
         TestTransaction.flagForCommit();
         TestTransaction.end();
 
-        TestTransaction.start();
-
         // then
         List<Alarm> alarms = alarmRepository.findAll();
         Alarm alarm = alarms.get(0);
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(alarms).hasSize(1);
             softly.assertThat(alarm.getTargetId()).isEqualTo(1L);
             softly.assertThat(alarm.getAlarmType()).isEqualTo(AlarmType.COMMENT);

@@ -25,8 +25,7 @@ export const TextArea = styled.textarea`
 
   @media (max-width: ${theme.breakpoint.sm}) {
     &::placeholder {
-      font-size: 1.2rem;
-      line-height: 2rem;
+      font: var(--text-small);
     }
   }
 
@@ -63,8 +62,7 @@ export const KeyDescription = styled.span`
   margin-top: 20px;
 
   text-align: right;
-  font: var(--text-caption);
-  font-size: 1.2rem;
+  font: var(--text-small);
 
   color: var(--dark-gray);
 

@@ -14,6 +14,7 @@ const zIndex = {
   tagButton: 90,
   header: 100,
   modal: 200,
+  toast: 300,
 };
 
 const animation = {

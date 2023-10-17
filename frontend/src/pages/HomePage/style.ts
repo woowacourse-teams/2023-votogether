@@ -5,11 +5,11 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const Container = styled.div`
-  padding-top: 40px;
+  margin: 50px 10px 20px 10px;
   position: relative;
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    padding-top: 10px;
+    margin-top: 10px;
   }
 `;
 

@@ -27,7 +27,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from Report r where r.reportType = :reportType and r.targetId = :targetId")
     void deleteAllWithReportTypeAndTargetIdInBatch(
-            @Param("reportType") ReportType reportType,
+            @Param("reportType") final ReportType reportType,
             @Param("targetId") final Long targetId
     );
 

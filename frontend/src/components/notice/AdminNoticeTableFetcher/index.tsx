@@ -2,6 +2,8 @@ import { SquareButton, Table } from 'votogether-design-system';
 
 import { usePagedNoticeList } from '@hooks';
 
+import { PATH } from '@constants/path';
+
 import * as S from './style';
 
 export default function AdminNoticeTableFetcher() {
@@ -21,15 +23,20 @@ export default function AdminNoticeTableFetcher() {
   return (
     <S.Container>
       <Table
-        columns={['제목', '내용', '배너 타이틀', '베너 부제목', '생성일자', '마감일자']}
+        columns={['제목', '내용', '배너 타이틀', '베너 부제목', '생성일자', '마감일자', '수정하기']}
         rows={data.noticeList.map(
-          ({ title, content, bannerTitle, bannerSubtitle, createdAt, deadline }) => ({
+          ({ id, title, content, bannerTitle, bannerSubtitle, createdAt, deadline }) => ({
             title,
             content,
             bannerTitle,
             bannerSubtitle,
             createdAt,
             deadline,
+            editButton: (
+              <S.EditButtonWrapper to={`${PATH.ADMIN_NOTICE}/${id}`}>
+                <SquareButton theme="fill">수정하기</SquareButton>
+              </S.EditButtonWrapper>
+            ),
           })
         )}
       />

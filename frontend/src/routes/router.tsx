@@ -8,6 +8,7 @@ import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
 import MyInfoPage from '@pages/MyInfoPage';
 import NotFoundPage from '@pages/NotFoundPage';
+import NoticeAdminPage from '@pages/notice/NoticeAdminPage';
 import NoticeDetailPage from '@pages/notice/NoticeDetailPage';
 import NoticeListPage from '@pages/notice/NoticeListPage';
 import CreatePostPage from '@pages/post/CreatePostPage';
@@ -165,39 +166,56 @@ const router = createBrowserRouter([
   {
     path: PATH.RANKING,
     element: (
-      <PrivateRoute isGuestAllowed={true}>
+      <>
         <RankingPage />
         <RouteChangeTracker />
-      </PrivateRoute>
+      </>
     ),
     errorElement: <ErrorPage />,
   },
   {
     path: PATH.ANNOUNCEMENT,
     element: (
-      <PrivateRoute isGuestAllowed={true}>
+      <>
         <AnnouncementPage />
         <RouteChangeTracker />
-      </PrivateRoute>
+      </>
     ),
     errorElement: <ErrorPage />,
   },
   {
     path: PATH.ADMIN,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: PATH.NOTICES.slice(1),
+        path: `${PATH.REPORT.slice(1)}/pending`,
         element: (
-          <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
-            <div>어드민 공지사항 목록 페이지</div>
+          <PrivateRoute isOnlyAdminAllowed>
+            <PendingReportPage />
           </PrivateRoute>
         ),
       },
       {
-        path: `${PATH.REPORTS}/pending`.slice(1),
+        path: `${PATH.NOTICES.slice(1)}/write`,
         element: (
-          <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
-            <PendingReportPage />
+          <PrivateRoute isOnlyAdminAllowed>
+            <div>공지사항 작성 페이지</div>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: `${PATH.NOTICES.slice(1)}/:noticeId`,
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <div>공지사항 수정 페이지</div>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: PATH.NOTICES.slice(1),
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <NoticeAdminPage />
           </PrivateRoute>
         ),
       },
@@ -219,19 +237,19 @@ const router = createBrowserRouter([
       {
         path: ':noticeId',
         element: (
-          <PrivateRoute isGuestAllowed={true}>
+          <>
             <NoticeDetailPage />
             <RouteChangeTracker />
-          </PrivateRoute>
+          </>
         ),
       },
       {
         path: '',
         element: (
-          <PrivateRoute isGuestAllowed={true}>
+          <>
             <NoticeListPage />
             <RouteChangeTracker />
-          </PrivateRoute>
+          </>
         ),
       },
     ],

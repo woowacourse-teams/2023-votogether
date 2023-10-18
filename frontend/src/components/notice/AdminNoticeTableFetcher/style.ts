@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { styled } from 'styled-components';
 
 export const Container = styled.div`
@@ -12,7 +14,12 @@ export const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-export const ButtonWrapper = styled.button`
+export const ButtonWrapper = styled.div`
   width: 60px;
+  height: 60px;
+`;
+
+export const EditButtonWrapper = styled(Link)`
+  width: 100%;
   height: 60px;
 `;

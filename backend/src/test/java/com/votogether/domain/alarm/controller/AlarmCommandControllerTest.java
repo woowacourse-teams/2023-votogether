@@ -2,6 +2,7 @@ package com.votogether.domain.alarm.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -46,12 +47,13 @@ class AlarmCommandControllerTest extends ControllerTest {
         void readAlarm() throws Exception {
             // given
             mockingAuthArgumentResolver();
-            willDoNothing().given(alarmCommandService).readAlarm(anyLong(), any(Member.class));
+            willDoNothing().given(alarmCommandService).readAlarm(anyLong(), anyString(), any(Member.class));
 
             // when, then
             RestAssuredMockMvc
                     .given().log().all()
                     .headers(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .param("type", "CONTENT")
                     .when().patch("/alarms/{id}", 1L)
                     .then().log().all()
                     .status(HttpStatus.OK);
@@ -63,12 +65,13 @@ class AlarmCommandControllerTest extends ControllerTest {
         void negativeAlarmId(Long alarmId) throws Exception {
             // given
             mockingAuthArgumentResolver();
-            willDoNothing().given(alarmCommandService).readAlarm(anyLong(), any(Member.class));
+            willDoNothing().given(alarmCommandService).readAlarm(anyLong(), anyString(), any(Member.class));
 
             // when, then
             RestAssuredMockMvc
                     .given().log().all()
                     .headers(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .param("type", "CONTENT")
                     .when().patch("/alarms/{id}", alarmId)
                     .then().log().all()
                     .status(HttpStatus.BAD_REQUEST)

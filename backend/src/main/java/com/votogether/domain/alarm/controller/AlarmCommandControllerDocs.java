@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 
@@ -33,6 +34,8 @@ public interface AlarmCommandControllerDocs {
     ResponseEntity<Void> readAlarm(
             @Parameter(description = "알림 ID", example = "1")
             @Positive(message = "알림 ID는 양수만 가능합니다.") final Long alarmId,
+            @Parameter(description = "알림 타입", example = "CONTENT")
+            @NotBlank(message = "알림 타입이 공백이거나 존재하지 않습니다.") final String alarmType,
             final Member loginMember
     );
 

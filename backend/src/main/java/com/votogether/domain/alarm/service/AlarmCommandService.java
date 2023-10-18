@@ -16,7 +16,7 @@ public class AlarmCommandService {
 
     private final AlarmRepository alarmRepository;
 
-    public void readAlarm(final Long alarmId, final Member loginMember) {
+    public void readAlarm(final Long alarmId, final String alarmType, final Member loginMember) {
         final Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new NotFoundException(AlarmExceptionType.NOT_FOUND));
 

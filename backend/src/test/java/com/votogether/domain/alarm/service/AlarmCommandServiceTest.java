@@ -39,9 +39,10 @@ class AlarmCommandServiceTest extends ServiceTest {
                     .isChecked(false)
                     .build();
             alarmRepository.save(alarm);
+            String type = "CONTENT";
 
             // when
-            alarmCommandService.readAlarm(alarm.getId(), member);
+            alarmCommandService.readAlarm(alarm.getId(), type, member);
 
             // then
             assertThat(alarm.isChecked()).isTrue();
@@ -52,9 +53,10 @@ class AlarmCommandServiceTest extends ServiceTest {
         void notExistAlarm() {
             // given
             Member member = memberTestPersister.builder().save();
+            String type = "CONTENT";
 
             // when, then
-            assertThatThrownBy(() -> alarmCommandService.readAlarm(-1L, member))
+            assertThatThrownBy(() -> alarmCommandService.readAlarm(-1L, type, member))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("알림이 존재하지 않습니다.");
         }

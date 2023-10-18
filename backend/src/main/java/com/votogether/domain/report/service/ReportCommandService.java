@@ -33,7 +33,7 @@ public class ReportCommandService {
 
         final ReportAggregateDto reportAggregateDto = reportRepository
                 .findReportAggregateDtoByReportTypeAndTargetId(report.getReportType(), report.getTargetId())
-                .orElseThrow(() -> new NotFoundException(ReportExceptionType.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ReportExceptionType.NOT_FOUND_REPORT_AGGREGATE));
 
         reportRepository.deleteAllWithReportTypeAndTargetIdInBatch(report.getReportType(), report.getTargetId());
 

@@ -38,15 +38,15 @@ public interface AlarmQueryControllerDocs {
     );
 
     @Operation(summary = "신고 조치 알림 조회", description = "신고 조치 알림 목록을 조회한다.")
-    @ApiResponse(responseCode = "201", description = "조회 성공")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     ResponseEntity<List<ReportActionAlarmResponse>> getReportActionAlarms(
             @Parameter(description = "현재 페이지 위치", example = "0")
             @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
             final Member member
     );
 
-    @Operation(summary = "신고 조치 알림 상세 조회", description = "신고조치알림를 상세 조회한다.")
-    @ApiResponse(responseCode = "201", description = "조회 성공")
+    @Operation(summary = "신고 조치 알림 상세 조회", description = "신고 조치 알림를 상세 조회한다.")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
     ResponseEntity<ReportActionResponse> getReportActionAlarm(
             @Parameter(description = "신고 조치 알림 ID", example = "1") final Long reportActionAlarmId,
             final Member member

@@ -6,7 +6,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useReportApproveResult = (reportId: number) => {
   const { data } = useQuery<ReportApproveResult>(
-    [QUERY_KEY.REPORT_CONFIRM_RESULT, reportId],
+    [QUERY_KEY.REPORT_APPROVE_RESULT, reportId],
     () => getReportApproveResult(reportId),
     {
       cacheTime: 60 * 60 * 1000,

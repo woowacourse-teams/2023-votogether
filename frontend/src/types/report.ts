@@ -1,7 +1,7 @@
+import { PendingReportActionListResponse, PendingReportActionResponse } from '@api/report';
+
 import { REPORT_MESSAGE } from '@constants/policyMessage';
 import { REPORT_TYPE } from '@constants/report';
-
-import { StringDate } from './time';
 
 export type ReportType = 'POST' | 'COMMENT' | 'NICKNAME';
 
@@ -19,19 +19,6 @@ export type ReportMessage = keyof typeof REPORT_MESSAGE;
 export interface ReportInfo {
   name: string;
   reportMessageList: { [key: string]: string };
-}
-
-export interface PendingReportActionListResponse {
-  totalPageNumber: number;
-  currentPageNumber: number;
-  reports: PendingReportActionResponse[];
-}
-export interface PendingReportActionResponse {
-  id: number;
-  type: keyof typeof REPORT_TYPE;
-  reasons: string[];
-  createdAt: StringDate;
-  target: string;
 }
 
 export type PendingReportAction = Omit<PendingReportActionResponse, 'type' | 'reasons'> & {

@@ -1,15 +1,25 @@
-import {
-  PendingReportActionList,
-  PendingReportActionListResponse,
-  ReportActionRequest,
-  ReportRequest,
-} from '@type/report';
+import { PendingReportActionList, ReportActionRequest, ReportRequest } from '@type/report';
+import { StringDate } from '@type/time';
 
 import { REPORT_TYPE } from '@constants/report';
 
 import { getFetch, postFetch } from '@utils/fetch';
 
-const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
+export interface PendingReportActionResponse {
+  id: number;
+  type: keyof typeof REPORT_TYPE;
+  reasons: string[];
+  createdAt: StringDate;
+  target: string;
+}
+
+export interface PendingReportActionListResponse {
+  totalPageNumber: number;
+  currentPageNumber: number;
+  reports: PendingReportActionResponse[];
+}
+
+const BASE_URL = process.env.VOTOGETHER_BASE_URL;
 
 export const reportContent = async (reportData: ReportRequest) => {
   return await postFetch(`${BASE_URL}/report`, reportData);

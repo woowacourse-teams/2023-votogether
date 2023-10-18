@@ -20,13 +20,13 @@ public class AlarmEventListener {
     @TransactionalEventListener
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handlePostAlarmEvent(final PostAlarmEvent postAlarmEvent) {
-        final Alarm alarm = new Alarm(
-                postAlarmEvent.member(),
-                postAlarmEvent.alarmType(),
-                postAlarmEvent.targetId(),
-                postAlarmEvent.detail(),
-                false
-        );
+        final Alarm alarm = Alarm.builder()
+                .member(postAlarmEvent.member())
+                .alarmType(postAlarmEvent.alarmType())
+                .targetId(postAlarmEvent.targetId())
+                .detail(postAlarmEvent.detail())
+                .isChecked(false)
+                .build();
         alarmRepository.save(alarm);
     }
 

@@ -47,7 +47,7 @@ public class Alarm extends BaseEntity {
     private boolean isChecked;
 
     @Builder
-    public Alarm(
+    private Alarm(
             final Member member,
             final AlarmType alarmType,
             final Long targetId,

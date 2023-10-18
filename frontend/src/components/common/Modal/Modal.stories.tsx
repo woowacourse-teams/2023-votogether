@@ -25,6 +25,10 @@ export const Default = () => {
     setIsOpen(true);
   };
 
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   const primaryButton = {
     text: 'Primary',
     handleClick: () => {
@@ -50,6 +54,7 @@ export const Default = () => {
           title="This is Default Modal"
           primaryButton={primaryButton}
           secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
         />
       )}
     </>
@@ -61,6 +66,10 @@ export const Wide = () => {
 
   const openModal = () => {
     setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
   };
 
   const primaryButton = {
@@ -88,6 +97,7 @@ export const Wide = () => {
           size="lg"
           primaryButton={primaryButton}
           secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
         />
       )}
     </>
@@ -99,6 +109,10 @@ export const CloseByESC = () => {
 
   const openModal = () => {
     setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
   };
 
   const primaryButton = {
@@ -142,6 +156,7 @@ export const CloseByESC = () => {
           size="sm"
           primaryButton={primaryButton}
           secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
         />
       )}
     </>
@@ -158,6 +173,10 @@ export const WithTimePicker = () => {
 
   const openModal = () => {
     setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
   };
 
   const handleResetButton = () => {
@@ -194,6 +213,7 @@ export const WithTimePicker = () => {
           size="sm"
           primaryButton={primaryButton}
           secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
         >
           <S.Body>
             <S.Description>최대 {MAX_DEADLINE}일을 넘을 수 없습니다.</S.Description>

@@ -16,6 +16,7 @@ interface ModalProps extends PropsWithChildren {
   size?: Size;
   primaryButton: ButtonProps;
   secondaryButton: ButtonProps;
+  handleModalClose: () => void;
 }
 
 export default function Modal({
@@ -24,6 +25,7 @@ export default function Modal({
   size = 'sm',
   primaryButton,
   secondaryButton,
+  handleModalClose,
 }: ModalProps) {
   const BackDropRef = useRef<HTMLDivElement>(null);
 
@@ -33,19 +35,19 @@ export default function Modal({
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (e.target === BackDropRef.current) {
-        secondaryClick();
+        handleModalClose();
       }
     };
 
     document.addEventListener('click', handler);
 
     return () => document.removeEventListener('click', handler);
-  }, [BackDropRef, secondaryClick]);
+  }, [BackDropRef, handleModalClose]);
 
   return (
     <S.All>
       <S.HiddenCloseButton
-        onClick={secondaryClick}
+        onClick={handleModalClose}
         tabIndex={0}
         aria-label="팝업 창 닫기"
       ></S.HiddenCloseButton>

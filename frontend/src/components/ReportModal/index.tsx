@@ -8,6 +8,7 @@ import Select from '@components/common/Select';
 import { REPORT_TYPE } from './constants';
 import * as S from './style';
 interface UserReportModalProps {
+  handleModalClose: () => void;
   reportType: ReportType;
   handleCancelClick: () => void;
   handleReportClick: (reason: ReportMessage) => void;
@@ -15,6 +16,7 @@ interface UserReportModalProps {
 }
 
 export default function ReportModal({
+  handleModalClose,
   reportType,
   handleCancelClick,
   handleReportClick,
@@ -41,6 +43,7 @@ export default function ReportModal({
         text: '취소',
         handleClick: handleCancelClick,
       }}
+      handleModalClose={handleModalClose}
     >
       <S.ModalBody>
         <Select

@@ -63,7 +63,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
   //기타 훅
   const navigate = useNavigate();
   const { addMessage } = useContext(ToastContext);
-  const { isOpen: isModalOpen, openComponent, closeComponent } = useToggle();
+  const { isOpen: isModalOpen, openComponent, closeComponent: closeModal } = useToggle();
 
   //게시글 정보 관련 훅
   const contentImageHook = useContentImage(serverImageUrl);
@@ -111,7 +111,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }
   };
 
-  const closeModal = () => {
+  const handleModalClose = () => {
     if (data && checkIrreplaceableTime(userSelectTime, data.createTime)) {
       addMessage('마감시간 지정 조건을 다시 확인해주세요.');
       const updatedTime = {
@@ -126,7 +126,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     setSelectTimeOption(
       Object.values(userSelectTime).every(time => time === 0) ? null : '사용자지정'
     );
-    closeComponent();
+    closeModal();
   };
 
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -313,6 +313,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
             primaryButton={primaryButton}
             secondaryButton={secondaryButton}
             aria-label="마감시간 설정 모달"
+            handleModalClose={handleModalClose}
           >
             <>
               <S.ModalHeader>

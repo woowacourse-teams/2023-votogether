@@ -38,7 +38,7 @@ export const NicknameChange: Story = {
 };
 
 export const DeleteUserAccount = () => {
-  const { isOpen, openComponent, closeComponent } = useToggle();
+  const { isOpen, openComponent, closeComponent: closeModal } = useToggle();
 
   const primaryButton = {
     text: '탈퇴',
@@ -49,7 +49,7 @@ export const DeleteUserAccount = () => {
 
   const secondaryButton = {
     text: '취소',
-    handleClick: closeComponent,
+    handleClick: closeModal,
   };
 
   return (
@@ -65,6 +65,7 @@ export const DeleteUserAccount = () => {
           title="정말 탈퇴하시겠어요?"
           primaryButton={primaryButton}
           secondaryButton={secondaryButton}
+          handleModalClose={secondaryButton.handleClick}
         >
           <ModalBody>
             <ModalDescription>

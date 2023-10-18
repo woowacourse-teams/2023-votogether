@@ -155,6 +155,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       )}
       {action === COMMENT_ACTION.USER_REPORT && (
         <ReportModal
+          handleModalClose={handleCancelClick}
           reportType="NICKNAME"
           handleReportClick={handleNicknameReportClick}
           handleCancelClick={handleCancelClick}
@@ -163,6 +164,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
       )}
       {action === COMMENT_ACTION.COMMENT_REPORT && (
         <ReportModal
+          handleModalClose={handleCancelClick}
           reportType="COMMENT"
           handleReportClick={handleCommentReportClick}
           handleCancelClick={handleCancelClick}

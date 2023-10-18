@@ -10,7 +10,9 @@ import MyInfoPage from '@pages/MyInfoPage';
 import NotFoundPage from '@pages/NotFoundPage';
 import NoticeAdminPage from '@pages/notice/NoticeAdminPage';
 import NoticeDetailPage from '@pages/notice/NoticeDetailPage';
+import NoticeEditPage from '@pages/notice/NoticeEditPage';
 import NoticeListPage from '@pages/notice/NoticeListPage';
+import NoticeWritePage from '@pages/notice/NoticeWritePage';
 import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
@@ -166,20 +168,20 @@ const router = createBrowserRouter([
   {
     path: PATH.RANKING,
     element: (
-      <>
+      <PrivateRoute isGuestAllowed={true}>
         <RankingPage />
         <RouteChangeTracker />
-      </>
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
   },
   {
     path: PATH.ANNOUNCEMENT,
     element: (
-      <>
+      <PrivateRoute isGuestAllowed={true}>
         <AnnouncementPage />
         <RouteChangeTracker />
-      </>
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
   },
@@ -199,7 +201,7 @@ const router = createBrowserRouter([
         path: `${PATH.NOTICES.slice(1)}/write`,
         element: (
           <PrivateRoute isOnlyAdminAllowed>
-            <div>공지사항 작성 페이지</div>
+            <NoticeWritePage />
           </PrivateRoute>
         ),
       },
@@ -207,7 +209,7 @@ const router = createBrowserRouter([
         path: `${PATH.NOTICES.slice(1)}/:noticeId`,
         element: (
           <PrivateRoute isOnlyAdminAllowed>
-            <div>공지사항 수정 페이지</div>
+            <NoticeEditPage />
           </PrivateRoute>
         ),
       },
@@ -237,19 +239,19 @@ const router = createBrowserRouter([
       {
         path: ':noticeId',
         element: (
-          <>
+          <PrivateRoute isGuestAllowed={true}>
             <NoticeDetailPage />
             <RouteChangeTracker />
-          </>
+          </PrivateRoute>
         ),
       },
       {
         path: '',
         element: (
-          <>
+          <PrivateRoute isGuestAllowed={true}>
             <NoticeListPage />
             <RouteChangeTracker />
-          </>
+          </PrivateRoute>
         ),
       },
     ],

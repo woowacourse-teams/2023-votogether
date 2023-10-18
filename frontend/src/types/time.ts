@@ -15,4 +15,4 @@ export type StringDate = `${number}-${number}-${number} ${number}:${number}`;
 /**
  * yyyy-mm-dd
  */
-export type StringDateOnly = `${number}-${number}-${number}`;
+export type StringDateUpToDay = `${number}-${number}-${number}`;

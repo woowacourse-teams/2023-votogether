@@ -5,7 +5,7 @@ import {
   NoticeRequest,
   NoticeResponse,
 } from '@type/notice';
-import { StringDateOnly } from '@type/time';
+import { StringDateUpToDay } from '@type/time';
 
 import { deleteFetch, getFetch, patchFetch, postFetch } from '@utils/fetch';
 
@@ -22,7 +22,7 @@ export const transformNotice = ({
     id,
     title,
     content,
-    createdAt: createdAt.split(' ')[0] as StringDateOnly,
+    createdAt: createdAt.split(' ')[0] as StringDateUpToDay,
     deadline,
     bannerTitle,
     bannerSubtitle,

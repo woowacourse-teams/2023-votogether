@@ -1,4 +1,4 @@
-import { StringDate, StringDateOnly } from './time';
+import { StringDate, StringDateUpToDay } from './time';
 
 export interface NoticeResponse {
   id: number;
@@ -18,6 +18,6 @@ export interface NoticeListResponse {
 
 export type NoticeRequest = Omit<Notice, 'createdAt' | 'id'>;
 
-export type Notice = Omit<NoticeResponse, 'createdAt'> & { createdAt: StringDateOnly };
+export type Notice = Omit<NoticeResponse, 'createdAt'> & { createdAt: StringDateUpToDay };
 
 export type NoticeList = Omit<NoticeListResponse, 'notices'> & { noticeList: Notice[] };

@@ -17,4 +17,5 @@ public enum CategoryExceptionType implements ExceptionType {
         this.code = code;
         this.message = message;
     }
+
 }

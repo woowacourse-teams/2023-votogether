@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
@@ -16,6 +18,8 @@ import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.notice.entity.Notice;
+import com.votogether.domain.notice.repository.NoticeRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
@@ -66,6 +70,12 @@ class MemberServiceTest extends ServiceTest {
 
     @Autowired
     PostTestPersister postTestPersister;
+
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
+
+    @Autowired
+    NoticeRepository noticeRepository;
 
     @Autowired
     EntityManager em;
@@ -478,6 +488,55 @@ class MemberServiceTest extends ServiceTest {
             assertAll(
                     () -> assertThat(memberRepository.findAll()).hasSize(1),
                     () -> assertThat(reportRepository.findAll()).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 신고조치알림 모두 삭제된다.")
+        void deleteWithReportActionAlarms() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+            ReportActionAlarm reportActionAlarm = ReportActionAlarm.builder()
+                    .reportType(ReportType.POST)
+                    .member(member)
+                    .isChecked(false)
+                    .target("1")
+                    .reasons("광고성, 부적합성")
+                    .build();
+            reportActionAlarmRepository.save(reportActionAlarm);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).isEmpty(),
+                    () -> assertThat(reportActionAlarmRepository.findAll()).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("회원과 작성한 공지사항 모두 삭제된다.")
+        void deleteWithNotices() {
+            // given
+            Member member = memberRepository.save(MemberFixtures.MALE_20.get());
+
+            Notice notice = Notice.builder()
+                    .member(member)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now().plusDays(1))
+                    .build();
+            noticeRepository.save(notice);
+
+            // when
+            memberService.deleteMember(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(memberRepository.findAll()).isEmpty(),
+                    () -> assertThat(noticeRepository.findAll()).isEmpty()
             );
         }
 

@@ -2,7 +2,6 @@ package com.votogether.domain.member.service;
 
 import com.votogether.domain.alarm.entity.Alarm;
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
-import com.votogether.domain.alarm.exception.AlarmExceptionType;
 import com.votogether.domain.alarm.repository.AlarmRepository;
 import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
@@ -92,13 +91,30 @@ public class MemberService {
     }
 
     private boolean hasLatestAlarm(final Member member) {
-        final Alarm alarm = alarmRepository.findByMemberOrderByCreatedAtDesc(member)
-                .orElseThrow(() -> new NotFoundException(AlarmExceptionType.NOT_FOUND));
-        final ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(member)
-                .orElseThrow(() -> new NotFoundException(AlarmExceptionType.NOT_FOUND_ACTION));
+        final Optional<Alarm> maybeAlarm = alarmRepository.findByMemberOrderByCreatedAtDesc(member);
+        final Optional<ReportActionAlarm> maybeReportActionAlarm =
+                reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(member);
 
-        final LocalDateTime latestAlarmCreatedAt = alarm.getLatestAlarmCreatedAt(reportActionAlarm.getCreatedAt());
+        if (maybeAlarm.isEmpty() && maybeReportActionAlarm.isEmpty()) {
+            return false;
+        }
+        final LocalDateTime latestAlarmCreatedAt = getLatestAlarmCreatedAt(maybeAlarm, maybeReportActionAlarm);
         return member.hasLatestAlarmCompareTo(latestAlarmCreatedAt);
+    }
+
+    private LocalDateTime getLatestAlarmCreatedAt(
+            final Optional<Alarm> maybeAlarm,
+            final Optional<ReportActionAlarm> maybeReportActionAlarm
+    ) {
+        if (maybeAlarm.isPresent()) {
+            return maybeAlarm.get().getCreatedAt();
+        }
+        if (maybeReportActionAlarm.isPresent()) {
+            return maybeReportActionAlarm.get().getCreatedAt();
+        }
+        final Alarm alarm = maybeAlarm.get();
+        final ReportActionAlarm reportActionAlarm = maybeReportActionAlarm.get();
+        return alarm.getLatestAlarmCreatedAt(reportActionAlarm.getCreatedAt());
     }
 
     @Transactional

@@ -98,10 +98,10 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
         Member memberA = memberRepository.save(MemberFixtures.MALE_30.get());
         Member memberB = memberRepository.save(MemberFixtures.MALE_20.get());
 
-        final ReportType reportType = ReportType.POST;
-        final long targetId = 1L;
+        ReportType reportType = ReportType.POST;
+        long targetId = 1L;
 
-        final String reasonA = "reasonA";
+        String reasonA = "reasonA";
         reportTestPersister.builder()
                 .member(memberA)
                 .reportType(reportType)
@@ -109,7 +109,7 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
                 .targetId(targetId)
                 .save();
 
-        final String reasonB = "reasonB";
+        String reasonB = "reasonB";
         Report savedReportB = reportTestPersister.builder()
                 .member(memberB)
                 .reportType(reportType)

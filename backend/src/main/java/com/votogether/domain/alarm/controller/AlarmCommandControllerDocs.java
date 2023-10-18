@@ -1,8 +1,11 @@
 package com.votogether.domain.alarm.controller;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.global.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,11 +27,17 @@ public interface AlarmCommandControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "알림을 읽을 수 있는 대상이 아닌 경우"
+                    description = """
+                            1.알림 ID가 양수가 아닌 경우
+                                                        
+                            2.알림을 읽을 수 있는 대상이 아닌 경우
+                            """,
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "알림이 존재하지 않은 경우"
+                    description = "알림이 존재하지 않은 경우",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
     ResponseEntity<Void> readAlarm(

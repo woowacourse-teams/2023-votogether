@@ -49,7 +49,8 @@ public interface AlarmQueryControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "페이지가 0이상 정수가 아닌 경우"
+                    description = "페이지가 0이상 정수가 아닌 경우",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
     ResponseEntity<List<ReportActionAlarmResponse>> getReportActionAlarms(

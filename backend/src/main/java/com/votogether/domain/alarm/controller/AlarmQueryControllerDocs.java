@@ -1,8 +1,13 @@
 package com.votogether.domain.alarm.controller;
 
+import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
+import com.votogether.domain.alarm.dto.ReportActionResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
+import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.ExceptionResponse;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +33,23 @@ public interface AlarmQueryControllerDocs {
             )
     })
     ResponseEntity<List<PostAlarmResponse>> getPostAlarm(
-            @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
+            @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
+            @Auth final Member loginMember
+    );
+
+    @Operation(summary = "신고 조치 알림 조회", description = "신고 조치 알림 목록을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    ResponseEntity<List<ReportActionAlarmResponse>> getReportActionAlarms(
+            @Parameter(description = "현재 페이지 위치", example = "0")
+            @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
+            final Member member
+    );
+
+    @Operation(summary = "신고 조치 알림 상세 조회", description = "신고 조치 알림를 상세 조회한다.")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    ResponseEntity<ReportActionResponse> getReportActionAlarm(
+            @Parameter(description = "신고 조치 알림 ID", example = "1") final Long reportActionAlarmId,
+            final Member member
     );
 
 }

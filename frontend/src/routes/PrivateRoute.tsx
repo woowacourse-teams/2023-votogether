@@ -18,16 +18,22 @@ interface Route extends PropsWithChildren {
 const PrivateRoute = ({
   children,
   isGuestAllowed = false,
-  isOnlyAdminAllowed = true,
+  isOnlyAdminAllowed = false,
   path = PATH.LOGIN,
 }: Route) => {
-  const authInfo = useContext(AuthContext);
+  const {
+    clearLoggedInfo,
+    loggedInfo: { userInfo },
+  } = useContext(AuthContext);
   const isLoggedIn = getLocalStorage(ACCESS_TOKEN_KEY);
   const hasEssentialInfo = getCookie().hasEssentialInfo;
-  let role = 'ADMIN'; // 로그인 시 response 로 받아야 함.
-  // const role = 'getCookie().role;
 
-  // const isAuthenticated = true;
+  if (isOnlyAdminAllowed && userInfo?.role !== 'ADMIN') {
+    alert('해당 페이지는 관리자만 접근이 가능합니다. 마이 페이지를 통해 접속해주세요.');
+
+    return <Navigate to={path} />;
+  }
+
   if (!isGuestAllowed && !isLoggedIn) {
     alert('해당 페이지에 접근하려면 로그인이 필요합니다.');
 
@@ -41,15 +47,9 @@ const PrivateRoute = ({
   }
 
   if (isLoggedIn && hasEssentialInfo === undefined) {
-    authInfo.clearLoggedInfo();
+    clearLoggedInfo();
 
     return <Navigate to="/" />;
-  }
-
-  if (isLoggedIn && isOnlyAdminAllowed && role !== 'ADMIN') {
-    alert('해당 페이지에 대한 접근 권한이 없습니다.');
-
-    return <Navigate to={path} />;
   }
 
   return children;

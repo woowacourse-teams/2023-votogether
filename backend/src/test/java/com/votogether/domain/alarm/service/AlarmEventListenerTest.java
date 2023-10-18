@@ -38,7 +38,7 @@ class AlarmEventListenerTest extends ServiceTest {
         TestTransaction.flagForCommit();
         TestTransaction.end();
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         // then
         List<Alarm> alarms = alarmRepository.findAll();

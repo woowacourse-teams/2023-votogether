@@ -103,7 +103,7 @@ describe('페이지 버튼을 눌러 공지 사항 리스트를 불러오는 지
         wrapper,
       });
 
-      expect(result.current.isCheckNextPage(totalPage)).toBe(expected);
+      expect(result.current.checkNextPage(totalPage)).toBe(expected);
     }
   );
 

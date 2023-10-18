@@ -12,7 +12,7 @@ export const usePagedNoticeList = (initialPageNumber: number = 0) => {
   const {
     fetchNextPage,
     fetchPrevPage,
-    isCheckNextPage,
+    checkNextPage,
     page,
     setPage,
     startNumber,
@@ -36,7 +36,7 @@ export const usePagedNoticeList = (initialPageNumber: number = 0) => {
     }
   );
 
-  const hasNextPage = data && isCheckNextPage(data.totalPageNumber);
+  const hasNextPage = data && checkNextPage(data.totalPageNumber);
 
   return {
     data,

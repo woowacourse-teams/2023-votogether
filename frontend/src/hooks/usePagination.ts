@@ -23,7 +23,7 @@ export const usePagination = (initialPageNumber: number = 0, size: number = 5) =
     setPageNumber(value - 1);
   };
 
-  const isCheckNextPage = (totalPage: number) => {
+  const checkNextPage = (totalPage: number) => {
     return totalPage > startNumber + size;
   };
 
@@ -34,7 +34,7 @@ export const usePagination = (initialPageNumber: number = 0, size: number = 5) =
   };
 
   const fetchNextPage = (totalPage: number) => {
-    if (!isCheckNextPage(totalPage)) return;
+    if (!checkNextPage(totalPage)) return;
 
     setPageNumber(startNumber + size);
   };
@@ -47,6 +47,6 @@ export const usePagination = (initialPageNumber: number = 0, size: number = 5) =
     startNumber,
     fetchNextPage,
     fetchPrevPage,
-    isCheckNextPage,
+    checkNextPage: checkNextPage,
   };
 };

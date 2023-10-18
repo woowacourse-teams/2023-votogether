@@ -21,7 +21,7 @@ export const useReportAction = () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.REPORT] });
     },
     onError: () => {
-      const message = error instanceof Error ? error.message : '투표를 실패했습니다.';
+      const message = error instanceof Error ? error.message : '신고 조치를 실패했습니다.';
       addMessage(message);
     },
   });

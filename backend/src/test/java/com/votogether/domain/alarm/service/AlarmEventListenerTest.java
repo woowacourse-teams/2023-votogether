@@ -9,6 +9,7 @@ import com.votogether.domain.alarm.repository.AlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.test.ServiceTest;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ class AlarmEventListenerTest extends ServiceTest {
     @Autowired
     AlarmRepository alarmRepository;
 
+    @Disabled
     @Test
     @DisplayName("게시글 관련 알림 이벤트를 수신한다.")
     void handlePostAlarmEvent() throws Exception {

@@ -79,6 +79,26 @@ class AlarmCommandControllerTest extends ControllerTest {
                     .body("message", containsString("알림 ID는 양수만 가능합니다."));
         }
 
+        @ParameterizedTest
+        @ValueSource(strings = {"", " "})
+        @DisplayName("알림 타입이 공백이거나 존재하지 않으면 400 응답을 반환한다.")
+        void emptyAlarmType(String alarmType) throws Exception {
+            // given
+            mockingAuthArgumentResolver();
+            willDoNothing().given(alarmCommandService).readAlarm(anyLong(), anyString(), any(Member.class));
+
+            // when, then
+            RestAssuredMockMvc
+                    .given().log().all()
+                    .headers(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
+                    .param("type", alarmType)
+                    .when().patch("/alarms/{id}", 1L)
+                    .then().log().all()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("code", equalTo(201))
+                    .body("message", containsString("알림 타입이 공백이거나 존재하지 않습니다."));
+        }
+
     }
 
 }

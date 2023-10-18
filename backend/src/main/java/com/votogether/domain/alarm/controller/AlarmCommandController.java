@@ -25,10 +25,10 @@ public class AlarmCommandController implements AlarmCommandControllerDocs {
     @PatchMapping("/{id}")
     public ResponseEntity<Void> readAlarm(
             @PathVariable("id") @Positive(message = "알림 ID는 양수만 가능합니다.") final Long alarmId,
-            @RequestParam("type") @NotBlank(message = "알림 타입이 공백이거나 존재하지 않습니다.") final String alarmType,
+            @RequestParam("type") @NotBlank(message = "알림 타입이 공백이거나 존재하지 않습니다.") final String type,
             @Auth final Member loginMember
     ) {
-        alarmCommandService.readAlarm(alarmId, alarmType, loginMember);
+        alarmCommandService.readAlarm(alarmId, type, loginMember);
         return ResponseEntity.ok().build();
     }
 

@@ -2,16 +2,23 @@ package com.votogether.domain.alarm.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
+import com.votogether.domain.alarm.dto.ReportActionResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmDetailResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.service.PostCommandService;
 import com.votogether.domain.post.service.PostCommentService;
+import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.test.ServiceTest;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,6 +38,9 @@ class AlarmQueryServiceTest extends ServiceTest {
 
     @Autowired
     PostCommandService postCommandService;
+
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
 
     @Nested
     @DisplayName("알림 조회는 ")
@@ -99,6 +109,66 @@ class AlarmQueryServiceTest extends ServiceTest {
             assertThat(postAlarmResponses).hasSize(0);
         }
 
+    }
+
+    @Test
+    @DisplayName("신고조치알림 목록을 조회한다.")
+    void getReportActionAlarms() {
+        // given
+        Member member = memberTestPersister.builder().save();
+
+        ReportActionAlarm reportActionAlarmA = ReportActionAlarm.builder()
+                .reportType(ReportType.POST)
+                .member(member)
+                .isChecked(false)
+                .reasons("광고성, 부적합성")
+                .target("1")
+                .build();
+
+        reportActionAlarmRepository.save(reportActionAlarmA);
+
+        // when
+        List<ReportActionAlarmResponse> reportActionAlarms = alarmQueryService.getReportActionAlarms(member, 0);
+
+        // then
+        ReportActionAlarmResponse result = reportActionAlarms.get(0);
+        assertAll(
+                () -> assertThat(reportActionAlarms.size()).isEqualTo(1),
+                () -> assertThat(result.alarmId()).isNotNull(),
+                () -> assertThat(result.isChecked()).isFalse(),
+                () -> assertThat(result.detail().reportActionId()).isNotNull(),
+                () -> assertThat(result.detail().content()).isEqualTo("1"),
+                () -> assertThat(result.detail().reasons()).containsAll(Set.of("광고성", "부적합성")),
+                () -> assertThat(result.detail().type()).isEqualTo(ReportType.POST)
+        );
+    }
+
+    @Test
+    @DisplayName("신고조치알림을 상세 조회한다.")
+    void getReportActionAlarm() {
+        // given
+        Member member = memberTestPersister.builder().save();
+
+        ReportActionAlarm reportActionAlarmA = ReportActionAlarm.builder()
+                .reportType(ReportType.POST)
+                .member(member)
+                .isChecked(false)
+                .reasons("광고성, 부적합성")
+                .target("1")
+                .build();
+
+        ReportActionAlarm savedReportActionAlarm = reportActionAlarmRepository.save(reportActionAlarmA);
+
+        // when
+        ReportActionResponse response = alarmQueryService.getReportActionAlarm(savedReportActionAlarm.getId(), member);
+
+        // then
+        assertAll(
+                () -> assertThat(response.reportActionId()).isEqualTo(savedReportActionAlarm.getId()),
+                () -> assertThat(response.type()).isEqualTo(ReportType.POST),
+                () -> assertThat(response.content()).isEqualTo("1"),
+                () -> assertThat(response.reasons()).containsAll(Set.of("광고성", "부적합성"))
+        );
     }
 
 }

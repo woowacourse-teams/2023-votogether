@@ -55,9 +55,10 @@ class MemberControllerTest extends ControllerTest {
                 "저문",
                 Gender.MALE,
                 1988,
-                Roles.MEMBER,
                 0,
-                0
+                0,
+                Roles.MEMBER,
+                false
         );
 
         given(tokenProcessor.resolveToken(anyString())).willReturn("token");

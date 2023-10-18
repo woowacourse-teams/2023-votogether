@@ -123,6 +123,10 @@ public class Member extends BaseEntity {
         return (this.gender != null && this.birthYear != null);
     }
 
+    public boolean hasLatestAlarmCompareTo(final LocalDateTime latestAlarmCreatedAt) {
+        return alarmCheckedAt.isBefore(latestAlarmCreatedAt);
+    }
+
     public String getNickname() {
         return this.nickname.getValue();
     }

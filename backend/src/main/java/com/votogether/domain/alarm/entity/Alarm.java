@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -72,6 +73,13 @@ public class Alarm extends BaseEntity {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new BadRequestException(AlarmExceptionType.NOT_OWNER);
         }
+    }
+
+    public LocalDateTime getLatestAlarmCreatedAt(final LocalDateTime reportActionAlarmCreatedAt) {
+        if (this.getCreatedAt().isAfter(reportActionAlarmCreatedAt)) {
+            return this.getCreatedAt();
+        }
+        return reportActionAlarmCreatedAt;
     }
 
 }

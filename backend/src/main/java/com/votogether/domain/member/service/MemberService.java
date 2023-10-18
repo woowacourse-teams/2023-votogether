@@ -1,7 +1,10 @@
 package com.votogether.domain.member.service;
 
 import com.votogether.domain.alarm.entity.Alarm;
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.exception.AlarmExceptionType;
 import com.votogether.domain.alarm.repository.AlarmRepository;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
@@ -23,6 +26,7 @@ import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +47,7 @@ public class MemberService {
     private final ReportRepository reportRepository;
     private final CommentRepository commentRepository;
     private final AlarmRepository alarmRepository;
+    private final ReportActionAlarmRepository reportActionAlarmRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -73,15 +78,27 @@ public class MemberService {
     public MemberInfoResponse findMemberInfo(final Member member) {
         final MemberMetric memberMetric = memberMetricRepository.findByMember(member)
                 .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+        final boolean hasLatestAlarm = hasLatestAlarm(member);
 
         return new MemberInfoResponse(
                 member.getNickname(),
                 member.getGender(),
                 member.getBirthYear(),
-                member.getRoles(),
                 memberMetric.getPostCount(),
-                memberMetric.getVoteCount()
+                memberMetric.getVoteCount(),
+                member.getRoles(),
+                hasLatestAlarm
         );
+    }
+
+    private boolean hasLatestAlarm(final Member member) {
+        final Alarm alarm = alarmRepository.findByMemberOrderByCreatedAtDesc(member)
+                .orElseThrow(() -> new NotFoundException(AlarmExceptionType.NOT_FOUND));
+        final ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(member)
+                .orElseThrow(() -> new NotFoundException(AlarmExceptionType.NOT_FOUND_ACTION));
+
+        final LocalDateTime latestAlarmCreatedAt = alarm.getLatestAlarmCreatedAt(reportActionAlarm.getCreatedAt());
+        return member.hasLatestAlarmCompareTo(latestAlarmCreatedAt);
     }
 
     @Transactional

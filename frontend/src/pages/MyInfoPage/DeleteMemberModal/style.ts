@@ -18,8 +18,10 @@ export const ModalTitle = styled.div`
 `;
 
 export const ModalDescription = styled.div`
+  padding-left: 25px;
+
   color: gray;
-  font-size: 16px;
+  font-size: 14px;
 `;
 
 export const ButtonListWrapper = styled.div`

@@ -26,7 +26,7 @@ export const Backdrop = styled.div`
   background: rgba(0, 0, 0, 0.35);
 `;
 
-export const Container = styled.div<{ size: Size }>`
+export const Container = styled.dialog<{ size: Size }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;

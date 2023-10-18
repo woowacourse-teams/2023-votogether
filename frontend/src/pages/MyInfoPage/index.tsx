@@ -32,7 +32,7 @@ export default function MyInfoPage() {
   const { isOpen, openComponent, closeComponent } = useToggle();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
 
-  const { isLoggedIn, userInfo } = loggedInfo;
+  const { userInfo } = loggedInfo;
 
   const handleModifyNickname = (newNickname: string) => {
     modifyNickname(newNickname);
@@ -59,38 +59,36 @@ export default function MyInfoPage() {
         <S.NoticeWrapper>
           <S.NoticeTitle to={PATH.NOTICES}>공지사항 보러가기</S.NoticeTitle>
         </S.NoticeWrapper>
-        {isLoggedIn && (
-          <S.UserControlSection>
-            <Accordion title="닉네임 변경">
-              <S.DescribeUl>
-                <li>- {NICKNAME_POLICY.LETTER_AMOUNT}</li>
-                <li>- {NICKNAME_POLICY.LIMIT_LETTER_TYPE}</li>
-                <li>- {NICKNAME_POLICY.LIMIT_CHANGING}</li>
-                <li>- {NICKNAME_POLICY.NO_DUPLICATION}</li>
-                <li>- {NICKNAME_POLICY.LIMIT_KOREAN}</li>
-              </S.DescribeUl>
-              <InputNSubmitButton
-                initText={loggedInfo.userInfo?.nickname}
-                handleSubmit={handleModifyNickname}
-                ariaLabel="닉네임"
-                limitText={NICKNAME}
+        <S.UserControlSection>
+          <Accordion title="닉네임 변경">
+            <S.DescribeUl>
+              <li>- {NICKNAME_POLICY.LETTER_AMOUNT}</li>
+              <li>- {NICKNAME_POLICY.LIMIT_LETTER_TYPE}</li>
+              <li>- {NICKNAME_POLICY.LIMIT_CHANGING}</li>
+              <li>- {NICKNAME_POLICY.NO_DUPLICATION}</li>
+              <li>- {NICKNAME_POLICY.LIMIT_KOREAN}</li>
+            </S.DescribeUl>
+            <InputNSubmitButton
+              initText={loggedInfo.userInfo?.nickname}
+              handleSubmit={handleModifyNickname}
+              ariaLabel="닉네임"
+              limitText={NICKNAME}
+            />
+          </Accordion>
+          <Accordion title="회원 탈퇴">
+            <S.ButtonWrapper>
+              <SquareButton onClick={openComponent} aria-label="회원 탈퇴" theme="blank">
+                회원 탈퇴
+              </SquareButton>
+            </S.ButtonWrapper>
+            {isOpen && (
+              <DeleteMemberModal
+                handleModalClose={closeComponent}
+                handleWithdrawalMembership={handleWithdrawalMembership}
               />
-            </Accordion>
-            <Accordion title="회원 탈퇴">
-              <S.ButtonWrapper>
-                <SquareButton onClick={openComponent} aria-label="회원 탈퇴" theme="blank">
-                  회원 탈퇴
-                </SquareButton>
-              </S.ButtonWrapper>
-              {isOpen && (
-                <DeleteMemberModal
-                  handleModalClose={closeComponent}
-                  handleWithdrawalMembership={handleWithdrawalMembership}
-                />
-              )}
-            </Accordion>
-          </S.UserControlSection>
-        )}
+            )}
+          </Accordion>
+        </S.UserControlSection>
         {userInfo && userInfo?.role === 'ADMIN' && (
           <Accordion title="관리자">
             <S.ButtonContainer>

@@ -8,4 +8,5 @@ export const QUERY_KEY = {
   POPULAR_RANKING: 'popularRanking',
   VOTE_STATISTICS: 'voteStatistics',
   REPORT: 'report',
+  NOTICE: 'notice',
 };

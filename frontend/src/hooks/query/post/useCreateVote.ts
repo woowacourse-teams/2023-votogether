@@ -1,4 +1,8 @@
+import { useContext } from 'react';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { ToastContext } from '@hooks/context/toast';
 
 import { votePost } from '@api/post';
 
@@ -6,9 +10,10 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postId: number }) => {
   const queryClient = useQueryClient();
+  const { addMessage } = useContext(ToastContext);
   const LOGGED_IN = true;
 
-  const { mutate, isError, error } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: (optionId: number) => votePost(postId, optionId),
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEY.USER_INFO, true]);
@@ -23,9 +28,10 @@ export const useCreateVote = ({ isPreview, postId }: { isPreview: boolean; postI
       queryClient.invalidateQueries([QUERY_KEY.POST_DETAIL, postId, LOGGED_IN]);
     },
     onError: error => {
-      window.console.log('투표 선택지 생성에 실패했습니다.', error);
+      const message = error instanceof Error ? error.message : '투표를 실패했습니다.';
+      addMessage(message);
     },
   });
 
-  return { mutate, isError, error };
+  return { mutate, isLoading };
 };

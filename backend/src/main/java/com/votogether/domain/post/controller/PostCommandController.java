@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/posts")
 @RestController
-public class PostCommandController {
+public class PostCommandController implements PostCommandControllerDocs {
 
     private final PostCommandService postCommandService;
 

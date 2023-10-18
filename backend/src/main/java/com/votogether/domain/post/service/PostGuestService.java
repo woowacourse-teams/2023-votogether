@@ -9,11 +9,14 @@ import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.post.repository.dto.PostCommentCountDto;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,11 +51,13 @@ public class PostGuestService {
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
         validateHiddenPost(post);
 
+        final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(List.of(post));
         return PostResponse.ofGuest(
                 post,
                 postCategoryRepository.findAllByPost(post),
                 post.getFirstContentImage(),
-                post.getPostOptions()
+                post.getPostOptions(),
+                postCommentCountMapper.getOrDefault(post.getId(), 0L)
         );
     }
 
@@ -76,16 +81,30 @@ public class PostGuestService {
     }
 
     private List<PostResponse> convertToResponses(final List<Post> posts) {
+        final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(posts);
         return posts.stream()
                 .map(post ->
                         PostResponse.ofGuest(
                                 post,
                                 postCategoryRepository.findAllByPost(post),
                                 post.getFirstContentImage(),
-                                post.getPostOptions()
+                                post.getPostOptions(),
+                                postCommentCountMapper.getOrDefault(post.getId(), 0L)
                         )
                 )
                 .toList();
+    }
+
+    private Map<Long, Long> generatePostCommentCountMapper(final List<Post> posts) {
+        final List<PostCommentCountDto> postCommentCountDtos =
+                postRepository.getCommentCountsInPosts(posts.stream().map(Post::getId).collect(Collectors.toSet()));
+        return postCommentCountDtos.stream()
+                .collect(Collectors.toMap(
+                        PostCommentCountDto::postId,
+                        PostCommentCountDto::commentCount,
+                        (exist, replace) -> replace,
+                        HashMap::new
+                ));
     }
 
     @Transactional(readOnly = true)
@@ -117,7 +136,7 @@ public class PostGuestService {
         int previousRanking = -1;
         long previousVoteCount = -1;
         for (Post post : posts) {
-            final long currentVoteCount = post.getTotalVoteCount();
+            final long currentVoteCount = post.getVoteCount();
             final int ranking = (currentVoteCount == previousVoteCount) ? previousRanking : currentRanking;
             rankings.put(post, ranking);
 

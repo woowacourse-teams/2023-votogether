@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
@@ -71,7 +72,7 @@ class TokenProcessorTest extends RepositoryTest {
 
             // when, then
             assertThatThrownBy(() -> tokenProcessor.resolveToken(token))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("올바르지 않은 토큰입니다.");
         }
 

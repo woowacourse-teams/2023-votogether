@@ -4,6 +4,9 @@ import com.votogether.domain.alarm.dto.event.PostAlarmEvent;
 import com.votogether.domain.alarm.entity.vo.AlarmType;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.MemberMetric;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
@@ -52,6 +55,7 @@ public class PostCommandService {
     private final VoteRepository voteRepository;
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
+    private final MemberMetricRepository memberMetricRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public Long createPost(final PostCreateRequest postCreate, final Member loginMember) {
@@ -66,6 +70,10 @@ public class PostCommandService {
         addImage(post, postCreate.getImageFile());
         addPostOptions(post, postCreate.getPostOptions());
 
+        final MemberMetric memberMetric = memberMetricRepository.findByMemberIdForUpdate(loginMember.getId())
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+
+        memberMetric.increasePostCount();
         return postRepository.save(post).getId();
     }
 
@@ -325,6 +333,10 @@ public class PostCommandService {
                 .map(PostContentImage::getImageUrl)
                 .toList();
 
+        final MemberMetric memberMetric = memberMetricRepository.findByMemberIdForUpdate(loginMember.getId())
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+
+        memberMetric.decreasePostCount();
         deleteVotes(postOptions);
         deletePostOptions(postId, postOptions);
         deleteComments(postId);

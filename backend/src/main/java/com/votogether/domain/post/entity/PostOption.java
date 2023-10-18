@@ -24,7 +24,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Formula;
 
 @Getter
 @Entity
@@ -52,7 +51,7 @@ public class PostOption extends BaseEntity {
     @Column
     private String imageUrl;
 
-    @Formula("(select count(*) from vote v where v.post_option_id = id)")
+    @Column(nullable = false)
     private long voteCount;
 
     @OneToMany(mappedBy = "postOption", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -63,12 +62,14 @@ public class PostOption extends BaseEntity {
             final Post post,
             final int sequence,
             final String content,
-            final String imageUrl
+            final String imageUrl,
+            final long voteCount
     ) {
         this.post = post;
         this.sequence = sequence;
         this.postOptionBody = new PostOptionBody(content);
         this.imageUrl = imageUrl;
+        this.voteCount = voteCount;
     }
 
     public void addVote(final Vote vote) {
@@ -79,6 +80,14 @@ public class PostOption extends BaseEntity {
     public void update(final String content, final String imageUrl) {
         this.postOptionBody = new PostOptionBody(content);
         this.imageUrl = imageUrl;
+    }
+
+    public void increaseVoteCount() {
+        this.voteCount += 1;
+    }
+
+    public void decreaseVoteCount() {
+        this.voteCount -= 1;
     }
 
     public boolean belongsTo(final Post post) {

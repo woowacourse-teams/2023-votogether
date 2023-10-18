@@ -6,9 +6,11 @@ import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
+import com.votogether.domain.member.entity.MemberMetric;
 import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
@@ -34,6 +36,7 @@ public class MemberService {
     private static final Long NICKNAME_CHANGING_CYCLE = 14L;
 
     private final MemberRepository memberRepository;
+    private final MemberMetricRepository memberMetricRepository;
     private final MemberCategoryRepository memberCategoryRepository;
     private final PostRepository postRepository;
     private final VoteRepository voteRepository;
@@ -47,7 +50,17 @@ public class MemberService {
                 member.getSocialId(),
                 member.getSocialType()
         );
-        return maybeMember.orElseGet(() -> memberRepository.save(member));
+        return maybeMember.orElseGet(() -> {
+            final Member savedMember = memberRepository.save(member);
+            final MemberMetric memberMetric = MemberMetric.builder()
+                    .member(member)
+                    .postCount(0)
+                    .voteCount(0)
+                    .score(0)
+                    .build();
+            memberMetricRepository.save(memberMetric);
+            return savedMember;
+        });
     }
 
     @Transactional(readOnly = true)
@@ -58,16 +71,16 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(final Member member) {
-        final int numberOfPosts = postRepository.countByWriter(member);
-        final int numberOfVotes = voteRepository.countByMember(member);
+        final MemberMetric memberMetric = memberMetricRepository.findByMember(member)
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
 
         return new MemberInfoResponse(
                 member.getNickname(),
                 member.getGender(),
                 member.getBirthYear(),
                 member.getRoles(),
-                numberOfPosts,
-                numberOfVotes
+                memberMetric.getPostCount(),
+                memberMetric.getVoteCount()
         );
     }
 
@@ -108,6 +121,7 @@ public class MemberService {
         deleteReports(member, posts, comments);
         deleteAlarms(member);
 
+        memberMetricRepository.deleteByMember(member);
         memberRepository.delete(member);
     }
 

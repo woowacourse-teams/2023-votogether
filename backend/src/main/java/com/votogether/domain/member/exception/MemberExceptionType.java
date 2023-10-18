@@ -15,6 +15,8 @@ public enum MemberExceptionType implements ExceptionType {
     ALREADY_ASSIGNED_BIRTH_YEAR(806, "이미 출생년도가 할당되어 있습니다."),
     NOT_PASSED_NICKNAME_CHANGING_CYCLE(807, "최소 닉네임 변경주기가 지나지 않았습니다."),
     NOT_ALLOWED_INITIAL_NICKNAME_PREFIX(808, "초기 닉네임에 포함된 접두어로 닉네임을 변경할 수 없습니다."),
+    INVALID_VOTE_COUNT(809, "수정 가능한 투표 수는 0이상이어야 합니다."),
+    NOT_FOUND_METRIC(810, "메트릭 정보가 존재하지 않습니다."),
     ;
 
     private final int code;

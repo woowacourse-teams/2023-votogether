@@ -12,11 +12,15 @@ import com.votogether.domain.post.exception.PostOptionExceptionType;
 import com.votogether.domain.post.repository.PostCategoryRepository;
 import com.votogether.domain.post.repository.PostOptionRepository;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.post.repository.dto.PostCommentCountDto;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.domain.vote.repository.dto.VoteCountByAgeGroupAndGenderDto;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,13 +55,14 @@ public class PostQueryService {
     public PostResponse getPost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
+        final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(List.of(post));
 
         if (post.isWriter(loginMember) && post.isHidden()) {
-            return createPostResponse(loginMember, post);
+            return createPostResponse(loginMember, post, postCommentCountMapper.getOrDefault(post.getId(), 0L));
         }
 
         validateHiddenPost(post);
-        return createPostResponse(loginMember, post);
+        return createPostResponse(loginMember, post, postCommentCountMapper.getOrDefault(post.getId(), 0L));
     }
 
     public List<PostResponse> searchPosts(
@@ -159,19 +164,34 @@ public class PostQueryService {
     }
 
     private List<PostResponse> convertToResponses(final List<Post> posts, final Member member) {
+        final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(posts);
         return posts.stream()
-                .map(post -> createPostResponse(member, post))
+                .map(post ->
+                        createPostResponse(member, post, postCommentCountMapper.getOrDefault(post.getId(), 0L)))
                 .toList();
     }
 
-    private PostResponse createPostResponse(Member loginMember, Post post) {
+    private Map<Long, Long> generatePostCommentCountMapper(final List<Post> posts) {
+        final List<PostCommentCountDto> postCommentCountDtos =
+                postRepository.getCommentCountsInPosts(posts.stream().map(Post::getId).collect(Collectors.toSet()));
+        return postCommentCountDtos.stream()
+                .collect(Collectors.toMap(
+                        PostCommentCountDto::postId,
+                        PostCommentCountDto::commentCount,
+                        (exist, replace) -> replace,
+                        HashMap::new
+                ));
+    }
+
+    private PostResponse createPostResponse(Member loginMember, Post post, final long commentCount) {
         return PostResponse.ofUser(
                 loginMember,
                 post,
                 postCategoryRepository.findAllByPost(post),
                 post.getFirstContentImage(),
                 post.getPostOptions(),
-                voteRepository.findByMemberAndPostOptionPost(loginMember, post)
+                voteRepository.findByMemberAndPostOptionPost(loginMember, post),
+                commentCount
         );
     }
 

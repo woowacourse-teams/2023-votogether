@@ -161,20 +161,20 @@ const router = createBrowserRouter([
   {
     path: PATH.RANKING,
     element: (
-      <>
+      <PrivateRoute isGuestAllowed={true}>
         <RankingPage />
         <RouteChangeTracker />
-      </>
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
   },
   {
     path: PATH.ANNOUNCEMENT,
     element: (
-      <>
+      <PrivateRoute isGuestAllowed={true}>
         <AnnouncementPage />
         <RouteChangeTracker />
-      </>
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
   },
@@ -182,15 +182,15 @@ const router = createBrowserRouter([
     path: PATH.ADMIN,
     children: [
       {
-        path: PATH.NOTICES,
+        path: PATH.NOTICES.slice(1),
         element: (
           <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
-            <div>어드민 카테고리 목록 페이지</div>
+            <div>어드민 공지사항 목록 페이지</div>
           </PrivateRoute>
         ),
       },
       {
-        path: `${PATH.REPORTS}/pending`,
+        path: `${PATH.REPORTS}/pending`.slice(1),
         element: (
           <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
             <div>어드민 신고 목록 페이지</div>

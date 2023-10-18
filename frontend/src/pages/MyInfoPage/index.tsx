@@ -132,7 +132,7 @@ export default function MyInfoPage() {
             <S.ButtonContainer>
               <S.AdminButtonWrapper>
                 <SquareButton
-                  onClick={() => navigate(PATH.ADMIN_REPORT_LIST)}
+                  onClick={() => navigate(PATH.ADMIN_PENDING_REPORT)}
                   aria-label="신고 목록 페이지"
                   theme="gray"
                 >
@@ -141,7 +141,7 @@ export default function MyInfoPage() {
               </S.AdminButtonWrapper>
               <S.AdminButtonWrapper>
                 <SquareButton
-                  onClick={() => navigate(PATH.ADMIN_CATEGORY_LIST)}
+                  onClick={() => navigate(PATH.ADMIN_NOTICE)}
                   aria-label="공지사항 목록 페이지"
                   theme="blank"
                 >

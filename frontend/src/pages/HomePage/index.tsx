@@ -1,6 +1,6 @@
 import { CSSProperties, Suspense, useContext } from 'react';
 
-import { AuthContext, useToggle } from '@hooks';
+import { AuthContext, ToastContext, useToggle } from '@hooks';
 
 import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 import { useDrawer } from '@hooks/useDrawer';
@@ -46,13 +46,13 @@ export default function HomePage() {
 
   const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(true);
 
+  const { addMessage } = useContext(ToastContext);
   const loggedInfo = useContext(AuthContext).loggedInfo;
   const isAlarmActive = loggedInfo.userInfo?.hasLatestAlarm;
   const { mutate } = useReadLatestAlarm();
 
   const handleToolTipOpen = () => {
-    //추후 토스트 처리
-    if (!loggedInfo.isLoggedIn) return;
+    if (!loggedInfo.isLoggedIn) return addMessage('알림은 로그인 후 이용할 수 있습니다.');
 
     openAlarmDrawer();
     mutate();

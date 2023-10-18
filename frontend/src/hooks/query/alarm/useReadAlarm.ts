@@ -15,9 +15,6 @@ export const useReadAlarm = (type: AlarmType) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [alarmQueryKey] });
     },
-    onError: () => {
-      //추후 토스트 처리
-    },
   });
 
   return { mutate };

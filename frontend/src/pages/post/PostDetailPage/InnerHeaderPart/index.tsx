@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PostAction, MenuItem } from '@type/menu';
+import { ReportMessage } from '@type/report';
 
 import { useToggle } from '@hooks';
 
@@ -28,8 +29,8 @@ interface PostDetailPageChildProps {
     controlPost: {
       setEarlyClosePost: () => void;
       deletePost: () => void;
-      reportPost: (reason: string) => void;
-      reportNickname: (reason: string) => void;
+      reportPost: (reason: ReportMessage) => void;
+      reportNickname: (reason: ReportMessage) => void;
     };
   };
   isEventLoading: Record<LoadingType, boolean>;

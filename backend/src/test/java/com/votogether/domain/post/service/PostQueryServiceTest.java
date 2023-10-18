@@ -145,7 +145,7 @@ class PostQueryServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("블라인드된 게시글이면 예외를 던진다.")
+        @DisplayName("작성자가 아니고 블라인드된 게시글이면 예외를 던진다.")
         void throwExceptionBlindPost() {
             // given
             Member member = memberTestPersister.builder().save();
@@ -156,6 +156,39 @@ class PostQueryServiceTest extends ServiceTest {
             assertThatThrownBy(() -> postQueryService.getPost(post.getId(), member))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("신고에 의해 숨겨진 게시글은 접근할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("작성자는 블라인드된 게시글은 조회 할 수 있다.")
+        void throwExceptionBlindPost1() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            post.blind();
+
+            // when
+            PostResponse result = postQueryService.getPost(post.getId(), member);
+
+            // then
+            assertThat(result.postId()).isEqualTo(result.postId());
+        }
+
+        @Test
+        @DisplayName("작성자는 블라인드된 게시글의 결과를 확인 할 수 없다.")
+        void throwExceptionBlindPost2() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            Post post = postTestPersister.postBuilder().writer(member).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            post.addPostOption(postOption);
+            post.blind();
+
+            // when
+            PostResponse result = postQueryService.getPost(post.getId(), member);
+
+            // then
+            PostResponse expected = expectedResponse(post, member, postOption, 0L, -1, -1, 0.0);
+            assertThat(result).usingRecursiveComparison().isEqualTo(expected);
         }
 
         @Test

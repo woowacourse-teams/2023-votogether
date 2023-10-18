@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useToggle } from '@hooks';
-import { useToast } from '@hooks';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useModifyUser } from '@hooks/query/user/useModifyUser';
@@ -13,7 +12,6 @@ import GuestProfile from '@components/common/Dashboard/GuestProfile';
 import UserProfile from '@components/common/Dashboard/UserProfile';
 import Layout from '@components/common/Layout';
 import SquareButton from '@components/common/SquareButton';
-import Toast from '@components/common/Toast';
 
 import { PATH } from '@constants/path';
 import { NICKNAME } from '@constants/policy';
@@ -27,20 +25,9 @@ import * as S from './style';
 export default function MyInfoPage() {
   const navigate = useNavigate();
 
-  const {
-    mutate: modifyNickname,
-    isSuccess: isModifyNicknameSuccess,
-    isError: isModifyNicknameError,
-    error: modifyNicknameError,
-  } = useModifyUser();
-  const {
-    mutate: withdrawalMembership,
-    isSuccess: isWithdrawalMembershipSuccess,
-    isError: isWithdrawalMembershipError,
-    error: withdrawalMembershipError,
-  } = useWithdrawalMembership();
-
-  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { mutate: modifyNickname } = useModifyUser();
+  const { mutate: withdrawalMembership, isSuccess: isWithdrawalMembershipSuccess } =
+    useWithdrawalMembership();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
@@ -56,35 +43,12 @@ export default function MyInfoPage() {
   };
 
   useEffect(() => {
-    if (isModifyNicknameSuccess) {
-      openToast('닉네임을 성공적으로 변경했습니다.');
-      return;
-    }
-  }, [isModifyNicknameSuccess]);
-
-  useEffect(() => {
-    if (isModifyNicknameError && modifyNicknameError instanceof Error) {
-      const errorResponse = JSON.parse(modifyNicknameError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isModifyNicknameError, modifyNicknameError]);
-
-  useEffect(() => {
     if (isWithdrawalMembershipSuccess) {
       clearLoggedInfo();
 
       navigate('/');
     }
   }, [isWithdrawalMembershipSuccess]);
-
-  useEffect(() => {
-    if (isWithdrawalMembershipError && withdrawalMembershipError instanceof Error) {
-      const errorResponse = JSON.parse(withdrawalMembershipError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isWithdrawalMembershipError, withdrawalMembershipError]);
 
   return (
     <Layout isSidebarVisible={true}>
@@ -150,11 +114,6 @@ export default function MyInfoPage() {
               </S.AdminButtonWrapper>
             </S.ButtonContainer>
           </Accordion>
-        )}
-        {isToastOpen && (
-          <Toast size="md" position="bottom">
-            {toastMessage}
-          </Toast>
         )}
       </S.Wrapper>
     </Layout>

@@ -1,111 +1,70 @@
 import type { Meta } from '@storybook/react';
 
-import { useToast } from '@hooks';
+import { useEffect, useRef, useState } from 'react';
+
+import { Size } from '@type/style';
+
+import { ToastInfo } from '@hooks/context/toast';
+
+import { TOAST_TIME } from '@constants/animation';
 
 import Toast from '.';
 
 const meta: Meta<typeof Toast> = {
   component: Toast,
+  args: {
+    size: 'sm',
+  },
+  argTypes: {
+    size: {
+      description: '토스트의 사이즈 조정',
+      control: {
+        type: 'radio',
+      },
+      options: ['sm', 'md', 'lg', 'free'],
+    },
+  },
 };
 
 export default meta;
 
-export const SizeCase = () => {
-  const { isToastOpen: isSmOpen, openToast: openSmComponent, toastMessage: smMessage } = useToast();
-  const { isToastOpen: isMdOpen, openToast: openMdComponent, toastMessage: mdMessage } = useToast();
-  const { isToastOpen: isLgOpen, openToast: openLgComponent, toastMessage: lgMessage } = useToast();
-  const {
-    isToastOpen: isFreeOpen,
-    openToast: openFreeComponent,
-    toastMessage: freeMessage,
-  } = useToast();
+export const SizeCase = (args: { size: Size | 'free' }) => {
+  //contextApi에 있는 훅 이동
+  const [toastList, setToastList] = useState<ToastInfo[]>([]);
+  const timeId = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (timeId.current) window.clearTimeout(timeId.current);
+
+    if (toastList.length !== 0) {
+      timeId.current = window.setTimeout(() => {
+        setToastList([]);
+
+        if (timeId.current) window.clearTimeout(timeId.current);
+      }, TOAST_TIME);
+    }
+  }, [toastList]);
+
+  const addMessage = (message: string) => {
+    if (toastList.find(toast => toast.text === message)) return;
+
+    const id = Date.now();
+    setToastList(toastList => [...toastList, { id, text: message }]);
+  };
 
   return (
     <>
       <button
-        onClick={() => openSmComponent('게시물이 삭제되었습니다.')}
+        onClick={() => addMessage(`toast no.${toastList.length + 1}`)}
         style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
       >
-        sm 사이즈 토스트 열기 버튼
+        토스트 열기 버튼
       </button>
-      {isSmOpen && (
-        <Toast size="sm" position="bottom">
-          {smMessage}
+      {toastList.map(toast => (
+        <Toast key={toast.id} {...args}>
+          {toast.text}
         </Toast>
-      )}
-      <button
-        onClick={() => openMdComponent('게시물이 삭제되었습니다.')}
-        style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
-      >
-        md 사이즈 토스트 열기 버튼
-      </button>
-      {isMdOpen && (
-        <Toast size="md" position="bottom">
-          {mdMessage}
-        </Toast>
-      )}
-      <button
-        onClick={() => openLgComponent('게시물이 삭제되었습니다.')}
-        style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
-      >
-        lg 사이즈 토스트 열기 버튼
-      </button>
-      {isLgOpen && (
-        <Toast size="lg" position="bottom">
-          {lgMessage}
-        </Toast>
-      )}
-      <button
-        onClick={() => openFreeComponent('게시물이 삭제되었습니다.')}
-        style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
-      >
-        free 사이즈 토스트 열기 버튼
-      </button>
-      {isFreeOpen && (
-        <Toast size="free" position="bottom">
-          {freeMessage}
-        </Toast>
-      )}
-    </>
-  );
-};
-
-export const PositionCase = () => {
-  const {
-    isToastOpen: isTopOpen,
-    openToast: openTopComponent,
-    toastMessage: topMessage,
-  } = useToast();
-  const {
-    isToastOpen: isBottomOpen,
-    openToast: openBottomComponent,
-    toastMessage: bottomMessage,
-  } = useToast();
-
-  return (
-    <>
-      <button
-        onClick={() => openTopComponent('게시물이 삭제되었습니다.')}
-        style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
-      >
-        top position 토스트 열기 버튼
-      </button>
-      {isTopOpen && (
-        <Toast size="sm" position="top">
-          {topMessage}
-        </Toast>
-      )}
-      <button
-        onClick={() => openBottomComponent('게시물이 삭제되었습니다.')}
-        style={{ display: 'block', margin: '10px', background: 'gray', cursor: 'pointer' }}
-      >
-        bottom position 토스트 열기 버튼
-      </button>
-      {isBottomOpen && (
-        <Toast size="sm" position="bottom">
-          {bottomMessage}
-        </Toast>
-      )}
+      ))}
     </>
   );
 };

@@ -10,6 +10,8 @@ export const BASE_PATH = {
   ANNOUNCEMENT: '/announcements',
   NOTICES: '/notices',
   REPORTS: '/reports',
+  REPORT: '/reports',
+  ALARM: '/alarms',
 };
 
 export const PATH = {
@@ -23,4 +25,5 @@ export const PATH = {
   USER_INFO_REGISTER: `${BASE_PATH.USER}/register`,
   ADMIN_PENDING_REPORT: `${BASE_PATH.ADMIN}${BASE_PATH.REPORTS}/pending`,
   ADMIN_NOTICE: `${BASE_PATH.ADMIN}${BASE_PATH.NOTICES}`,
+  REPORT_ALARM: `${BASE_PATH.ALARM}/report`,
 };

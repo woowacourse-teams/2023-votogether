@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import PendingReportPage from '@pages/admin/PendingReportPage';
 import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
 import ErrorPage from '@pages/ErrorPage';
@@ -11,6 +12,7 @@ import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
 import RankingPage from '@pages/RankingPage';
+import ReportAlarmPage from '@pages/ReportAlarmPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 import RouteChangeTracker from '@components/RouteChangeTracker';
@@ -193,11 +195,19 @@ const router = createBrowserRouter([
         path: `${PATH.REPORTS}/pending`.slice(1),
         element: (
           <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
-            <div>어드민 신고 목록 페이지</div>
+            <PendingReportPage />
           </PrivateRoute>
         ),
       },
     ],
+  },
+  {
+    path: `${PATH.REPORT_ALARM}/:reportId`,
+    element: (
+      <PrivateRoute>
+        <ReportAlarmPage />
+      </PrivateRoute>
+    ),
     errorElement: <ErrorPage />,
   },
   {

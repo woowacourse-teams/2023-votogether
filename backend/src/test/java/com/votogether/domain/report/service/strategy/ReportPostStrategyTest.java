@@ -133,4 +133,17 @@ class ReportPostStrategyTest extends ServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("targetId를 문자열로 파싱한다.")
+    void parseTarget() {
+        // given
+        Post post = postTestPersister.postBuilder().save();
+
+        // when
+        final String postId = reportPostStrategy.parseTarget(post.getId());
+
+        // then
+        assertThat(postId).isEqualTo(post.getId().toString());
+    }
+
 }

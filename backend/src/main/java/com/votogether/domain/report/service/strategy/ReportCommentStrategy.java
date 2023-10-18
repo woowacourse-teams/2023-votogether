@@ -65,4 +65,11 @@ public class ReportCommentStrategy implements ReportStrategy {
         }
     }
 
+    @Override
+    public String parseTarget(final Long targetId) {
+        final Comment reportedComment = commentRepository.findById(targetId)
+                .orElseThrow(() -> new NotFoundException(CommentExceptionType.NOT_FOUND));
+        return reportedComment.getContent();
+    }
+
 }

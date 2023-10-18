@@ -93,7 +93,9 @@ export default function HomePage() {
             width="310px"
             ref={alarmDrawerRef}
           >
-            <AlarmContainer closeToolTip={closeAlarmDrawer} style={alarmDrawerStyle} />
+            {loggedInfo.isLoggedIn && (
+              <AlarmContainer closeToolTip={closeAlarmDrawer} style={alarmDrawerStyle} />
+            )}
           </Drawer>
         </S.DrawerWrapper>
         <ErrorBoundary hasIcon={true} hasRetryInteraction={true}>

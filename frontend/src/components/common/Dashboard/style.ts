@@ -23,8 +23,11 @@ export const NoticeListLink = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  position: relative;
+  right: 6px;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 18px;
   font: var(--text-body);
 `;
 
@@ -36,7 +39,7 @@ export const Image = styled.img`
 
 export const CategorySectionWrapper = styled.div`
   width: 100%;
-  margin-top: 32px;
+  margin-top: 25px;
 `;
 
 export const ButtonWrapper = styled.div`

@@ -135,7 +135,7 @@ class ReportPostStrategyTest extends ServiceTest {
         Member reporter = memberService.register(MemberFixtures.MALE_20.get());
         Member writer = memberService.register(MemberFixtures.MALE_30.get());
 
-        final Post post = postTestPersister.postBuilder()
+        Post post = postTestPersister.postBuilder()
                 .writer(writer)
                 .title("title")
                 .content("content")

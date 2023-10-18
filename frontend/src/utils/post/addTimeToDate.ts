@@ -15,10 +15,10 @@ export const addTimeToDate = (addTime: DHMTime, baseTime: Date): StringDate => {
   newTime.setMinutes(baseTime.getMinutes() + minute);
 
   const newYear = newTime.getFullYear();
-  const newDay = +String(newTime.getDate()).padStart(2, '0');
-  const newMonth = +String(newTime.getMonth() + 1).padStart(2, '0');
-  const newHour = +String(newTime.getHours()).padStart(2, '0');
-  const newMinute = +String(newTime.getMinutes()).padStart(2, '0');
+  const newDay = Number(String(newTime.getDate()).padStart(2, '0'));
+  const newMonth = Number(String(newTime.getMonth() + 1).padStart(2, '0'));
+  const newHour = Number(String(newTime.getHours()).padStart(2, '0'));
+  const newMinute = Number(String(newTime.getMinutes()).padStart(2, '0'));
 
   return `${newYear}-${newMonth}-${newDay} ${newHour}:${newMinute}`;
 };

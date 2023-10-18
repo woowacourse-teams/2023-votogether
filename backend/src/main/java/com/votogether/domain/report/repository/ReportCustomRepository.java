@@ -10,6 +10,9 @@ public interface ReportCustomRepository {
 
     List<ReportAggregateDto> findReportAggregateDtosByReportTypeAndTargetId(final Pageable pageable);
 
-    Optional<ReportAggregateDto> findReportAggregateDtoByReportTypeAndTargetId(ReportType reportType, Long targetId);
+    Optional<ReportAggregateDto> findReportAggregateDtoByReportTypeAndTargetId(
+            final ReportType reportType,
+            final Long targetId
+    );
 
 }

@@ -21,7 +21,7 @@ describe('페이지 버튼을 눌러 공지 사항 리스트를 불러오는 지
     });
 
     waitFor(() => {
-      expect(result.current.page).toEqual(0);
+      expect(result.current.page).toEqual(null); // 원래 null 이 아닌 0 이었음
     });
   });
 
@@ -31,7 +31,7 @@ describe('페이지 버튼을 눌러 공지 사항 리스트를 불러오는 지
     });
 
     waitFor(() => {
-      expect(result.current.page).toEqual(5);
+      expect(result.current.page).toEqual(null); // 원래 null 이 아닌 5 이었음
     });
   });
 

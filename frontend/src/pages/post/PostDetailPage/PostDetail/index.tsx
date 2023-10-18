@@ -1,4 +1,4 @@
-import { Suspense, useContext, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
@@ -7,8 +7,7 @@ import { ReportMessage, ReportRequest } from '@type/report';
 import { AuthContext, useDeletePost, useEarlyClosePost, usePostDetail } from '@hooks';
 
 import { ToastContext } from '@hooks/context/toast';
-
-import { reportContent } from '@api/report';
+import { useReportContent } from '@hooks/query/report/useReportContent';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
@@ -30,9 +29,6 @@ import * as S from './style';
 export default function PostDetail() {
   const navigate = useNavigate();
 
-  const [isReportPostLoading, setIsReportPostLoading] = useState(false);
-  const [isReportNicknameLoading, setIsReportNicknameLoading] = useState(false);
-
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
@@ -47,6 +43,7 @@ export default function PostDetail() {
     isLoading: isDeletePostLoading,
   } = useDeletePost(postId, loggedInfo.isLoggedIn);
   const { mutate: earlyClosePost } = useEarlyClosePost(postId);
+  const { mutate: reportContent, isLoading: isContentReporting } = useReportContent();
 
   const postDataFallback = postData ?? ({} as PostInfo);
 
@@ -81,41 +78,16 @@ export default function PostDetail() {
       deletePost();
     },
     reportPost: async (reason: ReportMessage) => {
-      setIsReportPostLoading(true);
       const reportData: ReportRequest = { type: 'POST', id: postId, reason };
-
-      await reportContent(reportData)
-        .then(res => {
-          addMessage('게시물을 신고했습니다.');
-        })
-        .catch(error => {
-          const message = error instanceof Error ? error.message : '게시글 신고를 실패했습니다.';
-          addMessage(message);
-        })
-        .finally(() => {
-          setIsReportPostLoading(false);
-        });
+      reportContent(reportData);
     },
     reportNickname: async (reason: ReportMessage) => {
-      setIsReportNicknameLoading(true);
       const reportData: ReportRequest = {
         type: 'NICKNAME',
         id: postDataFallback.writer.id,
         reason,
       };
-
-      await reportContent(reportData)
-        .then(res => {
-          addMessage('작성자 닉네임을 신고했습니다.');
-        })
-        .catch(error => {
-          const message =
-            error instanceof Error ? error.message : '작성자 닉네임 신고를 실패했습니다.';
-          addMessage(message);
-        })
-        .finally(() => {
-          setIsReportNicknameLoading(false);
-        });
+      reportContent(reportData);
     },
     copyPostURL: () => {
       const currentURL = window.location.href;
@@ -146,8 +118,8 @@ export default function PostDetail() {
             handleEvent={{ movePage, controlPost }}
             isEventLoading={{
               isDeletePostLoading,
-              isReportPostLoading,
-              isReportNicknameLoading,
+              isReportPostLoading: isContentReporting,
+              isReportNicknameLoading: isContentReporting,
             }}
           />
         </NarrowTemplateHeader>
@@ -165,8 +137,8 @@ export default function PostDetail() {
           handleEvent={{ movePage, controlPost, openToast: addMessage }}
           isEventLoading={{
             isDeletePostLoading,
-            isReportPostLoading,
-            isReportNicknameLoading,
+            isReportPostLoading: isContentReporting,
+            isReportNicknameLoading: isContentReporting,
           }}
         />
       </S.MainContainer>

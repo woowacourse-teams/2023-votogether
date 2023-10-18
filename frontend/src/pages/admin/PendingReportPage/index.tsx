@@ -27,7 +27,7 @@ export default function PendingReportPage() {
   const params = useParams() as { page: string };
   const currentPageNumber = params.page ? Number(params.page) : 1;
 
-  const columnList = ['Id', '사유', '내용', '일시', '종류', '수정/삭제', '신고 해제'];
+  const columnList = ['Id', '사유', '일시', '내용', '종류', '수정/삭제', '신고 해제'];
   const { data } = usePendingReportActionList(currentPageNumber - 1);
   const { mutate: reportAction } = useReportAction();
 

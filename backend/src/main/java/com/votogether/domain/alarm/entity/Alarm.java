@@ -61,4 +61,8 @@ public class Alarm extends BaseEntity {
         this.isChecked = isChecked;
     }
 
+    public void read() {
+        this.isChecked = true;
+    }
+
 }

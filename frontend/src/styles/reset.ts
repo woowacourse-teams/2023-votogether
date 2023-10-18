@@ -71,6 +71,13 @@ th {
 button{
   background: none;
 }
+*{
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+*::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+}
 
 a{
   color: inherit;

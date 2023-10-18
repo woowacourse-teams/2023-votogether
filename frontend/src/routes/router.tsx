@@ -1,16 +1,20 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import PendingReportPage from '@pages/admin/PendingReportPage';
 import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
 import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
 import MyInfoPage from '@pages/MyInfoPage';
 import NotFoundPage from '@pages/NotFoundPage';
+import NoticeDetailPage from '@pages/notice/NoticeDetailPage';
+import NoticeListPage from '@pages/notice/NoticeListPage';
 import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
 import RankingPage from '@pages/RankingPage';
+import ReportAlarmPage from '@pages/ReportAlarmPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 import RouteChangeTracker from '@components/RouteChangeTracker';
@@ -177,6 +181,53 @@ const router = createBrowserRouter([
       </>
     ),
     errorElement: <ErrorPage />,
+  },
+  {
+    path: PATH.ADMIN,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'reports/pending',
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <PendingReportPage />
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+  {
+    path: `${PATH.REPORT_ALARM}/:reportId`,
+    element: (
+      <PrivateRoute>
+        <ReportAlarmPage />
+      </PrivateRoute>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: PATH.NOTICES,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: ':noticeId',
+        element: (
+          <>
+            <NoticeDetailPage />
+            <RouteChangeTracker />
+          </>
+        ),
+      },
+      {
+        path: '',
+        element: (
+          <>
+            <NoticeListPage />
+            <RouteChangeTracker />
+          </>
+        ),
+      },
+    ],
   },
   {
     path: '*',

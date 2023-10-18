@@ -2,6 +2,8 @@ import type { LoadingType } from '../types';
 
 import { useContext, useState } from 'react';
 
+import { ReportMessage } from '@type/report';
+
 import { AuthContext } from '@hooks/context/auth';
 
 import DeleteModal from '@components/common/DeleteModal';
@@ -19,8 +21,8 @@ interface PostDetailPageChildProps {
     controlPost: {
       setEarlyClosePost: () => void;
       deletePost: () => void;
-      reportPost: (reason: string) => void;
-      reportNickname: (reason: string) => void;
+      reportPost: (reason: ReportMessage) => void;
+      reportNickname: (reason: ReportMessage) => void;
     };
     openToast: (text: string) => void;
   };

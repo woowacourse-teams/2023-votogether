@@ -1,15 +1,15 @@
 import { ButtonHTMLAttributes } from 'react';
 
 import backIcon from '@assets/back.svg';
+import bellIcon from '@assets/bell.png';
 import categoryIcon from '@assets/category.svg';
 import ranking from '@assets/ranking.png';
 import retryIcon from '@assets/retry.svg';
 import searchIcon from '@assets/search_white.svg';
-import userInfo from '@assets/user.png';
 
 import * as S from './style';
 
-type IconCategory = 'category' | 'back' | 'search' | 'retry' | 'userInfo' | 'ranking';
+type IconCategory = 'category' | 'back' | 'search' | 'retry' | 'alarm' | 'ranking';
 
 interface IconInfo {
   name: string;
@@ -38,9 +38,9 @@ const ICON_CATEGORY: Record<IconCategory, IconInfo> = {
     url: retryIcon,
     isRoundBackground: false,
   },
-  userInfo: {
-    name: '사용자 페이지 이동',
-    url: userInfo,
+  alarm: {
+    name: '알림',
+    url: bellIcon,
     isRoundBackground: true,
   },
   ranking: {

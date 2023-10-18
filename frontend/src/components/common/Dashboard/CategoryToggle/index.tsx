@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { Category } from '@type/category';
 
-import { useToast } from '@hooks';
-
 import { AuthContext } from '@hooks/context/auth';
+import { ToastContext } from '@hooks/context/toast';
 import { useCategoryFavoriteToggle } from '@hooks/query/category/useCategoryFavoriteToggle';
-
-import Toast from '@components/common/Toast';
 
 import chevronDown from '@assets/chevron-down.svg';
 import chevronUp from '@assets/chevron-up.svg';
@@ -28,26 +25,23 @@ export default function CategoryToggle({
   isInitialOpen = true,
 }: CategoryToggleProps) {
   const [isToggleOpen, setIsToggleOpen] = useState(isInitialOpen);
-  const { isToastOpen, openToast, toastMessage } = useToast();
-  const { mutate, isError, error } = useCategoryFavoriteToggle();
+  const { mutate } = useCategoryFavoriteToggle();
 
   const { loggedInfo } = useContext(AuthContext);
+  const { addMessage } = useContext(ToastContext);
 
   const handleToggleClick = () => {
     setIsToggleOpen(prevIsToggleOpen => !prevIsToggleOpen);
   };
 
-  useEffect(() => {
-    if (isError && error instanceof Error) {
-      if (!loggedInfo.isLoggedIn) {
-        openToast('즐겨찾기는 로그인 후 이용할 수 있습니다.');
-        return;
-      }
-      const errorResponse = JSON.parse(error.message);
-      openToast(errorResponse.message);
+  const handleFavoriteCategoryClick = (categoryId: number, isFavorite: boolean) => {
+    if (!loggedInfo.isLoggedIn) {
+      addMessage('즐겨찾기는 로그인 후 이용할 수 있습니다.');
       return;
     }
-  }, [isError, error]);
+
+    mutate({ id: categoryId, isFavorite });
+  };
 
   return (
     <S.Container>
@@ -64,18 +58,16 @@ export default function CategoryToggle({
           {categoryList.length === 0 && <S.Caption>현재 카테고리가 없습니다</S.Caption>}
           {categoryList.map(({ id, name, isFavorite }) => (
             <S.CategoryItem key={id}>
-              <S.Circle title="즐겨찾기 버튼" onClick={() => mutate({ id, isFavorite })}>
+              <S.Circle
+                title="즐겨찾기 버튼"
+                onClick={() => handleFavoriteCategoryClick(id, isFavorite)}
+              >
                 <img src={isFavorite ? starFilled : startLined} alt="" />
               </S.Circle>
               <S.CategoryNameLink to={`/posts/category/${id}`}>{name}</S.CategoryNameLink>
             </S.CategoryItem>
           ))}
         </S.CategoryList>
-      )}
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
       )}
     </S.Container>
   );

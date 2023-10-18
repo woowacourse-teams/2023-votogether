@@ -3,6 +3,7 @@ package com.votogether.domain.report.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.report.entity.Report;
@@ -16,6 +17,9 @@ class ReportRepositoryTest extends RepositoryTest {
 
     @Autowired
     ReportRepository reportRepository;
+
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
 
     @Test
     @DisplayName("회원, 신고타입, 대상ID를 통해서 신고 횟수를 반환한다.")

@@ -1,6 +1,6 @@
 import { DefaultTheme, keyframes } from 'styled-components';
 
-const breakpoint = {
+const breakpoint: Record<'sm' | 'md' | 'lg', `${number}px`> = {
   /** @media (min-width: 576px) { ... } */
   sm: '576px',
   /** @media (min-width: 768px) { ... } */
@@ -14,6 +14,7 @@ const zIndex = {
   tagButton: 90,
   header: 100,
   modal: 200,
+  toast: 300,
 };
 
 const animation = {

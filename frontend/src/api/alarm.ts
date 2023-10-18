@@ -88,6 +88,8 @@ export const getReportApproveResult = async (reportId: number): Promise<ReportAp
   return transformReportApproveResultResponse(reportApproveResult);
 };
 
-export const readAlarm = async (alarmId: number) => {
-  await patchFetch(`${BASE_URL}/alarms/${alarmId}`);
+export type AlarmType = 'CONTENT' | 'REPORT';
+
+export const readAlarm = async (alarmId: number, type: AlarmType) => {
+  await patchFetch(`${BASE_URL}/alarms/${alarmId}?type=${type}`);
 };

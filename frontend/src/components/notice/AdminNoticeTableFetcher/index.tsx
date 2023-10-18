@@ -5,9 +5,16 @@ import { usePagedNoticeList } from '@hooks';
 import * as S from './style';
 
 export default function AdminNoticeTableFetcher() {
-  const { data, setPage, page } = usePagedNoticeList();
-
-  const startPageNumber = Math.floor(page / 5) * 5;
+  const {
+    data,
+    setPage,
+    page,
+    hasNextPage,
+    hasPrevPage,
+    fetchNextPage,
+    fetchPrevPage,
+    getPageNumberList,
+  } = usePagedNoticeList();
 
   if (!data) return <></>;
 
@@ -27,17 +34,12 @@ export default function AdminNoticeTableFetcher() {
         )}
       />
       <S.ButtonContainer>
-        {startPageNumber > 0 && (
-          <S.ButtonWrapper onClick={() => setPage(startPageNumber - 4)}>
+        {hasPrevPage && (
+          <S.ButtonWrapper onClick={() => fetchPrevPage()}>
             <SquareButton theme="gray">{'<'}</SquareButton>
           </S.ButtonWrapper>
         )}
-        {Array.from(
-          { length: Math.min(data.totalPageNumber - data.currentPageNumber, 5) },
-          (_, index) => {
-            return startPageNumber + (index % 5) + 1;
-          }
-        ).map(item => (
+        {getPageNumberList(data.totalPageNumber).map(item => (
           <S.ButtonWrapper
             onClick={() => {
               setPage(item);
@@ -46,8 +48,8 @@ export default function AdminNoticeTableFetcher() {
             <SquareButton theme={page === item - 1 ? 'fill' : 'blank'}>{item}</SquareButton>
           </S.ButtonWrapper>
         ))}
-        {data.totalPageNumber > startPageNumber + 5 && (
-          <S.ButtonWrapper onClick={() => setPage(startPageNumber + 6)}>
+        {hasNextPage && (
+          <S.ButtonWrapper onClick={() => fetchNextPage(data.totalPageNumber)}>
             <SquareButton theme="gray">{'>'}</SquareButton>
           </S.ButtonWrapper>
         )}

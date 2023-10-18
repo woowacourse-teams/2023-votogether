@@ -1,18 +1,28 @@
-import { useState } from 'react';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { NoticeList } from '@type/notice';
+
+import { usePagination } from '@hooks/usePagination';
 
 import { getNoticeList } from '@api/notice';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const usePagedNoticeList = (initialPageNumber: number = 0) => {
-  const [pageNumber, setPageNumber] = useState(initialPageNumber);
+  const {
+    fetchNextPage,
+    fetchPrevPage,
+    isCheckNextPage,
+    page,
+    setPage,
+    startNumber,
+    getPageNumberList,
+    hasPrevPage,
+  } = usePagination(initialPageNumber, 5);
+
   const { data, isError, isLoading, error } = useQuery<NoticeList>(
-    [QUERY_KEY.NOTICE, pageNumber],
-    () => getNoticeList(pageNumber),
+    [QUERY_KEY.NOTICE, page],
+    () => getNoticeList(page),
     {
       suspense: true,
       cacheTime: 30 * 60 * 1000,
@@ -26,41 +36,20 @@ export const usePagedNoticeList = (initialPageNumber: number = 0) => {
     }
   );
 
-  const startPage = Math.floor(pageNumber / 5) * 5;
-
-  const setPage = (value: number) => {
-    setPageNumber(value - 1);
-  };
-
-  const isCheckNextPage = (totalPage: number) => {
-    return totalPage > startPage + 5;
-  };
-
   const hasNextPage = data && isCheckNextPage(data.totalPageNumber);
-
-  const fetchPrevPage = () => {
-    if (pageNumber === 0) return;
-
-    setPageNumber(startPage - 5);
-  };
-
-  const fetchNextPage = () => {
-    if (!hasNextPage) return;
-
-    setPageNumber(startPage + 5);
-  };
 
   return {
     data,
     isError,
     isLoading,
     error,
-    hasNextPage,
     fetchNextPage,
     fetchPrevPage,
-    page: pageNumber,
+    getPageNumberList,
+    page,
     setPage,
-    startPage,
-    isCheckNextPage,
+    startNumber,
+    hasPrevPage,
+    hasNextPage,
   };
 };

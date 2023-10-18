@@ -65,6 +65,7 @@ public class MemberService {
                 member.getNickname(),
                 member.getGender(),
                 member.getBirthYear(),
+                member.getRole(),
                 numberOfPosts,
                 numberOfVotes
         );

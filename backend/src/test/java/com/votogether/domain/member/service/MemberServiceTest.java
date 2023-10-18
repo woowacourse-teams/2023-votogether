@@ -10,6 +10,7 @@ import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.Role;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
@@ -91,6 +92,7 @@ class MemberServiceTest extends ServiceTest {
                     .birthYear(1966)
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
+                    .role(Role.MEMBER)
                     .build();
             String newNickname = "jeomxon";
             Member savedMember = memberRepository.save(member);
@@ -151,6 +153,7 @@ class MemberServiceTest extends ServiceTest {
                     .birthYear(1966)
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
+                    .role(Role.MEMBER)
                     .build();
             Member savedMember = memberRepository.save(member);
 
@@ -176,6 +179,7 @@ class MemberServiceTest extends ServiceTest {
                     .nickname("저문")
                     .socialType(SocialType.KAKAO)
                     .socialId("123123123")
+                    .role(Role.MEMBER)
                     .build();
             Member member = memberRepository.save(unsavedMember);
             MemberDetailRequest request = new MemberDetailRequest(Gender.FEMALE, 2000);
@@ -194,13 +198,7 @@ class MemberServiceTest extends ServiceTest {
         @DisplayName("기존 성별이 지정되어 있으면 예외가 발생한다.")
         void updateDetailsSameGender() {
             // given
-            Member unsavedMember = Member.builder()
-                    .nickname("저문")
-                    .gender(Gender.MALE)
-                    .socialType(SocialType.KAKAO)
-                    .socialId("123123123")
-                    .build();
-            Member member = memberRepository.save(unsavedMember);
+            Member member = memberRepository.save(MemberFixtures.MALE_30.get());
             MemberDetailRequest request = new MemberDetailRequest(Gender.FEMALE, 2000);
 
             // when, then
@@ -215,11 +213,13 @@ class MemberServiceTest extends ServiceTest {
             // given
             Member unsavedMember = Member.builder()
                     .nickname("저문")
-                    .birthYear(2000)
+                    .birthYear(1993)
                     .socialType(SocialType.KAKAO)
                     .socialId("123123123")
+                    .role(Role.MEMBER)
                     .build();
             Member member = memberRepository.save(unsavedMember);
+
             MemberDetailRequest request = new MemberDetailRequest(Gender.MALE, 1995);
 
             // when, then

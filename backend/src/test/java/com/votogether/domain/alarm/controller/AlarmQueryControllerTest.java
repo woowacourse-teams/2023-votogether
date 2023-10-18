@@ -6,7 +6,9 @@ import static org.mockito.BDDMockito.given;
 import com.votogether.domain.alarm.dto.response.PostAlarmDetailResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
 import com.votogether.domain.alarm.service.AlarmQueryService;
+import com.votogether.domain.member.entity.Member;
 import com.votogether.test.ControllerTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.time.LocalDateTime;
@@ -18,7 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 
-@WebMvcTest(AlarmQueryQueryController.class)
+@WebMvcTest(AlarmQueryController.class)
 class AlarmQueryControllerTest extends ControllerTest {
 
     @MockBean
@@ -26,7 +28,7 @@ class AlarmQueryControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUp() {
-        RestAssuredMockMvc.standaloneSetup(new AlarmQueryQueryController(alarmQueryService));
+        RestAssuredMockMvc.standaloneSetup(new AlarmQueryController(alarmQueryService));
     }
 
     @Test
@@ -36,11 +38,12 @@ class AlarmQueryControllerTest extends ControllerTest {
         mockingAuthArgumentResolver();
 
         int page = 0;
+        Member member = MemberFixtures.FEMALE_20.get();
         PostAlarmDetailResponse postAlarmDetailResponse = new PostAlarmDetailResponse(1L, "title", "저문");
         PostAlarmResponse postAlarmResponse = new PostAlarmResponse(1L, postAlarmDetailResponse,
                 LocalDateTime.now(), false);
 
-        given(alarmQueryService.getPostAlarm(page)).willReturn(List.of(postAlarmResponse));
+        given(alarmQueryService.getPostAlarm(page, member)).willReturn(List.of(postAlarmResponse));
 
         // when
         List<PostAlarmResponse> postAlarmResponses = RestAssuredMockMvc

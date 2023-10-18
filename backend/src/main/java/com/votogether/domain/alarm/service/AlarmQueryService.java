@@ -22,9 +22,9 @@ public class AlarmQueryService {
 
     private final AlarmRepository alarmRepository;
 
-    public List<PostAlarmResponse> getPostAlarm(final int page) {
+    public List<PostAlarmResponse> getPostAlarm(final int page, final Member member) {
         final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE);
-        final Slice<Alarm> alarms = alarmRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+        final Slice<Alarm> alarms = alarmRepository.findAllByMemberOrderByCreatedAtDesc(member, pageRequest);
 
         return getPostAlarmResponses(alarms);
     }

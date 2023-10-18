@@ -1,11 +1,11 @@
-package com.votogether.domain.alarm.entity.service;
+package com.votogether.domain.alarm.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.votogether.domain.alarm.dto.response.PostAlarmDetailResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
-import com.votogether.domain.alarm.service.AlarmQueryService;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.dto.request.comment.CommentCreateRequest;
 import com.votogether.domain.post.entity.Post;
@@ -33,6 +33,9 @@ class AlarmQueryServiceTest extends ServiceTest {
     @Autowired
     PostCommandService postCommandService;
 
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
+
     @Nested
     @DisplayName("알림 조회는 ")
     class GetPostAlarm {
@@ -51,7 +54,7 @@ class AlarmQueryServiceTest extends ServiceTest {
             TestTransaction.end();
 
             // when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0);
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0, commentWriter);
 
             // then
             PostAlarmResponse postAlarmResponse = postAlarmResponses.get(0);
@@ -78,7 +81,7 @@ class AlarmQueryServiceTest extends ServiceTest {
             Thread.sleep(1000);
 
             // when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0);
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0, member);
 
             // then
             PostAlarmResponse postAlarmResponse = postAlarmResponses.get(0);
@@ -93,8 +96,11 @@ class AlarmQueryServiceTest extends ServiceTest {
         @Test
         @DisplayName("어떠한 이벤트도 발생하지 않았다면 빈 리스트가 조회된다.")
         void getEmptyListWhenNoEventOccurs() {
-            // given, when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0);
+            // given
+            Member member = memberTestPersister.builder().save();
+
+            // when
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0, member);
 
             // then
             assertThat(postAlarmResponses).hasSize(0);

@@ -2,21 +2,25 @@ package com.votogether.domain.report.service.strategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.vo.PostClosingType;
-import com.votogether.domain.post.entity.vo.PostSortType;
 import com.votogether.domain.post.service.PostGuestService;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.request.ReportRequest;
+import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
-import java.util.List;
+import com.votogether.test.fixtures.MemberFixtures;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,16 @@ class ReportPostStrategyTest extends ServiceTest {
 
     @Autowired
     PostGuestService postGuestService;
+
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
+
 
     @Test
     @DisplayName("정상적으로 동작한다.")
@@ -102,48 +116,88 @@ class ReportPostStrategyTest extends ServiceTest {
     }
 
     @Test
-    @DisplayName("투표글 신고가 5회가 되면 블라인드 처리가 된다.")
-    void reportAndBlind() {
-        // given
-        Member reporter1 = memberTestPersister.builder().save();
-        Member reporter2 = memberTestPersister.builder().save();
-        Member reporter3 = memberTestPersister.builder().save();
-        Member reporter4 = memberTestPersister.builder().save();
-        Member reporter5 = memberTestPersister.builder().save();
-        Post post = postTestPersister.postBuilder().save();
-        ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
-
-        // when
-        reportPostStrategy.report(reporter1, request);
-        reportPostStrategy.report(reporter2, request);
-        reportPostStrategy.report(reporter3, request);
-        reportPostStrategy.report(reporter4, request);
-        reportPostStrategy.report(reporter5, request);
-
-        // then
-        final List<PostResponse> responses = postGuestService.getPosts(
-                0,
-                PostClosingType.ALL,
-                PostSortType.HOT,
-                null
-        );
-        assertAll(
-                () -> assertThat(post.isHidden()).isTrue(),
-                () -> assertThat(responses).isEmpty()
-        );
-    }
-
-    @Test
     @DisplayName("targetId를 문자열로 파싱한다.")
     void parseTarget() {
         // given
         Post post = postTestPersister.postBuilder().save();
 
         // when
-        final String postId = reportPostStrategy.parseTarget(post.getId());
+        String postId = reportPostStrategy.parseTarget(post.getId());
 
         // then
         assertThat(postId).isEqualTo(post.getId().toString());
+    }
+
+    @Test
+    @DisplayName("게시글에 대한 신고 조치를 한다.")
+    void postReportAction() {
+        // given
+        Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+        Member writer = memberService.register(MemberFixtures.MALE_30.get());
+
+        final Post post = postTestPersister.postBuilder()
+                .writer(writer)
+                .title("title")
+                .content("content")
+                .deadline(LocalDateTime.now())
+                .save();
+
+        Report savedReport = reportTestPersister.builder()
+                .member(reporter)
+                .reportType(ReportType.POST)
+                .reason("reasonA")
+                .targetId(post.getId())
+                .save();
+
+        ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+                savedReport.getId(),
+                savedReport.getReportType(),
+                post.getId(),
+                savedReport.getReason(),
+                savedReport.getCreatedAt()
+        );
+
+        // when
+        reportPostStrategy.reportAction(reportAggregateDto);
+
+        // then
+        ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findAll().get(0);
+
+        assertSoftly(softly -> {
+            softly.assertThat(reportActionAlarm.getMember().getId()).isEqualTo(writer.getId());
+            softly.assertThat(reportActionAlarm.getReportType()).isEqualTo(savedReport.getReportType());
+            softly.assertThat(reportActionAlarm.getTarget()).isEqualTo(post.getId().toString());
+            softly.assertThat(reportActionAlarm.getReasons()).isEqualTo(savedReport.getReason());
+            softly.assertThat(reportActionAlarm.isChecked()).isFalse();
+            softly.assertThat(post.isHidden()).isTrue();
+        });
+    }
+
+    @Test
+    @DisplayName("게시글이 존재하지 않는 경우 예외 발생")
+    void postNotExistException() {
+        // given
+        Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+        Member member = memberService.register(MemberFixtures.MALE_30.get());
+
+        Report savedReport = reportTestPersister.builder()
+                .member(reporter)
+                .reportType(ReportType.NICKNAME)
+                .reason("reasonA")
+                .targetId(member.getId())
+                .save();
+
+        ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+                savedReport.getId(),
+                savedReport.getReportType(),
+                member.getId() + 1L,
+                savedReport.getReason(),
+                savedReport.getCreatedAt()
+        );
+
+        // when, then
+        assertThatThrownBy(() -> reportPostStrategy.reportAction(reportAggregateDto))
+                .isInstanceOf(NotFoundException.class);
     }
 
 }

@@ -7,6 +7,8 @@ import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.domain.report.exception.ReportExceptionType;
+import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import java.time.LocalDateTime;
@@ -28,25 +30,25 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
 
     @Test
     @DisplayName("신고 조치 예정 목록을 최신순으로 조회한다")
-    void getReports() {
+    void getReportAggregateDtos() {
         // given
-        final Member member = memberRepository.save(MemberFixtures.MALE_30.get());
+        Member member = memberRepository.save(MemberFixtures.MALE_30.get());
 
-        final Report savedReportA = reportTestPersister.builder()
+        Report savedReportA = reportTestPersister.builder()
                 .member(member)
                 .reportType(ReportType.POST)
                 .reason("reasonA")
                 .targetId(1L)
                 .save();
 
-        final Report savedReportB = reportTestPersister.builder()
+        Report savedReportB = reportTestPersister.builder()
                 .member(member)
                 .reportType(ReportType.COMMENT)
                 .reason("reasonB")
                 .targetId(1L)
                 .save();
 
-        final ReportAggregateDto reportAggregateDtoA = new ReportAggregateDto(
+        ReportAggregateDto reportAggregateDtoA = new ReportAggregateDto(
                 savedReportA.getId(),
                 savedReportA.getReportType(),
                 savedReportA.getTargetId(),
@@ -54,7 +56,7 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
                 savedReportA.getCreatedAt()
         );
 
-        final ReportAggregateDto reportAggregateDtoB = new ReportAggregateDto(
+        ReportAggregateDto reportAggregateDtoB = new ReportAggregateDto(
                 savedReportB.getId(),
                 savedReportB.getReportType(),
                 savedReportB.getTargetId(),
@@ -62,11 +64,11 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
                 savedReportB.getCreatedAt()
         );
 
-        final PageRequest pageRequest = PageRequest.of(0, 20);
+        PageRequest pageRequest = PageRequest.of(0, 20);
 
         // when
-        final List<ReportAggregateDto> reports = reportCustomRepository
-                .findReportsGroupedByReportTypeAndTargetId(pageRequest);
+        List<ReportAggregateDto> reports = reportCustomRepository
+                .findReportAggregateDtosByReportTypeAndTargetId(pageRequest);
 
         // then
         assertSoftly(softly -> {
@@ -76,9 +78,9 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
     }
 
     private void equalTo(
-            final SoftAssertions softly,
-            final ReportAggregateDto actualReport,
-            final ReportAggregateDto expectReport
+            SoftAssertions softly,
+            ReportAggregateDto actualReport,
+            ReportAggregateDto expectReport
     ) {
         softly.assertThat(actualReport).usingRecursiveComparison()
                 .withEqualsForType(
@@ -87,6 +89,48 @@ class ReportCustomRepositoryImplTest extends RepositoryTest {
                         LocalDateTime.class)
                 .ignoringFields("member", "updatedAt")
                 .isEqualTo(expectReport);
+    }
+
+    @Test
+    @DisplayName("신고 조치 예정 정보를 조회한다")
+    void getReportAggregateDto() {
+        // given
+        Member memberA = memberRepository.save(MemberFixtures.MALE_30.get());
+        Member memberB = memberRepository.save(MemberFixtures.MALE_20.get());
+
+        final ReportType reportType = ReportType.POST;
+        final long targetId = 1L;
+
+        final String reasonA = "reasonA";
+        reportTestPersister.builder()
+                .member(memberA)
+                .reportType(reportType)
+                .reason(reasonA)
+                .targetId(targetId)
+                .save();
+
+        final String reasonB = "reasonB";
+        Report savedReportB = reportTestPersister.builder()
+                .member(memberB)
+                .reportType(reportType)
+                .reason(reasonB)
+                .targetId(targetId)
+                .save();
+
+        // when
+        ReportAggregateDto reportAggregateDto = reportCustomRepository
+                .findReportAggregateDtoByReportTypeAndTargetId(reportType, targetId)
+                .orElseThrow(() -> new NotFoundException(ReportExceptionType.NOT_FOUND));
+
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(reportAggregateDto.reportMaxId()).isEqualTo(savedReportB.getId());
+            softly.assertThat(reportAggregateDto.reportType()).isEqualTo(reportType);
+            softly.assertThat(reportAggregateDto.targetId()).isEqualTo(targetId);
+            softly.assertThat(reportAggregateDto.reasons()).contains(reasonA, reasonB);
+            softly.assertThat(reportAggregateDto.createdAt().truncatedTo(ChronoUnit.SECONDS))
+                    .isEqualTo(savedReportB.getCreatedAt().truncatedTo(ChronoUnit.SECONDS));
+        });
     }
 
 }

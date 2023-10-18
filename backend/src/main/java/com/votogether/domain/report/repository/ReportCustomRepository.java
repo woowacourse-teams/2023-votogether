@@ -1,11 +1,15 @@
 package com.votogether.domain.report.repository;
 
 import com.votogether.domain.report.dto.ReportAggregateDto;
+import com.votogether.domain.report.entity.vo.ReportType;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
 public interface ReportCustomRepository {
 
-    List<ReportAggregateDto> findReportsGroupedByReportTypeAndTargetId(final Pageable pageable);
+    List<ReportAggregateDto> findReportAggregateDtosByReportTypeAndTargetId(final Pageable pageable);
+
+    Optional<ReportAggregateDto> findReportAggregateDtoByReportTypeAndTargetId(ReportType reportType, Long targetId);
 
 }

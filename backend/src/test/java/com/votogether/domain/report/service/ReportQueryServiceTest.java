@@ -28,20 +28,20 @@ class ReportQueryServiceTest extends ServiceTest {
     @DisplayName("신고 조치 예정 목록을 최신순으로 조회한다")
     void getReports() {
         // given
-        final Member member = memberService.register(MemberFixtures.MALE_30.get());
+        Member member = memberService.register(MemberFixtures.MALE_30.get());
 
-        final Comment comment = commentTestPersister.builder()
+        Comment comment = commentTestPersister.builder()
                 .content("commnetA")
                 .save();
 
-        final Report savedReportA = reportTestPersister.builder()
+        Report savedReportA = reportTestPersister.builder()
                 .member(member)
                 .reportType(ReportType.POST)
                 .reason("reasonA")
                 .targetId(1L)
                 .save();
 
-        final Report savedReportB = reportTestPersister.builder()
+        Report savedReportB = reportTestPersister.builder()
                 .member(member)
                 .reportType(ReportType.COMMENT)
                 .reason("reasonB")
@@ -49,10 +49,10 @@ class ReportQueryServiceTest extends ServiceTest {
                 .save();
 
         // when
-        final ReportPageResponse reportPageResponse = reportQueryService.getReports(0);
+        ReportPageResponse reportPageResponse = reportQueryService.getReports(0);
 
         // then
-        final List<ReportResponse> reportResponses = reportPageResponse.reports();
+        List<ReportResponse> reportResponses = reportPageResponse.reports();
         assertSoftly(softly -> {
             softly.assertThat(reportPageResponse.totalPageNumber()).isOne();
             softly.assertThat(reportPageResponse.currentPageNumber()).isZero();

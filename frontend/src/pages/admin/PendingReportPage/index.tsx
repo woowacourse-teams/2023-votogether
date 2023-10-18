@@ -16,9 +16,8 @@ import { REPORT_ACTION_TYPE, REPORT_TYPE } from '@constants/report';
 import * as S from './stlye';
 
 export interface ReportDetail {
-  typeName: string;
+  typeName: keyof typeof REPORT_ACTION_TYPE;
   target: string;
-  isEdit: boolean;
 }
 
 export default function PendingReportPage() {
@@ -32,10 +31,10 @@ export default function PendingReportPage() {
   const { mutate: reportAction } = useReportAction();
 
   const handleClickButton = (reportData: ReportActionRequest, reportDetail: ReportDetail) => {
-    const { typeName, target, isEdit } = reportDetail;
-    const editOrDelete = isEdit ? '수정' : '삭제';
+    const { typeName, target } = reportDetail;
+    const editOrDeleteText = REPORT_ACTION_TYPE[typeName];
     const message = `'${typeName}: ${target}'을 ${
-      reportData.hasAction ? editOrDelete : '신고 해제'
+      reportData.hasAction ? editOrDeleteText : '신고 해제'
     }하시겠습니까?`;
 
     if (window.confirm(message)) reportAction(reportData);
@@ -47,7 +46,7 @@ export default function PendingReportPage() {
         const reportDetail = {
           typeName: report.typeName,
           target: report.target,
-          isEdit: report.typeName === REPORT_TYPE.NICKNAME,
+          isNickname: report.typeName === REPORT_TYPE.NICKNAME,
         };
         return {
           ...report,

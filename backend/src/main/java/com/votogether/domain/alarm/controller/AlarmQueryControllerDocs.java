@@ -13,7 +13,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "알림", description = "알림 API")
-public interface AlarmControllerDocs {
+public interface AlarmQueryControllerDocs {
 
     @Operation(summary = "게시글 내역 알림 조회", description = "게시글 내역 알림을 조회한다.")
     @ApiResponses({

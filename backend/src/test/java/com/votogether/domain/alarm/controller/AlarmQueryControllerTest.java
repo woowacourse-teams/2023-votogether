@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.votogether.domain.alarm.dto.response.PostAlarmDetailResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
-import com.votogether.domain.alarm.service.AlarmService;
+import com.votogether.domain.alarm.service.AlarmQueryService;
 import com.votogether.test.ControllerTest;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -18,15 +18,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 
-@WebMvcTest(AlarmController.class)
-class AlarmControllerTest extends ControllerTest {
+@WebMvcTest(AlarmQueryQueryController.class)
+class AlarmQueryControllerTest extends ControllerTest {
 
     @MockBean
-    AlarmService alarmService;
+    AlarmQueryService alarmQueryService;
 
     @BeforeEach
     void setUp() {
-        RestAssuredMockMvc.standaloneSetup(new AlarmController(alarmService));
+        RestAssuredMockMvc.standaloneSetup(new AlarmQueryQueryController(alarmQueryService));
     }
 
     @Test
@@ -40,7 +40,7 @@ class AlarmControllerTest extends ControllerTest {
         PostAlarmResponse postAlarmResponse = new PostAlarmResponse(1L, postAlarmDetailResponse,
                 LocalDateTime.now(), false);
 
-        given(alarmService.getPostAlarm(page)).willReturn(List.of(postAlarmResponse));
+        given(alarmQueryService.getPostAlarm(page)).willReturn(List.of(postAlarmResponse));
 
         // when
         List<PostAlarmResponse> postAlarmResponses = RestAssuredMockMvc

@@ -1,7 +1,7 @@
 package com.votogether.domain.alarm.controller;
 
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
-import com.votogether.domain.alarm.service.AlarmService;
+import com.votogether.domain.alarm.service.AlarmQueryService;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/alarms")
 @RestController
-public class AlarmController implements AlarmControllerDocs {
+public class AlarmQueryQueryController implements AlarmQueryControllerDocs {
 
-    private final AlarmService alarmService;
+    private final AlarmQueryService alarmQueryService;
 
     @GetMapping("/content")
     public ResponseEntity<List<PostAlarmResponse>> getPostAlarm(
             @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
     ) {
-        final List<PostAlarmResponse> postAlarmResponses = alarmService.getPostAlarm(page);
+        final List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(page);
         return ResponseEntity.ok(postAlarmResponses);
     }
 

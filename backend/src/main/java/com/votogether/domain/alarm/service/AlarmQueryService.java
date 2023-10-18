@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
-public class AlarmService {
+public class AlarmQueryService {
 
     private static final int BASIC_PAGE_SIZE = 10;
     private static final String NICKNAME_WHEN_POST_CLOSING = "";
 
     private final AlarmRepository alarmRepository;
 
-    @Transactional(readOnly = true)
     public List<PostAlarmResponse> getPostAlarm(final int page) {
         final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE);
         final Slice<Alarm> alarms = alarmRepository.findAllByOrderByCreatedAtDesc(pageRequest);

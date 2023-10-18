@@ -29,7 +29,7 @@ export const transformNotice = ({
   };
 };
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
+const BASE_URL = process.env.VOTOGETHER_MOCKING_URL ?? '';
 
 export const createNotice = async (notice: NoticeRequest) => {
   await postFetch(`${BASE_URL}/notices`, notice);

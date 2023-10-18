@@ -1,5 +1,7 @@
 package com.votogether.domain.member.service;
 
+import com.votogether.domain.alarm.entity.Alarm;
+import com.votogether.domain.alarm.repository.AlarmRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
@@ -37,6 +39,7 @@ public class MemberService {
     private final VoteRepository voteRepository;
     private final ReportRepository reportRepository;
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -102,6 +105,7 @@ public class MemberService {
         deleteVotes(member);
         deleteMemberCategories(member);
         deleteReports(member, posts, comments);
+        deleteAlarms(member);
 
         memberRepository.delete(member);
     }
@@ -188,4 +192,13 @@ public class MemberService {
                 .toList();
         reportRepository.deleteAllById(reportIdsByMember);
     }
+
+    private void deleteAlarms(final Member member) {
+        final List<Long> alarmIds = alarmRepository.findAllByMember(member)
+                .stream()
+                .map(Alarm::getId)
+                .toList();
+        alarmRepository.deleteAllById(alarmIds);
+    }
+
 }

@@ -34,15 +34,37 @@ public class VoteService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
 
-        validateAlreadyVoted(member, post);
-
         final PostOption postOption = postOptionRepository.findById(postOptionId)
                 .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
 
-        final Vote vote = post.makeVote(member, postOption);
+        validateAlreadyVoted(member, post);
+        final Vote vote = createVote(member, post, postOption);
         voteRepository.save(vote);
     }
 
+    private Vote createVote(final Member member, final Post post, final PostOption postOption) {
+        validateDeadline(post);
+        validatePostOption(post, postOption);
+
+        final Vote vote = Vote.builder()
+                .member(member)
+                .postOption(postOption)
+                .build();
+        postOption.addVote(vote);
+        return vote;
+    }
+
+    private void validatePostOption(final Post post, final PostOption postOption) {
+        if (!post.hasPostOption(postOption)) {
+            throw new BadRequestException(PostOptionExceptionType.NOT_FOUND);
+        }
+    }
+
+    private void validateDeadline(final Post post) {
+        if (post.isClosed()) {
+            throw new BadRequestException(PostExceptionType.CLOSED);
+        }
+    }
 
     private void validateAlreadyVoted(final Member member, final Post post) {
         final List<PostOption> postOptions = post.getPostOptions();
@@ -72,8 +94,8 @@ public class VoteService {
                 .orElseThrow(() -> new NotFoundException(PostOptionExceptionType.NOT_FOUND));
 
         voteRepository.delete(originVote);
-        final Vote vote = post.makeVote(member, newPostOption);
-        voteRepository.save(vote);
+        final Vote newVote = createVote(member, post, newPostOption);
+        voteRepository.save(newVote);
     }
 
 }

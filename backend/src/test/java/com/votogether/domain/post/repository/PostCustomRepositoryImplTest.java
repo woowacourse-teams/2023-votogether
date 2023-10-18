@@ -462,18 +462,19 @@ class PostCustomRepositoryImplTest extends RepositoryTest {
         @DisplayName("게시글을 최신순으로 조회한다.")
         void getPostsByLatest() {
             // given
-            Member member = memberTestPersister.builder().save();
-            Post postA = postTestPersister.postBuilder().writer(member).save();
-            Post postB = postTestPersister.postBuilder().writer(member).save();
+            Member voter = memberTestPersister.builder().save();
+            Member writer = memberTestPersister.builder().save();
+            Post postA = postTestPersister.postBuilder().writer(writer).save();
+            Post postB = postTestPersister.postBuilder().writer(writer).save();
             PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
             PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
-            voteTestPersister.builder().postOption(postOptionA).member(member).save();
-            voteTestPersister.builder().postOption(postOptionB).member(member).save();
+            voteTestPersister.builder().postOption(postOptionA).member(voter).save();
+            voteTestPersister.builder().postOption(postOptionB).member(voter).save();
 
             // when
             Pageable pageable = PageRequest.of(0, 10);
             List<Post> result = postCustomRepository.findPostsByVotedWithFilteringAndPaging(
-                    member,
+                    voter,
                     PostClosingType.ALL,
                     PostSortType.LATEST,
                     pageable
@@ -490,19 +491,20 @@ class PostCustomRepositoryImplTest extends RepositoryTest {
         @DisplayName("게시글을 인기순으로 조회한다.")
         void getPostsByHot() {
             // post
-            Member member = memberTestPersister.builder().save();
+            Member voter = memberTestPersister.builder().save();
+            Member writer = memberTestPersister.builder().save();
             Post postA = postTestPersister.postBuilder().save();
             PostOption postOptionA = postTestPersister.postOptionBuilder().post(postA).sequence(1).save();
-            voteTestPersister.builder().postOption(postOptionA).member(member).save();
+            voteTestPersister.builder().postOption(postOptionA).member(voter).save();
             voteTestPersister.builder().postOption(postOptionA).save();
-            Post postB = postTestPersister.postBuilder().writer(member).save();
+            Post postB = postTestPersister.postBuilder().writer(writer).save();
             PostOption postOptionB = postTestPersister.postOptionBuilder().post(postB).sequence(1).save();
-            voteTestPersister.builder().postOption(postOptionB).member(member).save();
+            voteTestPersister.builder().postOption(postOptionB).member(voter).save();
 
             // when
             Pageable pageable = PageRequest.of(0, 10);
             List<Post> result = postCustomRepository.findPostsByVotedWithFilteringAndPaging(
-                    member,
+                    voter,
                     PostClosingType.ALL,
                     PostSortType.HOT,
                     pageable

@@ -23,7 +23,11 @@ public interface VoteControllerDocs {
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(
                     responseCode = "404",
-                    description = "1.존재하지 않는 게시글\t\n2.존재하지 않는 선택지",
+                    description = """
+                            1.존재하지 않는 게시글
+                                                        
+                            2.존재하지 않는 선택지
+                            """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     ResponseEntity<Void> vote(
@@ -37,7 +41,11 @@ public interface VoteControllerDocs {
             @ApiResponse(responseCode = "200", description = "투표 수정 성공"),
             @ApiResponse(
                     responseCode = "404",
-                    description = "1.존재하지 않는 게시글\t\n2.존재하지 않는 선택지",
+                    description = """
+                            1.존재하지 않는 게시글
+                                                        
+                            2.존재하지 않는 선택지
+                            """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     ResponseEntity<Void> changeVote(

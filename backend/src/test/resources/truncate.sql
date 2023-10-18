@@ -1,0 +1,16 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE vote;
+TRUNCATE TABLE post_content_image;
+TRUNCATE TABLE post_category;
+TRUNCATE TABLE member_category;
+TRUNCATE TABLE report;
+TRUNCATE TABLE comment;
+TRUNCATE TABLE post_option;
+TRUNCATE TABLE post;
+TRUNCATE TABLE member;
+TRUNCATE TABLE category;
+TRUNCATE TABLE alarm;
+TRUNCATE TABLE report_action_alarm;
+
+SET FOREIGN_KEY_CHECKS = 1;

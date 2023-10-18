@@ -1,6 +1,7 @@
-import { Notice, NoticeList } from '@type/notice';
+import { Notice, NoticeList, NoticeListResponse, NoticeResponse } from '@type/notice';
+import { StringDate } from '@type/time';
 
-import { NoticeListResponse, transformNotice } from '@api/notice';
+import { transformNotice } from '@api/notice';
 
 const noticeTitleList = [
   '방방뛰는 코끼리',
@@ -27,7 +28,7 @@ const noticeContentList = [
   '이 영상을 보면서 눈물과 미소가 번갈아 오네요 ㅜㅜ 너무나 감동적이고 멋지네요',
 ];
 
-const noticeCreatedAtList = [
+const noticeCreatedAtList: StringDate[] = [
   '2022-01-11 12:23',
   '2022-02-11 12:23',
   '2022-03-11 12:23',
@@ -40,7 +41,7 @@ const noticeCreatedAtList = [
   '2022-10-11 12:23',
 ];
 
-const noticeDeadlineList = [
+const noticeDeadlineList: StringDate[] = [
   '2022-01-11 12:23',
   '2022-02-11 12:23',
   '2022-03-11 12:23',
@@ -53,7 +54,7 @@ const noticeDeadlineList = [
   '2023-10-11 12:23',
 ];
 
-const getMockNoticeResponse = () => ({
+const getMockNoticeResponse = (): NoticeResponse => ({
   id: Math.floor(Math.random() * 30),
   title: noticeTitleList[Math.floor(Math.random() * 8)],
   content: noticeContentList[Math.floor(Math.random() * 11)],
@@ -63,7 +64,7 @@ const getMockNoticeResponse = () => ({
   deadline: noticeDeadlineList[Math.floor(Math.random() * 9)],
 });
 
-export const MOCK_NOTICE_RESPONSE: Notice = getMockNoticeResponse();
+export const MOCK_NOTICE_RESPONSE: NoticeResponse = getMockNoticeResponse();
 
 export const MOCK_TRANSFORM_NOTICE: Notice = transformNotice(MOCK_NOTICE_RESPONSE);
 

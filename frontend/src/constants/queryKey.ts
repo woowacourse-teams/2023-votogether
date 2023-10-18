@@ -7,6 +7,7 @@ export const QUERY_KEY = {
   PASSION_RANKING: 'passionRanking',
   POPULAR_RANKING: 'popularRanking',
   VOTE_STATISTICS: 'voteStatistics',
+  REPORT: 'report',
   ALARM_CONTENT: 'contentAlarm',
   ALARM_REPORT: 'reportAlarm',
   REPORT_APPROVE_RESULT: 'reportApproveResult',

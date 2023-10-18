@@ -1,4 +1,11 @@
-import { Notice, NoticeList } from '@type/notice';
+import {
+  Notice,
+  NoticeList,
+  NoticeListResponse,
+  NoticeRequest,
+  NoticeResponse,
+} from '@type/notice';
+import { StringDateUpToDay } from '@type/time';
 
 import { deleteFetch, getFetch, patchFetch, postFetch } from '@utils/fetch';
 
@@ -10,25 +17,17 @@ export const transformNotice = ({
   deadline,
   bannerTitle,
   bannerSubtitle,
-}: Notice): Notice => {
+}: NoticeResponse): Notice => {
   return {
     id,
     title,
     content,
-    createdAt,
+    createdAt: createdAt.split(' ')[0] as StringDateUpToDay,
     deadline,
     bannerTitle,
     bannerSubtitle,
   };
 };
-
-export interface NoticeListResponse {
-  totalPageNumber: number;
-  currentPageNumber: number;
-  notices: Notice[];
-}
-
-export type NoticeRequest = Omit<Notice, 'createdAt' | 'id'>;
 
 const BASE_URL = process.env.VOTOGETHER_BASE_URL ?? '';
 
@@ -37,7 +36,7 @@ export const createNotice = async (notice: NoticeRequest) => {
 };
 
 export const getBannerNotice = async () => {
-  const bannerNotice = await getFetch<Notice>(`${BASE_URL}/notices/progress`);
+  const bannerNotice = await getFetch<NoticeResponse>(`${BASE_URL}/notices/progress`);
 
   return transformNotice(bannerNotice);
 };
@@ -53,7 +52,7 @@ export const getNoticeList = async (page: number): Promise<NoticeList> => {
 };
 
 export const getNoticeDetail = async (noticeId: number) => {
-  const noticeDetail = await getFetch<Notice>(`${BASE_URL}/notices/${noticeId}`);
+  const noticeDetail = await getFetch<NoticeResponse>(`${BASE_URL}/notices/${noticeId}`);
 
   return transformNotice(noticeDetail);
 };

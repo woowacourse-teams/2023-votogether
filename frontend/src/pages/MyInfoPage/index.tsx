@@ -13,6 +13,7 @@ import UserProfile from '@components/common/Dashboard/UserProfile';
 import Layout from '@components/common/Layout';
 import SquareButton from '@components/common/SquareButton';
 
+import { PATH } from '@constants/path';
 import { NICKNAME } from '@constants/policy';
 import { NICKNAME_POLICY } from '@constants/policyMessage';
 
@@ -30,6 +31,8 @@ export default function MyInfoPage() {
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
+
+  const { userInfo } = loggedInfo;
 
   const handleModifyNickname = (newNickname: string) => {
     modifyNickname(newNickname);
@@ -51,8 +54,11 @@ export default function MyInfoPage() {
     <Layout isSidebarVisible={true}>
       <S.Wrapper>
         <S.ProfileSection>
-          {loggedInfo.userInfo ? <UserProfile userInfo={loggedInfo.userInfo} /> : <GuestProfile />}
+          {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile isLargeKaKao />}
         </S.ProfileSection>
+        <S.NoticeWrapper>
+          <S.NoticeTitle to={PATH.NOTICES}>공지사항 보러가기</S.NoticeTitle>
+        </S.NoticeWrapper>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">
             <S.DescribeUl>
@@ -83,6 +89,30 @@ export default function MyInfoPage() {
             )}
           </Accordion>
         </S.UserControlSection>
+        {userInfo && userInfo?.role === 'ADMIN' && (
+          <Accordion title="관리자">
+            <S.ButtonContainer>
+              <S.AdminButtonWrapper>
+                <SquareButton
+                  onClick={() => navigate(PATH.ADMIN_PENDING_REPORT)}
+                  aria-label="신고 목록 페이지"
+                  theme="gray"
+                >
+                  {`신고 목록\n페이지`}
+                </SquareButton>
+              </S.AdminButtonWrapper>
+              <S.AdminButtonWrapper>
+                <SquareButton
+                  onClick={() => navigate(PATH.ADMIN_NOTICE)}
+                  aria-label="공지사항 목록 페이지"
+                  theme="blank"
+                >
+                  {`공지사항 목록\n페이지`}
+                </SquareButton>
+              </S.AdminButtonWrapper>
+            </S.ButtonContainer>
+          </Accordion>
+        )}
       </S.Wrapper>
     </Layout>
   );

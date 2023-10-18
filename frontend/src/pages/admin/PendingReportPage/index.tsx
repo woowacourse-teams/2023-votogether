@@ -84,7 +84,7 @@ export default function PendingReportPage() {
               <S.PaginationContainer>
                 <S.MovePageButton
                   onClick={() =>
-                    navigate(`${PATH.PENDING_REPORT}?page=${data.currentPageNumber - 1}`)
+                    navigate(`${PATH.ADMIN_PENDING_REPORT}?page=${data.currentPageNumber - 1}`)
                   }
                   disabled={currentPageNumber === 1}
                 >
@@ -92,7 +92,7 @@ export default function PendingReportPage() {
                 </S.MovePageButton>
                 {new Array(data.totalPageNumber).fill(0).map((_, index) => (
                   <S.PaginationButton
-                    to={`${PATH.PENDING_REPORT}?page=${currentPageNumber}`}
+                    to={`${PATH.ADMIN_PENDING_REPORT}?page=${currentPageNumber}`}
                     $isSelected={index + 1 === currentPageNumber}
                   >
                     {index + 1}
@@ -100,7 +100,7 @@ export default function PendingReportPage() {
                 ))}
                 <S.MovePageButton
                   onClick={() =>
-                    navigate(`${PATH.PENDING_REPORT}?page=${data.currentPageNumber + 1}`)
+                    navigate(`${PATH.ADMIN_PENDING_REPORT}?page=${data.currentPageNumber + 1}`)
                   }
                   disabled={currentPageNumber === data.totalPageNumber}
                 >

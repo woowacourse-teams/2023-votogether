@@ -36,3 +36,8 @@ export const GuestButton = styled.button`
 
   cursor: pointer;
 `;
+
+export const KaKaoImage = styled.img`
+  width: 100%;
+  height: 40px;
+`;

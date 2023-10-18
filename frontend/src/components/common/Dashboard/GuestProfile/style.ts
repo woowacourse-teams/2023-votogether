@@ -7,7 +7,7 @@ export const Container = styled(ProfileContainer)`
 `;
 
 export const Image = styled.img`
-  width: 183px;
+  width: 100%;
   height: 40px;
 `;
 

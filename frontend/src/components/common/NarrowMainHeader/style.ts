@@ -12,6 +12,7 @@ export const Container = styled.header`
 
   position: fixed;
   top: 0;
+  left: 0;
 
   background-color: var(--header);
 

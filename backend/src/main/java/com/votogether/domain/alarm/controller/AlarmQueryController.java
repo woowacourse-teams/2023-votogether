@@ -27,9 +27,10 @@ public class AlarmQueryController implements AlarmQueryControllerDocs {
 
     @GetMapping("/content")
     public ResponseEntity<List<PostAlarmResponse>> getPostAlarm(
-            @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
+            @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
+            @Auth final Member loginMember
     ) {
-        final List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(page);
+        final List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(loginMember, page);
         return ResponseEntity.ok(postAlarmResponses);
     }
 
@@ -47,7 +48,8 @@ public class AlarmQueryController implements AlarmQueryControllerDocs {
             @PathVariable("id") final Long reportActionAlarmId,
             @Auth final Member member
     ) {
-        final ReportActionResponse response = alarmQueryService.getReportActionAlarm(reportActionAlarmId, member);
+        final ReportActionResponse response =
+                alarmQueryService.getReportActionAlarm(reportActionAlarmId, member);
         return ResponseEntity.ok(response);
     }
 

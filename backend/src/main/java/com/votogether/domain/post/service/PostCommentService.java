@@ -60,6 +60,9 @@ public class PostCommentService {
     }
 
     private void publishAlarmEvent(final Member loginMember, final Post post) {
+        if (post.isWriter(loginMember)) {
+            return;
+        }
         final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
                 loginMember,
                 post.getId(),

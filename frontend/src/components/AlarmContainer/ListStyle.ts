@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 export const Description = styled.p`
-  font: var(--text-default);
+  margin: 30px 0;
+
+  font: var(--text-body);
   text-align: center;
+  font-weight: 500;
 `;
 
 export const ListContainer = styled.ul`
@@ -15,7 +18,7 @@ export const ListItem = styled.li<{ $isRead: boolean }>`
   border: 1px solid var(--gray);
   align-items: center;
   min-height: 60px;
-  margin: 2px 0;
+  margin: 5px 0;
 
   background-color: ${props => props.$isRead && 'var(--bright-gray)'};
 `;

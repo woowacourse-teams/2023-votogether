@@ -22,7 +22,7 @@ export const ContentContainer = styled.div`
   }
 
   @media (min-width: ${theme.breakpoint.md}) {
-    height: calc(100vh - 400px);
+    height: calc(100vh - 440px);
   }
 `;
 

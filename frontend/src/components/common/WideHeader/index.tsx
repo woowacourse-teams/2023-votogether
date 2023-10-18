@@ -1,7 +1,7 @@
 import { CSSProperties, MouseEvent, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { AuthContext, useToggle } from '@hooks';
+import { AuthContext, ToastContext, useToggle } from '@hooks';
 
 import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 
@@ -26,6 +26,8 @@ export default function WideHeader() {
   const navigate = useNavigate();
   const { isOpen, openComponent, closeComponent } = useToggle();
   const toolTipRef = useRef<HTMLDivElement | null>(null);
+
+  const { addMessage } = useContext(ToastContext);
   const loggedInfo = useContext(AuthContext).loggedInfo;
   const isAlarmActive = loggedInfo.userInfo?.hasLatestAlarm;
 
@@ -40,8 +42,7 @@ export default function WideHeader() {
   };
 
   const handleToolTipOpen = () => {
-    //추후 토스트 처리
-    if (!loggedInfo.isLoggedIn) return;
+    if (!loggedInfo.isLoggedIn) return addMessage('알림은 로그인 후 이용할 수 있습니다.');
 
     openComponent();
     mutate();

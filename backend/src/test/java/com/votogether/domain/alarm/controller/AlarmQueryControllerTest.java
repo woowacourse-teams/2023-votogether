@@ -46,18 +46,17 @@ class AlarmQueryControllerTest extends ControllerTest {
         // given
         mockingAuthArgumentResolver();
 
-        int page = 0;
         PostAlarmDetailResponse postAlarmDetailResponse = new PostAlarmDetailResponse(1L, "title", "저문");
         PostAlarmResponse postAlarmResponse = new PostAlarmResponse(1L, postAlarmDetailResponse,
                 LocalDateTime.now(), false);
 
-        given(alarmQueryService.getPostAlarm(page)).willReturn(List.of(postAlarmResponse));
+        given(alarmQueryService.getPostAlarm(any(Member.class), anyInt())).willReturn(List.of(postAlarmResponse));
 
         // when
         List<PostAlarmResponse> postAlarmResponses = RestAssuredMockMvc
                 .given().log().all()
                 .headers(HttpHeaders.AUTHORIZATION, BEARER_TOKEN)
-                .queryParam("page", page)
+                .queryParam("page", 0)
                 .when().get("/alarms/content")
                 .then().log().all()
                 .extract()

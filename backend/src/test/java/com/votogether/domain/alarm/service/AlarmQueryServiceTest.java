@@ -2,7 +2,6 @@ package com.votogether.domain.alarm.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
 import com.votogether.domain.alarm.dto.ReportActionResponse;
@@ -62,7 +61,7 @@ class AlarmQueryServiceTest extends ServiceTest {
             Thread.sleep(1000);
 
             // when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0);
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(commentWriter, 0);
 
             // then
             PostAlarmResponse postAlarmResponse = postAlarmResponses.get(0);
@@ -89,7 +88,7 @@ class AlarmQueryServiceTest extends ServiceTest {
             Thread.sleep(1000);
 
             // when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0);
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(member, 0);
 
             // then
             PostAlarmResponse postAlarmResponse = postAlarmResponses.get(0);
@@ -104,8 +103,11 @@ class AlarmQueryServiceTest extends ServiceTest {
         @Test
         @DisplayName("어떠한 이벤트도 발생하지 않았다면 빈 리스트가 조회된다.")
         void getEmptyListWhenNoEventOccurs() {
-            // given, when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0);
+            // given
+            Member member = memberTestPersister.builder().save();
+
+            // when
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(member, 0);
 
             // then
             assertThat(postAlarmResponses).hasSize(0);
@@ -134,19 +136,19 @@ class AlarmQueryServiceTest extends ServiceTest {
 
         // then
         ReportActionAlarmResponse result = reportActionAlarms.get(0);
-        assertAll(
-                () -> assertThat(reportActionAlarms.size()).isEqualTo(1),
-                () -> assertThat(result.alarmId()).isNotNull(),
-                () -> assertThat(result.isChecked()).isFalse(),
-                () -> assertThat(result.detail().reportActionId()).isNotNull(),
-                () -> assertThat(result.detail().content()).isEqualTo("1"),
-                () -> assertThat(result.detail().reasons()).containsAll(Set.of("광고성", "부적합성")),
-                () -> assertThat(result.detail().type()).isEqualTo(ReportType.POST)
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(reportActionAlarms).hasSize(1);
+            softly.assertThat(result.alarmId()).isNotNull();
+            softly.assertThat(result.isChecked()).isFalse();
+            softly.assertThat(result.detail().reportActionId()).isNotNull();
+            softly.assertThat(result.detail().content()).isEqualTo("1");
+            softly.assertThat(result.detail().reasons()).containsAll(Set.of("광고성", "부적합성"));
+            softly.assertThat(result.detail().type()).isEqualTo(ReportType.POST);
+        });
     }
 
     @Test
-    @DisplayName("신고조치알림을 상세 조회한다.")
+    @DisplayName("신고 조치 알림을 상세 조회한다.")
     void getReportActionAlarm() {
         // given
         Member member = memberTestPersister.builder().save();
@@ -165,12 +167,12 @@ class AlarmQueryServiceTest extends ServiceTest {
         ReportActionResponse response = alarmQueryService.getReportActionAlarm(savedReportActionAlarm.getId(), member);
 
         // then
-        assertAll(
-                () -> assertThat(response.reportActionId()).isEqualTo(savedReportActionAlarm.getId()),
-                () -> assertThat(response.type()).isEqualTo(ReportType.POST),
-                () -> assertThat(response.content()).isEqualTo("1"),
-                () -> assertThat(response.reasons()).containsAll(Set.of("광고성", "부적합성"))
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(response.reportActionId()).isEqualTo(savedReportActionAlarm.getId());
+            softly.assertThat(response.type()).isEqualTo(ReportType.POST);
+            softly.assertThat(response.content()).isEqualTo("1");
+            softly.assertThat(response.reasons()).containsAll(Set.of("광고성", "부적합성"));
+        });
     }
 
 }

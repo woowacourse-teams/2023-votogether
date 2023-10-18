@@ -1,4 +1,4 @@
-import { PendingReportActionListResponse } from '@type/report';
+import { PendingReportActionListResponse } from '@api/report';
 
 export const MOCK_PENDING_REPORT_LIST: PendingReportActionListResponse = {
   totalPageNumber: 5,

@@ -30,9 +30,9 @@ public class AlarmQueryService {
     private final AlarmRepository alarmRepository;
     private final ReportActionAlarmRepository reportActionAlarmRepository;
 
-    public List<PostAlarmResponse> getPostAlarm(final int page) {
+    public List<PostAlarmResponse> getPostAlarm(final Member member, final int page) {
         final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE);
-        final Slice<Alarm> alarms = alarmRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+        final Slice<Alarm> alarms = alarmRepository.findAllByMemberOrderByCreatedAtDesc(member, pageRequest);
 
         return getPostAlarmResponses(alarms);
     }

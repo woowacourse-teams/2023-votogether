@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import kakao from '@assets/kakao_login_medium_wide.webp';
+import kakao from '@assets/kakao_login_large.webp';
 import logo from '@assets/stroke-logo.svg';
 
 import * as S from './style';
@@ -16,7 +16,7 @@ export default function MobileLogin() {
       <S.LogoImage src={logo} alt="보투게더 로고" />
       <S.LogoTitle>VOTOGETHER</S.LogoTitle>
       <S.LoginButton onClick={() => (window.location.href = kakaoURL)}>
-        <img src={kakao} alt="카카오 로그인" />
+        <S.KaKaoImage src={kakao} alt="카카오 로그인" />
       </S.LoginButton>
       <S.GuestButton onClick={() => navigate('/')}>비회원으로 이용하기</S.GuestButton>
     </S.Container>

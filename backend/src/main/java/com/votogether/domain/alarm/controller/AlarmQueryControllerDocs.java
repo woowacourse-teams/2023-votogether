@@ -5,6 +5,7 @@ import com.votogether.domain.alarm.dto.ReportActionResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.ExceptionResponse;
+import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +36,8 @@ public interface AlarmQueryControllerDocs {
             )
     })
     ResponseEntity<List<PostAlarmResponse>> getPostAlarm(
-            @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page
+            @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
+            @Auth final Member loginMember
     );
 
     @Operation(

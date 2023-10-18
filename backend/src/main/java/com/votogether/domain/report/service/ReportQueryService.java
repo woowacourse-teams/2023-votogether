@@ -29,7 +29,7 @@ public class ReportQueryService {
 
         final Pageable pageable = PageRequest.of(page, BASIC_PAGE_SIZE);
         final List<ReportAggregateDto> reportAggregateDtos = reportRepository
-                .findReportsGroupedByReportTypeAndTargetId(pageable);
+                .findReportAggregateDtosByReportTypeAndTargetId(pageable);
         final List<ReportResponse> reportResponses = parseReportResponses(reportAggregateDtos);
 
         return ReportPageResponse.of(totalPageNumber, page, reportResponses);

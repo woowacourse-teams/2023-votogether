@@ -4,6 +4,7 @@ import com.votogether.domain.auth.dto.response.KakaoMemberResponse;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.Nickname;
+import com.votogether.domain.member.entity.vo.Role;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.global.exception.BadRequestException;
@@ -54,19 +55,24 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String socialId;
 
+    @Column(nullable = false)
+    private Role role;
+
     @Builder
     private Member(
             final String nickname,
             final Gender gender,
             final Integer birthYear,
             final SocialType socialType,
-            final String socialId
+            final String socialId,
+            final Role role
     ) {
         this.nickname = new Nickname(nickname);
         this.gender = gender;
         this.birthYear = birthYear;
         this.socialType = socialType;
         this.socialId = socialId;
+        this.role = role;
     }
 
     public static Member from(final KakaoMemberResponse response) {
@@ -74,6 +80,7 @@ public class Member extends BaseEntity {
                 .nickname(INITIAL_NICKNAME_PREFIX + RandomStringUtils.random(10, true, true))
                 .socialType(SocialType.KAKAO)
                 .socialId(String.valueOf(response.id()))
+                .role(Role.MEMBER)
                 .build();
     }
 

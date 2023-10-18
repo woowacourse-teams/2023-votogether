@@ -51,13 +51,13 @@ class ReportQueryControllerTest extends ControllerTest {
             // given
             mockingAuthArgumentResolver();
 
-            final int totalPages = 3;
-            final int currentPageNumber = 1;
-            final String reason = "reason";
-            final ReportType reportType = ReportType.POST;
-            final long targetId = 1L;
+            int totalPages = 3;
+            int currentPageNumber = 1;
+            String reason = "reason";
+            ReportType reportType = ReportType.POST;
+            long targetId = 1L;
 
-            final ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+            ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
                     1L,
                     reportType,
                     targetId,
@@ -65,7 +65,7 @@ class ReportQueryControllerTest extends ControllerTest {
                     LocalDateTime.now()
             );
 
-            final ReportPageResponse reportPageResponse =
+            ReportPageResponse reportPageResponse =
                     ReportPageResponse.of(
                             totalPages,
                             currentPageNumber,
@@ -76,7 +76,7 @@ class ReportQueryControllerTest extends ControllerTest {
             given(reportQueryService.getReports(page)).willReturn(reportPageResponse);
 
             // when
-            final ReportPageResponse reportPageResponses = RestAssuredMockMvc
+            ReportPageResponse reportPageResponses = RestAssuredMockMvc
                     .given().log().all()
                     .contentType(ContentType.JSON)
                     .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
@@ -89,8 +89,8 @@ class ReportQueryControllerTest extends ControllerTest {
                     });
 
             // then
-            final List<ReportResponse> reports = reportPageResponses.reports();
-            final ReportResponse reportResponse = reports.get(0);
+            List<ReportResponse> reports = reportPageResponses.reports();
+            ReportResponse reportResponse = reports.get(0);
             assertSoftly(softly -> {
                 softly.assertThat(reportPageResponses.totalPageNumber()).isEqualTo(totalPages);
                 softly.assertThat(reportPageResponses.currentPageNumber()).isEqualTo(currentPageNumber);

@@ -1,6 +1,9 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import NoticeAdminPage from '@pages/admin/notices/NoticeAdminPage';
+import NoticeEditPage from '@pages/admin/notices/NoticeEditPage';
+import NoticeWritePage from '@pages/admin/notices/NoticeWritePage';
 import PendingReportPage from '@pages/admin/PendingReportPage';
 import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
@@ -8,11 +11,8 @@ import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
 import MyInfoPage from '@pages/MyInfoPage';
 import NotFoundPage from '@pages/NotFoundPage';
-import NoticeAdminPage from '@pages/notice/NoticeAdminPage';
 import NoticeDetailPage from '@pages/notice/NoticeDetailPage';
-import NoticeEditPage from '@pages/notice/NoticeEditPage';
 import NoticeListPage from '@pages/notice/NoticeListPage';
-import NoticeWritePage from '@pages/notice/NoticeWritePage';
 import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
@@ -190,7 +190,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: `${PATH.REPORT.slice(1)}/pending`,
+        path: `reports/pending`,
         element: (
           <PrivateRoute isOnlyAdminAllowed>
             <PendingReportPage />
@@ -198,7 +198,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: `${PATH.NOTICES.slice(1)}/write`,
+        path: `notices/write`,
         element: (
           <PrivateRoute isOnlyAdminAllowed>
             <NoticeWritePage />
@@ -206,7 +206,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: `${PATH.NOTICES.slice(1)}/:noticeId`,
+        path: `notices/:noticeId`,
         element: (
           <PrivateRoute isOnlyAdminAllowed>
             <NoticeEditPage />
@@ -214,7 +214,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: PATH.NOTICES.slice(1),
+        path: 'notices',
         element: (
           <PrivateRoute isOnlyAdminAllowed>
             <NoticeAdminPage />

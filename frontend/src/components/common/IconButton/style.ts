@@ -5,7 +5,12 @@ export const Button = styled.button<{ $isRoundBackground: boolean }>`
   height: 35px;
   border-radius: 50%;
 
-  background-color: ${props => (props.$isRoundBackground ? 'var(--gray)' : 'rgba(0, 0, 0, 0)')};
+  background-color: ${props => (props.$isRoundBackground ? 'var(--bright-gray)' : '')};
 
   cursor: pointer;
+
+  > * {
+    width: ${props => props.$isRoundBackground && '20px'};
+    height: ${props => props.$isRoundBackground && '20px'};
+  }
 `;

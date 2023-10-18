@@ -1,3 +1,5 @@
+import { ReportType } from '@type/report';
+
 import {
   MAX_DEADLINE,
   NICKNAME,
@@ -75,6 +77,12 @@ export const APP_LAUNCH_EVENT = {
   CONTENT_DETAIL: '',
 } as const;
 
-export const ERROR_MESSAGE = {
+export const REPORT_TYPE: Record<ReportType, { name: string; actionMessage: string }> = {
+  POST: { name: '게시글', actionMessage: '게시글이 삭제 조치 되었습니다.' },
+  COMMENT: { name: '댓글', actionMessage: '댓글이 삭제 조치 되었습니다.' },
+  NICKNAME: { name: '닉네임', actionMessage: '닉네임이 변경 조치 되었습니다.' },
+};
+
+  export const ERROR_MESSAGE = {
   DEFAULT: '요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요',
 };

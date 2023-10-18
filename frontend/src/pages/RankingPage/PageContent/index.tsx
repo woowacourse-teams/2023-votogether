@@ -17,7 +17,7 @@ export default function PageContent() {
   return (
     <>
       <ToggleSwitch
-        size="md"
+        size="sm"
         selectedButton={selectedButton}
         firstButton={firstButton}
         secondButton={secondButton}

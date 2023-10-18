@@ -1,30 +1,22 @@
 import { styled } from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 export const Table = styled.table`
   width: 100%;
 
-  font: var(--text-caption);
+  font: var(--text-default);
   text-align: center;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    font: var(--text-caption);
+  }
 `;
 
 export const Tr = styled.tr`
   display: grid;
-  grid-template-columns: 0.5fr 1fr 3fr 1fr;
+  grid-template-columns: 0.8fr 1fr 3fr 1fr;
   align-items: center;
-`;
-
-export const Th = styled.th`
-  padding: 10px 0;
-
-  font: var(--text-body);
-  font-weight: 600;
-`;
-
-export const RankingTd = styled.td`
-  padding: 5px 0;
-  height: auto;
-
-  line-height: 0;
 `;
 
 export const Td = styled.td`

@@ -221,6 +221,26 @@ class MemberControllerTest extends ControllerTest {
     }
 
     @Test
+    @DisplayName("최신 알림 읽기에 성공하면 200을 반환한다.")
+    void checkLatestAlarm() throws Exception {
+        // given
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
+        willDoNothing().given(memberService).checkLatestAlarm(any(Member.class));
+
+        // when, then
+        RestAssuredMockMvc
+                .given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .when().patch("/members/me/check-alarm")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
     @DisplayName("회원 탈퇴에 성공하면 204를 반환한다.")
     void deleteMember() throws Exception {
         // given

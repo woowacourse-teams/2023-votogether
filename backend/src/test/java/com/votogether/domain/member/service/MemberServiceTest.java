@@ -5,9 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.votogether.domain.alarm.entity.Alarm;
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
+import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.vo.Gender;
@@ -24,9 +27,12 @@ import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
+import com.votogether.test.persister.AlarmTestPersister;
 import com.votogether.test.persister.PostTestPersister;
+import com.votogether.test.persister.ReportActionAlarmTestPersister;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -37,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class MemberServiceTest extends ServiceTest {
 
@@ -66,6 +73,12 @@ class MemberServiceTest extends ServiceTest {
 
     @Autowired
     PostTestPersister postTestPersister;
+
+    @Autowired
+    AlarmTestPersister alarmTestPersister;
+
+    @Autowired
+    ReportActionAlarmTestPersister reportActionAlarmTestPersister;
 
     @Autowired
     EntityManager em;
@@ -240,6 +253,123 @@ class MemberServiceTest extends ServiceTest {
                     .hasMessage("이미 출생년도가 할당되어 있습니다.");
         }
 
+    }
+
+    @Nested
+    @DisplayName("내 정보 조회를 할 때")
+    class FindMemberInfo {
+
+        @Test
+        @DisplayName("정상적으로 조회가 된다.")
+        void success() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(memberInfoResponse.gender()).isEqualTo(Gender.MALE);
+                softly.assertThat(memberInfoResponse.birthYear()).isEqualTo(1995);
+                softly.assertThat(memberInfoResponse.postCount()).isZero();
+                softly.assertThat(memberInfoResponse.voteCount()).isZero();
+                softly.assertThat(memberInfoResponse.hasLatestAlarm()).isFalse();
+            });
+        }
+
+        @Test
+        @DisplayName("메트릭 정보가 없는 경우 예외가 발생한다.")
+        void throwsExceptionWhenNoMetrics() {
+            // given
+            Member member = memberTestPersister.builder().save();
+
+            // when, then
+            assertThatThrownBy(() -> memberService.findMemberInfo(member))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("메트릭 정보가 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("게시글 내역 알림이 존재한다면 회원의 최신 알림 확인 시각과 비교하여 게시글 알림이 더 최신인 경우 true를 반환한다.")
+        void returnsTrueWhenPostAlarmIsLatest() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+            alarmTestPersister.builder().member(member).save();
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertThat(memberInfoResponse.hasLatestAlarm()).isTrue();
+        }
+
+        @Test
+        @DisplayName("신고 조치 내역 알림이 존재한다면 회원의 최신 알림 확인 시각과 비교하여 게시글 알림이 더 최신인 경우 true를 반환한다.")
+        void returnsTrueWhenReportActionAlarmIsLatest() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+            reportActionAlarmTestPersister.builder().member(member).save();
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertThat(memberInfoResponse.hasLatestAlarm()).isTrue();
+        }
+
+        @Test
+        @DisplayName("신고 조치 내역 알림과 게시글 내역 알림이 모두 존재한다면 회원의 최신 알림 확인 시각과 비교하여 신고 조치 알림이 더 최신인 경우 true를 반환한다.")
+        void returnsTrueWhenReportActionAlarmOrPostAlarmIsLatest() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+            alarmTestPersister.builder().member(member).save();
+            reportActionAlarmTestPersister.builder().member(member).save();
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertThat(memberInfoResponse.hasLatestAlarm()).isTrue();
+        }
+
+        @Test
+        @DisplayName("신고 조치 내역 알림이 존재하지만, 회원의 최신 알림 확인 시각이 더 최신인 경우 false를 반환한다.")
+        void returnsTrueWhenReportActionAlarmOrPostAlarmIsNotLatest() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+            Alarm alarm = alarmTestPersister.builder().member(member).save();
+            ReportActionAlarm reportActionAlarm = reportActionAlarmTestPersister.builder().member(member).save();
+
+            ReflectionTestUtils.setField(alarm, "createdAt", LocalDateTime.now().minusDays(1));
+            ReflectionTestUtils.setField(reportActionAlarm, "createdAt", LocalDateTime.now().minusDays(1));
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertThat(memberInfoResponse.hasLatestAlarm()).isFalse();
+        }
+
+    }
+
+    @Test
+    @DisplayName("최신 알림을 확인한다.")
+    void checkLatestAlarm() {
+        // given
+        Member member = memberTestPersister.builder().save();
+        LocalDateTime beforeTime = member.getCreatedAt();
+
+        // when
+        memberService.checkLatestAlarm(member);
+
+        // then
+        assertThat(member.getAlarmCheckedAt()).isNotEqualTo(beforeTime);
     }
 
     @Nested

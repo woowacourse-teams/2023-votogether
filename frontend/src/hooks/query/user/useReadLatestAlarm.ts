@@ -12,9 +12,6 @@ export const useReadLatestAlarm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO] });
     },
-    onError: () => {
-      //추후 토스트 처리
-    },
   });
 
   return { mutate };

@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { AlarmType, readAlarm } from '@api/alarm';
+import { AlarmType } from '@type/alarm';
+
+import { readAlarm } from '@api/alarm';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

@@ -1,7 +1,5 @@
 package com.votogether.domain.report.controller;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import com.votogether.domain.member.entity.Member;

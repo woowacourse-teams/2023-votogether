@@ -29,10 +29,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.transaction.TestTransaction;
 
 class ReportCommandServiceTest extends ServiceTest {
 
@@ -336,7 +333,6 @@ class ReportCommandServiceTest extends ServiceTest {
             ReportActionRequest request = new ReportActionRequest(savedReport.getId(), false);
             reportCommandService.reportAction(request);
 
-
             // then
             Post savedPost = postRepository.findById(post.getId()).get();
             Optional<Report> reportById = reportRepository.findById(savedReport.getId());
@@ -505,7 +501,7 @@ class ReportCommandServiceTest extends ServiceTest {
             assertThatThrownBy(() -> reportCommandService.reportAction(request))
                     .isInstanceOf(NotFoundException.class);
         }
-        
+
     }
 
 }

@@ -35,7 +35,13 @@ public enum MemberFixtures {
     private final String socialId;
     private final Role role;
 
-    MemberFixtures(final String nickname, final Gender gender, final Integer birthYear, final String socialId, final Role role) {
+    MemberFixtures(
+            final String nickname,
+            final Gender gender,
+            final Integer birthYear,
+            final String socialId,
+            final Role role
+    ) {
         this.nickname = nickname;
         this.gender = gender;
         this.birthYear = birthYear;

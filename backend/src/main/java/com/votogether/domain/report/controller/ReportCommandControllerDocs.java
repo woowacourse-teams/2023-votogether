@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "신고", description = "신고 API")
@@ -42,7 +41,7 @@ public interface ReportCommandControllerDocs {
                     responseCode = "400",
                     description = """
                             1.신고 ID가 양의 정수가 아닌 경우
-                            
+                                                        
                             2.신고 ID가 존재하지 않은 경우
                             """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))

@@ -24,8 +24,8 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
     return <LS.Description>현재 도착한 알림이 없습니다!</LS.Description>;
   }
 
-  const handleAlarmClick = (alarmId: number, postId: number) => {
-    mutate(alarmId);
+  const handleAlarmClick = (alarmId: number, isChecked: boolean, postId: number) => {
+    if (!isChecked) mutate(alarmId);
 
     navigation(`${PATH.POST}/${postId}`);
     closeToolTip();
@@ -50,7 +50,7 @@ export default function ContentAlarmList({ closeToolTip }: { closeToolTip: () =>
               <LS.ListItem key={alarm.alarmId} $isRead={alarm.isChecked}>
                 <LS.LinkButton
                   onClick={() => {
-                    handleAlarmClick(alarm.alarmId, postId);
+                    handleAlarmClick(alarm.alarmId, alarm.isChecked, postId);
                   }}
                 >
                   <p>

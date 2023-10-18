@@ -15,7 +15,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,13 +54,9 @@ public class AlarmQueryService {
     }
 
     public List<ReportActionAlarmResponse> getReportActionAlarms(final Member member, final int page) {
-        final PageRequest pageRequest = PageRequest.of(
-                page,
-                BASIC_PAGE_SIZE,
-                Sort.by(Sort.Direction.DESC, "createdAt")
-        );
+        final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE);
         final List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository
-                .findByMember(member, pageRequest);
+                .findByMemberOrderByCreatedAtDesc(member, pageRequest);
 
         return reportActionAlarms.stream()
                 .map(ReportActionAlarmResponse::from)

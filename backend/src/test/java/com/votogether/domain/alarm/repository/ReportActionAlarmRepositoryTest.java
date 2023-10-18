@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 class ReportActionAlarmRepositoryTest extends RepositoryTest {
 
@@ -54,8 +53,9 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
         reportActionAlarmRepository.save(reportActionAlarmC);
 
         // when
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
-        List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository.findByMember(member, pageRequest);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(
+                member, pageRequest);
 
         // then
         assertAll(
@@ -87,11 +87,13 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
         }
 
         // when
-        PageRequest pageRequestA = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
-        List<ReportActionAlarm> reportActionAlarmsA = reportActionAlarmRepository.findByMember(member, pageRequestA);
+        PageRequest pageRequestA = PageRequest.of(0, 10);
+        List<ReportActionAlarm> reportActionAlarmsA = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(
+                member, pageRequestA);
 
-        PageRequest pageRequestB = PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
-        List<ReportActionAlarm> reportActionAlarmsB = reportActionAlarmRepository.findByMember(member, pageRequestB);
+        PageRequest pageRequestB = PageRequest.of(1, 10);
+        List<ReportActionAlarm> reportActionAlarmsB = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(
+                member, pageRequestB);
 
         // then
         assertAll(

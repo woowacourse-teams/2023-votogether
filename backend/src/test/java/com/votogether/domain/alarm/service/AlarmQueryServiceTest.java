@@ -48,7 +48,7 @@ class AlarmQueryServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("댓글을 생성할 때 가능하다.")
-        void whenCreateComment() {
+        void whenCreateComment() throws Exception {
             // given
             Member commentWriter = memberTestPersister.builder().save();
             Post post = postTestPersister.postBuilder().save();
@@ -58,6 +58,8 @@ class AlarmQueryServiceTest extends ServiceTest {
 
             TestTransaction.flagForCommit();
             TestTransaction.end();
+
+            Thread.sleep(1000);
 
             // when
             List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(0);

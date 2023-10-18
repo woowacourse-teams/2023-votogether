@@ -127,6 +127,10 @@ public class Member extends BaseEntity {
         return alarmCheckedAt.isBefore(latestAlarmCreatedAt);
     }
 
+    public void checkAlarm() {
+        alarmCheckedAt = LocalDateTime.now();
+    }
+
     public String getNickname() {
         return this.nickname.getValue();
     }

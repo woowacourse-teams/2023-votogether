@@ -130,6 +130,11 @@ public class MemberService {
     }
 
     @Transactional
+    public void checkLatestAlarm(final Member member) {
+        member.checkAlarm();
+    }
+
+    @Transactional
     public void deleteMember(final Member member) {
         final List<Post> posts = deletePosts(member);
         final List<Comment> comments = deleteComments(member);

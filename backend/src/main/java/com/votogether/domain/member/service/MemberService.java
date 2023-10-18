@@ -53,7 +53,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NON_EXISTENT_MEMBER));
     }
 
     @Transactional(readOnly = true)
@@ -65,6 +65,7 @@ public class MemberService {
                 member.getNickname(),
                 member.getGender(),
                 member.getBirthYear(),
+                member.getRole(),
                 numberOfPosts,
                 numberOfVotes
         );

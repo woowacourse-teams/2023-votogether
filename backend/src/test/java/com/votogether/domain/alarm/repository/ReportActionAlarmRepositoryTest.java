@@ -59,7 +59,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(reportActionAlarms.size()).isEqualTo(3),
+                () -> assertThat(reportActionAlarms).hasSize(3),
                 () -> assertThat(reportActionAlarms.get(0).getReportType()).isEqualTo(
                         reportActionAlarmC.getReportType()),
                 () -> assertThat(reportActionAlarms.get(1).getReportType()).isEqualTo(
@@ -95,8 +95,8 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(reportActionAlarmsA.size()).isEqualTo(10),
-                () -> assertThat(reportActionAlarmsB.size()).isEqualTo(1)
+                () -> assertThat(reportActionAlarmsA).hasSize(10),
+                () -> assertThat(reportActionAlarmsB).hasSize(1)
         );
     }
 

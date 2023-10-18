@@ -56,7 +56,7 @@ export default function AdminNoticeWrite({
     >
       <S.Title>공지사항 {writeType} 페이지</S.Title>
       <CustomTextarea label="제목" {...title} limit={100} />
-      <CustomTextarea label="내용" {...content} limit={3000} />
+      <CustomTextarea label="내용" {...content} limit={3000} rows={20} />
       <CustomTextarea label="배너 제목" {...bannerTitle} limit={100} />
       <CustomTextarea label="배너 부제목" {...bannerSubTitle} limit={100} />
       <S.TextareaContainer>
@@ -85,16 +85,17 @@ interface CustomInputProps {
   ) => void;
   limit: number;
   text: string;
+  rows?: number;
 }
 
-function CustomTextarea({ label, handleTextChange, text, limit }: CustomInputProps) {
+function CustomTextarea({ label, handleTextChange, text, limit, rows = 10 }: CustomInputProps) {
   return (
     <S.TextareaContainer>
       <S.Label htmlFor={label}>
         {label} ({text.length}/{limit})
       </S.Label>
       <S.Textarea
-        rows={20}
+        rows={rows}
         id={label}
         value={text}
         onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>

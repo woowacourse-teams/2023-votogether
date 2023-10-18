@@ -101,6 +101,7 @@ class MemberServiceTest extends ServiceTest {
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
                     .roles(Roles.MEMBER)
+                    .alarmCheckedAt(LocalDateTime.now())
                     .build();
             String newNickname = "jeomxon";
             Member savedMember = memberRepository.save(member);
@@ -162,6 +163,7 @@ class MemberServiceTest extends ServiceTest {
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
                     .roles(Roles.MEMBER)
+                    .alarmCheckedAt(LocalDateTime.now())
                     .build();
             Member savedMember = memberRepository.save(member);
 
@@ -188,6 +190,7 @@ class MemberServiceTest extends ServiceTest {
                     .socialType(SocialType.KAKAO)
                     .socialId("123123123")
                     .roles(Roles.MEMBER)
+                    .alarmCheckedAt(LocalDateTime.now())
                     .build();
             Member member = memberRepository.save(unsavedMember);
             MemberDetailRequest request = new MemberDetailRequest(Gender.FEMALE, 2000);
@@ -225,6 +228,7 @@ class MemberServiceTest extends ServiceTest {
                     .socialType(SocialType.KAKAO)
                     .socialId("123123123")
                     .roles(Roles.MEMBER)
+                    .alarmCheckedAt(LocalDateTime.now())
                     .build();
             Member member = memberRepository.save(unsavedMember);
 

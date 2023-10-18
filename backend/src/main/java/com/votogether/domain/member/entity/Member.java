@@ -59,6 +59,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 20)
     private Roles roles;
 
+    @Column(columnDefinition = "datetime(6)", nullable = false)
+    private LocalDateTime alarmCheckedAt;
+
     @Builder
     private Member(
             final String nickname,
@@ -66,7 +69,8 @@ public class Member extends BaseEntity {
             final Integer birthYear,
             final SocialType socialType,
             final String socialId,
-            final Roles roles
+            final Roles roles,
+            final LocalDateTime alarmCheckedAt
     ) {
         this.nickname = new Nickname(nickname);
         this.gender = gender;
@@ -74,6 +78,7 @@ public class Member extends BaseEntity {
         this.socialType = socialType;
         this.socialId = socialId;
         this.roles = roles;
+        this.alarmCheckedAt = alarmCheckedAt;
     }
 
     public static Member from(final KakaoMemberResponse response) {
@@ -82,6 +87,7 @@ public class Member extends BaseEntity {
                 .socialType(SocialType.KAKAO)
                 .socialId(String.valueOf(response.id()))
                 .roles(Roles.MEMBER)
+                .alarmCheckedAt(LocalDateTime.now())
                 .build();
     }
 

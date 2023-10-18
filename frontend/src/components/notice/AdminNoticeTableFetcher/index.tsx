@@ -1,6 +1,6 @@
 import { SquareButton, Table } from 'votogether-design-system';
 
-import { usePagedNoticeList } from '@hooks';
+import { useDeleteNotice, usePagedNoticeList } from '@hooks';
 
 import { PATH } from '@constants/path';
 
@@ -17,13 +17,31 @@ export default function AdminNoticeTableFetcher() {
     fetchPrevPage,
     getPageNumberList,
   } = usePagedNoticeList();
+  const { mutate: deleteNotice } = useDeleteNotice();
+
+  const handleNoticeDeleteClick = (title: string, noticeId: number) => {
+    const isDelete = window.confirm(`공지사항 제목: "${title}" 을 삭제하시겠습니까?`);
+
+    if (isDelete) {
+      deleteNotice(noticeId);
+    }
+  };
 
   if (!data) return <></>;
 
   return (
     <S.Container>
       <Table
-        columns={['제목', '내용', '배너 타이틀', '베너 부제목', '생성일자', '마감일자', '수정하기']}
+        columns={[
+          '제목',
+          '내용',
+          '배너 타이틀',
+          '베너 부제목',
+          '생성일자',
+          '마감일자',
+          '수정하기',
+          '삭제하기',
+        ]}
         rows={data.noticeList.map(
           ({ id, title, content, bannerTitle, bannerSubtitle, createdAt, deadline }) => ({
             title,
@@ -36,6 +54,11 @@ export default function AdminNoticeTableFetcher() {
               <S.EditButtonWrapper to={`${PATH.ADMIN_NOTICE}/${id}`}>
                 <SquareButton theme="fill">수정하기</SquareButton>
               </S.EditButtonWrapper>
+            ),
+            deleteButton: (
+              <S.DeleteButtonWrapper onClick={() => handleNoticeDeleteClick(title, id)}>
+                <SquareButton theme="blank">삭제하기</SquareButton>
+              </S.DeleteButtonWrapper>
             ),
           })
         )}

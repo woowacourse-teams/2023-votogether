@@ -23,3 +23,8 @@ export const EditButtonWrapper = styled(Link)`
   width: 100%;
   height: 60px;
 `;
+
+export const DeleteButtonWrapper = styled.div`
+  width: 100%;
+  height: 60px;
+`;

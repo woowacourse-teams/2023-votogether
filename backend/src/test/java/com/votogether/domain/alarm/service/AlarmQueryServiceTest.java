@@ -47,7 +47,7 @@ class AlarmQueryServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("댓글을 생성할 때 가능하다.")
-        void whenCreateComment() {
+        void whenCreateComment() throws Exception {
             // given
             Member commentWriter = memberTestPersister.builder().save();
             Post post = postTestPersister.postBuilder().save();
@@ -57,6 +57,8 @@ class AlarmQueryServiceTest extends ServiceTest {
 
             TestTransaction.flagForCommit();
             TestTransaction.end();
+
+            Thread.sleep(1000);
 
             // when
             List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(commentWriter, 0);
@@ -135,7 +137,7 @@ class AlarmQueryServiceTest extends ServiceTest {
         // then
         ReportActionAlarmResponse result = reportActionAlarms.get(0);
         assertSoftly(softly -> {
-            softly.assertThat(reportActionAlarms.size()).isEqualTo(1);
+            softly.assertThat(reportActionAlarms).hasSize(1);
             softly.assertThat(result.alarmId()).isNotNull();
             softly.assertThat(result.isChecked()).isFalse();
             softly.assertThat(result.detail().reportActionId()).isNotNull();

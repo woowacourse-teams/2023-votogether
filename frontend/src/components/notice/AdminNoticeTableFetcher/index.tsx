@@ -20,9 +20,9 @@ export default function AdminNoticeTableFetcher() {
   const { mutate: deleteNotice } = useDeleteNotice();
 
   const handleNoticeDeleteClick = (title: string, noticeId: number) => {
-    const isDelete = window.confirm(`공지사항 제목: "${title}" 을 삭제하시겠습니까?`);
+    const isDeleteConfirmed = window.confirm(`공지사항 제목: "${title}" 을 삭제하시겠습니까?`);
 
-    if (isDelete) {
+    if (isDeleteConfirmed) {
       deleteNotice(noticeId);
     }
   };
@@ -35,7 +35,7 @@ export default function AdminNoticeTableFetcher() {
         columns={[
           '제목',
           '내용',
-          '배너 타이틀',
+          '배너 제목',
           '베너 부제목',
           '생성일자',
           '마감일자',
@@ -52,12 +52,12 @@ export default function AdminNoticeTableFetcher() {
             deadline,
             editButton: (
               <S.EditButtonWrapper to={`${PATH.ADMIN_NOTICE}/${id}`}>
-                <SquareButton theme="fill">수정하기</SquareButton>
+                <SquareButton theme="fill">수정</SquareButton>
               </S.EditButtonWrapper>
             ),
             deleteButton: (
               <S.DeleteButtonWrapper onClick={() => handleNoticeDeleteClick(title, id)}>
-                <SquareButton theme="blank">삭제하기</SquareButton>
+                <SquareButton theme="blank">삭제</SquareButton>
               </S.DeleteButtonWrapper>
             ),
           })

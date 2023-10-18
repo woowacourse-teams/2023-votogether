@@ -1,10 +1,10 @@
 import { rest } from 'msw';
 
-import { MOCK_USER_INFO } from '@mocks/mockData/user';
+import { MOCK_ADMIN_USER_INFO, MOCK_USER_INFO } from '@mocks/mockData/user';
 
 export const mockUserInfo = [
   rest.get('/members/me', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(MOCK_USER_INFO));
+    return res(ctx.status(200), ctx.json(MOCK_ADMIN_USER_INFO));
   }),
 
   rest.patch('/members/me/detail', (req, res, ctx) => {

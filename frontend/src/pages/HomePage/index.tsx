@@ -1,11 +1,13 @@
-import { Suspense } from 'react';
+import { CSSProperties, Suspense, useContext } from 'react';
 
-import { useToggle } from '@hooks';
+import { AuthContext, ToastContext, useToggle } from '@hooks';
 
+import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 import { useDrawer } from '@hooks/useDrawer';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
+import AlarmContainer from '@components/AlarmContainer';
 import AddButton from '@components/common/AddButton';
 import AppInstallPrompt from '@components/common/AppInstallPrompt';
 import Banner from '@components/common/Banner';
@@ -24,17 +26,47 @@ import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
 
+// 70px = 토글 스위치의 크기(40px) 및 상하 padding(각 10px), gap(10px)
+const alarmDrawerStyle: CSSProperties = {
+  height: 'calc(100vh - 70px)',
+};
+
 export default function HomePage() {
-  const { drawerRef, closeDrawer, openDrawer } = useDrawer('left');
+  const {
+    drawerRef: categoryDrawerRdf,
+    openDrawer: openCategoryDrawer,
+    closeDrawer: closeCategoryDrawer,
+  } = useDrawer('left');
+  const {
+    drawerRef: alarmDrawerRef,
+    openDrawer: openAlarmDrawer,
+    closeDrawer: closeAlarmDrawer,
+  } = useDrawer('right');
   const { TITLE, CONTENT } = APP_LAUNCH_EVENT;
 
   const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(true);
+
+  const { addMessage } = useContext(ToastContext);
+  const loggedInfo = useContext(AuthContext).loggedInfo;
+  const isAlarmActive = loggedInfo.userInfo?.hasLatestAlarm;
+  const { mutate } = useReadLatestAlarm();
+
+  const handleToolTipOpen = () => {
+    if (!loggedInfo.isLoggedIn) return addMessage('알림은 로그인 후 이용할 수 있습니다.');
+
+    openAlarmDrawer();
+    mutate();
+  };
 
   return (
     <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>
       <S.Container>
         <S.HeaderWrapper>
-          <NarrowMainHeader handleMenuOpenClick={openDrawer} />
+          <NarrowMainHeader
+            handleCategoryOpenClick={openCategoryDrawer}
+            handleAlarmOpenClick={handleToolTipOpen}
+            isAlarmActive={isAlarmActive ?? false}
+          />
         </S.HeaderWrapper>
         {isBannerOpen && (
           <S.BannerWrapper>
@@ -47,11 +79,26 @@ export default function HomePage() {
           </S.BannerWrapper>
         )}
         <S.DrawerWrapper>
-          <Drawer handleDrawerClose={closeDrawer} placement="left" width="225px" ref={drawerRef}>
+          <Drawer
+            handleDrawerClose={closeCategoryDrawer}
+            placement="left"
+            width="225px"
+            ref={categoryDrawerRdf}
+          >
             <Dashboard />
           </Drawer>
+          <Drawer
+            handleDrawerClose={closeAlarmDrawer}
+            placement="right"
+            width="310px"
+            ref={alarmDrawerRef}
+          >
+            {loggedInfo.isLoggedIn && (
+              <AlarmContainer closeToolTip={closeAlarmDrawer} style={alarmDrawerStyle} />
+            )}
+          </Drawer>
         </S.DrawerWrapper>
-        <ErrorBoundary>
+        <ErrorBoundary hasIcon={true} hasRetryInteraction={true}>
           <Suspense fallback={<Skeleton isLarge={true} />}>
             <PostList />
           </Suspense>

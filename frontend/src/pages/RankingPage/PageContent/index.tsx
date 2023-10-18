@@ -17,14 +17,14 @@ export default function PageContent() {
   return (
     <>
       <ToggleSwitch
-        size="md"
+        size="sm"
         selectedButton={selectedButton}
         firstButton={firstButton}
         secondButton={secondButton}
       />
       {selectedButton === '열정 유저' && (
         <RS.Background>
-          <ErrorBoundary>
+          <ErrorBoundary hasRetryInteraction={true}>
             <Suspense fallback={<LoadingSpinner size="md" />}>
               <PassionUserRanking />
             </Suspense>
@@ -33,7 +33,7 @@ export default function PageContent() {
       )}
       {selectedButton === '인기글 유저' && (
         <RS.Background>
-          <ErrorBoundary>
+          <ErrorBoundary hasRetryInteraction={true}>
             <Suspense fallback={<LoadingSpinner size="md" />}>
               <PopularPost />
             </Suspense>

@@ -55,18 +55,14 @@ public class PostQueryService {
     public PostResponse getPost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
-        validateHiddenPost(post);
-
         final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(List.of(post));
-        return PostResponse.ofUser(
-                loginMember,
-                post,
-                postCategoryRepository.findAllByPost(post),
-                post.getFirstContentImage(),
-                post.getPostOptions(),
-                voteRepository.findByMemberAndPostOptionPost(loginMember, post),
-                postCommentCountMapper.getOrDefault(post.getId(), 0L)
-        );
+
+        if (post.isWriter(loginMember) && post.isHidden()) {
+            return createPostResponse(loginMember, post, postCommentCountMapper.getOrDefault(post.getId(), 0L));
+        }
+
+        validateHiddenPost(post);
+        return createPostResponse(loginMember, post, postCommentCountMapper.getOrDefault(post.getId(), 0L));
     }
 
     public List<PostResponse> searchPosts(
@@ -171,16 +167,7 @@ public class PostQueryService {
         final Map<Long, Long> postCommentCountMapper = generatePostCommentCountMapper(posts);
         return posts.stream()
                 .map(post ->
-                        PostResponse.ofUser(
-                                member,
-                                post,
-                                postCategoryRepository.findAllByPost(post),
-                                post.getFirstContentImage(),
-                                post.getPostOptions(),
-                                voteRepository.findByMemberAndPostOptionPost(member, post),
-                                postCommentCountMapper.getOrDefault(post.getId(), 0L)
-                        )
-                )
+                        createPostResponse(member, post, postCommentCountMapper.getOrDefault(post.getId(), 0L)))
                 .toList();
     }
 
@@ -194,6 +181,18 @@ public class PostQueryService {
                         (exist, replace) -> replace,
                         HashMap::new
                 ));
+    }
+
+    private PostResponse createPostResponse(Member loginMember, Post post, final long commentCount) {
+        return PostResponse.ofUser(
+                loginMember,
+                post,
+                postCategoryRepository.findAllByPost(post),
+                post.getFirstContentImage(),
+                post.getPostOptions(),
+                voteRepository.findByMemberAndPostOptionPost(loginMember, post),
+                commentCount
+        );
     }
 
 }

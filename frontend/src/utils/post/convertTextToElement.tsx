@@ -1,7 +1,12 @@
+import { MouseEvent } from 'react';
+
+import { convertTextToUrl } from './convertTextToUrl';
+
 export const convertTextToElement = (text: string) => {
+  const convertedUrlText = convertTextToUrl(text);
   const linkPattern = /\[\[([^[\]]+)\]\]/g;
 
-  const parts = text.split(linkPattern);
+  const parts = convertedUrlText.split(linkPattern);
 
   const elementList = parts.map((part, index) => {
     if (index % 2 === 1) {
@@ -10,6 +15,9 @@ export const convertTextToElement = (text: string) => {
       const linkUrl = linkText.startsWith('http' || 'https') ? linkText : `https://${linkText}`;
       return (
         <a
+          onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+            event.stopPropagation();
+          }}
           key={index}
           href={linkUrl}
           target="_blank"
@@ -22,7 +30,7 @@ export const convertTextToElement = (text: string) => {
     }
 
     // 링크가 아닌 문자열
-    return <span>{part}</span>;
+    return <span key={index}>{part}</span>;
   });
 
   return elementList;

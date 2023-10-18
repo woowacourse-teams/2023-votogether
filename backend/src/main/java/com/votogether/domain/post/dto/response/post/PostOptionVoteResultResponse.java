@@ -49,6 +49,9 @@ public record PostOptionVoteResultResponse(
             final PostOption postOption,
             final boolean isVoted
     ) {
+        if (post.isHidden() && post.isWriter(user)) {
+            return HIDDEN_COUNT;
+        }
         if (post.isClosed() || post.isWriter(user) || isVoted) {
             return postOption.getVoteCount();
         }

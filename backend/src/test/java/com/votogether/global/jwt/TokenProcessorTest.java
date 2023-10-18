@@ -5,11 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.vo.Gender;
-import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.RepositoryTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,15 +30,7 @@ class TokenProcessorTest extends RepositoryTest {
     @DisplayName("토큰을 생성한다.")
     void generateToken() throws Exception {
         // given
-        Member member = Member.builder()
-                .nickname("저문")
-                .gender(Gender.MALE)
-                .birthYear(1966)
-                .socialId("abc123")
-                .socialType(SocialType.KAKAO)
-                .build();
-
-        memberRepository.save(member);
+        Member member = memberRepository.save(MemberFixtures.MALE_30.get());
 
         // when
         String token = tokenProcessor.generateAccessToken(member.getId());
@@ -57,14 +48,7 @@ class TokenProcessorTest extends RepositoryTest {
         @DisplayName("Bearer가 prefix면 성공한다.")
         void resolveTokenSuccess() throws JsonProcessingException {
             // given
-            Member member = Member.builder()
-                    .nickname("저문")
-                    .gender(Gender.MALE)
-                    .birthYear(1966)
-                    .socialId("abc123")
-                    .socialType(SocialType.KAKAO)
-                    .build();
-            memberRepository.save(member);
+            Member member = memberRepository.save(MemberFixtures.MALE_30.get());
 
             String token = tokenProcessor.generateAccessToken(member.getId());
             token = "Bearer " + token;
@@ -82,14 +66,7 @@ class TokenProcessorTest extends RepositoryTest {
         @DisplayName("Bearer가 아닌 다른 prefix라면 예외를 발생시킨다.")
         void resolveTokenFail(String prefix) {
             // given
-            Member member = Member.builder()
-                    .nickname("저문")
-                    .gender(Gender.MALE)
-                    .birthYear(1966)
-                    .socialId("abc123")
-                    .socialType(SocialType.KAKAO)
-                    .build();
-            memberRepository.save(member);
+            Member member = memberRepository.save(MemberFixtures.MALE_30.get());
 
             String token = prefix + tokenProcessor.generateAccessToken(member.getId());
 

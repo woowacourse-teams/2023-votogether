@@ -1,5 +1,7 @@
 package com.votogether.domain.member.service;
 
+import com.votogether.domain.alarm.entity.Alarm;
+import com.votogether.domain.alarm.repository.AlarmRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
@@ -40,6 +42,7 @@ public class MemberService {
     private final VoteRepository voteRepository;
     private final ReportRepository reportRepository;
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -63,7 +66,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NON_EXISTENT_MEMBER));
     }
 
     @Transactional(readOnly = true)
@@ -75,6 +78,7 @@ public class MemberService {
                 member.getNickname(),
                 member.getGender(),
                 member.getBirthYear(),
+                member.getRoles(),
                 memberMetric.getPostCount(),
                 memberMetric.getVoteCount()
         );
@@ -115,6 +119,7 @@ public class MemberService {
         deleteVotes(member);
         deleteMemberCategories(member);
         deleteReports(member, posts, comments);
+        deleteAlarms(member);
 
         memberMetricRepository.deleteByMember(member);
         memberRepository.delete(member);
@@ -202,4 +207,13 @@ public class MemberService {
                 .toList();
         reportRepository.deleteAllById(reportIdsByMember);
     }
+
+    private void deleteAlarms(final Member member) {
+        final List<Long> alarmIds = alarmRepository.findAllByMember(member)
+                .stream()
+                .map(Alarm::getId)
+                .toList();
+        alarmRepository.deleteAllById(alarmIds);
+    }
+
 }

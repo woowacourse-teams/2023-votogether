@@ -1,8 +1,11 @@
+import { MouseEvent } from 'react';
+
 import ProgressBar from './ProgressBar';
 import * as S from './style';
 
 interface WrittenVoteOptionProps {
   handleVoteClick: () => void;
+  handleImageClick?: (event: MouseEvent<HTMLImageElement>) => void;
   text: string;
   isStatisticsVisible: boolean;
   peopleCount: number;
@@ -15,6 +18,7 @@ interface WrittenVoteOptionProps {
 
 export default function WrittenVoteOption({
   handleVoteClick,
+  handleImageClick,
   text,
   isStatisticsVisible,
   peopleCount,
@@ -31,7 +35,9 @@ export default function WrittenVoteOption({
       $isSelected={isSelected}
       onClick={handleVoteClick}
     >
-      {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'선택지에 포함된 이미지'} />}
+      {!isPreview && imageUrl && (
+        <S.Image onClick={handleImageClick} src={imageUrl} alt={'선택지에 포함된 이미지'} />
+      )}
       {isPreview ? (
         <S.PreviewContent>{text}</S.PreviewContent>
       ) : (

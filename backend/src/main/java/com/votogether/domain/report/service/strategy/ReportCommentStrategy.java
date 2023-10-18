@@ -1,9 +1,12 @@
 package com.votogether.domain.report.service.strategy;
 
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.exception.CommentExceptionType;
 import com.votogether.domain.post.repository.CommentRepository;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.report.repository.ReportRepository;
@@ -16,10 +19,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportCommentStrategy implements ReportStrategy {
 
-    private static final int NUMBER_OF_COMMENT_BLIND_BASED_REPORTS = 5;
-
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
+    private final ReportActionAlarmRepository reportActionAlarmRepository;
 
     @Override
     public void report(final Member reporter, final ReportRequest request) {
@@ -28,7 +30,6 @@ public class ReportCommentStrategy implements ReportStrategy {
         validateComment(reporter, request, reportedComment);
 
         saveReport(reporter, request, reportRepository);
-        blindComment(request, reportedComment);
     }
 
     private void validateComment(
@@ -46,13 +47,6 @@ public class ReportCommentStrategy implements ReportStrategy {
         );
     }
 
-    private void blindComment(final ReportRequest request, final Comment reportedComment) {
-        final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
-        if (reportCount >= NUMBER_OF_COMMENT_BLIND_BASED_REPORTS) {
-            reportedComment.blind();
-        }
-    }
-
     private void validateHiddenComment(final Comment comment) {
         if (comment.isHidden()) {
             throw new BadRequestException(CommentExceptionType.IS_HIDDEN);
@@ -63,6 +57,30 @@ public class ReportCommentStrategy implements ReportStrategy {
         if (comment.isWriter(member)) {
             throw new BadRequestException(CommentExceptionType.REPORT_MINE);
         }
+    }
+
+    @Override
+    public String parseTarget(final Long targetId) {
+        final Comment reportedComment = commentRepository.findById(targetId)
+                .orElseThrow(() -> new NotFoundException(CommentExceptionType.NOT_FOUND));
+        return reportedComment.getContent();
+    }
+
+    @Override
+    public void reportAction(final ReportAggregateDto reportAggregateDto) {
+        final Comment comment = commentRepository.findById(reportAggregateDto.targetId())
+                .orElseThrow(() -> new NotFoundException(CommentExceptionType.NOT_FOUND));
+
+        final ReportActionAlarm reportActionAlarm = ReportActionAlarm.builder()
+                .member(comment.getWriter())
+                .reportType(reportAggregateDto.reportType())
+                .target(comment.getContent())
+                .reasons(reportAggregateDto.reasons())
+                .isChecked(false)
+                .build();
+
+        reportActionAlarmRepository.save(reportActionAlarm);
+        comment.blind();
     }
 
 }

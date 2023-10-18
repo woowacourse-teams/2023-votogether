@@ -1,29 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
-import { ReportRequest } from '@type/report';
+import { CommentAction, CommentUser } from '@type/menu';
+import { ReportMessage, ReportRequest } from '@type/report';
 
 import { useToggle } from '@hooks';
-import { useToast } from '@hooks';
 
+import { ToastContext } from '@hooks/context/toast';
 import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
 
 import { reportContent } from '@api/report';
 
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
 import DeleteModal from '@components/common/DeleteModal';
-import Toast from '@components/common/Toast';
+import Menu from '@components/common/Menu';
 import ReportModal from '@components/ReportModal';
+
+import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '@constants/post';
 
 import { convertTextToElement } from '@utils/post/convertTextToElement';
 
 import ellipsis from '@assets/ellipsis-horizontal.svg';
 
-import { COMMENT_ACTION, COMMENT_MENU, COMMENT_USER, COMMENT_USER_MENU } from '../constants';
-import { type CommentAction, type CommentUser } from '../types';
-
-import CommentMenu from './CommentMenu';
 import * as S from './style';
 interface CommentItemProps {
   comment: Comment;
@@ -34,57 +33,57 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const [isReportCommentLoading, setIsReportCommentLoading] = useState(false);
   const [isReportNicknameLoading, setIsReportNicknameLoading] = useState(false);
 
+  const { addMessage } = useContext(ToastContext);
   const { isOpen, toggleComponent, closeComponent } = useToggle();
-  const { isToastOpen, openToast, toastMessage } = useToast();
   const { id, member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const { mutate, isError, error, isLoading: isCommentDeleting } = useDeleteComment(postId, id);
+  const { mutate, isLoading: isCommentDeleting } = useDeleteComment(postId, id);
 
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
     setAction(menu);
   };
 
-  const handleCommentReportClick = async (reason: string) => {
+  const handleCommentReportClick = async (reason: ReportMessage) => {
     const reportData: ReportRequest = { type: 'COMMENT', id, reason };
     setIsReportCommentLoading(true);
 
     await reportContent(reportData)
       .then(res => {
-        openToast('댓글을 신고했습니다.');
+        addMessage('댓글을 신고했습니다.');
       })
       .catch(e => {
         if (e instanceof Error) {
-          const errorResposne = JSON.parse(e.message);
-          openToast(errorResposne.message);
+          const errorResponse = JSON.parse(e.message);
+          addMessage(errorResponse.message);
           return;
         }
-        openToast('댓글 신고가 실패했습니다.');
+        addMessage('댓글 신고를 실패했습니다.');
       })
       .finally(() => {
         setIsReportCommentLoading(false);
       });
   };
 
-  const handleNicknameReportClick = async (reason: string) => {
+  const handleNicknameReportClick = async (reason: ReportMessage) => {
     const reportData: ReportRequest = { type: 'NICKNAME', id: member.id, reason };
     setIsReportNicknameLoading(true);
 
     await reportContent(reportData)
       .then(res => {
-        openToast('작성자 닉네임을 신고했습니다.');
+        addMessage('작성자 닉네임을 신고했습니다.');
       })
       .catch(e => {
         if (e instanceof Error) {
-          const errorResposne = JSON.parse(e.message);
-          openToast(errorResposne.message);
+          const errorResponse = JSON.parse(e.message);
+          addMessage(errorResponse.message);
           return;
         }
-        openToast('작성자 닉네임 신고가 실패했습니다.');
+        addMessage('작성자 닉네임 신고를 실패했습니다.');
       })
       .finally(() => {
         setIsReportNicknameLoading(false);
@@ -98,14 +97,6 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const handleDeleteClick = () => {
     mutate();
   };
-
-  useEffect(() => {
-    if (isError && error instanceof Error) {
-      const errorResponse = JSON.parse(error.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isError, error]);
 
   const USER_TYPE = COMMENT_USER_MENU[userType];
 
@@ -137,7 +128,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
             ></S.Image>
             {isOpen && (
               <S.MenuWrapper>
-                <CommentMenu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
+                <Menu handleMenuClick={handleMenuClick} menuList={COMMENT_MENU[USER_TYPE]} />
               </S.MenuWrapper>
             )}
           </S.MenuContainer>
@@ -177,11 +168,6 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           handleCancelClick={handleCancelClick}
           isReportLoading={isReportCommentLoading}
         />
-      )}
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
       )}
     </S.Container>
   );

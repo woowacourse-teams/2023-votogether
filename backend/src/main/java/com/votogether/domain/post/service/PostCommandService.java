@@ -1,5 +1,7 @@
 package com.votogether.domain.post.service;
 
+import com.votogether.domain.alarm.dto.event.PostAlarmEvent;
+import com.votogether.domain.alarm.entity.vo.AlarmType;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberMetric;
@@ -34,6 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +56,7 @@ public class PostCommandService {
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
     private final MemberMetricRepository memberMetricRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public Long createPost(final PostCreateRequest postCreate, final Member loginMember) {
         final Post post = Post.builder()
@@ -302,6 +306,18 @@ public class PostCommandService {
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
         post.closeEarly();
+
+        publishAlarmEvent(postId, loginMember, post);
+    }
+
+    private void publishAlarmEvent(final Long postId, final Member loginMember, final Post post) {
+        final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
+                loginMember,
+                postId,
+                AlarmType.POST_DEADLINE,
+                post.getTitle()
+        );
+        applicationEventPublisher.publishEvent(postAlarmEvent);
     }
 
     public void deletePost(final Long postId, final Member loginMember) {

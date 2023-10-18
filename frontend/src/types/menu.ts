@@ -1,15 +1,16 @@
-export type MenuColor = 'black' | 'red';
+import { COMMENT_ACTION, COMMENT_USER } from '@constants/post';
 
-//메뉴 컴포넌트에서 사용하는 기본적인 인터페이스
-interface MenuItem {
+export type MenuColor = 'black' | 'red';
+export interface MenuItem<T> {
   content: string;
   color: MenuColor;
-  action: string;
+  action: T;
 }
 
-export type PostAction = 'NICKNAME_REPORT' | 'POST_REPORT' | 'DELETE';
+export type CommentAction = (typeof COMMENT_ACTION)[keyof typeof COMMENT_ACTION];
 
-//게시글 메뉴 컴포넌트에서 사용하는 확장된 인터페이스 (action을 제한)
-export interface PostMenuItem extends MenuItem {
-  action: PostAction;
-}
+export type PostAction = 'NICKNAME_REPORT' | 'POST_REPORT' | 'DELETE' | 'EDIT';
+
+export type CommentUser = (typeof COMMENT_USER)[keyof typeof COMMENT_USER];
+
+export type CommentMenu = Exclude<CommentUser, 'GUEST'>;

@@ -15,6 +15,7 @@ export const SelectContainer = styled.div`
   align-items: center;
 
   position: relative;
+  width: 100%;
   padding: 20px 20px 30px 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 

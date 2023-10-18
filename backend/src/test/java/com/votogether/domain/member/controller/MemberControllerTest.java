@@ -13,6 +13,7 @@ import com.votogether.domain.member.dto.request.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.Roles;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.test.ControllerTest;
@@ -54,6 +55,7 @@ class MemberControllerTest extends ControllerTest {
                 "저문",
                 Gender.MALE,
                 1988,
+                Roles.MEMBER,
                 0,
                 0
         );
@@ -75,8 +77,8 @@ class MemberControllerTest extends ControllerTest {
         // then
         assertAll(
                 () -> assertThat(response.nickname()).isEqualTo("저문"),
-                () -> assertThat(response.postCount()).isEqualTo(0),
-                () -> assertThat(response.voteCount()).isEqualTo(0)
+                () -> assertThat(response.postCount()).isZero(),
+                () -> assertThat(response.voteCount()).isZero()
         );
     }
 

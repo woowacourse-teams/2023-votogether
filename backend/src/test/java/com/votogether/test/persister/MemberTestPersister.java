@@ -2,6 +2,7 @@ package com.votogether.test.persister;
 
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.Roles;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class MemberTestPersister {
         private Integer birthYear;
         private SocialType socialType;
         private String socialId;
+        private Roles roles;
 
         public MemberBuilder nickname(String nickname) {
             this.nickname = nickname;
@@ -50,6 +52,11 @@ public class MemberTestPersister {
             return this;
         }
 
+        public MemberBuilder roles(Roles roles) {
+            this.roles = roles;
+            return this;
+        }
+
         public Member save() {
             Member member = Member.builder()
                     .nickname(nickname == null ? RandomStringUtils.random(10, true, true) : nickname)
@@ -57,6 +64,7 @@ public class MemberTestPersister {
                     .birthYear(birthYear == null ? 1995 : birthYear)
                     .socialType(socialType == null ? SocialType.KAKAO : socialType)
                     .socialId(socialId == null ? RandomStringUtils.random(10, true, true) : socialId)
+                    .roles(roles == null ? Roles.MEMBER : roles)
                     .build();
             return memberRepository.save(member);
         }

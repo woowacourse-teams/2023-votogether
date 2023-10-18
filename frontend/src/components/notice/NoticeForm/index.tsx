@@ -16,17 +16,13 @@ import * as S from './style';
 
 type NoticeWriteType = (typeof NOTICE_WRITE_TYPE)[keyof typeof NOTICE_WRITE_TYPE];
 
-interface AdminNoticeWriteProps {
+interface NoticeFormProps {
   notice: Notice;
   writeType: NoticeWriteType;
   writeNotice: (notice: NoticeRequest) => void;
 }
 
-export default function AdminNoticeWrite({
-  notice,
-  writeType,
-  writeNotice,
-}: AdminNoticeWriteProps) {
+export default function NoticeForm({ notice, writeType, writeNotice }: NoticeFormProps) {
   const title = useText(notice.title);
   const content = useText(notice.content);
   const bannerTitle = useText(notice.bannerTitle);

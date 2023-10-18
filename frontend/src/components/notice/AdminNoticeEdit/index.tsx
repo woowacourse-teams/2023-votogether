@@ -4,8 +4,8 @@ import { NoticeRequest } from '@type/notice';
 
 import { useModifyNotice, useNoticeDetail } from '@hooks';
 
-import AdminNoticeWrite from '../AdminNoticeWrite';
-import { NOTICE_WRITE_TYPE } from '../AdminNoticeWrite/constant';
+import NoticeForm from '../NoticeForm';
+import { NOTICE_WRITE_TYPE } from '../NoticeForm/constant';
 
 export default function AdminNoticeEdit() {
   const { noticeIdParam } = useParams() ?? 0;
@@ -17,7 +17,7 @@ export default function AdminNoticeEdit() {
   if (!data) return <></>;
 
   return (
-    <AdminNoticeWrite
+    <NoticeForm
       notice={data}
       writeNotice={() => (notice: NoticeRequest) => mutate({ noticeId, notice })}
       writeType={NOTICE_WRITE_TYPE.EDIT}

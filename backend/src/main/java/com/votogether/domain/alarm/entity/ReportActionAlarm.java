@@ -1,8 +1,10 @@
 package com.votogether.domain.alarm.entity;
 
+import com.votogether.domain.alarm.exception.AlarmExceptionType;
 import com.votogether.domain.common.BaseEntity;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -59,6 +62,16 @@ public class ReportActionAlarm extends BaseEntity {
         this.target = target;
         this.reasons = reasons;
         this.isChecked = isChecked;
+    }
+
+    public void read() {
+        this.isChecked = true;
+    }
+
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new BadRequestException(AlarmExceptionType.NOT_OWNER);
+        }
     }
 
 }

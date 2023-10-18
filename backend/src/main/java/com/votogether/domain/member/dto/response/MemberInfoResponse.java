@@ -1,7 +1,7 @@
 package com.votogether.domain.member.dto.response;
 
 import com.votogether.domain.member.entity.vo.Gender;
-import com.votogether.domain.member.entity.vo.Role;
+import com.votogether.domain.member.entity.vo.Roles;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "회원 정보 응답")
@@ -16,7 +16,7 @@ public record MemberInfoResponse(
         Integer birthYear,
 
         @Schema(description = "권한", example = "MEMBER")
-        Role role,
+        Roles roles,
 
         @Schema(description = "작성한 게시글 수", example = "5")
         int postCount,

@@ -10,7 +10,7 @@ import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.entity.vo.Gender;
-import com.votogether.domain.member.entity.vo.Role;
+import com.votogether.domain.member.entity.vo.Roles;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
@@ -92,7 +92,7 @@ class MemberServiceTest extends ServiceTest {
                     .birthYear(1966)
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
-                    .role(Role.MEMBER)
+                    .roles(Roles.MEMBER)
                     .build();
             String newNickname = "jeomxon";
             Member savedMember = memberRepository.save(member);
@@ -153,7 +153,7 @@ class MemberServiceTest extends ServiceTest {
                     .birthYear(1966)
                     .socialId("abc123")
                     .socialType(SocialType.KAKAO)
-                    .role(Role.MEMBER)
+                    .roles(Roles.MEMBER)
                     .build();
             Member savedMember = memberRepository.save(member);
 
@@ -179,7 +179,7 @@ class MemberServiceTest extends ServiceTest {
                     .nickname("저문")
                     .socialType(SocialType.KAKAO)
                     .socialId("123123123")
-                    .role(Role.MEMBER)
+                    .roles(Roles.MEMBER)
                     .build();
             Member member = memberRepository.save(unsavedMember);
             MemberDetailRequest request = new MemberDetailRequest(Gender.FEMALE, 2000);
@@ -216,7 +216,7 @@ class MemberServiceTest extends ServiceTest {
                     .birthYear(1993)
                     .socialType(SocialType.KAKAO)
                     .socialId("123123123")
-                    .role(Role.MEMBER)
+                    .roles(Roles.MEMBER)
                     .build();
             Member member = memberRepository.save(unsavedMember);
 

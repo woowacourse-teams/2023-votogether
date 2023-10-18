@@ -1,8 +1,8 @@
 package com.votogether.domain.report.service;
 
 import com.votogether.domain.report.dto.ReportAggregateDto;
-import com.votogether.domain.report.dto.response.ReportResponse;
 import com.votogether.domain.report.dto.response.ReportPageResponse;
+import com.votogether.domain.report.dto.response.ReportResponse;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.domain.report.service.strategy.ReportActionProvider;
 import com.votogether.domain.report.service.strategy.ReportStrategy;

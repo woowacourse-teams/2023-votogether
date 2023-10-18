@@ -2,7 +2,6 @@ package com.votogether.domain.report.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.report.dto.ReportAggregateDto;
-import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -28,14 +27,14 @@ public record ReportResponse(
         LocalDateTime createdAt
 ) {
 
-        public static ReportResponse of(final ReportAggregateDto reportAggregateDto, final String target) {
-                return new ReportResponse(
-                        reportAggregateDto.reportMaxId(),
-                        reportAggregateDto.reportType(),
-                        Arrays.stream(reportAggregateDto.reasons().split(",")).toList(),
-                        target,
-                        reportAggregateDto.createdAt()
-                );
-        }
+    public static ReportResponse of(final ReportAggregateDto reportAggregateDto, final String target) {
+        return new ReportResponse(
+                reportAggregateDto.reportMaxId(),
+                reportAggregateDto.reportType(),
+                Arrays.stream(reportAggregateDto.reasons().split(",")).toList(),
+                target,
+                reportAggregateDto.createdAt()
+        );
+    }
 
 }

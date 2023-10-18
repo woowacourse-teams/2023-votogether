@@ -115,7 +115,7 @@ export default function PostDetail() {
           <InnerHeaderPart
             isClosed={isClosed}
             isWriter={isWriter}
-            handleEvent={{ movePage, controlPost }}
+            handleEvent={{ movePage, controlPost, openToast: addMessage }}
             isEventLoading={{
               isDeletePostLoading,
               isReportPostLoading: isContentReporting,

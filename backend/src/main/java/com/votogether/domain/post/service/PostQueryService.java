@@ -51,16 +51,13 @@ public class PostQueryService {
     public PostResponse getPost(final Long postId, final Member loginMember) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
-        validateHiddenPost(post);
 
-        return PostResponse.ofUser(
-                loginMember,
-                post,
-                postCategoryRepository.findAllByPost(post),
-                post.getFirstContentImage(),
-                post.getPostOptions(),
-                voteRepository.findByMemberAndPostOptionPost(loginMember, post)
-        );
+        if (post.isWriter(loginMember) && post.isHidden()) {
+            return createPostResponse(loginMember, post);
+        }
+
+        validateHiddenPost(post);
+        return createPostResponse(loginMember, post);
     }
 
     public List<PostResponse> searchPosts(
@@ -163,17 +160,19 @@ public class PostQueryService {
 
     private List<PostResponse> convertToResponses(final List<Post> posts, final Member member) {
         return posts.stream()
-                .map(post ->
-                        PostResponse.ofUser(
-                                member,
-                                post,
-                                postCategoryRepository.findAllByPost(post),
-                                post.getFirstContentImage(),
-                                post.getPostOptions(),
-                                voteRepository.findByMemberAndPostOptionPost(member, post)
-                        )
-                )
+                .map(post -> createPostResponse(member, post))
                 .toList();
+    }
+
+    private PostResponse createPostResponse(Member loginMember, Post post) {
+        return PostResponse.ofUser(
+                loginMember,
+                post,
+                postCategoryRepository.findAllByPost(post),
+                post.getFirstContentImage(),
+                post.getPostOptions(),
+                voteRepository.findByMemberAndPostOptionPost(loginMember, post)
+        );
     }
 
 }

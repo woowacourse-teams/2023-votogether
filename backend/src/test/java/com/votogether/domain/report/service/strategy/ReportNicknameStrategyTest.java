@@ -97,4 +97,17 @@ class ReportNicknameStrategyTest extends ServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("targetId를 통해 해당 멤버의 Nickname을 가져온다")
+    void parseTarget() {
+        // given
+        final Member member = memberRepository.save(MemberFixtures.MALE_30.get());
+
+        // when
+        final String nickName = reportNicknameStrategy.parseTarget(member.getId());
+
+        // then
+        assertThat(nickName).isEqualTo(member.getNickname());
+    }
+
 }

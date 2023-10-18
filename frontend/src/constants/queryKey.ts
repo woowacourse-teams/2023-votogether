@@ -10,4 +10,5 @@ export const QUERY_KEY = {
   ALARM_CONTENT: 'contentAlarm',
   ALARM_REPORT: 'reportAlarm',
   REPORT_CONFIRM_RESULT: 'reportApproveResult',
+  NOTICE: 'notice',
 };

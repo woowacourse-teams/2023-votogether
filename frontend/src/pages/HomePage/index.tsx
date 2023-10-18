@@ -96,7 +96,7 @@ export default function HomePage() {
             <AlarmContainer closeToolTip={closeAlarmDrawer} style={alarmDrawerStyle} />
           </Drawer>
         </S.DrawerWrapper>
-        <ErrorBoundary>
+        <ErrorBoundary hasIcon={true} hasRetryInteraction={true}>
           <Suspense fallback={<Skeleton isLarge={true} />}>
             <PostList />
           </Suspense>

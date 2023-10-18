@@ -1,14 +1,14 @@
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
 
-import { useToast } from '@hooks';
 import { useText } from '@hooks';
 import { useCreateComment, useEditComment } from '@hooks';
 
+import { ToastContext } from '@hooks/context/toast';
+
 import SquareButton from '@components/common/SquareButton';
-import Toast from '@components/common/Toast';
 
 import { POST_COMMENT } from '@constants/policy';
 
@@ -26,8 +26,8 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
+  const { addMessage } = useContext(ToastContext);
   const { text: content, handleTextChange, resetText } = useText(initialComment.content);
-  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
@@ -37,21 +37,17 @@ export default function CommentTextForm({
   const {
     mutate: createComment,
     isSuccess: isCreateSuccess,
-    isError: isCreateError,
-    error: createError,
     isLoading: createLoading,
   } = useCreateComment(postId);
   const {
     mutate: editComment,
     isSuccess: isEditSuccess,
-    isError: isEditError,
-    error: editError,
     isLoading: editLoading,
   } = useEditComment(postId, commentId);
 
   const handleUpdateComment = () => {
     if (content.trim() === '') {
-      openToast('댓글에 내용을 입력해주세요.');
+      addMessage('댓글에 내용을 입력해주세요.');
       return;
     }
     if (isEdit) {
@@ -59,6 +55,14 @@ export default function CommentTextForm({
       return;
     }
     createComment({ content: deleteOverlappingNewLine(content) });
+  };
+
+  const handleKeyboardCommentSubmit = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const isPressCtrlAndEnterKey = (event.metaKey || event.ctrlKey) && event.key === 'Enter';
+
+    if (isPressCtrlAndEnterKey) {
+      handleUpdateComment();
+    }
   };
 
   useEffect(() => {
@@ -69,22 +73,6 @@ export default function CommentTextForm({
     isEditSuccess && handleCancelClick && handleCancelClick();
   }, [isEditSuccess]);
 
-  useEffect(() => {
-    if (isCreateError && createError instanceof Error) {
-      const errorResponse = JSON.parse(createError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isCreateError, createError]);
-
-  useEffect(() => {
-    if (isEditError && editError instanceof Error) {
-      const errorResponse = JSON.parse(editError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isEditError, editError]);
-
   return (
     <S.Container>
       <S.TextArea
@@ -92,7 +80,9 @@ export default function CommentTextForm({
         value={content}
         placeholder="댓글을 입력해주세요. &#13;&#10;타인의 권리를 침해하거나 도배성/광고성/음란성 내용을 포함하는 경우, 댓글의 운영 원칙 및 관련 법률에 의하여 제재를 받을 수 있습니다."
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleTextChange(e, POST_COMMENT)}
+        onKeyDown={handleKeyboardCommentSubmit}
       />
+      <S.KeyDescription>Ctrl(Command) + Enter 키로 댓글을 저장할 수 있습니다</S.KeyDescription>
       <S.ButtonContainer>
         {isEdit && (
           <S.ButtonWrapper>
@@ -118,11 +108,6 @@ export default function CommentTextForm({
           </SquareButton>
         </S.ButtonWrapper>
       </S.ButtonContainer>
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
-      )}
     </S.Container>
   );
 }

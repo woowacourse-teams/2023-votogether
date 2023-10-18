@@ -1,31 +1,34 @@
 import { Suspense } from 'react';
 
-import ErrorBoundary from '@pages/ErrorBoundary';
+import ErrorBoundaryWithNarrowHeader from '@pages/ErrorBoundaryWithNarrowHeader';
 
 import Layout from '@components/common/Layout';
-import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
+import MobileLayoutTemplate from '@components/common/MobileLayoutTemplate';
 import Skeleton from '@components/common/Skeleton';
 
+import { ERROR_MESSAGE } from '@constants/policyMessage';
+
 import EditPost from './EditPost';
-import * as S from './style';
 
 export default function EditPostPage() {
   return (
     <Layout isSidebarVisible={false} isMobileDefaultHeaderVisible={false}>
-      <ErrorBoundary>
+      <ErrorBoundaryWithNarrowHeader
+        text={ERROR_MESSAGE.DEFAULT}
+        hasIcon={true}
+        hasRetryInteraction={true}
+        hasHomeInteraction={true}
+      >
         <Suspense
           fallback={
-            <>
-              <NarrowTemplateHeader />
-              <S.SkeletonWrapper>
-                <Skeleton isLarge={true} />
-              </S.SkeletonWrapper>
-            </>
+            <MobileLayoutTemplate>
+              <Skeleton isLarge={true} />
+            </MobileLayoutTemplate>
           }
         >
           <EditPost />
         </Suspense>
-      </ErrorBoundary>
+      </ErrorBoundaryWithNarrowHeader>
     </Layout>
   );
 }

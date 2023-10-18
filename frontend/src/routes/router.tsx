@@ -12,6 +12,7 @@ import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
 import RankingPage from '@pages/RankingPage';
+import ReportAlarmPage from '@pages/ReportAlarmPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 import RouteChangeTracker from '@components/RouteChangeTracker';
@@ -192,6 +193,15 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: `${PATH.REPORT_ALARM}/:reportId`,
+    element: (
+      <PrivateRoute>
+        <ReportAlarmPage />
+      </PrivateRoute>
+    ),
+    errorElement: <ErrorPage />,
   },
   {
     path: '*',

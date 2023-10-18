@@ -11,7 +11,7 @@ export const Background = styled.div`
   min-height: 500px;
   border-radius: 4px;
 
-  background-color: var(--gray);
+  background-color: var(--bright-gray);
 
   padding: 15px 10px;
 

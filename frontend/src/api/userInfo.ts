@@ -22,7 +22,7 @@ export interface UpdateUserInfoRequest {
 }
 
 export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
-  const { nickname, gender, birthYear, postCount, voteCount } = userInfo;
+  const { nickname, gender, birthYear, postCount, voteCount, hasLatestAlarm, role } = userInfo;
 
   return {
     nickname,
@@ -30,6 +30,8 @@ export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
     birthYear,
     postCount,
     voteCount,
+    hasLatestAlarm,
+    role,
   };
 };
 
@@ -53,6 +55,10 @@ export const withdrawalMembership = async () => {
 
 export const updateUserInfo = async (userInfo: UpdateUserInfoRequest) => {
   await patchFetch<UpdateUserInfoRequest>(`${BASE_URL}/members/me/detail`, userInfo);
+};
+
+export const readLatestAlarm = async () => {
+  await patchFetch(`${BASE_URL}/members/me/check-alarm`);
 };
 
 export const logoutUser = async () => {

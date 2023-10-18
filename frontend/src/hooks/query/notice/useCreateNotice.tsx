@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { NoticeRequest, createNotice } from '@api/notice';
+import { NoticeRequest } from '@type/notice';
+
+import { createNotice } from '@api/notice';
 
 import { QUERY_KEY } from '@constants/queryKey';
 

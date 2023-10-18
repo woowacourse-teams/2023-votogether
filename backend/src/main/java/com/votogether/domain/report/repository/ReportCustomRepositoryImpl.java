@@ -44,7 +44,7 @@ public class ReportCustomRepositoryImpl implements ReportCustomRepository {
             final ReportType reportType,
             final Long targetId
     ) {
-        ReportAggregateDto result = jpaQueryFactory.select(
+        final ReportAggregateDto result = jpaQueryFactory.select(
                         Projections.constructor(
                                 ReportAggregateDto.class,
                                 report.id.max(),

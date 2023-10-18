@@ -55,8 +55,11 @@ public class AlarmQueryService {
     }
 
     public List<ReportActionAlarmResponse> getReportActionAlarms(final Member member, final int page) {
-        final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE,
-                Sort.by(Sort.Direction.DESC, "createdAt"));
+        final PageRequest pageRequest = PageRequest.of(
+                page,
+                BASIC_PAGE_SIZE,
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
         final List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository
                 .findByMember(member, pageRequest);
 

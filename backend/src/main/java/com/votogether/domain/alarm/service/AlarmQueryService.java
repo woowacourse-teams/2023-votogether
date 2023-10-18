@@ -54,7 +54,6 @@ public class AlarmQueryService {
         return member.getNickname();
     }
 
-    @Transactional(readOnly = true)
     public List<ReportActionAlarmResponse> getReportActionAlarms(final Member member, final int page) {
         final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE,
                 Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -66,7 +65,6 @@ public class AlarmQueryService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
     public ReportActionResponse getReportActionAlarm(final Long reportActionAlarmId, final Member member) {
         final ReportActionAlarm reportActionAlarm = reportActionAlarmRepository
                 .findByIdAndMember(reportActionAlarmId, member)

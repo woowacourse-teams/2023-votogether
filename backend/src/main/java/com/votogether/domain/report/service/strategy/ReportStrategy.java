@@ -12,9 +12,9 @@ public interface ReportStrategy {
 
     void report(final Member reporter, final ReportRequest request);
 
-    String parseTarget(Long targetId);
+    String parseTarget(final Long targetId);
 
-    void reportAction(ReportAggregateDto reportAggregateDto);
+    void reportAction(final ReportAggregateDto reportAggregateDto);
 
     default void validateDuplicatedReport(
             final Member reporter,

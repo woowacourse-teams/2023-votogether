@@ -9,6 +9,8 @@ export const BASE_PATH = {
   RANKING: '/ranking',
   ANNOUNCEMENT: '/announcements',
   NOTICES: '/notices',
+  REPORT: '/reports',
+  ALARM: '/alarms',
 };
 
 export const PATH = {
@@ -20,4 +22,6 @@ export const PATH = {
   USER_VOTE: `${BASE_PATH.USER}/votes`,
   USER_INFO: `${BASE_PATH.USER}/myPage`,
   USER_INFO_REGISTER: `${BASE_PATH.USER}/register`,
+  PENDING_REPORT: `${BASE_PATH.ADMIN}${BASE_PATH.REPORT}/pending`,
+  REPORT_ALARM: `${BASE_PATH.ALARM}/report`,
 };

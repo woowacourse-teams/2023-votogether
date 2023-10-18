@@ -11,5 +11,7 @@ export default meta;
 type Story = StoryObj<typeof NarrowMainHeader>;
 
 export const Primary: Story = {
-  render: () => <NarrowMainHeader handleMenuOpenClick={() => {}} />,
+  render: () => (
+    <NarrowMainHeader handleCategoryOpenClick={() => {}} handleAlarmOpenClick={() => {}} />
+  ),
 };

@@ -31,7 +31,7 @@ export const Menu = styled.button<{ $color: MenuColor }>`
   cursor: pointer;
 
   &:hover {
-    background-color: var(--gray);
+    background-color: var(--bright-gray);
   }
 
   &:first-child {

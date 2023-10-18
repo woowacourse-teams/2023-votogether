@@ -26,7 +26,6 @@ export default function CommentTextForm({
   initialComment,
   handleCancelClick,
 }: CommentTextFormProps) {
-
   const { addMessage } = useContext(ToastContext);
   const { text: content, handleTextChange, resetText } = useText(initialComment.content);
 

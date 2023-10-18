@@ -136,7 +136,7 @@ const Post = forwardRef(function Post(
         >
           {title}
         </S.Title>
-        <S.Wrapper>
+        <S.WriterInfoWrapper>
           <span aria-label={`작성자 ${writer.nickname}`} tabIndex={isPreviewTabIndex}>
             {writer.nickname}
           </span>
@@ -154,7 +154,7 @@ const Post = forwardRef(function Post(
               {isActive ? convertTimeToWord(deadline) : '마감 완료'}
             </span>
           </S.Wrapper>
-        </S.Wrapper>
+        </S.WriterInfoWrapper>
         <S.Content
           tabIndex={isPreviewTabIndex}
           aria-label={`내용: ${content}`}

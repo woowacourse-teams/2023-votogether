@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import PendingReportPage from '@pages/admin/PendingReportPage';
 import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
 import ErrorPage from '@pages/ErrorPage';
@@ -13,6 +14,7 @@ import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
 import RankingPage from '@pages/RankingPage';
+import ReportAlarmPage from '@pages/ReportAlarmPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 import RouteChangeTracker from '@components/RouteChangeTracker';
@@ -177,6 +179,29 @@ const router = createBrowserRouter([
         <AnnouncementPage />
         <RouteChangeTracker />
       </>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: PATH.ADMIN,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'reports/pending',
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <PendingReportPage />
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+  {
+    path: `${PATH.REPORT_ALARM}/:reportId`,
+    element: (
+      <PrivateRoute>
+        <ReportAlarmPage />
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
   },

@@ -2,7 +2,7 @@ import { Suspense, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
-import { ReportRequest } from '@type/report';
+import { ReportMessage, ReportRequest } from '@type/report';
 
 import { AuthContext, useDeletePost, useEarlyClosePost, usePostDetail } from '@hooks';
 
@@ -80,7 +80,7 @@ export default function PostDetail() {
 
       deletePost();
     },
-    reportPost: async (reason: string) => {
+    reportPost: async (reason: ReportMessage) => {
       setIsReportPostLoading(true);
       const reportData: ReportRequest = { type: 'POST', id: postId, reason };
 
@@ -96,7 +96,7 @@ export default function PostDetail() {
           setIsReportPostLoading(false);
         });
     },
-    reportNickname: async (reason: string) => {
+    reportNickname: async (reason: ReportMessage) => {
       setIsReportNicknameLoading(true);
       const reportData: ReportRequest = {
         type: 'NICKNAME',

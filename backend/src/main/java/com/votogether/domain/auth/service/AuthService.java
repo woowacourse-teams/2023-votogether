@@ -39,7 +39,7 @@ public class AuthService {
         final Member registeredMember = memberService.register(member);
         final String accessToken = tokenProcessor.generateAccessToken(registeredMember.getId());
         final String refreshToken = tokenProcessor.generateRefreshToken(registeredMember.getId());
-        redisTemplate.opsForValue().set(refreshToken, registeredMember.getId());
+        redisTemplate.opsForValue().set(refreshToken, registeredMember.getId(), Duration.ofDays(14L));
         return new LoginTokenDto(accessToken, refreshToken, registeredMember.hasEssentialInfo());
     }
 

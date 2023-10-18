@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { Size } from '@type/style';
 
 const SIZE = {
-  sm: { height: '40px' },
+  sm: { height: '45px' },
   md: { height: '60px' },
   lg: { height: '80px' },
   free: { height: '100%' },

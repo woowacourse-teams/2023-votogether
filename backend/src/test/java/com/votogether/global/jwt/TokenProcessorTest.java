@@ -5,9 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.entity.vo.Gender;
-import com.votogether.domain.member.entity.vo.Role;
-import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.domain.member.repository.MemberRepository;
 import com.votogether.test.RepositoryTest;
 import com.votogether.test.fixtures.MemberFixtures;

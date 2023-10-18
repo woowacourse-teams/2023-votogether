@@ -37,18 +37,19 @@ public class AlarmQueryController implements AlarmQueryControllerDocs {
     @GetMapping("/report")
     public ResponseEntity<List<ReportActionAlarmResponse>> getReportActionAlarms(
             @RequestParam @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
-            @Auth final Member loginMember
+            @Auth final Member member
     ) {
-        final List<ReportActionAlarmResponse> response = alarmQueryService.getReportActionAlarms(loginMember, page);
+        final List<ReportActionAlarmResponse> response = alarmQueryService.getReportActionAlarms(member, page);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/report/{id}")
     public ResponseEntity<ReportActionResponse> getReportActionAlarm(
             @PathVariable("id") final Long reportActionAlarmId,
-            @Auth final Member loginMember
+            @Auth final Member member
     ) {
-        final ReportActionResponse response = alarmQueryService.getReportActionAlarm(reportActionAlarmId, loginMember);
+        final ReportActionResponse response =
+                alarmQueryService.getReportActionAlarm(reportActionAlarmId, member);
         return ResponseEntity.ok(response);
     }
 

@@ -116,7 +116,7 @@ class AlarmQueryServiceTest extends ServiceTest {
     }
 
     @Test
-    @DisplayName("신고 조치 알림 목록을 조회한다.")
+    @DisplayName("신고조치알림 목록을 조회한다.")
     void getReportActionAlarms() {
         // given
         Member member = memberTestPersister.builder().save();

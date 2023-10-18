@@ -56,7 +56,7 @@ export default function Modal({
         <S.Title aria-label={`제목: ${title}`} tabIndex={0}>
           {title}
         </S.Title>
-        <S.Body>{children}</S.Body>
+        {children && <S.Body>{children}</S.Body>}
         <S.ButtonContainer>
           <S.ButtonWrapper>
             <SquareButton onClick={secondaryClick} theme="gray">

@@ -36,7 +36,7 @@ export const Container = styled.dialog<{ size: Size }>`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: ${props => props.size && MODAL_SIZE[props.size]};
+  width: ${props => (props.size ? MODAL_SIZE[props.size] : '96%')};
   max-width: 290px;
   border-radius: 12px;
   border: 2px solid #f6f6f6;
@@ -45,10 +45,6 @@ export const Container = styled.dialog<{ size: Size }>`
   background-color: white;
 
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-
-  @media (max-width: ${theme.breakpoint.sm}) {
-    width: 96%;
-  }
 
   @media (min-width: ${theme.breakpoint.sm}) {
     width: 50%;
@@ -74,8 +70,6 @@ export const Title = styled.span`
 `;
 
 export const Body = styled.div`
-  min-height: 100%;
-
   font: var(--text-body);
 
   box-sizing: border-box;

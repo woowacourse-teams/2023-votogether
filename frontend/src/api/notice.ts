@@ -1,6 +1,6 @@
 import {
   Notice,
-  NoticeList,
+  NoticeListType,
   NoticeListResponse,
   NoticeRequest,
   NoticeResponse,
@@ -41,7 +41,7 @@ export const getBannerNotice = async () => {
   return transformNotice(bannerNotice);
 };
 
-export const getNoticeList = async (page: number): Promise<NoticeList> => {
+export const getNoticeList = async (page: number): Promise<NoticeListType> => {
   const noticeListInfo = await getFetch<NoticeListResponse>(`${BASE_URL}/notices?page=${page}`);
 
   return {

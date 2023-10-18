@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { NoticeList } from '@type/notice';
+import { NoticeListType } from '@type/notice';
 
 import { getNoticeList } from '@api/notice';
 
@@ -10,7 +10,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const usePagedNoticeList = (initialPageNumber: number = 0) => {
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
-  const { data, isError, isLoading, error } = useQuery<NoticeList>(
+  const { data, isError, isLoading, error } = useQuery<NoticeListType>(
     [QUERY_KEY.NOTICE, pageNumber],
     () => getNoticeList(pageNumber),
     {

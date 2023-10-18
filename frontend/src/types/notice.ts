@@ -20,4 +20,4 @@ export type NoticeRequest = Omit<Notice, 'createdAt' | 'id'>;
 
 export type Notice = Omit<NoticeResponse, 'createdAt'> & { createdAt: StringDateUpToDay };
 
-export type NoticeList = Omit<NoticeListResponse, 'notices'> & { noticeList: Notice[] };
+export type NoticeListType = Omit<NoticeListResponse, 'notices'> & { noticeList: Notice[] };

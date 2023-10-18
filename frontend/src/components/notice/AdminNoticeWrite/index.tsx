@@ -11,11 +11,14 @@ import SquareButton from '@components/common/SquareButton';
 
 import { addTimeToDate } from '@utils/post/addTimeToDate';
 
+import { NOTICE_WRITE_TYPE } from './constant';
 import * as S from './style';
+
+type NoticeWriteType = (typeof NOTICE_WRITE_TYPE)[keyof typeof NOTICE_WRITE_TYPE];
 
 interface AdminNoticeWriteProps {
   notice: Notice;
-  writeType: '수정' | '작성';
+  writeType: NoticeWriteType;
   writeNotice: (notice: NoticeRequest) => void;
 }
 

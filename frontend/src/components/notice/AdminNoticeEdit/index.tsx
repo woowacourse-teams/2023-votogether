@@ -5,6 +5,7 @@ import { NoticeRequest } from '@type/notice';
 import { useModifyNotice, useNoticeDetail } from '@hooks';
 
 import AdminNoticeWrite from '../AdminNoticeWrite';
+import { NOTICE_WRITE_TYPE } from '../AdminNoticeWrite/constant';
 
 export default function AdminNoticeEdit() {
   const { noticeIdParam } = useParams() ?? 0;
@@ -19,7 +20,7 @@ export default function AdminNoticeEdit() {
     <AdminNoticeWrite
       notice={data}
       writeNotice={() => (notice: NoticeRequest) => mutate({ noticeId, notice })}
-      writeType="수정"
+      writeType={NOTICE_WRITE_TYPE.EDIT}
     />
   );
 }

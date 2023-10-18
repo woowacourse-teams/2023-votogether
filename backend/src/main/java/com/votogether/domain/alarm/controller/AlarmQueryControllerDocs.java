@@ -42,10 +42,16 @@ public interface AlarmQueryControllerDocs {
             summary = "신고조치알림 조회",
             description = "신고조치알림목록을 조회한다."
     )
-    @ApiResponse(
-            responseCode = "201",
-            description = "조회 성공"
-    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "신고조치알림 조회 성공"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "페이지가 0이상 정수가 아닌 경우"
+            )
+    })
     ResponseEntity<List<ReportActionAlarmResponse>> getReportActionAlarms(
             @Parameter(description = "현재 페이지 위치", example = "0")
             @PositiveOrZero(message = "페이지는 0이상 정수만 가능합니다.") final int page,
@@ -58,7 +64,7 @@ public interface AlarmQueryControllerDocs {
     )
     @ApiResponse(
             responseCode = "201",
-            description = "조회 성공"
+            description = "신고조치알림 상세 조회 성공"
     )
     ResponseEntity<ReportActionResponse> getReportActionAlarm(
             @Parameter(description = "신고조치알림 ID", example = "1") final Long reportActionAlarmId,

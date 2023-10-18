@@ -47,7 +47,7 @@ export const Container = styled.dialog<{ size: Size }>`
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    width: 50%;
+    width: ${props => (props.size ? MODAL_SIZE[props.size] : '50%')};
     max-width: 500px;
   }
 `;

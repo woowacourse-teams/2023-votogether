@@ -42,6 +42,8 @@ public interface ReportCommandControllerDocs {
                     responseCode = "400",
                     description = """
                             1.신고 ID가 양의 정수가 아닌 경우
+                            
+                            2.신고 ID가 존재하지 않은 경우
                             """,
                     content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             ),

@@ -129,7 +129,7 @@ const router = createBrowserRouter([
       {
         path: 'myPage',
         element: (
-          <PrivateRoute isGuestAllowed={true}>
+          <PrivateRoute>
             <ScrollToTop />
             <MyInfoPage />
             <RouteChangeTracker />
@@ -219,19 +219,19 @@ const router = createBrowserRouter([
       {
         path: ':noticeId',
         element: (
-          <>
+          <PrivateRoute isGuestAllowed={true}>
             <NoticeDetailPage />
             <RouteChangeTracker />
-          </>
+          </PrivateRoute>
         ),
       },
       {
         path: '',
         element: (
-          <>
+          <PrivateRoute isGuestAllowed={true}>
             <NoticeListPage />
             <RouteChangeTracker />
-          </>
+          </PrivateRoute>
         ),
       },
     ],

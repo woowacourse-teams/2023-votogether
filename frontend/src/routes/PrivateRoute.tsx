@@ -27,8 +27,6 @@ const PrivateRoute = ({
   } = useContext(AuthContext);
   const isLoggedIn = getLocalStorage(ACCESS_TOKEN_KEY);
   const hasEssentialInfo = getCookie().hasEssentialInfo;
-  let role = 'ADMIN'; // 로그인 시 response 로 받아야 함.
-  // const role = 'getCookie().role;
 
   if (isOnlyAdminAllowed && userInfo?.role !== 'ADMIN') {
     alert('해당 페이지는 관리자만 접근이 가능합니다. 마이 페이지를 통해 접속해주세요.');
@@ -52,12 +50,6 @@ const PrivateRoute = ({
     clearLoggedInfo();
 
     return <Navigate to="/" />;
-  }
-
-  if (isLoggedIn && isOnlyAdminAllowed && role !== 'ADMIN') {
-    alert('해당 페이지에 대한 접근 권한이 없습니다.');
-
-    return <Navigate to={path} />;
   }
 
   return children;

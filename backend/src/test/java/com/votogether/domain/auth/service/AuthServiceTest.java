@@ -10,6 +10,7 @@ import com.votogether.domain.auth.service.oauth.KakaoOAuthClient;
 import com.votogether.domain.member.service.MemberService;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.global.log.context.LogContext;
 import com.votogether.test.config.RedisTestConfig;
 import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -39,6 +41,9 @@ class AuthServiceTest {
 
     @Autowired
     RedisTemplate<String, Long> redisTemplate;
+
+    @MockBean
+    LogContext logContext;
 
     @Nested
     @DisplayName("인증 토큰을 재발급 받을 때")
@@ -113,7 +118,7 @@ class AuthServiceTest {
             authService.deleteRefreshToken(refreshToken);
 
             // then
-            assertThat(redisTemplate.keys(refreshToken).size()).isZero();
+            assertThat(redisTemplate.keys(refreshToken)).isEmpty();
         }
 
     }

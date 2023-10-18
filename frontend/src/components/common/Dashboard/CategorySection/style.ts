@@ -33,7 +33,7 @@ export const SelectedStateWrapper = styled.div`
   justify-self: start;
 
   width: 100%;
-  border-bottom: 2px solid var(--gray);
+  border-bottom: 2px solid var(--bright-gray);
   padding-bottom: 20px;
 `;
 

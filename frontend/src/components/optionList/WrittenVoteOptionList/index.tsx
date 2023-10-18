@@ -1,3 +1,5 @@
+import { MouseEvent } from 'react';
+
 import { WrittenVoteOptionType } from '@type/post';
 
 import * as S from './style';
@@ -9,6 +11,7 @@ interface WrittenVoteOptionListProps {
   selectedOptionId: number;
   voteOptionList: WrittenVoteOptionType[];
   handleVoteClick: (newOptionId: number) => void;
+  handleImageClick?: (event: MouseEvent<HTMLImageElement>) => void;
 }
 
 export default function WrittenVoteOptionList({
@@ -17,6 +20,7 @@ export default function WrittenVoteOptionList({
   voteOptionList,
   selectedOptionId,
   handleVoteClick,
+  handleImageClick,
 }: WrittenVoteOptionListProps) {
   return (
     <S.VoteOptionListContainer aria-label="투표 선택지">
@@ -39,6 +43,7 @@ export default function WrittenVoteOptionList({
             isStatisticsVisible={isStatisticsVisible}
             isSelected={isSelected}
             handleVoteClick={() => handleVoteClick(voteOption.id)}
+            handleImageClick={handleImageClick}
           />
         );
       })}

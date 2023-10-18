@@ -1,8 +1,7 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
-import { useToast } from '@hooks';
-
+import { ToastContext } from '@hooks/context/toast';
 import { useUpdateUserInfo } from '@hooks/query/user/useUpdateUserInfo';
 
 import Accordion from '@components/common/Accordion';
@@ -10,7 +9,6 @@ import Layout from '@components/common/Layout';
 import LogoButton from '@components/common/LogoButton';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
-import Toast from '@components/common/Toast';
 
 import { ESSENTIAL_MAX_AGE } from '@constants/cookie';
 import { BIRTH_YEAR } from '@constants/policy';
@@ -28,9 +26,9 @@ interface UserInfoForm {
 export default function RegisterPersonalInfoPage() {
   const navigate = useNavigate();
   const hasEssentialInfo = getCookie().hasEssentialInfo === 'true';
+  const { addMessage } = useContext(ToastContext);
 
-  const { mutate: updateUserInfo, isSuccess, isError, error } = useUpdateUserInfo();
-  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { mutate: updateUserInfo, isSuccess } = useUpdateUserInfo();
 
   const [userInfoForm, setUserInfoForm] = useState<UserInfoForm>({
     gender: '',
@@ -54,45 +52,33 @@ export default function RegisterPersonalInfoPage() {
     const { gender, birthYear, isTermsAgreed } = userInfoForm;
 
     if (!gender || !birthYear) {
-      alert('필수 개인 정보를 모두 입력해주세요.');
+      addMessage('필수 개인 정보를 모두 입력해주세요.');
       return;
     }
 
     if (isNaN(Number(birthYear))) {
-      alert('생년월일 값을 확인해주세요.');
+      addMessage('생년월일 값을 확인해주세요.');
       return;
     }
 
     if (!isTermsAgreed) {
-      alert('개인 정보 약관에 동의해주세요.');
+      addMessage('개인 정보 약관에 동의해주세요.');
       return;
     }
 
     const submittedUserInfo = { gender, birthYear: Number(birthYear) };
     updateUserInfo(submittedUserInfo);
-    setCookie({ key: 'hasEssentialInfo', value: 'true', maxAge: ESSENTIAL_MAX_AGE });
-
-    alert('개인 정보 등록 완료!');
-    navigate('/');
   };
 
   useEffect(() => {
     if (isSuccess) {
       setCookie({ key: 'hasEssentialInfo', value: 'true', maxAge: ESSENTIAL_MAX_AGE });
-      alert('개인 정보가 등록 완료되었습니다.');
       navigate('/');
     }
   }, [isSuccess]);
 
-  useEffect(() => {
-    if (isError && error instanceof Error) {
-      openToast('개인 정보를 이미 등록 완료하셨습니다.');
-      return;
-    }
-  }, [isError, error]);
-
   if (hasEssentialInfo) {
-    alert('개인 정보를 이미 등록 완료하셨습니다.');
+    addMessage('개인 정보를 이미 등록 완료하셨습니다.');
     return <Navigate to={'/'} />;
   }
 
@@ -179,11 +165,6 @@ export default function RegisterPersonalInfoPage() {
             </S.ButtonWrapper>
           </S.InfoForm>
         </S.MainWrapper>
-        {isToastOpen && (
-          <Toast size="md" position="bottom">
-            {toastMessage}
-          </Toast>
-        )}
       </S.Wrapper>
     </Layout>
   );

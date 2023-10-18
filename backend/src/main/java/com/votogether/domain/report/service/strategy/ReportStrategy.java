@@ -7,10 +7,11 @@ import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 
-@FunctionalInterface
 public interface ReportStrategy {
 
     void report(final Member reporter, final ReportRequest request);
+
+    String parseTarget(Long targetId);
 
     default void validateDuplicatedReport(
             final Member reporter,

@@ -56,6 +56,9 @@ public record PostVoteResultResponse(
             final boolean isVoted,
             final long totalVoteCount
     ) {
+        if (post.isHidden() && post.isWriter(user)) {
+            return HIDDEN_COUNT;
+        }
         if (post.isClosed() || post.isWriter(user) || isVoted) {
             return totalVoteCount;
         }

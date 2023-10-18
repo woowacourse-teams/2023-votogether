@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { MOCK_TRANSFORMED_COMMENT_LIST } from '@mocks/mockData/comment';
+import { COMMENT_USER } from '@constants/post';
 
-import { COMMENT_USER } from '../constants';
+import { MOCK_TRANSFORMED_COMMENT_LIST } from '@mocks/mockData/comment';
 
 import CommentItem from '.';
 

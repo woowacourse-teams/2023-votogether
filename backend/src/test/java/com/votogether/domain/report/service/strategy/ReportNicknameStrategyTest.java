@@ -11,15 +11,14 @@ import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
-import com.votogether.test.annotation.ServiceTest;
+import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@ServiceTest
 @DisplayName("닉네임 신고기능은")
-class ReportNicknameStrategyTest {
+class ReportNicknameStrategyTest extends ServiceTest {
 
     @Autowired
     ReportNicknameStrategy reportNicknameStrategy;
@@ -96,6 +95,19 @@ class ReportNicknameStrategyTest {
                 () -> assertThat(reported.getNickname()).contains("Pause1"),
                 () -> assertThat(reportRepository.findAll()).isEmpty()
         );
+    }
+
+    @Test
+    @DisplayName("targetId를 통해 해당 멤버의 Nickname을 가져온다")
+    void parseTarget() {
+        // given
+        final Member member = memberRepository.save(MemberFixtures.MALE_30.get());
+
+        // when
+        final String nickName = reportNicknameStrategy.parseTarget(member.getId());
+
+        // then
+        assertThat(nickName).isEqualTo(member.getNickname());
     }
 
 }

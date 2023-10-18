@@ -1,13 +1,10 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useToast } from '@hooks';
-
 import { PostOptionContext } from '@hooks/context/postOption';
 import { useEditPost } from '@hooks/query/post/useEditPost';
 import { usePostDetail } from '@hooks/query/post/usePostDetail';
 
-import Toast from '@components/common/Toast';
 import PostForm from '@components/PostForm';
 
 import { PATH } from '@constants/path';
@@ -19,8 +16,7 @@ export default function EditPost() {
   const { postId } = useParams();
 
   const { data } = usePostDetail(true, Number(postId));
-  const { mutate, isSuccess, isError, error, isLoading } = useEditPost(Number(postId));
-  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { mutate, isSuccess, isLoading } = useEditPost(Number(postId));
   const { setPostOption } = useContext(PostOptionContext);
 
   useEffect(() => {
@@ -30,22 +26,5 @@ export default function EditPost() {
     }
   }, [isSuccess, navigate, postId]);
 
-  useEffect(() => {
-    if (isError && error instanceof Error) {
-      const errorResponse = JSON.parse(error.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isError, error]);
-
-  return (
-    <>
-      <PostForm data={data} mutate={mutate} isSubmitting={isLoading} />
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
-      )}
-    </>
-  );
+  return <PostForm data={data} mutate={mutate} isSubmitting={isLoading} />;
 }

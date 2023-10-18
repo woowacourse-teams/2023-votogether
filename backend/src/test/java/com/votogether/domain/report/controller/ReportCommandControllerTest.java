@@ -8,12 +8,11 @@ import static org.mockito.BDDMockito.willDoNothing;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
 import com.votogether.domain.member.entity.vo.SocialType;
-import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.service.ReportCommandService;
 import com.votogether.global.jwt.TokenPayload;
-import com.votogether.global.jwt.TokenProcessor;
+import com.votogether.test.ControllerTest;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,28 +22,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(ReportCommandCommandController.class)
-class ReportCommandControllerTest {
+@WebMvcTest(ReportCommandController.class)
+class ReportCommandControllerTest extends ControllerTest {
 
     @MockBean
     ReportCommandService reportCommandService;
 
-    @MockBean
-    TokenProcessor tokenProcessor;
-
-    @MockBean
-    MemberService memberService;
+    @Autowired
+    MockMvc mockMvc;
 
     @BeforeEach
-    void setUp(final WebApplicationContext webApplicationContext) {
-        RestAssuredMockMvc.standaloneSetup(new ReportCommandCommandController(reportCommandService));
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
+    void setUp() {
+        RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
     @Nested

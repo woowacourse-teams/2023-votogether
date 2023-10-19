@@ -1,12 +1,17 @@
+import { useContext } from 'react';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { NoticeRequest } from '@type/notice';
+
+import { ToastContext } from '@hooks/context/toast';
 
 import { modifyNotice } from '@api/notice';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const useModifyNotice = () => {
+  const { addMessage } = useContext(ToastContext);
   const queryClient = useQueryClient();
   const { mutate, isLoading, isSuccess, isError, error } = useMutation(
     ({ noticeId, notice }: { notice: NoticeRequest; noticeId: number }) =>
@@ -16,7 +21,10 @@ export const useModifyNotice = () => {
         queryClient.invalidateQueries([QUERY_KEY.NOTICE]);
       },
       onError: error => {
-        window.console.log('공지 사항 수정에 실패했습니다');
+        const errorMessage =
+          error instanceof Error ? error.message : '공지 사항 수정에 실패했습니다';
+
+        addMessage(errorMessage);
       },
     }
   );

@@ -8,7 +8,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useBannerNotice = () => {
   const { data, isError, isLoading, error } = useQuery<Notice>(
-    [QUERY_KEY.NOTICE],
+    [QUERY_KEY.NOTICE, 'banner'],
     getBannerNotice,
     {
       suspense: true,

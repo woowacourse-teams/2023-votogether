@@ -22,6 +22,8 @@ export const Container = styled.div`
 `;
 
 export const Menu = styled.button<{ $color: MenuColor }>`
+  width: 100%;
+
   padding: 10px 15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 

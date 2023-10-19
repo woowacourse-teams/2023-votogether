@@ -14,6 +14,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     List<Alarm> findAllByMember(final Member member);
 
-    Optional<Alarm> findByMemberOrderByIdDesc(final Member member);
+    Optional<Alarm> findTopByMemberOrderByIdDesc(final Member member);
 
 }

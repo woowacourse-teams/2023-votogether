@@ -1,7 +1,7 @@
 package com.votogether.domain.alarm.controller;
 
-import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
-import com.votogether.domain.alarm.dto.ReportActionResponse;
+import com.votogether.domain.alarm.dto.response.ReportActionAlarmResponse;
+import com.votogether.domain.alarm.dto.response.ReportActionResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.ExceptionResponse;

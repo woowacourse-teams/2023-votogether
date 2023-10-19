@@ -1,4 +1,4 @@
-package com.votogether.domain.alarm.dto;
+package com.votogether.domain.alarm.dto.response;
 
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import io.swagger.v3.oas.annotations.media.Schema;

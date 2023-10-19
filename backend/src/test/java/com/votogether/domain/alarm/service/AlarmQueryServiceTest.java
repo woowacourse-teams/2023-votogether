@@ -3,8 +3,8 @@ package com.votogether.domain.alarm.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
-import com.votogether.domain.alarm.dto.ReportActionResponse;
+import com.votogether.domain.alarm.dto.response.ReportActionAlarmResponse;
+import com.votogether.domain.alarm.dto.response.ReportActionResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmDetailResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
@@ -61,7 +61,7 @@ class AlarmQueryServiceTest extends ServiceTest {
             Thread.sleep(1000);
 
             // when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(commentWriter, 0);
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(post.getWriter(), 0);
 
             // then
             PostAlarmResponse postAlarmResponse = postAlarmResponses.get(0);

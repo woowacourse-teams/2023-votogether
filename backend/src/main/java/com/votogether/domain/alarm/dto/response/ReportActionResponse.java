@@ -1,5 +1,6 @@
-package com.votogether.domain.alarm.dto;
+package com.votogether.domain.alarm.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.report.entity.vo.ReportType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +24,7 @@ public record ReportActionResponse(
         Set<String> reasons,
 
         @Schema(description = "신고조치시간", example = "2023-08-01 13:56")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt
 ) {
 

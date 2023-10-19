@@ -22,7 +22,7 @@ public record MemberInfoResponse(
         long voteCount,
 
         @Schema(description = "권한", example = "MEMBER")
-        Roles roles,
+        Roles role,
 
         @Schema(description = "최신 알림 존재 여부", example = "false")
         boolean hasLatestAlarm

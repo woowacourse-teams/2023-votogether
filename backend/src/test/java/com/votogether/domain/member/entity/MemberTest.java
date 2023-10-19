@@ -16,7 +16,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class MemberTest {
 
     @Nested
-    @DisplayName("닉네임을 주기에 따라 변경하는 경우")
+    @DisplayName("닉네임을 주기에 따라 변경하는 경우 ")
     class ChangeNicknameByCycle {
 
         @Test
@@ -150,7 +150,7 @@ class MemberTest {
         void returnsFalse() {
             // given
             Member member = MemberFixtures.MALE_20.get();
-            LocalDateTime beforeTime = LocalDateTime.of(2023, 10, 18, 12, 0);
+            LocalDateTime beforeTime = LocalDateTime.of(2010, 10, 18, 12, 0);
 
             // when
             boolean hasLatestAlarm = member.hasLatestAlarmCompareTo(beforeTime);

@@ -307,7 +307,7 @@ class MemberServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("신고 조치 내역 알림이 존재한다면 회원의 최신 알림 확인 시각과 비교하여 게시글 알림이 더 최신인 경우 true를 반환한다.")
+        @DisplayName("신고 조치 내역 알림이 존재한다면 회원의 최신 알림 확인 시각과 비교하여 신고 조치 내역 알림이 더 최신인 경우 true를 반환한다.")
         void returnsTrueWhenReportActionAlarmIsLatest() {
             // given
             Member member = memberTestPersister.builder().save();
@@ -322,13 +322,53 @@ class MemberServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("신고 조치 내역 알림과 게시글 내역 알림이 모두 존재한다면 회원의 최신 알림 확인 시각과 비교하여 신고 조치 알림이 더 최신인 경우 true를 반환한다.")
+        @DisplayName("신고 조치 내역 알림과 게시글 내역 알림이 모두 존재한다면 회원의 최신 알림 확인 시각과 비교하여 알림들이 더 최신인 경우 true를 반환한다.")
         void returnsTrueWhenReportActionAlarmOrPostAlarmIsLatest() {
             // given
             Member member = memberTestPersister.builder().save();
             memberMetricTestPersister.builder().member(member).save();
             alarmTestPersister.builder().member(member).save();
             reportActionAlarmTestPersister.builder().member(member).save();
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertThat(memberInfoResponse.hasLatestAlarm()).isTrue();
+        }
+
+        @Test
+        @DisplayName("게시글 내역 알림과 신고 조치 내역 알림 모두 존재하고, 게시글 내역 알림이 가장 최신인 경우 true를 반환한다.")
+        void returnsTrueWhenPostAlarmIsLatestAndReportActionAlarmIsNotLatest() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+            Alarm alarm = alarmTestPersister.builder().member(member).save();
+            ReportActionAlarm reportActionAlarm = reportActionAlarmTestPersister.builder().member(member).save();
+
+            ReflectionTestUtils.setField(member, "alarmCheckedAt", LocalDateTime.now().minusDays(1));
+            ReflectionTestUtils.setField(alarm, "createdAt", LocalDateTime.now());
+            ReflectionTestUtils.setField(reportActionAlarm, "createdAt", LocalDateTime.now().minusDays(1));
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertThat(memberInfoResponse.hasLatestAlarm()).isTrue();
+        }
+
+        @Test
+        @DisplayName("게시글 내역 알림과 신고 조치 내역 알림 모두 존재하고, 신고 조치 내역 알림이 가장 최신인 경우 true를 반환한다.")
+        void returnsTrueWhenPostAlarmIsNotLatestAndReportActionAlarmIsLatest() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+            Alarm alarm = alarmTestPersister.builder().member(member).save();
+            ReportActionAlarm reportActionAlarm = reportActionAlarmTestPersister.builder().member(member).save();
+
+            ReflectionTestUtils.setField(member, "alarmCheckedAt", LocalDateTime.now().minusDays(1));
+            ReflectionTestUtils.setField(alarm, "createdAt", LocalDateTime.now().minusDays(1));
+            ReflectionTestUtils.setField(reportActionAlarm, "createdAt", LocalDateTime.now());
 
             // when
             MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);

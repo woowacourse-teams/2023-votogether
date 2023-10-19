@@ -67,7 +67,7 @@ class AlarmTest {
                 .detail("detail")
                 .isChecked(false)
                 .build();
-        ReflectionTestUtils.setField(alarm, "createdAt", LocalDateTime.of(2023, 10, 18, 12, 0));
+        ReflectionTestUtils.setField(alarm, "createdAt", LocalDateTime.of(2010, 10, 18, 12, 0));
         LocalDateTime now = LocalDateTime.now();
 
         // when

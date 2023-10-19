@@ -5,7 +5,6 @@ import NoticeAdminPage from '@pages/admin/notices/NoticeAdminPage';
 import NoticeEditPage from '@pages/admin/notices/NoticeEditPage';
 import NoticeWritePage from '@pages/admin/notices/NoticeWritePage';
 import PendingReportPage from '@pages/admin/PendingReportPage';
-import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
 import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
@@ -176,16 +175,6 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: PATH.ANNOUNCEMENT,
-    element: (
-      <PrivateRoute isGuestAllowed={true}>
-        <AnnouncementPage />
-        <RouteChangeTracker />
-      </PrivateRoute>
-    ),
-    errorElement: <ErrorPage />,
-  },
-  {
     path: PATH.ADMIN,
     errorElement: <ErrorPage />,
     children: [
@@ -261,4 +250,5 @@ const router = createBrowserRouter([
     element: <NotFoundPage />,
   },
 ]);
+
 export default router;

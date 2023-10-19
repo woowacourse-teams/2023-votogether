@@ -10,18 +10,17 @@ import ErrorBoundary from '@pages/ErrorBoundary';
 import AlarmContainer from '@components/AlarmContainer';
 import AddButton from '@components/common/AddButton';
 import AppInstallPrompt from '@components/common/AppInstallPrompt';
-import Banner from '@components/common/Banner';
 import Dashboard from '@components/common/Dashboard';
 import Drawer from '@components/common/Drawer';
 import Layout from '@components/common/Layout';
 import NarrowMainHeader from '@components/common/NarrowMainHeader';
 import Skeleton from '@components/common/Skeleton';
 import UpButton from '@components/common/UpButton';
+import BannerFetcher from '@components/notice/BannerFetcher';
 import PostList from '@components/post/PostList';
 
 import { BANNER_VISIBLE_MAX_AGE } from '@constants/cookie';
 import { PATH } from '@constants/path';
-import { APP_LAUNCH_EVENT } from '@constants/policyMessage';
 
 import { getCookie, setCookie } from '@utils/cookie';
 import { smoothScrollToTop } from '@utils/scrollToTop';
@@ -44,7 +43,6 @@ export default function HomePage() {
     openDrawer: openAlarmDrawer,
     closeDrawer: closeAlarmDrawer,
   } = useDrawer('right');
-  const { TITLE, CONTENT } = APP_LAUNCH_EVENT;
   const { isBannerVisible } = getCookie();
   const initialBannerVisible = isBannerVisible ? JSON.parse(isBannerVisible) : true;
   const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(initialBannerVisible);
@@ -89,12 +87,7 @@ export default function HomePage() {
         </S.HeaderWrapper>
         {isBannerOpen && (
           <S.BannerWrapper>
-            <Banner
-              title={TITLE}
-              content={CONTENT}
-              handleClose={handleBannerCloseClick}
-              path={PATH.ANNOUNCEMENT}
-            />
+            <BannerFetcher handleClose={handleBannerCloseClick} />
           </S.BannerWrapper>
         )}
         <S.DrawerWrapper>

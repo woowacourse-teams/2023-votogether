@@ -10,7 +10,9 @@ export interface DHMTime {
 /**
  * yyyy-mm-dd HH-MM
  */
-export type StringDate = `${number}-${number}-${number} ${number}:${number}`;
+export type StringDate = `${number}-${number | string}-${number | string} ${number | string}:${
+  | number
+  | string}`;
 
 /**
  * yyyy-mm-dd

@@ -14,6 +14,8 @@ import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.notice.entity.Notice;
+import com.votogether.domain.notice.repository.NoticeRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
@@ -47,6 +49,7 @@ public class MemberService {
     private final CommentRepository commentRepository;
     private final AlarmRepository alarmRepository;
     private final ReportActionAlarmRepository reportActionAlarmRepository;
+    private final NoticeRepository noticeRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -153,6 +156,8 @@ public class MemberService {
         deleteMemberCategories(member);
         deleteReports(member, posts, comments);
         deleteAlarms(member);
+        deleteReportActionAlarms(member);
+        deleteNotices(member);
 
         memberMetricRepository.deleteByMember(member);
         memberRepository.delete(member);
@@ -247,6 +252,22 @@ public class MemberService {
                 .map(Alarm::getId)
                 .toList();
         alarmRepository.deleteAllById(alarmIds);
+    }
+
+    private void deleteReportActionAlarms(final Member member) {
+        final List<Long> reportActionAlarmIds = reportActionAlarmRepository.findAllByMember(member)
+                .stream()
+                .map(ReportActionAlarm::getId)
+                .toList();
+        reportActionAlarmRepository.deleteAllById(reportActionAlarmIds);
+    }
+
+    private void deleteNotices(final Member member) {
+        final List<Long> noticeIds = noticeRepository.findAllByMember(member)
+                .stream()
+                .map(Notice::getId)
+                .toList();
+        noticeRepository.deleteAllById(noticeIds);
     }
 
 }

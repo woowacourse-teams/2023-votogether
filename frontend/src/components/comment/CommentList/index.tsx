@@ -63,7 +63,9 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
         )}
       </S.TextOrLoginWrapper>
       <S.ListContainer>
-        <S.CommentCount>댓글 {commentList ? commentList.length : 0}개</S.CommentCount>
+        {commentList && commentList.length !== 0 && (
+          <S.CommentCount>댓글 {commentList.length}개</S.CommentCount>
+        )}
         {slicedCommentList.map((comment, index) => {
           if (index % 10 === 9) {
             return (

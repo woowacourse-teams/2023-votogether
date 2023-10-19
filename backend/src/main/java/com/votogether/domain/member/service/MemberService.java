@@ -94,9 +94,9 @@ public class MemberService {
     }
 
     private boolean hasLatestAlarm(final Member member) {
-        final Optional<Alarm> maybeAlarm = alarmRepository.findByMemberOrderByIdDesc(member);
+        final Optional<Alarm> maybeAlarm = alarmRepository.findTopByMemberOrderByIdDesc(member);
         final Optional<ReportActionAlarm> maybeReportActionAlarm =
-                reportActionAlarmRepository.findByMemberOrderByIdDesc(member);
+                reportActionAlarmRepository.findTopByMemberOrderByIdDesc(member);
         final List<Optional<LocalDateTime>> maybeCreatedAts = List.of(
                 maybeAlarm.map(Alarm::getCreatedAt),
                 maybeReportActionAlarm.map(ReportActionAlarm::getCreatedAt)

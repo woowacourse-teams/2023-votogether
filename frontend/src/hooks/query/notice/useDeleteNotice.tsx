@@ -15,7 +15,9 @@ export const useDeleteNotice = () => {
     (noticeId: number) => deleteNotice(noticeId),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEY.NOTICE]);
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => queryKey[0] === QUERY_KEY.NOTICE,
+        });
       },
       onError: error => {
         const errorMessage =

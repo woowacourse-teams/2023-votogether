@@ -18,7 +18,9 @@ export const useModifyNotice = () => {
       modifyNotice({ notice, noticeId }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEY.NOTICE]);
+        queryClient.invalidateQueries({
+          predicate: ({ queryKey }) => queryKey[0] === QUERY_KEY.NOTICE,
+        });
       },
       onError: error => {
         const errorMessage =

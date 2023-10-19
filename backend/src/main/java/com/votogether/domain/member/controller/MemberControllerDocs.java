@@ -23,8 +23,7 @@ public interface MemberControllerDocs {
             @ApiResponse(
                     responseCode = "400",
                     description = "회원에 해당하는 통계 정보가 없는 경우",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class)
-                    )
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
             )
     })
     ResponseEntity<MemberInfoResponse> findMemberInfo(final Member member);

@@ -56,7 +56,7 @@ public class Member extends BaseEntity {
     private String socialId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(length = 20, nullable = false)
     private Roles roles;
 
     @Column(columnDefinition = "datetime(6)", nullable = false)

@@ -19,7 +19,7 @@ export const useDeleteNotice = () => {
       },
       onError: error => {
         const errorMessage =
-          error instanceof Error ? error.message : '공지 사항 삭제에 실패했습니다';
+          error instanceof Error ? error.message : '공지 사항 삭제를 실패했습니다';
 
         addMessage(errorMessage);
       },

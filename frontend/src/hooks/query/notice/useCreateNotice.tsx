@@ -21,7 +21,7 @@ export const useCreateNotice = () => {
       },
       onError: error => {
         const errorMessage =
-          error instanceof Error ? error.message : '공지 사항 생성에 실패했습니다';
+          error instanceof Error ? error.message : '공지 사항 생성을 실패했습니다';
 
         addMessage(errorMessage);
       },

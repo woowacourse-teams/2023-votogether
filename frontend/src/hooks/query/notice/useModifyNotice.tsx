@@ -22,7 +22,7 @@ export const useModifyNotice = () => {
       },
       onError: error => {
         const errorMessage =
-          error instanceof Error ? error.message : '공지 사항 수정에 실패했습니다';
+          error instanceof Error ? error.message : '공지 사항 수정을 실패했습니다';
 
         addMessage(errorMessage);
       },

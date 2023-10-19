@@ -19,9 +19,11 @@ import Skeleton from '@components/common/Skeleton';
 import UpButton from '@components/common/UpButton';
 import PostList from '@components/post/PostList';
 
+import { BANNER_VISIBLE_MAX_AGE } from '@constants/cookie';
 import { PATH } from '@constants/path';
 import { APP_LAUNCH_EVENT } from '@constants/policyMessage';
 
+import { getCookie, setCookie } from '@utils/cookie';
 import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
@@ -43,8 +45,9 @@ export default function HomePage() {
     closeDrawer: closeAlarmDrawer,
   } = useDrawer('right');
   const { TITLE, CONTENT } = APP_LAUNCH_EVENT;
-
-  const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(true);
+  const { isBannerVisible } = getCookie();
+  const initialBannerVisible = isBannerVisible ? JSON.parse(isBannerVisible) : true;
+  const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(initialBannerVisible);
 
   const { addMessage } = useContext(ToastContext);
   const loggedInfo = useContext(AuthContext).loggedInfo;
@@ -56,6 +59,22 @@ export default function HomePage() {
 
     openAlarmDrawer();
     mutate();
+  };
+
+  const handleBannerCloseClick = () => {
+    const isCloseBannerConfirmed = window.confirm(
+      '배너를 닫으시면 하루동안 볼 수 없습니다. 닫으시겠습니까?'
+    );
+
+    if (isCloseBannerConfirmed) {
+      setCookie({
+        key: 'isBannerVisible',
+        value: 'false',
+        maxAge: BANNER_VISIBLE_MAX_AGE,
+      });
+
+      closeBanner();
+    }
   };
 
   return (
@@ -73,7 +92,7 @@ export default function HomePage() {
             <Banner
               title={TITLE}
               content={CONTENT}
-              handleClose={closeBanner}
+              handleClose={handleBannerCloseClick}
               path={PATH.ANNOUNCEMENT}
             />
           </S.BannerWrapper>

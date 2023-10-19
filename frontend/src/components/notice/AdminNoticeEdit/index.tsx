@@ -8,7 +8,7 @@ import NoticeForm from '../NoticeForm';
 import { NOTICE_WRITE_TYPE } from '../NoticeForm/constant';
 
 export default function AdminNoticeEdit() {
-  const { noticeIdParam } = useParams() ?? 0;
+  const { noticeId: noticeIdParam } = useParams() ?? 0;
   const noticeId = Number(noticeIdParam);
 
   const { data } = useNoticeDetail(noticeId);

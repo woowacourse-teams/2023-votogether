@@ -35,7 +35,7 @@ export const transformUserInfoResponse = (userInfo: UserInfoResponse): User => {
   };
 };
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export const getUserInfo = async (isLoggedIn: boolean): Promise<User | null> => {
   if (!isLoggedIn) return null;

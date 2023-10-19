@@ -23,6 +23,7 @@ public class AlarmEventListener {
         final Alarm alarm = Alarm.builder()
                 .member(postAlarmEvent.member())
                 .alarmType(postAlarmEvent.alarmType())
+                .commentWriterNickname(postAlarmEvent.commentWriterNickname())
                 .targetId(postAlarmEvent.targetId())
                 .detail(postAlarmEvent.detail())
                 .isChecked(false)

@@ -11,8 +11,6 @@ export const useUserInfo = (isLoggedIn: boolean) => {
     [QUERY_KEY.USER_INFO, isLoggedIn],
     () => getUserInfo(isLoggedIn),
     {
-      cacheTime: 60 * 60 * 1000,
-      staleTime: 60 * 60 * 1000,
       suspense: true,
     }
   );

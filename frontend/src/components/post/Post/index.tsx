@@ -1,13 +1,15 @@
-import { ForwardedRef, forwardRef, memo, useContext, useEffect } from 'react';
+import { ForwardedRef, forwardRef, memo, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 
-import { useToast } from '@hooks';
-
 import { AuthContext } from '@hooks/context/auth';
+import { ToastContext } from '@hooks/context/toast';
 import { useCreateVote } from '@hooks/query/post/useCreateVote';
 import { useEditVote } from '@hooks/query/post/useEditVote';
+import { useImageZoomModal } from '@hooks/useImageZoomModal';
 
+import ImageZoomModal from '@components/common/ImageZoomModal';
 import WrittenVoteOptionList from '@components/optionList/WrittenVoteOptionList';
 
 import { PATH } from '@constants/path';
@@ -20,8 +22,6 @@ import { convertTimeToWord } from '@utils/time/convertTimeToWord';
 import commentIcon from '@assets/comment.svg';
 import photoIcon from '@assets/photo_black.svg';
 
-import Toast from '../../common/Toast';
-
 import * as S from './style';
 
 interface PostProps {
@@ -33,6 +33,7 @@ const Post = forwardRef(function Post(
   { postInfo, isPreview }: PostProps,
   ref: ForwardedRef<HTMLLIElement>
 ) {
+  const navigate = useNavigate();
   const {
     postId,
     category,
@@ -47,18 +48,15 @@ const Post = forwardRef(function Post(
     commentCount,
   } = postInfo;
   const { loggedInfo } = useContext(AuthContext);
-  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { addMessage } = useContext(ToastContext);
+  const { closeZoomModal, handleCloseClick, handleImageClick, imageSrc, zoomModalRef } =
+    useImageZoomModal();
 
-  const {
-    mutate: createVote,
-    isError: isCreateVoteError,
-    error: createVoteError,
-  } = useCreateVote({ isPreview, postId });
-  const {
-    mutate: editVote,
-    isError: isEditVoteError,
-    error: editVoteError,
-  } = useEditVote({ isPreview, postId });
+  const { mutate: createVote, isLoading: isCreateVoteLoading } = useCreateVote({
+    isPreview,
+    postId,
+  });
+  const { mutate: editVote, isLoading: isEditVoteLoading } = useEditVote({ isPreview, postId });
 
   const isActive = !checkClosedPost(deadline);
 
@@ -66,18 +64,23 @@ const Post = forwardRef(function Post(
     writer.id === loggedInfo.id || !isActive || voteInfo.selectedOptionId !== POST.NOT_VOTE;
 
   const handleVoteClick = (newOptionId: number) => {
+    if (isCreateVoteLoading || isEditVoteLoading) {
+      addMessage('투표 중입니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
+
     if (!loggedInfo.isLoggedIn) {
-      openToast('투표는 로그인 후에 이용하실 수 있습니다.');
+      addMessage('투표는 로그인 후에 이용하실 수 있습니다.');
       return;
     }
 
     if (!isActive) {
-      openToast('마감된 게시글에는 투표를 할 수 없습니다.');
+      addMessage('마감된 게시글에는 투표를 할 수 없습니다.');
       return;
     }
 
     if (writer.nickname === loggedInfo.userInfo?.nickname) {
-      openToast('내가 쓴 글에는 투표를 할 수 없습니다.');
+      addMessage('내가 쓴 글에는 투표를 할 수 없습니다.');
       return;
     }
 
@@ -94,29 +97,19 @@ const Post = forwardRef(function Post(
     });
   };
 
-  useEffect(() => {
-    if (isCreateVoteError && createVoteError instanceof Error) {
-      const errorResponse = JSON.parse(createVoteError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isCreateVoteError, createVoteError]);
-
-  useEffect(() => {
-    if (isEditVoteError && editVoteError instanceof Error) {
-      const errorResponse = JSON.parse(editVoteError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isEditVoteError, editVoteError]);
-
   const isPreviewTabIndex = isPreview ? undefined : 0;
 
   return (
     <S.Container as={isPreview ? 'li' : 'div'} ref={ref} $isPreview={isPreview}>
       <S.DetailLink
+        role={isPreview ? 'link' : 'none'}
+        tabIndex={0}
         as={isPreview ? '' : 'main'}
-        to={isPreview ? `${PATH.POST}/${postId}` : '#'}
+        onClick={() => {
+          if (!isPreview) return;
+
+          navigate(`${PATH.POST}/${postId}`);
+        }}
         $isPreview={isPreview}
         aria-describedby={
           isPreview
@@ -143,7 +136,7 @@ const Post = forwardRef(function Post(
         >
           {title}
         </S.Title>
-        <S.Wrapper>
+        <S.WriterInfoWrapper>
           <span aria-label={`작성자 ${writer.nickname}`} tabIndex={isPreviewTabIndex}>
             {writer.nickname}
           </span>
@@ -161,7 +154,7 @@ const Post = forwardRef(function Post(
               {isActive ? convertTimeToWord(deadline) : '마감 완료'}
             </span>
           </S.Wrapper>
-        </S.Wrapper>
+        </S.WriterInfoWrapper>
         <S.Content
           tabIndex={isPreviewTabIndex}
           aria-label={`내용: ${content}`}
@@ -169,7 +162,9 @@ const Post = forwardRef(function Post(
         >
           {convertTextToElement(content)}
         </S.Content>
-        {!isPreview && imageUrl && <S.Image src={imageUrl} alt={'본문에 포함된 이미지'} />}
+        {!isPreview && imageUrl && (
+          <S.Image onClick={handleImageClick} src={imageUrl} alt={'본문에 포함된 이미지'} />
+        )}
       </S.DetailLink>
       <WrittenVoteOptionList
         isStatisticsVisible={isStatisticsVisible}
@@ -177,24 +172,26 @@ const Post = forwardRef(function Post(
         handleVoteClick={handleVoteClick}
         isPreview={isPreview}
         voteOptionList={voteInfo.options}
+        handleImageClick={handleImageClick}
       />
       {isPreview && (
         <S.PreviewBottom>
-          <S.IconUint>
+          <S.IconUnit>
             <S.Icon src={photoIcon} alt="사진 갯수" />
             <span>{imageCount}</span>
-          </S.IconUint>
-          <S.IconUint>
+          </S.IconUnit>
+          <S.IconUnit>
             <S.Icon src={commentIcon} alt="댓글 갯수" />
             <span>{commentCount}</span>
-          </S.IconUint>
+          </S.IconUnit>
         </S.PreviewBottom>
       )}
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
-      )}
+      <ImageZoomModal
+        ref={zoomModalRef}
+        src={imageSrc}
+        closeZoomModal={closeZoomModal}
+        handleCloseClick={handleCloseClick}
+      />
     </S.Container>
   );
 });

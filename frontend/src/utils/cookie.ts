@@ -1,4 +1,4 @@
-type CookieKey = 'hasEssentialInfo' | 'isAppInstallVisible';
+type CookieKey = 'hasEssentialInfo' | 'isAppInstallVisible' | 'isBannerVisible';
 
 export const setCookie = ({
   key,

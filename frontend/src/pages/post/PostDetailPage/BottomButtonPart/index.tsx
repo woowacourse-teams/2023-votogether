@@ -2,6 +2,9 @@ import type { LoadingType } from '../types';
 
 import { useContext, useState } from 'react';
 
+import { PostAction } from '@type/menu';
+import { ReportMessage } from '@type/report';
+
 import { AuthContext } from '@hooks/context/auth';
 
 import DeleteModal from '@components/common/DeleteModal';
@@ -19,8 +22,8 @@ interface PostDetailPageChildProps {
     controlPost: {
       setEarlyClosePost: () => void;
       deletePost: () => void;
-      reportPost: (reason: string) => void;
-      reportNickname: (reason: string) => void;
+      reportPost: (reason: ReportMessage) => void;
+      reportNickname: (reason: ReportMessage) => void;
     };
     openToast: (text: string) => void;
   };
@@ -37,9 +40,9 @@ export default function BottomButtonPart({
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
   const { isDeletePostLoading, isReportPostLoading, isReportNicknameLoading } = isEventLoading;
-  const [action, setAction] = useState<string | null>(null);
+  const [action, setAction] = useState<PostAction | null>(null);
 
-  const handleActionButtonClick = (action: string) => {
+  const handleActionButtonClick = (action: PostAction) => {
     if (!loggedInfo.isLoggedIn) {
       openToast('로그인 후에 기능을 이용해주세요.');
       return;
@@ -113,6 +116,7 @@ export default function BottomButtonPart({
       )}
       {action === 'POST_REPORT' && (
         <ReportModal
+          handleModalClose={handleCancelClick}
           reportType="POST"
           handleReportClick={reportPost}
           handleCancelClick={handleCancelClick}
@@ -121,6 +125,7 @@ export default function BottomButtonPart({
       )}
       {action === 'NICKNAME_REPORT' && (
         <ReportModal
+          handleModalClose={handleCancelClick}
           reportType="NICKNAME"
           handleReportClick={reportNickname}
           handleCancelClick={handleCancelClick}

@@ -23,36 +23,6 @@ export const HeaderButton = styled.button`
   cursor: pointer;
 `;
 
-export const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-items: center;
-  justify-content: center;
-  gap: 20px;
-
-  padding: 70px 10px 20px 10px;
-
-  & > * {
-    width: 100%;
-  }
-
-  @media (min-width: ${theme.breakpoint.sm}) {
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
-
-    padding: 30px 40px 20px 40px;
-  }
-
-  @media (min-width: ${theme.breakpoint.md}) {
-    grid-template-columns: 1fr 300px;
-    padding: 30px 80px 20px 80px;
-  }
-
-  @media (min-width: ${theme.breakpoint.lg}) {
-    grid-template-columns: 1fr 400px;
-  }
-`;
-
 export const LeftSide = styled.div<{ $hasImage: boolean }>`
   display: flex;
   flex-direction: column;
@@ -181,6 +151,20 @@ export const OptionListWrapper = styled.div`
   }
 `;
 
+export const ModalBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 7px;
+
+  min-height: 100%;
+
+  font: var(--text-body);
+
+  box-sizing: border-box;
+`;
+
 export const Deadline = styled.div`
   font: var(--text-body);
   font-weight: bold;
@@ -255,19 +239,6 @@ export const CloseButton = styled.button`
   font: var(--text-body);
 
   cursor: pointer;
-`;
-
-export const ModalBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: start;
-  align-items: center;
-  gap: 10px;
-
-  padding: 10px 0;
-
-  font: var(--text-caption);
 `;
 
 export const ResetButtonWrapper = styled.div`

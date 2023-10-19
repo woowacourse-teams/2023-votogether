@@ -1,27 +1,21 @@
 import type { UseMutateFunction } from '@tanstack/react-query';
 
-import React, { HTMLAttributes, useState } from 'react';
+import React, { HTMLAttributes, useContext, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+
+import { ResponsiveFlex } from 'votogether-design-system';
 
 import { PostInfo } from '@type/post';
 
-import {
-  useMultiSelect,
-  useContentImage,
-  useText,
-  useToast,
-  useToggle,
-  useWritingOption,
-} from '@hooks';
+import { useMultiSelect, useContentImage, useText, useToggle, useWritingOption } from '@hooks';
 
-import ErrorBoundary from '@pages/ErrorBoundary';
+import { ToastContext } from '@hooks/context/toast';
 
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import Modal from '@components/common/Modal';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import SquareButton from '@components/common/SquareButton';
 import TimePickerOptionList from '@components/common/TimePickerOptionList';
-import Toast from '@components/common/Toast';
 import WritingVoteOptionList from '@components/optionList/WritingVoteOptionList';
 
 import { PATH } from '@constants/path';
@@ -40,12 +34,13 @@ import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
 import { getSelectedDHMTimeOption } from '@utils/post/getSelectedTimeOption';
 import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 
+import { theme } from '@styles/theme';
+
 import CategoryWrapper from './CategoryWrapper';
 import { DEADLINE_OPTION, DeadlineOptionInfo, DeadlineOptionName } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
 import { checkValidationPost } from './validation';
-
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
   mutate: UseMutateFunction<any, unknown, FormData, unknown>;
@@ -65,9 +60,18 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     writer,
   } = data ?? {};
 
+  //기타 훅
   const navigate = useNavigate();
+  const { addMessage } = useContext(ToastContext);
+  const { isOpen: isModalOpen, openComponent, closeComponent: closeModal } = useToggle();
+
+  //게시글 정보 관련 훅
   const contentImageHook = useContentImage(serverImageUrl);
   const { handlePasteImage } = contentImageHook;
+
+  const categorySelectHook = useMultiSelect(categoryIds ?? [], POST_CATEGORY.MAX_AMOUNT);
+  const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
+  const { text: writingContent, handleTextChange: handleContentChange } = useText(content ?? '');
   const writingOptionHook = useWritingOption(
     serverVoteInfo?.options.map(option => ({
       ...option,
@@ -75,46 +79,25 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }))
   );
 
+  //마감시간 관련 코드
   const deadlineDHMTime = calculateDeadlineDHMTime(createTime, deadline);
+  const baseTime = createTime ? new Date(createTime) : new Date();
 
-  const { isToastOpen, openToast, toastMessage } = useToast();
   const [selectTimeOption, setSelectTimeOption] = useState<
     DeadlineOptionName | '사용자지정' | null
   >(getSelectedDHMTimeOption(deadlineDHMTime));
-  const { isOpen, openComponent, closeComponent } = useToggle();
-  const [time, setTime] = useState(deadlineDHMTime);
-  const baseTime = createTime ? new Date(createTime) : new Date();
-  const closeModal = () => {
-    if (data && checkIrreplaceableTime(time, data.createTime)) {
-      openToast('마감시간 지정 조건을 다시 확인해주세요.');
-      const updatedTime = {
-        day: 0,
-        hour: 0,
-        minute: 0,
-      };
-      setTime(updatedTime);
-      setSelectTimeOption(null);
-    }
+  const [userSelectTime, setUserSelectTime] = useState(deadlineDHMTime);
 
-    setSelectTimeOption(Object.values(time).every(time => time === 0) ? null : '사용자지정');
-    closeComponent();
-  };
+  if (postId && writer && !checkWriter(writer.id)) return <Navigate to={PATH.HOME} />;
 
-  const { text: writingTitle, handleTextChange: handleTitleChange } = useText(title ?? '');
-  const {
-    text: writingContent,
-    handleTextChange: handleContentChange,
-    addText: addContent,
-  } = useText(content ?? '');
-  const multiSelectHook = useMultiSelect(categoryIds ?? [], POST_CATEGORY.MAX_AMOUNT);
-
+  // 마감시간 관련 핸들러
   const handleDeadlineButtonClick = (option: DeadlineOptionInfo) => {
     const targetTime = option.time;
 
     if (data && checkIrreplaceableTime(targetTime, data.createTime))
-      return openToast('마감시간 지정 조건을 다시 확인해주세요.');
+      return addMessage('마감시간 지정 조건을 다시 확인해주세요.');
     setSelectTimeOption(option.name);
-    setTime(targetTime);
+    setUserSelectTime(targetTime);
   };
 
   const handleResetButton = () => {
@@ -124,12 +107,26 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
         hour: 0,
         minute: 0,
       };
-      setTime(updatedTime);
+      setUserSelectTime(updatedTime);
     }
   };
 
-  const handleInsertContentLink = () => {
-    addContent('[[이 괄호 안에 링크를 작성해주세요]] ');
+  const handleModalClose = () => {
+    if (data && checkIrreplaceableTime(userSelectTime, data.createTime)) {
+      addMessage('마감시간 지정 조건을 다시 확인해주세요.');
+      const updatedTime = {
+        day: 0,
+        hour: 0,
+        minute: 0,
+      };
+      setUserSelectTime(updatedTime);
+      setSelectTimeOption(null);
+    }
+
+    setSelectTimeOption(
+      Object.values(userSelectTime).every(time => time === 0) ? null : '사용자지정'
+    );
+    closeModal();
   };
 
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -137,15 +134,15 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     const formData = new FormData();
 
     //예외처리
-    const { selectedOptionList } = multiSelectHook;
+    const { selectedOptionList } = categorySelectHook;
     const errorMessage = checkValidationPost(
       selectedOptionList,
       writingTitle,
       writingContent,
       writingOptionHook.optionList,
-      time
+      userSelectTime
     );
-    if (errorMessage) return openToast(errorMessage);
+    if (errorMessage) return addMessage(errorMessage);
 
     const writingOptionList = writingOptionHook.optionList.map(
       ({ id, isServerId, text, imageUrl }, index) => {
@@ -168,7 +165,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
         formData.append(`postOptions[${index}].content`, deleteOverlappingNewLine(option.content));
         formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
       });
-      formData.append('deadline', addTimeToDate(time, baseTime));
+      formData.append('deadline', addTimeToDate(userSelectTime, baseTime));
 
       fileInputList.forEach((item: HTMLInputElement, index: number) => {
         if (!item.files) return;
@@ -184,7 +181,15 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }
   };
 
-  if (postId && writer && !checkWriter(writer.id)) return <Navigate to={PATH.HOME} />;
+  const primaryButton = {
+    text: '저장',
+    handleClick: closeModal,
+  };
+
+  const secondaryButton = {
+    text: '초기화',
+    handleClick: handleResetButton,
+  };
 
   return (
     <>
@@ -197,11 +202,16 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
       <form id="form-post" onSubmit={handlePostFormSubmit}>
-        <S.Wrapper>
+        <ResponsiveFlex
+          breakpoint={theme.breakpoint.sm}
+          ratio={70}
+          $smGap="20px"
+          $lgGap="30px"
+          $smPadding="60px 15px 0px 0px"
+          $lgPadding="20px 80px 40px 60px"
+        >
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
-            <ErrorBoundary>
-              <CategoryWrapper multiSelectHook={multiSelectHook} />
-            </ErrorBoundary>
+            <CategoryWrapper multiSelectHook={categorySelectHook} />
             <S.Title
               value={writingTitle}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -223,11 +233,6 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
               onPaste={handlePasteImage}
               required
             />
-            <S.ContentLinkButtonWrapper>
-              <S.Button onClick={handleInsertContentLink} type="button">
-                본문에 링크 넣기
-              </S.Button>
-            </S.ContentLinkButtonWrapper>
             <S.ContentImagePartWrapper $hasImage={!!contentImageHook.contentImage}>
               <ContentImagePart size="lg" contentImageHook={contentImageHook} />
             </S.ContentImagePartWrapper>
@@ -239,13 +244,17 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
             <S.Deadline aria-label="마감시간 설정">
               <S.DeadlineDescription
                 aria-label={getDeadlineMessage({
-                  hour: time.hour,
-                  day: time.day,
-                  minute: time.minute,
+                  hour: userSelectTime.hour,
+                  day: userSelectTime.day,
+                  minute: userSelectTime.minute,
                 })}
                 aria-live="polite"
               >
-                {getDeadlineMessage({ hour: time.hour, day: time.day, minute: time.minute })}
+                {getDeadlineMessage({
+                  hour: userSelectTime.hour,
+                  day: userSelectTime.day,
+                  minute: userSelectTime.minute,
+                })}
                 {data && (
                   <S.Description tabIndex={0}>
                     현재 시간으로부터 글 작성일({createTime})로부터 {MAX_DEADLINE}일 이내 (
@@ -297,41 +306,25 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
               </SquareButton>
             </S.SaveButtonWrapper>
           </S.RightSide>
-        </S.Wrapper>
-        {isOpen && (
-          <Modal size="sm" onModalClose={closeModal} aria-label="마감시간 설정 모달">
-            <>
-              <S.ModalHeader>
-                <h3>마감 시간 선택</h3>
-                <S.CloseButton onClick={closeModal} aria-label="마감시간 설정 모달 끄기">
-                  X
-                </S.CloseButton>
-              </S.ModalHeader>
-              <S.ModalBody>
-                <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
-                  {POST_DEADLINE_POLICY.DEFAULT}
-                </S.Description>
-                <TimePickerOptionList time={time} setTime={setTime} />
-                <S.ResetButtonWrapper>
-                  <SquareButton
-                    aria-label="마감시간 초기화"
-                    onClick={handleResetButton}
-                    type="button"
-                    theme="blank"
-                  >
-                    초기화
-                  </SquareButton>
-                </S.ResetButtonWrapper>
-              </S.ModalBody>
-            </>
+        </ResponsiveFlex>
+        {isModalOpen && (
+          <Modal
+            size="sm"
+            primaryButton={primaryButton}
+            secondaryButton={secondaryButton}
+            aria-label="마감시간 설정 모달"
+            handleModalClose={handleModalClose}
+            title="마감 시간 선택"
+          >
+            <S.ModalBody>
+              <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
+                {POST_DEADLINE_POLICY.DEFAULT}
+              </S.Description>
+              <TimePickerOptionList time={userSelectTime} setTime={setUserSelectTime} />
+            </S.ModalBody>
           </Modal>
         )}
       </form>
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
-      )}
     </>
   );
 }

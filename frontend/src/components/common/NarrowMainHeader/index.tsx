@@ -5,6 +5,7 @@ import { useToggle } from '@hooks';
 
 import { PATH } from '@constants/path';
 
+import AlarmIconButton from '../ActiveContainer';
 import IconButton from '../IconButton';
 import LogoButton from '../LogoButton';
 import SearchBar from '../SearchBar';
@@ -12,10 +13,16 @@ import SearchBar from '../SearchBar';
 import * as S from './style';
 
 interface NarrowMainHeaderProps {
-  handleMenuOpenClick: () => void;
+  handleCategoryOpenClick: () => void;
+  handleAlarmOpenClick: () => void;
+  isAlarmActive?: boolean;
 }
 
-export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHeaderProps) {
+export default function NarrowMainHeader({
+  handleCategoryOpenClick,
+  handleAlarmOpenClick,
+  isAlarmActive,
+}: NarrowMainHeaderProps) {
   const {
     isOpen: isSearchInputOpen,
     openComponent: openSearchInput,
@@ -26,10 +33,6 @@ export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHead
 
   const movePostListPage = () => {
     navigate('/');
-  };
-
-  const moveUserInfoPage = () => {
-    navigate(PATH.USER_INFO);
   };
 
   const moveRankingPage = () => {
@@ -44,10 +47,12 @@ export default function NarrowMainHeader({ handleMenuOpenClick }: NarrowMainHead
     </S.Background>
   ) : (
     <S.Container>
-      <IconButton category="category" onClick={handleMenuOpenClick} />
+      <IconButton category="category" onClick={handleCategoryOpenClick} />
       <LogoButton content="icon" onClick={movePostListPage} />
       <IconButton category="search" onClick={openSearchInput} />
-      <IconButton category="userInfo" onClick={moveUserInfoPage} />
+      <AlarmIconButton isActive={isAlarmActive ?? false}>
+        <IconButton category="alarm" onClick={handleAlarmOpenClick} />
+      </AlarmIconButton>
       <IconButton category="ranking" onClick={moveRankingPage} />
     </S.Container>
   );

@@ -4,12 +4,13 @@ import { useCommentList, useMoreComment, AuthContext } from '@hooks';
 
 import SquareButton from '@components/common/SquareButton';
 
+import { COMMENT_USER } from '@constants/post';
+
 import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import CommentItem from './CommentItem';
 import CommentLoginSection from './CommentLoginSection';
 import CommentTextForm from './CommentTextForm';
-import { COMMENT_USER } from './constants';
 import * as S from './style';
 
 interface CommentListProps {
@@ -62,6 +63,9 @@ export default function CommentList({ postId, postWriterName }: CommentListProps
         )}
       </S.TextOrLoginWrapper>
       <S.ListContainer>
+        {commentList && commentList.length !== 0 && (
+          <S.CommentCount>댓글 {commentList.length}개</S.CommentCount>
+        )}
         {slicedCommentList.map((comment, index) => {
           if (index % 10 === 9) {
             return (

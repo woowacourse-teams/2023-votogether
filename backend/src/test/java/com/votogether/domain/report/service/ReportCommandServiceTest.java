@@ -1,24 +1,31 @@
 package com.votogether.domain.report.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.post.dto.response.post.PostResponse;
+import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
-import com.votogether.domain.post.entity.vo.PostClosingType;
-import com.votogether.domain.post.entity.vo.PostSortType;
+import com.votogether.domain.post.repository.CommentRepository;
+import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.post.service.PostCommentService;
 import com.votogether.domain.post.service.PostGuestService;
+import com.votogether.domain.report.dto.request.ReportActionRequest;
 import com.votogether.domain.report.dto.request.ReportRequest;
+import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
+import com.votogether.test.fixtures.MemberFixtures;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -34,6 +41,21 @@ class ReportCommandServiceTest extends ServiceTest {
 
     @Autowired
     PostCommentService postCommentService;
+
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
+
+    @Autowired
+    PostRepository postRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Nested
     @DisplayName("게시글 신고기능은")
@@ -108,38 +130,6 @@ class ReportCommandServiceTest extends ServiceTest {
             assertThatThrownBy(() -> reportCommandService.report(reporter, request))
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("하나의 글에 대해서 중복하여 신고할 수 없습니다.");
-        }
-
-        @Test
-        @DisplayName("투표글 신고가 5회가 되면 블라인드 처리가 된다.")
-        void reportAndBlind() {
-            // given
-            Member reporter1 = memberTestPersister.builder().save();
-            Member reporter2 = memberTestPersister.builder().save();
-            Member reporter3 = memberTestPersister.builder().save();
-            Member reporter4 = memberTestPersister.builder().save();
-            Member reporter5 = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().save();
-            ReportRequest request = new ReportRequest(ReportType.POST, post.getId(), "불건전한 게시글");
-
-            // when
-            reportCommandService.report(reporter1, request);
-            reportCommandService.report(reporter2, request);
-            reportCommandService.report(reporter3, request);
-            reportCommandService.report(reporter4, request);
-            reportCommandService.report(reporter5, request);
-
-            // then
-            final List<PostResponse> responses = postGuestService.getPosts(
-                    0,
-                    PostClosingType.ALL,
-                    PostSortType.HOT,
-                    null
-            );
-            assertAll(
-                    () -> assertThat(post.isHidden()).isTrue(),
-                    () -> assertThat(responses).isEmpty()
-            );
         }
 
     }
@@ -224,33 +214,6 @@ class ReportCommandServiceTest extends ServiceTest {
                     .hasMessage("하나의 댓글에 대해서 중복하여 신고할 수 없습니다.");
         }
 
-        @Test
-        @DisplayName("댓글 신고가 5회가 되면 블라인드 처리가 된다.")
-        void reportAndBlind() {
-            // given
-            Member reporter1 = memberTestPersister.builder().save();
-            Member reporter2 = memberTestPersister.builder().save();
-            Member reporter3 = memberTestPersister.builder().save();
-            Member reporter4 = memberTestPersister.builder().save();
-            Member reporter5 = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().save();
-            Comment comment = commentTestPersister.builder().post(post).save();
-            ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
-
-            // when
-            reportCommandService.report(reporter1, request);
-            reportCommandService.report(reporter2, request);
-            reportCommandService.report(reporter3, request);
-            reportCommandService.report(reporter4, request);
-            reportCommandService.report(reporter5, request);
-
-            // then
-            assertAll(
-                    () -> assertThat(comment.isHidden()).isTrue(),
-                    () -> assertThat(postCommentService.getComments(post.getId())).isEmpty()
-            );
-        }
-
     }
 
     @Nested
@@ -298,25 +261,247 @@ class ReportCommandServiceTest extends ServiceTest {
                     .isInstanceOf(BadRequestException.class)
                     .hasMessage("하나의 닉네임에 대해서 중복하여 신고할 수 없습니다.");
         }
+    }
+
+    @Nested
+    @DisplayName("신고 조치 기능은")
+    class ReportAction {
 
         @Test
-        @DisplayName("닉네임 신고가 3회가 되면 닉네임이 자동변경처리가 된다.")
-        void reportAndBlind() {
+        @DisplayName("게시글에 대해 신고 조치를 한다.")
+        void postReportAction() {
             // given
-            Member reporter1 = memberTestPersister.builder().save();
-            Member reporter2 = memberTestPersister.builder().save();
-            Member reporter3 = memberTestPersister.builder().save();
-            Member reported = memberTestPersister.builder().save();
-            ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
+            Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+            Member writer = memberService.register(MemberFixtures.MALE_30.get());
+
+            Post post = postTestPersister.postBuilder()
+                    .writer(writer)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .save();
+
+            Report savedReport = reportTestPersister.builder()
+                    .member(reporter)
+                    .reportType(ReportType.POST)
+                    .reason("reasonA")
+                    .targetId(post.getId())
+                    .save();
 
             // when
-            reportCommandService.report(reporter1, request);
-            reportCommandService.report(reporter2, request);
-            reportCommandService.report(reporter3, request);
+            ReportActionRequest request = new ReportActionRequest(savedReport.getId(), true);
+            reportCommandService.reportAction(request);
 
             // then
-            assertThat(reported.getNickname()).contains("Pause1");
+            Post savedPost = postRepository.findById(post.getId()).get();
+            Optional<Report> reportById = reportRepository.findById(savedReport.getId());
+            ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findAll().get(0);
+
+            assertSoftly(softly -> {
+                softly.assertThat(reportById).isEmpty();
+                softly.assertThat(reportActionAlarm.getMember().getId()).isEqualTo(writer.getId());
+                softly.assertThat(reportActionAlarm.getReportType()).isEqualTo(savedReport.getReportType());
+                softly.assertThat(reportActionAlarm.getTarget()).isEqualTo(savedPost.getId().toString());
+                softly.assertThat(reportActionAlarm.getReasons()).isEqualTo(savedReport.getReason());
+                softly.assertThat(reportActionAlarm.isChecked()).isFalse();
+                softly.assertThat(savedPost.isHidden()).isTrue();
+            });
         }
+
+        @Test
+        @DisplayName("게시글에 대해 신고 조치를 하지 않는다.")
+        void postNotReportAction() {
+            // given
+            Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+            Member writer = memberService.register(MemberFixtures.MALE_30.get());
+
+            Post post = postTestPersister.postBuilder()
+                    .writer(writer)
+                    .title("title")
+                    .content("content")
+                    .deadline(LocalDateTime.now())
+                    .save();
+
+            Report savedReport = reportTestPersister.builder()
+                    .member(reporter)
+                    .reportType(ReportType.POST)
+                    .reason("reasonA")
+                    .targetId(post.getId())
+                    .save();
+
+            // when
+            ReportActionRequest request = new ReportActionRequest(savedReport.getId(), false);
+            reportCommandService.reportAction(request);
+
+            // then
+            Post savedPost = postRepository.findById(post.getId()).get();
+            Optional<Report> reportById = reportRepository.findById(savedReport.getId());
+            List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository.findAll();
+
+            assertSoftly(softly -> {
+                softly.assertThat(reportById).isEmpty();
+                softly.assertThat(reportActionAlarms).isEmpty();
+                softly.assertThat(savedPost.isHidden()).isFalse();
+            });
+        }
+
+        @Test
+        @DisplayName("댓글에 대해 신고 조치를 한다.")
+        void commentReportAction() {
+            // given
+            Member writer = memberService.register(MemberFixtures.MALE_30.get());
+            Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+
+            Comment comment = commentTestPersister.builder()
+                    .writer(writer)
+                    .content("commnetA")
+                    .save();
+
+            Report savedReport = reportTestPersister.builder()
+                    .member(reporter)
+                    .reportType(ReportType.COMMENT)
+                    .reason("reasonA")
+                    .targetId(comment.getId())
+                    .save();
+
+            // when
+            ReportActionRequest request = new ReportActionRequest(savedReport.getId(), true);
+            reportCommandService.reportAction(request);
+
+            // then
+            Comment savedComment = commentRepository.findById(comment.getId()).get();
+            Optional<Report> reportById = reportRepository.findById(savedReport.getId());
+            ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findAll().get(0);
+
+            assertSoftly(softly -> {
+                softly.assertThat(reportById).isEmpty();
+                softly.assertThat(reportActionAlarm.getMember().getId()).isEqualTo(writer.getId());
+                softly.assertThat(reportActionAlarm.getReportType()).isEqualTo(savedReport.getReportType());
+                softly.assertThat(reportActionAlarm.getTarget()).isEqualTo(savedComment.getContent());
+                softly.assertThat(reportActionAlarm.getReasons()).isEqualTo(savedReport.getReason());
+                softly.assertThat(reportActionAlarm.isChecked()).isFalse();
+                softly.assertThat(savedComment.isHidden()).isTrue();
+            });
+        }
+
+        @Test
+        @DisplayName("댓글에 대해 신고 조치를 하지 않는다.")
+        void commentNotReportAction() {
+            // given
+            Member writer = memberService.register(MemberFixtures.MALE_30.get());
+            Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+
+            Comment comment = commentTestPersister.builder()
+                    .writer(writer)
+                    .content("commnetA")
+                    .save();
+
+            Report savedReport = reportTestPersister.builder()
+                    .member(reporter)
+                    .reportType(ReportType.COMMENT)
+                    .reason("reasonA")
+                    .targetId(comment.getId())
+                    .save();
+
+            // when
+            ReportActionRequest request = new ReportActionRequest(savedReport.getId(), false);
+            reportCommandService.reportAction(request);
+
+            // then
+            Comment savedComment = commentRepository.findById(comment.getId()).get();
+            Optional<Report> reportById = reportRepository.findById(savedReport.getId());
+            List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository.findAll();
+
+            assertSoftly(softly -> {
+                softly.assertThat(reportById).isEmpty();
+                softly.assertThat(reportActionAlarms).isEmpty();
+                softly.assertThat(savedComment.isHidden()).isFalse();
+            });
+        }
+
+        @Test
+        @DisplayName("닉네임에 대해 신고 조치를 한다.")
+        void nicknameReportAction() {
+            // given
+            Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+            Member member = memberService.register(MemberFixtures.MALE_30.get());
+
+            Report savedReport = reportTestPersister.builder()
+                    .member(reporter)
+                    .reportType(ReportType.NICKNAME)
+                    .reason("reasonA")
+                    .targetId(member.getId())
+                    .save();
+
+            // when
+            ReportActionRequest request = new ReportActionRequest(savedReport.getId(), true);
+            reportCommandService.reportAction(request);
+
+            // then
+            Member savedMember = memberService.findById(member.getId());
+            Optional<Report> reportById = reportRepository.findById(savedReport.getId());
+            ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findAll().get(0);
+
+            assertSoftly(softly -> {
+                softly.assertThat(reportById).isEmpty();
+                softly.assertThat(reportActionAlarm.getMember().getId()).isEqualTo(member.getId());
+                softly.assertThat(reportActionAlarm.getReportType()).isEqualTo(savedReport.getReportType());
+                softly.assertThat(reportActionAlarm.getTarget()).isNotEqualTo(savedMember.getNickname());
+                softly.assertThat(reportActionAlarm.getReasons()).isEqualTo(savedReport.getReason());
+                softly.assertThat(reportActionAlarm.isChecked()).isFalse();
+            });
+        }
+
+        @Test
+        @DisplayName("닉네임에 대해 신고 조치를 하지 않는다.")
+        void nicknameNotReportAction() {
+            // given
+            Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+            Member member = memberService.register(MemberFixtures.MALE_30.get());
+
+            Report savedReport = reportTestPersister.builder()
+                    .member(reporter)
+                    .reportType(ReportType.NICKNAME)
+                    .reason("reasonA")
+                    .targetId(member.getId())
+                    .save();
+
+            // when
+            ReportActionRequest request = new ReportActionRequest(savedReport.getId(), false);
+            reportCommandService.reportAction(request);
+
+            // then
+            Member savedMember = memberService.findById(member.getId());
+            Optional<Report> reportById = reportRepository.findById(savedReport.getId());
+            List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository.findAll();
+
+            assertSoftly(softly -> {
+                softly.assertThat(reportById).isEmpty();
+                softly.assertThat(reportActionAlarms).isEmpty();
+                softly.assertThat(member.getNickname()).isEqualTo(savedMember.getNickname());
+            });
+        }
+
+        @Test
+        @DisplayName("신고가 존재하지 않으면 예외 발생.")
+        void reportNotExistException() {
+            // given
+            Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+            Member member = memberService.register(MemberFixtures.MALE_30.get());
+
+            Report savedReport = reportTestPersister.builder()
+                    .member(reporter)
+                    .reportType(ReportType.NICKNAME)
+                    .reason("reasonA")
+                    .targetId(member.getId())
+                    .save();
+
+            // when, then
+            ReportActionRequest request = new ReportActionRequest(savedReport.getId() + 1L, true);
+            assertThatThrownBy(() -> reportCommandService.reportAction(request))
+                    .isInstanceOf(NotFoundException.class);
+        }
+
     }
 
 }

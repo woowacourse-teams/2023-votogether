@@ -10,3 +10,31 @@ export const Button = styled.button`
 
   cursor: pointer;
 `;
+
+//이벤트를 위한 코드
+export const Image = styled.img<{ $isMoving: boolean }>`
+  width: 50px;
+  height: 50px;
+
+  position: absolute;
+  right: 13px;
+  bottom: 83px;
+  z-index: -1;
+
+  ${props =>
+    props.$isMoving
+      ? `animation: move 1s linear infinite;
+  
+  @keyframes move {
+    0% {
+      right:  13px;
+    }
+    50% {
+      right: 200px;
+    }
+    100% {
+      right:  13px;
+    }
+  }`
+      : ''};
+`;

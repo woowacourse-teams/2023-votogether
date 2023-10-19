@@ -19,7 +19,7 @@ const meta: Meta<typeof Modal> = {
 export default meta;
 
 export const Default = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const openModal = () => {
     setIsOpen(true);
@@ -29,15 +29,33 @@ export const Default = () => {
     setIsOpen(false);
   };
 
+  const primaryButton = {
+    text: 'Primary',
+    handleClick: () => {
+      alert('You Clicked Primary Button!');
+    },
+  };
+
+  const secondaryButton = {
+    text: 'Secondary',
+    handleClick: () => {
+      setIsOpen(false);
+    },
+  };
+
   return (
     <>
       <SquareButton onClick={openModal} theme="blank">
         Open Modal
       </SquareButton>
       {isOpen && (
-        <Modal size="sm" onModalClose={closeModal}>
-          <p>This is Default Modal</p>
-        </Modal>
+        <Modal
+          size="sm"
+          title="This is Default Modal"
+          primaryButton={primaryButton}
+          secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
+        />
       )}
     </>
   );
@@ -54,29 +72,18 @@ export const Wide = () => {
     setIsOpen(false);
   };
 
-  return (
-    <>
-      <SquareButton onClick={openModal} theme="blank">
-        Open Modal
-      </SquareButton>
-      {isOpen && (
-        <Modal size="lg" onModalClose={closeModal}>
-          <p>This is Wide Modal</p>
-        </Modal>
-      )}
-    </>
-  );
-};
-
-export const WithCloseButton = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
+  const primaryButton = {
+    text: 'Primary',
+    handleClick: () => {
+      alert('You Clicked Primary Button!');
+    },
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
+  const secondaryButton = {
+    text: 'Secondary',
+    handleClick: () => {
+      setIsOpen(false);
+    },
   };
 
   return (
@@ -85,18 +92,13 @@ export const WithCloseButton = () => {
         Open Modal
       </SquareButton>
       {isOpen && (
-        <Modal size="sm" onModalClose={closeModal}>
-          <>
-            <S.Header>
-              <p>Modal Title</p>
-              <S.CloseButton onClick={closeModal}>X</S.CloseButton>
-            </S.Header>
-            <S.Body>
-              <S.Description>This is Description</S.Description>
-              This is Content
-            </S.Body>
-          </>
-        </Modal>
+        <Modal
+          title="This is Wide Modal"
+          size="lg"
+          primaryButton={primaryButton}
+          secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
+        />
       )}
     </>
   );
@@ -113,10 +115,24 @@ export const CloseByESC = () => {
     setIsOpen(false);
   };
 
+  const primaryButton = {
+    text: 'Primary',
+    handleClick: () => {
+      alert('You Clicked Primary Button!');
+    },
+  };
+
+  const secondaryButton = {
+    text: 'Secondary',
+    handleClick: () => {
+      setIsOpen(false);
+    },
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        closeModal();
+        secondaryButton.handleClick();
       }
     };
 
@@ -135,9 +151,13 @@ export const CloseByESC = () => {
         Open Modal
       </SquareButton>
       {isOpen && (
-        <Modal size="sm" onModalClose={closeModal}>
-          <p>Close This Modal by ESC</p>
-        </Modal>
+        <Modal
+          title="Close This Modal by ESC"
+          size="sm"
+          primaryButton={primaryButton}
+          secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
+        />
       )}
     </>
   );
@@ -159,7 +179,7 @@ export const WithTimePicker = () => {
     setIsOpen(false);
   };
 
-  const handleResetBUtton = () => {
+  const handleResetButton = () => {
     if (window.confirm('정말 초기화하시겠습니까?')) {
       const updatedTime = {
         day: 0,
@@ -170,28 +190,35 @@ export const WithTimePicker = () => {
     }
   };
 
+  const primaryButton = {
+    text: '저장',
+    handleClick: () => {
+      setIsOpen(false);
+    },
+  };
+
+  const secondaryButton = {
+    text: '초기화',
+    handleClick: handleResetButton,
+  };
+
   return (
     <>
       <SquareButton onClick={openModal} theme="blank">
         사용자 지정
       </SquareButton>
       {isOpen && (
-        <Modal size="sm" onModalClose={closeModal}>
-          <>
-            <S.Header>
-              <h3>마감 시간 선택</h3>
-              <S.CloseButton onClick={closeModal}>X</S.CloseButton>
-            </S.Header>
-            <S.Body>
-              <S.Description>최대 {MAX_DEADLINE}일을 넘을 수 없습니다.</S.Description>
-              <TimePickerOptionList time={time} setTime={setTime} />
-              <S.ButtonWrapper>
-                <SquareButton onClick={handleResetBUtton} theme="blank">
-                  초기화
-                </SquareButton>
-              </S.ButtonWrapper>
-            </S.Body>
-          </>
+        <Modal
+          title="마감 시간 선택"
+          size="sm"
+          primaryButton={primaryButton}
+          secondaryButton={secondaryButton}
+          handleModalClose={closeModal}
+        >
+          <S.Body>
+            <S.Description>최대 {MAX_DEADLINE}일을 넘을 수 없습니다.</S.Description>
+            <TimePickerOptionList time={time} setTime={setTime} />
+          </S.Body>
         </Modal>
       )}
     </>
@@ -218,7 +245,6 @@ const Body = styled.div`
   align-items: center;
   gap: 10px;
 
-  padding: 10px 0;
   font: var(--text-caption);
 `;
 

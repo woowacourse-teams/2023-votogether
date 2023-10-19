@@ -13,6 +13,7 @@ import com.votogether.domain.member.dto.request.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.vo.Gender;
+import com.votogether.domain.member.entity.vo.Roles;
 import com.votogether.domain.member.entity.vo.SocialType;
 import com.votogether.global.jwt.TokenPayload;
 import com.votogether.test.ControllerTest;
@@ -55,7 +56,9 @@ class MemberControllerTest extends ControllerTest {
                 Gender.MALE,
                 1988,
                 0,
-                0
+                0,
+                Roles.MEMBER,
+                false
         );
 
         given(tokenProcessor.resolveToken(anyString())).willReturn("token");
@@ -75,8 +78,8 @@ class MemberControllerTest extends ControllerTest {
         // then
         assertAll(
                 () -> assertThat(response.nickname()).isEqualTo("저문"),
-                () -> assertThat(response.postCount()).isEqualTo(0),
-                () -> assertThat(response.voteCount()).isEqualTo(0)
+                () -> assertThat(response.postCount()).isZero(),
+                () -> assertThat(response.voteCount()).isZero()
         );
     }
 
@@ -215,6 +218,26 @@ class MemberControllerTest extends ControllerTest {
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
+    }
+
+    @Test
+    @DisplayName("최신 알림 읽기에 성공하면 200을 반환한다.")
+    void checkLatestAlarm() throws Exception {
+        // given
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+
+        willDoNothing().given(memberService).checkLatestAlarm(any(Member.class));
+
+        // when, then
+        RestAssuredMockMvc
+                .given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .when().patch("/members/me/check-alarm")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test

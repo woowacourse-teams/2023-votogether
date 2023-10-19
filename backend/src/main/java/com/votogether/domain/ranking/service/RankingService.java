@@ -1,15 +1,13 @@
 package com.votogether.domain.ranking.service;
 
 import com.votogether.domain.member.entity.Member;
-import com.votogether.domain.member.repository.MemberRepository;
-import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.member.entity.MemberMetric;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.ranking.dto.response.RankingResponse;
-import com.votogether.domain.ranking.entity.PassionRankings;
-import com.votogether.domain.ranking.entity.vo.PassionRecord;
-import com.votogether.domain.vote.repository.VoteRepository;
-import java.util.LinkedHashMap;
+import com.votogether.global.exception.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,37 +16,50 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RankingService {
 
-    private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
-    private final VoteRepository voteRepository;
+    private final MemberMetricRepository memberMetricRepository;
 
     @Transactional(readOnly = true)
     public RankingResponse getPassionRanking(final Member member) {
-        final PassionRankings passionRankings = getPassionRankings();
-        return RankingResponse.of(passionRankings, member);
+        final MemberMetric memberMetric = memberMetricRepository.findByMember(member)
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+        final long higherCount = memberMetricRepository.countByScoreGreaterThan(memberMetric.getScore());
+
+        return new RankingResponse(
+                higherCount + 1,
+                member.getNickname(),
+                memberMetric.getPostCount(),
+                memberMetric.getVoteCount(),
+                memberMetric.getScore()
+        );
     }
 
     @Transactional(readOnly = true)
     public List<RankingResponse> getPassionRanking() {
-        final PassionRankings passionRankings = getPassionRankings();
-        return passionRankings.getTop10Members()
-                .stream()
-                .map(member -> RankingResponse.of(passionRankings, member)
-                ).toList();
-    }
+        final List<MemberMetric> memberMetrics = memberMetricRepository.getTop10MemberMetrics();
 
-    private PassionRankings getPassionRankings() {
-        final List<Member> members = memberRepository.findAll();
-        final List<Integer> postCounts = postRepository.findCountsByMembers(members);
-        final List<Integer> voteCounts = voteRepository.findCountsByMembers(members);
+        int currentRanking = 1;
+        int previousRanking = -1;
+        long previousScore = -1;
 
-        final Map<Member, PassionRecord> passionBoard = new LinkedHashMap<>();
+        final List<RankingResponse> result = new ArrayList<>();
+        for (final MemberMetric memberMetric : memberMetrics) {
+            final long currentScore = memberMetric.getScore();
+            final int ranking = (currentScore == previousScore) ? previousRanking : currentRanking;
 
-        for (int i = 0; i < members.size(); i++) {
-            passionBoard.put(members.get(i), new PassionRecord(postCounts.get(i), voteCounts.get(i)));
+            final RankingResponse rankingResponse = new RankingResponse(
+                    ranking,
+                    memberMetric.getMember().getNickname(),
+                    memberMetric.getPostCount(),
+                    memberMetric.getVoteCount(),
+                    memberMetric.getScore()
+            );
+            result.add(rankingResponse);
+
+            previousRanking = ranking;
+            previousScore = currentScore;
+            currentRanking++;
         }
-
-        return new PassionRankings(passionBoard);
+        return result;
     }
 
 }

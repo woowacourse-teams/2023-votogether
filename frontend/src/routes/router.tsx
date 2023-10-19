@@ -1,16 +1,18 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
 import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
 import MyInfoPage from '@pages/MyInfoPage';
 import NotFoundPage from '@pages/NotFoundPage';
+import NoticeDetailPage from '@pages/notice/NoticeDetailPage';
+import NoticeListPage from '@pages/notice/NoticeListPage';
 import CreatePostPage from '@pages/post/CreatePostPage';
 import EditPostPage from '@pages/post/EditPostPage';
 import PostDetailPage from '@pages/post/PostDetailPage';
 import RankingPage from '@pages/RankingPage';
+import ReportAlarmPage from '@pages/ReportAlarmPage';
 
 import ScrollToTop from '@components/common/ScrollToTop';
 import RouteChangeTracker from '@components/RouteChangeTracker';
@@ -22,6 +24,10 @@ import PrivateRoute from './PrivateRoute';
 const Login = lazy(() => import('@pages/auth/LoginPage'));
 const RegisterPersonalInfo = lazy(() => import('@pages/user/RegisterPersonalInfoPage'));
 const VoteStatisticsPage = lazy(() => import('@pages/VoteStatisticsPage'));
+const NoticeAdminPage = lazy(() => import('@pages/admin/notices/NoticeAdminPage'));
+const NoticeEditPage = lazy(() => import('@pages/admin/notices/NoticeEditPage'));
+const NoticeWritePage = lazy(() => import('@pages/admin/notices/NoticeWritePage'));
+const PendingReportPage = lazy(() => import('@pages/admin/PendingReportPage'));
 
 const router = createBrowserRouter([
   {
@@ -161,26 +167,88 @@ const router = createBrowserRouter([
   {
     path: PATH.RANKING,
     element: (
-      <>
+      <PrivateRoute isGuestAllowed={true}>
         <RankingPage />
         <RouteChangeTracker />
-      </>
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
   },
   {
-    path: PATH.ANNOUNCEMENT,
+    path: PATH.ADMIN,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: `reports/pending`,
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <PendingReportPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: `notices/write`,
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <NoticeWritePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: `notices/:noticeId`,
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <NoticeEditPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'notices',
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <NoticeAdminPage />
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+  {
+    path: `${PATH.REPORT_ALARM}/:reportId`,
     element: (
-      <>
-        <AnnouncementPage />
-        <RouteChangeTracker />
-      </>
+      <PrivateRoute>
+        <ReportAlarmPage />
+      </PrivateRoute>
     ),
     errorElement: <ErrorPage />,
+  },
+  {
+    path: PATH.NOTICES,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: ':noticeId',
+        element: (
+          <PrivateRoute isGuestAllowed={true}>
+            <NoticeDetailPage />
+            <RouteChangeTracker />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '',
+        element: (
+          <PrivateRoute isGuestAllowed={true}>
+            <NoticeListPage />
+            <RouteChangeTracker />
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
   {
     path: '*',
     element: <NotFoundPage />,
   },
 ]);
+
 export default router;

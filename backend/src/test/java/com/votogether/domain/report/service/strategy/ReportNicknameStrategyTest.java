@@ -2,15 +2,21 @@ package com.votogether.domain.report.service.strategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.member.service.MemberService;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.request.ReportRequest;
+import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +28,12 @@ class ReportNicknameStrategyTest extends ServiceTest {
 
     @Autowired
     ReportNicknameStrategy reportNicknameStrategy;
+
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
 
     @Autowired
     ReportRepository reportRepository;
@@ -75,26 +87,81 @@ class ReportNicknameStrategyTest extends ServiceTest {
     }
 
     @Test
-    @DisplayName("닉네임 신고가 3회가 되면 닉네임이 자동변경처리가 된다.")
-    void reportAndBlind() {
+    @DisplayName("targetId를 통해 해당 멤버의 Nickname을 가져온다")
+    void parseTarget() {
         // given
-        Member reporter1 = memberRepository.save(MemberFixtures.FEMALE_20.get());
-        Member reporter2 = memberRepository.save(MemberFixtures.FEMALE_30.get());
-        Member reporter3 = memberRepository.save(MemberFixtures.FEMALE_40.get());
-        Member reported = memberRepository.save(MemberFixtures.FEMALE_10.get());
-
-        ReportRequest request = new ReportRequest(ReportType.NICKNAME, reported.getId(), "불건전한 닉네임");
+        Member member = memberRepository.save(MemberFixtures.MALE_30.get());
 
         // when
-        reportNicknameStrategy.report(reporter1, request);
-        reportNicknameStrategy.report(reporter2, request);
-        reportNicknameStrategy.report(reporter3, request);
+        String nickName = reportNicknameStrategy.parseTarget(member.getId());
 
         // then
-        assertAll(
-                () -> assertThat(reported.getNickname()).contains("Pause1"),
-                () -> assertThat(reportRepository.findAll()).isEmpty()
+        assertThat(nickName).isEqualTo(member.getNickname());
+    }
+
+    @Test
+    @DisplayName("닉네임에 대한 신고 조치를 한다.")
+    void nicknameReportAction() {
+        // given
+        Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+        Member member = memberService.register(MemberFixtures.MALE_30.get());
+        String nickname = member.getNickname();
+
+        Report savedReport = reportTestPersister.builder()
+                .member(reporter)
+                .reportType(ReportType.NICKNAME)
+                .reason("reasonA")
+                .targetId(member.getId())
+                .save();
+
+        ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+                savedReport.getId(),
+                savedReport.getReportType(),
+                member.getId(),
+                savedReport.getReason(),
+                savedReport.getCreatedAt()
         );
+
+        // when
+        reportNicknameStrategy.reportAction(reportAggregateDto);
+
+        // then
+        ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findAll().get(0);
+
+        assertSoftly(softly -> {
+            softly.assertThat(reportActionAlarm.getMember().getId()).isEqualTo(member.getId());
+            softly.assertThat(reportActionAlarm.getReportType()).isEqualTo(savedReport.getReportType());
+            softly.assertThat(reportActionAlarm.getTarget()).isNotEqualTo(member.getNickname());
+            softly.assertThat(reportActionAlarm.getReasons()).isEqualTo(savedReport.getReason());
+            softly.assertThat(reportActionAlarm.isChecked()).isFalse();
+        });
+    }
+
+    @Test
+    @DisplayName("회원이 존재하지 않는 경우 예외 발생")
+    void nicknameNotExistException() {
+        // given
+        Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+        Member member = memberService.register(MemberFixtures.MALE_30.get());
+
+        Report savedReport = reportTestPersister.builder()
+                .member(reporter)
+                .reportType(ReportType.NICKNAME)
+                .reason("reasonA")
+                .targetId(member.getId())
+                .save();
+
+        ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+                savedReport.getId(),
+                savedReport.getReportType(),
+                member.getId() + 1L,
+                savedReport.getReason(),
+                savedReport.getCreatedAt()
+        );
+
+        // when, then
+        assertThatThrownBy(() -> reportNicknameStrategy.reportAction(reportAggregateDto))
+                .isInstanceOf(NotFoundException.class);
     }
 
 }

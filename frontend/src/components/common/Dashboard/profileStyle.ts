@@ -12,5 +12,5 @@ export const ProfileContainer = styled.section`
 
   font: var(--text-body);
 
-  background-color: var(--gray);
+  background-color: var(--bright-gray);
 `;

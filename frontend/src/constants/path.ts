@@ -7,7 +7,10 @@ export const BASE_PATH = {
   ADMIN: '/admin',
   SEARCH: '/search',
   RANKING: '/ranking',
-  ANNOUNCEMENT: '/announcements',
+  NOTICES: '/notices',
+  REPORTS: '/reports',
+  REPORT: '/reports',
+  ALARM: '/alarms',
 };
 
 export const PATH = {
@@ -19,4 +22,8 @@ export const PATH = {
   USER_VOTE: `${BASE_PATH.USER}/votes`,
   USER_INFO: `${BASE_PATH.USER}/myPage`,
   USER_INFO_REGISTER: `${BASE_PATH.USER}/register`,
+  ADMIN_PENDING_REPORT: `${BASE_PATH.ADMIN}${BASE_PATH.REPORTS}/pending`,
+  ADMIN_NOTICE: `${BASE_PATH.ADMIN}${BASE_PATH.NOTICES}`,
+  ADMIN_NOTICE_WRITE: `${BASE_PATH.ADMIN}${BASE_PATH.NOTICES}/write`,
+  REPORT_ALARM: `${BASE_PATH.ALARM}/report`,
 };

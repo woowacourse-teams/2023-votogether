@@ -1,7 +1,6 @@
 package com.votogether.domain.post.dto.response.post;
 
 import com.votogether.domain.post.entity.Post;
-import com.votogether.domain.post.entity.PostOption;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "게시글 간략 정보 응답")
@@ -24,15 +23,8 @@ public record PostSummaryResponse(
                 post.getId(),
                 post.getWriter().getNickname(),
                 post.getPostBody().getTitle(),
-                calculateTotalVoteCount(post)
+                post.getVoteCount()
         );
-    }
-
-    private static long calculateTotalVoteCount(final Post post) {
-        return post.getPostOptions()
-                .stream()
-                .mapToLong(PostOption::getVoteCount)
-                .sum();
     }
 
 }

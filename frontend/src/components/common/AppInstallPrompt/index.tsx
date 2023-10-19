@@ -2,6 +2,8 @@ import { Fragment, useEffect, useState } from 'react';
 
 import ChannelTalk from '@components/ChannelTalk';
 
+import { APP_VISIBLE_MAX_AGE } from '@constants/cookie';
+
 import { getCookie, setCookie } from '@utils/cookie';
 
 import { BeforeInstallPromptEvent } from '../../../../window';
@@ -39,7 +41,7 @@ export default function AppInstallPrompt() {
   };
 
   const handleCancelClick = () => {
-    setCookie({ key: 'isAppInstallVisible', value: 'false', maxAge: 7 * 24 * 60 * 60 });
+    setCookie({ key: 'isAppInstallVisible', value: 'false', maxAge: APP_VISIBLE_MAX_AGE });
     setBookMarkPrompt(null);
     setDeferredPrompt(null);
 

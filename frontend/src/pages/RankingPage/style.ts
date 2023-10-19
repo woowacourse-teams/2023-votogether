@@ -35,7 +35,7 @@ export const PageHeader = styled.div`
   margin: 15px;
 
   text-align: center;
-  font: var(--text-title);
+  font: var(--text-page-title);
 `;
 
 export const ContentContainer = styled.div`
@@ -43,6 +43,10 @@ export const ContentContainer = styled.div`
   flex-direction: column;
   gap: 10px;
 
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 0 15px;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    margin-top: 20px;
+  }
 `;

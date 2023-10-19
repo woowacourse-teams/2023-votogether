@@ -28,10 +28,12 @@ export const Wrapper = styled.div`
 `;
 
 export const IconImage = styled.img`
+  justify-self: center;
+
   width: 18px;
   height: 18px;
 
-  justify-self: center;
+  cursor: pointer;
 `;
 
 export const Content = styled.div`

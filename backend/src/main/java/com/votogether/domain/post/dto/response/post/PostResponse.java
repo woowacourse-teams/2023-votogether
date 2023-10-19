@@ -61,7 +61,8 @@ public record PostResponse(
             final List<PostCategory> postCategories,
             final PostContentImage postContentImage,
             final List<PostOption> postOptions,
-            final Optional<Vote> vote
+            final Optional<Vote> vote,
+            final long commentCount
     ) {
         postOptions.sort(Comparator.comparingInt(PostOption::getSequence));
         return new PostResponse(
@@ -74,7 +75,7 @@ public record PostResponse(
                 post.getCreatedAt(),
                 post.getDeadline(),
                 calculateImageCount(postContentImage, postOptions),
-                post.getCommentCount(),
+                commentCount,
                 PostVoteResultResponse.ofUser(user, post, postOptions, vote)
         );
     }
@@ -115,7 +116,8 @@ public record PostResponse(
             final Post post,
             final List<PostCategory> postCategories,
             final PostContentImage postContentImage,
-            final List<PostOption> postOptions
+            final List<PostOption> postOptions,
+            final long commentCount
     ) {
         postOptions.sort(Comparator.comparingInt(PostOption::getSequence));
         return new PostResponse(
@@ -128,7 +130,7 @@ public record PostResponse(
                 post.getCreatedAt(),
                 post.getDeadline(),
                 calculateImageCount(postContentImage, postOptions),
-                post.getCommentCount(),
+                commentCount,
                 PostVoteResultResponse.ofGuest(post, postOptions)
         );
     }

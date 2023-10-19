@@ -6,6 +6,8 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.votogether.domain.category.entity.Category;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.MemberMetric;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
@@ -60,6 +62,9 @@ class PostCommandServiceTest extends ServiceTest {
     @Autowired
     PostOptionRepository postOptionRepository;
 
+    @Autowired
+    MemberMetricRepository memberMetricRepository;
+
     @AfterEach
     void tearDown(
             @Value("${image.upload_directory}") String uploadDirectory
@@ -92,6 +97,7 @@ class PostCommandServiceTest extends ServiceTest {
         Category categoryB = categoryTestPersister.builder().save();
         PostCreateRequest postCreateRequest = mockingPostCreateRequest(List.of(categoryA.getId(), categoryB.getId()));
         Member member = memberTestPersister.builder().save();
+        MemberMetric memberMetric = memberMetricTestPersister.builder().member(member).save();
 
         // when
         Long postId = postCommandService.createPost(postCreateRequest, member);
@@ -102,6 +108,8 @@ class PostCommandServiceTest extends ServiceTest {
             softly.assertThat(post.getPostCategories()).hasSize(2);
             softly.assertThat(post.getPostContentImages()).hasSize(1);
             softly.assertThat(post.getPostOptions()).hasSize(2);
+            softly.assertThat(post.getVoteCount()).isZero();
+            softly.assertThat(memberMetric.getPostCount()).isEqualTo(1);
         });
     }
 
@@ -122,6 +130,7 @@ class PostCommandServiceTest extends ServiceTest {
                     )
             );
             Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
             Long postId = postCommandService.createPost(postCreateRequest, member);
             PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
                     List.of(categoryA.getId()),
@@ -172,6 +181,7 @@ class PostCommandServiceTest extends ServiceTest {
                     )
             );
             Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
             Long postId = postCommandService.createPost(postCreateRequest, member);
             PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
                     List.of(categoryA.getId(), categoryB.getId(), categoryC.getId()),
@@ -215,6 +225,7 @@ class PostCommandServiceTest extends ServiceTest {
                     )
             );
             Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
             Long postId = postCommandService.createPost(postCreateRequest, member);
             PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
                     List.of(categoryA.getId()),
@@ -373,6 +384,7 @@ class PostCommandServiceTest extends ServiceTest {
             PostCreateRequest postCreateRequest = mockingPostCreateRequest(
                     List.of(categoryA.getId(), categoryB.getId()));
             Member member = memberTestPersister.builder().save();
+            MemberMetric memberMetric = memberMetricTestPersister.builder().member(member).save();
             Long postId = postCommandService.createPost(postCreateRequest, member);
 
             em.flush();
@@ -387,6 +399,7 @@ class PostCommandServiceTest extends ServiceTest {
                 softly.assertThat(postCategoryRepository.findAll()).isEmpty();
                 softly.assertThat(postContentImageRepository.findAll()).isEmpty();
                 softly.assertThat(postOptionRepository.findAll()).isEmpty();
+                softly.assertThat(memberMetricRepository.findById(memberMetric.getId()).get().getPostCount()).isZero();
             });
         }
 

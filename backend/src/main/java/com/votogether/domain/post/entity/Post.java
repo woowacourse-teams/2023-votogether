@@ -17,9 +17,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +31,12 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
 @Getter
 @Entity
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {@Index(name = "idx_vote_count", columnList = "voteCount")})
 public class Post extends BaseEntity {
 
     private static final int MAXIMUM_POST_OPTION_SIZE = 5;
@@ -51,14 +53,14 @@ public class Post extends BaseEntity {
     @Embedded
     private PostBody postBody;
 
+    @Column(nullable = false)
+    private long voteCount;
+
     @Embedded
     private PostDeadline postDeadline;
 
     @Column(nullable = false)
     private boolean isHidden;
-
-    @Formula("(select count(*) from comment c where c.post_id = id)")
-    private long commentCount;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostCategory> postCategories = new ArrayList<>();
@@ -77,10 +79,12 @@ public class Post extends BaseEntity {
             final Member writer,
             final String title,
             final String content,
+            final long voteCount,
             final LocalDateTime deadline
     ) {
         this.writer = writer;
         this.postBody = new PostBody(title, content);
+        this.voteCount = voteCount;
         this.postDeadline = new PostDeadline(deadline);
         this.isHidden = false;
     }
@@ -122,6 +126,14 @@ public class Post extends BaseEntity {
     public void update(final String title, final String content, final LocalDateTime deadline) {
         this.postBody = new PostBody(title, content);
         this.postDeadline = new PostDeadline(deadline);
+    }
+
+    public void increaseVoteCount() {
+        this.voteCount += 1;
+    }
+
+    public void decreaseVoteCount() {
+        this.voteCount -= 1;
     }
 
     public void closeEarly() {
@@ -203,12 +215,6 @@ public class Post extends BaseEntity {
             return null;
         }
         return postContentImages.get(0);
-    }
-
-    public long getTotalVoteCount() {
-        return postOptions.stream()
-                .mapToLong(PostOption::getVoteCount)
-                .sum();
     }
 
 }

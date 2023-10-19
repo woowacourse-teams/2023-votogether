@@ -8,10 +8,12 @@ import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
+import com.votogether.domain.post.repository.dto.PostCommentCountDto;
 import com.votogether.test.RepositoryTest;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,25 @@ class PostCustomRepositoryImplTest extends RepositoryTest {
 
     @Autowired
     PostCustomRepositoryImpl postCustomRepository;
+
+    @Test
+    @DisplayName("게시글 ID 목록에 속한 게시글의 댓글 수 조회")
+    void getReviewCountsInPosts() {
+        // given
+        Post post = postTestPersister.postBuilder().save();
+        commentTestPersister.builder().post(post).save();
+        commentTestPersister.builder().post(post).save();
+
+        // when
+        List<PostCommentCountDto> result = postCustomRepository.getCommentCountsInPosts(Set.of(post.getId()));
+
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(result).hasSize(1);
+            softly.assertThat(result.get(0).postId()).isEqualTo(post.getId());
+            softly.assertThat(result.get(0).commentCount()).isEqualTo(2);
+        });
+    }
 
     @Nested
     @DisplayName("마감시간, 정렬기준, 카테고리로 필터링하여 게시글 페이징 조회")

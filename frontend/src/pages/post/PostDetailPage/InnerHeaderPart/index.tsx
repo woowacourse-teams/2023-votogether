@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PostAction, PostMenuItem } from '@type/menu';
+import { PostAction, MenuItem } from '@type/menu';
+import { ReportMessage } from '@type/report';
 
-import { useToggle } from '@hooks';
+import { AuthContext, useToggle } from '@hooks';
 
 import DeleteModal from '@components/common/DeleteModal';
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import IconButton from '@components/common/IconButton';
-import PostMenu from '@components/common/PostMenu';
+import Menu from '@components/common/Menu';
 import TagButton from '@components/common/TagButton';
 import ReportModal from '@components/ReportModal';
 
@@ -28,14 +29,15 @@ interface PostDetailPageChildProps {
     controlPost: {
       setEarlyClosePost: () => void;
       deletePost: () => void;
-      reportPost: (reason: string) => void;
-      reportNickname: (reason: string) => void;
+      reportPost: (reason: ReportMessage) => void;
+      reportNickname: (reason: ReportMessage) => void;
     };
+    openToast: (text: string) => void;
   };
   isEventLoading: Record<LoadingType, boolean>;
 }
 
-const menuList: PostMenuItem[] = [
+const menuList: MenuItem<PostAction>[] = [
   { color: 'black', content: '닉네임 신고', action: 'NICKNAME_REPORT' },
   { color: 'black', content: '게시글 신고', action: 'POST_REPORT' },
 ];
@@ -43,20 +45,25 @@ const menuList: PostMenuItem[] = [
 export default function InnerHeaderPart({
   isWriter,
   isClosed,
-  handleEvent: { movePage, controlPost },
+  handleEvent: { movePage, controlPost, openToast },
   isEventLoading,
 }: PostDetailPageChildProps) {
   const navigate = useNavigate();
-
+  const { loggedInfo } = useContext(AuthContext);
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
-  const { isOpen, toggleComponent, closeComponent } = useToggle();
-  const [action, setAction] = useState<PostAction | null>(null);
-
   const { isDeletePostLoading, isReportNicknameLoading, isReportPostLoading } = isEventLoading;
+  const { isOpen: isMenuOpen, toggleComponent, closeComponent } = useToggle();
+  const [action, setAction] = useState<PostAction | null>(null);
 
   const handleMenuClick = (action: PostAction) => {
     closeComponent();
+
+    if (!loggedInfo.isLoggedIn) {
+      openToast('로그인 후에 기능을 이용해주세요.');
+      return;
+    }
+
     setAction(action);
   };
 
@@ -79,14 +86,14 @@ export default function InnerHeaderPart({
         {!isWriter ? (
           <>
             <HeaderTextButton
-              aria-label={isOpen ? '게시글 신고 메뉴 닫기' : '게시글 신고 메뉴 열기'}
+              aria-label={isMenuOpen ? '게시글 신고 메뉴 닫기' : '게시글 신고 메뉴 열기'}
               onClick={toggleComponent}
             >
               신고
             </HeaderTextButton>
-            {isOpen && (
+            {isMenuOpen && (
               <S.MenuWrapper>
-                <PostMenu menuList={menuList} handleMenuClick={handleMenuClick} />
+                <Menu menuList={menuList} handleMenuClick={handleMenuClick} />
               </S.MenuWrapper>
             )}
           </>
@@ -135,6 +142,7 @@ export default function InnerHeaderPart({
         )}
         {action === 'POST_REPORT' && (
           <ReportModal
+            handleModalClose={handleCancelClick}
             reportType="POST"
             handleReportClick={reportPost}
             handleCancelClick={handleCancelClick}
@@ -143,6 +151,7 @@ export default function InnerHeaderPart({
         )}
         {action === 'NICKNAME_REPORT' && (
           <ReportModal
+            handleModalClose={handleCancelClick}
             reportType="NICKNAME"
             handleReportClick={reportNickname}
             handleCancelClick={handleCancelClick}

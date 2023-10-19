@@ -4,9 +4,11 @@ import { usePopularPostRanking } from '@hooks/query/ranking/usePopularPostRankin
 
 import { PATH } from '@constants/path';
 
-import firstRankIcon from '@assets/first-rank.webp';
-import secondRankIcon from '@assets/second-rank.webp';
-import thirdRankIcon from '@assets/third-rank.webp';
+import firstRankIcon from '@assets/ranking-first.webp';
+import secondRankIcon from '@assets/ranking-second.webp';
+import thirdRankIcon from '@assets/ranking-third.webp';
+
+import * as TS from '../RankingTableStyle';
 
 import * as S from './style';
 
@@ -26,7 +28,7 @@ export default function PopularPost() {
       <thead>
         <S.Tr>
           {columnNameList.map(text => (
-            <S.Th key={text}>{text}</S.Th>
+            <TS.Th key={text}>{text}</TS.Th>
           ))}
         </S.Tr>
       </thead>
@@ -34,12 +36,15 @@ export default function PopularPost() {
         {rankingPostList &&
           rankingPostList.map((rankingPost, index) => {
             const rankIcon = rankIconUrl[rankingPost.ranking] && (
-              <img src={rankIconUrl[rankingPost.ranking]} alt={rankingPost.ranking.toString()} />
+              <TS.IconImage
+                src={rankIconUrl[rankingPost.ranking]}
+                alt={rankingPost.ranking.toString()}
+              />
             );
 
             return (
               <S.Tr key={index}>
-                <S.RankingTd>{rankIcon ?? rankingPost.ranking}</S.RankingTd>
+                <TS.RankingTd>{rankIcon ?? rankingPost.ranking}</TS.RankingTd>
                 <S.Td>{rankingPost.post.writer}</S.Td>
                 <S.Td>
                   <Link to={`${PATH.POST}/${rankingPost.post.id}`}>{rankingPost.post.title}</Link>

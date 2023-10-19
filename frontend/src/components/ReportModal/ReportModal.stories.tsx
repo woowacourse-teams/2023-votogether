@@ -12,6 +12,7 @@ type Story = StoryObj<typeof ReportModal>;
 export const Nickname: Story = {
   render: () => (
     <ReportModal
+      handleModalClose={() => {}}
       reportType="NICKNAME"
       handleCancelClick={() => {}}
       handleReportClick={() => {}}
@@ -23,6 +24,7 @@ export const Nickname: Story = {
 export const Comment: Story = {
   render: () => (
     <ReportModal
+      handleModalClose={() => {}}
       reportType="COMMENT"
       handleCancelClick={() => {}}
       handleReportClick={() => {}}
@@ -34,6 +36,7 @@ export const Comment: Story = {
 export const Post: Story = {
   render: () => (
     <ReportModal
+      handleModalClose={() => {}}
       reportType="POST"
       handleCancelClick={() => {}}
       handleReportClick={() => {}}

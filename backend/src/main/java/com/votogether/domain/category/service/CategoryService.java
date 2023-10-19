@@ -2,10 +2,13 @@ package com.votogether.domain.category.service;
 
 import com.votogether.domain.category.dto.response.CategoryResponse;
 import com.votogether.domain.category.entity.Category;
+import com.votogether.domain.category.exception.CategoryExceptionType;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
+import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.exception.NotFoundException;
 import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +35,11 @@ public class CategoryService {
     @Transactional
     public void addFavoriteCategory(final Member member, final Long categoryId) {
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(CategoryExceptionType.NOT_FOUND));
 
         memberCategoryRepository.findByMemberAndCategory(member, category)
                 .ifPresent(ignore -> {
-                    throw new IllegalStateException("이미 선호 카테고리에 등록되어 있습니다.");
+                    throw new BadRequestException(CategoryExceptionType.EXIST_LIKE_CATEGORY);
                 });
 
         final MemberCategory memberCategory = MemberCategory.builder()
@@ -50,9 +53,9 @@ public class CategoryService {
     @Transactional
     public void removeFavoriteCategory(final Member member, final Long categoryId) {
         final Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(CategoryExceptionType.NOT_FOUND));
         final MemberCategory memberCategory = memberCategoryRepository.findByMemberAndCategory(member, category)
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리는 선호 카테고리가 아닙니다."));
+                .orElseThrow(() -> new BadRequestException(CategoryExceptionType.NOT_LIKE_CATEGORY));
 
         memberCategoryRepository.delete(memberCategory);
     }

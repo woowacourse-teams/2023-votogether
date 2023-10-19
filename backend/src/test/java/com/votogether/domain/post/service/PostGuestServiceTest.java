@@ -14,6 +14,8 @@ import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.PostOption;
 import com.votogether.domain.post.entity.vo.PostClosingType;
 import com.votogether.domain.post.entity.vo.PostSortType;
+import com.votogether.domain.post.repository.PostOptionRepository;
+import com.votogether.domain.post.repository.PostRepository;
 import com.votogether.domain.vote.entity.Vote;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
@@ -35,6 +37,12 @@ class PostGuestServiceTest extends ServiceTest {
     PostGuestService postGuestService;
 
     @Autowired
+    PostRepository postRepository;
+
+    @Autowired
+    PostOptionRepository postOptionRepository;
+
+    @Autowired
     EntityManager em;
 
     @Nested
@@ -47,12 +55,11 @@ class PostGuestServiceTest extends ServiceTest {
             // given
             LocalDateTime deadline = LocalDateTime.now().minusDays(1);
             Member writer = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result = postGuestService.getPosts(0, PostClosingType.ALL, PostSortType.LATEST, null);
@@ -94,12 +101,11 @@ class PostGuestServiceTest extends ServiceTest {
             // given
             LocalDateTime deadline = LocalDateTime.now().minusDays(1);
             Member writer = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             PostResponse result = postGuestService.getPost(post.getId());
@@ -166,12 +172,11 @@ class PostGuestServiceTest extends ServiceTest {
             // given
             LocalDateTime deadline = LocalDateTime.now().minusDays(1);
             Member writer = memberTestPersister.builder().save();
-            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).save();
-            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).save();
+            Post post = postTestPersister.postBuilder().deadline(deadline).writer(writer).voteCount(1).save();
+            PostOption postOption = postTestPersister.postOptionBuilder().post(post).sequence(1).voteCount(1).save();
             Vote vote = voteTestPersister.builder().postOption(postOption).save();
             postOption.addVote(vote);
             post.addPostOption(postOption);
-            ReflectionTestUtils.setField(postOption, "voteCount", 1);
 
             // when
             List<PostResponse> result =
@@ -217,8 +222,8 @@ class PostGuestServiceTest extends ServiceTest {
             List<PostOption> postOptions = new ArrayList<>();
 
             for (int i = 0; i < 11; i++) {
-                Post post = postTestPersister.postBuilder().save();
-                PostOption postOption = postTestPersister.postOptionBuilder().post(post).save();
+                Post post = postTestPersister.postBuilder().voteCount(i + 1).save();
+                PostOption postOption = postTestPersister.postOptionBuilder().post(post).voteCount(i + 1).save();
                 posts.add(post);
                 postOptions.add(postOption);
             }
@@ -233,15 +238,16 @@ class PostGuestServiceTest extends ServiceTest {
             voteTestPersister.builder().postOption(postOptions.get(10)).save();
             voteTestPersister.builder().postOption(postOptions.get(10)).save();
             voteTestPersister.builder().postOption(postOptions.get(7)).save();
+            ReflectionTestUtils.setField(posts.get(10), "voteCount", 3);
+            ReflectionTestUtils.setField(postOptions.get(10), "voteCount", 3);
+            posts.get(7).increaseVoteCount();
+            postOptions.get(7).increaseVoteCount();
 
             /*
             index       |0| |1| |2| |3| |4| |5| |6| |7| |8| |9| |10|
             voteCount   |1| |2| |3| |4| |5| |6| |7| |9| |9| |10| |3|
             ranking     |11| |10| |8| |7| |6| |5| |4| |2| |2| |1| |8|
             */
-
-            em.clear();
-            em.flush();
 
             // when
             List<PostRankingResponse> rankings = postGuestService.getRanking();
@@ -284,8 +290,8 @@ class PostGuestServiceTest extends ServiceTest {
             List<PostOption> postOptions = new ArrayList<>();
 
             for (int i = 0; i < 10; i++) {
-                Post post = postTestPersister.postBuilder().save();
-                PostOption postOption = postTestPersister.postOptionBuilder().post(post).save();
+                Post post = postTestPersister.postBuilder().voteCount(i + 1).save();
+                PostOption postOption = postTestPersister.postOptionBuilder().post(post).voteCount(i + 1).save();
                 posts.add(post);
                 postOptions.add(postOption);
             }
@@ -302,8 +308,8 @@ class PostGuestServiceTest extends ServiceTest {
             ranking     |10| |9| |8| |7| |6| |5| |4| |3| |2| |1|
             */
 
-            em.clear();
             em.flush();
+            em.clear();
 
             // when
             List<PostRankingResponse> rankings = postGuestService.getRanking();

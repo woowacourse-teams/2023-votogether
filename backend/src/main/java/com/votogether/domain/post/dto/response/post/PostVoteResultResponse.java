@@ -29,18 +29,12 @@ public record PostVoteResultResponse(
             final List<PostOption> postOptions,
             final Optional<Vote> vote
     ) {
-        final long totalVoteCount = countTotalVoteCount(postOptions);
+        final long totalVoteCount = post.getVoteCount();
         return new PostVoteResultResponse(
                 findSelectedOption(vote),
                 countVotesForUser(user, post, vote.isPresent(), totalVoteCount),
                 convertToUserResponses(user, post, postOptions, vote.isPresent(), totalVoteCount)
         );
-    }
-
-    private static long countTotalVoteCount(final List<PostOption> postOptions) {
-        return postOptions.stream()
-                .mapToLong(PostOption::getVoteCount)
-                .sum();
     }
 
     private static Long findSelectedOption(final Optional<Vote> vote) {
@@ -56,6 +50,9 @@ public record PostVoteResultResponse(
             final boolean isVoted,
             final long totalVoteCount
     ) {
+        if (post.isHidden() && post.isWriter(user)) {
+            return HIDDEN_COUNT;
+        }
         if (post.isClosed() || post.isWriter(user) || isVoted) {
             return totalVoteCount;
         }
@@ -75,7 +72,7 @@ public record PostVoteResultResponse(
     }
 
     public static PostVoteResultResponse ofGuest(final Post post, final List<PostOption> postOptions) {
-        final long totalVoteCount = countTotalVoteCount(postOptions);
+        final long totalVoteCount = post.getVoteCount();
         return new PostVoteResultResponse(
                 NOT_SELECTED,
                 countVotesForGuest(post, totalVoteCount),

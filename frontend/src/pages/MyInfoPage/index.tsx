@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useToggle } from '@hooks';
-import { useToast } from '@hooks';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useModifyUser } from '@hooks/query/user/useModifyUser';
@@ -13,8 +12,8 @@ import GuestProfile from '@components/common/Dashboard/GuestProfile';
 import UserProfile from '@components/common/Dashboard/UserProfile';
 import Layout from '@components/common/Layout';
 import SquareButton from '@components/common/SquareButton';
-import Toast from '@components/common/Toast';
 
+import { PATH } from '@constants/path';
 import { NICKNAME } from '@constants/policy';
 import { NICKNAME_POLICY } from '@constants/policyMessage';
 
@@ -26,23 +25,14 @@ import * as S from './style';
 export default function MyInfoPage() {
   const navigate = useNavigate();
 
-  const {
-    mutate: modifyNickname,
-    isSuccess: isModifyNicknameSuccess,
-    isError: isModifyNicknameError,
-    error: modifyNicknameError,
-  } = useModifyUser();
-  const {
-    mutate: withdrawalMembership,
-    isSuccess: isWithdrawalMembershipSuccess,
-    isError: isWithdrawalMembershipError,
-    error: withdrawalMembershipError,
-  } = useWithdrawalMembership();
-
-  const { isToastOpen, openToast, toastMessage } = useToast();
+  const { mutate: modifyNickname } = useModifyUser();
+  const { mutate: withdrawalMembership, isSuccess: isWithdrawalMembershipSuccess } =
+    useWithdrawalMembership();
 
   const { isOpen, openComponent, closeComponent } = useToggle();
   const { loggedInfo, clearLoggedInfo } = useContext(AuthContext);
+
+  const { userInfo } = loggedInfo;
 
   const handleModifyNickname = (newNickname: string) => {
     modifyNickname(newNickname);
@@ -53,21 +43,6 @@ export default function MyInfoPage() {
   };
 
   useEffect(() => {
-    if (isModifyNicknameSuccess) {
-      openToast('닉네임을 성공적으로 변경했습니다.');
-      return;
-    }
-  }, [isModifyNicknameSuccess]);
-
-  useEffect(() => {
-    if (isModifyNicknameError && modifyNicknameError instanceof Error) {
-      const errorResponse = JSON.parse(modifyNicknameError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isModifyNicknameError, modifyNicknameError]);
-
-  useEffect(() => {
     if (isWithdrawalMembershipSuccess) {
       clearLoggedInfo();
 
@@ -75,20 +50,15 @@ export default function MyInfoPage() {
     }
   }, [isWithdrawalMembershipSuccess]);
 
-  useEffect(() => {
-    if (isWithdrawalMembershipError && withdrawalMembershipError instanceof Error) {
-      const errorResponse = JSON.parse(withdrawalMembershipError.message);
-      openToast(errorResponse.message);
-      return;
-    }
-  }, [isWithdrawalMembershipError, withdrawalMembershipError]);
-
   return (
     <Layout isSidebarVisible={true}>
       <S.Wrapper>
         <S.ProfileSection>
-          {loggedInfo.userInfo ? <UserProfile userInfo={loggedInfo.userInfo} /> : <GuestProfile />}
+          {userInfo ? <UserProfile userInfo={userInfo} /> : <GuestProfile isLargeKaKao />}
         </S.ProfileSection>
+        <S.NoticeWrapper>
+          <S.NoticeTitle to={PATH.NOTICES}>공지사항 보러가기</S.NoticeTitle>
+        </S.NoticeWrapper>
         <S.UserControlSection>
           <Accordion title="닉네임 변경">
             <S.DescribeUl>
@@ -119,10 +89,29 @@ export default function MyInfoPage() {
             )}
           </Accordion>
         </S.UserControlSection>
-        {isToastOpen && (
-          <Toast size="md" position="bottom">
-            {toastMessage}
-          </Toast>
+        {userInfo && userInfo?.role === 'ADMIN' && (
+          <Accordion title="관리자">
+            <S.ButtonContainer>
+              <S.AdminButtonWrapper>
+                <SquareButton
+                  onClick={() => navigate(PATH.ADMIN_PENDING_REPORT)}
+                  aria-label="신고 목록 페이지"
+                  theme="gray"
+                >
+                  {`신고 목록\n페이지`}
+                </SquareButton>
+              </S.AdminButtonWrapper>
+              <S.AdminButtonWrapper>
+                <SquareButton
+                  onClick={() => navigate(PATH.ADMIN_NOTICE)}
+                  aria-label="공지사항 목록 페이지"
+                  theme="blank"
+                >
+                  {`공지사항 목록\n페이지`}
+                </SquareButton>
+              </S.AdminButtonWrapper>
+            </S.ButtonContainer>
+          </Accordion>
         )}
       </S.Wrapper>
     </Layout>

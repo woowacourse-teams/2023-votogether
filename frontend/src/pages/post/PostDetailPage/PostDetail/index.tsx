@@ -1,12 +1,13 @@
-import { Suspense, useContext, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
-import { ReportRequest } from '@type/report';
+import { ReportMessage, ReportRequest } from '@type/report';
 
-import { useToast, AuthContext, useDeletePost, useEarlyClosePost, usePostDetail } from '@hooks';
+import { AuthContext, useDeletePost, useEarlyClosePost, usePostDetail } from '@hooks';
 
-import { reportContent } from '@api/report';
+import { ToastContext } from '@hooks/context/toast';
+import { useReportContent } from '@hooks/query/report/useReportContent';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
@@ -14,7 +15,6 @@ import CommentList from '@components/comment/CommentList';
 import NarrowTemplateHeader from '@components/common/NarrowTemplateHeader';
 import Skeleton from '@components/common/Skeleton';
 import TagButton from '@components/common/TagButton';
-import Toast from '@components/common/Toast';
 import Post from '@components/post/Post';
 
 import { checkClosedPost } from '@utils/time/checkClosedPost';
@@ -29,25 +29,21 @@ import * as S from './style';
 export default function PostDetail() {
   const navigate = useNavigate();
 
-  const [isReportPostLoading, setIsReportPostLoading] = useState(false);
-  const [isReportNicknameLoading, setIsReportNicknameLoading] = useState(false);
-
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
-  const { isToastOpen, openToast, toastMessage } = useToast();
 
   const { loggedInfo } = useContext(AuthContext);
+  const { addMessage } = useContext(ToastContext);
   const memberId = loggedInfo.id;
 
   const { data: postData } = usePostDetail(loggedInfo.isLoggedIn, postId);
   const {
     mutate: deletePost,
     isSuccess: isDeleteSuccess,
-    isError: isDeleteError,
-    error: deleteError,
     isLoading: isDeletePostLoading,
   } = useDeletePost(postId, loggedInfo.isLoggedIn);
   const { mutate: earlyClosePost } = useEarlyClosePost(postId);
+  const { mutate: reportContent, isLoading: isContentReporting } = useReportContent();
 
   const postDataFallback = postData ?? ({} as PostInfo);
 
@@ -57,7 +53,7 @@ export default function PostDetail() {
   const movePage = {
     moveWritePostPage: () => {
       if (postDataFallback.voteInfo.allPeopleCount) {
-        openToast('투표한 사용자가 있어 글 수정이 불가합니다.');
+        addMessage('투표한 사용자가 있어 글 수정이 불가합니다.');
         return;
       }
 
@@ -75,75 +71,36 @@ export default function PostDetail() {
     setEarlyClosePost: earlyClosePost,
     deletePost: () => {
       if (postDataFallback.voteInfo.allPeopleCount >= 20) {
-        openToast('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
+        addMessage('20인 이상 투표한 게시물은 삭제할 수 없습니다.');
         return;
       }
 
       deletePost();
     },
-    reportPost: async (reason: string) => {
-      setIsReportPostLoading(true);
+    reportPost: async (reason: ReportMessage) => {
       const reportData: ReportRequest = { type: 'POST', id: postId, reason };
-
-      await reportContent(reportData)
-        .then(res => {
-          openToast('게시물을 신고했습니다.');
-        })
-        .catch(e => {
-          if (e instanceof Error) {
-            const errorResposne = JSON.parse(e.message);
-            openToast(errorResposne.message);
-            return;
-          }
-          openToast('게시글 신고가 실패했습니다.');
-        })
-        .finally(() => {
-          setIsReportPostLoading(false);
-        });
+      reportContent(reportData);
     },
-    reportNickname: async (reason: string) => {
-      setIsReportNicknameLoading(true);
+    reportNickname: async (reason: ReportMessage) => {
       const reportData: ReportRequest = {
         type: 'NICKNAME',
         id: postDataFallback.writer.id,
         reason,
       };
-
-      await reportContent(reportData)
-        .then(res => {
-          openToast('작성자 닉네임을 신고했습니다.');
-        })
-        .catch(e => {
-          if (e instanceof Error) {
-            const errorResposne = JSON.parse(e.message);
-            openToast(errorResposne.message);
-            return;
-          }
-          openToast('작성자 닉네임 신고가 실패했습니다.');
-        })
-        .finally(() => {
-          setIsReportNicknameLoading(false);
-        });
+      reportContent(reportData);
     },
     copyPostURL: () => {
       const currentURL = window.location.href;
       navigator.clipboard
         .writeText(currentURL)
         .then(() => {
-          openToast('게시물 URL이 클립보드에 복사되었습니다.');
+          addMessage('게시물 URL이 클립보드에 복사되었습니다.');
         })
         .catch(error => {
-          console.error('URL 복사 실패:', error);
-          openToast('URL을 클립보드에 복사하는 동안 오류가 발생했습니다. 다시 시도해주세요.');
+          addMessage('URL을 클립보드에 복사하는 동안 오류가 발생했습니다. 다시 시도해주세요.');
         });
     },
   };
-
-  useEffect(() => {
-    if (isDeleteError && deleteError instanceof Error) {
-      openToast(deleteError.message);
-    }
-  }, [isDeleteError, deleteError]);
 
   useEffect(() => {
     if (isDeleteSuccess) {
@@ -158,11 +115,11 @@ export default function PostDetail() {
           <InnerHeaderPart
             isClosed={isClosed}
             isWriter={isWriter}
-            handleEvent={{ movePage, controlPost }}
+            handleEvent={{ movePage, controlPost, openToast: addMessage }}
             isEventLoading={{
               isDeletePostLoading,
-              isReportPostLoading,
-              isReportNicknameLoading,
+              isReportPostLoading: isContentReporting,
+              isReportNicknameLoading: isContentReporting,
             }}
           />
         </NarrowTemplateHeader>
@@ -177,26 +134,21 @@ export default function PostDetail() {
         <BottomButtonPart
           isClosed={isClosed}
           isWriter={isWriter}
-          handleEvent={{ movePage, controlPost, openToast }}
+          handleEvent={{ movePage, controlPost, openToast: addMessage }}
           isEventLoading={{
             isDeletePostLoading,
-            isReportPostLoading,
-            isReportNicknameLoading,
+            isReportPostLoading: isContentReporting,
+            isReportNicknameLoading: isContentReporting,
           }}
         />
       </S.MainContainer>
       <S.BottomContainer>
-        <ErrorBoundary>
+        <ErrorBoundary hasRetryInteraction={true}>
           <Suspense fallback={<Skeleton isLarge={false} />}>
             <CommentList postId={postId} postWriterName={postDataFallback.writer.nickname} />
           </Suspense>
         </ErrorBoundary>
       </S.BottomContainer>
-      {isToastOpen && (
-        <Toast size="md" position="bottom">
-          {toastMessage}
-        </Toast>
-      )}
     </>
   );
 }

@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import { styled } from 'styled-components';
 
 import { theme } from '@styles/theme';
@@ -9,7 +7,7 @@ export const Container = styled.li<{ $isPreview: boolean }>`
 
   position: relative;
 
-  font: var(--text-small);
+  font: var(--text-default);
   letter-spacing: 0.5px;
   line-height: 1.5;
 
@@ -22,7 +20,7 @@ export const Container = styled.li<{ $isPreview: boolean }>`
 `;
 
 export const Category = styled.span`
-  font: var(--text-small);
+  font: var(--text-default);
 
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-caption);
@@ -58,19 +56,22 @@ export const Title = styled.p<{ $isPreview: boolean }>`
   }
 `;
 
-export const Wrapper = styled.div`
+export const WriterInfoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  font: var(--text-small);
-
-  & > :nth-child(2) {
-    margin-left: 10px;
-  }
+  font: var(--text-default);
+  width: 100%;
 
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-caption);
+  }
+`;
+
+export const Wrapper = styled.div`
+  & > :nth-child(2) {
+    margin-left: 10px;
   }
 `;
 
@@ -83,6 +84,7 @@ export const Content = styled.div<{ $isPreview: boolean }>`
   text-overflow: ellipsis;
   word-break: break-word;
   white-space: pre-wrap;
+  text-align: start;
 
   overflow: hidden;
 
@@ -94,21 +96,27 @@ export const Content = styled.div<{ $isPreview: boolean }>`
   }
 `;
 
-export const DetailLink = styled(Link)<{ $isPreview: boolean }>`
+export const DetailLink = styled.button<{ $isPreview: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  width: 100%;
+
+  cursor: ${({ $isPreview }) => $isPreview && 'pointer'};
 `;
 
 export const Image = styled.img`
   width: 80%;
   border-radius: 4px;
   margin-bottom: 10px;
-  border: 1px solid var(--gray);
+  border: 1px solid var(--bright-gray);
   align-self: center;
 
   aspect-ratio: 1/1;
   object-fit: contain;
+
+  cursor: pointer;
 
   @media (min-width: ${theme.breakpoint.md}) {
     margin-bottom: 20px;
@@ -124,7 +132,7 @@ export const PreviewBottom = styled.div`
   margin-top: 10px;
 `;
 
-export const IconUint = styled.div`
+export const IconUnit = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 5px;

@@ -1,16 +1,20 @@
 package com.votogether.domain.report.service.strategy;
 
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 
-@FunctionalInterface
 public interface ReportStrategy {
 
     void report(final Member reporter, final ReportRequest request);
+
+    String parseTarget(final Long targetId);
+
+    void reportAction(final ReportAggregateDto reportAggregateDto);
 
     default void validateDuplicatedReport(
             final Member reporter,

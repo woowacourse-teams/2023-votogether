@@ -1,4 +1,8 @@
+import { useContext } from 'react';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { ToastContext } from '@hooks/context/toast';
 
 import { deleteComment } from '@api/comment';
 
@@ -6,17 +10,18 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useDeleteComment = (postId: number, commentId: number) => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, isError, error } = useMutation(
-    () => deleteComment(postId, commentId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS]);
-      },
-      onError: error => {
-        window.console.log('Delete Comment error', error);
-      },
-    }
-  );
+  const { addMessage } = useContext(ToastContext);
 
-  return { mutate, isLoading, isError, error };
+  const { mutate, isLoading } = useMutation(() => deleteComment(postId, commentId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEY.POSTS, postId, QUERY_KEY.COMMENTS]);
+      addMessage('댓글이 삭제되었습니다.');
+    },
+    onError: error => {
+      const message = error instanceof Error ? error.message : '댓글 삭제를 실패했습니다.';
+      addMessage(message);
+    },
+  });
+
+  return { mutate, isLoading };
 };

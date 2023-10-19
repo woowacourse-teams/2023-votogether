@@ -1,9 +1,12 @@
 package com.votogether.domain.report.service.strategy;
 
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.exception.PostExceptionType;
 import com.votogether.domain.post.repository.PostRepository;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.request.ReportRequest;
 import com.votogether.domain.report.exception.ReportExceptionType;
 import com.votogether.domain.report.repository.ReportRepository;
@@ -16,10 +19,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportPostStrategy implements ReportStrategy {
 
-    private static final int NUMBER_OF_POST_BLIND_BASED_REPORTS = 5;
-
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
+    private final ReportActionAlarmRepository reportActionAlarmRepository;
 
     @Override
     public void report(final Member reporter, final ReportRequest request) {
@@ -28,7 +30,6 @@ public class ReportPostStrategy implements ReportStrategy {
         validatePost(reporter, reportedPost, request);
 
         saveReport(reporter, request, reportRepository);
-        blindPost(request, reportedPost);
     }
 
     private void validatePost(
@@ -46,13 +47,6 @@ public class ReportPostStrategy implements ReportStrategy {
         );
     }
 
-    private void blindPost(final ReportRequest request, final Post reportedPost) {
-        final int reportCount = reportRepository.countByReportTypeAndTargetId(request.type(), request.id());
-        if (reportCount >= NUMBER_OF_POST_BLIND_BASED_REPORTS) {
-            reportedPost.blind();
-        }
-    }
-
     private void validateHiddenPost(final Post post) {
         if (post.isHidden()) {
             throw new BadRequestException(PostExceptionType.IS_HIDDEN);
@@ -63,6 +57,28 @@ public class ReportPostStrategy implements ReportStrategy {
         if (post.isWriter(member)) {
             throw new BadRequestException(PostExceptionType.REPORT_MINE);
         }
+    }
+
+    @Override
+    public String parseTarget(final Long targetId) {
+        return targetId.toString();
+    }
+
+    @Override
+    public void reportAction(final ReportAggregateDto reportAggregateDto) {
+        final Post reportedPost = postRepository.findById(reportAggregateDto.targetId())
+                .orElseThrow(() -> new NotFoundException(PostExceptionType.NOT_FOUND));
+
+        final ReportActionAlarm reportActionAlarm = ReportActionAlarm.builder()
+                .member(reportedPost.getWriter())
+                .reportType(reportAggregateDto.reportType())
+                .target(reportedPost.getId().toString())
+                .reasons(reportAggregateDto.reasons())
+                .isChecked(false)
+                .build();
+
+        reportActionAlarmRepository.save(reportActionAlarm);
+        reportedPost.blind();
     }
 
 }

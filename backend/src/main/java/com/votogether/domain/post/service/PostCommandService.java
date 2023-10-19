@@ -1,7 +1,12 @@
 package com.votogether.domain.post.service;
 
+import com.votogether.domain.alarm.dto.event.PostAlarmEvent;
+import com.votogether.domain.alarm.entity.vo.AlarmType;
 import com.votogether.domain.category.repository.CategoryRepository;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.entity.MemberMetric;
+import com.votogether.domain.member.exception.MemberExceptionType;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.post.dto.request.post.PostCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionCreateRequest;
 import com.votogether.domain.post.dto.request.post.PostOptionUpdateRequest;
@@ -31,6 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +45,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 @Service
 public class PostCommandService {
+
+    private static final String NICKNAME_WHEN_POST_CLOSING = "";
 
     private final ImageUploader imageUploader;
     private final PostRepository postRepository;
@@ -49,6 +57,8 @@ public class PostCommandService {
     private final VoteRepository voteRepository;
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
+    private final MemberMetricRepository memberMetricRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public Long createPost(final PostCreateRequest postCreate, final Member loginMember) {
         final Post post = Post.builder()
@@ -62,6 +72,10 @@ public class PostCommandService {
         addImage(post, postCreate.getImageFile());
         addPostOptions(post, postCreate.getPostOptions());
 
+        final MemberMetric memberMetric = memberMetricRepository.findByMemberIdForUpdate(loginMember.getId())
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+
+        memberMetric.increasePostCount();
         return postRepository.save(post).getId();
     }
 
@@ -294,6 +308,19 @@ public class PostCommandService {
         validateHiddenPost(post);
         validatePostWriter(post, loginMember);
         post.closeEarly();
+
+        publishAlarmEvent(postId, loginMember, post);
+    }
+
+    private void publishAlarmEvent(final Long postId, final Member loginMember, final Post post) {
+        final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
+                loginMember,
+                NICKNAME_WHEN_POST_CLOSING,
+                postId,
+                AlarmType.POST_DEADLINE,
+                post.getTitle()
+        );
+        applicationEventPublisher.publishEvent(postAlarmEvent);
     }
 
     public void deletePost(final Long postId, final Member loginMember) {
@@ -309,6 +336,10 @@ public class PostCommandService {
                 .map(PostContentImage::getImageUrl)
                 .toList();
 
+        final MemberMetric memberMetric = memberMetricRepository.findByMemberIdForUpdate(loginMember.getId())
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+
+        memberMetric.decreasePostCount();
         deleteVotes(postOptions);
         deletePostOptions(postId, postOptions);
         deleteComments(postId);

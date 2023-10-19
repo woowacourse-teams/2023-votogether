@@ -11,6 +11,7 @@ import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.ServiceTest;
 import com.votogether.test.fixtures.CategoryFixtures;
 import com.votogether.test.fixtures.MemberFixtures;
@@ -106,7 +107,7 @@ class CategoryServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> categoryService.removeFavoriteCategory(member, category.getId()))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("해당 카테고리는 선호 카테고리가 아닙니다.");
         }
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import { AuthContext } from '@hooks/context/auth';
 import { useUserRanking } from '@hooks/query/ranking/useUserRanking';

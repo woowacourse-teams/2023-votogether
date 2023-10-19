@@ -38,7 +38,20 @@ export const NicknameChange: Story = {
 };
 
 export const DeleteUserAccount = () => {
-  const { isOpen, openComponent, closeComponent } = useToggle();
+  const { isOpen, openComponent, closeComponent: closeModal } = useToggle();
+
+  const primaryButton = {
+    text: '탈퇴',
+    handleClick: () => {
+      alert('회원 탈퇴가 완료되었습니다.');
+    },
+  };
+
+  const secondaryButton = {
+    text: '취소',
+    handleClick: closeModal,
+  };
+
   return (
     <Accordion title="회원 탈퇴">
       <ButtonWrapper>
@@ -47,20 +60,17 @@ export const DeleteUserAccount = () => {
         </SquareButton>
       </ButtonWrapper>
       {isOpen && (
-        <Modal size="sm" onModalClose={closeComponent}>
+        <Modal
+          size="sm"
+          title="정말 탈퇴하시겠어요?"
+          primaryButton={primaryButton}
+          secondaryButton={secondaryButton}
+          handleModalClose={secondaryButton.handleClick}
+        >
           <ModalBody>
-            <ModalTitle>정말 탈퇴하시겠어요?</ModalTitle>
             <ModalDescription>
               탈퇴 버튼 클릭 시, <br></br>계정은 삭제되며 복구되지 않아요.
             </ModalDescription>
-            <ButtonListWrapper>
-              <SquareButton aria-label="회원 탈퇴" theme="fill">
-                탈퇴
-              </SquareButton>
-              <SquareButton onClick={closeComponent} aria-label="회원 탈퇴" theme="blank">
-                취소
-              </SquareButton>
-            </ButtonListWrapper>
           </ModalBody>
         </Modal>
       )}
@@ -92,21 +102,6 @@ const ModalBody = styled.div`
   font: var(--text-caption);
 `;
 
-const ModalTitle = styled.div`
-  font: var(--text-title);
-`;
-
 const ModalDescription = styled.div`
   font: var(--text-body);
-`;
-
-const ButtonListWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-  gap: 20px;
-
-  width: 90%;
-  height: 50px;
-
-  margin-top: 20px;
 `;

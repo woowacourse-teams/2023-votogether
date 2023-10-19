@@ -2,18 +2,25 @@ package com.votogether.domain.report.service.strategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.entity.Member;
+import com.votogether.domain.member.service.MemberService;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.service.PostCommentService;
+import com.votogether.domain.report.dto.ReportAggregateDto;
 import com.votogether.domain.report.dto.request.ReportRequest;
+import com.votogether.domain.report.entity.Report;
 import com.votogether.domain.report.entity.vo.ReportType;
+import com.votogether.domain.report.repository.ReportRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
 import com.votogether.test.ServiceTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +32,16 @@ class ReportCommentStrategyTest extends ServiceTest {
     ReportCommentStrategy reportCommentStrategy;
 
     @Autowired
+    ReportRepository reportRepository;
+
+    @Autowired
+    ReportActionAlarmRepository reportActionAlarmRepository;
+
+    @Autowired
     PostCommentService postCommentService;
+
+    @Autowired
+    MemberService memberService;
 
     @Test
     @DisplayName("정상적으로 동작한다.")
@@ -103,30 +119,94 @@ class ReportCommentStrategyTest extends ServiceTest {
     }
 
     @Test
-    @DisplayName("댓글 신고가 5회가 되면 블라인드 처리가 된다.")
-    void reportAndBlind() {
+    @DisplayName("targetId를 통해 comment의 내용을 가져온다")
+    void parseTarget() {
         // given
-        Member reporter1 = memberTestPersister.builder().save();
-        Member reporter2 = memberTestPersister.builder().save();
-        Member reporter3 = memberTestPersister.builder().save();
-        Member reporter4 = memberTestPersister.builder().save();
-        Member reporter5 = memberTestPersister.builder().save();
-        Post post = postTestPersister.postBuilder().save();
-        Comment comment = commentTestPersister.builder().post(post).save();
-        ReportRequest request = new ReportRequest(ReportType.COMMENT, comment.getId(), "불건전한 댓글");
+        String savedCommentContent = "commentA";
+        Comment comment = commentTestPersister.builder()
+                .content(savedCommentContent)
+                .save();
 
         // when
-        reportCommentStrategy.report(reporter1, request);
-        reportCommentStrategy.report(reporter2, request);
-        reportCommentStrategy.report(reporter3, request);
-        reportCommentStrategy.report(reporter4, request);
-        reportCommentStrategy.report(reporter5, request);
+        String content = reportCommentStrategy.parseTarget(comment.getId());
 
         // then
-        assertAll(
-                () -> assertThat(comment.isHidden()).isTrue(),
-                () -> assertThat(postCommentService.getComments(post.getId())).isEmpty()
+        assertThat(content).isEqualTo(savedCommentContent);
+    }
+
+    @Test
+    @DisplayName("댓글에 대한 신고 조치를 한다.")
+    void commentReportAction() {
+        // given
+        Member writer = memberService.register(MemberFixtures.MALE_30.get());
+        Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+
+        Comment comment = commentTestPersister.builder()
+                .writer(writer)
+                .content("commnetA")
+                .save();
+
+        Report savedReport = reportTestPersister.builder()
+                .member(reporter)
+                .reportType(ReportType.COMMENT)
+                .reason("reasonA")
+                .targetId(comment.getId())
+                .save();
+
+        ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+                savedReport.getId(),
+                savedReport.getReportType(),
+                comment.getId(),
+                savedReport.getReason(),
+                savedReport.getCreatedAt()
         );
+
+        // when
+        reportCommentStrategy.reportAction(reportAggregateDto);
+
+        // then
+        ReportActionAlarm reportActionAlarm = reportActionAlarmRepository.findAll().get(0);
+
+        assertSoftly(softly -> {
+            softly.assertThat(reportActionAlarm.getMember().getId()).isEqualTo(writer.getId());
+            softly.assertThat(reportActionAlarm.getReportType()).isEqualTo(savedReport.getReportType());
+            softly.assertThat(reportActionAlarm.getTarget()).isEqualTo(comment.getContent());
+            softly.assertThat(reportActionAlarm.getReasons()).isEqualTo(savedReport.getReason());
+            softly.assertThat(reportActionAlarm.isChecked()).isFalse();
+            softly.assertThat(comment.isHidden()).isTrue();
+        });
+    }
+
+    @Test
+    @DisplayName("댓글이 존재하지 않는 경우 예외 발생")
+    void commentNotExistException() {
+        // given
+        Member writer = memberService.register(MemberFixtures.MALE_30.get());
+        Member reporter = memberService.register(MemberFixtures.MALE_20.get());
+
+        Comment comment = commentTestPersister.builder()
+                .writer(writer)
+                .content("commnetA")
+                .save();
+
+        Report savedReport = reportTestPersister.builder()
+                .member(reporter)
+                .reportType(ReportType.COMMENT)
+                .reason("reasonA")
+                .targetId(comment.getId())
+                .save();
+
+        ReportAggregateDto reportAggregateDto = new ReportAggregateDto(
+                savedReport.getId(),
+                savedReport.getReportType(),
+                comment.getId() + 1L,
+                savedReport.getReason(),
+                savedReport.getCreatedAt()
+        );
+
+        // when, then
+        assertThatThrownBy(() -> reportCommentStrategy.reportAction(reportAggregateDto))
+                .isInstanceOf(NotFoundException.class);
     }
 
 }

@@ -1,13 +1,21 @@
 package com.votogether.domain.member.service;
 
+import com.votogether.domain.alarm.entity.Alarm;
+import com.votogether.domain.alarm.entity.ReportActionAlarm;
+import com.votogether.domain.alarm.repository.AlarmRepository;
+import com.votogether.domain.alarm.repository.ReportActionAlarmRepository;
 import com.votogether.domain.member.dto.request.MemberDetailRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.domain.member.entity.MemberCategory;
+import com.votogether.domain.member.entity.MemberMetric;
 import com.votogether.domain.member.entity.vo.Nickname;
 import com.votogether.domain.member.exception.MemberExceptionType;
 import com.votogether.domain.member.repository.MemberCategoryRepository;
+import com.votogether.domain.member.repository.MemberMetricRepository;
 import com.votogether.domain.member.repository.MemberRepository;
+import com.votogether.domain.notice.entity.Notice;
+import com.votogether.domain.notice.repository.NoticeRepository;
 import com.votogether.domain.post.entity.Post;
 import com.votogether.domain.post.entity.comment.Comment;
 import com.votogether.domain.post.repository.CommentRepository;
@@ -19,6 +27,7 @@ import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +41,15 @@ public class MemberService {
     private static final Long NICKNAME_CHANGING_CYCLE = 14L;
 
     private final MemberRepository memberRepository;
+    private final MemberMetricRepository memberMetricRepository;
     private final MemberCategoryRepository memberCategoryRepository;
     private final PostRepository postRepository;
     private final VoteRepository voteRepository;
     private final ReportRepository reportRepository;
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
+    private final ReportActionAlarmRepository reportActionAlarmRepository;
+    private final NoticeRepository noticeRepository;
 
     @Transactional
     public Member register(final Member member) {
@@ -44,27 +57,62 @@ public class MemberService {
                 member.getSocialId(),
                 member.getSocialType()
         );
-        return maybeMember.orElseGet(() -> memberRepository.save(member));
+        return maybeMember.orElseGet(() -> {
+            final Member savedMember = memberRepository.save(member);
+            final MemberMetric memberMetric = MemberMetric.builder()
+                    .member(member)
+                    .postCount(0)
+                    .voteCount(0)
+                    .score(0)
+                    .build();
+            memberMetricRepository.save(memberMetric);
+            return savedMember;
+        });
     }
 
     @Transactional(readOnly = true)
     public Member findById(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NONEXISTENT_MEMBER));
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NON_EXISTENT_MEMBER));
     }
 
     @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(final Member member) {
-        final int numberOfPosts = postRepository.countByWriter(member);
-        final int numberOfVotes = voteRepository.countByMember(member);
+        final MemberMetric memberMetric = memberMetricRepository.findByMember(member)
+                .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+        final boolean hasLatestAlarm = hasLatestAlarm(member);
 
         return new MemberInfoResponse(
                 member.getNickname(),
                 member.getGender(),
                 member.getBirthYear(),
-                numberOfPosts,
-                numberOfVotes
+                memberMetric.getPostCount(),
+                memberMetric.getVoteCount(),
+                member.getRoles(),
+                hasLatestAlarm
         );
+    }
+
+    private boolean hasLatestAlarm(final Member member) {
+        final Optional<Alarm> maybeAlarm = alarmRepository.findTopByMemberOrderByIdDesc(member);
+        final Optional<ReportActionAlarm> maybeReportActionAlarm =
+                reportActionAlarmRepository.findTopByMemberOrderByIdDesc(member);
+        final List<Optional<LocalDateTime>> maybeCreatedAts = List.of(
+                maybeAlarm.map(Alarm::getCreatedAt),
+                maybeReportActionAlarm.map(ReportActionAlarm::getCreatedAt)
+        );
+
+        return getLatestAlarmCreatedAt(maybeCreatedAts, member);
+    }
+
+    private boolean getLatestAlarmCreatedAt(
+            final List<Optional<LocalDateTime>> maybeCreatedAts,
+            final Member member
+    ) {
+        return maybeCreatedAts.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .anyMatch(member::hasLatestAlarmCompareTo);
     }
 
     @Transactional
@@ -96,13 +144,22 @@ public class MemberService {
     }
 
     @Transactional
+    public void checkLatestAlarm(final Member member) {
+        member.checkAlarm();
+    }
+
+    @Transactional
     public void deleteMember(final Member member) {
         final List<Post> posts = deletePosts(member);
         final List<Comment> comments = deleteComments(member);
         deleteVotes(member);
         deleteMemberCategories(member);
         deleteReports(member, posts, comments);
+        deleteAlarms(member);
+        deleteReportActionAlarms(member);
+        deleteNotices(member);
 
+        memberMetricRepository.deleteByMember(member);
         memberRepository.delete(member);
     }
 
@@ -188,4 +245,29 @@ public class MemberService {
                 .toList();
         reportRepository.deleteAllById(reportIdsByMember);
     }
+
+    private void deleteAlarms(final Member member) {
+        final List<Long> alarmIds = alarmRepository.findAllByMember(member)
+                .stream()
+                .map(Alarm::getId)
+                .toList();
+        alarmRepository.deleteAllById(alarmIds);
+    }
+
+    private void deleteReportActionAlarms(final Member member) {
+        final List<Long> reportActionAlarmIds = reportActionAlarmRepository.findAllByMember(member)
+                .stream()
+                .map(ReportActionAlarm::getId)
+                .toList();
+        reportActionAlarmRepository.deleteAllById(reportActionAlarmIds);
+    }
+
+    private void deleteNotices(final Member member) {
+        final List<Long> noticeIds = noticeRepository.findAllByMember(member)
+                .stream()
+                .map(Notice::getId)
+                .toList();
+        noticeRepository.deleteAllById(noticeIds);
+    }
+
 }

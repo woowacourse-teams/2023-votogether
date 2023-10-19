@@ -25,6 +25,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final String LOCALHOST_FRONTEND = "http://localhost:3000";
     private static final String HTTPS_LOCALHOST_FRONTEND = "https://localhost:3000";
+    private static final String HTTPS_JERO = "https://jero-votogether-next.vercel.app/";
+    private static final String HTTPS_WUS = "https://wus-votogether-next-app.vercel.app/";
+    private static final String HTTPS_CHSUA = "https://chsua-votogether-next-app.vercel.app/";
+
     private static final String DEV_SERVER = "https://dev.votogether.com";
     private static final String PROD_SERVER = "https://votogether.com";
 
@@ -41,6 +45,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         config.addAllowedOrigin(HTTPS_LOCALHOST_FRONTEND);
         config.addAllowedOrigin(DEV_SERVER);
         config.addAllowedOrigin(PROD_SERVER);
+        config.addAllowedOrigin(HTTPS_JERO);
+        config.addAllowedOrigin(HTTPS_WUS);
+        config.addAllowedOrigin(HTTPS_CHSUA);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader(HttpHeaders.LOCATION);

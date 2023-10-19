@@ -7,6 +7,8 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 9px;
 
+  width: 100%;
+
   @media (min-width: ${theme.breakpoint.sm}) {
     gap: 12px;
   }

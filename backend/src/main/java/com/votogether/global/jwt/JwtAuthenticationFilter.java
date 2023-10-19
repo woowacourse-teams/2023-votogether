@@ -38,7 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Map<String, String> MATCH_URI_METHOD = new HashMap<>(
             Map.ofEntries(
-                    Map.entry("^/posts/.+/comments$", "GET")
+                    Map.entry("^/posts/.+/comments$", "GET"),
+                    Map.entry("^/notices.*$", "GET")
             )
     );
 

@@ -21,6 +21,13 @@ export const ListContainer = styled.div`
   position: relative;
 `;
 
+export const CommentCount = styled.p`
+  margin-left: 1px;
+
+  font: var(--text-body);
+  font-weight: bold;
+`;
+
 export const MoreButtonWrapper = styled.div`
   width: 80px;
   height: 46px;

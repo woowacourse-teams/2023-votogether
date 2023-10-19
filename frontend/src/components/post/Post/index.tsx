@@ -176,14 +176,14 @@ const Post = forwardRef(function Post(
       />
       {isPreview && (
         <S.PreviewBottom>
-          <S.IconUint>
+          <S.IconUnit>
             <S.Icon src={photoIcon} alt="사진 갯수" />
             <span>{imageCount}</span>
-          </S.IconUint>
-          <S.IconUint>
+          </S.IconUnit>
+          <S.IconUnit>
             <S.Icon src={commentIcon} alt="댓글 갯수" />
             <span>{commentCount}</span>
-          </S.IconUint>
+          </S.IconUnit>
         </S.PreviewBottom>
       )}
       <ImageZoomModal

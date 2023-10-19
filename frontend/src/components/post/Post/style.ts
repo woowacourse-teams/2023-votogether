@@ -132,7 +132,7 @@ export const PreviewBottom = styled.div`
   margin-top: 10px;
 `;
 
-export const IconUint = styled.div`
+export const IconUnit = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 5px;

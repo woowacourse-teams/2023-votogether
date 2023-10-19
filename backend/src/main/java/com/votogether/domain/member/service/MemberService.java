@@ -27,6 +27,7 @@ import com.votogether.domain.vote.entity.Vote;
 import com.votogether.domain.vote.repository.VoteRepository;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.global.exception.NotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -79,15 +80,39 @@ public class MemberService {
     public MemberInfoResponse findMemberInfo(final Member member) {
         final MemberMetric memberMetric = memberMetricRepository.findByMember(member)
                 .orElseThrow(() -> new NotFoundException(MemberExceptionType.NOT_FOUND_METRIC));
+        final boolean hasLatestAlarm = hasLatestAlarm(member);
 
         return new MemberInfoResponse(
                 member.getNickname(),
                 member.getGender(),
                 member.getBirthYear(),
-                member.getRoles(),
                 memberMetric.getPostCount(),
-                memberMetric.getVoteCount()
+                memberMetric.getVoteCount(),
+                member.getRoles(),
+                hasLatestAlarm
         );
+    }
+
+    private boolean hasLatestAlarm(final Member member) {
+        final Optional<Alarm> maybeAlarm = alarmRepository.findByMemberOrderByIdDesc(member);
+        final Optional<ReportActionAlarm> maybeReportActionAlarm =
+                reportActionAlarmRepository.findByMemberOrderByIdDesc(member);
+        final List<Optional<LocalDateTime>> maybeCreatedAts = List.of(
+                maybeAlarm.map(Alarm::getCreatedAt),
+                maybeReportActionAlarm.map(ReportActionAlarm::getCreatedAt)
+        );
+
+        return getLatestAlarmCreatedAt(maybeCreatedAts, member);
+    }
+
+    private boolean getLatestAlarmCreatedAt(
+            final List<Optional<LocalDateTime>> maybeCreatedAts,
+            final Member member
+    ) {
+        return maybeCreatedAts.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .anyMatch(member::hasLatestAlarmCompareTo);
     }
 
     @Transactional
@@ -116,6 +141,11 @@ public class MemberService {
         if (member.getBirthYear() != null) {
             throw new BadRequestException(MemberExceptionType.ALREADY_ASSIGNED_BIRTH_YEAR);
         }
+    }
+
+    @Transactional
+    public void checkLatestAlarm(final Member member) {
+        member.checkAlarm();
     }
 
     @Transactional

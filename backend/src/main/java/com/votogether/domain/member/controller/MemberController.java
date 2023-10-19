@@ -46,6 +46,12 @@ public class MemberController implements MemberControllerDocs {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/me/check-alarm")
+    public ResponseEntity<Void> checkLatestAlarm(@Auth final Member member) {
+        memberService.checkLatestAlarm(member);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/me/delete")
     public ResponseEntity<Void> deleteMember(@Auth final Member member) {
         memberService.deleteMember(member);

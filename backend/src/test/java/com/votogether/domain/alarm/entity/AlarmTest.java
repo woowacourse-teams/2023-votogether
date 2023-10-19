@@ -7,6 +7,7 @@ import com.votogether.domain.alarm.entity.vo.AlarmType;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.BadRequestException;
 import com.votogether.test.fixtures.MemberFixtures;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -52,6 +53,28 @@ class AlarmTest {
         assertThatThrownBy(() -> alarm.checkOwner(other))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("알림을 읽을 대상이 아닙니다.");
+    }
+
+    @Test
+    @DisplayName("알림이 생성된 시각과 인자로 받은 시각을 비교하여 최신 시각을 반환한다.")
+    void getLatestAlarmCreatedAt() {
+        // given
+        Member member = MemberFixtures.MALE_30.get();
+        Alarm alarm = Alarm.builder()
+                .member(member)
+                .alarmType(AlarmType.COMMENT)
+                .targetId(1L)
+                .detail("detail")
+                .isChecked(false)
+                .build();
+        ReflectionTestUtils.setField(alarm, "createdAt", LocalDateTime.of(2010, 10, 18, 12, 0));
+        LocalDateTime now = LocalDateTime.now();
+
+        // when
+        LocalDateTime latestAlarmCreatedAt = alarm.getLatestAlarmCreatedAt(now);
+
+        // then
+        assertThat(latestAlarmCreatedAt).isEqualTo(now);
     }
 
 }

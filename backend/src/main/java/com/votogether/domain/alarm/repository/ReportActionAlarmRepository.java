@@ -13,6 +13,8 @@ public interface ReportActionAlarmRepository extends JpaRepository<ReportActionA
 
     Optional<ReportActionAlarm> findByIdAndMember(final Long Id, final Member member);
 
+    Optional<ReportActionAlarm> findByMemberOrderByIdDesc(final Member member);
+
     List<ReportActionAlarm> findAllByMember(final Member member);
 
 }

@@ -292,6 +292,20 @@ class MemberServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("모든 알림이 존재하지 않는 경우 false가 반환된다.")
+        void returnsFalseWhenNoAlarmExists() {
+            // given
+            Member member = memberTestPersister.builder().save();
+            memberMetricTestPersister.builder().member(member).save();
+
+            // when
+            MemberInfoResponse memberInfoResponse = memberService.findMemberInfo(member);
+
+            // then
+            assertThat(memberInfoResponse.hasLatestAlarm()).isFalse();
+        }
+
+        @Test
         @DisplayName("게시글 내역 알림이 존재한다면 회원의 최신 알림 확인 시각과 비교하여 게시글 알림이 더 최신인 경우 true를 반환한다.")
         void returnsTrueWhenPostAlarmIsLatest() {
             // given
@@ -379,7 +393,7 @@ class MemberServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("신고 조치 내역 알림이 존재하지만, 회원의 최신 알림 확인 시각이 더 최신인 경우 false를 반환한다.")
-        void returnsTrueWhenReportActionAlarmOrPostAlarmIsNotLatest() {
+        void returnsFalseWhenReportActionAlarmOrPostAlarmIsNotLatest() {
             // given
             Member member = memberTestPersister.builder().save();
             memberMetricTestPersister.builder().member(member).save();

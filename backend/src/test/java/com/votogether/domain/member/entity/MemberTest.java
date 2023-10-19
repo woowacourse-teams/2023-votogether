@@ -114,10 +114,11 @@ class MemberTest {
     }
 
     @Test
-    @DisplayName("회원은 알림을 확인하면 이전에 저장되어있던 시간과는 다르다.")
+    @DisplayName("회원은 알림을 확인하면 이전에 저장되어있던 시간 이후의 시간으로 변경된다.")
     void checkAlarm() {
         // given
         Member member = MemberFixtures.MALE_20.get();
+        ReflectionTestUtils.setField(member, "createdAt", LocalDateTime.of(2001, 10, 10, 12, 0));
         LocalDateTime beforeAlarmCheckedAt = member.getAlarmCheckedAt();
 
         // when
@@ -125,7 +126,7 @@ class MemberTest {
 
         // then
         LocalDateTime afterAlarmCheckedAt = member.getAlarmCheckedAt();
-        assertThat(beforeAlarmCheckedAt).isNotEqualTo(afterAlarmCheckedAt);
+        assertThat(afterAlarmCheckedAt).isAfter(beforeAlarmCheckedAt);
     }
 
     @Nested

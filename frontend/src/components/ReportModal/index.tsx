@@ -25,7 +25,9 @@ export default function ReportModal({
   const { selectedOption, handleOptionChange } = useSelect<ReportMessage>(defaultReportMessage);
 
   const handlePrimaryButtonClick = () => {
-    !isReportLoading && handleReportClick(selectedOption);
+    if (isReportLoading) return;
+
+    handleReportClick(selectedOption);
     handleCancelClick();
   };
 

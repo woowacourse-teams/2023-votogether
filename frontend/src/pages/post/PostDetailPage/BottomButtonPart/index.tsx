@@ -2,6 +2,7 @@ import type { LoadingType } from '../types';
 
 import { useContext, useState } from 'react';
 
+import { PostAction } from '@type/menu';
 import { ReportMessage } from '@type/report';
 
 import { AuthContext } from '@hooks/context/auth';
@@ -39,9 +40,9 @@ export default function BottomButtonPart({
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
   const { isDeletePostLoading, isReportPostLoading, isReportNicknameLoading } = isEventLoading;
-  const [action, setAction] = useState<string | null>(null);
+  const [action, setAction] = useState<PostAction | null>(null);
 
-  const handleActionButtonClick = (action: string) => {
+  const handleActionButtonClick = (action: PostAction) => {
     if (!loggedInfo.isLoggedIn) {
       openToast('로그인 후에 기능을 이용해주세요.');
       return;

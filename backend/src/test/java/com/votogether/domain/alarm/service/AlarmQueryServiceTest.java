@@ -61,7 +61,7 @@ class AlarmQueryServiceTest extends ServiceTest {
             Thread.sleep(1000);
 
             // when
-            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(commentWriter, 0);
+            List<PostAlarmResponse> postAlarmResponses = alarmQueryService.getPostAlarm(post.getWriter(), 0);
 
             // then
             PostAlarmResponse postAlarmResponse = postAlarmResponses.get(0);

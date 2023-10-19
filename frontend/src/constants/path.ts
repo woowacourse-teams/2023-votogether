@@ -7,7 +7,6 @@ export const BASE_PATH = {
   ADMIN: '/admin',
   SEARCH: '/search',
   RANKING: '/ranking',
-  ANNOUNCEMENT: '/announcements',
   NOTICES: '/notices',
   REPORTS: '/reports',
   REPORT: '/reports',

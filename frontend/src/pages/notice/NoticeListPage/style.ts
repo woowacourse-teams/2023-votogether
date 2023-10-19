@@ -16,10 +16,3 @@ export const Title = styled.span`
 
   padding: 48px 0;
 `;
-
-export const ButtonWrapper = styled.div`
-  width: 80px;
-  height: 46px;
-
-  margin-top: 18px;
-`;

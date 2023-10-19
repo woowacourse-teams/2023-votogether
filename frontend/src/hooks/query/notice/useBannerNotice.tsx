@@ -7,8 +7,8 @@ import { getBannerNotice } from '@api/notice';
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const useBannerNotice = () => {
-  const { data, isError, isLoading, error } = useQuery<Notice>(
-    [QUERY_KEY.NOTICE],
+  const { data, isError, isLoading, error } = useQuery<Notice | null>(
+    [QUERY_KEY.NOTICE, 'banner'],
     getBannerNotice,
     {
       suspense: true,
@@ -20,6 +20,7 @@ export const useBannerNotice = () => {
       onError: () => {
         console.error('배너 공지 사항을 불러오는데 실패했습니다');
       },
+      retry: false,
     }
   );
 

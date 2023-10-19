@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { NoticeList } from '@type/notice';
+import { NoticeListType } from '@type/notice';
 
 import { getNoticeList } from '@api/notice';
 
@@ -8,7 +8,7 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useStackedNoticeList = () => {
   const { data, isError, isLoading, error, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery<NoticeList>(
+    useInfiniteQuery<NoticeListType>(
       [QUERY_KEY.NOTICE],
       ({ pageParam = 0 }) => getNoticeList(pageParam),
       {

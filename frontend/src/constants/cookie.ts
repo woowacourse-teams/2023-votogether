@@ -5,3 +5,5 @@ import { convertDayToSecond } from '@utils/time/convertDayToSecond';
  * 365일
  */
 export const ESSENTIAL_MAX_AGE = convertDayToSecond(365);
+export const APP_VISIBLE_MAX_AGE = convertDayToSecond(7);
+export const BANNER_VISIBLE_MAX_AGE = convertDayToSecond(1);

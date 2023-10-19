@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { NoticeList } from '@type/notice';
+import { NoticeListType } from '@type/notice';
 
 import { usePagination } from '@hooks/usePagination';
 
@@ -20,7 +20,7 @@ export const usePagedNoticeList = (initialPageNumber: number = 0) => {
     hasPrevPage,
   } = usePagination(initialPageNumber, 5);
 
-  const { data, isError, isLoading, error } = useQuery<NoticeList>(
+  const { data, isError, isLoading, error } = useQuery<NoticeListType>(
     [QUERY_KEY.NOTICE, page],
     () => getNoticeList(page),
     {

@@ -1,26 +1,28 @@
 import { CSSProperties, Suspense, useContext } from 'react';
 
-import { AuthContext, ToastContext, useToggle } from '@hooks';
+import { AuthContext, ToastContext } from '@hooks';
 
 import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
+import { useBannerToggle } from '@hooks/useBannerToggle';
 import { useDrawer } from '@hooks/useDrawer';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
+import NoRenderErrorBoundary from '@pages/NoRenderErrorBoundary';
 
 import AlarmContainer from '@components/AlarmContainer';
 import AddButton from '@components/common/AddButton';
 import AppInstallPrompt from '@components/common/AppInstallPrompt';
-import Banner from '@components/common/Banner';
 import Dashboard from '@components/common/Dashboard';
 import Drawer from '@components/common/Drawer';
 import Layout from '@components/common/Layout';
 import NarrowMainHeader from '@components/common/NarrowMainHeader';
 import Skeleton from '@components/common/Skeleton';
 import UpButton from '@components/common/UpButton';
+import BannerFetcher from '@components/notice/BannerFetcher';
+import BannerSkeleton from '@components/notice/BannerSkeleton';
 import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
-import { APP_LAUNCH_EVENT } from '@constants/policyMessage';
 
 import { smoothScrollToTop } from '@utils/scrollToTop';
 
@@ -42,10 +44,8 @@ export default function HomePage() {
     openDrawer: openAlarmDrawer,
     closeDrawer: closeAlarmDrawer,
   } = useDrawer('right');
-  const { TITLE, CONTENT } = APP_LAUNCH_EVENT;
 
-  const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(true);
-
+  const { isBannerOpen, closeBanner } = useBannerToggle();
   const { addMessage } = useContext(ToastContext);
   const loggedInfo = useContext(AuthContext).loggedInfo;
   const isAlarmActive = loggedInfo.userInfo?.hasLatestAlarm;
@@ -70,12 +70,11 @@ export default function HomePage() {
         </S.HeaderWrapper>
         {isBannerOpen && (
           <S.BannerWrapper>
-            <Banner
-              title={TITLE}
-              content={CONTENT}
-              handleClose={closeBanner}
-              path={PATH.ANNOUNCEMENT}
-            />
+            <NoRenderErrorBoundary>
+              <Suspense fallback={<BannerSkeleton />}>
+                <BannerFetcher handleClose={closeBanner} />
+              </Suspense>
+            </NoRenderErrorBoundary>
           </S.BannerWrapper>
         )}
         <S.DrawerWrapper>

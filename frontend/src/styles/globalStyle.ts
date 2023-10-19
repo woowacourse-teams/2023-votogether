@@ -25,13 +25,13 @@ export const GlobalStyle = createGlobalStyle`
 
   :root {
     /* Colors *****************************************/
+    --red: #F51A18;
     --primary-color: #F85554;
     --white: #ffffff;
-    --slate: #94a3b8;
-    --gray: #ced4da;
     --bright-gray: #F4F4F4;
-    --red: #F51A18;
+    --gray: #cccccc;
     --dark-gray: #929292;
+    --slate: #94a3b8;
     --header: #1f1f1f;
     --graph-color-purple:#853DE1;
     --graph-color-green:#5AEAA5;

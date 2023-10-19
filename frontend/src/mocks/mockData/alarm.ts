@@ -38,7 +38,8 @@ const reportAlarmAtPost = () => ({
   isChecked: randomBoolean(),
   detail: {
     createdAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
-    reportActionId: Math.round(Math.random() * 1000),
+    reportId: Math.round(Math.random() * 1000),
+    reasons: [],
     type: 'POST',
     content: '신고되어 삭제된 게시물',
   },
@@ -49,7 +50,8 @@ const reportAlarmAtComment = () => ({
   isChecked: randomBoolean(),
   detail: {
     createdAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
-    reportActionId: Math.round(Math.random() * 1000),
+    reportId: Math.round(Math.random() * 1000),
+    reasons: [],
     type: 'COMMENT',
     content: '삭제된 댓글 내용',
   },
@@ -60,7 +62,8 @@ const reportAlarmAtNickName = () => ({
   isChecked: randomBoolean(),
   detail: {
     createdAt: `201${randomNum()}-0${randomNum()}-1${randomNum()} 11:34`,
-    reportActionId: Math.round(Math.random() * 1000),
+    reportId: Math.round(Math.random() * 1000),
+    reasons: [],
     type: 'NICKNAME',
     content: '변경처리된 닉네임',
   },

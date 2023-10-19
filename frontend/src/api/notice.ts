@@ -7,7 +7,7 @@ import {
 } from '@type/notice';
 import { StringDateUpToDay } from '@type/time';
 
-import { deleteFetch, getFetch, patchFetch, postFetch } from '@utils/fetch';
+import { deleteFetch, getFetch, postFetch, putFetch } from '@utils/fetch';
 
 export const transformNotice = ({
   id,
@@ -66,7 +66,7 @@ export const modifyNotice = async ({
   noticeId: number;
   notice: NoticeRequest;
 }) => {
-  return await patchFetch(`${BASE_URL}/notices/${noticeId}`, notice);
+  return await putFetch(`${BASE_URL}/notices/${noticeId}`, notice);
 };
 
 export const deleteNotice = async (noticeId: number) => {

@@ -31,7 +31,7 @@ const PrivateRoute = ({
   if (isOnlyAdminAllowed && userInfo?.role !== 'ADMIN') {
     alert('해당 페이지는 관리자만 접근이 가능합니다. 마이 페이지를 통해 접속해주세요.');
 
-    return <Navigate to={path} />;
+    return <Navigate to={PATH.USER_INFO} />;
   }
 
   if (!isGuestAllowed && !isLoggedIn) {

@@ -69,13 +69,13 @@ export const MOCK_NOTICE_RESPONSE: NoticeResponse = getMockNoticeResponse();
 export const MOCK_TRANSFORM_NOTICE: Notice = transformNotice(MOCK_NOTICE_RESPONSE);
 
 export const MOCK_NOTICE_LIST_RESPONSE: NoticeListResponse = {
-  totalPageNumber: 3,
+  totalPageNumber: 23,
   currentPageNumber: 0,
   notices: Array.from({ length: 20 }, () => getMockNoticeResponse()),
 };
 
 export const MOCK_TRANSFORM_NOTICE_LIST: NoticeListType = {
-  totalPageNumber: 3,
+  totalPageNumber: 23,
   currentPageNumber: 0,
   noticeList: MOCK_NOTICE_LIST_RESPONSE.notices.map(item => transformNotice(item)),
 };

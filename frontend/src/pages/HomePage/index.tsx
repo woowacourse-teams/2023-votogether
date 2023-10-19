@@ -1,8 +1,9 @@
 import { CSSProperties, Suspense, useContext } from 'react';
 
-import { AuthContext, ToastContext, useToggle } from '@hooks';
+import { AuthContext, ToastContext } from '@hooks';
 
 import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
+import { useBannerToggle } from '@hooks/useBannerToggle';
 import { useDrawer } from '@hooks/useDrawer';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
@@ -19,10 +20,8 @@ import UpButton from '@components/common/UpButton';
 import BannerFetcher from '@components/notice/BannerFetcher';
 import PostList from '@components/post/PostList';
 
-import { BANNER_VISIBLE_MAX_AGE } from '@constants/cookie';
 import { PATH } from '@constants/path';
 
-import { getCookie, setCookie } from '@utils/cookie';
 import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
@@ -43,10 +42,8 @@ export default function HomePage() {
     openDrawer: openAlarmDrawer,
     closeDrawer: closeAlarmDrawer,
   } = useDrawer('right');
-  const { isBannerVisible } = getCookie();
-  const initialBannerVisible = isBannerVisible ? JSON.parse(isBannerVisible) : true;
-  const { isOpen: isBannerOpen, closeComponent: closeBanner } = useToggle(initialBannerVisible);
 
+  const { isBannerOpen, closeBanner } = useBannerToggle();
   const { addMessage } = useContext(ToastContext);
   const loggedInfo = useContext(AuthContext).loggedInfo;
   const isAlarmActive = loggedInfo.userInfo?.hasLatestAlarm;
@@ -57,22 +54,6 @@ export default function HomePage() {
 
     openAlarmDrawer();
     mutate();
-  };
-
-  const handleBannerCloseClick = () => {
-    const isCloseBannerConfirmed = window.confirm(
-      '배너를 닫으시면 하루동안 볼 수 없습니다. 닫으시겠습니까?'
-    );
-
-    if (isCloseBannerConfirmed) {
-      setCookie({
-        key: 'isBannerVisible',
-        value: 'false',
-        maxAge: BANNER_VISIBLE_MAX_AGE,
-      });
-
-      closeBanner();
-    }
   };
 
   return (
@@ -87,7 +68,7 @@ export default function HomePage() {
         </S.HeaderWrapper>
         {isBannerOpen && (
           <S.BannerWrapper>
-            <BannerFetcher handleClose={handleBannerCloseClick} />
+            <BannerFetcher handleClose={closeBanner} />
           </S.BannerWrapper>
         )}
         <S.DrawerWrapper>

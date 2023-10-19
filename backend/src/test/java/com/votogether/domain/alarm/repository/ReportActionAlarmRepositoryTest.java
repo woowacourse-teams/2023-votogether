@@ -1,7 +1,6 @@
 package com.votogether.domain.alarm.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.votogether.domain.alarm.entity.ReportActionAlarm;
 import com.votogether.domain.member.entity.Member;
@@ -23,7 +22,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
     void getInLatestOrder() {
         // given
         Member member = memberTestPersister.builder().save();
-
+        
         ReportActionAlarm reportActionAlarmA = ReportActionAlarm.builder()
                 .reportType(ReportType.POST)
                 .member(member)
@@ -54,19 +53,19 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
 
         // when
         PageRequest pageRequest = PageRequest.of(0, 10);
-        List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(
-                member, pageRequest);
+        List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository
+                .findByMemberOrderByCreatedAtDesc(member, pageRequest);
 
         // then
-        assertAll(
-                () -> assertThat(reportActionAlarms).hasSize(3),
-                () -> assertThat(reportActionAlarms.get(0).getReportType()).isEqualTo(
-                        reportActionAlarmC.getReportType()),
-                () -> assertThat(reportActionAlarms.get(1).getReportType()).isEqualTo(
-                        reportActionAlarmB.getReportType()),
-                () -> assertThat(reportActionAlarms.get(2).getReportType()).isEqualTo(
-                        reportActionAlarmA.getReportType())
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(reportActionAlarms).hasSize(3);
+            softly.assertThat(reportActionAlarms.get(0).getReportType()).isEqualTo(
+                    reportActionAlarmC.getReportType());
+            softly.assertThat(reportActionAlarms.get(1).getReportType()).isEqualTo(
+                    reportActionAlarmB.getReportType());
+            softly.assertThat(reportActionAlarms.get(2).getReportType()).isEqualTo(
+                    reportActionAlarmA.getReportType());
+        });
     }
 
     @Test
@@ -88,17 +87,18 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
 
         // when
         PageRequest pageRequestA = PageRequest.of(0, 10);
-        List<ReportActionAlarm> reportActionAlarmsA = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(
-                member, pageRequestA);
+        List<ReportActionAlarm> reportActionAlarmsA = reportActionAlarmRepository
+                .findByMemberOrderByCreatedAtDesc(member, pageRequestA);
 
         PageRequest pageRequestB = PageRequest.of(1, 10);
-        List<ReportActionAlarm> reportActionAlarmsB = reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(
-                member, pageRequestB);
+        List<ReportActionAlarm> reportActionAlarmsB = reportActionAlarmRepository
+                .findByMemberOrderByCreatedAtDesc(member, pageRequestB);
 
         // then
-        assertAll(
-                () -> assertThat(reportActionAlarmsA).hasSize(10),
-                () -> assertThat(reportActionAlarmsB).hasSize(1)
+        assertSoftly(softly -> {
+                    softly.assertThat(reportActionAlarmsA).hasSize(10);
+                    softly.assertThat(reportActionAlarmsB).hasSize(1);
+                }
         );
     }
 

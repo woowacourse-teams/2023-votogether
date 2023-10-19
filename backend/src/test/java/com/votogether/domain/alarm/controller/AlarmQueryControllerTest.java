@@ -25,7 +25,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -90,12 +89,14 @@ class AlarmQueryControllerTest extends ControllerTest {
 
         // when
         List<ReportActionAlarmResponse> results = RestAssuredMockMvc
+                .given().log().all()
+                .queryParam("page", 0)
                 .when().get("/alarms/report?page=0")
                 .then().log().all()
                 .status(HttpStatus.OK)
                 .extract()
-                .as(new ParameterizedTypeReference<List<ReportActionAlarmResponse>>() {
-                }.getType());
+                .as(new TypeRef<>() {
+                });
 
         // then
         assertThat(results.get(0)).isEqualTo(response);
@@ -117,6 +118,7 @@ class AlarmQueryControllerTest extends ControllerTest {
 
         // when
         ReportActionResponse result = RestAssuredMockMvc
+                .given().log().all()
                 .when().get("/alarms/report/{id}", 1)
                 .then().log().all()
                 .status(HttpStatus.OK)

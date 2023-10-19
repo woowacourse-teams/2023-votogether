@@ -15,13 +15,16 @@ public record MemberInfoResponse(
         @Schema(description = "출생년도", example = "2002")
         Integer birthYear,
 
-        @Schema(description = "권한", example = "MEMBER")
-        Roles roles,
-
         @Schema(description = "작성한 게시글 수", example = "5")
         long postCount,
 
         @Schema(description = "투표한 수", example = "10")
-        long voteCount
+        long voteCount,
+
+        @Schema(description = "권한", example = "MEMBER")
+        Roles roles,
+
+        @Schema(description = "최신 알림 존재 여부", example = "false")
+        boolean hasLatestAlarm
 ) {
 }

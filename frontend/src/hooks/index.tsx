@@ -64,6 +64,7 @@ import { useText } from './useText';
 import { useToggle } from './useToggle';
 import { useToggleSwitch } from './useToggleSwitch';
 import { useWritingOption } from './useWritingOption';
+import { usePagination } from './usePagination';
 
 export {
   useCount,
@@ -80,6 +81,7 @@ export {
   useText,
   useToggle,
   useWritingOption,
+  usePagination,
 };
 
 export {

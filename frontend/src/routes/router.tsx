@@ -1,6 +1,9 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import NoticeAdminPage from '@pages/admin/notices/NoticeAdminPage';
+import NoticeEditPage from '@pages/admin/notices/NoticeEditPage';
+import NoticeWritePage from '@pages/admin/notices/NoticeWritePage';
 import PendingReportPage from '@pages/admin/PendingReportPage';
 import AnnouncementPage from '@pages/AnnouncementPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
@@ -184,20 +187,37 @@ const router = createBrowserRouter([
   },
   {
     path: PATH.ADMIN,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: PATH.NOTICES.slice(1),
+        path: `reports/pending`,
         element: (
-          <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
-            <div>어드민 공지사항 목록 페이지</div>
+          <PrivateRoute isOnlyAdminAllowed>
+            <PendingReportPage />
           </PrivateRoute>
         ),
       },
       {
-        path: `${PATH.REPORTS}/pending`.slice(1),
+        path: `notices/write`,
         element: (
-          <PrivateRoute isOnlyAdminAllowed={true} path={PATH.USER_INFO}>
-            <PendingReportPage />
+          <PrivateRoute isOnlyAdminAllowed>
+            <NoticeWritePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: `notices/:noticeId`,
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <NoticeEditPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'notices',
+        element: (
+          <PrivateRoute isOnlyAdminAllowed>
+            <NoticeAdminPage />
           </PrivateRoute>
         ),
       },

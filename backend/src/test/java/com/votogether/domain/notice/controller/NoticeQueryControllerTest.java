@@ -13,6 +13,7 @@ import com.votogether.domain.notice.service.NoticeQueryService;
 import com.votogether.test.ControllerTest;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,8 +53,8 @@ class NoticeQueryControllerTest extends ControllerTest {
                 "bannerTitle",
                 "bannerSubtitle",
                 "content",
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now()
+                LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.MINUTES),
+                LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
         );
         given(noticeQueryService.getProgressNotice()).willReturn(expected);
 
@@ -86,8 +87,8 @@ class NoticeQueryControllerTest extends ControllerTest {
                     "bannerTitle",
                     "bannerSubtitle",
                     "content",
-                    LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now()
+                    LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.MINUTES),
+                    LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
             );
             NoticePageResponse expected = new NoticePageResponse(1, 0, List.of(noticeResponse));
             given(noticeQueryService.getNotices(anyInt())).willReturn(expected);
@@ -153,8 +154,8 @@ class NoticeQueryControllerTest extends ControllerTest {
                     "bannerTitle",
                     "bannerSubtitle",
                     "content",
-                    LocalDateTime.now().plusDays(1),
-                    LocalDateTime.now()
+                    LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.MINUTES),
+                    LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
             );
             given(noticeQueryService.getNotice(anyLong())).willReturn(expected);
 

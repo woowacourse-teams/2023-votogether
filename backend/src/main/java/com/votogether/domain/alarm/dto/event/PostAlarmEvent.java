@@ -5,6 +5,7 @@ import com.votogether.domain.member.entity.Member;
 
 public record PostAlarmEvent(
         Member member,
+        String commentWriterNickname,
         Long targetId,
         AlarmType alarmType,
         String detail

@@ -32,7 +32,7 @@ class AlarmEventListenerTest extends ServiceTest {
     void handlePostAlarmEvent() throws Exception {
         // given
         Member member = memberTestPersister.builder().save();
-        PostAlarmEvent postAlarmEvent = new PostAlarmEvent(member, 1L, AlarmType.COMMENT, "title");
+        PostAlarmEvent postAlarmEvent = new PostAlarmEvent(member, "nickname", 1L, AlarmType.COMMENT, "title");
 
         // when
         alarmEventListener.handlePostAlarmEvent(postAlarmEvent);

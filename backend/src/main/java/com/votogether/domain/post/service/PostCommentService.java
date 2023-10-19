@@ -65,6 +65,7 @@ public class PostCommentService {
         }
         final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
                 post.getWriter(),
+                loginMember.getNickname(),
                 post.getId(),
                 AlarmType.COMMENT,
                 post.getTitle()

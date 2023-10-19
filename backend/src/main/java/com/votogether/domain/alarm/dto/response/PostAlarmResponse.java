@@ -21,10 +21,10 @@ public record PostAlarmResponse(
         boolean isChecked
 ) {
 
-    public static PostAlarmResponse of(final Alarm alarm, final String nickname) {
+    public static PostAlarmResponse of(final Alarm alarm) {
         return new PostAlarmResponse(
                 alarm.getId(),
-                PostAlarmDetailResponse.of(alarm, nickname),
+                PostAlarmDetailResponse.of(alarm),
                 alarm.getCreatedAt(),
                 alarm.isChecked()
         );

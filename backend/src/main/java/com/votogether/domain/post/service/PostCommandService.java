@@ -46,6 +46,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class PostCommandService {
 
+    private static final String NICKNAME_WHEN_POST_CLOSING = "";
+
     private final ImageUploader imageUploader;
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
@@ -313,6 +315,7 @@ public class PostCommandService {
     private void publishAlarmEvent(final Long postId, final Member loginMember, final Post post) {
         final PostAlarmEvent postAlarmEvent = new PostAlarmEvent(
                 loginMember,
+                NICKNAME_WHEN_POST_CLOSING,
                 postId,
                 AlarmType.POST_DEADLINE,
                 post.getTitle()

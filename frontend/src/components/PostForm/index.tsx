@@ -63,7 +63,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
   //기타 훅
   const navigate = useNavigate();
   const { addMessage } = useContext(ToastContext);
-  const { isOpen: isModalOpen, openComponent, closeComponent } = useToggle();
+  const { isOpen: isModalOpen, openComponent, closeComponent: closeModal } = useToggle();
 
   //게시글 정보 관련 훅
   const contentImageHook = useContentImage(serverImageUrl);
@@ -111,7 +111,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }
   };
 
-  const closeModal = () => {
+  const handleModalClose = () => {
     if (data && checkIrreplaceableTime(userSelectTime, data.createTime)) {
       addMessage('마감시간 지정 조건을 다시 확인해주세요.');
       const updatedTime = {
@@ -126,7 +126,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     setSelectTimeOption(
       Object.values(userSelectTime).every(time => time === 0) ? null : '사용자지정'
     );
-    closeComponent();
+    closeModal();
   };
 
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -179,6 +179,16 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
 
       mutate(formData);
     }
+  };
+
+  const primaryButton = {
+    text: '저장',
+    handleClick: closeModal,
+  };
+
+  const secondaryButton = {
+    text: '초기화',
+    handleClick: handleResetButton,
   };
 
   return (
@@ -298,31 +308,20 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
           </S.RightSide>
         </ResponsiveFlex>
         {isModalOpen && (
-          <Modal size="sm" onModalClose={closeModal} aria-label="마감시간 설정 모달">
-            <>
-              <S.ModalHeader>
-                <h3>마감 시간 선택</h3>
-                <S.CloseButton onClick={closeModal} aria-label="마감시간 설정 모달 끄기">
-                  X
-                </S.CloseButton>
-              </S.ModalHeader>
-              <S.ModalBody>
-                <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
-                  {POST_DEADLINE_POLICY.DEFAULT}
-                </S.Description>
-                <TimePickerOptionList time={userSelectTime} setTime={setUserSelectTime} />
-                <S.ResetButtonWrapper>
-                  <SquareButton
-                    aria-label="마감시간 초기화"
-                    onClick={handleResetButton}
-                    type="button"
-                    theme="blank"
-                  >
-                    초기화
-                  </SquareButton>
-                </S.ResetButtonWrapper>
-              </S.ModalBody>
-            </>
+          <Modal
+            size="sm"
+            primaryButton={primaryButton}
+            secondaryButton={secondaryButton}
+            aria-label="마감시간 설정 모달"
+            handleModalClose={handleModalClose}
+            title="마감 시간 선택"
+          >
+            <S.ModalBody>
+              <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
+                {POST_DEADLINE_POLICY.DEFAULT}
+              </S.Description>
+              <TimePickerOptionList time={userSelectTime} setTime={setUserSelectTime} />
+            </S.ModalBody>
           </Modal>
         )}
       </form>

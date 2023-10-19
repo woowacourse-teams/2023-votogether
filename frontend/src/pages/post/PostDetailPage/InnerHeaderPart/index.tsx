@@ -142,6 +142,7 @@ export default function InnerHeaderPart({
         )}
         {action === 'POST_REPORT' && (
           <ReportModal
+            handleModalClose={handleCancelClick}
             reportType="POST"
             handleReportClick={reportPost}
             handleCancelClick={handleCancelClick}
@@ -150,6 +151,7 @@ export default function InnerHeaderPart({
         )}
         {action === 'NICKNAME_REPORT' && (
           <ReportModal
+            handleModalClose={handleCancelClick}
             reportType="NICKNAME"
             handleReportClick={reportNickname}
             handleCancelClick={handleCancelClick}

@@ -2,12 +2,13 @@ import { ReportMessage, ReportType } from '@type/report';
 
 import { useSelect } from '@hooks';
 
+import Modal from '@components/common/Modal';
 import Select from '@components/common/Select';
-import TwoButtonModal from '@components/common/TwoButtonModal';
 
 import { REPORT_TYPE } from './constants';
-
+import * as S from './style';
 interface UserReportModalProps {
+  handleModalClose: () => void;
   reportType: ReportType;
   handleCancelClick: () => void;
   handleReportClick: (reason: ReportMessage) => void;
@@ -15,6 +16,7 @@ interface UserReportModalProps {
 }
 
 export default function ReportModal({
+  handleModalClose,
   reportType,
   handleCancelClick,
   handleReportClick,
@@ -32,8 +34,9 @@ export default function ReportModal({
   };
 
   return (
-    <TwoButtonModal
+    <Modal
       title={name}
+      size="sm"
       primaryButton={{
         text: '신고',
         handleClick: handlePrimaryButtonClick,
@@ -42,13 +45,16 @@ export default function ReportModal({
         text: '취소',
         handleClick: handleCancelClick,
       }}
+      handleModalClose={handleModalClose}
     >
-      <Select
-        aria-label={`${name} 방법 선택`}
-        optionList={reportMessageList}
-        handleOptionChange={handleOptionChange}
-        selectedOption={reportMessageList[selectedOption]}
-      />
-    </TwoButtonModal>
+      <S.ModalBody>
+        <Select
+          aria-label={`${name} 방법 선택`}
+          optionList={reportMessageList}
+          handleOptionChange={handleOptionChange}
+          selectedOption={reportMessageList[selectedOption]}
+        />
+      </S.ModalBody>
+    </Modal>
   );
 }

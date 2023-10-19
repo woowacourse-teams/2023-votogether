@@ -151,6 +151,20 @@ export const OptionListWrapper = styled.div`
   }
 `;
 
+export const ModalBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 7px;
+
+  min-height: 100%;
+
+  font: var(--text-body);
+
+  box-sizing: border-box;
+`;
+
 export const Deadline = styled.div`
   font: var(--text-body);
   font-weight: bold;
@@ -225,19 +239,6 @@ export const CloseButton = styled.button`
   font: var(--text-body);
 
   cursor: pointer;
-`;
-
-export const ModalBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: start;
-  align-items: center;
-  gap: 10px;
-
-  padding: 10px 0;
-
-  font: var(--text-caption);
 `;
 
 export const ResetButtonWrapper = styled.div`

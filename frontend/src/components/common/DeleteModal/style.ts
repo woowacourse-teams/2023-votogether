@@ -1,14 +1,10 @@
 import { styled } from 'styled-components';
 
-import { theme } from '@styles/theme';
-
 export const Description = styled.p`
+  padding: 0 20px;
+
   color: #67727e;
 
-  font: var(--text-caption);
+  font-size: 14px;
   white-space: pre-wrap;
-
-  @media (min-width: ${theme.breakpoint.sm}) {
-    font: var(--text-body);
-  }
 `;

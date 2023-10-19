@@ -49,7 +49,7 @@ export default function DeleteModal({
         >
           <S.Description
             tabIndex={0}
-          >{`${TARGET_FOR_DELETE[target]} 삭제하시겠습니까?\n삭제 버튼 클릭 시 취소할 수 없습니다.`}</S.Description>
+          >{`${TARGET_FOR_DELETE[target]}을 삭제하시겠습니까?\n삭제 버튼 클릭 시 취소할 수 없습니다.`}</S.Description>
         </Modal>
       )}
     </>

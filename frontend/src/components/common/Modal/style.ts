@@ -40,7 +40,6 @@ export const Container = styled.dialog<{ size: Size }>`
   max-width: 290px;
   border-radius: 12px;
   border: 2px solid #f6f6f6;
-  padding-left: 5px 0 0 10px;
 
   background-color: white;
 
@@ -60,8 +59,7 @@ export const HiddenCloseButton = styled.button`
 
 export const Title = styled.span`
   padding: 15px 2px 0 20px;
-  margin-top: 5px;
-  margin-bottom: 16px;
+  margin: 5px 0 16px;
 
   color: #334253;
 

@@ -7,8 +7,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
-import com.votogether.domain.alarm.dto.ReportActionAlarmResponse;
-import com.votogether.domain.alarm.dto.ReportActionResponse;
+import com.votogether.domain.alarm.dto.response.ReportActionAlarmResponse;
+import com.votogether.domain.alarm.dto.response.ReportActionResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmDetailResponse;
 import com.votogether.domain.alarm.dto.response.PostAlarmResponse;
 import com.votogether.domain.alarm.entity.ReportActionAlarm;

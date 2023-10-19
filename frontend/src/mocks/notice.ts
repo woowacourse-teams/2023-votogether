@@ -25,7 +25,7 @@ export const mockNotice = [
     return res(ctx.status(200), ctx.json(MOCK_NOTICE_RESPONSE));
   }),
 
-  rest.patch(`/notices/:id`, async (req, res, ctx) => {
+  rest.put(`/notices/:id`, async (req, res, ctx) => {
     const data = await req.json();
 
     MOCK_NOTICE_TEST = data.title;

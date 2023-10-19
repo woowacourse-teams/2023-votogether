@@ -44,7 +44,7 @@ export default function LogoButton({ content, ...rest }: LogoButtonProps) {
     return (
       <S.Button content={content} aria-label={ariaLabelText} {...rest}>
         <img src={logo} alt="로고 아이콘" onClick={handleLogoClick} />
-        {count > 5 && <EventMascot />}
+        {count > 5 && <EventMascot type={'ma'} />}
         <img src={votogether} alt="보투게더 아이콘" />
       </S.Button>
     );
@@ -53,7 +53,7 @@ export default function LogoButton({ content, ...rest }: LogoButtonProps) {
   return (
     <S.Button content={content} aria-label={ariaLabelText} {...rest}>
       <img src={src} alt="보투게더 아이콘" onClick={handleLogoClick} />
-      {count > 5 && <EventMascot />}
+      {count > 5 && <EventMascot type={'ma'} />}
     </S.Button>
   );
 }

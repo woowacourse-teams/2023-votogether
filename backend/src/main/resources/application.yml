@@ -4,6 +4,10 @@ spring:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
+    hikari:
+      maximumPoolSize: ${MAXIMUM_POOL_SIZE}
+      connectionTimeout: ${CONNECTION_TIMEOUT}
+      maxLifetime: ${MAX_LIFETIME}
 
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect

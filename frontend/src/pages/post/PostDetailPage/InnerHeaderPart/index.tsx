@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { PostAction, MenuItem } from '@type/menu';
 import { ReportMessage } from '@type/report';
 
-import { useToggle } from '@hooks';
+import { AuthContext, useToggle } from '@hooks';
 
 import DeleteModal from '@components/common/DeleteModal';
 import HeaderTextButton from '@components/common/HeaderTextButton';
@@ -32,6 +32,7 @@ interface PostDetailPageChildProps {
       reportPost: (reason: ReportMessage) => void;
       reportNickname: (reason: ReportMessage) => void;
     };
+    openToast: (text: string) => void;
   };
   isEventLoading: Record<LoadingType, boolean>;
 }
@@ -44,20 +45,25 @@ const menuList: MenuItem<PostAction>[] = [
 export default function InnerHeaderPart({
   isWriter,
   isClosed,
-  handleEvent: { movePage, controlPost },
+  handleEvent: { movePage, controlPost, openToast },
   isEventLoading,
 }: PostDetailPageChildProps) {
   const navigate = useNavigate();
-
+  const { loggedInfo } = useContext(AuthContext);
   const { moveWritePostPage, moveVoteStatisticsPage } = movePage;
   const { setEarlyClosePost, deletePost, reportPost, reportNickname } = controlPost;
-  const { isOpen, toggleComponent, closeComponent } = useToggle();
-  const [action, setAction] = useState<PostAction | null>(null);
-
   const { isDeletePostLoading, isReportNicknameLoading, isReportPostLoading } = isEventLoading;
+  const { isOpen: isMenuOpen, toggleComponent, closeComponent } = useToggle();
+  const [action, setAction] = useState<PostAction | null>(null);
 
   const handleMenuClick = (action: PostAction) => {
     closeComponent();
+
+    if (!loggedInfo.isLoggedIn) {
+      openToast('로그인 후에 기능을 이용해주세요.');
+      return;
+    }
+
     setAction(action);
   };
 
@@ -80,12 +86,12 @@ export default function InnerHeaderPart({
         {!isWriter ? (
           <>
             <HeaderTextButton
-              aria-label={isOpen ? '게시글 신고 메뉴 닫기' : '게시글 신고 메뉴 열기'}
+              aria-label={isMenuOpen ? '게시글 신고 메뉴 닫기' : '게시글 신고 메뉴 열기'}
               onClick={toggleComponent}
             >
               신고
             </HeaderTextButton>
-            {isOpen && (
+            {isMenuOpen && (
               <S.MenuWrapper>
                 <Menu menuList={menuList} handleMenuClick={handleMenuClick} />
               </S.MenuWrapper>

@@ -45,6 +45,10 @@ server:
     max-connections: 8192
     threads:
       max: 200
+    hikari:
+      maximumPoolSize: 10
+      connectionTimeout: 30000
+      maxLifetime: 180000
 
 springdoc:
   swagger-ui:

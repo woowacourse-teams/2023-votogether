@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Comment } from '@type/comment';
@@ -7,10 +7,8 @@ import { ReportMessage, ReportRequest } from '@type/report';
 
 import { useToggle } from '@hooks';
 
-import { ToastContext } from '@hooks/context/toast';
 import { useDeleteComment } from '@hooks/query/comment/useDeleteComment';
-
-import { reportContent } from '@api/report';
+import { useReportContent } from '@hooks/query/report/useReportContent';
 
 import CommentTextForm from '@components/comment/CommentList/CommentTextForm';
 import DeleteModal from '@components/common/DeleteModal';
@@ -30,10 +28,6 @@ interface CommentItemProps {
 }
 
 export default function CommentItem({ comment, userType }: CommentItemProps) {
-  const [isReportCommentLoading, setIsReportCommentLoading] = useState(false);
-  const [isReportNicknameLoading, setIsReportNicknameLoading] = useState(false);
-
-  const { addMessage } = useContext(ToastContext);
   const { isOpen, toggleComponent, closeComponent } = useToggle();
   const { id, member, content, createdAt, isEdit } = comment;
   const [action, setAction] = useState<CommentAction | null>(null);
@@ -41,7 +35,8 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   const params = useParams() as { postId: string };
   const postId = Number(params.postId);
 
-  const { mutate, isLoading: isCommentDeleting } = useDeleteComment(postId, id);
+  const { mutate: deleteComment, isLoading: isCommentDeleting } = useDeleteComment(postId, id);
+  const { mutate: reportContent, isLoading: isContentReporting } = useReportContent();
 
   const handleMenuClick = (menu: CommentAction) => {
     closeComponent();
@@ -50,44 +45,12 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
 
   const handleCommentReportClick = async (reason: ReportMessage) => {
     const reportData: ReportRequest = { type: 'COMMENT', id, reason };
-    setIsReportCommentLoading(true);
-
-    await reportContent(reportData)
-      .then(res => {
-        addMessage('댓글을 신고했습니다.');
-      })
-      .catch(e => {
-        if (e instanceof Error) {
-          const errorResponse = JSON.parse(e.message);
-          addMessage(errorResponse.message);
-          return;
-        }
-        addMessage('댓글 신고를 실패했습니다.');
-      })
-      .finally(() => {
-        setIsReportCommentLoading(false);
-      });
+    reportContent(reportData);
   };
 
   const handleNicknameReportClick = async (reason: ReportMessage) => {
     const reportData: ReportRequest = { type: 'NICKNAME', id: member.id, reason };
-    setIsReportNicknameLoading(true);
-
-    await reportContent(reportData)
-      .then(res => {
-        addMessage('작성자 닉네임을 신고했습니다.');
-      })
-      .catch(e => {
-        if (e instanceof Error) {
-          const errorResponse = JSON.parse(e.message);
-          addMessage(errorResponse.message);
-          return;
-        }
-        addMessage('작성자 닉네임 신고를 실패했습니다.');
-      })
-      .finally(() => {
-        setIsReportNicknameLoading(false);
-      });
+    reportContent(reportData);
   };
 
   const handleCancelClick = () => {
@@ -95,7 +58,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
   };
 
   const handleDeleteClick = () => {
-    mutate();
+    deleteComment();
   };
 
   const USER_TYPE = COMMENT_USER_MENU[userType];
@@ -158,7 +121,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           reportType="NICKNAME"
           handleReportClick={handleNicknameReportClick}
           handleCancelClick={handleCancelClick}
-          isReportLoading={isReportNicknameLoading}
+          isReportLoading={isContentReporting}
         />
       )}
       {action === COMMENT_ACTION.COMMENT_REPORT && (
@@ -166,7 +129,7 @@ export default function CommentItem({ comment, userType }: CommentItemProps) {
           reportType="COMMENT"
           handleReportClick={handleCommentReportClick}
           handleCancelClick={handleCancelClick}
-          isReportLoading={isReportCommentLoading}
+          isReportLoading={isContentReporting}
         />
       )}
     </S.Container>

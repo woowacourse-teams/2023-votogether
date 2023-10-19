@@ -12,7 +12,6 @@ import { QUERY_KEY } from '@constants/queryKey';
 
 export const useReportAction = () => {
   const queryClient = useQueryClient();
-
   const { addMessage } = useContext(ToastContext);
 
   const { mutate, isLoading, isSuccess, isError, error } = useMutation({
@@ -21,7 +20,7 @@ export const useReportAction = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.REPORT] });
     },
-    onError: error => {
+    onError: () => {
       const message = error instanceof Error ? error.message : '신고 조치를 실패했습니다.';
       addMessage(message);
     },

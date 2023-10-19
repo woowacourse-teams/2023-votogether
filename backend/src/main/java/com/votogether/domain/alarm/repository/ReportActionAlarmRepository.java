@@ -9,8 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReportActionAlarmRepository extends JpaRepository<ReportActionAlarm, Long> {
 
-    List<ReportActionAlarm> findByMember(final Member member, final Pageable pageable);
+    List<ReportActionAlarm> findByMemberOrderByIdDesc(final Member member, final Pageable pageable);
 
     Optional<ReportActionAlarm> findByIdAndMember(final Long Id, final Member member);
+
+    Optional<ReportActionAlarm> findByMemberOrderByIdDesc(final Member member);
+
+    List<ReportActionAlarm> findAllByMember(final Member member);
 
 }

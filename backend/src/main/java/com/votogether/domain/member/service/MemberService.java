@@ -91,9 +91,9 @@ public class MemberService {
     }
 
     private boolean hasLatestAlarm(final Member member) {
-        final Optional<Alarm> maybeAlarm = alarmRepository.findByMemberOrderByCreatedAtDesc(member);
+        final Optional<Alarm> maybeAlarm = alarmRepository.findByMemberOrderByIdDesc(member);
         final Optional<ReportActionAlarm> maybeReportActionAlarm =
-                reportActionAlarmRepository.findByMemberOrderByCreatedAtDesc(member);
+                reportActionAlarmRepository.findByMemberOrderByIdDesc(member);
 
         if (maybeAlarm.isEmpty() && maybeReportActionAlarm.isEmpty()) {
             return false;

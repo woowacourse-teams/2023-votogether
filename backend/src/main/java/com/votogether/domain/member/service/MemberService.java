@@ -106,11 +106,11 @@ public class MemberService {
             final Optional<Alarm> maybeAlarm,
             final Optional<ReportActionAlarm> maybeReportActionAlarm
     ) {
-        if (maybeAlarm.isPresent()) {
-            return maybeAlarm.get().getCreatedAt();
-        }
-        if (maybeReportActionAlarm.isPresent()) {
+        if (maybeAlarm.isEmpty()) {
             return maybeReportActionAlarm.get().getCreatedAt();
+        }
+        if (maybeReportActionAlarm.isEmpty()) {
+            return maybeAlarm.get().getCreatedAt();
         }
         final Alarm alarm = maybeAlarm.get();
         final ReportActionAlarm reportActionAlarm = maybeReportActionAlarm.get();

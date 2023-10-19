@@ -17,7 +17,6 @@ export default function NoticeDetail({ notice: { title, content, createdAt } }: 
 
   return (
     <S.Container>
-      <S.Category tabIndex={0}>VoTogether 공지사항</S.Category>
       <S.Title tabIndex={0}>{title}</S.Title>
       <S.CreatedAt tabIndex={0}>작성일 : {createdAt}</S.CreatedAt>
       <S.Content tabIndex={0}>{content}</S.Content>

@@ -20,6 +20,7 @@ export const useBannerNotice = () => {
       onError: () => {
         console.error('배너 공지 사항을 불러오는데 실패했습니다');
       },
+      retry: false,
     }
   );
 

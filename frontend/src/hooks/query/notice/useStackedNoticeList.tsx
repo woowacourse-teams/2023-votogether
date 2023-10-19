@@ -22,7 +22,7 @@ export const useStackedNoticeList = () => {
           console.error('공지 사항의 리스트를 불러오는데 실패했습니다');
         },
         getNextPageParam: lastPage => {
-          if (lastPage.currentPageNumber === lastPage.totalPageNumber) return;
+          if (lastPage.currentPageNumber + 1 === lastPage.totalPageNumber) return;
 
           return lastPage.currentPageNumber + 1;
         },

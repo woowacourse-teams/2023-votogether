@@ -26,7 +26,7 @@ export default function PendingReportPage() {
   const params = useParams() as { page: string };
   const currentPageNumber = params.page ? Number(params.page) : 1;
 
-  const columnList = ['Id', '사유', '일시', '내용', '종류', '수정/삭제', '신고 해제'];
+  const columnList = ['Id', '내용', '일시', '종류', '사유', '수정/삭제', '신고 해제'];
   const { data } = usePendingReportActionList(currentPageNumber - 1);
   const { mutate: reportAction } = useReportAction();
 
@@ -79,7 +79,7 @@ export default function PendingReportPage() {
               <Table
                 columns={columnList}
                 rows={reportListWithAction}
-                columnTemplate="1fr 3fr 3fr 2fr 3fr 2fr 2fr"
+                columnTemplate="1fr 2fr 3fr 2fr 4fr 2fr 2fr"
               />
               <S.PaginationContainer>
                 <S.MovePageButton

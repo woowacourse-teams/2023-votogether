@@ -7,7 +7,7 @@ import { getBannerNotice } from '@api/notice';
 import { QUERY_KEY } from '@constants/queryKey';
 
 export const useBannerNotice = () => {
-  const { data, isError, isLoading, error } = useQuery<Notice>(
+  const { data, isError, isLoading, error } = useQuery<Notice | null>(
     [QUERY_KEY.NOTICE, 'banner'],
     getBannerNotice,
     {

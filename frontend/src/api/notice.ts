@@ -38,6 +38,8 @@ export const createNotice = async (notice: NoticeRequest) => {
 export const getBannerNotice = async () => {
   const bannerNotice = await getFetch<NoticeResponse>(`${BASE_URL}/notices/progress`);
 
+  if (bannerNotice.id === null) return null;
+
   return transformNotice(bannerNotice);
 };
 

@@ -56,7 +56,7 @@ public class AlarmQueryService {
     public List<ReportActionAlarmResponse> getReportActionAlarms(final Member member, final int page) {
         final PageRequest pageRequest = PageRequest.of(page, BASIC_PAGE_SIZE);
         final List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository
-                .findByMemberOrderByCreatedAtDesc(member, pageRequest);
+                .findByMemberOrderByIdDesc(member, pageRequest);
 
         return reportActionAlarms.stream()
                 .map(ReportActionAlarmResponse::from)

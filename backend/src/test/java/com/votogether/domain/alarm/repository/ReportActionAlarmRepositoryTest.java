@@ -22,7 +22,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
     void getInLatestOrder() {
         // given
         Member member = memberTestPersister.builder().save();
-        
+
         ReportActionAlarm reportActionAlarmA = ReportActionAlarm.builder()
                 .reportType(ReportType.POST)
                 .member(member)
@@ -54,7 +54,7 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
         // when
         PageRequest pageRequest = PageRequest.of(0, 10);
         List<ReportActionAlarm> reportActionAlarms = reportActionAlarmRepository
-                .findByMemberOrderByCreatedAtDesc(member, pageRequest);
+                .findByMemberOrderByIdDesc(member, pageRequest);
 
         // then
         assertSoftly(softly -> {
@@ -88,11 +88,11 @@ class ReportActionAlarmRepositoryTest extends RepositoryTest {
         // when
         PageRequest pageRequestA = PageRequest.of(0, 10);
         List<ReportActionAlarm> reportActionAlarmsA = reportActionAlarmRepository
-                .findByMemberOrderByCreatedAtDesc(member, pageRequestA);
+                .findByMemberOrderByIdDesc(member, pageRequestA);
 
         PageRequest pageRequestB = PageRequest.of(1, 10);
         List<ReportActionAlarm> reportActionAlarmsB = reportActionAlarmRepository
-                .findByMemberOrderByCreatedAtDesc(member, pageRequestB);
+                .findByMemberOrderByIdDesc(member, pageRequestB);
 
         // then
         assertSoftly(softly -> {

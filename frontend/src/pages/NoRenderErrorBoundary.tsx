@@ -1,16 +1,19 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 
-interface BannerErrorBoundaryProps {
+interface NoRenderErrorBoundaryProps {
   children: ReactNode;
 }
 
-interface BannerErrorBoundaryState {
+interface NoRenderErrorBoundaryState {
   hasError: boolean;
   errorMessage: string;
 }
 
-class BannerErrorBoundary extends Component<BannerErrorBoundaryProps, BannerErrorBoundaryState> {
-  constructor(props: BannerErrorBoundaryProps) {
+class NoRenderErrorBoundary extends Component<
+  NoRenderErrorBoundaryProps,
+  NoRenderErrorBoundaryState
+> {
+  constructor(props: NoRenderErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, errorMessage: '' };
   }
@@ -32,4 +35,4 @@ class BannerErrorBoundary extends Component<BannerErrorBoundaryProps, BannerErro
   }
 }
 
-export default BannerErrorBoundary;
+export default NoRenderErrorBoundary;

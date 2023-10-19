@@ -1,10 +1,6 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import NoticeAdminPage from '@pages/admin/notices/NoticeAdminPage';
-import NoticeEditPage from '@pages/admin/notices/NoticeEditPage';
-import NoticeWritePage from '@pages/admin/notices/NoticeWritePage';
-import PendingReportPage from '@pages/admin/PendingReportPage';
 import RedirectionPage from '@pages/auth/RedirectionPage';
 import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
@@ -28,6 +24,10 @@ import PrivateRoute from './PrivateRoute';
 const Login = lazy(() => import('@pages/auth/LoginPage'));
 const RegisterPersonalInfo = lazy(() => import('@pages/user/RegisterPersonalInfoPage'));
 const VoteStatisticsPage = lazy(() => import('@pages/VoteStatisticsPage'));
+const NoticeAdminPage = lazy(() => import('@pages/admin/notices/NoticeAdminPage'));
+const NoticeEditPage = lazy(() => import('@pages/admin/notices/NoticeEditPage'));
+const NoticeWritePage = lazy(() => import('@pages/admin/notices/NoticeWritePage'));
+const PendingReportPage = lazy(() => import('@pages/admin/PendingReportPage'));
 
 const router = createBrowserRouter([
   {

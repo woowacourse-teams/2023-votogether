@@ -18,6 +18,7 @@ import NarrowMainHeader from '@components/common/NarrowMainHeader';
 import Skeleton from '@components/common/Skeleton';
 import UpButton from '@components/common/UpButton';
 import BannerFetcher from '@components/notice/BannerFetcher';
+import BannerSkeleton from '@components/notice/BannerSkeleton';
 import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
@@ -68,7 +69,11 @@ export default function HomePage() {
         </S.HeaderWrapper>
         {isBannerOpen && (
           <S.BannerWrapper>
-            <BannerFetcher handleClose={closeBanner} />
+            <ErrorBoundary>
+              <Suspense fallback={<BannerSkeleton />}>
+                <BannerFetcher handleClose={closeBanner} />
+              </Suspense>
+            </ErrorBoundary>
           </S.BannerWrapper>
         )}
         <S.DrawerWrapper>

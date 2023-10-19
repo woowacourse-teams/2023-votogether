@@ -94,27 +94,22 @@ public class MemberService {
         final Optional<Alarm> maybeAlarm = alarmRepository.findByMemberOrderByIdDesc(member);
         final Optional<ReportActionAlarm> maybeReportActionAlarm =
                 reportActionAlarmRepository.findByMemberOrderByIdDesc(member);
+        final List<Optional<LocalDateTime>> maybeCreatedAts = List.of(
+                maybeAlarm.map(Alarm::getCreatedAt),
+                maybeReportActionAlarm.map(ReportActionAlarm::getCreatedAt)
+        );
 
-        if (maybeAlarm.isEmpty() && maybeReportActionAlarm.isEmpty()) {
-            return false;
-        }
-        final LocalDateTime latestAlarmCreatedAt = getLatestAlarmCreatedAt(maybeAlarm, maybeReportActionAlarm);
-        return member.hasLatestAlarmCompareTo(latestAlarmCreatedAt);
+        return getLatestAlarmCreatedAt(maybeCreatedAts, member);
     }
 
-    private LocalDateTime getLatestAlarmCreatedAt(
-            final Optional<Alarm> maybeAlarm,
-            final Optional<ReportActionAlarm> maybeReportActionAlarm
+    private boolean getLatestAlarmCreatedAt(
+            final List<Optional<LocalDateTime>> maybeCreatedAts,
+            final Member member
     ) {
-        if (maybeAlarm.isEmpty()) {
-            return maybeReportActionAlarm.get().getCreatedAt();
-        }
-        if (maybeReportActionAlarm.isEmpty()) {
-            return maybeAlarm.get().getCreatedAt();
-        }
-        final Alarm alarm = maybeAlarm.get();
-        final ReportActionAlarm reportActionAlarm = maybeReportActionAlarm.get();
-        return alarm.getLatestAlarmCreatedAt(reportActionAlarm.getCreatedAt());
+        return maybeCreatedAts.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .anyMatch(member::hasLatestAlarmCompareTo);
     }
 
     @Transactional

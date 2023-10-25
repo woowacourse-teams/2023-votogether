@@ -5,7 +5,6 @@ export const Container = styled.div`
   grid-template-rows: 40px auto;
   gap: 10px;
 
-  height: 100%;
   padding: 10px;
 `;
 

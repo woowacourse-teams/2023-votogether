@@ -12,9 +12,7 @@ export const convertTextToUrl = (text: string) => {
       //linkRegex를 포함하지 않는다면 그대로 return
       if (!linkRegex.test(part)) return part;
 
-      return part.replace(linkRegex, url => {
-        return `[[${url}]]`;
-      });
+      return part.replace(linkRegex, url => `[[${url}]]`);
     })
     .join('');
 };

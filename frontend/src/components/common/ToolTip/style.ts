@@ -6,7 +6,7 @@ const SIZE = {
   sm: { height: '300px', width: '250px' },
   md: { height: '460px', width: '315px' },
   lg: { height: '740px', width: '420px' },
-  free: { height: '100%', width: '100%' },
+  free: { height: 'fit-content', width: '100%' },
 };
 
 export const Container = styled.div`

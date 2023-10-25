@@ -6,7 +6,8 @@ test.each([
     '반갑다 https://github.com/woowacourse-teams/2023-votogether/issues/703    임',
     '반갑다 [[https://github.com/woowacourse-teams/2023-votogether/issues/703]]    임',
   ],
-  ['안녕 wwwww.naver.com', '안녕 wwwww.naver.com'],
+  ['안녕 wwwww.naver.com', '안녕 ww[[www.naver.com]]'],
+  ['하하 [www.naver.com]', '하하 [[[www.naver.com]]]'],
   ['http://localhost:3000/ 피카츄', '[[http://localhost:3000/]] 피카츄'],
   [
     'http://localhost:3000/http://localhost:3000/ 피카츄',

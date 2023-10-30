@@ -16,6 +16,7 @@
     "jsx": "react-jsx",
     "noEmit": false,
     "baseUrl": "src",
+    "types": ["jest"],
     "paths": {
       "@assets/*": ["assets/*"],
       "@pages/*": ["pages/*"],
@@ -40,7 +41,8 @@
     "__test__",
     "styled-components.d.ts",
     "env.d.ts",
-    "window.d.ts"
+    "window.d.ts",
+    "**/*.spec.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["cypress.config.ts", "cypress.d.ts", "cypress", "node_modules", "**/*.cy.ts"]
 }

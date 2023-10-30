@@ -14,6 +14,8 @@ export const Container = styled.div`
   @media (min-width: ${theme.breakpoint.sm}) {
     font: var(--text-body);
   }
+
+  z-index: 1;
 `;
 
 export const Wrapper = styled.div`

@@ -3,7 +3,7 @@ package com.votogether.domain.auth.service.oauth;
 import com.votogether.domain.auth.dto.response.KakaoMemberResponse;
 import com.votogether.domain.auth.dto.response.OAuthAccessTokenResponse;
 import lombok.Getter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,18 +14,16 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Getter
-@ConfigurationProperties(prefix = "oauth.kakao")
+@RequiredArgsConstructor
 @Component
 public class KakaoOAuthClient {
 
     private static final RestTemplate restTemplate = new RestTemplate();
 
-    private final MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
+    private final KakaoOAuthConfig kakaoOAuthConfig;
 
     public String getAccessToken(final String code) {
-        info.remove("code");
-        info.add("code", code);
-
+        final MultiValueMap<String, String> info = makeKakaoInfo(code);
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -37,6 +35,16 @@ public class KakaoOAuthClient {
                 OAuthAccessTokenResponse.class
         ).getBody();
         return response.accessToken();
+    }
+
+    private MultiValueMap<String, String> makeKakaoInfo(final String code) {
+        final MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
+        info.add("grant_type", kakaoOAuthConfig.grantType());
+        info.add("client_id", kakaoOAuthConfig.clientId());
+        info.add("client_secret", kakaoOAuthConfig.clientSecret());
+        info.add("redirect_uri", kakaoOAuthConfig.redirectUri());
+        info.add("code", code);
+        return info;
     }
 
     public KakaoMemberResponse getMemberInfo(final String accessToken) {

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -13,7 +14,9 @@ import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
 import com.votogether.domain.auth.service.AuthService;
 import com.votogether.domain.auth.service.dto.LoginTokenDto;
 import com.votogether.domain.auth.service.dto.ReissuedTokenDto;
+import com.votogether.global.jwt.TokenPayload;
 import com.votogether.test.ControllerTest;
+import com.votogether.test.fixtures.MemberFixtures;
 import io.restassured.http.Cookie;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +27,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -143,6 +147,26 @@ class AuthControllerTest extends ControllerTest {
                 .then().log().all()
                 .header("Set-Cookie", containsString("Max-Age=0"))
                 .status(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴에 성공하면 204를 반환한다.")
+    void deleteMember() throws Exception {
+        // given
+        TokenPayload tokenPayload = new TokenPayload(1L, 1L, 1L);
+
+        given(tokenProcessor.resolveToken(anyString())).willReturn("token");
+        given(tokenProcessor.parseToken(anyString())).willReturn(tokenPayload);
+        given(memberService.findById(anyLong())).willReturn(MemberFixtures.FEMALE_20.get());
+        willDoNothing().given(memberService).deleteMember(MemberFixtures.FEMALE_20.get());
+
+        // when, then
+        RestAssuredMockMvc
+                .given().log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .when().delete("/auth/member/delete")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
 }

@@ -41,6 +41,9 @@ public class Alarm extends BaseEntity {
     @Column(length = 20, nullable = false)
     private AlarmType alarmType;
 
+    @Column(length = 20, nullable = false)
+    private String commentWriterNickname;
+
     @Column(nullable = false)
     private Long targetId;
 
@@ -54,12 +57,14 @@ public class Alarm extends BaseEntity {
     private Alarm(
             final Member member,
             final AlarmType alarmType,
+            final String commentWriterNickname,
             final Long targetId,
             final String detail,
             final boolean isChecked
     ) {
         this.member = member;
         this.alarmType = alarmType;
+        this.commentWriterNickname = commentWriterNickname;
         this.targetId = targetId;
         this.detail = detail;
         this.isChecked = isChecked;

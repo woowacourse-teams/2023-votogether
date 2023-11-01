@@ -42,6 +42,7 @@ button,
 input,
 select {
   margin: 0;
+  color: black;
 }
 html {
   box-sizing: border-box;
@@ -80,7 +81,7 @@ button{
 }
 
 a{
-  color: inherit;
+  color: black;
   text-decoration: none;
 }
 `;

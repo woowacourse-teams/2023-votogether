@@ -1,6 +1,7 @@
 import { PendingReportActionList, ReportActionRequest, ReportRequest } from '@type/report';
 import { StringDate } from '@type/time';
 
+import { REPORT_MESSAGE } from '@constants/policyMessage';
 import { REPORT_TYPE } from '@constants/report';
 
 import { getFetch, postFetch } from '@utils/fetch';
@@ -8,7 +9,7 @@ import { getFetch, postFetch } from '@utils/fetch';
 export interface PendingReportActionResponse {
   id: number;
   type: keyof typeof REPORT_TYPE;
-  reasons: string[];
+  reasons: (keyof typeof REPORT_MESSAGE)[];
   createdAt: StringDate;
   target: string;
 }
@@ -34,7 +35,12 @@ export const getPendingReportActionList = async (
   const { reports, ...rest } = pendingReportActionList;
   const reportList = reports.map(report => {
     const { type, reasons, ...rest } = report;
-    return { ...rest, typeName: REPORT_TYPE[report.type], reason: reasons.join(', ') };
+    const transformedReasonList = reasons.map(reason => REPORT_MESSAGE[reason]);
+    return {
+      ...rest,
+      typeName: REPORT_TYPE[report.type],
+      reason: transformedReasonList.join(', '),
+    };
   });
 
   return { ...rest, reportList };

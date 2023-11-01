@@ -21,6 +21,7 @@ public class AlarmTestPersister {
 
         private Member member;
         private AlarmType alarmType;
+        private String commentWriterNickname;
         private Long targetId;
         private String detail;
         private boolean isChecked;
@@ -32,6 +33,11 @@ public class AlarmTestPersister {
 
         public AlarmBuilder alarmType(AlarmType alarmType) {
             this.alarmType = alarmType;
+            return this;
+        }
+
+        public AlarmBuilder commentWriterNickname(String commentWriterNickname) {
+            this.commentWriterNickname = commentWriterNickname;
             return this;
         }
 
@@ -54,6 +60,7 @@ public class AlarmTestPersister {
             Alarm alarm = Alarm.builder()
                     .member(member == null ? memberTestPersister.builder().save() : member)
                     .alarmType(alarmType == null ? AlarmType.COMMENT : alarmType)
+                    .commentWriterNickname(commentWriterNickname == null ? "nickname" : commentWriterNickname)
                     .targetId(targetId == null ? 1L : targetId)
                     .detail(detail == null ? "detail" : detail)
                     .isChecked(false)

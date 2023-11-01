@@ -26,7 +26,7 @@ export default function PendingReportPage() {
   const params = useParams() as { page: string };
   const currentPageNumber = params.page ? Number(params.page) : 1;
 
-  const columnList = ['Id', '내용', '일시', '종류', '사유', '수정/삭제', '신고 해제'];
+  const columnList = ['순번', '내용', '일시', '종류', '사유', '수정/삭제', '신고 해제'];
   const { data } = usePendingReportActionList(currentPageNumber - 1);
   const { mutate: reportAction } = useReportAction();
 
@@ -41,7 +41,7 @@ export default function PendingReportPage() {
   };
 
   const reportListWithAction = data
-    ? data.reportList.map(report => {
+    ? data.reportList.map((report, index) => {
         const reportData = { id: report.id, hasAction: true };
         const reportDetail = {
           typeName: report.typeName,
@@ -50,6 +50,7 @@ export default function PendingReportPage() {
         };
         return {
           ...report,
+          id: index + 1,
           editOrDeleteAction: (
             <S.ReportActionButton
               $isEdit={report.typeName === REPORT_TYPE.NICKNAME}

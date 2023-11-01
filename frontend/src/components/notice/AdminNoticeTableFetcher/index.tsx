@@ -33,17 +33,19 @@ export default function AdminNoticeTableFetcher() {
     <S.Container>
       <Table
         columns={[
+          '순번',
           '제목',
           '내용',
           '배너 제목',
-          '베너 부제목',
+          '배너 부제목',
           '생성일자',
           '마감일자',
-          '수정하기',
-          '삭제하기',
+          '수정',
+          '삭제',
         ]}
         rows={data.noticeList.map(
-          ({ id, title, content, bannerTitle, bannerSubtitle, createdAt, deadline }) => ({
+          ({ id, title, content, bannerTitle, bannerSubtitle, createdAt, deadline }, index) => ({
+            id: index + 1,
             title,
             content,
             bannerTitle,

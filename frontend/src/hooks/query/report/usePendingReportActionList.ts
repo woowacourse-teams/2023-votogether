@@ -5,16 +5,30 @@ import { useQuery } from '@tanstack/react-query';
 import { PendingReportActionList } from '@type/report';
 
 import { ToastContext } from '@hooks/context/toast';
+import { usePagination } from '@hooks/usePagination';
 
 import { getPendingReportActionList } from '@api/report';
 
 import { QUERY_KEY } from '@constants/queryKey';
 
-export const usePendingReportActionList = (page: number) => {
+export const usePendingReportActionList = (initialPageNumber: number = 0) => {
   const { addMessage } = useContext(ToastContext);
 
-  const { data } = useQuery<PendingReportActionList>(
-    [QUERY_KEY.REPORT],
+  const PAGE_SIZE = 20;
+
+  const {
+    fetchNextPage,
+    fetchPrevPage,
+    checkNextPage,
+    page,
+    setPage,
+    startNumber,
+    getPageNumberList,
+    hasPrevPage,
+  } = usePagination(initialPageNumber, PAGE_SIZE);
+
+  const { data, isLoading, isError, error } = useQuery<PendingReportActionList>(
+    [QUERY_KEY.REPORT, page],
     () => getPendingReportActionList(page),
     {
       suspense: true,
@@ -29,5 +43,20 @@ export const usePendingReportActionList = (page: number) => {
     }
   );
 
-  return { data };
+  const hasNextPage = data && checkNextPage(data.totalPageNumber);
+
+  return {
+    data,
+    isError,
+    isLoading,
+    error,
+    fetchNextPage,
+    fetchPrevPage,
+    getPageNumberList,
+    page,
+    setPage,
+    startNumber,
+    hasPrevPage,
+    hasNextPage,
+  };
 };

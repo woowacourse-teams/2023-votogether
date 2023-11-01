@@ -4,6 +4,8 @@ import { useDeleteNotice, usePagedNoticeList } from '@hooks';
 
 import { PATH } from '@constants/path';
 
+import { truncateText } from '@utils/truncateText';
+
 import * as S from './style';
 
 export default function AdminNoticeTableFetcher() {
@@ -19,6 +21,18 @@ export default function AdminNoticeTableFetcher() {
   } = usePagedNoticeList();
   const { mutate: deleteNotice } = useDeleteNotice();
 
+  const columnList = [
+    '순번',
+    '제목',
+    '내용',
+    '배너 제목',
+    '배너 부제목',
+    '생성일자',
+    '마감일자',
+    '수정',
+    '삭제',
+  ];
+
   const handleNoticeDeleteClick = (title: string, noticeId: number) => {
     const isDeleteConfirmed = window.confirm(`공지사항 제목: "${title}" 을 삭제하시겠습니까?`);
 
@@ -32,22 +46,12 @@ export default function AdminNoticeTableFetcher() {
   return (
     <S.Container>
       <Table
-        columns={[
-          '순번',
-          '제목',
-          '내용',
-          '배너 제목',
-          '배너 부제목',
-          '생성일자',
-          '마감일자',
-          '수정',
-          '삭제',
-        ]}
+        columns={columnList}
         rows={data.noticeList.map(
           ({ id, title, content, bannerTitle, bannerSubtitle, createdAt, deadline }, index) => ({
             id: index + 1,
-            title,
-            content,
+            title: truncateText(title),
+            content: truncateText(content),
             bannerTitle,
             bannerSubtitle,
             createdAt,

@@ -5,7 +5,6 @@ import com.votogether.domain.member.dto.request.MemberNicknameUpdateRequest;
 import com.votogether.domain.member.dto.response.MemberInfoResponse;
 import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.ExceptionResponse;
-import com.votogether.global.jwt.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -58,10 +57,6 @@ public interface MemberControllerDocs {
 
     @Operation(summary = "회원 최신 알림 확인", description = "회원의 최신 알림 읽은 시간을 수정한다.")
     @ApiResponse(responseCode = "200", description = "최신 알림 읽기 성공")
-    ResponseEntity<Void> checkLatestAlarm(@Auth final Member member);
-
-    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴한다.")
-    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공")
-    ResponseEntity<Void> deleteMember(final Member member);
+    ResponseEntity<Void> checkLatestAlarm(final Member member);
 
 }

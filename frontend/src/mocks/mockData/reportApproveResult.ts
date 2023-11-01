@@ -1,7 +1,7 @@
 import { ReportApproveResultResponse } from '@api/alarm';
 
 export const MOCK_REPORT_APPROVE_RESULT: ReportApproveResultResponse = {
-  reportId: 1,
+  reportActionId: 1,
   type: 'POST',
   reasons: ['BEHAVIOR', 'SPECIFIC_PERSON', 'PRIVACY', 'SPAMMING', 'BEHAVIOR'],
   content: '10004',

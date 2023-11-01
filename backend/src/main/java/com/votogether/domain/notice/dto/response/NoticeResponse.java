@@ -1,5 +1,6 @@
 package com.votogether.domain.notice.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.votogether.domain.notice.entity.Notice;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -22,9 +23,11 @@ public record NoticeResponse(
         String content,
 
         @Schema(description = "공지사항 배너 마감기한", example = "2023-12-25 23:59")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime deadline,
 
         @Schema(description = "공지사항 생성시각", example = "2023-12-25 23:59")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt
 ) {
 

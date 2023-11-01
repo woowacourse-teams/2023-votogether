@@ -38,6 +38,5 @@ export const GuestButton = styled.button`
 `;
 
 export const KaKaoImage = styled.img`
-  width: 100%;
   height: 40px;
 `;

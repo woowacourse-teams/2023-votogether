@@ -15,11 +15,11 @@ public record PostAlarmDetailResponse(
         String commentWriter
 ) {
 
-    public static PostAlarmDetailResponse of(final Alarm alarm, final String nickname) {
+    public static PostAlarmDetailResponse of(final Alarm alarm) {
         return new PostAlarmDetailResponse(
                 alarm.getTargetId(),
                 alarm.getDetail(),
-                nickname
+                alarm.getCommentWriterNickname()
         );
     }
 

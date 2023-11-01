@@ -1,5 +1,6 @@
 package com.votogether.domain.notice.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +25,7 @@ public record NoticeRequest(
 
         @Schema(description = "배너 노출 마감기한", example = "2023-12-25 23:59")
         @NotNull(message = "배너 노출 마감기한을 입력하지 않았습니다.")
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         LocalDateTime deadline
 ) {
 }

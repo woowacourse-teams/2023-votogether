@@ -57,7 +57,7 @@ export interface ReportApproveResult {
 }
 
 export interface ReportApproveResultResponse {
-  reportId: number;
+  reportActionId: number;
   type: ReportType;
   reasons: ReportMessage[];
   content: string;
@@ -65,7 +65,7 @@ export interface ReportApproveResultResponse {
 }
 
 const transformReportApproveResultResponse = (reportApproveResult: ReportApproveResultResponse) => {
-  const { reportId, type, reasons, content, createdAt } = reportApproveResult;
+  const { reportActionId: reportId, type, reasons, content, createdAt } = reportApproveResult;
   return { reportId, type, reasonList: reasons, content, createdAt };
 };
 

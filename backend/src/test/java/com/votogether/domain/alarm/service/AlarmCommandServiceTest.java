@@ -40,6 +40,7 @@ class AlarmCommandServiceTest extends ServiceTest {
             Alarm alarm = Alarm.builder()
                     .member(member)
                     .alarmType(AlarmType.COMMENT)
+                    .commentWriterNickname("nickname")
                     .targetId(1L)
                     .detail("detail")
                     .isChecked(false)

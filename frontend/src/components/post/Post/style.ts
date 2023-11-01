@@ -99,6 +99,7 @@ export const Content = styled.div<{ $isPreview: boolean }>`
 export const DetailLink = styled.button<{ $isPreview: boolean }>`
   display: flex;
   flex-direction: column;
+  text-align: left;
   gap: 10px;
 
   width: 100%;

@@ -86,4 +86,10 @@ public class AuthService {
         redisTemplate.delete(refreshTokenByRequest);
     }
 
+    @Transactional
+    public void deleteMember(final Member member) {
+        memberService.deleteMember(member);
+        kakaoOAuthClient.disconnectFromKakao(member);
+    }
+
 }

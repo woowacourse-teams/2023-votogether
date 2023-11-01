@@ -7,7 +7,9 @@ import com.votogether.domain.auth.exception.AuthExceptionType;
 import com.votogether.domain.auth.service.AuthService;
 import com.votogether.domain.auth.service.dto.LoginTokenDto;
 import com.votogether.domain.auth.service.dto.ReissuedTokenDto;
+import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.BadRequestException;
+import com.votogether.global.jwt.Auth;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -68,6 +70,12 @@ public class AuthController implements AuthControllerDocs {
         authService.deleteRefreshToken(refreshToken);
 
         expireCookie(httpServletResponse, refreshToken);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/member/delete")
+    public ResponseEntity<Void> disconnectFromKakao(@Auth final Member loginMember) {
+        authService.deleteMember(loginMember);
         return ResponseEntity.noContent().build();
     }
 

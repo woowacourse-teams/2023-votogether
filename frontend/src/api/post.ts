@@ -1,6 +1,8 @@
 import { PostInfo, PostListByOptionalOption, PostListByRequiredOption } from '@type/post';
 import { StringDate } from '@type/time';
 
+import { PostRequestKind } from '@pages/HomePage/types';
+
 import {
   DEFAULT_CATEGORY_ID,
   POST_TYPE,
@@ -148,7 +150,16 @@ export const getPostList = async (
   requiredOption: PostListByRequiredOption,
   optionalOption: PostListByOptionalOption
 ) => {
-  const { pageNumber } = requiredOption;
+  const { pageNumber, postType, isLoggedIn } = requiredOption;
+
+  const { MY_POST, MY_VOTE } = POST_TYPE;
+  const onlyMemberPostType: PostRequestKind[] = [MY_POST, MY_VOTE];
+
+  if (!isLoggedIn && onlyMemberPostType.includes(postType))
+    return {
+      pageNumber,
+      postList: [],
+    };
 
   const postListUrl = makePostListUrl(requiredOption, optionalOption);
 

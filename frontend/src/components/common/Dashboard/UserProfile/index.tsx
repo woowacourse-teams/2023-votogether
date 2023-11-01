@@ -4,6 +4,8 @@ import { User } from '@type/user';
 
 import { PATH } from '@constants/path';
 
+import { truncateText } from '@utils/truncateText';
+
 import arrowRight from '@assets/arrow-right.png';
 
 import * as PS from '../profileStyle';
@@ -25,7 +27,7 @@ export default function UserProfile({ userInfo }: UserProfileProps) {
       ) : (
         <S.TextCardLink to={PATH.USER_INFO} aria-label="닉네임을 클릭하면 마이페이지로 이동합니다.">
           <S.NickName>
-            {nickname} <S.Img src={arrowRight} alt="마이페이지 이동 화살표" />
+            {truncateText(nickname, 7)} <S.Img src={arrowRight} alt="마이페이지 이동 화살표" />
           </S.NickName>
         </S.TextCardLink>
       )}

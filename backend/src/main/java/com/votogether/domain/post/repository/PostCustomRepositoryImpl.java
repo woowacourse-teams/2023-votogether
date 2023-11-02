@@ -51,10 +51,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             final Long categoryId,
             final Pageable pageable
     ) {
-        return jpaQueryFactory
-                .selectDistinct(post)
+        List<Long> postIds = jpaQueryFactory
+                .select(post.id)
                 .from(post)
-                .join(post.writer).fetchJoin()
                 .leftJoin(post.postCategories, postCategory)
                 .where(
                         categoryIdEq(categoryId),
@@ -64,6 +63,14 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .orderBy(orderBy(postSortType))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .fetch();
+
+        return jpaQueryFactory
+                .selectDistinct(post)
+                .from(post)
+                .join(post.writer).fetchJoin()
+                .where(post.id.in(postIds))
+                .orderBy(orderBy(postSortType))
                 .fetch();
     }
 

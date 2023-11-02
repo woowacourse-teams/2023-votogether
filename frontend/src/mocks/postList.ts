@@ -9,6 +9,8 @@ import {
 
 import { MOCK_GUEST_POST_LIST, MOCK_POST_LIST } from '@mocks/mockData/post';
 
+import { MOCKING_DELAY } from './handlers';
+
 export const mockPostList = [
   rest.get('/posts', (req, res, ctx) => {
     return createMockPostListResponse(req, res, ctx);
@@ -58,7 +60,7 @@ const createMockPostListResponse = (
   }
 
   if (page > 0) {
-    return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(1000));
+    return res(ctx.status(200), ctx.json(MOCK_POST_LIST), ctx.delay(MOCKING_DELAY));
   }
 
   return res(ctx.status(200), ctx.json(MOCK_POST_LIST));
@@ -74,7 +76,7 @@ const createMockGuestPostListResponse = (
   if (page === null) return;
 
   if (page > 0) {
-    return res(ctx.status(200), ctx.json(MOCK_GUEST_POST_LIST), ctx.delay(1000));
+    return res(ctx.status(200), ctx.json(MOCK_GUEST_POST_LIST), ctx.delay(MOCKING_DELAY));
   }
 
   return res(ctx.status(200), ctx.json(MOCK_GUEST_POST_LIST));

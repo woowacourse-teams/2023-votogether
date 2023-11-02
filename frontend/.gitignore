@@ -3,3 +3,4 @@
 /dist
 localhost.pem
 localhost-key.pem
+/coverage

@@ -13,6 +13,8 @@ import { mockToken } from './token';
 import { mockUserInfo } from './userInfo';
 import { mockVote } from './vote';
 
+export const MOCKING_DELAY = Number(process.env.VOTOGETHER_MOCKING_DELAY) ?? 1000;
+
 export const handlers = [
   ...example,
   ...mockPostList,

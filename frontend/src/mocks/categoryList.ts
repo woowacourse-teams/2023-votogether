@@ -14,12 +14,12 @@ export const mockCategoryHandlers = [
   rest.post('/categories/:categoryId/like', (req, res, ctx) => {
     MOCK_CATEGORY_LIST[1].isFavorite = true;
 
-    return res(ctx.status(200), ctx.json({ message: '카테고리 즐겨찾기 등록 성공' }));
+    return res(ctx.status(201), ctx.json({ message: '카테고리 즐겨찾기 등록 성공' }));
   }),
 
   rest.delete('/categories/:categoryId/like', (req, res, ctx) => {
     MOCK_CATEGORY_LIST[0].isFavorite = false;
 
-    return res(ctx.status(200));
+    return res(ctx.status(204));
   }),
 ];

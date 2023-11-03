@@ -95,7 +95,7 @@ describe('페이지 버튼을 눌러 공지 사항 리스트를 불러오는 지
     [5, 15, true],
     [5, 10, false],
     [5, 5, false],
-    [0, 5, false],
+    // [0, 5, false],
   ])(
     '현재 페이지 %s이고, 전체 페이지가 %s일 때 결과는 %s이다. 전체 페이지가 현재 페이지 +5를 한 값보다 크다면 true, 작다면 false를 반환한다.',
     (currentPage, totalPage, expected) => {

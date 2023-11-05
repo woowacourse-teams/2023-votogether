@@ -7,18 +7,18 @@ export const Wrapper = styled.main`
   flex-direction: column;
   justify-content: start;
   align-items: start;
-  gap: 15px;
+  gap: 20px;
 
-  padding: 15px;
+  padding: 30px;
 
   @media (max-width: ${theme.breakpoint.sm}) {
     margin-top: 40px;
+    padding: 15px;
   }
 `;
 
-export const PageTitle = styled.h1`
-  font-size: 2rem;
-  font-weight: 600;
+export const PageTitle = styled.span`
+  font: var(--text-page-title);
 `;
 
 export const ButtonContainer = styled.div`

@@ -13,15 +13,15 @@ import * as S from './style';
 export default function PendingReportPage() {
   return (
     <Layout isSidebarVisible={false}>
-      <S.Wrapper>
-        <S.PageTitle>신고 조치 예정 목록</S.PageTitle>
-        <Suspense fallback={<Skeleton isLarge />}>
+      <Suspense fallback={<Skeleton isLarge />}>
+        <S.Wrapper>
+          <S.PageTitle>신고 조치 예정 목록</S.PageTitle>
           <PendingReportTableFetcher />
-        </Suspense>
-        <S.ButtonContainer>
-          <UpButton onClick={smoothScrollToTop} />
-        </S.ButtonContainer>
-      </S.Wrapper>
+          <S.ButtonContainer>
+            <UpButton onClick={smoothScrollToTop} />
+          </S.ButtonContainer>
+        </S.Wrapper>
+      </Suspense>
     </Layout>
   );
 }

@@ -50,7 +50,11 @@ export default function AdminNoticeTableFetcher() {
         rows={data.noticeList.map(
           ({ id, title, content, bannerTitle, bannerSubtitle, createdAt, deadline }, index) => ({
             id: index + 1,
-            title: truncateText(title),
+            title: (
+              <S.PostDetailLink to={`${PATH.NOTICES}/${id}`}>
+                {truncateText(title)}
+              </S.PostDetailLink>
+            ),
             content: truncateText(content),
             bannerTitle,
             bannerSubtitle,

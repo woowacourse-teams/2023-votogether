@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { SquareButton, Table } from 'votogether-design-system';
 
 import { ReportActionRequest } from '@type/report';
@@ -7,6 +5,7 @@ import { ReportActionRequest } from '@type/report';
 import { usePendingReportActionList } from '@hooks/query/report/usePendingReportActionList';
 import { useReportAction } from '@hooks/query/report/useReportAction';
 
+import { PATH } from '@constants/path';
 import { REPORT_ACTION_TYPE, REPORT_TYPE } from '@constants/report';
 
 import { truncateText } from '@utils/truncateText';
@@ -56,6 +55,12 @@ export default function PendingReportTableFetcher() {
     return {
       ...report,
       id: index + 1,
+      target:
+        report.typeName === '게시글' ? (
+          <S.PostDetailLink to={`${PATH.POST}/${report.target}`}>게시글 보러가기</S.PostDetailLink>
+        ) : (
+          report.target
+        ),
       editOrDeleteAction: (
         <S.ReportActionButton
           $isEdit={report.typeName === REPORT_TYPE.NICKNAME}

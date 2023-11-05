@@ -1,6 +1,13 @@
+import { Link } from 'react-router-dom';
+
 import styled from 'styled-components';
 
 import { theme } from '@styles/theme';
+
+export const PostDetailLink = styled(Link)`
+  text-decoration: underline;
+  text-underline-offset: 2px;
+`;
 
 export const ReportActionButton = styled.button<{ $isEdit: boolean }>`
   height: 35px;

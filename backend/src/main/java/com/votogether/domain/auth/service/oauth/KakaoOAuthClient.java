@@ -34,7 +34,7 @@ public class KakaoOAuthClient {
     }
 
     public String getAccessToken(final String code) {
-        final MultiValueMap<String, String> loginInfoRequest = makeKakaoInfo(code);
+        final MultiValueMap<String, String> loginInfoRequest = makeKakaoLoginInfo(code);
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -48,7 +48,7 @@ public class KakaoOAuthClient {
         return response.accessToken();
     }
 
-    private MultiValueMap<String, String> makeKakaoInfo(final String code) {
+    private MultiValueMap<String, String> makeKakaoLoginInfo(final String code) {
         final MultiValueMap<String, String> loginInfoRequest = new LinkedMultiValueMap<>();
         loginInfoRequest.add("grant_type", kakaoOAuthLoginInfo.grantType());
         loginInfoRequest.add("client_id", kakaoOAuthLoginInfo.clientId());

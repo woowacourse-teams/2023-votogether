@@ -88,8 +88,8 @@ public class AuthService {
 
     @Transactional
     public void deleteMember(final Member member) {
-        memberService.deleteMember(member);
         kakaoOAuthClient.disconnectFromKakao(member);
+        memberService.deleteMember(member);
     }
 
 }

@@ -73,8 +73,8 @@ public class AuthController implements AuthControllerDocs {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/member/delete")
-    public ResponseEntity<Void> disconnectFromKakao(@Auth final Member loginMember) {
+    @DeleteMapping("/members/me/delete")
+    public ResponseEntity<Void> deleteMember(@Auth final Member loginMember) {
         authService.deleteMember(loginMember);
         return ResponseEntity.noContent().build();
     }

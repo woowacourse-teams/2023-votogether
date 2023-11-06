@@ -60,7 +60,7 @@ public interface AuthControllerDocs {
     );
 
     @Operation(summary = "회원 탈퇴 하기", description = "회원 탈퇴를 한다.")
-    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공")
-    ResponseEntity<Void> disconnectFromKakao(final Member loginMember);
+    @ApiResponse(responseCode = "204", description = "회원 탈퇴 성공")
+    ResponseEntity<Void> deleteMember(final Member loginMember);
 
 }

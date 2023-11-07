@@ -164,7 +164,7 @@ class AuthControllerTest extends ControllerTest {
         RestAssuredMockMvc
                 .given().log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer token")
-                .when().delete("/auth/member/delete")
+                .when().delete("/auth/members/me/delete")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

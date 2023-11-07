@@ -1,6 +1,6 @@
 import type { UseMutateFunction } from '@tanstack/react-query';
 
-import React, { HTMLAttributes, useContext, useState } from 'react';
+import React, { HTMLAttributes, useContext } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { ResponsiveFlex } from 'votogether-design-system';
@@ -10,6 +10,7 @@ import { PostInfo } from '@type/post';
 import { useMultiSelect, useContentImage, useText, useToggle, useWritingOption } from '@hooks';
 
 import { ToastContext } from '@hooks/context/toast';
+import { useDeadline } from '@hooks/useDHMTime';
 
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import Modal from '@components/common/Modal';
@@ -27,17 +28,14 @@ import {
 } from '@constants/policyMessage';
 
 import { deleteOverlappingNewLine } from '@utils/deleteOverlappingNewLine';
-import { addTimeToDate } from '@utils/post/addTimeToDate';
-import { calculateDeadlineDHMTime } from '@utils/post/calculateDeadlineDHMTime';
 import { checkWriter } from '@utils/post/checkWriter';
 import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
-import { getSelectedDHMTimeOption } from '@utils/post/getSelectedTimeOption';
 import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 
 import { theme } from '@styles/theme';
 
 import CategoryWrapper from './CategoryWrapper';
-import { DEADLINE_OPTION, DeadlineOptionInfo, DeadlineOptionName } from './constants';
+import { DEADLINE_OPTION, DeadlineOptionInfo } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
 import { checkValidationPost } from './validation';
@@ -60,6 +58,16 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     writer,
   } = data ?? {};
 
+  const {
+    userSelectedDHMTime,
+    selectedTimeOption,
+    changeDeadlineOption,
+    changeDeadlinePicker,
+    resetDeadline,
+    getFinalDeadline,
+    getLimitDeadline,
+  } = useDeadline(createTime, deadline);
+
   //기타 훅
   const navigate = useNavigate();
   const { addMessage } = useContext(ToastContext);
@@ -79,53 +87,28 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }))
   );
 
-  //마감시간 관련 코드
-  const deadlineDHMTime = calculateDeadlineDHMTime(createTime, deadline);
-  const baseTime = createTime ? new Date(createTime) : new Date();
-
-  const [selectTimeOption, setSelectTimeOption] = useState<
-    DeadlineOptionName | '사용자지정' | null
-  >(getSelectedDHMTimeOption(deadlineDHMTime));
-  const [userSelectTime, setUserSelectTime] = useState(deadlineDHMTime);
-
   if (postId && writer && !checkWriter(writer.id)) return <Navigate to={PATH.HOME} />;
 
   // 마감시간 관련 핸들러
   const handleDeadlineButtonClick = (option: DeadlineOptionInfo) => {
-    const targetTime = option.time;
-
-    if (data && checkIrreplaceableTime(targetTime, data.createTime))
+    if (data && checkIrreplaceableTime(option.time, data.createTime))
       return addMessage('마감시간 지정 조건을 다시 확인해주세요.');
-    setSelectTimeOption(option.name);
-    setUserSelectTime(targetTime);
+
+    changeDeadlineOption(option);
   };
 
   const handleResetButton = () => {
     if (window.confirm('정말 초기화하시겠습니까?')) {
-      const updatedTime = {
-        day: 0,
-        hour: 0,
-        minute: 0,
-      };
-      setUserSelectTime(updatedTime);
+      resetDeadline();
     }
   };
 
   const handleModalClose = () => {
-    if (data && checkIrreplaceableTime(userSelectTime, data.createTime)) {
+    if (data && checkIrreplaceableTime(userSelectedDHMTime, data.createTime)) {
       addMessage('마감시간 지정 조건을 다시 확인해주세요.');
-      const updatedTime = {
-        day: 0,
-        hour: 0,
-        minute: 0,
-      };
-      setUserSelectTime(updatedTime);
-      setSelectTimeOption(null);
+      resetDeadline();
     }
 
-    setSelectTimeOption(
-      Object.values(userSelectTime).every(time => time === 0) ? null : '사용자지정'
-    );
     closeModal();
   };
 
@@ -140,7 +123,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
       writingTitle,
       writingContent,
       writingOptionHook.optionList,
-      userSelectTime
+      userSelectedDHMTime
     );
     if (errorMessage) return addMessage(errorMessage);
 
@@ -165,7 +148,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
         formData.append(`postOptions[${index}].content`, deleteOverlappingNewLine(option.content));
         formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
       });
-      formData.append('deadline', addTimeToDate(userSelectTime, baseTime));
+      formData.append('deadline', getFinalDeadline());
 
       fileInputList.forEach((item: HTMLInputElement, index: number) => {
         if (!item.files) return;
@@ -244,22 +227,21 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
             <S.Deadline aria-label="마감시간 설정">
               <S.DeadlineDescription
                 aria-label={getDeadlineMessage({
-                  hour: userSelectTime.hour,
-                  day: userSelectTime.day,
-                  minute: userSelectTime.minute,
+                  hour: userSelectedDHMTime.hour,
+                  day: userSelectedDHMTime.day,
+                  minute: userSelectedDHMTime.minute,
                 })}
                 aria-live="polite"
               >
                 {getDeadlineMessage({
-                  hour: userSelectTime.hour,
-                  day: userSelectTime.day,
-                  minute: userSelectTime.minute,
+                  hour: userSelectedDHMTime.hour,
+                  day: userSelectedDHMTime.day,
+                  minute: userSelectedDHMTime.minute,
                 })}
                 {data && (
                   <S.Description tabIndex={0}>
                     현재 시간으로부터 글 작성일({createTime})로부터 {MAX_DEADLINE}일 이내 (
-                    {addTimeToDate({ day: MAX_DEADLINE, hour: 0, minute: 0 }, baseTime)})까지만 선택
-                    가능합니다.
+                    {getLimitDeadline()})까지만 선택 가능합니다.
                   </S.Description>
                 )}
                 {data && (
@@ -278,7 +260,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
                     key={option.name}
                     type="button"
                     onClick={() => handleDeadlineButtonClick(option)}
-                    theme={selectTimeOption === option.name ? 'fill' : 'blank'}
+                    theme={selectedTimeOption === option.name ? 'fill' : 'blank'}
                   >
                     {option.name}
                   </SquareButton>
@@ -287,7 +269,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
                   <SquareButton
                     type="button"
                     onClick={openComponent}
-                    theme={selectTimeOption === '사용자지정' ? 'fill' : 'blank'}
+                    theme={selectedTimeOption === '사용자지정' ? 'fill' : 'blank'}
                   >
                     사용자 지정
                   </SquareButton>
@@ -320,7 +302,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
               <S.Description aria-label={POST_DEADLINE_POLICY.DEFAULT} tabIndex={0}>
                 {POST_DEADLINE_POLICY.DEFAULT}
               </S.Description>
-              <TimePickerOptionList time={userSelectTime} setTime={setUserSelectTime} />
+              <TimePickerOptionList time={userSelectedDHMTime} setTime={changeDeadlinePicker} />
             </S.ModalBody>
           </Modal>
         )}

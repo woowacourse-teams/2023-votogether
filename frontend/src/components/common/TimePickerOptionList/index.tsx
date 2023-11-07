@@ -1,5 +1,3 @@
-import React, { Dispatch } from 'react';
-
 import { DHMTime } from '@type/time';
 
 import { MAX_DEADLINE } from '@constants/policy';
@@ -9,7 +7,7 @@ import TimePickerOption from './TimePickerOption';
 
 interface TimePickerOptionListProps {
   time: DHMTime;
-  setTime: Dispatch<React.SetStateAction<DHMTime>>;
+  setTime: ({ option, updatedTime }: { option: string; updatedTime: number }) => void;
 }
 
 export default function TimePickerOptionList({ time, setTime }: TimePickerOptionListProps) {
@@ -17,10 +15,7 @@ export default function TimePickerOptionList({ time, setTime }: TimePickerOption
     time.day === MAX_DEADLINE ? { day: MAX_DEADLINE - 1, hour: 23, minute: 59 } : time;
 
   const updateTime = (option: string, updatedTime: number) => {
-    setTime(prev => ({
-      ...prev,
-      [option]: updatedTime,
-    }));
+    setTime({ option, updatedTime });
   };
 
   return (

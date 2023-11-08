@@ -6,7 +6,6 @@ import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 import { useBannerToggle } from '@hooks/useBannerToggle';
 import { useDrawer } from '@hooks/useDrawer';
 
-import ErrorBoundary from '@pages/ErrorBoundary';
 import NoRenderErrorBoundary from '@pages/NoRenderErrorBoundary';
 
 import AlarmContainer from '@components/AlarmContainer';
@@ -16,7 +15,6 @@ import Dashboard from '@components/common/Dashboard';
 import Drawer from '@components/common/Drawer';
 import Layout from '@components/common/Layout';
 import NarrowMainHeader from '@components/common/NarrowMainHeader';
-import Skeleton from '@components/common/Skeleton';
 import UpButton from '@components/common/UpButton';
 import BannerFetcher from '@components/notice/BannerFetcher';
 import BannerSkeleton from '@components/notice/BannerSkeleton';
@@ -97,11 +95,7 @@ export default function HomePage() {
             )}
           </Drawer>
         </S.DrawerWrapper>
-        <ErrorBoundary hasIcon={true} hasRetryInteraction={true}>
-          <Suspense fallback={<Skeleton isLarge={true} />}>
-            <PostList />
-          </Suspense>
-        </ErrorBoundary>
+        <PostList />
         <S.ButtonContainer>
           <UpButton onClick={smoothScrollToTop} />
           <S.AddButtonWrapper to={PATH.POST_WRITE}>

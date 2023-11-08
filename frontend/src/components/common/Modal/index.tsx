@@ -1,21 +1,17 @@
-import React, { useEffect, useRef, PropsWithChildren } from 'react';
+import { useEffect, useRef, PropsWithChildren } from 'react';
 
+import { ButtonInfo } from '@type/modalButton';
 import { Size } from '@type/style';
 
 import SquareButton from '../SquareButton';
 
 import * as S from './style';
 
-interface ButtonProps {
-  text: string;
-  handleClick: () => void;
-}
-
 interface ModalProps extends PropsWithChildren {
   title?: string;
   size?: Size;
-  primaryButton: ButtonProps;
-  secondaryButton: ButtonProps;
+  primaryButton: ButtonInfo;
+  secondaryButton: ButtonInfo;
   handleModalClose: () => void;
 }
 
@@ -29,8 +25,12 @@ export default function Modal({
 }: ModalProps) {
   const BackDropRef = useRef<HTMLDivElement>(null);
 
-  const { text: primaryText, handleClick: primaryClick } = primaryButton;
-  const { text: secondaryText, handleClick: secondaryClick } = secondaryButton;
+  const { text: primaryText, handleClick: primaryClick, ...primaryButtonRest } = primaryButton;
+  const {
+    text: secondaryText,
+    handleClick: secondaryClick,
+    ...secondaryButtonRest
+  } = secondaryButton;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -59,12 +59,12 @@ export default function Modal({
         {children && <S.Body>{children}</S.Body>}
         <S.ButtonContainer>
           <S.ButtonWrapper>
-            <SquareButton onClick={secondaryClick} theme="gray">
+            <SquareButton onClick={secondaryClick} theme="gray" {...secondaryButtonRest}>
               {secondaryText}
             </SquareButton>
           </S.ButtonWrapper>
           <S.ButtonWrapper>
-            <SquareButton onClick={primaryClick} theme="fill">
+            <SquareButton onClick={primaryClick} theme="fill" {...primaryButtonRest}>
               {primaryText}
             </SquareButton>
           </S.ButtonWrapper>

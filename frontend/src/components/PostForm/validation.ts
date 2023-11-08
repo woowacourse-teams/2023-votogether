@@ -1,4 +1,4 @@
-import { DHMTime } from '@type/time';
+import { DHMTime, StringDate } from '@type/time';
 
 import { WritingVoteOptionType } from '@hooks/useWritingOption';
 
@@ -17,7 +17,8 @@ export const checkValidationPost = (
   title: string,
   content: string,
   optionList: WritingVoteOptionType[],
-  time: DHMTime
+  selectedTime: DHMTime,
+  deadline: StringDate
 ) => {
   if (categoryList.length < 1) return POST_CATEGORY_POLICY.MIN;
   if (categoryList.length > 3) return POST_CATEGORY_POLICY.MAX;
@@ -30,6 +31,8 @@ export const checkValidationPost = (
   if (optionList.length > 5) return POST_OPTION_POLICY.MAX;
   if (optionList.some(option => option.text.trim() === '')) return POST_OPTION_POLICY.REQUIRED;
 
-  const isTimeOptionZero = Object.values(time).reduce((a, b) => a + b, 0) < 1;
+  const isTimeOptionZero = Object.values(selectedTime).reduce((a, b) => a + b, 0) < 1;
   if (isTimeOptionZero) return POST_DEADLINE_POLICY.REQUIRED;
+
+  if (Number(new Date(deadline)) <= Date.now()) return POST_DEADLINE_POLICY.DEFAULT;
 };

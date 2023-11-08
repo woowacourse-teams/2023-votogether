@@ -58,16 +58,6 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     writer,
   } = data ?? {};
 
-  const {
-    userSelectedDHMTime,
-    selectedTimeOption,
-    changeDeadlineOption,
-    changeDeadlinePicker,
-    resetDeadline,
-    getFinalDeadline,
-    getLimitDeadline,
-  } = useDeadline(createTime, deadline);
-
   //기타 훅
   const navigate = useNavigate();
   const { addMessage } = useContext(ToastContext);
@@ -87,7 +77,31 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }))
   );
 
-  if (postId && writer && !checkWriter(writer.id)) return <Navigate to={PATH.HOME} />;
+  //마감시간 관련 훅
+  const {
+    userSelectedDHMTime,
+    selectedTimeOption,
+    changeDeadlineOption,
+    changeDeadlinePicker,
+    resetDeadline,
+    getFinalDeadline,
+    getLimitDeadline,
+  } = useDeadline(createTime, deadline);
+
+  if (deadline && Number(new Date(deadline)) < Date.now()) {
+    addMessage('마감완료된 게시물은 수정할 수 없습니다.');
+    return <Navigate to={PATH.HOME} />;
+  }
+
+  if (postId && writer && !checkWriter(writer.id)) {
+    addMessage('사용자가 작성한 글만 수정할 수 있습니다.');
+    return <Navigate to={PATH.HOME} />;
+  }
+
+  if (serverVoteInfo && serverVoteInfo.allPeopleCount !== 0) {
+    addMessage('투표한 사용자가 있어 글 수정이 불가합니다.');
+    return <Navigate to={PATH.HOME} />;
+  }
 
   // 마감시간 관련 핸들러
   const handleDeadlineButtonClick = (option: DeadlineOptionInfo) => {
@@ -123,12 +137,13 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
       writingTitle,
       writingContent,
       writingOptionHook.optionList,
-      userSelectedDHMTime
+      userSelectedDHMTime,
+      getFinalDeadline()
     );
     if (errorMessage) return addMessage(errorMessage);
 
     const writingOptionList = writingOptionHook.optionList.map(
-      ({ id, isServerId, text, imageUrl }, index) => {
+      ({ id, isServerId, text, imageUrl }) => {
         return { id, isServerId, content: text, imageUrl };
       }
     );
@@ -166,7 +181,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
 
   const primaryButton = {
     text: '저장',
-    handleClick: closeModal,
+    handleClick: handleModalClose,
   };
 
   const secondaryButton = {

@@ -50,7 +50,6 @@ export const POST_OPTION_POLICY = {
 } as const;
 
 export const POST_DEADLINE_POLICY = {
-  REQUIRED: '시간은 필수로 입력해야 합니다.',
   DEFAULT: `${MAX_DEADLINE}일 이내로 마감시간을 정해주세요.`,
 } as const;
 

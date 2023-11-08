@@ -27,8 +27,8 @@ import {
   POST_TITLE_POLICY,
 } from '@constants/policyMessage';
 
-import { deleteOverlappingNewLine } from '@utils/deleteOverlappingNewLine';
 import { checkWriter } from '@utils/post/checkWriter';
+import { convertToFormdata } from '@utils/post/convertToFormdata';
 import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
 import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 
@@ -38,6 +38,7 @@ import CategoryWrapper from './CategoryWrapper';
 import { DEADLINE_OPTION, DeadlineOptionInfo } from './constants';
 import ContentImagePart from './ContentImageSection';
 import * as S from './style';
+import { WritingPostInfo } from './type';
 import { checkValidationPost } from './validation';
 interface PostFormProps extends HTMLAttributes<HTMLFormElement> {
   data?: PostInfo;
@@ -128,52 +129,26 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
 
   const handlePostFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData();
-
-    //예외처리
-    const { selectedOptionList } = categorySelectHook;
-    const errorMessage = checkValidationPost(
-      selectedOptionList,
-      writingTitle,
-      writingContent,
-      writingOptionHook.optionList,
-      userSelectedDHMTime,
-      getFinalDeadline()
-    );
-    if (errorMessage) return addMessage(errorMessage);
-
-    const writingOptionList = writingOptionHook.optionList.map(
-      ({ id, isServerId, text, imageUrl }) => {
-        return { id, isServerId, content: text, imageUrl };
-      }
-    );
 
     if (e.target instanceof HTMLFormElement) {
       const imageFileInputs = e.target.querySelectorAll<HTMLInputElement>('input[type="file"]');
       const fileInputList = [...imageFileInputs];
 
-      selectedOptionList.forEach(categoryId =>
-        formData.append('categoryIds', categoryId.id.toString())
-      );
-      formData.append('title', writingTitle);
-      formData.append('content', deleteOverlappingNewLine(writingContent));
-      formData.append('imageUrl', contentImageHook.contentImage);
-      writingOptionList.forEach((option, index) => {
-        option.isServerId && formData.append(`postOptions[${index}].id`, option.id.toString());
-        formData.append(`postOptions[${index}].content`, deleteOverlappingNewLine(option.content));
-        formData.append(`postOptions[${index}].imageUrl`, option.imageUrl);
-      });
-      formData.append('deadline', getFinalDeadline());
+      const writingPostInfo: WritingPostInfo = {
+        categoryOptionList: categorySelectHook.selectedOptionList,
+        title: writingTitle,
+        content: writingContent,
+        imageUrl: contentImageHook.contentImage,
+        optionList: writingOptionHook.optionList,
+        deadline: getFinalDeadline(),
+        fileInputList: fileInputList,
+      };
 
-      fileInputList.forEach((item: HTMLInputElement, index: number) => {
-        if (!item.files) return;
+      //예외처리
+      const errorMessage = checkValidationPost(writingPostInfo);
+      if (errorMessage) return addMessage(errorMessage);
 
-        if (index === 0) {
-          item.files[0] && formData.append('imageFile', item.files[0]);
-        } else {
-          item.files[0] && formData.append(`postOptions[${index - 1}].imageFile`, item.files[0]);
-        }
-      });
+      const formData = convertToFormdata(writingPostInfo);
 
       mutate(formData);
     }

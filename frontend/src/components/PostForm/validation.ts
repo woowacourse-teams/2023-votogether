@@ -1,9 +1,3 @@
-import { DHMTime, StringDate } from '@type/time';
-
-import { WritingVoteOptionType } from '@hooks/useWritingOption';
-
-import { Option } from '@components/common/MultiSelect/types';
-
 import {
   POST_CATEGORY_POLICY,
   POST_CONTENT_POLICY,
@@ -12,16 +6,17 @@ import {
   POST_TITLE_POLICY,
 } from '@constants/policyMessage';
 
-export const checkValidationPost = (
-  categoryList: Option[],
-  title: string,
-  content: string,
-  optionList: WritingVoteOptionType[],
-  selectedTime: DHMTime,
-  deadline: StringDate
-) => {
-  if (categoryList.length < 1) return POST_CATEGORY_POLICY.MIN;
-  if (categoryList.length > 3) return POST_CATEGORY_POLICY.MAX;
+import { WritingPostInfo } from './type';
+
+export const checkValidationPost = ({
+  categoryOptionList,
+  title,
+  content,
+  optionList,
+  deadline,
+}: WritingPostInfo) => {
+  if (categoryOptionList.length < 1) return POST_CATEGORY_POLICY.MIN;
+  if (categoryOptionList.length > 3) return POST_CATEGORY_POLICY.MAX;
 
   if (title.trim() === '') return POST_TITLE_POLICY.REQUIRED;
 
@@ -30,9 +25,6 @@ export const checkValidationPost = (
   if (optionList.length < 2) return POST_OPTION_POLICY.MIN;
   if (optionList.length > 5) return POST_OPTION_POLICY.MAX;
   if (optionList.some(option => option.text.trim() === '')) return POST_OPTION_POLICY.REQUIRED;
-
-  const isTimeOptionZero = Object.values(selectedTime).reduce((a, b) => a + b, 0) < 1;
-  if (isTimeOptionZero) return POST_DEADLINE_POLICY.REQUIRED;
 
   if (Number(new Date(deadline)) <= Date.now()) return POST_DEADLINE_POLICY.DEFAULT;
 };

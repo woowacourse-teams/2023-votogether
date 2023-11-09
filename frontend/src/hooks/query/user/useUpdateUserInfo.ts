@@ -14,7 +14,7 @@ export const useUpdateUserInfo = () => {
 
   const LOGGED_IN = true;
   const { mutate, isLoading, isSuccess, isError, error } = useMutation({
-    mutationFn: async (userInfo: UpdateUserInfoRequest) => await updateUserInfo(userInfo),
+    mutationFn: (userInfo: UpdateUserInfoRequest) => updateUserInfo(userInfo),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO, LOGGED_IN] });
 

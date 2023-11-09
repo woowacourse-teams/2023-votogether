@@ -15,8 +15,7 @@ export const useReportAction = () => {
   const { addMessage } = useContext(ToastContext);
 
   const { mutate, isLoading, isSuccess, isError, error } = useMutation({
-    mutationFn: async (reportActionData: ReportActionRequest) =>
-      await reportAction(reportActionData),
+    mutationFn: (reportActionData: ReportActionRequest) => reportAction(reportActionData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.REPORT] });
     },

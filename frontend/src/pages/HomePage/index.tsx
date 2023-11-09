@@ -38,12 +38,12 @@ export default function HomePage() {
     drawerRef: categoryDrawerRdf,
     openDrawer: openCategoryDrawer,
     closeDrawer: closeCategoryDrawer,
-  } = useDrawer('left');
+  } = useDrawer('left', 'drawer-category-toast-content');
   const {
     drawerRef: alarmDrawerRef,
     openDrawer: openAlarmDrawer,
     closeDrawer: closeAlarmDrawer,
-  } = useDrawer('right');
+  } = useDrawer('right', 'drawer-alarm-toast-content');
 
   const { isBannerOpen, closeBanner } = useBannerToggle();
   const { addMessage } = useContext(ToastContext);
@@ -79,6 +79,7 @@ export default function HomePage() {
         )}
         <S.DrawerWrapper>
           <Drawer
+            toastContentId="drawer-category-toast-content"
             handleDrawerClose={closeCategoryDrawer}
             placement="left"
             width="225px"
@@ -87,6 +88,7 @@ export default function HomePage() {
             <Dashboard />
           </Drawer>
           <Drawer
+            toastContentId="drawer-alarm-toast-content"
             handleDrawerClose={closeAlarmDrawer}
             placement="right"
             width="310px"

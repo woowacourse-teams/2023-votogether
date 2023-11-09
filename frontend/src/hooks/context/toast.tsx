@@ -1,13 +1,7 @@
-import {
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  createContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+
+import { ToastContentId } from '@type/toast';
 
 import ToastContainer from '@components/ToastContainer';
 
@@ -20,15 +14,13 @@ export interface ToastInfo {
 
 interface ToastContextProps {
   addMessage: (message: string) => void;
-  setElementId: Dispatch<SetStateAction<ToastContentId>>;
+  setElementId: (id: ToastContentId) => void;
 }
 
 export const ToastContext = createContext<ToastContextProps>({
   addMessage: (message: string) => {},
   setElementId: () => {},
 });
-
-type ToastContentId = 'toast-content' | 'drawer-toast-content';
 
 export default function ToastProvider({ children }: PropsWithChildren) {
   const [toastList, setToastList] = useState<ToastInfo[]>([]);
@@ -44,6 +36,10 @@ export default function ToastProvider({ children }: PropsWithChildren) {
     setToastList(toastList => [...toastList, { id, text: message }]);
   };
 
+  const setElementId = useCallback((id: ToastContentId) => {
+    setToastElementId(id);
+  }, []);
+
   useEffect(() => {
     if (timeId.current) window.clearTimeout(timeId.current);
 
@@ -57,7 +53,7 @@ export default function ToastProvider({ children }: PropsWithChildren) {
   }, [toastList]);
 
   return (
-    <ToastContext.Provider value={{ addMessage, setElementId: setToastElementId }}>
+    <ToastContext.Provider value={{ addMessage, setElementId }}>
       {toastContentEl && createPortal(<ToastContainer toastList={toastList} />, toastContentEl)}
       {children}
     </ToastContext.Provider>

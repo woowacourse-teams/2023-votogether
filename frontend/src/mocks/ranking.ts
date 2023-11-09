@@ -2,6 +2,8 @@ import { rest } from 'msw';
 
 import { PassionUserRanking, PopularPostRanking } from '@type/ranking';
 
+import { MOCKING_DELAY } from './handlers';
+
 const userRankingInfo: PassionUserRanking = {
   ranking: 1111,
   nickname: 'wow',
@@ -37,14 +39,14 @@ const rankingPostList: PopularPostRanking[] = new Array(10)
 
 export const mockRanking = [
   rest.get('/members/me/ranking', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.delay(500), ctx.json(userRankingInfo));
+    return res(ctx.status(200), ctx.delay(MOCKING_DELAY), ctx.json(userRankingInfo));
   }),
 
   rest.get('/members/ranking/passion/guest', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.delay(1000), ctx.json(rankerList));
+    return res(ctx.status(200), ctx.delay(MOCKING_DELAY), ctx.json(rankerList));
   }),
 
   rest.get('/posts/ranking/popular/guest', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.delay(500), ctx.json(rankingPostList));
+    return res(ctx.status(200), ctx.delay(MOCKING_DELAY), ctx.json(rankingPostList));
   }),
 ];

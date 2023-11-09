@@ -54,6 +54,7 @@ export default forwardRef(function Drawer(
       onClose={handleCloseClick}
       onClick={handleCloseClick}
     >
+      <div id="drawer-toast-content" />
       <S.CloseButton onClick={handleDrawerClose}>사이드바 닫기버튼</S.CloseButton>
       {children}
     </S.Dialog>

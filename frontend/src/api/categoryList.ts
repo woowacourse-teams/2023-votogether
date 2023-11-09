@@ -14,7 +14,7 @@ export const transformCategoryListResponse = (categoryList: CategoryResponse[]) 
   }));
 };
 
-const BASE_URL = process.env.VOTOGETHER_BASE_URL;
+const BASE_URL = process.env.VOTOGETHER_MOCKING_URL;
 
 export const getUserCategoryList = async () => {
   const categoryList = await getFetch<CategoryResponse[]>(`${BASE_URL}/categories`);

@@ -24,7 +24,8 @@ export default function ReportModal({
 }: UserReportModalProps) {
   const { name, reportMessageList } = REPORT_TYPE[reportType];
   const defaultReportMessage = Object.keys(reportMessageList)[0] as ReportMessage;
-  const { selectedOption, handleOptionChange } = useSelect<ReportMessage>(defaultReportMessage);
+  const { selectedOption, handleOptionChange, isSelectOpen, toggleSelect } =
+    useSelect<ReportMessage>(defaultReportMessage);
 
   const handlePrimaryButtonClick = () => {
     if (isReportLoading) return;
@@ -49,6 +50,8 @@ export default function ReportModal({
     >
       <S.ModalBody>
         <Select
+          isOpen={isSelectOpen}
+          toggleSelect={toggleSelect}
           aria-label={`${name} 방법 선택`}
           optionList={reportMessageList}
           handleOptionChange={handleOptionChange}

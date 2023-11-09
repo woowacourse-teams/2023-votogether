@@ -1,4 +1,4 @@
-import React, { Suspense, useContext, useRef } from 'react';
+import React, { MouseEvent, Suspense, useContext, useRef } from 'react';
 
 import { useSelect } from '@hooks';
 
@@ -22,10 +22,22 @@ export default function PostList() {
 
   const { postOption, setPostOption } = useContext(PostOptionContext);
 
-  const { selectedOption: selectedStatusOption, handleOptionChange: handleStatusOptionChange } =
-    useSelect<PostStatus>(postOption.status);
-  const { selectedOption: selectedSortingOption, handleOptionChange: handleSortingOptionChange } =
-    useSelect<PostSorting>(postOption.sorting);
+  const {
+    selectedOption: selectedStatusOption,
+    handleOptionChange: handleStatusOptionChange,
+    isSelectOpen: isStatusSelectOpen,
+    toggleSelect: toggleStatusSelect,
+    selectRef: statusSelectRef,
+    handleCloseClick: handleStatusClose,
+  } = useSelect<PostStatus>(postOption.status);
+  const {
+    selectedOption: selectedSortingOption,
+    handleOptionChange: handleSortingOptionChange,
+    isSelectOpen: isSortingSelectOpen,
+    toggleSelect: toggleSortingSelect,
+    selectRef: sortingSelectRef,
+    handleCloseClick: handleSortingClose,
+  } = useSelect<PostSorting>(postOption.sorting);
 
   const focusTopContent = () => {
     if (!topButtonRef.current) return;
@@ -34,11 +46,18 @@ export default function PostList() {
   };
 
   return (
-    <S.Container>
+    <S.Container
+      onClick={(event: MouseEvent<HTMLDivElement>) => {
+        handleStatusClose(event);
+        handleSortingClose(event);
+      }}
+    >
       <button ref={topButtonRef} role="contentinfo" aria-label="최상단입니다" />
       <S.SelectContainer>
-        <S.SelectWrapper>
+        <S.SelectWrapper ref={statusSelectRef}>
           <Select<PostStatus>
+            isOpen={isStatusSelectOpen}
+            toggleSelect={toggleStatusSelect}
             aria-label={`마감 여부로 게시글 정렬 선택, 현재 옵션은 ${STATUS_OPTION[selectedStatusOption]}`}
             handleOptionChange={async (value: PostStatus) => {
               if (value === selectedStatusOption) return;
@@ -54,8 +73,10 @@ export default function PostList() {
             selectedOption={STATUS_OPTION[selectedStatusOption]}
           />
         </S.SelectWrapper>
-        <S.SelectWrapper>
+        <S.SelectWrapper ref={sortingSelectRef}>
           <Select<PostSorting>
+            isOpen={isSortingSelectOpen}
+            toggleSelect={toggleSortingSelect}
             aria-label={`인기순/최신순으로 게시글 정렬 선택, 현재 옵션은 ${SORTING_OPTION[selectedSortingOption]}`}
             handleOptionChange={(value: PostSorting) => {
               if (value === selectedSortingOption) return;

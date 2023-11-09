@@ -48,3 +48,7 @@ export const SelectWrapper = styled.div`
 export const HiddenLink = styled(Link)`
   position: absolute;
 `;
+
+export const SkeletonWrapper = styled.div`
+  padding: 30px 20px;
+`;

@@ -93,7 +93,13 @@ export default function PostList() {
         </S.SelectWrapper>
       </S.SelectContainer>
       <ErrorBoundary hasIcon={true} hasRetryInteraction={true}>
-        <Suspense fallback={<Skeleton isLarge={true} />}>
+        <Suspense
+          fallback={
+            <S.SkeletonWrapper>
+              <Skeleton isLarge={true} />
+            </S.SkeletonWrapper>
+          }
+        >
           <PostListFetcher focusTopContent={focusTopContent} />
         </Suspense>
       </ErrorBoundary>

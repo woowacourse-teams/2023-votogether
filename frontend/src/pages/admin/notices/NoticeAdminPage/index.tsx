@@ -15,7 +15,7 @@ export default function NoticeAdminPage() {
       <S.WriteContainer>
         <S.Title>관리자 공지사항 페이지</S.Title>
         <S.ButtonWrapper to={PATH.ADMIN_NOTICE_WRITE}>
-          <SquareButton theme="fill">공지사항 작성하러 가기 </SquareButton>
+          <SquareButton theme="fill">공지사항 작성</SquareButton>
         </S.ButtonWrapper>
       </S.WriteContainer>
       <Suspense fallback={<Skeleton isLarge />}>

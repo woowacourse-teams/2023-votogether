@@ -18,7 +18,7 @@ const meta: Meta<typeof Modal> = {
 
 export default meta;
 
-export const Default = () => {
+export const Deadline = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const openModal = () => {
@@ -163,7 +163,7 @@ export const CloseByESC = () => {
   );
 };
 
-export const WithTimePicker = () => {
+export const WithDeadlineTimePicker = () => {
   const [time, setTime] = useState({
     day: 2,
     hour: 7,

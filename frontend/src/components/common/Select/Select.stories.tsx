@@ -37,7 +37,7 @@ export const SelectExample = () => {
   );
 };
 
-export const Disable = () => {
+export const Disabled = () => {
   const { handleOptionChange, isSelectOpen, selectedOption, toggleSelect } =
     useSelect<SortingOptionType>('popular');
 

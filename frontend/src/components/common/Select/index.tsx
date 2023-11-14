@@ -27,7 +27,7 @@ export default function Select<T extends string>({
 }: SelectProps<T>) {
   const optionKeyList = Object.keys(optionList) as T[];
 
-  const toggleOpen = () => {
+  const handleToggleOpen = () => {
     if (isDisabled) return;
     toggleSelect();
   };
@@ -46,7 +46,7 @@ export default function Select<T extends string>({
 
   return (
     <S.Container>
-      <S.SelectedContainer onClick={toggleOpen} $status={getSelectStatus()} {...rest}>
+      <S.SelectedContainer onClick={handleToggleOpen} $status={getSelectStatus()} {...rest}>
         <span>{selectedOption}</span>
         <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
       </S.SelectedContainer>

@@ -39,7 +39,7 @@ export default function PostList() {
     handleCloseClick: handleSortingClose,
   } = useSelect<PostSorting>(postOption.sorting);
 
-  const focusTopContent = () => {
+  const handleFocusTopContent = () => {
     if (!topButtonRef.current) return;
 
     topButtonRef.current.focus();
@@ -100,7 +100,7 @@ export default function PostList() {
             </S.SkeletonWrapper>
           }
         >
-          <PostListFetcher focusTopContent={focusTopContent} />
+          <PostListFetcher handleFocusTopContent={handleFocusTopContent} />
         </Suspense>
       </ErrorBoundary>
       <S.HiddenLink aria-label="게시글 작성 페이지로 이동" to={PATH.POST_WRITE} />

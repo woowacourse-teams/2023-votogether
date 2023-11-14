@@ -3,6 +3,7 @@ package com.votogether.domain.auth.controller;
 import com.votogether.domain.auth.dto.request.AccessTokenRequest;
 import com.votogether.domain.auth.dto.response.LoginResponse;
 import com.votogether.domain.auth.dto.response.ReissuedAccessTokenResponse;
+import com.votogether.domain.member.entity.Member;
 import com.votogether.global.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -57,5 +58,9 @@ public interface AuthControllerDocs {
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse
     );
+
+    @Operation(summary = "회원 탈퇴 하기", description = "회원 탈퇴를 한다.")
+    @ApiResponse(responseCode = "204", description = "회원 탈퇴 성공")
+    ResponseEntity<Void> deleteMember(final Member loginMember);
 
 }

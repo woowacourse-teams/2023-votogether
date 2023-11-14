@@ -60,11 +60,13 @@ votogether:
 
 oauth:
   kakao:
-    info:
-      grant_type: ${GRANT_TYPE}
-      client_id: ${CLIENT_ID}
-      client_secret: ${CLIENT_SECRET}
-      redirect_uri: ${REDIRECT_URI}
+    login:
+      grant-type: ${GRANT_TYPE}
+      client-id: ${CLIENT_ID}
+      client-secret: ${CLIENT_SECRET}
+      redirect-uri: ${REDIRECT_URI}
+    disconnect:
+      admin-key: ${ADMIN_KEY}
 
 jwt:
   token:

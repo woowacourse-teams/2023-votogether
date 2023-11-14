@@ -1,21 +1,18 @@
 import { ForwardedRef, KeyboardEvent, MouseEvent, PropsWithChildren, forwardRef } from 'react';
 
-import { DrawerToastContentId } from '@type/toast';
-
 import * as S from './style';
 
 interface DrawerProps extends PropsWithChildren {
   handleDrawerClose: () => void;
   width: string;
   placement: 'left' | 'right';
-  toastContentId: DrawerToastContentId;
 }
 
 const ARIA_MESSAGE =
   '사용자 정보 및 카테고리 정보가 있는 사이드바가 열렸습니다. 사이드바 닫기 버튼을 누르거나 ESC를 누르면 닫을 수 있습니다.';
 
 export default forwardRef(function Drawer(
-  { handleDrawerClose, width, placement, toastContentId, children }: DrawerProps,
+  { handleDrawerClose, width, placement, children }: DrawerProps,
   ref: ForwardedRef<HTMLDialogElement>
 ) {
   const handleCloseClick = (event: MouseEvent<HTMLDialogElement>) => {
@@ -51,7 +48,6 @@ export default forwardRef(function Drawer(
       onClose={handleCloseClick}
       onClick={handleCloseClick}
     >
-      <S.ToastWrapper id={toastContentId} $placement={placement} />
       <S.CloseButton onClick={handleDrawerClose}>사이드바 닫기버튼</S.CloseButton>
       {children}
     </S.Dialog>

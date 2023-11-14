@@ -32,10 +32,3 @@ export const Dialog = styled.dialog<{
     background-color: rgba(0, 0, 0, 0.35);
   }
 `;
-
-export const ToastWrapper = styled.div<{ $placement: 'left' | 'right' }>`
-  position: absolute;
-  width: 100vw;
-  left: ${({ $placement }) => ($placement === 'left' ? '0' : 'auto')};
-  right: ${({ $placement }) => ($placement === 'right' ? '0' : 'auto')};
-`;

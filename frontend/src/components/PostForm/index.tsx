@@ -29,7 +29,7 @@ import {
 } from '@constants/policyMessage';
 
 import { checkWriter } from '@utils/post/checkWriter';
-import { convertToFormdata } from '@utils/post/convertToFormdata';
+import { convertToFormData } from '@utils/post/convertToFormdata';
 import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
 import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 
@@ -149,7 +149,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
       const errorMessage = checkValidationPost(writingPostInfo);
       if (errorMessage) return addMessage(errorMessage);
 
-      const formData = convertToFormdata(writingPostInfo);
+      const formData = convertToFormData(writingPostInfo);
 
       mutate(formData);
     }

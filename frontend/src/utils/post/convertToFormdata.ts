@@ -2,7 +2,7 @@ import { WritingPostInfo } from '@components/PostForm/type';
 
 import { deleteOverlappingNewLine } from '@utils/deleteOverlappingNewLine';
 
-export const convertToFormdata = ({
+export const convertToFormData = ({
   categoryOptionList,
   title,
   content,

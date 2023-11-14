@@ -1,6 +1,6 @@
 import { useEffect, useRef, PropsWithChildren } from 'react';
 
-import { ButtonInfo } from '@type/modalButton';
+import { ModalButton } from '@type/modalButton';
 import { Size } from '@type/style';
 
 import SquareButton from '../SquareButton';
@@ -10,8 +10,8 @@ import * as S from './style';
 interface ModalProps extends PropsWithChildren {
   title?: string;
   size?: Size;
-  primaryButton: ButtonInfo;
-  secondaryButton: ButtonInfo;
+  primaryButton: ModalButton;
+  secondaryButton: ModalButton;
   handleModalClose: () => void;
 }
 

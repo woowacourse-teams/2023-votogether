@@ -5,7 +5,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 import { ResponsiveFlex } from 'votogether-design-system';
 
-import { ButtonInfo } from '@type/modalButton';
+import { ModalButton } from '@type/modalButton';
 import { PostInfo } from '@type/post';
 
 import { useMultiSelect, useContentImage, useText, useToggle, useWritingOption } from '@hooks';
@@ -155,13 +155,13 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
     }
   };
 
-  const primaryButton: ButtonInfo = {
+  const primaryButton: ModalButton = {
     text: '저장',
     handleClick: handleModalClose,
     type: 'button',
   };
 
-  const secondaryButton: ButtonInfo = {
+  const secondaryButton: ModalButton = {
     text: '초기화',
     handleClick: handleResetButton,
     type: 'button',

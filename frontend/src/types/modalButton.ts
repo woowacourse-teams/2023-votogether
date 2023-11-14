@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from 'react';
 
-export interface ButtonInfo extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ModalButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
   handleClick: () => void;
 }

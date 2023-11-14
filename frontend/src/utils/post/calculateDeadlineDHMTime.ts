@@ -5,9 +5,9 @@ import { convertMilliSecondToDHMTime } from '@utils/time/convertMilliSecondToDHM
 
 export const calculateDeadlineDHMTime = (
   createdAt?: StringDate,
-  deadLine?: StringDate
+  deadline?: StringDate
 ): DHMTime => {
-  if (!createdAt || !deadLine) {
+  if (!createdAt || !deadline) {
     return {
       day: 0,
       hour: 0,
@@ -15,7 +15,7 @@ export const calculateDeadlineDHMTime = (
     };
   }
 
-  const timeGap = calculateTimeGap(createdAt, deadLine);
+  const timeGap = calculateTimeGap(createdAt, deadline);
 
   return convertMilliSecondToDHMTime(timeGap);
 };

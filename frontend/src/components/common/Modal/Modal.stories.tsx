@@ -18,7 +18,7 @@ const meta: Meta<typeof Modal> = {
 
 export default meta;
 
-export const Default = () => {
+export const Deadline = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const openModal = () => {
@@ -163,7 +163,7 @@ export const CloseByESC = () => {
   );
 };
 
-export const WithTimePicker = () => {
+export const WithDeadlineTimePicker = () => {
   const [time, setTime] = useState({
     day: 2,
     hour: 7,
@@ -202,6 +202,19 @@ export const WithTimePicker = () => {
     handleClick: handleResetButton,
   };
 
+  const changeDeadlinePicker = ({
+    option,
+    updatedTime,
+  }: {
+    option: string;
+    updatedTime: number;
+  }) => {
+    setTime(prev => ({
+      ...prev,
+      [option]: updatedTime,
+    }));
+  };
+
   return (
     <>
       <SquareButton onClick={openModal} theme="blank">
@@ -217,7 +230,7 @@ export const WithTimePicker = () => {
         >
           <S.Body>
             <S.Description>최대 {MAX_DEADLINE}일을 넘을 수 없습니다.</S.Description>
-            <TimePickerOptionList time={time} setTime={setTime} />
+            <TimePickerOptionList time={time} setTime={changeDeadlinePicker} />
           </S.Body>
         </Modal>
       )}

@@ -17,9 +17,22 @@ export const Default = () => {
     minute: 25,
   });
 
+  const changeDeadlinePicker = ({
+    option,
+    updatedTime,
+  }: {
+    option: string;
+    updatedTime: number;
+  }) => {
+    setTime(prev => ({
+      ...prev,
+      [option]: updatedTime,
+    }));
+  };
+
   return (
     <>
-      <TimePickerOptionList time={time} setTime={setTime} />
+      <TimePickerOptionList time={time} setTime={changeDeadlinePicker} />
     </>
   );
 };

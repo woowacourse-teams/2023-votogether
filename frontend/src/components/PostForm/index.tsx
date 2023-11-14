@@ -11,7 +11,7 @@ import { PostInfo } from '@type/post';
 import { useMultiSelect, useContentImage, useText, useToggle, useWritingOption } from '@hooks';
 
 import { ToastContext } from '@hooks/context/toast';
-import { useDeadline } from '@hooks/useDHMTime';
+import { useDeadline } from '@hooks/useDeadline';
 
 import HeaderTextButton from '@components/common/HeaderTextButton';
 import Modal from '@components/common/Modal';
@@ -29,7 +29,7 @@ import {
 } from '@constants/policyMessage';
 
 import { checkWriter } from '@utils/post/checkWriter';
-import { convertToFormData } from '@utils/post/convertToFormdata';
+import { convertToFormData } from '@utils/post/convertToFormData';
 import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
 import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 

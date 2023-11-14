@@ -17,7 +17,7 @@ export const mockUserInfo = [
     return res(ctx.status(200), ctx.json({ ok: '닉네임이 성공적으로 수정되었습니다!' }));
   }),
 
-  rest.delete('/members/me/delete', (req, res, ctx) => {
+  rest.delete('/auth/members/me/delete', (req, res, ctx) => {
     MOCK_USER_INFO.nickname = 'cancel';
 
     return res(ctx.status(204));

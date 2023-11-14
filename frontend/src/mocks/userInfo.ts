@@ -27,7 +27,7 @@ export const mockUserInfo = [
     );
   }),
 
-  rest.delete('/members/me/delete', (req, res, ctx) => {
+  rest.delete('/auth/members/me/delete', (req, res, ctx) => {
     MOCK_USER_INFO.nickname = 'cancel';
 
     return res(ctx.status(204), ctx.delay(MOCKING_DELAY));

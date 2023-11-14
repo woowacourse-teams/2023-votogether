@@ -45,10 +45,10 @@ export const SelectWrapper = styled.div`
   }
 `;
 
-export const HiddenButton = styled.button`
+export const HiddenLink = styled(Link)`
   position: absolute;
 `;
 
-export const HiddenLink = styled(Link)`
-  position: absolute;
+export const SkeletonWrapper = styled.div`
+  padding: 30px 20px;
 `;

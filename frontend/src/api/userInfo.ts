@@ -50,7 +50,7 @@ export const modifyNickname = async (nickname: string) => {
 };
 
 export const withdrawalMembership = async () => {
-  await deleteFetch(`${BASE_URL}/members/me/delete`);
+  await deleteFetch(`${BASE_URL}/auth/members/me/delete`);
 };
 
 export const updateUserInfo = async (userInfo: UpdateUserInfoRequest) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import chevronDown from '@assets/chevron-down.svg';
 import chevronUp from '@assets/chevron-up.svg';
@@ -10,6 +10,8 @@ export interface SelectProps<T extends string>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   selectedOption: string;
   optionList: Record<T, string>;
+  isOpen: boolean;
+  toggleSelect: () => void;
   handleOptionChange: (option: T) => void;
   isDisabled?: boolean;
 }
@@ -18,20 +20,16 @@ export default function Select<T extends string>({
   selectedOption,
   optionList,
   handleOptionChange,
+  isOpen,
+  toggleSelect,
   isDisabled = false,
   ...rest
 }: SelectProps<T>) {
   const optionKeyList = Object.keys(optionList) as T[];
-  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleOpen = () => {
+  const handleToggleOpen = () => {
     if (isDisabled) return;
-    setIsOpen(prev => !prev);
-  };
-
-  const handleSelectClick = (option: T) => {
-    handleOptionChange(option);
-    setIsOpen(false);
+    toggleSelect();
   };
 
   const getSelectStatus = () => {
@@ -48,7 +46,7 @@ export default function Select<T extends string>({
 
   return (
     <S.Container>
-      <S.SelectedContainer onClick={toggleOpen} $status={getSelectStatus()} {...rest}>
+      <S.SelectedContainer onClick={handleToggleOpen} $status={getSelectStatus()} {...rest}>
         <span>{selectedOption}</span>
         <S.Image src={isOpen ? chevronUp : chevronDown} alt="" $isSelected={isOpen} />
       </S.SelectedContainer>
@@ -64,7 +62,7 @@ export default function Select<T extends string>({
               <S.OptionContainer
                 tabIndex={0}
                 key={optionKey}
-                onClick={() => handleSelectClick(optionKey)}
+                onClick={() => handleOptionChange(optionKey)}
               >
                 {optionList[optionKey]}
               </S.OptionContainer>

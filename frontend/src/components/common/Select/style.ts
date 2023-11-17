@@ -52,7 +52,7 @@ export const SelectedContainer = styled.button<{ $status: Status }>`
 export const OptionListParent = styled.div`
   position: relative;
 
-  z-index: ${theme.zIndex.select};
+  z-index: ${theme.zIndex.selector};
 `;
 
 export const OptionListContainer = styled.div`

@@ -9,10 +9,16 @@ const breakpoint: Record<'sm' | 'md' | 'lg', `${number}px`> = {
   lg: '1440px',
 };
 
+/**
+ * 1 ~ 99: 본문 내 레어이
+ * 100 ~ 199 : 본문을 제외한 페이지 내 레이어
+ * 200 ~  : 페이지보다 상위 레이어
+ */
 const zIndex = {
-  select: 1,
-  tagButton: 90,
-  header: 100,
+  menu: 1,
+  selector: 2,
+  tagButton: 100,
+  header: 101,
   modal: 200,
   toast: 300,
 };

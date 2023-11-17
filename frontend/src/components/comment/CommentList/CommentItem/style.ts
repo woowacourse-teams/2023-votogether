@@ -60,7 +60,7 @@ export const MenuWrapper = styled.div`
   position: absolute;
   right: 0%;
 
-  z-index: ${theme.zIndex.modal};
+  z-index: ${theme.zIndex.selector};
 `;
 
 export const Description = styled.p`

@@ -29,7 +29,7 @@ import {
 } from '@constants/policyMessage';
 
 import { checkWriter } from '@utils/post/checkWriter';
-import { convertToFormData } from '@utils/post/convertToForm';
+import { convertToFormData } from '@utils/post/convertToFormData';
 import { getDeadlineMessage } from '@utils/post/getDeadlineMessage';
 import { checkIrreplaceableTime } from '@utils/time/checkIrreplaceableTime';
 

@@ -1,5 +1,5 @@
 import { Suspense, useContext, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { PostInfo } from '@type/post';
 import { ReportMessage, ReportRequest } from '@type/report';
@@ -26,11 +26,8 @@ import InnerHeaderPart from '../InnerHeaderPart';
 
 import * as S from './style';
 
-export default function PostDetail() {
+export default function PostDetail({ postId }: { postId: number }) {
   const navigate = useNavigate();
-
-  const params = useParams() as { postId: string };
-  const postId = Number(params.postId);
 
   const { loggedInfo } = useContext(AuthContext);
   const { addMessage } = useContext(ToastContext);

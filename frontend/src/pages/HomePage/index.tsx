@@ -1,6 +1,12 @@
-import { CSSProperties, Suspense, useContext } from 'react';
+import { CSSProperties, Suspense, useContext, useEffect } from 'react';
 
-import { AuthContext, ToastContext } from '@hooks';
+import {
+  AuthContext,
+  PostOptionContext,
+  ToastContext,
+  useCategoryList,
+  usePostRequestInfo,
+} from '@hooks';
 
 import { useReadLatestAlarm } from '@hooks/query/user/useReadLatestAlarm';
 import { useBannerToggle } from '@hooks/useBannerToggle';
@@ -22,6 +28,7 @@ import PostList from '@components/post/PostList';
 
 import { PATH } from '@constants/path';
 
+import { getSelectedPostListState } from '@utils/post/getSelectedPostListState';
 import { smoothScrollToTop } from '@utils/scrollToTop';
 
 import * as S from './style';
@@ -55,6 +62,22 @@ export default function HomePage() {
     openAlarmDrawer();
     mutate();
   };
+
+  const { postOption, setPostOption } = useContext(PostOptionContext);
+  const { postOptionalOption, postType } = usePostRequestInfo();
+  const { categoryId } = postOptionalOption;
+
+  const { data: categoryList } = useCategoryList(false);
+  const categoryListFallback = categoryList ?? [];
+  const selectedState = getSelectedPostListState({
+    categoryId,
+    categoryList: categoryListFallback,
+    postType,
+  });
+
+  useEffect(() => {
+    setPostOption({ ...postOption, type: selectedState });
+  }, [selectedState]);
 
   return (
     <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>

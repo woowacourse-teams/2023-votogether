@@ -22,7 +22,7 @@ export default function EditPost() {
   useEffect(() => {
     if (isSuccess) {
       navigate(`${PATH.POST}/${postId}`);
-      setPostOption({ sorting: SORTING.LATEST, status: STATUS.PROGRESS });
+      setPostOption({ sorting: SORTING.LATEST, status: STATUS.PROGRESS, type: '전체' });
     }
   }, [isSuccess, navigate, postId]);
 

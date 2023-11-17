@@ -177,13 +177,13 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
           </HeaderTextButton>
         </NarrowTemplateHeader>
       </S.HeaderWrapper>
-      <form id="form-post" onSubmit={handlePostFormSubmit}>
+      <S.Form id="form-post" onSubmit={handlePostFormSubmit}>
         <ResponsiveFlex
           breakpoint={theme.breakpoint.sm}
           ratio={70}
           $smGap="20px"
           $lgGap="30px"
-          $smPadding="60px 15px 0px 0px"
+          $smPadding="60px 0px 0px 0px"
           $lgPadding="20px 80px 40px 60px"
         >
           <S.LeftSide $hasImage={!!contentImageHook.contentImage}>
@@ -299,7 +299,7 @@ export default function PostForm({ data, mutate, isSubmitting }: PostFormProps) 
             </S.ModalBody>
           </Modal>
         )}
-      </form>
+      </S.Form>
     </>
   );
 }

@@ -14,7 +14,7 @@ export const useWithdrawalMembership = () => {
 
   const LOGGED_IN = true;
   const { mutate, isLoading, isSuccess, isError, error } = useMutation({
-    mutationFn: async () => await withdrawalMembership(),
+    mutationFn: withdrawalMembership,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO, LOGGED_IN] });
       addMessage('회원 탈퇴를 완료했습니다.');

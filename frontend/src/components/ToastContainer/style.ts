@@ -4,11 +4,14 @@ import { theme } from '@styles/theme';
 
 // 컨테이너를 가로중앙에 위치시키기 위해 left = width * 1/2로 설정
 export const Container = styled.div`
-  width: 80%;
+  width: 100vw;
 
   position: fixed;
   bottom: 20vh;
-  left: 10%;
+  left: auto;
+  right: auto;
+
+  padding: 0 10%;
 
   z-index: ${theme.zIndex.toast};
 

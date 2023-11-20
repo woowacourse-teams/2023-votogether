@@ -14,11 +14,11 @@ export const useReportApproveResult = (reportId: number) => {
       suspense: true,
 
       retry: (failCount, error) => {
-        // const fetchError = error as Error;
-        // const status = JSON.parse(fetchError.message).status;
-        // if (status === 404) {
-        //   return false;
-        // }
+        const fetchError = error as Error;
+        const status = JSON.parse(fetchError.message).status;
+        if (status === 404) {
+          return false;
+        }
         return failCount <= 3;
       },
     }

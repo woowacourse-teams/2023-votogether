@@ -15,7 +15,7 @@ export const useReportContent = () => {
   const { addMessage } = useContext(ToastContext);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: async (reportData: ReportRequest) => await reportContent(reportData),
+    mutationFn: (reportData: ReportRequest) => reportContent(reportData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.REPORT] });
       addMessage('신고를 완료하였습니다.');

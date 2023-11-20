@@ -28,7 +28,7 @@ export const useDrawer = (placement: 'left' | 'right') => {
 
     drawerRef.current.style.transform =
       placement === 'left' ? 'translateX(-100%)' : 'translateX(100%)';
-  }, []);
+  }, [placement]);
 
   return { drawerRef, openDrawer, closeDrawer };
 };

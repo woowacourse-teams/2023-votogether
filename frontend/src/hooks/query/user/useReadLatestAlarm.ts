@@ -8,7 +8,7 @@ export const useReadLatestAlarm = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: async () => await readLatestAlarm(),
+    mutationFn: readLatestAlarm,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_INFO] });
     },

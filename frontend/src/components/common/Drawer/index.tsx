@@ -1,10 +1,4 @@
-import React, {
-  ForwardedRef,
-  KeyboardEvent,
-  MouseEvent,
-  PropsWithChildren,
-  forwardRef,
-} from 'react';
+import { ForwardedRef, KeyboardEvent, MouseEvent, PropsWithChildren, forwardRef } from 'react';
 
 import * as S from './style';
 

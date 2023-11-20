@@ -11,7 +11,7 @@ export const useReadAlarm = (type: AlarmType) => {
   const alarmQueryKey = type === 'CONTENT' ? QUERY_KEY.ALARM_CONTENT : QUERY_KEY.ALARM_REPORT;
 
   const { mutate } = useMutation({
-    mutationFn: async (alarmId: number) => await readAlarm(alarmId, type),
+    mutationFn: (alarmId: number) => readAlarm(alarmId, type),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [alarmQueryKey] });
     },

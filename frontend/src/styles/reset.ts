@@ -25,6 +25,7 @@ h5,
 h6 {
   margin: 0;
   padding: 0;
+  outline: 0;
 }
 h1,
 h2,
@@ -43,6 +44,7 @@ input,
 select {
   margin: 0;
   color: black;
+  outline: 0;
 }
 html {
   box-sizing: border-box;

@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import { theme } from '@styles/theme';
 
 export const Container = styled.div`
-  margin: 50px 10px 20px 10px;
+  margin-top: 50px;
   position: relative;
 
   @media (min-width: ${theme.breakpoint.sm}) {
@@ -28,9 +28,8 @@ export const HeaderWrapper = styled.div`
 `;
 
 export const BannerWrapper = styled.div`
-  width: 100%;
-
-  margin-bottom: 10px;
+  width: calc(100% - 10px);
+  margin: 0 auto 10px auto;
 `;
 
 export const DrawerWrapper = styled.div`

@@ -19,11 +19,6 @@ export const Wrapper = styled.div`
 
   @media (min-width: ${theme.breakpoint.sm}) {
     grid-template-columns: 1fr 6fr 3fr;
-    margin: 0 8px;
-  }
-
-  @media (max-width: ${theme.breakpoint.sm}) {
-    border-radius: 0px;
   }
 `;
 

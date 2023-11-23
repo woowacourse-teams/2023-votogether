@@ -19,7 +19,6 @@ export const usePostDetail = (isLoggedIn: boolean, postId: number) => {
     () => fetchApi(postId),
     {
       suspense: true,
-
       onSuccess: data => {
         if (checkClosedPost(data.deadline)) {
           queryClient.setQueryDefaults(POST_DETAIL_QUERY_KEY, {

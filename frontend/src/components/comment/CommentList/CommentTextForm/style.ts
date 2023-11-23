@@ -7,10 +7,22 @@ export const Container = styled.div`
   flex-direction: column;
 `;
 
-export const TextArea = styled.textarea`
+export const TextAreaWrapper = styled.div`
   height: 120px;
-  padding: 12px;
+  padding-top: 12px;
   border: 1px solid var(--primary-color);
+  border-radius: 6px;
+
+  @media (min-width: ${theme.breakpoint.sm}) {
+    height: 160px;
+  }
+`;
+
+export const TextArea = styled.textarea`
+  height: 99%;
+  width: 100%;
+  padding: 12px;
+  padding-top: 0px;
   border-radius: 6px;
 
   font: var(--text-caption);
@@ -30,8 +42,6 @@ export const TextArea = styled.textarea`
   }
 
   @media (min-width: ${theme.breakpoint.sm}) {
-    height: 160px;
-
     font: var(--text-body);
   }
 `;

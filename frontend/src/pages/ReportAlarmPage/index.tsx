@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useParams } from 'react-router-dom';
 
 import ErrorBoundary from '@pages/ErrorBoundary';
 
@@ -9,14 +10,17 @@ import ReportApproveResult from './ReportApproveResult';
 import * as S from './style';
 
 export default function ReportAlarmPage() {
+  const params = useParams() as { reportId: string };
+  const reportId = Number(params.reportId);
+
   return (
     <Layout isSidebarVisible={true} isChannelTalkVisible={false}>
       <S.Container>
         <S.PageHeader>신고 조치 상세</S.PageHeader>
-        <ErrorBoundary>
+        <ErrorBoundary hasHomeInteraction hasIcon key={reportId}>
           <Suspense fallback={<Skeleton isLarge={true} />}>
             <S.ContentContainer>
-              <ReportApproveResult />
+              <ReportApproveResult reportId={reportId} />
             </S.ContentContainer>
           </Suspense>
         </ErrorBoundary>

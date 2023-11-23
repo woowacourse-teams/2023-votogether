@@ -1,10 +1,9 @@
 import { useContext } from 'react';
 
+import { PostOptionContext } from '@hooks';
+
 import { AuthContext } from '@hooks/context/auth';
 import { useCategoryList } from '@hooks/query/category/useCategoryList';
-import { usePostRequestInfo } from '@hooks/usePostRequestInfo';
-
-import { getSelectedPostListState } from '@utils/post/getSelectedPostListState';
 
 import CategoryToggle from '../CategoryToggle';
 
@@ -12,20 +11,12 @@ import * as S from './style';
 
 export default function CategorySection() {
   const { loggedInfo } = useContext(AuthContext);
+  const { postOption } = useContext(PostOptionContext);
   const { userInfo, isLoggedIn } = loggedInfo;
 
   const { data: categoryList } = useCategoryList(isLoggedIn);
 
   const categoryListFallback = categoryList ?? [];
-
-  const { postOptionalOption, postType } = usePostRequestInfo();
-  const { categoryId } = postOptionalOption;
-
-  const selectedState = getSelectedPostListState({
-    categoryId,
-    categoryList: categoryListFallback,
-    postType,
-  });
 
   const favoriteCategory = categoryListFallback.filter(category => category.isFavorite === true);
   const allCategory = categoryListFallback.filter(category => category.isFavorite === false);
@@ -34,7 +25,7 @@ export default function CategorySection() {
     <>
       <S.SelectedStateWrapper>
         <S.Circle />
-        <S.SelectedStateText>{selectedState}</S.SelectedStateText>
+        <S.SelectedStateText>{postOption.type}</S.SelectedStateText>
       </S.SelectedStateWrapper>
       <S.ContentContainer>
         <S.CategoryToggleContainer>

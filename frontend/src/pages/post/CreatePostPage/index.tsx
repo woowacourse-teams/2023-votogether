@@ -23,7 +23,7 @@ export default function CreatePostPage() {
   useEffect(() => {
     if (isSuccess) {
       navigate('/');
-      setPostOption({ sorting: SORTING.LATEST, status: STATUS.PROGRESS });
+      setPostOption({ sorting: SORTING.LATEST, status: STATUS.PROGRESS, type: '전체' });
     }
   }, [isSuccess, navigate]);
 

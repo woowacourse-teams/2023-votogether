@@ -19,6 +19,10 @@ export const getSelectedPostListState = ({
     return selectedCategory?.name ?? '전체';
   }
 
+  if (postType === 'search') {
+    return '검색';
+  }
+
   if (postType === 'myPost') {
     return '내가 작성한 글';
   }

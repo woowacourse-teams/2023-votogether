@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { useParams } from 'react-router-dom';
 
 import { useReportApproveResult } from '@hooks/query/useReportApproveResult';
 
@@ -12,10 +11,7 @@ import { REPORT_MESSAGE, REPORT_TYPE } from '@constants/policyMessage';
 import ReportTargetPost from './ReportTargetPost';
 import * as S from './style';
 
-export default function ReportApproveResult() {
-  const params = useParams() as { reportId: string };
-  const reportId = Number(params.reportId);
-
+export default function ReportApproveResult({ reportId }: { reportId: number }) {
   const { data } = useReportApproveResult(reportId);
 
   return (

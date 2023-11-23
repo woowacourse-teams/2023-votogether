@@ -250,3 +250,7 @@ export const ResetButtonWrapper = styled.div`
   width: 50%;
   height: 40px;
 `;
+
+export const Form = styled.form`
+  width: calc(100% - 20px);
+`;

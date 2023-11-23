@@ -19,6 +19,7 @@ import AddButton from '@components/common/AddButton';
 import AppInstallPrompt from '@components/common/AppInstallPrompt';
 import Dashboard from '@components/common/Dashboard';
 import Drawer from '@components/common/Drawer';
+import DrawerToastWrapper from '@components/common/Drawer/DrawerToastWrapper';
 import Layout from '@components/common/Layout';
 import NarrowMainHeader from '@components/common/NarrowMainHeader';
 import UpButton from '@components/common/UpButton';
@@ -50,6 +51,7 @@ export default function HomePage() {
     closeDrawer: closeAlarmDrawer,
   } = useDrawer('right');
 
+  const { setElementId } = useContext(ToastContext);
   const { isBannerOpen, closeBanner } = useBannerToggle();
   const { addMessage } = useContext(ToastContext);
   const loggedInfo = useContext(AuthContext).loggedInfo;
@@ -60,6 +62,7 @@ export default function HomePage() {
     if (!loggedInfo.isLoggedIn) return addMessage('알림은 로그인 후 이용할 수 있습니다.');
 
     openAlarmDrawer();
+    setElementId('drawer-alarm-toast-content');
     mutate();
   };
 
@@ -79,12 +82,27 @@ export default function HomePage() {
     setPostOption({ ...postOption, type: selectedState });
   }, [selectedState]);
 
+  const handleAlarmDrawerClose = () => {
+    closeAlarmDrawer();
+    setElementId('toast-content');
+  };
+
+  const handleCategoryDrawerOpen = () => {
+    openCategoryDrawer();
+    setElementId('drawer-category-toast-content');
+  };
+
+  const handleCategoryDrawerClose = () => {
+    closeCategoryDrawer();
+    setElementId('toast-content');
+  };
+
   return (
     <Layout isSidebarVisible={true} isMobileDefaultHeaderVisible={false}>
       <S.Container>
         <S.HeaderWrapper>
           <NarrowMainHeader
-            handleCategoryOpenClick={openCategoryDrawer}
+            handleCategoryOpenClick={handleCategoryDrawerOpen}
             handleAlarmOpenClick={handleToolTipOpen}
             isAlarmActive={isAlarmActive ?? false}
           />
@@ -100,21 +118,23 @@ export default function HomePage() {
         )}
         <S.DrawerWrapper>
           <Drawer
-            handleDrawerClose={closeCategoryDrawer}
+            handleDrawerClose={handleCategoryDrawerClose}
             placement="left"
             width="225px"
             ref={categoryDrawerRdf}
           >
+            <DrawerToastWrapper placement="left" id="drawer-category-toast-content" />
             <Dashboard />
           </Drawer>
           <Drawer
-            handleDrawerClose={closeAlarmDrawer}
+            handleDrawerClose={handleAlarmDrawerClose}
             placement="right"
             width="310px"
             ref={alarmDrawerRef}
           >
+            <DrawerToastWrapper id="drawer-alarm-toast-content" placement="right" />
             {loggedInfo.isLoggedIn && (
-              <AlarmContainer closeToolTip={closeAlarmDrawer} style={alarmDrawerStyle} />
+              <AlarmContainer closeToolTip={handleAlarmDrawerClose} style={alarmDrawerStyle} />
             )}
           </Drawer>
         </S.DrawerWrapper>
